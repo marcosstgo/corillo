@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>KATANA — Dual Stream</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/9a4d3275ad.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
+
+  <style>
+    :root{
+      --ink:#060608; --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.14);
+      --white:#f2efe9; --muted:#48485a; --accent:#e8c84a; --live:#df3030;
+      --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      background:var(--ink);color:var(--white);font-family:var(--mono);
+      overflow:hidden;
+      display:flex;flex-direction:column;
+    }
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:50;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    .nav{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 20px;
+      border-bottom:1px solid var(--border);
+      background:rgba(6,6,8,.95);
+      backdrop-filter:blur(14px);
+      flex-shrink:0;z-index:10;
+    }
+    .nav-brand{font-family:var(--display);letter-spacing:4px;font-size:22px;line-height:1}
+    .nav-brand span{color:var(--accent)}
+    .nav-tag{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.35);text-transform:uppercase;margin-left:10px}
+    .nav-right{display:flex;gap:8px;align-items:center}
+    .btn{
+      display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.55rem;font-weight:700;
+      padding:8px 12px;border-radius:6px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.65);transition:.2s;text-decoration:none;white-space:nowrap;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
+    .btn.primary:hover{opacity:.88}
+
+    /* ── STREAMS ── */
+    .streams{
+      flex:1;
+      display:flex;flex-direction:column;
+      min-height:0;
+    }
+
+    .stream{
+      flex:1;
+      position:relative;
+      border-bottom:1px solid var(--border);
+      background:#000;
+      min-height:0;
+      overflow:hidden;
+    }
+    .stream:last-child{border-bottom:none}
+
+    video{
+      width:100%;height:100%;
+      display:block;object-fit:contain;
+      background:#000;
+    }
+
+    /* Label overlay */
+    .stream-label{
+      position:absolute;top:12px;left:12px;z-index:5;
+      display:flex;align-items:center;gap:8px;
+    }
+    .ch-name{
+      font-family:var(--display);font-size:1.1rem;letter-spacing:3px;
+      color:var(--white);text-shadow:0 2px 8px rgba(0,0,0,.8);
+    }
+    .live-badge{
+      display:none;align-items:center;gap:5px;
+      background:var(--live);color:#fff;
+      font-size:.5rem;letter-spacing:1.5px;padding:3px 8px;border-radius:2px;
+    }
+    .live-badge.show{display:flex}
+    .dot-live{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+    /* Offline overlay */
+    .offline{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+      background:linear-gradient(160deg,#080e1c,#0a1830 60%,#06080e);
+      z-index:3;
+    }
+    .offline i{font-size:1.4rem;color:var(--muted)}
+    .offline p{font-size:.55rem;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+
+    /* Divider label */
+    .divider{
+      position:absolute;bottom:12px;right:12px;z-index:5;
+      font-size:.5rem;letter-spacing:2px;color:rgba(255,255,255,.3);
+      text-transform:uppercase;
+    }
+
+    /* Reconnect notice */
+    .reconnect{
+      position:absolute;inset:0;
+      display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.6);z-index:4;
+    }
+    .reconnect.show{display:flex}
+    .reconnect p{font-size:.6rem;letter-spacing:2px;color:rgba(255,255,255,.6)}
+
+    /* Mobile: stack becomes scroll */
+    @media(max-width:600px){
+      body{overflow:auto}
+      .streams{min-height:auto}
+      .stream{min-height:50vw;aspect-ratio:16/9;flex:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div style="display:flex;align-items:center">
+    <a href="/" class="nav-brand">KAT<span>A</span>NA</a>
+    <span class="nav-tag">Dual Stream</span>
+  </div>
+  <div class="nav-right">
+    <a class="btn" href="/katatonia/"><i class="fa-solid fa-expand"></i> Solo KATATONIA</a>
+    <a class="btn" href="/mira_sanganooo/"><i class="fa-solid fa-expand"></i> Solo MIRA</a>
+    <a class="btn primary" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+  </div>
+</div>
+
+<!-- STREAMS -->
+<div class="streams">
+
+  <!-- Stream 1: KATATONIA -->
+  <div class="stream" id="s1">
+    <video id="v1" playsinline muted autoplay></video>
+    <div class="offline" id="off1">
+      <i class="fa-solid fa-broadcast-tower"></i>
+      <p>KATATONIA · Offline</p>
+    </div>
+    <div class="reconnect" id="rc1"><p>Reconectando…</p></div>
+    <div class="stream-label">
+      <div class="ch-name">KATATONIA</div>
+      <div class="live-badge" id="lb1"><span class="dot-live"></span> LIVE</div>
+    </div>
+    <div class="divider">1 / 2</div>
+  </div>
+
+  <!-- Stream 2: MIRA_SANGANOOO -->
+  <div class="stream" id="s2">
+    <video id="v2" playsinline muted autoplay></video>
+    <div class="offline" id="off2">
+      <i class="fa-solid fa-broadcast-tower"></i>
+      <p>MIRA_SANGANOOO · Offline</p>
+    </div>
+    <div class="reconnect" id="rc2"><p>Reconectando…</p></div>
+    <div class="stream-label">
+      <div class="ch-name">MIRA_SANGANOOO</div>
+      <div class="live-badge" id="lb2"><span class="dot-live"></span> LIVE</div>
+    </div>
+    <div class="divider">2 / 2</div>
+  </div>
+
+</div>
+
+<script>
+const STREAMS = [
+  { key:'katatonia',    vid:'v1', off:'off1', rc:'rc1', lb:'lb1' },
+  { key:'mira_sanganooo', vid:'v2', off:'off2', rc:'rc2', lb:'lb2' },
+];
+
+const $ = (id) => document.getElementById(id);
+
+function initPlayer(cfg) {
+  const url     = `/live/${encodeURIComponent(cfg.key)}/index.m3u8`;
+  const video   = $(cfg.vid);
+  let   hls     = null;
+  let   retries = 0;
+  let   timer   = null;
+
+  function setLive(on) {
+    $(cfg.off).style.display = on ? 'none' : 'flex';
+    $(cfg.lb).classList.toggle('show', on);
+    $(cfg.rc).classList.remove('show');
+  }
+
+  function cleanup() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    try { video.pause(); } catch {}
+    video.removeAttribute('src'); video.load();
+    if (hls) { try { hls.destroy(); } catch {} hls = null; }
+  }
+
+  function retry(reason) {
+    retries++;
+    $(cfg.rc).classList.add('show');
+    setLive(false);
+    const wait = Math.min(20000, 1500 * Math.pow(1.5, Math.min(retries, 8)));
+    timer = setTimeout(start, wait);
+  }
+
+  function start() {
+    cleanup();
+
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = url;
+      video.play().then(() => setLive(true)).catch(() => {});
+      video.addEventListener('error', () => retry('error'), { once:true });
+      return;
+    }
+
+    if (window.Hls && Hls.isSupported()) {
+      hls = new Hls({ lowLatencyMode:true, backBufferLength:20, maxBufferLength:6 });
+      hls.loadSource(url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play().then(() => setLive(true)).catch(() => {});
+      });
+      hls.on(Hls.Events.ERROR, (_, d) => {
+        if (d?.fatal) { cleanup(); retry(d.type); }
+      });
+      return;
+    }
+  }
+
+  video.addEventListener('playing', () => setLive(true));
+  video.addEventListener('waiting', () => {});
+  video.addEventListener('stalled', () => retry('stalled'));
+
+  start();
+}
+
+STREAMS.forEach(initPlayer);
+</script>
+</body>
+</html>

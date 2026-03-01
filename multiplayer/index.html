@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Multiplayer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/9a4d3275ad.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
+
+  <style>
+    :root{
+      --ink:#060608; --surface:#0c0c10;
+      --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.18);
+      --white:#f2efe9; --muted:#48485a; --accent:#e8c84a; --live:#df3030;
+      --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      background:var(--ink);color:var(--white);
+      font-family:var(--mono);min-height:100vh;overflow-x:hidden;
+    }
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:50;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    header{
+      position:sticky;top:0;z-index:60;
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.7));
+      border-bottom:1px solid var(--border);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;gap:12px;flex-wrap:wrap}
+    .nav-left{display:flex;align-items:center;gap:14px}
+    .brand{font-family:var(--display);letter-spacing:4px;font-size:22px;line-height:1;text-decoration:none;color:var(--white)}
+    .brand span{color:var(--accent)}
+    .page-tag{
+      font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.35);
+      text-transform:uppercase;border-left:1px solid var(--border);padding-left:14px;
+    }
+    .live-pill{
+      display:flex;align-items:center;gap:6px;
+      font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--live);background:rgba(223,48,48,.08);
+      border:1px solid rgba(223,48,48,.2);
+      padding:5px 10px 5px 8px;border-radius:999px;
+    }
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+    .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.18);animation:blink 1.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+    .btn{
+      display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.55rem;font-weight:700;
+      padding:8px 12px;border-radius:6px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.65);transition:.2s;text-decoration:none;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+
+    /* ── MAIN ── */
+    .page{padding:24px}
+    @media(max-width:600px){.page{padding:14px}}
+
+    /* ── EMPTY STATE ── */
+    .empty{
+      display:none;flex-direction:column;align-items:center;justify-content:center;
+      min-height:60vh;gap:20px;text-align:center;
+    }
+    .empty.show{display:flex}
+    .empty-icon{
+      width:72px;height:72px;border-radius:50%;
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.8rem;color:var(--muted);
+    }
+    .empty h2{font-family:var(--display);font-size:2rem;letter-spacing:3px;color:rgba(255,255,255,.3)}
+    .empty p{font-size:.6rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+
+    /* ── GRID ── */
+    .gallery{
+      display:grid;
+      gap:12px;
+      grid-template-columns: repeat(2, 1fr);
+      /* Dynamic layout based on count via JS class */
+    }
+    .gallery.count-1{ grid-template-columns: 1fr }
+    .gallery.count-2{ grid-template-columns: repeat(2, 1fr) }
+    .gallery.count-3{ grid-template-columns: repeat(2, 1fr) }
+    .gallery.count-4{ grid-template-columns: repeat(2, 1fr) }
+    .gallery.count-5{ grid-template-columns: repeat(3, 1fr) }
+
+    /* Special: 3 streams — first one spans full width */
+    .gallery.count-3 .stream-card:first-child{
+      grid-column: 1 / -1;
+    }
+
+    @media(max-width:768px){
+      .gallery,
+      .gallery.count-1,
+      .gallery.count-2,
+      .gallery.count-3,
+      .gallery.count-4,
+      .gallery.count-5{
+        grid-template-columns: 1fr;
+      }
+      .gallery.count-3 .stream-card:first-child{
+        grid-column: auto;
+      }
+    }
+
+    /* ── STREAM CARD ── */
+    .stream-card{
+      position:relative;border-radius:12px;overflow:hidden;
+      border:1px solid var(--border);background:#000;
+      cursor:pointer;
+      transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+      text-decoration:none;color:inherit;display:block;
+    }
+    .stream-card:hover{
+      border-color:var(--border-h);
+      transform:translateY(-2px);
+      box-shadow:0 12px 32px rgba(0,0,0,.6);
+    }
+    .stream-card.is-featured{
+      border-color:rgba(232,200,74,.2);
+    }
+
+    /* Thumb */
+    .thumb{aspect-ratio:16/9;position:relative;overflow:hidden;background:#000}
+    .thumb video{width:100%;height:100%;object-fit:cover;display:block}
+
+    /* Overlays */
+    .tag-live{
+      position:absolute;top:10px;left:10px;z-index:3;
+      display:flex;align-items:center;gap:5px;
+      background:var(--live);color:#fff;
+      font-size:.48rem;letter-spacing:1.5px;padding:3px 8px;border-radius:2px;
+    }
+    .tag-host{
+      position:absolute;top:10px;right:10px;z-index:3;
+      font-size:.48rem;letter-spacing:1.5px;color:var(--accent);
+      border:1px solid rgba(232,200,74,.3);padding:3px 8px;border-radius:2px;
+      background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
+    }
+    .tag-viewers{
+      position:absolute;bottom:10px;right:10px;z-index:3;
+      display:flex;align-items:center;gap:5px;
+      background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+      font-size:.48rem;letter-spacing:1px;padding:3px 8px;border-radius:2px;
+      color:rgba(255,255,255,.8);
+    }
+
+    /* Hover play icon */
+    .play-icon{
+      position:absolute;inset:0;z-index:2;
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transition:opacity .2s;
+      background:rgba(0,0,0,.3);
+    }
+    .stream-card:hover .play-icon{opacity:1}
+    .play-icon i{font-size:2.5rem;color:rgba(255,255,255,.9);filter:drop-shadow(0 2px 8px rgba(0,0,0,.6))}
+
+    /* Card footer */
+    .card-foot{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;
+      border-top:1px solid var(--border);
+      background:linear-gradient(to bottom,rgba(12,12,16,.85),rgba(6,6,8,.95));
+    }
+    .ava{
+      width:28px;height:28px;border-radius:50%;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--display);font-size:.8rem;color:var(--ink);
+    }
+    .foot-info{flex:1;min-width:0}
+    .ch-name{font-size:.62rem;letter-spacing:1px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+    .ch-sub{font-size:.65rem;color:var(--muted);margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .expand-icon{color:rgba(255,255,255,.3);font-size:.7rem;flex-shrink:0;transition:.2s}
+    .stream-card:hover .expand-icon{color:var(--accent)}
+
+    /* Pulse on live cards */
+    @keyframes pulse-border{
+      0%,100%{box-shadow:0 0 0 0 rgba(223,48,48,.0)}
+      50%{box-shadow:0 0 0 3px rgba(223,48,48,.12)}
+    }
+    .stream-card.is-live{animation:pulse-border 3s infinite}
+
+    /* Poll indicator */
+    .poll-bar{
+      position:fixed;bottom:0;left:0;right:0;height:2px;
+      background:var(--border);z-index:55;overflow:hidden;
+    }
+    .poll-progress{
+      height:100%;background:var(--accent);width:100%;
+      transform-origin:left;
+      transition:transform linear;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="nav-left">
+      <a href="/" class="brand">C<span>O</span>RILLO</a>
+      <div class="page-tag">Multiplayer</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <div class="live-pill">
+        <span class="dot on" id="navDot"></span>
+        <span id="navCount">0</span>&nbsp;en vivo
+      </div>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- Empty state -->
+  <div class="empty" id="emptyState">
+    <div class="empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
+    <h2>NADIE EN VIVO</h2>
+    <p>Cuando alguien inicie stream aparecerá aquí</p>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery" id="gallery"></div>
+
+</main>
+
+<!-- Poll progress bar -->
+<div class="poll-bar"><div class="poll-progress" id="pollBar"></div></div>
+
+<script>
+const STREAMERS = [
+  { key:'katatonia',     name:'KATATONIA',     sub:'Gaming · Bayamón PR',      ava:'K', color:'linear-gradient(135deg,#e8c84a,#c09020)', host:true  },
+  { key:'tea',           name:'TEA',            sub:'Just chatting · vibes',    ava:'T', color:'linear-gradient(135deg,#f9a8d4,#d0408a)', host:false },
+  { key:'mira_sanganooo',name:'MIRA_SANGANOOO', sub:'Contenido · Reacciones',   ava:'M', color:'linear-gradient(135deg,#ff9f43,#e06010)', host:false },
+  { key:'404',           name:'404',            sub:'Gaming · Not found',       ava:'4', color:'linear-gradient(135deg,#a29bfe,#6c5ce7)', host:false },
+  { key:'elbala',        name:'ELBALA',         sub:'Gaming · Entretenimiento', ava:'E', color:'linear-gradient(135deg,#55efc4,#00b894)', host:false },
+];
+
+const API      = '/mediamtx-api/v3/paths/list';
+const POLL_MS  = 15000;
+const CACHE_MS = 8000;
+const $        = id => document.getElementById(id);
+
+let cache    = { t:0, data:null };
+let hlsMap   = {}; // key → hls instance
+let liveKeys = []; // currently shown live keys
+
+// ── API ──
+async function fetchPaths() {
+  const now = Date.now();
+  if (cache.data && (now - cache.t) < CACHE_MS) return cache.data;
+  const ctrl = new AbortController();
+  const to   = setTimeout(() => ctrl.abort(), 5000);
+  try {
+    const res  = await fetch(API, { signal:ctrl.signal, cache:'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    cache = { t:now, data };
+    return data;
+  } finally { clearTimeout(to); }
+}
+
+function getLive(data) {
+  return (Array.isArray(data?.items) ? data.items : []).filter(p => p.ready);
+}
+
+// ── HLS PLAYER ──
+function destroyHls(key) {
+  if (hlsMap[key]) {
+    try { hlsMap[key].destroy(); } catch {}
+    delete hlsMap[key];
+  }
+}
+
+function playVideo(video, key) {
+  const url = `/live/${encodeURIComponent(key)}/index.m3u8`;
+  destroyHls(key);
+
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = url;
+    video.play().catch(() => {});
+    return;
+  }
+  if (window.Hls && Hls.isSupported()) {
+    const h = new Hls({ lowLatencyMode:true, backBufferLength:20, maxBufferLength:6 });
+    h.loadSource(url);
+    h.attachMedia(video);
+    h.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+    h.on(Hls.Events.ERROR, (_, d) => { if (d?.fatal) { try{h.destroy()}catch{} delete hlsMap[key]; } });
+    hlsMap[key] = h;
+
+    // Pause when off screen
+    const io = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) { try{video.pause()}catch{} }
+      else { video.play().catch(()=>{}); }
+    }, { threshold:0.1 });
+    io.observe(video);
+  }
+}
+
+// ── BUILD CARD ──
+function buildCard(streamer, viewers) {
+  const a   = document.createElement('a');
+  a.href    = `/${encodeURIComponent(streamer.key)}/`;
+  a.className = 'stream-card is-live' + (streamer.host ? ' is-featured' : '');
+  a.dataset.key = streamer.key;
+
+  a.innerHTML = `
+    <div class="thumb">
+      <video playsinline muted autoplay loop></video>
+      <div class="tag-live"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
+      ${streamer.host ? '<div class="tag-host">HOST</div>' : ''}
+      <div class="tag-viewers"><i class="fa-solid fa-eye"></i>&nbsp;${viewers}</div>
+      <div class="play-icon"><i class="fa-solid fa-play"></i></div>
+    </div>
+    <div class="card-foot">
+      <div class="ava" style="background:${streamer.color}">${streamer.ava}</div>
+      <div class="foot-info">
+        <div class="ch-name">${streamer.name}</div>
+        <div class="ch-sub">${streamer.sub}</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square expand-icon"></i>
+    </div>`;
+
+  // Start video
+  const video = a.querySelector('video');
+  playVideo(video, streamer.key);
+
+  return a;
+}
+
+// ── UPDATE GALLERY ──
+function updateGallery(liveStreamers) {
+  const gallery = $('gallery');
+  const empty   = $('emptyState');
+  const newKeys = liveStreamers.map(s => s.key).join(',');
+  const oldKeys = liveKeys.join(',');
+
+  // Update count
+  const count = liveStreamers.length;
+  $('navCount').textContent = count;
+  $('navDot').className     = count > 0 ? 'dot on' : 'dot';
+
+  // Update viewer counts without rebuilding if same streamers
+  if (newKeys === oldKeys) {
+    liveStreamers.forEach(s => {
+      const card = gallery.querySelector(`[data-key="${s.key}"]`);
+      if (card) {
+        const vt = card.querySelector('.tag-viewers');
+        if (vt) vt.innerHTML = `<i class="fa-solid fa-eye"></i>&nbsp;${s.viewers}`;
+      }
+    });
+    return;
+  }
+
+  // Destroy HLS for streamers no longer live
+  liveKeys.forEach(k => {
+    if (!liveStreamers.find(s => s.key === k)) destroyHls(k);
+  });
+
+  // Rebuild gallery
+  gallery.innerHTML = '';
+  liveKeys = liveStreamers.map(s => s.key);
+
+  if (count === 0) {
+    empty.classList.add('show');
+    gallery.className = 'gallery';
+    return;
+  }
+
+  empty.classList.remove('show');
+  gallery.className = `gallery count-${Math.min(count, 5)}`;
+
+  liveStreamers.forEach(s => gallery.appendChild(buildCard(s, s.viewers)));
+}
+
+// ── POLL ──
+let pollTimer    = null;
+let pollAnim     = null;
+
+function animatePollBar() {
+  const bar = $('pollBar');
+  bar.style.transition = 'none';
+  bar.style.transform  = 'scaleX(1)';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      bar.style.transition = `transform ${POLL_MS}ms linear`;
+      bar.style.transform  = 'scaleX(0)';
+    });
+  });
+}
+
+async function refresh() {
+  try {
+    const data      = await fetchPaths();
+    const livePaths = getLive(data);
+
+    const liveStreamers = STREAMERS
+      .filter(s => livePaths.find(p => p.name === 'live/' + s.key))
+      .map(s => {
+        const pd = livePaths.find(p => p.name === 'live/' + s.key);
+        return { ...s, viewers: pd ? (pd.readers || []).length : 0 };
+      });
+
+    updateGallery(liveStreamers);
+  } catch(e) {
+    // Silently fail — keep existing state
+  }
+
+  animatePollBar();
+  pollTimer = setTimeout(refresh, POLL_MS);
+}
+
+// ── INIT ──
+refresh();
+</script>
+</body>
+</html>

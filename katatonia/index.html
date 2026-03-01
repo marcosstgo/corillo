@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Player</title>
+  <meta name="description" content="CORILLO player — HLS con temas, vertical/horizontal, reconexión automática." />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/9a4d3275ad.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+  <style>
+    :root{
+      --ink:#060608; --surface:#0c0c10; --panel:#121218;
+      --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.16);
+      --white:#f2efe9; --muted:#48485a; --accent:#e8c84a; --live:#df3030;
+      --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
+      --radius:12px; --chat-w:340px;
+    }
+    [data-theme="light"]{
+      --ink:#f0efe9; --surface:#e4e2db; --panel:#d8d6cf;
+      --border:rgba(0,0,0,.1); --border-h:rgba(0,0,0,.2);
+      --white:#12120f; --muted:#5a5a6a; --accent:#b08010; --live:#df3030;
+    }
+    [data-theme="light"] body{background:var(--ink);color:var(--white)}
+    [data-theme="light"] header{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
+    [data-theme="light"] body::after{opacity:.3}
+    [data-theme="light"] #navLogo text{fill:#12120f !important}
+    [data-theme="light"] #navLogo circle[stroke="#f2efe9"]{stroke:#12120f !important}
+    [data-theme="light"] .btn{color:var(--white);border-color:rgba(0,0,0,.12)}
+    [data-theme="light"] .btn:hover{border-color:rgba(0,0,0,.25);background:rgba(0,0,0,.05)}
+    [data-theme="light"] .btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+    [data-theme="light"] .statsRow{background:rgba(240,239,233,.8)}
+    [data-theme="light"] .stat-val{color:var(--white)}
+    [data-theme="light"] .chat-col{background:var(--surface)}
+    [data-theme="light"] .chat-header{background:var(--panel)}
+
+    /* Theme toggle */
+    .theme-btn{
+      width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+      background:transparent;color:var(--white);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.8rem;transition:.2s;flex-shrink:0;
+    }
+    .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    :focus-visible{outline:2px solid rgba(232,200,74,.7);outline-offset:3px;border-radius:4px}
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    header{
+      position:sticky;top:0;z-index:100;
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(6,6,8,.95),rgba(6,6,8,.6));
+      border-bottom:1px solid var(--border);
+    }
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;flex-wrap:wrap}
+    .brand-link{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .brand-svg{width:110px;height:30px}
+    .channel-tag{
+      font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;
+      color:var(--muted);border-left:1px solid var(--border);padding-left:10px;
+    }
+    .nav-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 12px;border-radius:6px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.7);
+      font-family:var(--mono);font-size:.55rem;letter-spacing:1px;text-transform:uppercase;
+      cursor:pointer;transition:.18s ease;white-space:nowrap;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white);background:rgba(255,255,255,.04)}
+    .btn.active{border-color:rgba(232,200,74,.4);color:var(--accent);background:rgba(232,200,74,.06)}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent;font-weight:600}
+    .btn.primary:hover{background:#d4b43c}
+    .btn.danger{background:rgba(223,48,48,.1);border-color:rgba(223,48,48,.3);color:#f87171}
+    .divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
+
+    /* ── MAIN LAYOUT ── */
+    .page{display:flex;flex-direction:column;min-height:calc(100vh - 51px)}
+    .content{
+      flex:1;display:grid;
+      grid-template-columns:1fr var(--chat-w);
+      grid-template-rows:auto 1fr;
+      gap:0;
+      max-width:100%;
+    }
+    .content.chat-hidden{grid-template-columns:1fr 0}
+    .content.vertical-mode{grid-template-columns:minmax(0,1fr) var(--chat-w)}
+
+    /* ── PLAYER COLUMN ── */
+    .player-col{
+      grid-row:1/3;
+      display:flex;flex-direction:column;
+      border-right:1px solid var(--border);
+      min-width:0;
+    }
+    .playerWrap{
+      position:relative;background:#000;flex-shrink:0;
+    }
+    #video{width:100%;display:block;background:#000}
+    #video.horizontal{aspect-ratio:16/9}
+    #video.vertical{aspect-ratio:9/16;max-height:80vh;margin:0 auto}
+
+    /* Overlay */
+    .overlay{
+      position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.6);z-index:10;padding:18px;
+    }
+    .overlay.show{display:flex}
+    .panel{
+      border:1px solid rgba(255,255,255,.14);border-radius:14px;
+      padding:20px;max-width:420px;width:100%;
+      background:rgba(10,10,14,.7);backdrop-filter:blur(12px);
+    }
+    .panel h3{font-family:var(--mono);text-transform:uppercase;letter-spacing:2px;font-size:11px;color:rgba(255,255,255,.6);margin-bottom:8px}
+    .panel p{color:rgba(255,255,255,.75);font-size:.9rem;line-height:1.5}
+    .panel .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    /* Overlay panel always dark — force white text/borders regardless of theme */
+    .panel .btn{color:rgba(255,255,255,.8);border-color:rgba(255,255,255,.15)}
+    .panel .btn:hover{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.08)}
+    .panel .btn.primary{background:var(--accent);color:#111;border-color:transparent}
+
+    /* Status bar */
+    .statusBar{
+      position:absolute;left:0;right:0;bottom:0;
+      display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;
+      background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
+      pointer-events:none;
+    }
+    .statusBar .left,.statusBar .right{display:flex;gap:6px;pointer-events:auto}
+    .pill{
+      display:inline-flex;align-items:center;gap:5px;
+      font-family:var(--mono);font-size:9px;letter-spacing:1px;
+      padding:5px 8px;border-radius:999px;
+      color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);
+    }
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+    .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.2);animation:blink 1.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+    /* Stats row */
+    .statsRow{
+      display:flex;border-top:1px solid var(--border);
+      background:rgba(12,12,16,.6);flex-shrink:0;
+    }
+    .stat{flex:1;padding:8px 12px;border-right:1px solid var(--border);text-align:center}
+    .stat:last-child{border-right:none}
+    .stat-val{font-family:var(--mono);font-size:.68rem;letter-spacing:1px;color:var(--white)}
+    .stat-lbl{font-family:var(--mono);font-size:.44rem;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+
+    /* ── CHAT COLUMN ── */
+    .chat-col{
+      grid-row:1/3;
+      display:flex;flex-direction:column;
+      overflow:hidden;
+      transition:width .25s ease;
+      background:var(--surface);
+    }
+    .content.chat-hidden .chat-col{width:0;overflow:hidden;border:none}
+
+    .chat-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 12px;border-bottom:1px solid var(--border);
+      background:var(--panel);flex-shrink:0;
+    }
+    .chat-title{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+    .chat-title i{color:#9147ff}
+    .chat-toggle-btn{
+      width:24px;height:24px;border-radius:4px;border:1px solid var(--border);
+      background:transparent;color:var(--muted);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;font-size:.6rem;
+      transition:.15s;
+    }
+    .chat-toggle-btn:hover{border-color:var(--border-h);color:var(--white)}
+
+    .chat-frame{flex:1;min-height:0}
+    .chat-frame iframe{width:100%;height:100%;border:none;display:block}
+
+    /* Chat toggle button floating */
+    @keyframes fabPulse{
+      0%{box-shadow:0 4px 16px rgba(145,71,255,.5),0 0 0 0 rgba(145,71,255,.4)}
+      70%{box-shadow:0 4px 16px rgba(145,71,255,.5),0 0 0 12px rgba(145,71,255,0)}
+      100%{box-shadow:0 4px 16px rgba(145,71,255,.5),0 0 0 0 rgba(145,71,255,0)}
+    }
+    @keyframes fabBounce{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-4px)}
+    }
+    .chat-fab{
+      position:fixed;bottom:24px;right:24px;z-index:90;
+      display:none;align-items:center;gap:8px;
+      padding:10px 16px;border-radius:999px;
+      background:#9147ff;color:#fff;border:none;cursor:pointer;
+      font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;
+      box-shadow:0 4px 16px rgba(145,71,255,.5);
+      transition:background .2s,transform .2s;
+    }
+    .chat-fab .fab-icon{font-size:1rem;animation:fabBounce 2s ease-in-out infinite}
+    .chat-fab .fab-dot{
+      width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0;
+      box-shadow:0 0 0 0 rgba(74,222,128,.4);
+      animation:fabDotPulse 1.5s ease-out infinite;
+    }
+    @keyframes fabDotPulse{
+      0%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}
+      70%{box-shadow:0 0 0 6px rgba(74,222,128,0)}
+      100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}
+    }
+    .chat-fab:hover{background:#7d3ddb;transform:scale(1.04)}
+    .chat-fab.visible{display:flex;animation:fabPulse 2.5s ease-out 1s 3}
+
+    /* Themes */
+    body.theme-terminal{background:#06080a}
+    body.theme-terminal .playerWrap{border:1px solid rgba(232,200,74,.15)}
+    body.theme-terminal .playerWrap::before{
+      content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+      background:repeating-linear-gradient(to bottom,rgba(255,255,255,.04),rgba(255,255,255,.04) 1px,transparent 4px,transparent 7px);
+    }
+    body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,255,.14),transparent 55%),var(--ink)}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .content{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+      .player-col{grid-row:auto;border-right:none;border-bottom:1px solid var(--border)}
+      .chat-col{
+        grid-row:auto;height:420px;
+        border-top:1px solid var(--border);
+      }
+      .content.chat-hidden .chat-col{height:0}
+        :root{--chat-w:100%}
+    }
+    @media(max-width:600px){
+      .topbar{padding:8px 12px}
+      .channel-tag{display:none}
+      .statsRow{display:grid;grid-template-columns:repeat(3,1fr)}
+      .stat:nth-child(3n){border-right:none}
+      .stat:nth-child(n+4){border-top:1px solid var(--border)}
+      .chat-col{height:360px}
+      .nav-controls .divider,.nav-controls .btn:not(.primary):not(#chatToggleBtn){display:none}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand-link">
+      <a href="/" style="display:flex;align-items:center">
+        <svg id="navLogo" class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+          <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
+          <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+          <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+          <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+          <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+        </svg>
+      </a>
+      <div class="channel-tag" id="chTag">— canal</div>
+    </div>
+
+    <div class="nav-controls">
+      <!-- Live status -->
+      <span class="pill"><span class="dot" id="liveDot"></span>&nbsp;<span id="liveTxt">offline</span></span>
+
+      <div class="divider"></div>
+
+      <!-- Mode -->
+      <button class="btn" id="btnH" title="Horizontal 16:9"><i class="fa-solid fa-rectangle-wide"></i> 16:9</button>
+      <button class="btn" id="btnV" title="Vertical 9:16"><i class="fa-solid fa-mobile-screen"></i> 9:16</button>
+
+      <div class="divider"></div>
+
+      <!-- Themes -->
+      <button class="btn" id="btnThemeOg">Original</button>
+      <button class="btn" id="btnThemeTm"><i class="fa-solid fa-terminal"></i></button>
+      <button class="btn" id="btnThemeTw"><i class="fa-brands fa-twitch"></i></button>
+
+      <div class="divider"></div>
+
+      <!-- Theme -->
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+
+      <!-- Chat toggle -->
+      <button class="btn" id="chatToggleBtn" title="Mostrar/ocultar chat">
+        <i class="fa-solid fa-comments"></i> Chat
+      </button>
+
+      <!-- Twitch link -->
+      <a class="btn primary" id="twitchLink" href="#" target="_blank" rel="noopener">
+        <i class="fa-brands fa-twitch"></i> Twitch
+      </a>
+
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+  <div class="content" id="content">
+
+    <!-- PLAYER COLUMN -->
+    <div class="player-col">
+      <div class="playerWrap">
+        <video id="video" class="horizontal" playsinline controls></video>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay">
+          <div class="panel">
+            <h3 id="ovTitle">Cargando</h3>
+            <p id="ovMsg">Iniciando stream…</p>
+            <div class="row">
+              <button class="btn primary" id="ovRetry"><i class="fa-solid fa-play"></i> Reintentar</button>
+              <button class="btn" id="ovUnmute" style="display:none"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status bar -->
+        <div class="statusBar" aria-hidden="true">
+          <div class="left">
+            <span class="pill"><i class="fa-solid fa-tower-broadcast"></i>&nbsp;<span id="hlsTxt">—</span></span>
+          </div>
+          <div class="right">
+            <span class="pill"><i class="fa-solid fa-rotate"></i>&nbsp;<span id="retryTxt">0</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stream stats -->
+      <div class="statsRow" id="statsRow">
+        <div class="stat"><div class="stat-val" id="sBitrate">—</div><div class="stat-lbl">Bitrate</div></div>
+        <div class="stat"><div class="stat-val" id="sBuffer">—</div><div class="stat-lbl">Buffer</div></div>
+        <div class="stat"><div class="stat-val" id="sLatency">—</div><div class="stat-lbl">Latencia</div></div>
+        <div class="stat"><div class="stat-val" id="sLevel">—</div><div class="stat-lbl">Calidad</div></div>
+        <div class="stat"><div class="stat-val" id="sRetries">0</div><div class="stat-lbl">Reconexiones</div></div>
+      </div>
+    </div>
+
+    <!-- CHAT COLUMN -->
+    <div class="chat-col" id="chatCol">
+      <div class="chat-header">
+        <div class="chat-title">
+          <i class="fa-brands fa-twitch"></i>
+          <span id="chatChannelLabel">chat</span>
+        </div>
+        <button class="chat-toggle-btn" id="chatCloseBtn" title="Ocultar chat">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="chat-frame" id="chatFrame">
+        <!-- Twitch chat iframe loaded by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Floating chat button (mobile hidden, shown when chat is closed on desktop) -->
+<button class="chat-fab" id="chatFab" title="Abrir chat de Twitch">
+  <span class="fab-dot"></span>
+  <i class="fa-brands fa-twitch fab-icon"></i>
+  <span>Chat en vivo</span>
+</button>
+
+<script>
+const $ = (s, el=document) => el.querySelector(s);
+
+// ── CHANNEL ──
+const pathParts = location.pathname.replace(/^\/|\/$/g,'').split('/');
+const channel   = (pathParts[0] || new URLSearchParams(location.search).get('ch') || 'katatonia').trim();
+
+// Twitch username map — add more as needed
+const TWITCH_MAP = {
+  'katatonia': 'katat0nia',
+};
+const twitchUser = TWITCH_MAP[channel] || channel;
+
+$('#chTag').textContent      = '— ' + channel.toUpperCase();
+document.title               = 'CORILLO — ' + channel.toUpperCase();
+$('#twitchLink').href        = 'https://twitch.tv/' + twitchUser;
+$('#chatChannelLabel').textContent = twitchUser;
+
+// ── MODE ──
+const params = new URLSearchParams(location.search);
+let mode = (params.get('mode') || 'horizontal').trim();
+
+function setMode(m) {
+  mode = m;
+  $('#video').className = m;
+  $('#btnH').classList.toggle('active', m === 'horizontal');
+  $('#btnV').classList.toggle('active', m === 'vertical');
+  history.replaceState(null,'', location.pathname + (m === 'horizontal' ? '' : '?mode=vertical'));
+  lastMode = null;
+  start();
+}
+$('#btnH').addEventListener('click', () => setMode('horizontal'));
+$('#btnV').addEventListener('click', () => setMode('vertical'));
+$('#video').className = mode;
+$('#btn' + (mode === 'vertical' ? 'V' : 'H')).classList.add('active');
+
+// ── THEME ──
+function setTheme(name) {
+  document.body.classList.remove('theme-terminal','theme-twitch');
+  if (name !== 'original') document.body.classList.add('theme-' + name);
+  localStorage.setItem('corillo_theme', name);
+  $('#btnThemeOg').classList.toggle('active', name === 'original');
+  $('#btnThemeTm').classList.toggle('active', name === 'terminal');
+  $('#btnThemeTw').classList.toggle('active', name === 'twitch');
+}
+setTheme(localStorage.getItem('corillo_theme') || 'original');
+$('#btnThemeOg').addEventListener('click', () => setTheme('original'));
+$('#btnThemeTm').addEventListener('click', () => setTheme('terminal'));
+$('#btnThemeTw').addEventListener('click', () => setTheme('twitch'));
+
+// ── CHAT ──
+let chatLoaded = false;
+let chatVisible = localStorage.getItem('corillo_chat') === 'visible';
+
+function loadChat() {
+  if (chatLoaded) return;
+  chatLoaded = true;
+  const frame = document.createElement('iframe');
+  frame.src = `https://www.twitch.tv/embed/${twitchUser}/chat?parent=${location.hostname}&darkpopout`;
+  frame.setAttribute('allowfullscreen','');
+  frame.title = 'Twitch Chat';
+  $('#chatFrame').appendChild(frame);
+}
+
+function showChat() {
+  chatVisible = true;
+  localStorage.setItem('corillo_chat', 'visible');
+  $('#content').classList.remove('chat-hidden');
+  $('#chatFab').classList.remove('visible');
+  loadChat();
+}
+
+function hideChat() {
+  chatVisible = false;
+  localStorage.setItem('corillo_chat', 'hidden');
+  $('#content').classList.add('chat-hidden');
+  // Show FAB only on desktop
+  $('#chatFab').classList.add('visible');
+}
+
+if (!chatVisible) {
+  $('#content').classList.add('chat-hidden');
+  $('#chatFab').classList.add('visible');
+} else {
+  loadChat();
+}
+
+$('#chatToggleBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
+$('#chatCloseBtn').addEventListener('click', hideChat);
+$('#chatFab').addEventListener('click', showChat);
+
+// Update chat toggle button state
+function updateChatBtn() {
+  $('#chatToggleBtn').classList.toggle('active', chatVisible);
+}
+updateChatBtn();
+['click'].forEach(e => {
+  $('#chatToggleBtn').addEventListener(e, updateChatBtn);
+  $('#chatCloseBtn').addEventListener(e, updateChatBtn);
+  $('#chatFab').addEventListener(e, updateChatBtn);
+});
+
+// ── OVERLAY ──
+function showOverlay(title, msg, {showUnmute=false}={}) {
+  $('#ovTitle').textContent = title;
+  $('#ovMsg').textContent   = msg;
+  $('#overlay').classList.add('show');
+  $('#ovUnmute').style.display = showUnmute ? 'inline-flex' : 'none';
+}
+function hideOverlay() { $('#overlay').classList.remove('show'); }
+
+// ── STATS ──
+let statsTimer = null;
+function startStatsPolling() {
+  if (statsTimer) return;
+  let hooked = false, emaBitrate = null;
+  function fmtMbps(bps) {
+    if (!bps || !isFinite(bps) || bps <= 0) return '—';
+    return (bps / 1_000_000).toFixed(1) + ' Mbps';
+  }
+  function hookHls() {
+    if (hooked) return;
+    const h = window._hlsInstance;
+    if (!h) return;
+    hooked = true;
+    h.on(Hls.Events.FRAG_LOADED, (_, data) => {
+      try {
+        const bytes = data?.stats?.loaded || 0;
+        const dur   = data?.frag?.duration || 0;
+        if (bytes > 0 && dur > 0) {
+          const bps = (bytes * 8) / dur;
+          emaBitrate = emaBitrate == null ? bps : emaBitrate * .75 + bps * .25;
+        }
+      } catch {}
+    });
+  }
+  statsTimer = setInterval(() => {
+    const v = $('#video');
+    if (!v) return;
+    hookHls();
+    if (v.readyState >= 2 && v.buffered.length) {
+      const buf = v.buffered.end(v.buffered.length - 1) - v.currentTime;
+      $('#sBuffer').textContent = isFinite(buf) ? buf.toFixed(1) + 's' : '—';
+    }
+    if (v.seekable?.length > 0) {
+      const lat = v.seekable.end(v.seekable.length - 1) - v.currentTime;
+      $('#sLatency').textContent = (isFinite(lat) && lat >= 0) ? lat.toFixed(1) + 's' : '—';
+    }
+    const w = v.videoWidth, h = v.videoHeight;
+    $('#sLevel').textContent   = (w > 0 && h > 0) ? `${w}×${h}` : '—';
+    $('#sBitrate').textContent = fmtMbps(emaBitrate);
+  }, 1000);
+}
+function stopStatsPolling() {
+  clearInterval(statsTimer); statsTimer = null;
+  ['sBitrate','sBuffer','sLatency','sLevel'].forEach(id => $('#'+id).textContent = '—');
+}
+
+// ── PLAYER ──
+let hls = null, retries = 0, retryTimer = null, lastMode = null;
+window._hlsInstance = null;
+
+function setLive(on) {
+  $('#liveDot').className   = 'dot' + (on ? ' on' : '');
+  $('#liveTxt').textContent = on ? 'en vivo' : 'offline';
+}
+
+function cleanup() {
+  if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+  stopStatsPolling();
+  const v = $('#video');
+  try { v.pause(); } catch {}
+  v.removeAttribute('src'); v.load();
+  if (hls) { try { hls.destroy(); } catch {} hls = null; window._hlsInstance = null; }
+  setLive(false);
+}
+
+function scheduleRetry(reason) {
+  retries++;
+  $('#sRetries').textContent = retries;
+  $('#retryTxt').textContent = retries;
+  const wait = Math.min(30000, 1200 * Math.pow(1.6, Math.min(retries, 10)));
+  showOverlay('Reconectando', reason + '. Reintentando en ' + Math.round(wait/1000) + 's…', { showUnmute: !$('#video').muted });
+  retryTimer = setTimeout(start, wait);
+}
+
+function getUrl() {
+  const path = mode === 'vertical' ? channel + '-vertical' : channel;
+  return '/live/' + encodeURIComponent(path) + '/index.m3u8';
+}
+
+async function start() {
+  cleanup();
+  const url = getUrl();
+  $('#hlsTxt').textContent = mode === 'vertical' ? '9:16' : '16:9';
+  showOverlay('Cargando', 'Iniciando stream…');
+  const v = $('#video');
+
+  if (v.canPlayType('application/vnd.apple.mpegurl')) {
+    v.src = url;
+    try {
+      await v.play();
+      hideOverlay(); setLive(true); startStatsPolling();
+    } catch {
+      showOverlay('Toca para reproducir', 'El navegador bloqueó el autoplay.', { showUnmute: true });
+    }
+    v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { once:true });
+    return;
+  }
+
+  if (window.Hls && Hls.isSupported()) {
+    hls = new Hls({ lowLatencyMode:true, backBufferLength:30, maxBufferLength:8, maxLiveSyncPlaybackRate:1.3 });
+    window._hlsInstance = hls;
+    hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
+    hls.on(Hls.Events.MANIFEST_PARSED, async () => {
+      try {
+        await v.play();
+        hideOverlay(); setLive(true); startStatsPolling();
+      } catch {
+        showOverlay('Toca para reproducir', 'Autoplay bloqueado.', { showUnmute: true });
+      }
+    });
+    hls.on(Hls.Events.ERROR, (_, d) => {
+      if (d?.fatal) { cleanup(); scheduleRetry(d.type || 'Error fatal'); }
+    });
+    hls.attachMedia(v);
+    return;
+  }
+
+  showOverlay('No compatible', 'Este navegador no puede reproducir HLS. Usa Safari en iOS o un navegador moderno.');
+}
+
+$('#ovRetry').addEventListener('click', () => { retries = 0; start(); });
+$('#ovUnmute').addEventListener('click', () => {
+  const v = $('#video');
+  v.muted = false; v.volume = 1;
+  hideOverlay(); v.play().catch(() => {});
+});
+$('#video').addEventListener('stalled',  () => scheduleRetry('Stream detenido'));
+$('#video').addEventListener('waiting',  () => setLive(false));
+$('#video').addEventListener('playing',  () => { setLive(true); hideOverlay(); startStatsPolling(); });
+
+// ── THEME ──
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo_page_theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  if (btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo_page_theme', next);
+  });
+})();
+
+start();
+</script>
+</body>
+</html>

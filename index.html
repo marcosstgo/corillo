@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Stream Platform</title>
+  <meta name="description" content="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos." />
+  <!-- Open Graph / WhatsApp / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/">
+  <meta property="og:title" content="CORILLO — Stream Platform">
+  <meta property="og:description" content="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos arbitrarios. Solo tú, tu setup y tu audiencia.">
+  <meta property="og:image" content="https://corillo.live/assets/apple-touch-icon.png">
+  <meta property="og:image:width" content="180">
+  <meta property="og:image:height" content="180">
+  <meta property="og:locale" content="es_PR">
+  <meta property="og:site_name" content="CORILLO">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://corillo.live/">
+  <meta name="twitter:title" content="CORILLO — Stream Platform">
+  <meta name="twitter:description" content="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos arbitrarios.">
+  <meta name="twitter:image" content="https://corillo.live/assets/apple-touch-icon.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+  <!-- Theme -->
+  <meta name="theme-color" content="#060608">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://corillo.live/">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
+
+  <style>
+    :root{
+      --ink:#060608; --surface:#0c0c10; --panel:#121218;
+      --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.14);
+      --white:#f2efe9; --muted:#48485a; --accent:#e8c84a; --live:#df3030;
+      --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
+    }
+    [data-theme="light"]{
+      --ink:#f0efe9; --surface:#e4e2db; --panel:#d8d6cf;
+      --border:rgba(0,0,0,.1); --border-h:rgba(0,0,0,.2);
+      --white:#12120f; --muted:#5a5a6a; --accent:#b08010; --live:#df3030;
+    }
+    [data-theme="light"] body{background:var(--ink);color:var(--white)}
+    [data-theme="light"] header{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
+    [data-theme="light"] body::after{opacity:.3}
+
+    /* Logo fix in light mode */
+    [data-theme="light"] #navLogo text{ fill:#12120f !important }
+    [data-theme="light"] #navLogo circle[stroke="#f2efe9"]{ stroke:#12120f !important }
+
+    /* Cards in light mode */
+    [data-theme="light"] .card{
+      background:linear-gradient(to bottom,rgba(255,255,255,.9),rgba(245,244,240,.95));
+      border-color:rgba(0,0,0,.1);
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+    [data-theme="light"] .card:hover{
+      border-color:rgba(0,0,0,.2);
+      box-shadow:0 8px 24px rgba(0,0,0,.15);
+    }
+    [data-theme="light"] .card.is-live{border-color:rgba(223,48,48,.3)}
+    [data-theme="light"] .card.is-host{border-color:rgba(176,128,16,.25)}
+    [data-theme="light"] .ch-offline{background:var(--surface);color:var(--muted)}
+    [data-theme="light"] .cardBody{background:rgba(255,255,255,.6)}
+
+    /* Nav buttons */
+    [data-theme="light"] .btn{color:var(--white);border-color:rgba(0,0,0,.12)}
+    [data-theme="light"] .btn:hover{border-color:rgba(0,0,0,.25);background:rgba(0,0,0,.05)}
+    [data-theme="light"] .btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+
+    /* Featured card */
+    [data-theme="light"] .featured{background:rgba(0,0,0,.04)}
+    [data-theme="light"] .featHead{background:rgba(0,0,0,.04)}
+    [data-theme="light"] .featMeta{border-color:rgba(0,0,0,.08);background:rgba(0,0,0,.03)}
+
+    /* Section */
+    [data-theme="light"] .secTop h2{color:var(--white)}
+    [data-theme="light"] footer{border-color:rgba(0,0,0,.08)}
+    [data-theme="light"] .car-btn{background:rgba(240,239,233,.9);color:var(--white)}
+
+    /* Theme toggle button */
+    .theme-btn{
+      width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+      background:transparent;color:var(--white);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.75rem;transition:.2s;flex-shrink:0;
+    }
+    .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--ink);color:var(--white);font-family:var(--body);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    :focus-visible{outline:2px solid rgba(232,200,74,.7);outline-offset:3px;border-radius:6px}
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:50;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}body::after{display:none}}
+
+    /* ── LAYOUT ── */
+    .container{max-width:1400px;margin:0 auto;padding:0 48px}
+    @media(max-width:900px){.container{padding:0 20px}}
+    @media(max-width:600px){.container{padding:0 14px}}
+
+    /* ── NAV ── */
+    header{
+      position:sticky;top:0;z-index:60;
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(6,6,8,.95),rgba(6,6,8,.6));
+      border-bottom:1px solid var(--border);
+    }
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;flex-wrap:wrap}
+    .brand{display:flex;align-items:baseline;gap:12px}
+    .brand h1{font-family:var(--display);letter-spacing:4px;font-size:28px;line-height:1}
+    .brand h1 span{color:var(--accent)}
+    .brand .tag{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.4)}
+    .live-pill{
+      display:flex;align-items:center;gap:7px;
+      font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--live);background:rgba(223,48,48,.08);border:1px solid rgba(223,48,48,.2);
+      padding:5px 12px 5px 9px;border-radius:999px;
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:.3s}
+    .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.2);animation:blink 1.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+    nav{display:flex;gap:8px;align-items:center}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;
+      font-size:.6rem;font-weight:700;border-radius:6px;
+      padding:10px 16px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.7);transition:.2s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
+    .btn.primary:hover{opacity:.88;box-shadow:0 0 20px rgba(232,200,74,.25)}
+
+    /* ── HERO ── */
+    .hero{position:relative;padding:48px 0 20px}
+    .heroCard{
+      position:relative;border:1px solid var(--border);border-radius:16px;overflow:hidden;
+      background:radial-gradient(1000px 500px at 20% 0%,rgba(232,200,74,.1),transparent 55%),
+                 radial-gradient(900px 420px at 85% 10%,rgba(223,48,48,.1),transparent 55%),
+                 linear-gradient(to bottom,rgba(18,18,24,.75),rgba(12,12,16,.55));
+    }
+    .canvasWrap{position:absolute;inset:0;pointer-events:none;opacity:.7}
+    #heroCanvas{width:100%;height:100%;display:block}
+
+    .heroInner{
+      position:relative;z-index:1;
+      display:grid;grid-template-columns:1.15fr .85fr;gap:24px;padding:32px;align-items:center;
+    }
+    @media(max-width:980px){.heroInner{grid-template-columns:1fr;padding:24px}}
+    @media(max-width:600px){.heroInner{padding:20px 16px}}
+
+    .heroTitle{
+      font-family:var(--display);font-size:clamp(3.2rem,6.5vw,6rem);line-height:.88;letter-spacing:2px;
+    }
+    .heroTitle .stroke{-webkit-text-stroke:1.5px rgba(242,239,233,.85);color:transparent;display:block}
+    .heroTitle .gold{color:var(--accent);display:block;text-shadow:0 0 60px rgba(232,200,74,.2)}
+    .heroSub{margin-top:14px;max-width:52ch;color:rgba(255,255,255,.7);line-height:1.7;font-size:.95rem}
+    .heroActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
+    /* Stats bar */
+    @media(max-width:600px){
+            }
+
+    /* Featured player */
+    .featured{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:rgba(6,6,8,.5);cursor:pointer;transition:border-color .2s}
+    .featured:hover{border-color:var(--border-h)}
+    .featHead{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 14px;border-bottom:1px solid var(--border);
+    }
+    .featHead .left{display:flex;align-items:center;gap:8px}
+    .featTtl{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55)}
+    .featVideo{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}
+    #featuredVideo{width:100%;height:100%;object-fit:cover;display:block}
+    .featOffline{
+      position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+      background:linear-gradient(160deg,#080e1c,#0a1830 60%,#06080e);
+    }
+    .featOffline .icon{width:44px;height:44px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+    .featOffline p{font-family:var(--mono);font-size:.55rem;letter-spacing:3px;color:var(--muted)}
+    .featMeta{padding:10px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid var(--border)}
+    .feat-ava{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.85rem;color:var(--ink);flex-shrink:0}
+    .feat-info{flex:1;min-width:0}
+    .feat-name{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .feat-sub{font-size:.75rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px}
+    .feat-badge{font-family:var(--mono);font-size:.5rem;letter-spacing:1.5px;color:var(--accent);border:1px solid rgba(232,200,74,.2);padding:2px 6px;border-radius:2px;flex-shrink:0}
+
+    /* API notice */
+    .notice{
+      margin-top:10px;border:1px dashed rgba(255,255,255,.15);border-radius:10px;
+      padding:10px 14px;color:rgba(255,255,255,.6);background:rgba(255,255,255,.02);
+      font-family:var(--mono);font-size:11px;letter-spacing:.5px;display:none;
+    }
+
+    /* ── CHANNELS ── */
+    .channels{padding:8px 0 64px}
+    .secTop{
+      display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+      padding:20px 0 14px;flex-wrap:wrap;
+    }
+    .secTop h2{font-family:var(--display);letter-spacing:3px;font-size:2rem;line-height:1}
+    .secTop p{color:var(--muted);font-size:.85rem;margin-top:3px}
+
+    /* ── CAROUSEL ── */
+    .carousel-wrap{position:relative}
+    .grid{
+      display:flex;gap:14px;
+      overflow-x:auto;overflow-y:visible;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      padding:4px 0 16px;
+      scrollbar-width:none;
+    }
+    .grid::-webkit-scrollbar{display:none}
+    .card{flex:0 0 280px;scroll-snap-align:start}
+    @media(max-width:600px){.card{flex:0 0 240px}}
+
+    /* Nav arrows */
+    .car-btn{
+      position:absolute;top:50%;transform:translateY(-60%);z-index:5;
+      width:40px;height:40px;border-radius:50%;border:1px solid var(--border-h);
+      background:rgba(6,6,8,.85);backdrop-filter:blur(8px);
+      color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;
+      font-size:.8rem;transition:.2s;opacity:0;pointer-events:none;
+    }
+    .carousel-wrap:hover .car-btn{opacity:1;pointer-events:auto}
+    .car-btn:hover{background:rgba(232,200,74,.15);border-color:rgba(232,200,74,.4)}
+    .car-btn.left{left:-16px}
+    .car-btn.right{right:-16px}
+    .car-btn:disabled{opacity:.2!important;pointer-events:none}
+
+    /* Live sort indicator */
+    .live-first-badge{
+      display:inline-flex;align-items:center;gap:5px;
+      font-size:.5rem;letter-spacing:1.5px;color:var(--live);
+      border:1px solid rgba(223,48,48,.2);padding:3px 8px;border-radius:2px;
+    }
+
+    @keyframes cardIn{
+      from{opacity:0;transform:translateY(14px) scale(.98)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+    .card{
+      border:1px solid var(--border);border-radius:12px;overflow:hidden;display:block;
+      background:linear-gradient(to bottom,rgba(18,18,24,.65),rgba(12,12,16,.45));
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+    }
+    .card.animate-in{
+      animation:cardIn .45s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    .card:hover{transform:translateY(-2px);border-color:var(--border-h);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+    .card.is-soon{border-style:dashed;border-color:rgba(255,255,255,.08);cursor:default;pointer-events:none}
+    .card.is-soon:hover{transform:none;box-shadow:none}
+    .soon-overlay{
+      position:absolute;inset:0;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:6px;
+      background:rgba(6,6,8,.6);backdrop-filter:blur(2px);
+    }
+    .soon-tag{
+      font-family:var(--mono);font-size:.5rem;letter-spacing:2px;
+      color:rgba(255,255,255,.3);border:1px dashed rgba(255,255,255,.12);
+      padding:4px 10px;border-radius:2px;
+    }
+    .card.is-live{border-color:rgba(223,48,48,.2)}
+    .card.is-host{border-color:rgba(232,200,74,.12)}
+    .thumb{aspect-ratio:16/9;background:#000;position:relative;overflow:hidden}
+    .thumb video{width:100%;height:100%;object-fit:cover;opacity:.9}
+    .ch-offline{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.52rem;letter-spacing:2px;color:var(--muted);background:var(--panel)}
+    .is-live .ch-offline{display:none}
+    .live-tag{
+      position:absolute;top:8px;left:8px;display:none;align-items:center;gap:4px;z-index:1;
+      background:var(--live);color:#fff;font-family:var(--mono);font-size:.5rem;letter-spacing:1.5px;padding:3px 7px;border-radius:2px;
+    }
+    .is-live .live-tag{display:flex}
+    .views-tag{
+      position:absolute;top:8px;right:8px;display:none;align-items:center;gap:4px;z-index:1;
+      background:rgba(0,0,0,.7);color:var(--white);font-family:var(--mono);font-size:.5rem;padding:3px 7px;border-radius:2px;
+    }
+    .is-live .views-tag{display:flex}
+    .cardBody{padding:10px 12px;display:flex;align-items:center;gap:8px}
+    .card-ava{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--ink);flex-shrink:0}
+    .card-meta{flex:1;min-width:0}
+    .card-name{font-family:var(--mono);font-size:.6rem;letter-spacing:1px;font-weight:700;display:flex;align-items:center;gap:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .card-desc{font-size:.72rem;color:var(--muted);margin-top:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .host-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
+
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--border);padding:20px 0 28px}
+    .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .foot-logo{font-family:var(--display);font-size:.95rem;letter-spacing:6px;color:rgba(255,255,255,.35)}
+    .foot-logo span{color:var(--accent)}
+    .foot-info{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <a href="/" style="display:flex;align-items:center;text-decoration:none">
+        <svg id="navLogo" width="160" height="44" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+          <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
+          <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+          <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+          <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+          <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+        </svg>
+        </a>
+        <div class="tag">Stream Platform · Puerto Rico</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="theme-btn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">
+☀
+        </button>
+        <div class="live-pill">
+          <span class="dot on" id="navDot"></span>
+          <span id="navCount">0</span>&nbsp;en vivo
+        </div>
+        <nav>
+          <a class="btn" href="#canales"><i class="fa-solid fa-satellite-dish"></i> Canales</a>
+          <a class="btn" href="/multiplayer/"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
+          <a class="btn primary" href="/join/"><i class="fa-solid fa-plus"></i> Crear Canal</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="heroCard">
+        <div class="canvasWrap" aria-hidden="true"><canvas id="heroCanvas"></canvas></div>
+        <div class="heroInner">
+
+          <!-- LEFT: copy -->
+          <div>
+            <div class="heroTitle">
+              <span class="stroke">TU STREAM</span>
+              <span class="gold">TUS REGLAS</span>
+            </div>
+            <div class="heroSub">
+              CORILLO es una plataforma de streaming independiente. Sin algoritmos en tu contra, sin baneos arbitrarios. Solo tú, tu setup y tu audiencia.
+            </div>
+            <div class="heroActions">
+              <a class="btn primary" href="#canales"><i class="fa-solid fa-play"></i> Ver en vivo</a>
+              <a class="btn" href="/multiplayer/"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
+              <a class="btn" href="/join/"><i class="fa-solid fa-bolt"></i> Crear canal</a>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: featured stream -->
+          <div class="featured" id="featuredCard" role="button" tabindex="0" aria-label="Ver stream destacado">
+            <div class="featHead">
+              <div class="left">
+                <span class="dot" id="featDot"></span>
+                <div class="featTtl">Destacado ahora</div>
+              </div>
+              <div class="featTtl" id="featChannel">—</div>
+            </div>
+            <div class="featVideo">
+              <video id="featuredVideo" playsinline muted autoplay></video>
+              <div class="featOffline" id="featOffline">
+                <div class="icon"><i class="fa-solid fa-broadcast-tower"></i></div>
+                <p>OFFLINE</p>
+              </div>
+            </div>
+            <div class="featMeta">
+              <div class="feat-ava" id="featAva">K</div>
+              <div class="feat-info">
+                <div class="feat-name" id="featName">KATATONIA</div>
+                <div class="feat-sub" id="featSub">Offline · Sin stream activo</div>
+              </div>
+              <div class="feat-badge" id="featBadge" style="display:none">HOST</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="notice" id="apiNotice"></div>
+    </div>
+  </section>
+
+  <!-- CHANNELS -->
+  <section class="channels" id="canales">
+    <div class="container">
+      <div class="secTop">
+        <div>
+          <div>
+            <h2>CANALES</h2>
+            <p>Todos los streamers en la plataforma</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="live-first-badge"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;Live primero</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="live-pill" id="livePill" style="opacity:0;pointer-events:none">
+            <span class="dot on"></span>
+            <span id="liveCount">0 en vivo</span>
+          </div>
+          <button class="btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        </div>
+      </div>
+      <div class="carousel-wrap">
+        <button class="car-btn left" id="carLeft" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="grid" id="channelsGrid"></div>
+        <button class="car-btn right" id="carRight" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-inner">
+      <div class="foot-logo">
+        <svg width="36" height="36" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="72" height="72" rx="16" fill="#0c0c10"/>
+          <circle cx="36" cy="36" r="26" stroke="rgba(255,255,255,0.35)" stroke-width="7" fill="none"/>
+          <circle cx="36" cy="36" r="15" stroke="#e8c84a" stroke-width="5" fill="none" opacity=".6"/>
+          <circle cx="36" cy="36" r="6" fill="#e8c84a" opacity=".6"/>
+          <circle cx="36" cy="36" r="2.5" fill="#df3030" opacity=".6"/>
+        </svg>
+      </div>
+      <div class="foot-info">Puerto Rico · Plataforma independiente</div>
+      <div class="foot-info">v2.0.0</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── STREAMERS CONFIG ──
+const STREAMERS = [
+  { key:'katatonia',    name:'KATATONIA',    sub:'Gaming · Bayamón PR',      ava:'K', color:'linear-gradient(135deg,#e8c84a,#c09020)', host:true  },
+  { key:'tea',         name:'TEA',           sub:'Just chatting · vibes',    ava:'T', color:'linear-gradient(135deg,#f9a8d4,#d0408a)', host:false },
+  { key:'mira_sanganooo',name:'MIRA_SANGANOOO', sub:'Contenido · Reacciones',   ava:'M', color:'linear-gradient(135deg,#ff9f43,#e06010)', host:false },
+  { key:'404',         name:'404',           sub:'Gaming · Not found',       ava:'4', color:'linear-gradient(135deg,#a29bfe,#6c5ce7)', host:false },
+  { key:'elbala',      name:'ELBALA',        sub:'Gaming · Entretenimiento', ava:'E', color:'linear-gradient(135deg,#55efc4,#00b894)', host:false },
+  { key:null,          name:'???',           sub:'Próximamente · Invitación', ava:'?', color:'linear-gradient(135deg,#2a2a3a,#1a1a28)', host:false, soon:true },
+];
+
+const API     = '/mediamtx-api/v3/paths/list';
+const POLL_MS = 15000;
+const CACHE_S = 8000;
+const $       = (s, el=document) => el.querySelector(s);
+
+// ── API ──
+let cache = { t:0, data:null };
+async function fetchPaths() {
+  const now = Date.now();
+  if (cache.data && (now - cache.t) < CACHE_S) return cache.data;
+  const ctrl = new AbortController();
+  const to   = setTimeout(() => ctrl.abort(), 5000);
+  try {
+    const res = await fetch(API, { signal:ctrl.signal, cache:'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    cache = { t:now, data };
+    return data;
+  } finally { clearTimeout(to); }
+}
+
+function getLive(data) {
+  return (Array.isArray(data?.items) ? data.items : []).filter(p => p.ready);
+}
+
+// ── FEATURED ──
+let featHls = null;
+
+function destroyFeatured() {
+  const v = $('#featuredVideo');
+  try { v.pause(); } catch {}
+  v.removeAttribute('src'); v.load();
+  if (featHls) { try { featHls.destroy(); } catch {} featHls = null; }
+}
+
+function showOffline() {
+  destroyFeatured();
+  const s = STREAMERS[0];
+  $('#featDot').className      = 'dot';
+  $('#featChannel').textContent = '—';
+  $('#featOffline').style.display = 'flex';
+  $('#featuredVideo').style.display = 'none';
+  $('#featAva').style.background = s.color;
+  $('#featAva').textContent      = s.ava;
+  $('#featName').textContent     = s.name;
+  $('#featSub').textContent      = 'Offline · Sin stream activo';
+  $('#featBadge').style.display  = s.host ? 'block' : 'none';
+  $('#featBadge').textContent    = 'HOST';
+  $('#featuredCard').style.cursor = 'default';
+  $('#featuredCard').onclick      = null;
+  $('#featuredCard').onkeydown    = null;
+}
+
+let lastFeatKey = null;
+function loadFeatured(streamer, viewers) {
+  if (streamer.key === lastFeatKey) return;
+  lastFeatKey = streamer.key;
+  destroyFeatured();
+
+  $('#featDot').className       = 'dot on';
+  $('#featChannel').textContent = streamer.name;
+  $('#featOffline').style.display    = 'none';
+  $('#featuredVideo').style.display  = 'block';
+  $('#featAva').style.background = streamer.color;
+  $('#featAva').textContent      = streamer.ava;
+  $('#featName').textContent     = streamer.name;
+  $('#featSub').textContent      = streamer.sub + (viewers ? ' · ' + viewers + ' viewers' : '');
+  $('#featBadge').style.display  = streamer.host ? 'block' : 'none';
+  $('#featBadge').textContent    = 'HOST';
+
+  const nav = () => location.href = '/' + encodeURIComponent(streamer.key) + '/';
+  $('#featuredCard').style.cursor = 'pointer';
+  $('#featuredCard').onclick      = nav;
+  $('#featuredCard').onkeydown    = e => (e.key === 'Enter' || e.key === ' ') && nav();
+
+  const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
+  const v   = $('#featuredVideo');
+  if (v.canPlayType('application/vnd.apple.mpegurl')) {
+    v.src = url; v.play().catch(() => {});
+  } else if (window.Hls && Hls.isSupported()) {
+    featHls = new Hls({ lowLatencyMode:true, backBufferLength:30 });
+    featHls.loadSource(url);
+    featHls.attachMedia(v);
+    featHls.on(Hls.Events.MANIFEST_PARSED, () => v.play().catch(() => {}));
+    featHls.on(Hls.Events.ERROR, (_, d) => { if (d?.fatal) showOffline(); });
+  }
+}
+
+// ── CAROUSEL NAV ──
+function initCarousel() {
+  const grid  = $('#channelsGrid');
+  const left  = $('#carLeft');
+  const right = $('#carRight');
+  if (!grid || !left || !right) return;
+
+  const scroll = (dir) => {
+    grid.scrollBy({ left: dir * 300, behavior: 'smooth' });
+  };
+  left.addEventListener('click',  () => scroll(-1));
+  right.addEventListener('click', () => scroll(1));
+
+  const updateBtns = () => {
+    left.disabled  = grid.scrollLeft <= 0;
+    right.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 4;
+  };
+  grid.addEventListener('scroll', updateBtns);
+  updateBtns();
+
+  // Drag to scroll
+  let isDown = false, startX, scrollL;
+  grid.addEventListener('mousedown', e => {
+    isDown = true; startX = e.pageX - grid.offsetLeft; scrollL = grid.scrollLeft;
+    grid.style.cursor = 'grabbing';
+  });
+  grid.addEventListener('mouseleave', () => { isDown = false; grid.style.cursor = ''; });
+  grid.addEventListener('mouseup',    () => { isDown = false; grid.style.cursor = ''; });
+  grid.addEventListener('mousemove',  e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x    = e.pageX - grid.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    grid.scrollLeft = scrollL - walk;
+  });
+}
+
+// ── GRID ──
+let _livePaths = [];
+function buildGrid() {
+  const grid = $('#channelsGrid');
+  grid.innerHTML = '';
+  // Sort: live first, then offline, host always first within group
+  const sorted = [...STREAMERS].sort((a, b) => {
+    const aLive = !!_livePaths.find(p => p.name === 'live/' + a.key);
+    const bLive = !!_livePaths.find(p => p.name === 'live/' + b.key);
+    if (aLive !== bLive) return bLive - aLive;
+    if (a.host !== b.host) return b.host - a.host;
+    return 0;
+  });
+  sorted.forEach(s => {
+    const a = document.createElement('a');
+    a.className  = 'card' + (s.host ? ' is-host' : '');
+    a.href       = '/' + encodeURIComponent(s.key) + '/';
+    a.dataset.key = s.key;
+    if (s.soon) {
+      // Coming soon card — no link, no video
+      a.removeAttribute('href');
+      a.className = 'card is-soon';
+      a.innerHTML = `
+        <div class="thumb">
+          <div class="soon-overlay">
+            <span class="soon-tag">PRÓXIMAMENTE</span>
+          </div>
+        </div>
+        <div class="cardBody">
+          <div class="card-ava" style="background:${s.color}">${s.ava}</div>
+          <div class="card-meta">
+            <div class="card-name" style="color:var(--muted)">${s.name}</div>
+            <div class="card-desc">${s.sub}</div>
+          </div>
+        </div>`;
+    } else {
+      a.innerHTML  = `
+        <div class="thumb">
+          <video playsinline muted autoplay loop></video>
+          <div class="ch-offline">Offline</div>
+          <div class="live-tag"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
+          <div class="views-tag"><i class="fa-solid fa-eye"></i>&nbsp;<span class="vcount">0</span></div>
+        </div>
+        <div class="cardBody">
+          <div class="card-ava" style="background:${s.color}">${s.ava}</div>
+          <div class="card-meta">
+            <div class="card-name">${s.host ? '<span class="host-dot"></span>' : ''}&nbsp;${s.name}</div>
+            <div class="card-desc">${s.sub}</div>
+          </div>
+        </div>`;
+
+      // Only load preview if streamer is live
+      const v = a.querySelector('video');
+      a._loadPreview = function() {
+        if (a._previewLoaded) return;
+        a._previewLoaded = true;
+        const url = '/live/' + encodeURIComponent(s.key) + '/index.m3u8';
+        if (v.canPlayType('application/vnd.apple.mpegurl')) {
+          v.src = url; v.play().catch(() => {});
+        } else if (window.Hls && Hls.isSupported()) {
+          const h = new Hls({ lowLatencyMode:true, backBufferLength:10 });
+          h.loadSource(url);
+          h.attachMedia(v);
+          h.on(Hls.Events.ERROR, (_, d) => { if (d?.fatal) { try{h.destroy()}catch{} a._previewLoaded = false; } });
+          v.play().catch(() => {});
+          a._hls = h;
+          const io = new IntersectionObserver(entries => {
+            if (!entries[0].isIntersecting) { try{h.destroy()}catch{} a._previewLoaded = false; io.disconnect(); }
+          }, { threshold:0 });
+          io.observe(a);
+        }
+      };
+      a._stopPreview = function() {
+        if (a._hls) { try{a._hls.destroy()}catch{} a._hls = null; }
+        v.removeAttribute('src'); v.load();
+        a._previewLoaded = false;
+      };
+    }
+
+    grid.appendChild(a);
+  });
+  initCarousel();
+  // Staggered entrance animation
+  requestAnimationFrame(() => {
+    grid.querySelectorAll('.card').forEach((card, i) => {
+      card.style.animationDelay = (i * 80) + 'ms';
+      card.classList.add('animate-in');
+    });
+  });
+}
+
+function updateGrid(livePaths) {
+  _livePaths = livePaths;
+  document.querySelectorAll('.card[data-key]').forEach(card => {
+    const key  = card.dataset.key;
+    const path = livePaths.find(p => p.name === 'live/' + key);
+    const live = !!path;
+    const views = path ? (path.readers || []).length : 0;
+    const wasLive = card.classList.contains('is-live');
+    card.classList.toggle('is-live', live);
+    const vc = card.querySelector('.vcount');
+    if (vc) vc.textContent = views;
+    // Start preview when goes live, stop when goes offline
+    if (live && !wasLive && card._loadPreview) card._loadPreview();
+    if (!live && wasLive && card._stopPreview) card._stopPreview();
+  });
+
+  // Re-sort carousel: live cards move to front
+  const grid = $('#channelsGrid');
+  if (!grid) return;
+  const cards = [...grid.querySelectorAll('.card[data-key]')];
+  cards.sort((a, b) => {
+    const aLive = a.classList.contains('is-live');
+    const bLive = b.classList.contains('is-live');
+    if (aLive !== bLive) return bLive - aLive;
+    const aHost = STREAMERS.find(s => s.key === a.dataset.key)?.host;
+    const bHost = STREAMERS.find(s => s.key === b.dataset.key)?.host;
+    return (bHost ? 1 : 0) - (aHost ? 1 : 0);
+  });
+  cards.forEach(c => grid.appendChild(c));
+}
+
+// ── REFRESH ──
+async function refresh() {
+  let livePaths = [];
+  try {
+    const data = await fetchPaths();
+    livePaths  = getLive(data);
+    $('#apiNotice').style.display = 'none';
+  } catch(e) {
+    $('#apiNotice').textContent   = 'No se pudo conectar con MediaMTX. Mostrando estado offline.';
+    $('#apiNotice').style.display = 'block';
+  }
+
+  // Count only known streamers
+  const count = STREAMERS.filter(s => livePaths.find(p => p.name === 'live/' + s.key)).length;
+  $('#navCount').textContent  = count;
+  if ($('#numLive')) $('#numLive').textContent = count;
+  $('#navDot').className      = count > 0 ? 'dot on' : 'dot';
+  const pill = $('#livePill');
+  pill.style.opacity          = count > 0 ? '1' : '0';
+  pill.style.pointerEvents    = count > 0 ? 'auto' : 'none';
+  $('#liveCount').textContent = count + (count === 1 ? ' en vivo' : ' en vivo');
+
+  // Update live streamers list for rotator
+  _liveStreamers = STREAMERS.filter(s => livePaths.find(p => p.name === 'live/' + s.key));
+
+  if (_liveStreamers.length === 0) {
+    lastFeatKey = null;
+    clearInterval(_featTimer);
+    _featTimer = null;
+    showOffline();
+  } else {
+    // Keep current featured if still live, else pick first
+    if (!_liveStreamers.find(s => s.key === lastFeatKey)) {
+      // Host first, then others
+      const next = _liveStreamers.find(s => s.host) || _liveStreamers[0];
+      const pd = livePaths.find(p => p.name === 'live/' + next.key);
+      loadFeatured(next, pd ? (pd.readers || []).length : 0);
+    }
+    // Start rotator if not running
+    if (!_featTimer && _liveStreamers.length > 1) {
+      _featTimer = setInterval(() => rotateFeatured(), 30000);
+    }
+    // Stop rotator if only one live
+    if (_liveStreamers.length <= 1 && _featTimer) {
+      clearInterval(_featTimer);
+      _featTimer = null;
+    }
+  }
+
+  updateGrid(livePaths);
+}
+
+// ── FEATURED ROTATOR ──
+let _liveStreamers = [];
+let _featTimer     = null;
+let _featIdx       = 0;
+
+function rotateFeatured() {
+  if (_liveStreamers.length <= 1) return;
+  _featIdx = (_featIdx + 1) % _liveStreamers.length;
+  const next = _liveStreamers[_featIdx];
+  const pd   = _livePaths.find(p => p.name === 'live/' + next.key);
+  // Force reload even if same key
+  lastFeatKey = null;
+  loadFeatured(next, pd ? (pd.readers || []).length : 0);
+
+  // Flash indicator
+  const dot = $('#featDot');
+  dot.style.opacity = '0';
+  setTimeout(() => dot.style.opacity = '1', 300);
+}
+
+// ── THEME TOGGLE ──
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  if (btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+
+// ── INIT ──
+buildGrid();
+showOffline();
+refresh();
+$('#refreshBtn').addEventListener('click', () => { cache.t = 0; refresh(); });
+setInterval(refresh, POLL_MS);
+
+// ── CANVAS ANIMATION ──
+(function(){
+  const reduce = window.matchMedia?.('(prefers-reduced-motion:reduce)').matches;
+  const canvas = $('#heroCanvas');
+  if (reduce || !canvas) return;
+  const ctx = canvas.getContext('2d', { alpha:true });
+  let raf = 0, t = 0;
+
+  function resize() {
+    const r   = canvas.getBoundingClientRect();
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width  = Math.floor(r.width  * dpr);
+    canvas.height = Math.floor(r.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    t += 0.011;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    for (let i = 0; i < 4; i++) {
+      const x = (Math.sin(t * .7 + i) * .5 + .5) * W;
+      const y = (Math.cos(t * .5 + i * 1.4) * .5 + .5) * H;
+      const r = 220 + i * 80;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, i % 2 === 0 ? 'rgba(232,200,74,.12)' : 'rgba(223,48,48,.10)');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(255,255,255,.015)';
+    for (let y = 0; y < H; y += 5) ctx.fillRect(0, y, W, 1);
+    raf = requestAnimationFrame(draw);
+  }
+
+  function stop()  { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+  function start() { if (!raf) raf = requestAnimationFrame(draw); }
+  document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+  start();
+})();
+</script>
+</body>
+</html>

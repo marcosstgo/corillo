@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Player</title>
+  <meta name="description" content="CORILLO player — HLS con temas, vertical/horizontal, reconexión automática." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/9a4d3275ad.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
+
+  <style>
+    :root{
+      --ink:#060608; --surface:#0c0c10; --panel:#121218;
+      --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.14);
+      --white:#f2efe9; --muted:#48485a; --accent:#e8c84a; --live:#df3030;
+      --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
+      --radius:14px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    :focus-visible{outline:2px solid rgba(232,200,74,.7);outline-offset:3px;border-radius:6px}
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:50;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+
+    .container{max-width:1200px;margin:0 auto;padding:20px 18px}
+    @media(max-width:600px){.container{padding:14px 12px}}
+
+    /* ── TOP BAR ── */
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .top-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1}
+    .brand span{color:var(--accent)}
+    .meta{font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+    .meta strong{color:rgba(255,255,255,.85)}
+
+    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.6rem;font-weight:700;
+      padding:10px 12px;border-radius:8px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.7);transition:.2s ease;white-space:nowrap;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
+    .btn.primary:hover{opacity:.88}
+    .btn.active{border-color:rgba(232,200,74,.4);color:var(--accent)}
+
+    /* ── PLAYER ── */
+    .playerWrap{
+      border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+      background:#000;position:relative;
+    }
+    #video{width:100%;display:block;background:#000;object-fit:contain}
+    #video.horizontal{aspect-ratio:16/9}
+    #video.vertical{aspect-ratio:9/16;max-height:85vh;margin:0 auto}
+
+    /* Status bar */
+    .statusBar{
+      position:absolute;left:0;right:0;bottom:0;
+      display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;
+      background:linear-gradient(to top,rgba(0,0,0,.75),rgba(0,0,0,0));pointer-events:none;flex-wrap:wrap;
+    }
+    .statusBar .left,.statusBar .right{display:flex;gap:7px;flex-wrap:wrap;pointer-events:auto}
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;
+      font-family:var(--mono);font-size:10px;letter-spacing:1px;
+      padding:6px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+      color:rgba(255,255,255,.72);background:rgba(0,0,0,.35);
+    }
+    .dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex-shrink:0}
+    .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.18);animation:blink 1.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+    /* Overlay */
+    .overlay{
+      position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.55);z-index:10;padding:18px;
+    }
+    .overlay.show{display:flex}
+    .panel{
+      border:1px solid rgba(255,255,255,.14);border-radius:14px;
+      padding:18px;max-width:480px;width:100%;
+      background:rgba(10,10,14,.6);backdrop-filter:blur(10px);
+    }
+    .panel h3{font-family:var(--mono);text-transform:uppercase;letter-spacing:2px;font-size:11px;color:rgba(255,255,255,.7);margin-bottom:10px}
+    .panel p{color:rgba(255,255,255,.7);font-size:.9rem}
+    .panel .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+    /* Stats row */
+    .statsRow{
+      display:flex;gap:0;margin-top:12px;
+      border:1px solid var(--border);border-radius:8px;overflow:hidden;
+      background:rgba(12,12,16,.5);
+    }
+    .stat{flex:1;padding:8px 12px;border-right:1px solid var(--border);text-align:center}
+    .stat:last-child{border-right:none}
+    .stat-val{font-family:var(--mono);font-size:.7rem;letter-spacing:1px;color:var(--white)}
+    .stat-lbl{font-family:var(--mono);font-size:.48rem;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:2px}
+
+    /* Themes */
+    body.theme-terminal{background:#06080a}
+    body.theme-terminal .playerWrap{
+      border-color:rgba(232,200,74,.22);
+      box-shadow:0 0 0 1px rgba(232,200,74,.1) inset;
+    }
+    body.theme-terminal .playerWrap::before{
+      content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+      background:repeating-linear-gradient(to bottom,rgba(255,255,255,.05),rgba(255,255,255,.05) 1px,transparent 4px,transparent 7px);
+      opacity:.08;
+    }
+    body.theme-twitch{
+      background:radial-gradient(1000px 500px at 50% 0%,rgba(145,71,255,.14),transparent 55%),var(--ink);
+    }
+
+    @media(max-width:600px){
+      .brand{font-size:20px}
+      .statsRow{display:grid;grid-template-columns:repeat(3,1fr)}
+      .stat{border-bottom:1px solid var(--border)}
+      .stat:nth-child(n+4){border-bottom:none}
+      .stat:nth-child(3n){border-right:none}
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP -->
+  <div class="top">
+    <div class="top-left">
+      <a href="/" class="brand">C<span>O</span>RILLO</a>
+      <div class="meta">Canal: <strong id="chName">—</strong> &nbsp;·&nbsp; <span id="modeName">horizontal</span></div>
+    </div>
+    <div class="controls">
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+
+      <!-- Modo -->
+      <button class="btn" id="btnH" title="Horizontal 16:9"><i class="fa-solid fa-rectangle-wide"></i> 16:9</button>
+      <button class="btn" id="btnV" title="Vertical 9:16"><i class="fa-solid fa-mobile-screen"></i> 9:16</button>
+
+      <!-- Temas -->
+      <button class="btn" id="btnThemeOg">Original</button>
+      <button class="btn" id="btnThemeTm"><i class="fa-solid fa-terminal"></i> Terminal</button>
+      <button class="btn" id="btnThemeTw"><i class="fa-brands fa-twitch"></i> Twitch</button>
+
+      <!-- Twitch -->
+      <a class="btn primary" id="twitchLink" href="#" target="_blank" rel="noopener">
+        <i class="fa-brands fa-twitch"></i> Twitch
+      </a>
+    </div>
+  </div>
+
+  <!-- PLAYER -->
+  <div class="playerWrap">
+    <video id="video" class="horizontal" playsinline controls></video>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay">
+      <div class="panel">
+        <h3 id="ovTitle">Cargando</h3>
+        <p id="ovMsg">Iniciando stream…</p>
+        <div class="row">
+          <button class="btn primary" id="ovRetry"><i class="fa-solid fa-play"></i> Reintentar</button>
+          <button class="btn" id="ovUnmute" style="display:none"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="statusBar" aria-hidden="true">
+      <div class="left">
+        <span class="pill"><span class="dot" id="liveDot"></span> <span id="liveTxt">offline</span></span>
+        <span class="pill" id="hlsPill"><i class="fa-solid fa-tower-broadcast"></i> <span id="hlsTxt">—</span></span>
+      </div>
+      <div class="right">
+        <span class="pill"><i class="fa-solid fa-rotate"></i> <span id="retryTxt">0</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STREAM STATS -->
+  <div class="statsRow" id="statsRow">
+    <div class="stat"><div class="stat-val" id="sBitrate">—</div><div class="stat-lbl">Bitrate</div></div>
+    <div class="stat"><div class="stat-val" id="sBuffer">—</div><div class="stat-lbl">Buffer</div></div>
+    <div class="stat"><div class="stat-val" id="sLatency">—</div><div class="stat-lbl">Latencia</div></div>
+    <div class="stat"><div class="stat-val" id="sLevel">—</div><div class="stat-lbl">Calidad</div></div>
+    <div class="stat"><div class="stat-val" id="sRetries">0</div><div class="stat-lbl">Reconexiones</div></div>
+  </div>
+
+</div>
+
+<script>
+const $ = (s, el=document) => el.querySelector(s);
+
+// ── URL PARAMS ──
+// Read channel from clean URL: /katatonia/ or /katatonia/?mode=vertical
+const params  = new URLSearchParams(location.search);
+// pathname = '/katatonia/' → segments[1] = 'katatonia'
+const pathParts = location.pathname.replace(/^\/|\/$/g, '').split('/');
+const channel = (pathParts[0] || params.get('ch') || 'katatonia').trim();
+let   mode    = (params.get('mode') || 'horizontal').trim(); // horizontal | vertical
+
+$('#chName').textContent = channel;
+document.title = 'CORILLO — ' + channel.toUpperCase();
+$('#twitchLink').href = 'https://twitch.tv/' + encodeURIComponent(channel);
+
+// ── MODE ──
+function setMode(m) {
+  mode = m;
+  const v = $('#video');
+  v.className = m; // 'horizontal' or 'vertical'
+  $('#modeName').textContent = m;
+  $('#btnH').classList.toggle('active', m === 'horizontal');
+  $('#btnV').classList.toggle('active', m === 'vertical');
+  // Update URL without reload (clean URL format)
+  const newUrl = location.pathname + (m === 'horizontal' ? '' : '?mode=vertical');
+  history.replaceState(null, '', newUrl);
+  // Restart stream with new path
+  lastMode = null;
+  start();
+}
+
+$('#btnH').addEventListener('click', () => setMode('horizontal'));
+$('#btnV').addEventListener('click', () => setMode('vertical'));
+
+// Apply initial mode
+$('#video').className = mode;
+$('#modeName').textContent = mode;
+$('#btn' + (mode === 'vertical' ? 'V' : 'H')).classList.add('active');
+
+// ── THEME ──
+function setTheme(name) {
+  document.body.classList.remove('theme-terminal', 'theme-twitch');
+  if (name !== 'original') document.body.classList.add('theme-' + name);
+  localStorage.setItem('kata_theme', name);
+  $('#btnThemeOg').classList.toggle('active', name === 'original');
+  $('#btnThemeTm').classList.toggle('active', name === 'terminal');
+  $('#btnThemeTw').classList.toggle('active', name === 'twitch');
+}
+setTheme(localStorage.getItem('kata_theme') || 'original');
+$('#btnThemeOg').addEventListener('click', () => setTheme('original'));
+$('#btnThemeTm').addEventListener('click', () => setTheme('terminal'));
+$('#btnThemeTw').addEventListener('click', () => setTheme('twitch'));
+
+// ── OVERLAY ──
+function showOverlay(title, msg, {showUnmute=false}={}) {
+  $('#ovTitle').textContent = title;
+  $('#ovMsg').textContent   = msg;
+  $('#overlay').classList.add('show');
+  $('#ovUnmute').style.display = showUnmute ? 'inline-flex' : 'none';
+}
+function hideOverlay() { $('#overlay').classList.remove('show'); }
+
+// ── STATS POLLING ──
+let statsTimer = null;
+function startStatsPolling() {
+  if (statsTimer) return;
+  statsTimer = setInterval(() => {
+    const v = $('#video');
+    if (!v || v.readyState < 2) return;
+    const buf = v.buffered.length ? (v.buffered.end(v.buffered.length - 1) - v.currentTime).toFixed(1) + 's' : '—';
+    $('#sBuffer').textContent  = buf;
+    $('#sLatency').textContent = v.currentTime ? Math.round((Date.now() / 1000) - v.currentTime) + 's' : '—';
+    if (window._hlsInstance) {
+      const lvl = window._hlsInstance.levels?.[window._hlsInstance.currentLevel];
+      if (lvl) {
+        $('#sBitrate').textContent = lvl.bitrate ? Math.round(lvl.bitrate / 1000) + 'k' : '—';
+        $('#sLevel').textContent   = (lvl.width && lvl.height) ? `${lvl.width}×${lvl.height}` : '—';
+      }
+    }
+  }, 1500);
+}
+function stopStatsPolling() {
+  clearInterval(statsTimer); statsTimer = null;
+  ['sBitrate','sBuffer','sLatency','sLevel'].forEach(id => $(('#'+id)).textContent = '—');
+}
+
+// ── PLAYER ──
+let hls       = null;
+let retries   = 0;
+let retryTimer = null;
+let lastMode  = null;
+
+window._hlsInstance = null;
+
+function getUrl() {
+  const path = mode === 'vertical' ? channel + '-vertical' : channel;
+  return '/live/' + encodeURIComponent(path) + '/index.m3u8';
+}
+
+function setLive(on) {
+  $('#liveDot').className = 'dot' + (on ? ' on' : '');
+  $('#liveTxt').textContent = on ? 'en vivo' : 'offline';
+}
+
+function cleanup() {
+  if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+  stopStatsPolling();
+  const v = $('#video');
+  try { v.pause(); } catch {}
+  v.removeAttribute('src'); v.load();
+  if (hls) { try { hls.destroy(); } catch {} hls = null; window._hlsInstance = null; }
+  setLive(false);
+}
+
+function scheduleRetry(reason) {
+  retries++;
+  $('#sRetries').textContent = retries;
+  $('#retryTxt').textContent = retries;
+  const wait = Math.min(30000, 1200 * Math.pow(1.6, Math.min(retries, 10)));
+  showOverlay('Reconectando', reason + '. Reintentando en ' + Math.round(wait / 1000) + 's…', { showUnmute: !$('#video').muted });
+  retryTimer = setTimeout(start, wait);
+}
+
+async function start() {
+  cleanup();
+  const url = getUrl();
+  $('#hlsTxt').textContent = mode === 'vertical' ? '9:16' : '16:9';
+  showOverlay('Cargando', 'Iniciando stream…');
+
+  const v = $('#video');
+
+  if (v.canPlayType('application/vnd.apple.mpegurl')) {
+    v.src = url;
+    try {
+      await v.play();
+      hideOverlay(); setLive(true); startStatsPolling();
+    } catch {
+      showOverlay('Toca para reproducir', 'El navegador bloqueó el autoplay.', { showUnmute: true });
+    }
+    v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { once:true });
+    return;
+  }
+
+  if (window.Hls && Hls.isSupported()) {
+    hls = new Hls({ lowLatencyMode:true, backBufferLength:30, maxBufferLength:8, maxLiveSyncPlaybackRate:1.3 });
+    window._hlsInstance = hls;
+
+    hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
+    hls.on(Hls.Events.MANIFEST_PARSED, async () => {
+      try {
+        await v.play();
+        hideOverlay(); setLive(true); startStatsPolling();
+      } catch {
+        showOverlay('Toca para reproducir', 'Autoplay bloqueado.', { showUnmute: true });
+      }
+    });
+    hls.on(Hls.Events.ERROR, (_, d) => {
+      if (!d) return;
+      if (d.fatal) { cleanup(); scheduleRetry(d.type || 'Error fatal'); }
+    });
+
+    hls.attachMedia(v);
+    return;
+  }
+
+  showOverlay('No compatible', 'Este navegador no puede reproducir HLS. Usa Safari en iOS o un navegador moderno.');
+}
+
+// ── EVENTS ──
+$('#ovRetry').addEventListener('click', () => { retries = 0; start(); });
+$('#ovUnmute').addEventListener('click', () => {
+  const v = $('#video');
+  v.muted = false; v.volume = 1;
+  hideOverlay(); v.play().catch(() => {});
+});
+$('#video').addEventListener('stalled', () => scheduleRetry('Stream detenido'));
+$('#video').addEventListener('waiting', () => setLive(false));
+$('#video').addEventListener('playing', () => { setLive(true); hideOverlay(); startStatsPolling(); });
+
+// ── START ──
+start();
+</script>
+</body>
+</html>
