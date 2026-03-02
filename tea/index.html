@@ -6,6 +6,13 @@
   <meta name="color-scheme" content="dark" />
   <title>CORILLO — Player</title>
   <meta name="description" content="CORILLO player — HLS con temas, vertical/horizontal, reconexión automática." />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/tea/">
+  <meta property="og:title" content="CORILLO — TEA">
+  <meta property="og:description" content="Stream en vivo de TEA en CORILLO — plataforma independiente desde Puerto Rico.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:locale" content="es_PR">
+  <meta property="og:site_name" content="CORILLO">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -248,12 +255,12 @@ $('#btn' + (mode === 'vertical' ? 'V' : 'H')).classList.add('active');
 function setTheme(name) {
   document.body.classList.remove('theme-terminal','theme-twitch');
   if (name !== 'original') document.body.classList.add('theme-' + name);
-  localStorage.setItem('kata_theme', name);
+  localStorage.setItem('corillo_theme', name);
   $('#btnThemeOg').classList.toggle('active', name === 'original');
   $('#btnThemeTm').classList.toggle('active', name === 'terminal');
   $('#btnThemeTw').classList.toggle('active', name === 'twitch');
 }
-setTheme(localStorage.getItem('kata_theme') || 'original');
+setTheme(localStorage.getItem('corillo_theme') || 'original');
 $('#btnThemeOg').addEventListener('click', () => setTheme('original'));
 $('#btnThemeTm').addEventListener('click', () => setTheme('terminal'));
 $('#btnThemeTw').addEventListener('click', () => setTheme('twitch'));

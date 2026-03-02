@@ -6,6 +6,13 @@
   <meta name="color-scheme" content="dark" />
   <title>CORILLO — Player</title>
   <meta name="description" content="CORILLO player — HLS con temas, vertical/horizontal, reconexión automática." />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/katatonia/">
+  <meta property="og:title" content="CORILLO — KATATONIA">
+  <meta property="og:description" content="Stream en vivo de KATATONIA en CORILLO — plataforma independiente desde Puerto Rico.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:locale" content="es_PR">
+  <meta property="og:site_name" content="CORILLO">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -375,7 +382,6 @@ function setMode(m) {
   $('#btnH').classList.toggle('active', m === 'horizontal');
   $('#btnV').classList.toggle('active', m === 'vertical');
   history.replaceState(null,'', location.pathname + (m === 'horizontal' ? '' : '?mode=vertical'));
-  lastMode = null;
   start();
 }
 $('#btnH').addEventListener('click', () => setMode('horizontal'));

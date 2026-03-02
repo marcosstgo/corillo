@@ -424,6 +424,15 @@ async function refresh() {
   });
 })();
 
+// ── VISIBILITY ──
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+  } else {
+    cache.t = 0; refresh();
+  }
+});
+
 // ── INIT ──
 refresh();
 </script>

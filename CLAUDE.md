@@ -96,12 +96,12 @@ Keep these keys stable — they're spread across every replicated page and chang
 | Key | Scope | Values |
 |-----|-------|--------|
 | `corillo-theme` | All pages | `'dark'` / `'light'` |
-| `corillo_theme` | `katatonia/index.html` | `'original'` / `'terminal'` / `'twitch'` (player visual theme) |
-| `kata_theme` | Player pages (404, tea, mira_sanganooo, elbala) | `'original'` / `'terminal'` / `'twitch'` |
+| `corillo_theme` | All player pages | `'original'` / `'terminal'` / `'twitch'` (player visual theme) |
+| `corillo_theme` | All player pages (katatonia, 404, tea, mira_sanganooo, elbala) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared) |
 | `corillo_chat` | `katatonia/index.html` | `'1'` / `'0'` (chat panel visibility) |
 
 ## Conventions
 
 - The grain overlay (`body::after` with SVG fractalNoise) appears on every page — it's intentional, do not remove it.
-- Player pages derive the channel key from their directory name (hardcoded in the HTML, not read from the URL).
+- Player pages derive the channel key from `location.pathname` — `pathParts[0]` is the first path segment (e.g. `/tea/` → `"tea"`). The `<title>` and Twitch link are updated dynamically by JS on load.
 - The `dual/` page is hardcoded to KATATONIA + MIRA_SANGANOOO and is not a generic template.

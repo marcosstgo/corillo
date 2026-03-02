@@ -1,14 +1,13 @@
 {
-  "version": "2.1.0",
-  "date": "2026-03-01",
+  "version": "2.2.0",
+  "date": "2026-03-02",
   "changes": [
-    "Netflix-style carousel",
-    "Dark/light theme on all pages",
-    "Twitch chat integration",
-    "GitHub Actions CI/CD deploy",
-    "Global styles.css",
-    "Mobile stream stability fix",
-    "Coming soon card",
-    "Card entrance animations"
+    "Port katatonia player layout to all player pages (sticky header, full-width video, EMA bitrate)",
+    "Shared assets: streamers.js (single source of truth), styles.css (design tokens)",
+    "API_TIMEOUT_MS constant, visibilitychange polling pause on homepage and multiplayer",
+    "Unified player visual theme key (corillo_theme) across all player pages",
+    "OG meta tags on all player pages",
+    "Fix lastMode dead code in katatonia",
+    "Fix reserved handle list in join page (catatonia → katatonia)"
   ]
 }
