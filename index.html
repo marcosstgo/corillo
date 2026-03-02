@@ -272,12 +272,11 @@
 
     /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:20px 0 28px}
-    .foot-links{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.5rem;letter-spacing:1px;color:var(--muted)}
-    .foot-links a{color:var(--muted);transition:.15s}
-    .foot-links a:hover{color:var(--accent)}
     .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    .foot-logo{font-family:var(--display);font-size:.95rem;letter-spacing:6px;color:rgba(255,255,255,.35)}
-    .foot-logo span{color:var(--accent)}
+    .foot-left{display:flex;align-items:center;gap:12px}
+    .foot-right{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.5rem;letter-spacing:1px;color:var(--muted)}
+    .foot-right a{color:var(--muted);transition:.15s}
+    .foot-right a:hover{color:var(--accent)}
     .foot-info{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase}
   </style>
 </head>
@@ -414,22 +413,23 @@
 <footer>
   <div class="container">
     <div class="foot-inner">
-      <div class="foot-logo">
-        <svg width="36" height="36" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div class="foot-left">
+        <svg width="28" height="28" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="72" height="72" rx="16" fill="#0c0c10"/>
           <circle cx="36" cy="36" r="26" stroke="rgba(255,255,255,0.35)" stroke-width="7" fill="none"/>
           <circle cx="36" cy="36" r="15" stroke="#e8c84a" stroke-width="5" fill="none" opacity=".6"/>
           <circle cx="36" cy="36" r="6" fill="#e8c84a" opacity=".6"/>
           <circle cx="36" cy="36" r="2.5" fill="#df3030" opacity=".6"/>
         </svg>
+        <div class="foot-info">Puerto Rico · Plataforma independiente</div>
       </div>
-      <div class="foot-info">Puerto Rico · Plataforma independiente</div>
-      <div class="foot-links">
+      <div class="foot-right">
         <a href="/legal/">Términos & Privacidad</a>
         <span>·</span>
         <a href="/dmca/">DMCA</a>
+        <span>·</span>
+        <span id="footVersion">v2.2.2</span>
       </div>
-      <div class="foot-info" id="footVersion">v2.1.0</div>
     </div>
   </div>
 </footer>
