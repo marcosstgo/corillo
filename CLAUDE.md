@@ -50,6 +50,18 @@ Never modify this pattern — it is critical for cross-browser HLS support.
 
 The homepage and multiplayer page poll `/mediamtx-api/v3/paths/list` every 15 seconds (`POLL_MS = 15000`) with an 8-second client-side cache. A `ready: true` field on a path item means the stream is live. Viewer count comes from `path.readers.length`.
 
+
+### LocalStorage keys (current behavior)
+
+Keep these keys stable unless there is a migration plan across every replicated page:
+- Global light/dark theme: `corillo-theme` (home, multiplayer, legal, dmca, join, dual, players)
+- Player style theme (terminal/twitch/original):
+  - `corillo_theme` on `katatonia/index.html`
+  - `kata_theme` on replicated players (`404`, `tea`, `mira_sanganooo`, `elbala`)
+- Player chat visibility in `katatonia/index.html`: `corillo_chat`
+
+If you choose to unify these keys in the future, do it in one coordinated change and include explicit migration logic and QA notes.
+
 ### Styling rules
 
 - **All global styles go in `assets/styles.css`** — never hardcode colors in HTML files.
