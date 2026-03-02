@@ -78,6 +78,17 @@ npx serve .
 
 For live status and HLS playback, a MediaMTX instance must be running with the Caddy proxy configured.
 
+### LocalStorage keys
+
+Keep these keys stable — they're spread across every replicated page and changing one requires a coordinated update with migration logic:
+
+| Key | Scope | Values |
+|-----|-------|--------|
+| `corillo-theme` | All pages | `'dark'` / `'light'` |
+| `corillo_theme` | `katatonia/index.html` | `'original'` / `'terminal'` / `'twitch'` (player visual theme) |
+| `kata_theme` | Player pages (404, tea, mira_sanganooo, elbala) | `'original'` / `'terminal'` / `'twitch'` |
+| `corillo_chat` | `katatonia/index.html` | `'1'` / `'0'` (chat panel visibility) |
+
 ## Conventions
 
 - The grain overlay (`body::after` with SVG fractalNoise) appears on every page — it's intentional, do not remove it.

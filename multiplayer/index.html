@@ -235,9 +235,10 @@
 <script>
 // STREAMERS defined in /assets/streamers.js (also adds soon:true placeholder)
 
-const API      = '/mediamtx-api/v3/paths/list';
-const POLL_MS  = 15000;
-const CACHE_MS = 8000;
+const API            = '/mediamtx-api/v3/paths/list';
+const POLL_MS        = 15000;
+const CACHE_MS       = 8000;
+const API_TIMEOUT_MS = 5000;
 const $        = id => document.getElementById(id);
 
 let cache    = { t:0, data:null };
@@ -249,7 +250,7 @@ async function fetchPaths() {
   const now = Date.now();
   if (cache.data && (now - cache.t) < CACHE_MS) return cache.data;
   const ctrl = new AbortController();
-  const to   = setTimeout(() => ctrl.abort(), 5000);
+  const to   = setTimeout(() => ctrl.abort(), API_TIMEOUT_MS);
   try {
     const res  = await fetch(API, { signal:ctrl.signal, cache:'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
