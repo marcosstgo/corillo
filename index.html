@@ -302,6 +302,9 @@
 
     /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:20px 0 28px}
+    .foot-links{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.5rem;letter-spacing:1px;color:var(--muted)}
+    .foot-links a{color:var(--muted);transition:.15s}
+    .foot-links a:hover{color:var(--accent)}
     .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
     .foot-logo{font-family:var(--display);font-size:.95rem;letter-spacing:6px;color:rgba(255,255,255,.35)}
     .foot-logo span{color:var(--accent)}
@@ -451,7 +454,12 @@
         </svg>
       </div>
       <div class="foot-info">Puerto Rico · Plataforma independiente</div>
-      <div class="foot-info">v2.0.0</div>
+      <div class="foot-links">
+        <a href="/legal/">Términos & Privacidad</a>
+        <span>·</span>
+        <a href="/dmca/">DMCA</a>
+      </div>
+      <div class="foot-info" id="footVersion">v2.1.0</div>
     </div>
   </div>
 </footer>
@@ -806,6 +814,12 @@ showOffline();
 refresh();
 $('#refreshBtn').addEventListener('click', () => { cache.t = 0; refresh(); });
 setInterval(refresh, POLL_MS);
+
+// ── VERSION ──
+fetch('/version.json').then(r => r.json()).then(d => {
+  const el = document.getElementById('footVersion');
+  if (el && d.version) el.textContent = 'v' + d.version;
+}).catch(() => {});
 
 // ── CANVAS ANIMATION ──
 (function(){

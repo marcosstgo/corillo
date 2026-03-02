@@ -1,0 +1,14 @@
+{
+  "version": "2.1.0",
+  "date": "2026-03-01",
+  "changes": [
+    "Netflix-style carousel",
+    "Dark/light theme on all pages",
+    "Twitch chat integration",
+    "GitHub Actions CI/CD deploy",
+    "Global styles.css",
+    "Mobile stream stability fix",
+    "Coming soon card",
+    "Card entrance animations"
+  ]
+}
