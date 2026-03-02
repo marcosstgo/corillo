@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Términos de Servicio y Privacidad</title>
+  <meta name="description" content="Términos de Servicio y Política de Privacidad de CORILLO." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    .page-wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px}
+    @media(max-width:600px){.page-wrap{padding:24px 16px 60px}}
+
+    .page-header{margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+    .page-header .back{
+      display:inline-flex;align-items:center;gap:6px;
+      font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--muted);margin-bottom:20px;transition:.15s;
+    }
+    .page-header .back:hover{color:var(--white)}
+    .page-title{font-family:var(--display);font-size:clamp(2.5rem,6vw,4rem);letter-spacing:3px;line-height:1}
+    .page-title span{color:var(--accent)}
+    .page-meta{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-top:10px}
+
+    .lang-tabs{display:flex;gap:8px;margin-bottom:32px}
+    .lang-tab{
+      font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;text-transform:uppercase;
+      padding:6px 14px;border-radius:6px;border:1px solid var(--border);
+      background:transparent;color:var(--muted);cursor:pointer;transition:.15s;
+    }
+    .lang-tab.active{border-color:rgba(232,200,74,.4);color:var(--accent);background:rgba(232,200,74,.06)}
+    .lang-tab:hover:not(.active){border-color:var(--border-h);color:var(--white)}
+
+    .content-block{display:none}
+    .content-block.active{display:block}
+
+    .toc{
+      background:rgba(12,12,16,.6);border:1px solid var(--border);border-radius:10px;
+      padding:20px 24px;margin-bottom:40px;
+    }
+    .toc-title{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    .toc ol{padding-left:18px}
+    .toc li{margin:6px 0}
+    .toc a{font-size:.85rem;color:rgba(255,255,255,.6);transition:.15s}
+    .toc a:hover{color:var(--accent)}
+
+    .legal-section{margin-bottom:40px;scroll-margin-top:80px}
+    .legal-section h2{
+      font-family:var(--display);letter-spacing:2px;font-size:1.6rem;
+      color:var(--white);margin-bottom:14px;padding-bottom:10px;
+      border-bottom:1px solid var(--border);
+    }
+    .legal-section h2 .num{color:var(--accent);margin-right:8px}
+    .legal-section p{color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:12px;font-size:.95rem}
+    .legal-section ul{padding-left:20px;margin-bottom:12px}
+    .legal-section li{color:rgba(255,255,255,.7);line-height:1.8;margin:6px 0;font-size:.95rem}
+    .legal-section a{color:var(--accent);text-decoration:underline;text-decoration-color:rgba(232,200,74,.3)}
+    .legal-section a:hover{text-decoration-color:var(--accent)}
+
+    .highlight-box{
+      background:rgba(232,200,74,.05);border:1px solid rgba(232,200,74,.15);
+      border-radius:8px;padding:16px 20px;margin:16px 0;
+    }
+    .highlight-box p{color:rgba(255,255,255,.8);margin:0}
+
+    .contact-card{
+      background:rgba(12,12,16,.6);border:1px solid var(--border);border-radius:10px;
+      padding:24px;margin-top:16px;
+    }
+    .contact-card p{margin:4px 0;font-size:.9rem;color:rgba(255,255,255,.7)}
+    .contact-card strong{color:var(--white)}
+
+    /* Light mode */
+    [data-theme="light"] .toc{background:rgba(255,255,255,.6)}
+    [data-theme="light"] .legal-section p,[data-theme="light"] .legal-section li{color:rgba(0,0,0,.7)}
+    [data-theme="light"] .toc a{color:rgba(0,0,0,.6)}
+    [data-theme="light"] .contact-card{background:rgba(255,255,255,.6)}
+    [data-theme="light"] .contact-card p{color:rgba(0,0,0,.7)}
+    [data-theme="light"] .contact-card strong{color:var(--white)}
+    [data-theme="light"] .highlight-box p{color:rgba(0,0,0,.8)}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="topbar">
+      <a href="/" style="display:flex;align-items:center">
+        <svg id="navLogo" width="130" height="36" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="g1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/><stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/></radialGradient></defs>
+          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+          <circle cx="72" cy="42" r="36" fill="url(#g1)"/>
+          <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+          <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+          <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+          <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+        </svg>
+      </a>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+        <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-title">TÉRMINOS <span>&</span> PRIVACIDAD</div>
+      <div class="page-meta">Última actualización: 1 de marzo de 2026 · Marcos Santiago</div>
+    </div>
+
+    <div class="lang-tabs">
+      <button class="lang-tab active" onclick="setLang('es')">Español</button>
+      <button class="lang-tab" onclick="setLang('en')">English</button>
+    </div>
+
+    <!-- ESPAÑOL -->
+    <div class="content-block active" id="block-es">
+      <div class="toc">
+        <div class="toc-title">Contenido</div>
+        <ol>
+          <li><a href="#es-1">Aceptación de términos</a></li>
+          <li><a href="#es-2">Descripción del servicio</a></li>
+          <li><a href="#es-3">Responsabilidad del contenido</a></li>
+          <li><a href="#es-4">Propiedad intelectual y DMCA</a></li>
+          <li><a href="#es-5">Política de privacidad</a></li>
+          <li><a href="#es-6">Limitación de responsabilidad</a></li>
+          <li><a href="#es-7">Modificaciones</a></li>
+          <li><a href="#es-8">Contacto</a></li>
+        </ol>
+      </div>
+
+      <div class="legal-section" id="es-1">
+        <h2><span class="num">01</span>Aceptación de Términos</h2>
+        <p>Al acceder o utilizar CORILLO ("la Plataforma"), operada por Marcos Santiago, usted acepta estar sujeto a estos Términos de Servicio. Si no está de acuerdo con alguna parte de estos términos, no debe utilizar la Plataforma.</p>
+        <div class="highlight-box">
+          <p>CORILLO es una plataforma de streaming independiente con sede en Puerto Rico. El uso de la Plataforma está sujeto a las leyes aplicables de los Estados Unidos y del Estado Libre Asociado de Puerto Rico.</p>
+        </div>
+      </div>
+
+      <div class="legal-section" id="es-2">
+        <h2><span class="num">02</span>Descripción del Servicio</h2>
+        <p>CORILLO es una plataforma de transmisión en vivo que permite a usuarios autorizados ("Streamers") transmitir contenido de video en tiempo real. El acceso como Streamer es por invitación exclusiva y requiere aprobación previa.</p>
+        <ul>
+          <li>El servicio permite la visualización pública de transmisiones en vivo</li>
+          <li>CORILLO actúa como intermediario tecnológico, no como productor de contenido</li>
+          <li>La disponibilidad del servicio no está garantizada de forma ininterrumpida</li>
+          <li>CORILLO se reserva el derecho de modificar o discontinuar el servicio en cualquier momento</li>
+        </ul>
+      </div>
+
+      <div class="legal-section" id="es-3">
+        <h2><span class="num">03</span>Responsabilidad del Contenido</h2>
+        <p>Los Streamers son <strong>exclusivamente responsables</strong> del contenido que transmiten. Al utilizar CORILLO como Streamer, usted garantiza que:</p>
+        <ul>
+          <li>Tiene todos los derechos necesarios para transmitir el contenido</li>
+          <li>El contenido no viola derechos de autor, marcas registradas u otros derechos de propiedad intelectual</li>
+          <li>El contenido no es ilegal, difamatorio, obsceno o que incite a la violencia</li>
+          <li>Cuenta con los permisos necesarios para transmitir música, imágenes o cualquier obra protegida</li>
+          <li>No transmitirá contenido que viole la privacidad de terceros</li>
+        </ul>
+        <p>CORILLO se reserva el derecho de suspender o terminar transmisiones que violen estos términos sin previo aviso.</p>
+      </div>
+
+      <div class="legal-section" id="es-4">
+        <h2><span class="num">04</span>Propiedad Intelectual y DMCA</h2>
+        <p>CORILLO respeta los derechos de propiedad intelectual y cumple con la <em>Digital Millennium Copyright Act (DMCA)</em>. Si usted es titular de derechos de autor y cree que su contenido está siendo utilizado sin autorización, puede presentar una reclamación.</p>
+        <p>Para más información sobre nuestro proceso de reclamaciones DMCA, visite nuestra <a href="/dmca/">Política DMCA</a>.</p>
+        <div class="highlight-box">
+          <p>CORILLO opera bajo el "Puerto Seguro" (Safe Harbor) de la DMCA como proveedor de servicios. Respondemos a todas las notificaciones válidas de infracción de manera oportuna.</p>
+        </div>
+      </div>
+
+      <div class="legal-section" id="es-5">
+        <h2><span class="num">05</span>Política de Privacidad</h2>
+        <p>CORILLO recopila información mínima necesaria para operar el servicio:</p>
+        <ul>
+          <li><strong>Datos de uso:</strong> Estadísticas de visualización anónimas (número de espectadores por transmisión)</li>
+          <li><strong>Datos técnicos:</strong> Dirección IP, tipo de navegador y datos de conexión para diagnóstico técnico</li>
+          <li><strong>No recopilamos:</strong> Nombres, correos electrónicos ni información personal de visitantes anónimos</li>
+        </ul>
+        <p>CORILLO no vende, alquila ni comparte información personal con terceros con fines comerciales. Los datos técnicos se utilizan únicamente para mantener y mejorar el servicio.</p>
+        <p>Los visitantes pueden usar la Plataforma sin crear una cuenta ni proporcionar información personal.</p>
+      </div>
+
+      <div class="legal-section" id="es-6">
+        <h2><span class="num">06</span>Limitación de Responsabilidad</h2>
+        <p>CORILLO y Marcos Santiago no serán responsables por:</p>
+        <ul>
+          <li>Daños directos, indirectos, incidentales o consecuentes derivados del uso de la Plataforma</li>
+          <li>Contenido transmitido por Streamers que viole derechos de terceros</li>
+          <li>Interrupciones del servicio por causas técnicas, de mantenimiento o de fuerza mayor</li>
+          <li>Pérdida de datos o contenido durante transmisiones</li>
+        </ul>
+        <p>El servicio se ofrece "tal como está" sin garantías de ningún tipo, expresas o implícitas.</p>
+      </div>
+
+      <div class="legal-section" id="es-7">
+        <h2><span class="num">07</span>Modificaciones</h2>
+        <p>CORILLO se reserva el derecho de modificar estos Términos en cualquier momento. Los cambios entrarán en vigor al ser publicados en esta página. El uso continuado de la Plataforma después de la publicación de cambios constituye aceptación de los nuevos términos.</p>
+      </div>
+
+      <div class="legal-section" id="es-8">
+        <h2><span class="num">08</span>Contacto</h2>
+        <p>Para consultas sobre estos Términos de Servicio o Política de Privacidad:</p>
+        <div class="contact-card">
+          <p><strong>CORILLO — Marcos Santiago</strong></p>
+          <p>Puerto Rico, Estados Unidos</p>
+          <p>Email: <a href="mailto:hello@marcossantiago.com">hello@marcossantiago.com</a></p>
+          <p>Reclamaciones DMCA: <a href="/dmca/">corillo.live/dmca/</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH -->
+    <div class="content-block" id="block-en">
+      <div class="toc">
+        <div class="toc-title">Contents</div>
+        <ol>
+          <li><a href="#en-1">Acceptance of Terms</a></li>
+          <li><a href="#en-2">Description of Service</a></li>
+          <li><a href="#en-3">Content Responsibility</a></li>
+          <li><a href="#en-4">Intellectual Property & DMCA</a></li>
+          <li><a href="#en-5">Privacy Policy</a></li>
+          <li><a href="#en-6">Limitation of Liability</a></li>
+          <li><a href="#en-7">Modifications</a></li>
+          <li><a href="#en-8">Contact</a></li>
+        </ol>
+      </div>
+
+      <div class="legal-section" id="en-1">
+        <h2><span class="num">01</span>Acceptance of Terms</h2>
+        <p>By accessing or using CORILLO ("the Platform"), operated by Marcos Santiago, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you must not use the Platform.</p>
+        <div class="highlight-box">
+          <p>CORILLO is an independent streaming platform based in Puerto Rico. Use of the Platform is subject to applicable laws of the United States and the Commonwealth of Puerto Rico.</p>
+        </div>
+      </div>
+
+      <div class="legal-section" id="en-2">
+        <h2><span class="num">02</span>Description of Service</h2>
+        <p>CORILLO is a live streaming platform that allows authorized users ("Streamers") to broadcast live video content. Streamer access is by exclusive invitation and requires prior approval.</p>
+        <ul>
+          <li>The service allows public viewing of live streams</li>
+          <li>CORILLO acts as a technology intermediary, not a content producer</li>
+          <li>Uninterrupted service availability is not guaranteed</li>
+          <li>CORILLO reserves the right to modify or discontinue the service at any time</li>
+        </ul>
+      </div>
+
+      <div class="legal-section" id="en-3">
+        <h2><span class="num">03</span>Content Responsibility</h2>
+        <p>Streamers are <strong>solely responsible</strong> for the content they broadcast. By using CORILLO as a Streamer, you warrant that:</p>
+        <ul>
+          <li>You have all necessary rights to broadcast the content</li>
+          <li>The content does not infringe copyrights, trademarks, or other intellectual property rights</li>
+          <li>The content is not illegal, defamatory, obscene, or incites violence</li>
+          <li>You have the necessary permissions to broadcast music, images, or any protected work</li>
+          <li>You will not broadcast content that violates third-party privacy</li>
+        </ul>
+        <p>CORILLO reserves the right to suspend or terminate streams that violate these terms without prior notice.</p>
+      </div>
+
+      <div class="legal-section" id="en-4">
+        <h2><span class="num">04</span>Intellectual Property & DMCA</h2>
+        <p>CORILLO respects intellectual property rights and complies with the Digital Millennium Copyright Act (DMCA). If you are a copyright holder and believe your content is being used without authorization, you may file a claim.</p>
+        <p>For more information about our DMCA claims process, visit our <a href="/dmca/">DMCA Policy</a>.</p>
+        <div class="highlight-box">
+          <p>CORILLO operates under the DMCA Safe Harbor as a service provider. We respond to all valid infringement notices in a timely manner.</p>
+        </div>
+      </div>
+
+      <div class="legal-section" id="en-5">
+        <h2><span class="num">05</span>Privacy Policy</h2>
+        <p>CORILLO collects minimal information necessary to operate the service:</p>
+        <ul>
+          <li><strong>Usage data:</strong> Anonymous viewing statistics (number of viewers per stream)</li>
+          <li><strong>Technical data:</strong> IP address, browser type and connection data for technical diagnostics</li>
+          <li><strong>We do not collect:</strong> Names, email addresses, or personal information from anonymous visitors</li>
+        </ul>
+        <p>CORILLO does not sell, rent, or share personal information with third parties for commercial purposes. Technical data is used solely to maintain and improve the service.</p>
+        <p>Visitors may use the Platform without creating an account or providing personal information.</p>
+      </div>
+
+      <div class="legal-section" id="en-6">
+        <h2><span class="num">06</span>Limitation of Liability</h2>
+        <p>CORILLO and Marcos Santiago shall not be liable for:</p>
+        <ul>
+          <li>Direct, indirect, incidental, or consequential damages arising from use of the Platform</li>
+          <li>Content broadcast by Streamers that violates third-party rights</li>
+          <li>Service interruptions due to technical, maintenance, or force majeure causes</li>
+          <li>Loss of data or content during broadcasts</li>
+        </ul>
+        <p>The service is provided "as is" without warranties of any kind, express or implied.</p>
+      </div>
+
+      <div class="legal-section" id="en-7">
+        <h2><span class="num">07</span>Modifications</h2>
+        <p>CORILLO reserves the right to modify these Terms at any time. Changes will take effect upon publication on this page. Continued use of the Platform after changes are posted constitutes acceptance of the new terms.</p>
+      </div>
+
+      <div class="legal-section" id="en-8">
+        <h2><span class="num">08</span>Contact</h2>
+        <p>For inquiries about these Terms of Service or Privacy Policy:</p>
+        <div class="contact-card">
+          <p><strong>CORILLO — Marcos Santiago</strong></p>
+          <p>Puerto Rico, United States</p>
+          <p>Email: <a href="mailto:hello@marcossantiago.com">hello@marcossantiago.com</a></p>
+          <p>DMCA Claims: <a href="/dmca/">corillo.live/dmca/</a></p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<script>
+// Theme
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  if(btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+
+// Language tabs
+function setLang(lang) {
+  document.querySelectorAll('.content-block').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('block-' + lang).classList.add('active');
+  document.querySelectorAll('.lang-tab').forEach(t => {
+    if(t.textContent.toLowerCase().includes(lang === 'es' ? 'español' : 'english')) t.classList.add('active');
+  });
+  localStorage.setItem('corillo-lang', lang);
+}
+const savedLang = localStorage.getItem('corillo-lang') || 'es';
+if(savedLang === 'en') setLang('en');
+</script>
+</body>
+</html>
