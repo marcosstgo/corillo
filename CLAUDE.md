@@ -50,7 +50,7 @@ Never modify this pattern — it is critical for cross-browser HLS support.
 
 The homepage and multiplayer page poll `/mediamtx-api/v3/paths/list` every 15 seconds (`POLL_MS = 15000`) with an 8-second client-side cache (`CACHE_S`/`CACHE_MS`). The fetch has a `API_TIMEOUT_MS = 5000` abort timeout. A `ready: true` field on a path item means the stream is live. Viewer count comes from `path.readers.length`.
 
-The homepage pauses polling via `visibilitychange` when the tab is hidden and resumes (with an immediate fetch) when it becomes visible again.
+Both the homepage and multiplayer page pause polling via `visibilitychange` when the tab is hidden and resume (with an immediate fetch, `cache.t = 0`) when it becomes visible again.
 
 ### Shared assets
 
@@ -58,6 +58,7 @@ The homepage pauses polling via `visibilitychange` when the tab is hidden and re
 |------|----------|
 | `assets/styles.css` | Design tokens (`:root` vars), light-mode overrides, CSS reset, grain overlay (`body::after`), `@keyframes blink`, `.theme-btn` |
 | `assets/streamers.js` | `window.STREAMERS` roster — single source of truth |
+| `assets/og-image.html` | Source template for the OG social preview image (1200×630 SVG). To regenerate `og-image.png`: open in a headless browser and screenshot at exactly 1200×630. |
 
 All 9 HTML pages link `styles.css`. Each page's inline `<style>` keeps only page-specific layout and component rules.
 
@@ -96,9 +97,8 @@ Keep these keys stable — they're spread across every replicated page and chang
 | Key | Scope | Values |
 |-----|-------|--------|
 | `corillo-theme` | All pages | `'dark'` / `'light'` |
-| `corillo_theme` | All player pages | `'original'` / `'terminal'` / `'twitch'` (player visual theme) |
-| `corillo_theme` | All player pages (katatonia, 404, tea, mira_sanganooo, elbala) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared) |
-| `corillo_chat` | `katatonia/index.html` | `'1'` / `'0'` (chat panel visibility) |
+| `corillo_theme` | All player pages (katatonia, 404, tea, mira_sanganooo, elbala) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared across all players) |
+| `corillo_chat` | `katatonia/index.html` | `'visible'` / `'hidden'` (chat panel visibility) |
 
 ## Conventions
 
