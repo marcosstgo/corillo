@@ -1,0 +1,45 @@
+/* CORILLO — shared design tokens and base styles
+   Loaded on every page before the page-specific <style> block. */
+
+/* ── Dark-mode design tokens (defaults) ── */
+:root{
+  --ink:#060608; --surface:#0c0c10; --panel:#121218;
+  --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.14);
+  --white:#f2efe9; --muted:#48485a; --accent:#e8c84a; --live:#df3030;
+  --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
+}
+
+/* ── Light-mode token overrides ── */
+[data-theme="light"]{
+  --ink:#f0efe9; --surface:#e4e2db; --panel:#d8d6cf;
+  --border:rgba(0,0,0,.1); --border-h:rgba(0,0,0,.2);
+  --white:#12120f; --muted:#5a5a6a; --accent:#b08010; --live:#df3030;
+}
+[data-theme="light"] body{background:var(--ink);color:var(--white)}
+[data-theme="light"] body::after{opacity:.3}
+[data-theme="light"] .btn{color:var(--white);border-color:rgba(0,0,0,.12)}
+[data-theme="light"] .btn:hover{border-color:rgba(0,0,0,.25);background:rgba(0,0,0,.05)}
+[data-theme="light"] .btn.primary{background:var(--accent);color:#fff;border-color:transparent}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid rgba(232,200,74,.7);outline-offset:3px;border-radius:6px}
+
+/* ── Film-grain overlay (non-interactive) ── */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:50;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
+}
+
+/* ── Live indicator pulse ── */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ── Dark/light theme toggle button ── */
+.theme-btn{
+  width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+  background:transparent;color:var(--white);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.75rem;transition:.2s;flex-shrink:0;
+}
+.theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}

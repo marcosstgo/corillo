@@ -7,27 +7,16 @@
   <title>CORILLO — Únete</title>
   <meta name="description" content="Crea tu canal en CORILLO en 2 minutos." />
 
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+  <link rel="stylesheet" href="/assets/styles.css">
   <style>
-    :root{
-      --ink:#060608; --surface:#0c0c10; --panel:#121218;
-      --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.14);
-      --white:#f2efe9; --muted:#48485a; --accent:#e8c84a;
-      --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
-      --radius:14px;
-    }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{ --radius:14px; }
     body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    :focus-visible{outline:2px solid rgba(232,200,74,.7);outline-offset:3px;border-radius:6px}
-    body::after{
-      content:'';position:fixed;inset:0;pointer-events:none;z-index:50;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.025'/%3E%3C/svg%3E");
-    }
 
     .container{max-width:1100px;margin:0 auto;padding:22px 18px}
     @media(max-width:600px){.container{padding:16px 12px}}
@@ -129,25 +118,8 @@
     .rtmp-item label{margin:0 0 4px;display:block}
     .rtmp-note{margin-top:8px;font-size:.78rem;color:rgba(255,255,255,.45)}
 
-    [data-theme="light"]{
-      --ink:#f0efe9; --surface:#e4e2db; --panel:#d8d6cf;
-      --border:rgba(0,0,0,.1); --border-h:rgba(0,0,0,.2);
-      --white:#12120f; --muted:#5a5a6a; --accent:#b08010;
-    }
-    [data-theme="light"] body{background:var(--ink);color:var(--white)}
-    [data-theme="light"] body::after{opacity:.3}
-    [data-theme="light"] .btn{color:var(--white);border-color:rgba(0,0,0,.12)}
-    [data-theme="light"] .btn:hover{border-color:rgba(0,0,0,.25);background:rgba(0,0,0,.05)}
-    [data-theme="light"] .btn.primary{background:var(--accent);color:#fff;border-color:transparent}
     [data-theme="light"] .card{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
     [data-theme="light"] .sub{color:rgba(0,0,0,.6)}
-    .theme-btn{
-      width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
-      background:transparent;color:var(--white);cursor:pointer;
-      display:inline-flex;align-items:center;justify-content:center;
-      font-size:.75rem;transition:.2s;flex-shrink:0;
-    }
-    .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
 
     /* Reservation notice */
     .reserved-note{
@@ -204,7 +176,7 @@
       </div>
 
       <div class="reserved-note">
-        Handles reservados: <strong>join, assets, catatonia, mediamtx-api, live, api, admin, static</strong>
+        Handles reservados: <strong>join, assets, katatonia, mediamtx-api, live, api, admin, static</strong>
       </div>
     </div>
 
@@ -293,7 +265,7 @@
 const $ = (s, el=document) => el.querySelector(s);
 
 const RESERVED = new Set([
-  'join','assets','catatonia','mediamtx-api','live','api',
+  'join','assets','katatonia','mediamtx-api','live','api',
   'static','admin','robots','sitemap','favicon','index','stream'
 ]);
 
