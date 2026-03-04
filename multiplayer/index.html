@@ -398,7 +398,7 @@ async function refresh() {
     const livePaths = getLive(data);
 
     const liveStreamers = STREAMERS
-      .filter(s => livePaths.find(p => p.name === 'live/' + s.key))
+      .filter(s => s.key && livePaths.find(p => p.name === 'live/' + s.key))
       .map(s => {
         const pd = livePaths.find(p => p.name === 'live/' + s.key);
         return { ...s, viewers: pd ? (pd.readers || []).length : 0 };

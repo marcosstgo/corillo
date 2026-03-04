@@ -241,7 +241,10 @@
         <div class="rtmp-note">
           En OBS: <strong>Configuración → Emisión → Tipo: Stream personalizado</strong><br>
           Pega el servidor y el stream key. El host te confirmará que puedes empezar.<br>
-          Para vertical (9:16): stream key es <code id="rtmpKeyV">—</code>
+          Para vertical (9:16): stream key es <code id="rtmpKeyV">—</code><br><br>
+          <a href="/configuracion/" style="color:rgba(232,200,74,.8);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:1px;">
+            <i class="fa-solid fa-book-open"></i>&nbsp; Ver guía completa de OBS & Meld Studio →
+          </a>
         </div>
       </div>
 
@@ -266,8 +269,9 @@
 const $ = (s, el=document) => el.querySelector(s);
 
 const RESERVED = new Set([
-  'join','assets','katatonia','mediamtx-api','live','api',
-  'static','admin','robots','sitemap','favicon','index','stream'
+  'join','assets','mediamtx-api','live','api',
+  'static','admin','robots','sitemap','favicon','index','stream',
+  'katatonia','tea','mira_sanganooo','404','elbala','marcos'
 ]);
 
 function sanitize(raw) {

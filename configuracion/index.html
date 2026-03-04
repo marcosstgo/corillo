@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Configuración OBS & Meld Studio</title>
+  <meta name="description" content="Guía paso a paso para configurar OBS Studio o Meld Studio y hacer stream a CORILLO." />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/configuracion/">
+  <meta property="og:title" content="CORILLO — Configuración OBS & Meld">
+  <meta property="og:description" content="Guía completa para configurar OBS Studio o Meld Studio y hacer stream a CORILLO desde Puerto Rico.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:locale" content="es_PR">
+  <meta property="og:site_name" content="CORILLO">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    :root{ --radius:14px; }
+    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+
+    .container{max-width:1100px;margin:0 auto;padding:22px 18px}
+    @media(max-width:600px){.container{padding:16px 12px}}
+
+    /* ── TOP ── */
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+    .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1}
+    .brand span{color:var(--accent)}
+    .title{font-family:var(--display);letter-spacing:2px;font-size:clamp(2rem,5vw,3.2rem);line-height:1;margin-top:4px}
+    .sub{margin-top:8px;color:rgba(255,255,255,.65);max-width:64ch;font-size:.9rem}
+
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.6rem;font-weight:700;
+      padding:10px 14px;border-radius:8px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.7);transition:.2s ease;white-space:nowrap;
+      text-decoration:none;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
+    .btn.primary:hover{opacity:.88}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+    /* ── TABS ── */
+    .tabs{display:flex;gap:8px;margin-bottom:24px}
+    .tab{
+      font-family:var(--mono);font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
+      padding:10px 18px;border-radius:8px;border:1px solid var(--border);
+      background:transparent;color:var(--muted);cursor:pointer;transition:.18s;
+    }
+    .tab.active{border-color:rgba(232,200,74,.4);color:var(--accent);background:rgba(232,200,74,.06)}
+    .tab:hover:not(.active){border-color:var(--border-h);color:var(--white)}
+
+    /* ── CARDS ── */
+    .steps{display:flex;flex-direction:column;gap:14px}
+    .card{
+      border:1px solid var(--border);border-radius:var(--radius);
+      background:linear-gradient(to bottom,rgba(18,18,24,.65),rgba(12,12,16,.45));
+      padding:20px;
+    }
+    .card-head{
+      display:flex;align-items:center;gap:12px;margin-bottom:16px;
+      padding-bottom:14px;border-bottom:1px solid var(--border);
+    }
+    .step-num{
+      font-family:var(--display);font-size:2rem;color:rgba(232,200,74,.25);
+      letter-spacing:1px;line-height:1;flex-shrink:0;
+    }
+    .step-title{
+      font-family:var(--mono);text-transform:uppercase;letter-spacing:2.5px;
+      font-size:11px;color:rgba(255,255,255,.7);
+    }
+    .step-path{
+      font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.5px;margin-top:3px;
+    }
+
+    /* ── FIELDS ── */
+    .field{margin-bottom:14px}
+    .field:last-child{margin-bottom:0}
+    .field-label{
+      font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+      color:rgba(255,255,255,.5);margin-bottom:5px;display:block;
+    }
+    .code-wrap{position:relative}
+    .code{
+      font-family:var(--mono);font-size:11px;
+      background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:8px;
+      padding:10px 44px 10px 12px;overflow-x:auto;white-space:nowrap;
+      color:rgba(255,255,255,.85);letter-spacing:.3px;
+    }
+    .code.no-copy{padding-right:12px}
+    .copy-btn{
+      position:absolute;top:50%;right:8px;transform:translateY(-50%);
+      font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;
+      color:rgba(255,255,255,.6);padding:4px 8px;cursor:pointer;transition:.2s;
+    }
+    .copy-btn:hover{background:rgba(255,255,255,.12);color:var(--white)}
+
+    .field-note{margin-top:7px;font-size:.8rem;color:rgba(255,255,255,.45);line-height:1.5}
+    .field-note a{color:var(--accent);text-decoration:none}
+    .field-note a:hover{text-decoration:underline}
+
+    /* ── GRID VALUES ── */
+    .val-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:500px){.val-grid{grid-template-columns:1fr}}
+
+    /* ── RTMP CARD (nota especial) ── */
+    .note-card{
+      border:1px solid rgba(232,200,74,.15);border-radius:var(--radius);
+      background:rgba(232,200,74,.03);padding:16px;margin-top:14px;
+    }
+    .note-card-title{
+      font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+      color:rgba(232,200,74,.7);margin-bottom:10px;
+    }
+    .note-card p{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.6;margin:0}
+    .note-card code{font-family:var(--mono);font-size:10px;color:rgba(232,200,74,.8);
+      background:rgba(232,200,74,.08);padding:2px 5px;border-radius:4px}
+
+    /* ── TROUBLESHOOTING ── */
+    .tshoot{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+    .tshoot li{
+      display:flex;gap:12px;align-items:flex-start;
+      font-size:.85rem;color:rgba(255,255,255,.65);line-height:1.5;
+    }
+    .tshoot li i{color:rgba(232,200,74,.6);margin-top:2px;flex-shrink:0;width:14px}
+    .tshoot strong{color:rgba(255,255,255,.85)}
+
+    /* ── FOOTER LINK ── */
+    .page-footer{
+      margin-top:40px;padding-top:20px;border-top:1px solid var(--border);
+      text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:1.5px;
+      text-transform:uppercase;color:var(--muted);
+    }
+    .page-footer a{color:var(--accent);text-decoration:none}
+    .page-footer a:hover{text-decoration:underline}
+
+    [data-theme="light"] .card{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
+    [data-theme="light"] .sub{color:rgba(0,0,0,.6)}
+    [data-theme="light"] .note-card{background:rgba(0,0,0,.03)}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP -->
+  <div class="top">
+    <div>
+      <a href="/" class="brand">C<span>O</span>RILLO</a>
+      <div class="title">CONFIGURACIÓN</div>
+      <div class="sub">Configura OBS Studio o Meld Studio para hacer stream a CORILLO en minutos.</div>
+    </div>
+    <div class="row">
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+      <a class="btn primary" href="/join/"><i class="fa-solid fa-plus"></i> Únete</a>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" id="tabObs" onclick="switchTab('obs')">
+      <i class="fa-solid fa-video"></i> OBS Studio
+    </button>
+    <button class="tab" id="tabMeld" onclick="switchTab('meld')">
+      <i class="fa-solid fa-sliders"></i> Meld Studio
+    </button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       OBS STUDIO
+  ══════════════════════════════════════════ -->
+  <div id="tab-obs" class="steps">
+
+    <!-- PASO 01: Emisión -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Emisión</div>
+          <div class="step-path">Configuración → Emisión</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Servicio</span>
+        <div class="code no-copy">Personalizado...</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Servidor</span>
+        <div class="code-wrap">
+          <div class="code" id="rtmpServer">rtmp://corillo.live/live</div>
+          <button class="copy-btn" data-target="rtmpServer">Copiar</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Clave de retransmisión (Stream Key)</span>
+        <div class="code no-copy">tu_handle &nbsp;·&nbsp; ej: katatonia</div>
+        <div class="field-note">
+          El host te asigna tu stream key. Genera tu handle en <a href="/join/">/join/</a> y compártelo.<br>
+          Para stream vertical (9:16) usa la key <code>tu_handle-vertical</code>.
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 02: Salida -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Salida</div>
+          <div class="step-path">Configuración → Salida → Modo: Avanzado → pestaña Emisión</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Encoder de vídeo</span>
+        <div class="code no-copy">x264 &nbsp;·&nbsp; (o NVENC / AMF si tienes GPU dedicada)</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Bitrate de vídeo</span>
+        <div class="val-grid">
+          <div>
+            <div class="field-note" style="margin:0 0 4px">1080p</div>
+            <div class="code-wrap">
+              <div class="code" id="bitrate1080">3000 Kbps</div>
+              <button class="copy-btn" data-target="bitrate1080">Copiar</button>
+            </div>
+          </div>
+          <div>
+            <div class="field-note" style="margin:0 0 4px">720p</div>
+            <div class="code-wrap">
+              <div class="code" id="bitrate720">2500 Kbps</div>
+              <button class="copy-btn" data-target="bitrate720">Copiar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Intervalo de fotogramas clave</span>
+        <div class="code-wrap">
+          <div class="code" id="keyframe">2 s</div>
+          <button class="copy-btn" data-target="keyframe">Copiar</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Preset CPU (solo x264)</span>
+        <div class="code no-copy">veryfast</div>
+        <div class="field-note">Si tienes drops usa <code>ultrafast</code>. Si tienes CPU sobrante prueba <code>fast</code>.</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Perfil</span>
+        <div class="code no-copy">high</div>
+      </div>
+    </div>
+
+    <!-- PASO 03: Vídeo -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Vídeo</div>
+          <div class="step-path">Configuración → Vídeo</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Resolución base (lienzo)</span>
+        <div class="code-wrap">
+          <div class="code" id="canvasRes">1920x1080</div>
+          <button class="copy-btn" data-target="canvasRes">Copiar</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Resolución de salida</span>
+        <div class="val-grid">
+          <div>
+            <div class="field-note" style="margin:0 0 4px">1080p (recomendado)</div>
+            <div class="code no-copy">1920x1080</div>
+          </div>
+          <div>
+            <div class="field-note" style="margin:0 0 4px">720p (conexión limitada)</div>
+            <div class="code no-copy">1280x720</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Valores de FPS</span>
+        <div class="val-grid">
+          <div>
+            <div class="field-note" style="margin:0 0 4px">Recomendado</div>
+            <div class="code no-copy">30</div>
+          </div>
+          <div>
+            <div class="field-note" style="margin:0 0 4px">Gaming / alta acción</div>
+            <div class="code no-copy">60</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 04: Audio -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Audio</div>
+          <div class="step-path">Configuración → Salida → pestaña Audio</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Bitrate de audio</span>
+        <div class="code-wrap">
+          <div class="code" id="audioBitrate">160 Kbps</div>
+          <button class="copy-btn" data-target="audioBitrate">Copiar</button>
+        </div>
+        <div class="field-note">AAC es el codec por defecto — no lo cambies.</div>
+      </div>
+    </div>
+
+    <!-- PASO 05: Verificar -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">05</div>
+        <div>
+          <div class="step-title">Iniciar y verificar</div>
+          <div class="step-path">OBS → Iniciar emisión</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-note" style="font-size:.9rem;color:rgba(255,255,255,.65);">
+          Dale click a <strong>Iniciar emisión</strong> en OBS. En 5–10 segundos el stream debería aparecer en tu player de CORILLO:
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Tu player</span>
+        <div class="code no-copy">corillo.live / tu_handle /</div>
+        <div class="field-note">Reemplaza <code>tu_handle</code> con tu handle asignado.</div>
+      </div>
+
+      <div class="note-card">
+        <div class="note-card-title"><i class="fa-solid fa-triangle-exclamation"></i>&nbsp; Troubleshooting OBS</div>
+        <ul class="tshoot">
+          <li>
+            <i class="fa-solid fa-circle-dot"></i>
+            <span><strong>Stream no aparece en el player</strong> — verifica que el servidor es exactamente <code>rtmp://corillo.live/live</code> y que la stream key es correcta. Espera 10s.</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-dot"></i>
+            <span><strong>Drops / lag / frames caídos</strong> — baja el bitrate 500 Kbps. Cambia preset de <code>veryfast</code> a <code>ultrafast</code>. Si usas GPU encoder (NVENC/AMF) puede ayudar.</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-dot"></i>
+            <span><strong>Audio desfasado</strong> — Configuración → Audio → Desplazamiento de sincronización de audio. Ajusta en incrementos de 50ms.</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-dot"></i>
+            <span><strong>Desconexiones frecuentes</strong> — en Configuración → Avanzado activa <strong>"Reconectar automáticamente"</strong> con reintentos cada 10s.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /tab-obs -->
+
+  <!-- ══════════════════════════════════════════
+       MELD STUDIO
+  ══════════════════════════════════════════ -->
+  <div id="tab-meld" class="steps" style="display:none">
+
+    <!-- PASO 01: Destino -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Añadir destino RTMP</div>
+          <div class="step-path">Panel derecho → Destinations → Add Destination → Custom RTMP</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Server URL</span>
+        <div class="code-wrap">
+          <div class="code" id="meldRtmp">rtmp://corillo.live/live</div>
+          <button class="copy-btn" data-target="meldRtmp">Copiar</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Stream Key</span>
+        <div class="code no-copy">tu_handle &nbsp;·&nbsp; ej: katatonia</div>
+        <div class="field-note">
+          El host te asigna tu stream key. Genera tu handle en <a href="/join/">/join/</a>.<br>
+          Para stream vertical (9:16) usa la key <code>tu_handle-vertical</code>.
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 02: Calidad -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Calidad de salida</div>
+          <div class="step-path">Settings → Stream Quality</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Resolución</span>
+        <div class="val-grid">
+          <div>
+            <div class="field-note" style="margin:0 0 4px">Recomendada</div>
+            <div class="code no-copy">1920×1080</div>
+          </div>
+          <div>
+            <div class="field-note" style="margin:0 0 4px">Conexión limitada</div>
+            <div class="code no-copy">1280×720</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Frame rate</span>
+        <div class="code no-copy">30 fps &nbsp;·&nbsp; (60 fps para gaming)</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Video bitrate</span>
+        <div class="code-wrap">
+          <div class="code" id="meldVideoBr">3000 Kbps</div>
+          <button class="copy-btn" data-target="meldVideoBr">Copiar</button>
+        </div>
+        <div class="field-note">Para 720p usa 2500 Kbps.</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Audio bitrate</span>
+        <div class="code-wrap">
+          <div class="code" id="meldAudioBr">160 Kbps</div>
+          <button class="copy-btn" data-target="meldAudioBr">Copiar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASO 03: Go Live -->
+    <div class="card">
+      <div class="card-head">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Iniciar y verificar</div>
+          <div class="step-path">Meld → Go Live</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-note" style="font-size:.9rem;color:rgba(255,255,255,.65);">
+          Asegúrate de que el destino <strong>Custom RTMP</strong> esté activado y dale click a <strong>Go Live</strong>. En 5–10 segundos el stream aparecerá en tu player de CORILLO.
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Tu player</span>
+        <div class="code no-copy">corillo.live / tu_handle /</div>
+      </div>
+
+      <div class="note-card">
+        <div class="note-card-title"><i class="fa-solid fa-triangle-exclamation"></i>&nbsp; Troubleshooting Meld</div>
+        <ul class="tshoot">
+          <li>
+            <i class="fa-solid fa-circle-dot"></i>
+            <span><strong>Stream no aparece</strong> — verifica que el destino seleccionado es "Custom RTMP" y que está activo (toggle encendido). Revisa la Server URL y Stream Key.</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-dot"></i>
+            <span><strong>Error de conexión</strong> — confirma que el servidor es <code>rtmp://corillo.live/live</code> (sin barra al final). Revisa tu conexión.</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-circle-dot"></i>
+            <span><strong>Calidad baja / pixelado</strong> — sube el video bitrate a 3500–4000 Kbps si tu internet lo permite.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div><!-- /tab-meld -->
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <p>¿Todavía no tienes tu handle? &nbsp;<a href="/join/">Únete a CORILLO →</a></p>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── DARK/LIGHT THEME ──
+(function(){
+  const root  = document.documentElement;
+  const btn   = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  if (btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+
+// ── TAB SWITCHER ──
+function switchTab(name) {
+  document.getElementById('tab-obs').style.display  = name === 'obs'  ? 'flex' : 'none';
+  document.getElementById('tab-meld').style.display = name === 'meld' ? 'flex' : 'none';
+  document.getElementById('tabObs').classList.toggle('active',  name === 'obs');
+  document.getElementById('tabMeld').classList.toggle('active', name === 'meld');
+}
+
+// ── COPY BUTTONS ──
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const text = document.getElementById(btn.dataset.target)?.textContent?.trim();
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      const orig = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = orig, 1200);
+    } catch {
+      alert('Copia manualmente: ' + text);
+    }
+  });
+});
+</script>
+</body>
+</html>

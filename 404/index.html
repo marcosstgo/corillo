@@ -15,6 +15,8 @@
   <meta property="og:site_name" content="CORILLO">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -233,7 +235,11 @@ const channel   = (pathParts[0] || new URLSearchParams(location.search).get('ch'
 
 $('#chTag').textContent = '— ' + channel.toUpperCase();
 document.title          = 'CORILLO — ' + channel.toUpperCase();
-$('#twitchLink').href   = 'https://twitch.tv/' + encodeURIComponent(channel);
+
+// Twitch username map — add handle here if different from channel key
+const TWITCH_HANDLES = {};
+const twitchUser = TWITCH_HANDLES[channel] || channel;
+$('#twitchLink').href = 'https://twitch.tv/' + encodeURIComponent(twitchUser);
 
 // ── MODE ──
 const params = new URLSearchParams(location.search);

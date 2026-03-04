@@ -20,10 +20,11 @@ The site is served as static files. **Caddy** handles reverse proxy and SSL, pro
 |------|-------------|
 | `index.html` | Homepage — channel grid, featured player, live count |
 | `katatonia/index.html` | Individual channel player (the canonical player template) |
-| `{streamer}/index.html` | Same player template replicated per streamer (404, elbala, mira_sanganooo, tea) |
+| `{streamer}/index.html` | Same player template replicated per streamer (404, elbala, marcos, mira_sanganooo, tea) |
 | `multiplayer/index.html` | Multi-stream grid view — shows all live streamers simultaneously |
 | `dual/index.html` | Fixed 2-up layout for KATATONIA + MIRA_SANGANOOO (named "KATANA") |
 | `join/index.html` | Onboarding/info page for new streamers |
+| `configuracion/index.html` | Step-by-step guide for configuring OBS Studio and Meld Studio |
 
 ### Streamers
 
@@ -34,6 +35,7 @@ The site is served as static files. **Caddy** handles reverse proxy and SSL, pro
 | `mira_sanganooo` | MIRA_SANGANOOO | — | — |
 | `404` | 404 | — | — |
 | `elbala` | ELBALA | — | — |
+| `marcos` | MARCOS | — | — |
 
 The `STREAMERS` roster lives in **`assets/streamers.js`** (`window.STREAMERS`). Only `index.html` and `multiplayer/index.html` load it — individual player pages don't use it. **Edit only `assets/streamers.js`** when adding or removing a streamer. Each entry: `key` (URL path + MediaMTX path prefix `live/{key}`), `name`, `sub`, `ava`, `color`, `host`, optionally `soon:true` for placeholder cards.
 
@@ -60,7 +62,7 @@ Both the homepage and multiplayer page pause polling via `visibilitychange` when
 | `assets/streamers.js` | `window.STREAMERS` roster — single source of truth |
 | `assets/og-image.html` | Source template for the OG social preview image (1200×630 SVG). To regenerate `og-image.png`: open in a headless browser and screenshot at exactly 1200×630. |
 
-All 9 HTML pages link `styles.css`. Each page's inline `<style>` keeps only page-specific layout and component rules.
+All 11 HTML pages link `styles.css`. Each page's inline `<style>` keeps only page-specific layout and component rules.
 
 ### Styling rules
 
@@ -97,7 +99,7 @@ Keep these keys stable — they're spread across every replicated page and chang
 | Key | Scope | Values |
 |-----|-------|--------|
 | `corillo-theme` | All pages | `'dark'` / `'light'` |
-| `corillo_theme` | All player pages (katatonia, 404, tea, mira_sanganooo, elbala) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared across all players) |
+| `corillo_theme` | All player pages (katatonia, 404, tea, mira_sanganooo, elbala, marcos) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared across all players) |
 | `corillo_chat` | `katatonia/index.html` | `'visible'` / `'hidden'` (chat panel visibility) |
 
 ## Conventions
