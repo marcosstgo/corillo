@@ -261,12 +261,42 @@
     }
     .plat-badge.builtin{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
     .plat-badge.custom{background:rgba(232,200,74,.1);border:1px solid rgba(232,200,74,.25);color:rgba(232,200,74,.8)}
+    .plat-badge.planned{background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.12);color:rgba(255,255,255,.25)}
     .platform-formula{
       margin-top:14px;padding:10px 14px;border-radius:8px;
       background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.06);
       font-family:var(--mono);font-size:.62rem;letter-spacing:.5px;color:rgba(255,255,255,.5);
     }
     .platform-formula strong{color:var(--accent)}
+
+    /* ── COMING SOON PLATFORM PREVIEW ── */
+    .plat-cs-wrap{
+      position:relative;border:1px dashed rgba(255,255,255,.1);border-radius:var(--radius);
+      background:rgba(255,255,255,.01);padding:24px;overflow:hidden;
+    }
+    .plat-cs-overlay{
+      position:absolute;inset:0;z-index:2;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+      background:rgba(6,6,8,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+      border-radius:var(--radius);
+    }
+    .plat-cs-tag{
+      font-family:var(--mono);font-size:.62rem;letter-spacing:3px;text-transform:uppercase;
+      color:rgba(255,255,255,.45);border:1px dashed rgba(255,255,255,.2);
+      background:rgba(6,6,8,.85);padding:8px 22px;border-radius:4px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .plat-preview-rows{opacity:.3;pointer-events:none;user-select:none}
+    .plat-cs-info{
+      margin-top:14px;padding:12px 16px;border-radius:8px;
+      border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02);
+      font-family:var(--mono);font-size:.6rem;letter-spacing:.5px;
+      color:rgba(255,255,255,.4);display:flex;align-items:flex-start;gap:8px;line-height:1.6;
+    }
+    .plat-cs-info i{color:rgba(255,255,255,.25);flex-shrink:0;margin-top:2px}
+    [data-theme="light"] .plat-cs-overlay{background:rgba(240,239,233,.7)}
+    [data-theme="light"] .plat-cs-tag{background:rgba(240,239,233,.95);color:rgba(0,0,0,.45);border-color:rgba(0,0,0,.2)}
+    [data-theme="light"] .plat-cs-info{border-color:rgba(0,0,0,.08);background:rgba(0,0,0,.03);color:rgba(0,0,0,.45)}
 
     /* ── DOWNLOAD ── */
     .download-box{
@@ -574,49 +604,63 @@
 
   <!-- ── PLATFORM SECTION ── -->
   <section class="section" id="platforms" aria-labelledby="plat-heading">
-    <div class="section-label" aria-hidden="true" data-t="plat_label">Supported Platforms</div>
-    <h2 class="section-title" id="plat-heading" data-t="plat_title">WHERE DO YOU WANT TO STREAM?</h2>
-    <p class="section-sub" data-t="plat_sub">Select your destination from built-in presets, or enter any custom RTMP URL. Add your stream key and you're ready to go live.</p>
+    <div class="section-label" aria-hidden="true" data-t="plat_label">Coming Soon</div>
+    <h2 class="section-title" id="plat-heading" data-t="plat_title">PLATFORM PRESETS</h2>
+    <p class="section-sub" data-t="plat_sub">Future versions of Streamer Pro will include one-click presets for the most popular RTMP platforms. Select your destination, enter your stream key, and go live — no URL lookup needed.</p>
 
-    <div class="platform-block">
-      <div class="platform-note" data-t="plat_note">Destination = RTMP Base URL + Stream Key</div>
-      <div class="platforms-list" role="list">
+    <!-- Preview concept — feature not yet implemented -->
+    <div class="plat-cs-wrap">
 
-        <div class="platform-row" role="listitem">
-          <div class="plat-name">CORILLO</div>
-          <div class="plat-url">rtmp://corillo.live/live/</div>
-          <span class="plat-badge builtin" data-t="badge_builtin">Built-in</span>
+      <!-- Coming Soon overlay -->
+      <div class="plat-cs-overlay" aria-label="Coming soon">
+        <div class="plat-cs-tag">
+          <i class="fa-regular fa-clock" aria-hidden="true"></i>
+          <span data-t="plat_cs_tag">Coming Soon</span>
         </div>
-
-        <div class="platform-row" role="listitem">
-          <div class="plat-name">TWITCH</div>
-          <div class="plat-url">rtmp://live.twitch.tv/app/</div>
-          <span class="plat-badge builtin" data-t="badge_builtin">Built-in</span>
-        </div>
-
-        <div class="platform-row" role="listitem">
-          <div class="plat-name">KICK</div>
-          <div class="plat-url">rtmp://ingest.kick.com/live/</div>
-          <span class="plat-badge builtin" data-t="badge_builtin">Built-in</span>
-        </div>
-
-        <div class="platform-row" role="listitem">
-          <div class="plat-name">YOUTUBE</div>
-          <div class="plat-url">rtmp://a.rtmp.youtube.com/live2</div>
-          <span class="plat-badge builtin" data-t="badge_builtin">Built-in</span>
-        </div>
-
-        <div class="platform-row" role="listitem">
-          <div class="plat-name" data-t="plat_custom_label">CUSTOM RTMP</div>
-          <div class="plat-url" data-t="plat_custom_url">Any RTMP endpoint — editable base URL</div>
-          <span class="plat-badge custom" data-t="badge_custom">Custom</span>
-        </div>
-
       </div>
-      <div class="platform-formula">
-        <strong data-t="plat_formula_label">Stream Destination:</strong>&nbsp;
-        <span data-t="plat_formula">RTMP Base URL <strong style="color:rgba(255,255,255,.35)">+</strong> Your Stream Key</span>
+
+      <!-- Dimmed platform rows (preview concept only) -->
+      <div class="plat-preview-rows" aria-hidden="true">
+        <div class="platform-note" data-t="plat_note">Destination = RTMP Base URL + Stream Key</div>
+        <div class="platforms-list">
+          <div class="platform-row">
+            <div class="plat-name">CORILLO</div>
+            <div class="plat-url">rtmp://corillo.live/live/</div>
+            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+          </div>
+          <div class="platform-row">
+            <div class="plat-name">TWITCH</div>
+            <div class="plat-url">rtmp://live.twitch.tv/app/</div>
+            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+          </div>
+          <div class="platform-row">
+            <div class="plat-name">KICK</div>
+            <div class="plat-url">rtmp://ingest.kick.com/live/</div>
+            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+          </div>
+          <div class="platform-row">
+            <div class="plat-name">YOUTUBE</div>
+            <div class="plat-url">rtmp://a.rtmp.youtube.com/live2</div>
+            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+          </div>
+          <div class="platform-row">
+            <div class="plat-name" data-t="plat_custom_label">CUSTOM RTMP</div>
+            <div class="plat-url" data-t="plat_custom_url">Any RTMP endpoint — editable base URL</div>
+            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+          </div>
+        </div>
+        <div class="platform-formula">
+          <strong data-t="plat_formula_label">Stream Destination:</strong>&nbsp;
+          <span data-t="plat_formula">RTMP Base URL <strong style="color:rgba(255,255,255,.35)">+</strong> Your Stream Key</span>
+        </div>
       </div>
+
+    </div>
+
+    <!-- Clarification note -->
+    <div class="plat-cs-info">
+      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+      <span data-t="plat_cs_note">Currently, the RTMP destination URL is entered manually in the app. Platform presets with auto-filled URLs will be available in a future update.</span>
     </div>
   </section>
 
@@ -843,9 +887,11 @@ const STRINGS = {
     uc5_desc:          'Loop waiting room videos, promotional content, or branded playlists through a simple, reliable stream.',
     uc6_title:         'Small Teams',
     uc6_desc:          'For teams that need "set it and run" streaming — minimal setup, maximum reliability, no technical expertise required.',
-    plat_label:        'Supported Platforms',
-    plat_title:        'WHERE DO YOU WANT TO STREAM?',
-    plat_sub:          'Select your destination from built-in presets, or enter any custom RTMP URL. Add your stream key and you\'re ready to go live.',
+    plat_label:        'Coming Soon',
+    plat_title:        'PLATFORM PRESETS',
+    plat_sub:          'Future versions of Streamer Pro will include one-click presets for the most popular RTMP platforms. Select your destination, enter your stream key, and go live — no URL lookup needed.',
+    plat_cs_tag:       'Coming Soon',
+    plat_cs_note:      'Currently, the RTMP destination URL is entered manually in the app. Platform presets with auto-filled URLs will be available in a future update.',
     plat_note:         'Destination = RTMP Base URL + Stream Key',
     plat_custom_label: 'CUSTOM RTMP',
     plat_custom_url:   'Any RTMP endpoint — editable base URL',
@@ -853,6 +899,7 @@ const STRINGS = {
     plat_formula:      'RTMP Base URL <strong style="color:rgba(255,255,255,.35)">+</strong> Your Stream Key',
     badge_builtin:     'Built-in',
     badge_custom:      'Custom',
+    badge_planned:     'Planned',
     dl_label:          'Download',
     dl_title:          'DOWNLOAD STREAMER PRO BETA',
     dl_sub:            'Windows 10/11 · FFmpeg bundled · No extra install required',
@@ -932,9 +979,11 @@ const STRINGS = {
     uc5_desc:          'Reproduce videos de sala de espera, contenido promocional o playlists de marca con un stream simple y confiable.',
     uc6_title:         'Equipos Pequeños',
     uc6_desc:          'Para equipos que necesitan streaming tipo "configúralo y funciona" — configuración mínima, máxima confiabilidad.',
-    plat_label:        'Plataformas Soportadas',
-    plat_title:        '¿A DÓNDE QUIERES TRANSMITIR?',
-    plat_sub:          'Selecciona tu destino entre los presets integrados, o ingresa cualquier URL RTMP personalizada. Agrega tu stream key y estás listo para ir en vivo.',
+    plat_label:        'Próximamente',
+    plat_title:        'PRESETS DE PLATAFORMA',
+    plat_sub:          'Las próximas versiones de Streamer Pro incluirán presets de un clic para las plataformas RTMP más populares. Selecciona tu destino, ingresa tu stream key y sal en vivo — sin buscar URLs.',
+    plat_cs_tag:       'Próximamente',
+    plat_cs_note:      'Por el momento, la URL de destino RTMP se ingresa manualmente en la app. Los presets de plataforma con URLs pre-configuradas estarán disponibles en una futura actualización.',
     plat_note:         'Destino = URL Base RTMP + Stream Key',
     plat_custom_label: 'RTMP PERSONALIZADO',
     plat_custom_url:   'Cualquier endpoint RTMP — URL base editable',
@@ -942,6 +991,7 @@ const STRINGS = {
     plat_formula:      'URL Base RTMP <strong style="color:rgba(255,255,255,.35)">+</strong> Tu Stream Key',
     badge_builtin:     'Integrado',
     badge_custom:      'Personalizado',
+    badge_planned:     'Planificado',
     dl_label:          'Descarga',
     dl_title:          'DESCARGA STREAMER PRO BETA',
     dl_sub:            'Windows 10/11 · FFmpeg incluido · Sin instalación adicional',
