@@ -87,14 +87,27 @@
     .panel .btn:hover{color:#fff;border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.08)}
     .panel .btn.primary{background:var(--accent);color:#111;border-color:transparent}
 
-    /* Status bar */
-    .statusBar{
-      position:absolute;left:0;right:0;bottom:0;
-      display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;
+    /* Controls bar */
+    .ctrl-bar{
+      position:absolute;left:0;right:0;bottom:0;z-index:12;
+      display:flex;align-items:center;justify-content:space-between;gap:8px;padding:28px 12px 10px;
       background:linear-gradient(to top,rgba(0,0,0,.8),transparent);
-      pointer-events:none;
+      opacity:0;transition:opacity .25s;pointer-events:none;
     }
-    .statusBar .left,.statusBar .right{display:flex;gap:6px;pointer-events:auto}
+    .ctrl-bar.visible{opacity:1;pointer-events:auto}
+    .ctrl-left,.ctrl-right{display:flex;align-items:center;gap:6px}
+    .ctrl-btn{
+      width:30px;height:30px;background:none;border:none;
+      color:rgba(255,255,255,.9);font-size:13px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:4px;transition:color .15s,background .15s;flex-shrink:0;
+    }
+    .ctrl-btn:hover{color:#fff;background:rgba(255,255,255,.12)}
+    .vol-slider{
+      width:72px;height:3px;
+      appearance:none;-webkit-appearance:none;
+      background:rgba(255,255,255,.35);border-radius:2px;cursor:pointer;accent-color:#fff;
+    }
     .pill{
       display:inline-flex;align-items:center;gap:5px;
       font-family:var(--mono);font-size:9px;letter-spacing:1px;
@@ -127,8 +140,6 @@
     .unmute-btn{position:absolute;bottom:52px;left:14px;z-index:11;display:none;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;transition:background .15s,border-color .15s}
     .unmute-btn.show{display:inline-flex}
     .unmute-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4)}
-    #btnFs{cursor:pointer;background:rgba(0,0,0,.45);border:none}
-    #btnFs:hover{background:rgba(255,255,255,.1)}
 
     /* Responsive */
     @media(max-width:600px){
@@ -212,14 +223,17 @@
     <!-- Unmute banner -->
     <button id="unmuteBtn" class="unmute-btn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
 
-    <!-- Status bar -->
-    <div class="statusBar">
-      <div class="left">
+    <!-- Controls -->
+    <div class="ctrl-bar" id="ctrlBar">
+      <div class="ctrl-left">
+        <button id="ctrlPlay" class="ctrl-btn" title="Play / Pausa"><i class="fa-solid fa-pause"></i></button>
+        <button id="ctrlMute" class="ctrl-btn" title="Silenciar"><i class="fa-solid fa-volume-high"></i></button>
+        <input id="ctrlVol" type="range" min="0" max="1" step="0.05" value="1" class="vol-slider">
         <span class="pill"><i class="fa-solid fa-tower-broadcast"></i>&nbsp;<span id="hlsTxt">—</span></span>
       </div>
-      <div class="right">
-        <button id="btnFs" class="pill"><i class="fa-solid fa-expand"></i></button>
+      <div class="ctrl-right">
         <span class="pill"><i class="fa-solid fa-rotate"></i>&nbsp;<span id="retryTxt">0</span></span>
+        <button id="ctrlFs" class="ctrl-btn" title="Pantalla completa"><i class="fa-solid fa-expand"></i></button>
       </div>
     </div>
   </div>
@@ -299,8 +313,54 @@ $('#unmuteBtn').addEventListener('click', () => {
   hideUnmuteBanner();
 });
 
-// ── FULLSCREEN ──
-$('#btnFs').addEventListener('click', () => {
+// ── CONTROLS BAR ──
+let ctrlTimer = null;
+const ctrlBar = document.getElementById('ctrlBar');
+const playerWrap = document.querySelector('.playerWrap');
+function showCtrl() {
+  ctrlBar.classList.add('visible');
+  clearTimeout(ctrlTimer);
+  ctrlTimer = setTimeout(() => ctrlBar.classList.remove('visible'), 3000);
+}
+playerWrap.addEventListener('mousemove', showCtrl);
+playerWrap.addEventListener('mouseleave', () => { clearTimeout(ctrlTimer); ctrlBar.classList.remove('visible'); });
+playerWrap.addEventListener('touchstart', showCtrl, { passive: true });
+
+// Play / Pause
+const ctrlPlay = document.getElementById('ctrlPlay');
+ctrlPlay.addEventListener('click', () => {
+  const v = $('#video');
+  if (v.paused) v.play().catch(() => {}); else v.pause();
+});
+$('#video').addEventListener('play',  () => { ctrlPlay.querySelector('i').className = 'fa-solid fa-pause'; });
+$('#video').addEventListener('pause', () => { ctrlPlay.querySelector('i').className = 'fa-solid fa-play'; });
+
+// Mute / Volume
+const ctrlMute = document.getElementById('ctrlMute');
+const ctrlVol  = document.getElementById('ctrlVol');
+function syncVol() {
+  const v = $('#video');
+  ctrlVol.value = v.muted ? 0 : v.volume;
+  ctrlMute.querySelector('i').className = 'fa-solid ' +
+    ((v.muted || v.volume === 0) ? 'fa-volume-xmark' : v.volume < 0.5 ? 'fa-volume-low' : 'fa-volume-high');
+}
+ctrlMute.addEventListener('click', () => {
+  const v = $('#video');
+  v.muted = !v.muted;
+  if (!v.muted && v.volume === 0) v.volume = 1;
+  syncVol();
+});
+ctrlVol.addEventListener('input', () => {
+  const v = $('#video');
+  v.volume = +ctrlVol.value;
+  v.muted = v.volume === 0;
+  syncVol();
+});
+$('#video').addEventListener('volumechange', () => { syncVol(); if (!$('#video').muted) hideUnmuteBanner(); });
+
+// Fullscreen
+const ctrlFs = document.getElementById('ctrlFs');
+ctrlFs.addEventListener('click', () => {
   const v = $('#video');
   if (!document.fullscreenElement) {
     (v.requestFullscreen || v.webkitRequestFullscreen).call(v).catch(() => {});
@@ -309,8 +369,7 @@ $('#btnFs').addEventListener('click', () => {
   }
 });
 document.addEventListener('fullscreenchange', () => {
-  const icon = $('#btnFs').querySelector('i');
-  icon.className = document.fullscreenElement ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+  ctrlFs.querySelector('i').className = document.fullscreenElement ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
 });
 
 // ── STATS ──
