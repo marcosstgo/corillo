@@ -363,17 +363,24 @@ $('#video').addEventListener('volumechange', () => { syncVol(); if (!$('#video')
 
 // Fullscreen
 const ctrlFs = document.getElementById('ctrlFs');
+function isFullscreen() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+function updateFsIcon() { ctrlFs.querySelector('i').className = isFullscreen() ? 'fa-solid fa-compress' : 'fa-solid fa-expand'; }
 ctrlFs.addEventListener('click', () => {
   const v = $('#video');
-  if (!document.fullscreenElement) {
-    (v.requestFullscreen || v.webkitRequestFullscreen).call(v).catch(() => {});
-  } else {
-    document.exitFullscreen().catch(() => {});
+  if (isFullscreen()) {
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document).catch(() => {});
+  } else if (v.requestFullscreen) {
+    v.requestFullscreen().catch(() => {});
+  } else if (v.webkitRequestFullscreen) {
+    v.webkitRequestFullscreen();
+  } else if (v.webkitEnterFullscreen) {
+    v.webkitEnterFullscreen();
   }
 });
-document.addEventListener('fullscreenchange', () => {
-  ctrlFs.querySelector('i').className = document.fullscreenElement ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
-});
+document.addEventListener('fullscreenchange', updateFsIcon);
+document.addEventListener('webkitfullscreenchange', updateFsIcon);
+$('#video').addEventListener('webkitbeginfullscreen', () => { ctrlFs.querySelector('i').className = 'fa-solid fa-compress'; });
+$('#video').addEventListener('webkitendfullscreen',   () => { ctrlFs.querySelector('i').className = 'fa-solid fa-expand'; });
 
 // ── STATS ──
 let statsTimer = null;
