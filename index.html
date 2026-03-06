@@ -118,6 +118,10 @@
     .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
     .btn.primary:hover{opacity:.88;box-shadow:0 0 20px rgba(232,200,74,.25)}
 
+    /* ── DIGEST ── */
+    .digest-bar{display:flex;align-items:center;gap:8px;margin-top:16px;font-family:var(--mono);font-size:.7rem;color:rgba(255,255,255,.45);min-height:18px}
+    #digestText{font-style:italic;transition:opacity .4s}
+
     /* ── HERO ── */
     .hero{position:relative;padding:48px 0 20px}
     .heroCard{
@@ -371,6 +375,11 @@
               <a class="btn primary" href="#canales"><i class="fa-solid fa-play"></i> Ver en vivo</a>
               <a class="btn" href="/multiplayer/"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
               <a class="btn" href="/join/"><i class="fa-solid fa-bolt"></i> Crear canal</a>
+            </div>
+
+            <div class="digest-bar" id="digestBar" style="display:none">
+              <span class="dot on" style="width:6px;height:6px;flex-shrink:0"></span>
+              <span id="digestText"></span>
             </div>
 
           </div>
@@ -835,6 +844,20 @@ document.addEventListener('visibilitychange', () => {
     pollTimer = setInterval(refresh, POLL_MS);
   }
 });
+
+// ── DIGEST ──
+async function loadDigest() {
+  try {
+    const r = await fetch('/chat-api/digest');
+    if (!r.ok) return;
+    const { digest } = await r.json();
+    if (!digest) return;
+    document.getElementById('digestText').textContent = digest;
+    document.getElementById('digestBar').style.display = 'flex';
+  } catch(e) {}
+}
+loadDigest();
+setInterval(loadDigest, 2 * 60 * 1000);
 
 // ── VERSION ──
 fetch('/version.json').then(r => r.json()).then(d => {

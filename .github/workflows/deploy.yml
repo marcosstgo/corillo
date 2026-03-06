@@ -51,6 +51,7 @@ jobs:
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "scp /var/www/stream/chat/system_prompt.py marcos@192.168.8.167:/home/marcos/corillo-bot/system_prompt.py && \
+             scp /var/www/stream/chat/server.py marcos@192.168.8.167:/home/marcos/corillo-bot/server.py && \
              ssh marcos@192.168.8.167 'sudo systemctl restart corillo-bot'"
 
       - name: Commit bumped version
