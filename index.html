@@ -290,7 +290,10 @@
     #chatSend{background:var(--accent);color:var(--ink);border:none;border-radius:6px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:.15s;flex-shrink:0}
     #chatSend:hover{opacity:.85}
     #chatSend:disabled{opacity:.4;cursor:not-allowed}
-    @media(max-width:600px){#chatPanel{width:calc(100vw - 40px)}}
+    @media(max-width:600px){
+      #chatPanel{width:calc(100vw - 40px)}
+      #chatInput{font-size:16px}
+    }
 
     /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:20px 0 28px}
@@ -902,6 +905,14 @@ fetch('/version.json').then(r => r.json()).then(d => {
 
   send.addEventListener('click', sendMsg);
   input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
+
+  // Adjust widget position when mobile keyboard appears
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      const offset = window.innerHeight - window.visualViewport.offsetTop - window.visualViewport.height;
+      document.getElementById('chatWidget').style.bottom = (offset + 20) + 'px';
+    });
+  }
 })();
 
 // ── CANVAS ANIMATION ──
