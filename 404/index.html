@@ -339,6 +339,7 @@ $('#video').addEventListener('pause', () => { ctrlPlay.querySelector('i').classN
 // Mute / Volume
 const ctrlMute = document.getElementById('ctrlMute');
 const ctrlVol  = document.getElementById('ctrlVol');
+(function(){ const s = parseFloat(localStorage.getItem('corillo_volume')); if (!isNaN(s)) { $('#video').volume = s; ctrlVol.value = s; } })();
 function syncVol() {
   const v = $('#video');
   ctrlVol.value = v.muted ? 0 : v.volume;
@@ -355,6 +356,7 @@ ctrlVol.addEventListener('input', () => {
   const v = $('#video');
   v.volume = +ctrlVol.value;
   v.muted = v.volume === 0;
+  localStorage.setItem('corillo_volume', v.volume);
   syncVol();
 });
 $('#video').addEventListener('volumechange', () => { syncVol(); if (!$('#video').muted) hideUnmuteBanner(); });
