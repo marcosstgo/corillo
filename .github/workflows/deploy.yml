@@ -52,7 +52,8 @@ jobs:
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "scp /var/www/stream/chat/system_prompt.py marcos@192.168.8.167:/home/marcos/corillo-bot/system_prompt.py && \
              scp /var/www/stream/chat/server.py marcos@192.168.8.167:/home/marcos/corillo-bot/server.py && \
-             ssh marcos@192.168.8.167 'sudo systemctl restart corillo-bot'"
+             scp /var/www/stream/chat/requirements.txt marcos@192.168.8.167:/home/marcos/corillo-bot/requirements.txt && \
+             ssh marcos@192.168.8.167 '/home/marcos/corillo-bot/venv/bin/pip install -q -r /home/marcos/corillo-bot/requirements.txt && sudo systemctl restart corillo-bot'"
 
       - name: Commit bumped version
         run: |
