@@ -159,7 +159,45 @@
       .statsRow{display:grid;grid-template-columns:repeat(3,1fr)}
       .stat:nth-child(3n){border-right:none}
       .stat:nth-child(n+4){border-top:1px solid var(--border)}
-      .nav-controls .divider,.nav-controls .btn:not(.primary){display:none}
+      .nav-controls .divider,.nav-controls .btn:not(.primary):not(#chatToggleBtn){display:none}
+    }
+
+    /* ── CHAT ── */
+    :root{ --border-h:rgba(255,255,255,.16); --chat-w:340px; }
+    [data-theme="light"] .chat-col{background:var(--surface)}
+    [data-theme="light"] .chat-header{background:var(--panel)}
+    .content{display:grid;grid-template-columns:1fr var(--chat-w);min-height:calc(100vh - 51px)}
+    .content.chat-hidden{grid-template-columns:1fr 0}
+    .player-col{display:flex;flex-direction:column;border-right:1px solid var(--border);min-width:0}
+    .chat-col{display:flex;flex-direction:column;overflow:hidden;background:var(--surface)}
+    .content.chat-hidden .chat-col{width:0;overflow:hidden;border:none}
+    .chat-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--border);background:var(--panel);flex-shrink:0}
+    .chat-title{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:6px}
+    .chat-toggle-btn{width:24px;height:24px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.6rem;transition:.15s}
+    .chat-toggle-btn:hover{border-color:var(--border-h);color:var(--white)}
+    .chat-msgs{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-height:0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+    .chat-msg{font-size:.8rem;line-height:1.45;word-break:break-word}
+    .msg-user{font-family:var(--mono);font-size:.52rem;letter-spacing:.5px;font-weight:700;margin-right:6px}
+    .chat-msg.is-bot .msg-user{color:#9147ff}
+    .chat-msg.is-system{font-family:var(--mono);font-size:.48rem;letter-spacing:1px;color:rgba(255,255,255,.2);text-align:center;padding:3px 0}
+    .chat-input-wrap{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;align-items:center}
+    #chatInput{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--white);font-size:.82rem;font-family:var(--body);outline:none;transition:.15s;min-width:0}
+    #chatInput:focus{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+    #chatInput::placeholder{color:rgba(255,255,255,.2)}
+    #chatSend{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:.15s;flex-shrink:0}
+    #chatSend:hover{border-color:var(--border-h);color:var(--white)}
+    .chat-you{font-family:var(--mono);font-size:.48rem;letter-spacing:1px;color:rgba(255,255,255,.25)}
+    @keyframes fabBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    .chat-fab{position:fixed;bottom:24px;right:24px;z-index:90;display:none;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(6,6,8,.9);color:#fff;border:1px solid var(--border-h);cursor:pointer;font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;transition:background .2s}
+    .chat-fab .fab-icon{font-size:1rem;animation:fabBounce 2s ease-in-out infinite}
+    .chat-fab:hover{background:rgba(255,255,255,.08)}
+    .chat-fab.visible{display:flex}
+    @media(max-width:900px){
+      .content{grid-template-columns:1fr;grid-template-rows:auto auto}
+      .player-col{border-right:none;border-bottom:1px solid var(--border)}
+      .chat-col{height:360px;border-top:1px solid var(--border)}
+      .content.chat-hidden .chat-col{height:0}
+      :root{--chat-w:100%}
     }
   </style>
 </head>
@@ -210,55 +248,88 @@
         <i class="fa-brands fa-twitch"></i> Twitch
       </a>
 
+      <button class="btn" id="chatToggleBtn" title="Mostrar/ocultar chat">
+        <i class="fa-solid fa-comments"></i> Chat
+      </button>
+
       <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
     </div>
   </div>
 </header>
 
-<div class="page">
+<div class="content" id="content">
 
-  <div class="playerWrap">
-    <video id="video" class="horizontal" playsinline></video>
+  <!-- PLAYER COLUMN -->
+  <div class="player-col">
+    <div class="playerWrap">
+      <video id="video" class="horizontal" playsinline></video>
 
-    <!-- Overlay -->
-    <div class="overlay" id="overlay">
-      <div class="panel">
-        <h3 id="ovTitle">Cargando</h3>
-        <p id="ovMsg">Iniciando stream…</p>
-        <div class="row">
-          <button class="btn primary" id="ovRetry"><i class="fa-solid fa-play"></i> Reintentar</button>
+      <!-- Overlay -->
+      <div class="overlay" id="overlay">
+        <div class="panel">
+          <h3 id="ovTitle">Cargando</h3>
+          <p id="ovMsg">Iniciando stream…</p>
+          <div class="row">
+            <button class="btn primary" id="ovRetry"><i class="fa-solid fa-play"></i> Reintentar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Unmute banner -->
+      <button id="unmuteBtn" class="unmute-btn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
+
+      <!-- Controls -->
+      <div class="ctrl-bar" id="ctrlBar">
+        <div class="ctrl-left">
+          <button id="ctrlPlay" class="ctrl-btn" title="Play / Pausa"><i class="fa-solid fa-pause"></i></button>
+          <button id="ctrlMute" class="ctrl-btn" title="Silenciar"><i class="fa-solid fa-volume-high"></i></button>
+          <input id="ctrlVol" type="range" min="0" max="1" step="0.05" value="1" class="vol-slider">
+          <span class="pill"><i class="fa-solid fa-tower-broadcast"></i>&nbsp;<span id="hlsTxt">—</span></span>
+        </div>
+        <div class="ctrl-right">
+          <span class="pill"><i class="fa-solid fa-rotate"></i>&nbsp;<span id="retryTxt">0</span></span>
+          <button id="ctrlFs" class="ctrl-btn" title="Pantalla completa"><i class="fa-solid fa-expand"></i></button>
         </div>
       </div>
     </div>
 
-    <!-- Unmute banner -->
-    <button id="unmuteBtn" class="unmute-btn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
-
-    <!-- Controls -->
-    <div class="ctrl-bar" id="ctrlBar">
-      <div class="ctrl-left">
-        <button id="ctrlPlay" class="ctrl-btn" title="Play / Pausa"><i class="fa-solid fa-pause"></i></button>
-        <button id="ctrlMute" class="ctrl-btn" title="Silenciar"><i class="fa-solid fa-volume-high"></i></button>
-        <input id="ctrlVol" type="range" min="0" max="1" step="0.05" value="1" class="vol-slider">
-        <span class="pill"><i class="fa-solid fa-tower-broadcast"></i>&nbsp;<span id="hlsTxt">—</span></span>
-      </div>
-      <div class="ctrl-right">
-        <span class="pill"><i class="fa-solid fa-rotate"></i>&nbsp;<span id="retryTxt">0</span></span>
-        <button id="ctrlFs" class="ctrl-btn" title="Pantalla completa"><i class="fa-solid fa-expand"></i></button>
-      </div>
+    <!-- Stream stats -->
+    <div class="statsRow" id="statsRow">
+      <div class="stat"><div class="stat-val" id="sBitrate">—</div><div class="stat-lbl">Bitrate</div></div>
+      <div class="stat"><div class="stat-val" id="sBuffer">—</div><div class="stat-lbl">Buffer</div></div>
+      <div class="stat"><div class="stat-val" id="sLatency">—</div><div class="stat-lbl">Latencia</div></div>
+      <div class="stat"><div class="stat-val" id="sLevel">—</div><div class="stat-lbl">Calidad</div></div>
+      <div class="stat"><div class="stat-val" id="sRetries">0</div><div class="stat-lbl">Reconexiones</div></div>
     </div>
   </div>
 
-  <!-- Stream stats -->
-  <div class="statsRow" id="statsRow">
-    <div class="stat"><div class="stat-val" id="sBitrate">—</div><div class="stat-lbl">Bitrate</div></div>
-    <div class="stat"><div class="stat-val" id="sBuffer">—</div><div class="stat-lbl">Buffer</div></div>
-    <div class="stat"><div class="stat-val" id="sLatency">—</div><div class="stat-lbl">Latencia</div></div>
-    <div class="stat"><div class="stat-val" id="sLevel">—</div><div class="stat-lbl">Calidad</div></div>
-    <div class="stat"><div class="stat-val" id="sRetries">0</div><div class="stat-lbl">Reconexiones</div></div>
+  <!-- CHAT COLUMN -->
+  <div class="chat-col" id="chatCol">
+    <div class="chat-header">
+      <div class="chat-title">
+        <span class="dot on" style="width:6px;height:6px"></span>
+        <span>CHAT</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="chat-you" id="chatYou"></span>
+        <button class="chat-toggle-btn" id="chatCloseBtn" title="Ocultar chat">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-input-wrap">
+      <input type="text" id="chatInput" placeholder="Mensaje… (@bot para el bot)" maxlength="280" autocomplete="off">
+      <button id="chatSend" title="Enviar"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
   </div>
 
 </div>
+
+<button class="chat-fab" id="chatFab" title="Abrir chat">
+  <i class="fa-solid fa-comments fab-icon"></i>
+  <span>Chat en vivo</span>
+</button>
 
 <script>
 const $ = (s, el=document) => el.querySelector(s);
@@ -533,6 +604,94 @@ $('#video').addEventListener('playing',  () => { setLive(true); hideOverlay(); s
     localStorage.setItem('corillo-theme', next);
   });
 })();
+
+// ── CHAT ──
+let chatVisible = localStorage.getItem('corillo_chat') === 'visible';
+
+function showChat() {
+  chatVisible = true;
+  localStorage.setItem('corillo_chat', 'visible');
+  $('#content').classList.remove('chat-hidden');
+  $('#chatFab').classList.remove('visible');
+  $('#chatToggleBtn').classList.add('active');
+}
+
+function hideChat() {
+  chatVisible = false;
+  localStorage.setItem('corillo_chat', 'hidden');
+  $('#content').classList.add('chat-hidden');
+  $('#chatFab').classList.add('visible');
+  $('#chatToggleBtn').classList.remove('active');
+}
+
+if (!chatVisible) {
+  $('#content').classList.add('chat-hidden');
+  $('#chatFab').classList.add('visible');
+} else {
+  $('#chatToggleBtn').classList.add('active');
+}
+
+$('#chatToggleBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
+$('#chatCloseBtn').addEventListener('click', hideChat);
+$('#chatFab').addEventListener('click', showChat);
+
+// ── WEBSOCKET CHAT ──
+const WS_BASE = location.protocol === 'https:' ? 'wss:' : 'ws:';
+const WS_URL  = `${WS_BASE}//${location.host}/chat-api/ws/${channel}`;
+
+let ws = null, wsTimer = null;
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function addChatMsg(msg) {
+  const box = $('#chatMsgs');
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+  const el = document.createElement('div');
+  if (msg.type === 'system') {
+    el.className = 'chat-msg is-system';
+    el.textContent = msg.text;
+  } else {
+    el.className = 'chat-msg' + (msg.bot ? ' is-bot' : '');
+    el.innerHTML = `<span class="msg-user">${escHtml(msg.user)}</span><span class="msg-text">${escHtml(msg.text)}</span>`;
+  }
+  box.appendChild(el);
+  if (atBottom) box.scrollTop = box.scrollHeight;
+}
+
+function connectWs() {
+  if (ws && ws.readyState < 2) return;
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => clearTimeout(wsTimer);
+  ws.onmessage = ({ data }) => {
+    try {
+      const msg = JSON.parse(data);
+      if (msg.type === 'welcome') {
+        $('#chatYou').textContent = msg.user;
+        return;
+      }
+      addChatMsg(msg);
+    } catch {}
+  };
+  ws.onclose = () => { wsTimer = setTimeout(connectWs, 3000); };
+  ws.onerror = () => ws.close();
+}
+
+function sendMsg() {
+  const input = $('#chatInput');
+  const text = input.value.trim();
+  if (!text || !ws || ws.readyState !== 1) return;
+  ws.send(JSON.stringify({ text }));
+  input.value = '';
+}
+
+$('#chatSend').addEventListener('click', sendMsg);
+$('#chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+});
+
+connectWs();
 
 start();
 </script>
