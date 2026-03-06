@@ -185,8 +185,18 @@
     }
     .chat-toggle-btn:hover{border-color:var(--border-h);color:var(--white)}
 
-    .chat-frame{flex:1;min-height:0}
-    .chat-frame iframe{width:100%;height:100%;border:none;display:block}
+    .chat-msgs{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-height:0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+    .chat-msg{font-size:.8rem;line-height:1.45;word-break:break-word}
+    .msg-user{font-family:var(--mono);font-size:.52rem;letter-spacing:.5px;font-weight:700;margin-right:6px}
+    .chat-msg.is-bot .msg-user{color:#9147ff}
+    .chat-msg.is-system{font-family:var(--mono);font-size:.48rem;letter-spacing:1px;color:rgba(255,255,255,.2);text-align:center;padding:3px 0}
+    .chat-input-wrap{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;align-items:center}
+    #chatInput{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--white);font-size:.82rem;font-family:var(--body);outline:none;transition:.15s;min-width:0}
+    #chatInput:focus{border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.06)}
+    #chatInput::placeholder{color:rgba(255,255,255,.2)}
+    #chatSend{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:.15s;flex-shrink:0}
+    #chatSend:hover{border-color:var(--border-h);color:var(--white)}
+    .chat-you{font-family:var(--mono);font-size:.48rem;letter-spacing:1px;color:rgba(255,255,255,.25)}
 
     /* Chat toggle button floating */
     @keyframes fabPulse{
@@ -370,15 +380,20 @@
     <div class="chat-col" id="chatCol">
       <div class="chat-header">
         <div class="chat-title">
-          <i class="fa-brands fa-twitch"></i>
-          <span id="chatChannelLabel">chat</span>
+          <span class="dot on" style="width:6px;height:6px"></span>
+          <span id="chatChannelLabel">CHAT</span>
         </div>
-        <button class="chat-toggle-btn" id="chatCloseBtn" title="Ocultar chat">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="chat-you" id="chatYou"></span>
+          <button class="chat-toggle-btn" id="chatCloseBtn" title="Ocultar chat">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
       </div>
-      <div class="chat-frame" id="chatFrame">
-        <!-- Twitch chat iframe loaded by JS -->
+      <div class="chat-msgs" id="chatMsgs"></div>
+      <div class="chat-input-wrap">
+        <input type="text" id="chatInput" placeholder="Mensaje… (@bot para el bot)" maxlength="280" autocomplete="off">
+        <button id="chatSend" title="Enviar"><i class="fa-solid fa-paper-plane"></i></button>
       </div>
     </div>
 
@@ -386,9 +401,9 @@
 </div>
 
 <!-- Floating chat button (mobile hidden, shown when chat is closed on desktop) -->
-<button class="chat-fab" id="chatFab" title="Abrir chat de Twitch">
+<button class="chat-fab" id="chatFab" title="Abrir chat">
   <span class="fab-dot"></span>
-  <i class="fa-brands fa-twitch fab-icon"></i>
+  <i class="fa-solid fa-comments fab-icon"></i>
   <span>Chat en vivo</span>
 </button>
 
@@ -442,56 +457,92 @@ $('#btnThemeTm').addEventListener('click', () => setTheme('terminal'));
 $('#btnThemeTw').addEventListener('click', () => setTheme('twitch'));
 
 // ── CHAT ──
-let chatLoaded = false;
 let chatVisible = localStorage.getItem('corillo_chat') === 'visible';
-
-function loadChat() {
-  if (chatLoaded) return;
-  chatLoaded = true;
-  const frame = document.createElement('iframe');
-  frame.src = `https://www.twitch.tv/embed/${twitchUser}/chat?parent=${location.hostname}&darkpopout`;
-  frame.setAttribute('allowfullscreen','');
-  frame.title = 'Twitch Chat';
-  $('#chatFrame').appendChild(frame);
-}
 
 function showChat() {
   chatVisible = true;
   localStorage.setItem('corillo_chat', 'visible');
   $('#content').classList.remove('chat-hidden');
   $('#chatFab').classList.remove('visible');
-  loadChat();
+  $('#chatToggleBtn').classList.add('active');
 }
 
 function hideChat() {
   chatVisible = false;
   localStorage.setItem('corillo_chat', 'hidden');
   $('#content').classList.add('chat-hidden');
-  // Show FAB only on desktop
   $('#chatFab').classList.add('visible');
+  $('#chatToggleBtn').classList.remove('active');
 }
 
 if (!chatVisible) {
   $('#content').classList.add('chat-hidden');
   $('#chatFab').classList.add('visible');
 } else {
-  loadChat();
+  $('#chatToggleBtn').classList.add('active');
 }
 
 $('#chatToggleBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
 $('#chatCloseBtn').addEventListener('click', hideChat);
 $('#chatFab').addEventListener('click', showChat);
 
-// Update chat toggle button state
-function updateChatBtn() {
-  $('#chatToggleBtn').classList.toggle('active', chatVisible);
+// ── WEBSOCKET CHAT ──
+const WS_BASE = location.protocol === 'https:' ? 'wss:' : 'ws:';
+const WS_URL  = `${WS_BASE}//${location.host}/chat-api/ws/${channel}`;
+
+let ws = null, wsTimer = null;
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-updateChatBtn();
-['click'].forEach(e => {
-  $('#chatToggleBtn').addEventListener(e, updateChatBtn);
-  $('#chatCloseBtn').addEventListener(e, updateChatBtn);
-  $('#chatFab').addEventListener(e, updateChatBtn);
+
+function addChatMsg(msg) {
+  const box = $('#chatMsgs');
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+  const el = document.createElement('div');
+  if (msg.type === 'system') {
+    el.className = 'chat-msg is-system';
+    el.textContent = msg.text;
+  } else {
+    el.className = 'chat-msg' + (msg.bot ? ' is-bot' : '');
+    el.innerHTML = `<span class="msg-user">${escHtml(msg.user)}</span><span class="msg-text">${escHtml(msg.text)}</span>`;
+  }
+  box.appendChild(el);
+  if (atBottom) box.scrollTop = box.scrollHeight;
+}
+
+function connectWs() {
+  if (ws && ws.readyState < 2) return;
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => clearTimeout(wsTimer);
+  ws.onmessage = ({ data }) => {
+    try {
+      const msg = JSON.parse(data);
+      if (msg.type === 'welcome') {
+        $('#chatYou').textContent = msg.user;
+        return;
+      }
+      addChatMsg(msg);
+    } catch {}
+  };
+  ws.onclose = () => { wsTimer = setTimeout(connectWs, 3000); };
+  ws.onerror = () => ws.close();
+}
+
+function sendMsg() {
+  const input = $('#chatInput');
+  const text = input.value.trim();
+  if (!text || !ws || ws.readyState !== 1) return;
+  ws.send(JSON.stringify({ text }));
+  input.value = '';
+}
+
+$('#chatSend').addEventListener('click', sendMsg);
+$('#chatInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
 });
+
+connectWs();
 
 // ── OVERLAY ──
 function showOverlay(title, msg) {

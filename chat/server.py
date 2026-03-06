@@ -1,9 +1,7 @@
-import os
-import time
-import httpx
-import anthropic
+import os, time, json, asyncio, random
+import httpx, anthropic
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from system_prompt import SYSTEM
@@ -19,6 +17,12 @@ app.add_middleware(
 )
 
 ac = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+
+NAMES = [
+    "Coqui","Pitirre","Manatí","Gandule","Sofrito","Tostón",
+    "Colmado","Boricua","Mofongo","Platano","Lechón","Bacalao",
+    "Chinchorro","Aguacate","Tembleque","Pernil","Añejo","Pilón",
+]
 
 class Msg(BaseModel):
     message: str
@@ -37,7 +41,6 @@ async def chat(body: Msg):
     status = ("En vivo ahora:\n" + "\n".join(
         f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live
     )) if live else "Sin streams en vivo."
-
     res = ac.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=512,
@@ -46,7 +49,7 @@ async def chat(body: Msg):
     )
     return {"reply": res.content[0].text}
 
-# ── Digest cache (2 min) ──────────────────────────────────────────
+# ── Digest (2 min cache) ─────────────────────────────────────────
 _digest = {"text": "", "ts": 0}
 DIGEST_TTL = 120
 
@@ -56,11 +59,8 @@ async def digest():
         return {"digest": _digest["text"]}
 
     live = await get_live()
-
     if live:
-        lines = "\n".join(
-            f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live
-        )
+        lines = "\n".join(f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live)
         prompt = (
             f"Estado actual de CORILLO:\n{lines}\n\n"
             "Escribe UNA sola frase corta y casual sobre quién está en vivo ahora. "
@@ -79,7 +79,100 @@ async def digest():
         system=SYSTEM,
         messages=[{"role": "user", "content": prompt}],
     )
-
     _digest["text"] = res.content[0].text.strip()
     _digest["ts"] = time.time()
     return {"digest": _digest["text"]}
+
+# ── WebSocket Chat ───────────────────────────────────────────────
+class Room:
+    def __init__(self):
+        self.clients: dict = {}  # websocket → username
+        self.history: list = []  # últimos 50 mensajes
+
+    async def join(self, ws: WebSocket) -> str:
+        await ws.accept()
+        username = random.choice(NAMES) + "_" + str(random.randint(10, 99))
+        self.clients[ws] = username
+        return username
+
+    def leave(self, ws: WebSocket):
+        self.clients.pop(ws, None)
+
+    async def broadcast(self, msg: dict):
+        self.history.append(msg)
+        if len(self.history) > 50:
+            self.history = self.history[-50:]
+        for ws in list(self.clients):
+            try:
+                await ws.send_json(msg)
+            except:
+                self.clients.pop(ws, None)
+
+rooms: dict = {}
+
+def get_room(channel: str) -> Room:
+    if channel not in rooms:
+        rooms[channel] = Room()
+    return rooms[channel]
+
+@app.websocket("/ws/{channel}")
+async def ws_chat(ws: WebSocket, channel: str):
+    room = get_room(channel)
+    username = await room.join(ws)
+
+    # Bienvenida + historial
+    await ws.send_json({"type": "welcome", "user": username})
+    for msg in room.history:
+        await ws.send_json(msg)
+
+    try:
+        while True:
+            data = await ws.receive_text()
+            try:
+                payload = json.loads(data)
+            except:
+                continue
+            text = str(payload.get("text", "")).strip()[:280]
+            if not text:
+                continue
+
+            msg = {
+                "type": "message",
+                "user": username,
+                "text": text,
+                "ts": time.time(),
+                "bot": False,
+            }
+            await room.broadcast(msg)
+
+            if "@bot" in text.lower():
+                query = text.lower().split("@bot", 1)[-1].strip() or "hola"
+                asyncio.create_task(bot_reply(room, query))
+
+    except WebSocketDisconnect:
+        room.leave(ws)
+
+async def bot_reply(room: Room, query: str):
+    live = await get_live()
+    status = ("En vivo:\n" + "\n".join(
+        f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live
+    )) if live else "Sin streams en vivo."
+    try:
+        res = await asyncio.to_thread(
+            ac.messages.create,
+            model="claude-haiku-4-5-20251001",
+            max_tokens=150,
+            system=SYSTEM + f"\n\n{status}",
+            messages=[{"role": "user", "content": query}],
+        )
+        reply = res.content[0].text.strip()
+    except:
+        reply = "No pude responder ahora mismo."
+
+    await room.broadcast({
+        "type": "message",
+        "user": "CORILLO BOT",
+        "text": reply,
+        "ts": time.time(),
+        "bot": True,
+    })
