@@ -188,9 +188,9 @@
     #chatSend:hover{border-color:var(--border-h);color:var(--white)}
     .chat-you{font-family:var(--mono);font-size:.48rem;letter-spacing:1px;color:rgba(255,255,255,.25)}
     @keyframes fabBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-    .chat-fab{position:fixed;bottom:24px;right:24px;z-index:90;display:none;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(6,6,8,.9);color:#fff;border:1px solid var(--border-h);cursor:pointer;font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;transition:background .2s}
+    .chat-fab{position:fixed;bottom:24px;right:24px;z-index:90;display:none;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:var(--accent);color:var(--ink);border:none;cursor:pointer;font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;box-shadow:0 4px 16px rgba(232,200,74,.35);transition:background .2s,transform .2s}
     .chat-fab .fab-icon{font-size:1rem;animation:fabBounce 2s ease-in-out infinite}
-    .chat-fab:hover{background:rgba(255,255,255,.08)}
+    .chat-fab:hover{background:#d4b43c;transform:scale(1.04)}
     .chat-fab.visible{display:flex}
     @media(max-width:900px){
       .content{grid-template-columns:1fr;grid-template-rows:auto auto}
