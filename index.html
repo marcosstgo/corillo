@@ -566,6 +566,32 @@
   </div>
 </footer>
 
+<!-- MOBILE NAV OVERLAY -->
+<div id="mobileNav" role="dialog" aria-label="Menú de navegación" aria-modal="true">
+  <div id="mobileNavBackdrop"></div>
+  <div id="mobileNavPanel">
+    <div class="mob-nav-head">
+      <span class="mob-nav-head-brand">CORILLO</span>
+      <button id="mobileNavClose" class="mob-nav-close" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <nav class="mob-nav-links" aria-label="Navegación principal">
+      <a href="#canales"><i class="fa-solid fa-satellite-dish"></i> Canales</a>
+      <a href="/multiplayer/"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
+      <a href="/streamer-pro/"><i class="fa-solid fa-rocket"></i> Streamer Pro</a>
+      <a href="/roadmap/"><i class="fa-solid fa-map"></i> Roadmap</a>
+      <a class="primary" href="/join/"><i class="fa-solid fa-plus"></i> Crear Canal</a>
+    </nav>
+    <div class="mob-nav-footer">
+      <div class="mob-nav-pill">
+        <span class="dot on"></span>
+        <span id="mobNavCount">0</span>&nbsp;en vivo
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // STREAMERS defined in /assets/streamers.js
 
@@ -1084,31 +1110,5 @@ fetch('/version.json').then(r => r.json()).then(d => {
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 })();
 </script>
-
-<!-- MOBILE NAV OVERLAY -->
-<div id="mobileNav" role="dialog" aria-label="Menú de navegación" aria-modal="true">
-  <div id="mobileNavBackdrop"></div>
-  <div id="mobileNavPanel">
-    <div class="mob-nav-head">
-      <span class="mob-nav-head-brand">CORILLO</span>
-      <button id="mobileNavClose" class="mob-nav-close" aria-label="Cerrar menú">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-    <nav class="mob-nav-links" aria-label="Navegación principal">
-      <a href="#canales"><i class="fa-solid fa-satellite-dish"></i> Canales</a>
-      <a href="/multiplayer/"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
-      <a href="/streamer-pro/"><i class="fa-solid fa-rocket"></i> Streamer Pro</a>
-      <a href="/roadmap/"><i class="fa-solid fa-map"></i> Roadmap</a>
-      <a class="primary" href="/join/"><i class="fa-solid fa-plus"></i> Crear Canal</a>
-    </nav>
-    <div class="mob-nav-footer">
-      <div class="mob-nav-pill">
-        <span class="dot on"></span>
-        <span id="mobNavCount">0</span>&nbsp;en vivo
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>
