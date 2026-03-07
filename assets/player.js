@@ -58,14 +58,7 @@ function showOverlay(title, msg) {
 function hideOverlay() { $('#overlay').classList.remove('show'); }
 
 // ── UNMUTE ──
-function showUnmuteBanner() {
-  if (!$('#video').muted) return;
-  if (localStorage.getItem('corillo_muted') === 'false') {
-    $('#video').muted = false; // usuario ya activó antes — auto-desmutear
-  } else {
-    $('#unmuteBtn').classList.add('show');
-  }
-}
+function showUnmuteBanner() { if ($('#video').muted) $('#unmuteBtn').classList.add('show'); }
 function hideUnmuteBanner() { $('#unmuteBtn').classList.remove('show'); }
 $('#unmuteBtn').addEventListener('click', () => {
   const v = $('#video');
@@ -233,16 +226,24 @@ async function start() {
   $('#hlsTxt').textContent = mode === 'vertical' ? '9:16' : '16:9';
   showOverlay('Cargando', 'Iniciando stream…');
   const v = $('#video');
-  v.muted = true; // siempre muted al inicio — evita bloqueo de autoplay en todos los navegadores
+  // Intenta con sonido si el usuario ya lo activó antes; si no, empieza muted
+  v.muted = localStorage.getItem('corillo_muted') !== 'false';
+
+  // tryPlay: si falla unmuted, reintenta muted (fallback para autoplay bloqueado)
+  async function tryPlay() {
+    try {
+      await v.play();
+      hideOverlay(); setLive(true); startStatsPolling();
+      if (v.muted) showUnmuteBanner();
+    } catch {
+      if (!v.muted) { v.muted = true; return tryPlay(); }
+      showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
+    }
+  }
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url;
-    try {
-      await v.play();
-      hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner();
-    } catch {
-      showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
-    }
+    await tryPlay();
     v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { once:true });
     return;
   }
@@ -251,14 +252,7 @@ async function start() {
     hls = new Hls({ lowLatencyMode:true, backBufferLength:30, maxBufferLength:8, maxLiveSyncPlaybackRate:1.3 });
     window._hlsInstance = hls;
     hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
-    hls.on(Hls.Events.MANIFEST_PARSED, async () => {
-      try {
-        await v.play();
-        hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner();
-      } catch {
-        showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
-      }
-    });
+    hls.on(Hls.Events.MANIFEST_PARSED, () => tryPlay());
     hls.on(Hls.Events.ERROR, (_, d) => {
       if (d?.fatal) { cleanup(); scheduleRetry(d.type || 'Error fatal'); }
     });
