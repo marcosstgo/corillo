@@ -60,10 +60,12 @@ function hideOverlay() { $('#overlay').classList.remove('show'); }
 // ── UNMUTE ──
 function showUnmuteBanner() {
   if (!$('#video').muted) return;
-  // En desktop: auto-desmutear si ya lo activó antes (v.muted=false es seguro)
-  // En mobile: siempre mostrar banner — el browser necesita un gesto del usuario
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   if (!isTouch && localStorage.getItem('corillo_muted') === 'false') {
+    // Desktop: auto-desmutear (safe)
+    $('#video').muted = false;
+  } else if (isTouch && sessionStorage.getItem('corillo_unmuted') === 'true') {
+    // Mobile: ya tocó el banner en esta sesión — desmutear sin banner
     $('#video').muted = false;
   } else {
     $('#unmuteBtn').classList.add('show');
@@ -74,6 +76,7 @@ $('#unmuteBtn').addEventListener('click', () => {
   const v = $('#video');
   v.muted = false; v.volume = v.volume || 1;
   localStorage.setItem('corillo_muted', 'false');
+  sessionStorage.setItem('corillo_unmuted', 'true');
   hideUnmuteBanner();
 });
 
