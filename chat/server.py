@@ -86,19 +86,31 @@ async def digest():
     return {"digest": _digest["text"]}
 
 # ── WebSocket Chat ───────────────────────────────────────────────
+RATE_LIMIT = 1.0  # segundos mínimos entre mensajes
+
 class Room:
     def __init__(self):
-        self.clients: dict = {}  # websocket → username
-        self.history: list = []  # últimos 50 mensajes
+        self.clients: dict = {}    # websocket → username
+        self.history: list = []    # últimos 50 mensajes
+        self.last_msg: dict = {}   # websocket → timestamp último mensaje
 
     async def join(self, ws: WebSocket) -> str:
         await ws.accept()
         username = random.choice(NAMES) + "_" + str(random.randint(10, 99))
         self.clients[ws] = username
+        self.last_msg[ws] = 0.0
         return username
 
     def leave(self, ws: WebSocket):
         self.clients.pop(ws, None)
+        self.last_msg.pop(ws, None)
+
+    def check_rate(self, ws: WebSocket) -> bool:
+        now = time.time()
+        if now - self.last_msg.get(ws, 0) < RATE_LIMIT:
+            return False
+        self.last_msg[ws] = now
+        return True
 
     async def broadcast(self, msg: dict):
         self.history.append(msg)
@@ -136,6 +148,10 @@ async def ws_chat(ws: WebSocket, channel: str):
                 continue
             text = str(payload.get("text", "")).strip()[:280]
             if not text:
+                continue
+
+            if not room.check_rate(ws):
+                await ws.send_json({"type": "system", "text": "Tranquilo, no tan rápido. 🐢"})
                 continue
 
             msg = {
