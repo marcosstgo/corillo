@@ -260,7 +260,7 @@
   <!-- PLAYER COLUMN -->
   <div class="player-col">
     <div class="playerWrap">
-      <video id="video" class="horizontal" playsinline></video>
+      <video id="video" class="horizontal" playsinline muted></video>
 
       <!-- Overlay -->
       <div class="overlay" id="overlay">
@@ -547,6 +547,7 @@ async function start() {
   $('#hlsTxt').textContent = mode === 'vertical' ? '9:16' : '16:9';
   showOverlay('Cargando', 'Iniciando stream…');
   const v = $('#video');
+  v.muted = true; // siempre muted al inicio — evita bloqueo de autoplay en todos los navegadores
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url;
@@ -554,9 +555,7 @@ async function start() {
       await v.play();
       hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner();
     } catch {
-      v.muted = true;
-      try { await v.play(); hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner(); }
-      catch { showOverlay('Toca para reproducir', 'El navegador bloqueó el autoplay.'); }
+      showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
     }
     v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { once:true });
     return;
@@ -571,9 +570,7 @@ async function start() {
         await v.play();
         hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner();
       } catch {
-        v.muted = true;
-        try { await v.play(); hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner(); }
-        catch { showOverlay('Toca para reproducir', 'Autoplay bloqueado.'); }
+        showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
       }
     });
     hls.on(Hls.Events.ERROR, (_, d) => {
