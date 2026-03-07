@@ -94,9 +94,12 @@ class Room:
         self.history: list = []    # últimos 50 mensajes
         self.last_msg: dict = {}   # websocket → timestamp último mensaje
 
-    async def join(self, ws: WebSocket) -> str:
+    async def join(self, ws: WebSocket, requested: str = "") -> str:
         await ws.accept()
-        username = random.choice(NAMES) + "_" + str(random.randint(10, 99))
+        if requested and 3 <= len(requested) <= 40 and ' ' not in requested:
+            username = requested
+        else:
+            username = random.choice(NAMES) + "_" + str(random.randint(10, 99))
         self.clients[ws] = username
         self.last_msg[ws] = 0.0
         return username
@@ -132,7 +135,8 @@ def get_room(channel: str) -> Room:
 @app.websocket("/ws/{channel}")
 async def ws_chat(ws: WebSocket, channel: str):
     room = get_room(channel)
-    username = await room.join(ws)
+    requested = ws.query_params.get("user", "").strip()[:40]
+    username = await room.join(ws, requested)
 
     # Bienvenida + historial
     await ws.send_json({"type": "welcome", "user": username})
