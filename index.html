@@ -308,6 +308,75 @@
     .foot-right a{color:var(--muted);transition:.15s}
     .foot-right a:hover{color:var(--accent)}
     .foot-info{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.3);text-transform:uppercase}
+
+    /* ── MOBILE NAV ── */
+    .menu-btn{
+      display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;
+      width:40px;height:40px;padding:0;
+      background:transparent;border:1px solid var(--border);border-radius:6px;
+      cursor:pointer;flex-shrink:0;transition:.15s;
+    }
+    .menu-btn:hover{border-color:var(--border-h)}
+    .menu-btn span{display:block;width:18px;height:2px;background:var(--white);border-radius:2px;transition:.25s ease}
+    .menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+    .menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0;transform:scaleX(0)}
+    .menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+    #mobileNav{position:fixed;inset:0;z-index:200;visibility:hidden;pointer-events:none}
+    #mobileNav.open{visibility:visible;pointer-events:auto}
+    #mobileNavBackdrop{
+      position:absolute;inset:0;
+      background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+      opacity:0;transition:opacity .3s ease;
+    }
+    #mobileNav.open #mobileNavBackdrop{opacity:1}
+    #mobileNavPanel{
+      position:absolute;top:0;right:0;bottom:0;
+      width:min(300px,85vw);
+      background:rgba(8,8,12,.98);border-left:1px solid var(--border);
+      display:flex;flex-direction:column;
+      transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);
+      overflow-y:auto;
+    }
+    #mobileNav.open #mobileNavPanel{transform:translateX(0)}
+    .mob-nav-head{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;
+    }
+    .mob-nav-head-brand{font-family:var(--display);letter-spacing:4px;font-size:22px;line-height:1}
+    .mob-nav-close{
+      background:none;border:1px solid var(--border);border-radius:6px;
+      color:var(--muted);cursor:pointer;width:34px;height:34px;
+      display:flex;align-items:center;justify-content:center;transition:.15s;flex-shrink:0;
+    }
+    .mob-nav-close:hover{color:var(--white);border-color:var(--border-h)}
+    .mob-nav-links{display:flex;flex-direction:column;gap:4px;padding:16px;flex:1}
+    .mob-nav-links a{
+      display:flex;align-items:center;gap:12px;
+      padding:13px 16px;border-radius:8px;
+      font-family:var(--mono);font-size:.68rem;letter-spacing:2px;text-transform:uppercase;
+      color:rgba(255,255,255,.75);border:1px solid transparent;transition:.15s ease;
+    }
+    .mob-nav-links a:hover{background:rgba(255,255,255,.06);color:var(--white);border-color:var(--border)}
+    .mob-nav-links a.primary{
+      background:var(--accent);color:var(--ink);margin-top:8px;font-weight:700;border-color:transparent;
+    }
+    .mob-nav-links a.primary:hover{opacity:.88;background:var(--accent)}
+    .mob-nav-links a i{width:16px;text-align:center;font-size:.85rem;flex-shrink:0}
+    .mob-nav-footer{
+      padding:16px 20px;border-top:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+    }
+    .mob-nav-pill{
+      display:flex;align-items:center;gap:7px;
+      font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--live);
+    }
+
+    @media(max-width:900px){
+      nav{display:none}
+      .menu-btn{display:flex}
+    }
   </style>
 </head>
 <body>
@@ -350,6 +419,9 @@
           <a class="btn" href="/roadmap/"><i class="fa-solid fa-map"></i> Roadmap</a>
           <a class="btn primary" href="/join/"><i class="fa-solid fa-plus"></i> Crear Canal</a>
         </nav>
+        <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menú">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
   </div>
@@ -761,6 +833,7 @@ async function refresh() {
   // Count only known streamers
   const count = STREAMERS.filter(s => livePaths.find(p => p.name === 'live/' + s.key)).length;
   $('#navCount').textContent  = count;
+  if ($('#mobNavCount')) $('#mobNavCount').textContent = count;
   if ($('#numLive')) $('#numLive').textContent = count;
   $('#navDot').className      = count > 0 ? 'dot on' : 'dot';
   const pill = $('#livePill');
@@ -982,6 +1055,60 @@ fetch('/version.json').then(r => r.json()).then(d => {
   document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
   start();
 })();
+
+// ── MOBILE NAV ──
+(function(){
+  const btn      = document.getElementById('menuBtn');
+  const nav      = document.getElementById('mobileNav');
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const closeBtn = document.getElementById('mobileNavClose');
+  if (!btn || !nav) return;
+
+  function openMenu() {
+    nav.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+  function closeMenu() {
+    nav.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    btn.focus();
+  }
+
+  btn.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  backdrop.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('open')) closeMenu(); });
+  nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+})();
 </script>
+
+<!-- MOBILE NAV OVERLAY -->
+<div id="mobileNav" role="dialog" aria-label="Menú de navegación" aria-modal="true">
+  <div id="mobileNavBackdrop"></div>
+  <div id="mobileNavPanel">
+    <div class="mob-nav-head">
+      <span class="mob-nav-head-brand">CORILLO</span>
+      <button id="mobileNavClose" class="mob-nav-close" aria-label="Cerrar menú">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <nav class="mob-nav-links" aria-label="Navegación principal">
+      <a href="#canales"><i class="fa-solid fa-satellite-dish"></i> Canales</a>
+      <a href="/multiplayer/"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
+      <a href="/streamer-pro/"><i class="fa-solid fa-rocket"></i> Streamer Pro</a>
+      <a href="/roadmap/"><i class="fa-solid fa-map"></i> Roadmap</a>
+      <a class="primary" href="/join/"><i class="fa-solid fa-plus"></i> Crear Canal</a>
+    </nav>
+    <div class="mob-nav-footer">
+      <div class="mob-nav-pill">
+        <span class="dot on"></span>
+        <span id="mobNavCount">0</span>&nbsp;en vivo
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
