@@ -58,11 +58,19 @@ function showOverlay(title, msg) {
 function hideOverlay() { $('#overlay').classList.remove('show'); }
 
 // ── UNMUTE ──
-function showUnmuteBanner() { if ($('#video').muted) $('#unmuteBtn').classList.add('show'); }
+function showUnmuteBanner() {
+  if (!$('#video').muted) return;
+  if (localStorage.getItem('corillo_muted') === 'false') {
+    $('#video').muted = false; // usuario ya activó antes — auto-desmutear
+  } else {
+    $('#unmuteBtn').classList.add('show');
+  }
+}
 function hideUnmuteBanner() { $('#unmuteBtn').classList.remove('show'); }
 $('#unmuteBtn').addEventListener('click', () => {
   const v = $('#video');
-  v.muted = false; v.volume = 1;
+  v.muted = false; v.volume = v.volume || 1;
+  localStorage.setItem('corillo_muted', 'false');
   hideUnmuteBanner();
 });
 
@@ -102,6 +110,7 @@ ctrlMute.addEventListener('click', () => {
   const v = $('#video');
   v.muted = !v.muted;
   if (!v.muted && v.volume === 0) v.volume = 1;
+  localStorage.setItem('corillo_muted', v.muted ? 'true' : 'false');
   syncVol();
 });
 ctrlVol.addEventListener('input', () => {
