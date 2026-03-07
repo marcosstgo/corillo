@@ -587,6 +587,26 @@ $('#ovRetry').addEventListener('click', () => { retries = 0; start(); });
 $('#video').addEventListener('waiting',  () => setLive(false));
 $('#video').addEventListener('playing',  () => { setLive(true); hideOverlay(); startStatsPolling(); showUnmuteBanner(); });
 
+// ── WAKE LOCK — evita que el móvil apague la pantalla durante el stream ──
+let wakeLock = null;
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    wakeLock = await navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', () => { wakeLock = null; });
+  } catch {}
+}
+function releaseWakeLock() {
+  if (wakeLock) { wakeLock.release(); wakeLock = null; }
+}
+$('#video').addEventListener('playing', requestWakeLock);
+$('#video').addEventListener('pause',   releaseWakeLock);
+$('#video').addEventListener('ended',   releaseWakeLock);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { releaseWakeLock(); }
+  else if (!$('#video').paused) { requestWakeLock(); }
+});
+
 // ── DARK/LIGHT THEME ──
 (function(){
   const root = document.documentElement;
