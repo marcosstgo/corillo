@@ -97,4 +97,9 @@ $('#chatInput').addEventListener('keydown', e => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
 });
 
+// On mobile: scroll the input row into view after the virtual keyboard opens
+$('#chatInput').addEventListener('focus', function() {
+  setTimeout(() => this.closest('.chat-input-wrap').scrollIntoView({ behavior: 'smooth', block: 'end' }), 350);
+});
+
 connectWs();
