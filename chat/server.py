@@ -22,6 +22,8 @@ NAMES = [
     "Coqui","Pitirre","Manatí","Gandule","Sofrito","Tostón",
     "Colmado","Boricua","Mofongo","Platano","Lechón","Bacalao",
     "Chinchorro","Aguacate","Tembleque","Pernil","Añejo","Pilón",
+    "BadBunny","Coquí","Chulería","Alcapurria","Bacalaíto",
+    "Sorullito","AyBendito","Algarete","Bomba","Plena","Coquito",
 ]
 
 class Msg(BaseModel):
