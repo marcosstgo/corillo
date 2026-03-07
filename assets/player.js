@@ -205,7 +205,11 @@ function scheduleRetry(reason) {
   $('#sRetries').textContent = retries;
   $('#retryTxt').textContent = retries;
   const wait = Math.min(30000, 1200 * Math.pow(1.6, Math.min(retries, 10)));
-  showOverlay('Reconectando', reason + '. Reintentando en ' + Math.round(wait/1000) + 's…');
+  const offline = reason === 'networkError' || reason === 'Error de HLS nativo';
+  showOverlay(
+    offline ? 'Sin transmisión' : 'Reconectando',
+    (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(wait/1000) + 's…'
+  );
   retryTimer = setTimeout(start, wait);
 }
 
