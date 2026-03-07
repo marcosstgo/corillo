@@ -58,7 +58,14 @@ function showOverlay(title, msg) {
 function hideOverlay() { $('#overlay').classList.remove('show'); }
 
 // ── UNMUTE ──
-function showUnmuteBanner() { if ($('#video').muted) $('#unmuteBtn').classList.add('show'); }
+function showUnmuteBanner() {
+  if (!$('#video').muted) return;
+  if (localStorage.getItem('corillo_muted') === 'false') {
+    $('#video').muted = false; // ya activó antes — desmutear sin banner
+  } else {
+    $('#unmuteBtn').classList.add('show');
+  }
+}
 function hideUnmuteBanner() { $('#unmuteBtn').classList.remove('show'); }
 $('#unmuteBtn').addEventListener('click', () => {
   const v = $('#video');
