@@ -271,3 +271,63 @@ async def vision_loop(room: Room, channel: str):
             await bot_vision_comment(room, channel)
         # Próximo comentario en 5-9 minutos
         await asyncio.sleep(random.uniform(300, 540))
+
+# ── STREAMER GREETER ─────────────────────────────────────────────
+STREAMER_NAMES = {
+    "katatonia": "Katatonia",
+    "tea": "Tea",
+    "mira_sanganooo": "Mira_Sanganooo",
+    "404": "404",
+    "elbala": "Elbala",
+    "marcos": "Marcos",
+    "pataecabra": "Pataecabra",
+}
+
+_prev_live: set = set()
+
+async def greet_streamer(room: Room, channel: str):
+    name = STREAMER_NAMES.get(channel, channel.upper())
+    try:
+        res = await asyncio.to_thread(
+            ac.messages.create,
+            model="claude-haiku-4-5-20251001",
+            max_tokens=60,
+            system=SYSTEM,
+            messages=[{"role": "user", "content": (
+                f"{name} acaba de empezar su stream en CORILLO. "
+                "Escríbele un saludo corto y entusiasta en español boricua, "
+                "como parte del crew dándole la bienvenida. "
+                "1 frase máximo. Sin hashtags, sin emojis (máx 1)."
+            )}],
+        )
+        greeting = res.content[0].text.strip()
+    except:
+        greeting = f"¡Wepa {name}, arriba el stream! 🔥"
+
+    await room.broadcast({
+        "type": "message",
+        "user": "CORILLO BOT",
+        "text": greeting,
+        "ts": time.time(),
+        "bot": True,
+    })
+
+async def live_monitor():
+    global _prev_live
+    await asyncio.sleep(20)  # espera inicial al arrancar el servidor
+    while True:
+        try:
+            live = await get_live()
+            current_live = {p["name"].removeprefix("live/") for p in live}
+            newly_live = current_live - _prev_live
+            for ch in newly_live:
+                room = get_room(ch)
+                asyncio.create_task(greet_streamer(room, ch))
+            _prev_live = current_live
+        except:
+            pass
+        await asyncio.sleep(15)
+
+@app.on_event("startup")
+async def startup():
+    asyncio.create_task(live_monitor())
