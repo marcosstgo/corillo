@@ -625,9 +625,13 @@ function getLive(data) {
 }
 
 // ── FEATURED ──
-let featHls = null;
+let featHls    = null;
+let featTimeout = null;
+let featAbort   = null;
 
 function destroyFeatured() {
+  if (featTimeout) { clearTimeout(featTimeout); featTimeout = null; }
+  if (featAbort)   { featAbort.abort(); featAbort = null; }
   const v = $('#featuredVideo');
   try { v.pause(); } catch {}
   v.removeAttribute('src'); v.load();
@@ -677,6 +681,13 @@ function loadFeatured(streamer, viewers) {
 
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
   const v   = $('#featuredVideo');
+
+  // If the video hasn't produced a frame within 12s, go offline and let the poll retry
+  featAbort   = new AbortController();
+  featTimeout = setTimeout(() => { featTimeout = null; showOffline(); }, 12000);
+  v.addEventListener('playing', () => {
+    if (featTimeout) { clearTimeout(featTimeout); featTimeout = null; }
+  }, { once: true, signal: featAbort.signal });
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url; v.play().catch(() => {});
