@@ -70,13 +70,17 @@ function showUnmuteBanner() {
   if (!$('#video').muted) return;
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   if (!isTouch && localStorage.getItem('corillo_muted') === 'false') {
-    // Desktop: auto-desmutear — Chrome pausa asíncronamente al desmutear,
-    // ceder al event loop con setTimeout(0) para detectarlo y retomar play
+    // Desktop: intentar auto-desmutear — si Chrome bloquea por autoplay policy
+    // (sin gesto del usuario), pausa el video; capturamos ese pause y mostramos banner
     const v = $('#video');
+    const onPause = () => {
+      v.removeEventListener('pause', onPause);
+      v.muted = true;
+      $('#unmuteBtn').classList.add('show');
+    };
+    v.addEventListener('pause', onPause);
     v.muted = false;
-    setTimeout(() => {
-      if (v.paused) v.play().catch(() => { v.muted = true; $('#unmuteBtn').classList.add('show'); });
-    }, 0);
+    setTimeout(() => v.removeEventListener('pause', onPause), 1000);
   } else {
     // Mobile: siempre requiere tap del usuario — no se puede auto-desmutear
     $('#unmuteBtn').classList.add('show');
