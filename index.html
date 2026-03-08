@@ -380,6 +380,30 @@
       nav{display:none}
       .menu-btn{display:flex}
     }
+
+    /* ── TOASTS ── */
+    .toast-wrap{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;flex-direction:column-reverse;gap:8px;pointer-events:none}
+    @media(max-width:600px){.toast-wrap{right:12px;left:12px}}
+    .toast{
+      display:flex;align-items:center;gap:10px;
+      padding:12px 16px;border-radius:12px;
+      background:rgba(14,14,18,.96);border:1px solid rgba(255,255,255,.13);
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      color:var(--white);cursor:pointer;pointer-events:auto;
+      min-width:220px;max-width:320px;position:relative;overflow:hidden;
+      animation:toastIn .25s ease;
+    }
+    .toast.out{animation:toastOut .25s ease forwards}
+    .toast-ava{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--ink);flex-shrink:0}
+    .toast-body{flex:1;min-width:0}
+    .toast-name{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .toast-sub{font-size:.72rem;color:rgba(255,255,255,.45);margin-top:2px}
+    .toast-bar{position:absolute;bottom:0;left:0;height:2px;background:var(--accent);width:100%;transform-origin:left;animation:toastBar 5s linear forwards}
+    @keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+    @keyframes toastOut{from{opacity:1;transform:none}to{opacity:0;transform:translateX(20px)}}
+    @keyframes toastBar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+    [data-theme="light"] .toast{background:rgba(255,255,255,.97);border-color:rgba(0,0,0,.1);color:#12120f}
+    [data-theme="light"] .toast-sub{color:rgba(0,0,0,.45)}
   </style>
 </head>
 <body>
@@ -751,6 +775,28 @@ function initCarousel() {
   });
 }
 
+// ── TOAST ──
+function showToast(streamer) {
+  const wrap = $('#toastWrap');
+  if (!wrap) return;
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `
+    <span class="dot on" style="flex-shrink:0"></span>
+    <div class="toast-ava" style="background:${streamer.color}">${streamer.ava}</div>
+    <div class="toast-body">
+      <div class="toast-name">${streamer.name}</div>
+      <div class="toast-sub">está en vivo ahora &mdash; toca para ver</div>
+    </div>
+    <div class="toast-bar"></div>`;
+  t.addEventListener('click', () => location.href = '/' + encodeURIComponent(streamer.key) + '/');
+  wrap.appendChild(t);
+  setTimeout(() => {
+    t.classList.add('out');
+    setTimeout(() => t.remove(), 280);
+  }, 5000);
+}
+
 // ── GRID ──
 let _livePaths = [];
 function buildGrid() {
@@ -825,7 +871,11 @@ function updateGrid(livePaths) {
     const live = !!path;
     const views = path ? (path.readers || []).length : 0;
     const wasLive = card.classList.contains('is-live');
-    if (live && !wasLive) newlyLive = true;
+    if (live && !wasLive) {
+      newlyLive = true;
+      const s = STREAMERS.find(st => st.key === key);
+      if (s) showToast(s);
+    }
     card.classList.toggle('is-live', live);
     const vc = card.querySelector('.vcount');
     if (vc) vc.textContent = views;
@@ -1139,5 +1189,6 @@ fetch('/version.json').then(r => r.json()).then(d => {
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 })();
 </script>
+<div class="toast-wrap" id="toastWrap"></div>
 </body>
 </html>
