@@ -237,6 +237,7 @@ function setLive(on) {
 
 function cleanup() {
   if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+  _unmuteAttemptPending = false;
   stopStatsPolling();
   const v = $('#video');
   try { v.pause(); } catch {}
