@@ -276,6 +276,11 @@
     .card-meta{flex:1;min-width:0}
     .card-name{font-family:var(--mono);font-size:.6rem;letter-spacing:1px;font-weight:700;display:flex;align-items:center;gap:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
     .card-desc{font-size:.72rem;color:var(--muted);margin-top:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .share-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:.15s;touch-action:manipulation}
+    .share-btn:hover{border-color:var(--border-h);color:var(--white)}
+    .share-btn.copied{border-color:rgba(74,222,128,.4);color:#4ade80}
+    [data-theme="light"] .share-btn{color:rgba(0,0,0,.4)}
+    [data-theme="light"] .share-btn:hover{color:rgba(0,0,0,.8)}
     .host-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0}
 
     /* ── CHAT WIDGET ── */
@@ -881,8 +886,38 @@ function buildGrid() {
             <div class="card-name">${s.host ? '<span class="host-dot"></span>' : ''}&nbsp;${s.name}</div>
             <div class="card-desc">${s.sub}</div>
           </div>
+          <button class="share-btn" title="Compartir"><i class="fa-solid fa-share-nodes"></i></button>
         </div>`;
 
+      // Share button logic
+      a.querySelector('.share-btn').addEventListener('click', async e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const btn  = e.currentTarget;
+        const url  = 'https://corillo.live/' + encodeURIComponent(s.key) + '/';
+        const title = 'CORILLO — ' + s.name;
+        const text  = s.name + ' en corillo.live 🇵🇷';
+        if (navigator.share) {
+          try {
+            const res = await fetch('/assets/thumbs/' + s.key + '.jpg');
+            if (res.ok) {
+              const blob = await res.blob();
+              const file = new File([blob], s.key + '.jpg', { type: 'image/jpeg' });
+              if (navigator.canShare?.({ files: [file] })) {
+                await navigator.share({ title, text, url, files: [file] });
+                return;
+              }
+            }
+          } catch {}
+          try { await navigator.share({ title, text, url }); return; } catch {}
+        }
+        try {
+          await navigator.clipboard.writeText(url);
+          btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+          btn.classList.add('copied');
+          setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i>'; btn.classList.remove('copied'); }, 2000);
+        } catch {}
+      });
     }
 
     grid.appendChild(a);
