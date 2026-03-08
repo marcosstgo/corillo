@@ -1,4 +1,4 @@
-import os, time, json, asyncio, random
+import os, time, json, asyncio, random, base64
 import httpx, anthropic
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -36,6 +36,17 @@ async def get_live():
             return [p for p in r.json().get("items", []) if p.get("ready")]
     except:
         return []
+
+async def fetch_thumb_b64(channel: str) -> str | None:
+    url = f"https://corillo.live/assets/thumbs/{channel}.jpg"
+    try:
+        async with httpx.AsyncClient(timeout=8) as c:
+            r = await c.get(url)
+            if r.status_code == 200:
+                return base64.standard_b64encode(r.content).decode()
+    except:
+        pass
+    return None
 
 @app.post("/message")
 async def chat(body: Msg):
@@ -93,6 +104,7 @@ class Room:
         self.clients: dict = {}    # websocket → username
         self.history: list = []    # últimos 50 mensajes
         self.last_msg: dict = {}   # websocket → timestamp último mensaje
+        self._vision_task = None   # loop de comentarios espontáneos
 
     async def join(self, ws: WebSocket, requested: str = "") -> str:
         await ws.accept()
@@ -138,6 +150,10 @@ async def ws_chat(ws: WebSocket, channel: str):
     requested = ws.query_params.get("user", "").strip()[:40]
     username = await room.join(ws, requested)
 
+    # Arrancar vision loop si no hay uno activo
+    if room._vision_task is None or room._vision_task.done():
+        room._vision_task = asyncio.create_task(vision_loop(room, channel))
+
     # Bienvenida + historial
     await ws.send_json({"type": "welcome", "user": username})
     for msg in room.history:
@@ -169,23 +185,34 @@ async def ws_chat(ws: WebSocket, channel: str):
 
             if "@bot" in text.lower():
                 query = text.lower().split("@bot", 1)[-1].strip() or "hola"
-                asyncio.create_task(bot_reply(room, query))
+                asyncio.create_task(bot_reply(room, query, channel))
 
     except WebSocketDisconnect:
         room.leave(ws)
 
-async def bot_reply(room: Room, query: str):
+async def bot_reply(room: Room, query: str, channel: str = ""):
     live = await get_live()
     status = ("En vivo:\n" + "\n".join(
         f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live
     )) if live else "Sin streams en vivo."
+
+    # Incluir thumbnail del canal si está disponible
+    b64 = await fetch_thumb_b64(channel) if channel else None
+    user_content = []
+    if b64:
+        user_content.append({
+            "type": "image",
+            "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
+        })
+    user_content.append({"type": "text", "text": query})
+
     try:
         res = await asyncio.to_thread(
             ac.messages.create,
             model="claude-haiku-4-5-20251001",
             max_tokens=150,
             system=SYSTEM + f"\n\n{status}",
-            messages=[{"role": "user", "content": query}],
+            messages=[{"role": "user", "content": user_content}],
         )
         reply = res.content[0].text.strip()
     except:
@@ -198,3 +225,49 @@ async def bot_reply(room: Room, query: str):
         "ts": time.time(),
         "bot": True,
     })
+
+VISION_SYSTEM = (
+    "Eres un viewer más del stream. Estás viendo una captura de pantalla del stream en vivo. "
+    "Reacciona a lo que ves en la imagen con UN comentario MUY corto y casual en español, "
+    "como lo haría alguien del crew boricua mirando el stream. "
+    "Máximo 1 frase breve. Sin saludos, sin hashtags. Máximo 1 emoji si aplica. "
+    "Reacciona específicamente a lo que se ve en pantalla."
+)
+
+async def bot_vision_comment(room: Room, channel: str):
+    b64 = await fetch_thumb_b64(channel)
+    if not b64:
+        return
+    try:
+        res = await asyncio.to_thread(
+            ac.messages.create,
+            model="claude-haiku-4-5-20251001",
+            max_tokens=60,
+            system=VISION_SYSTEM,
+            messages=[{"role": "user", "content": [
+                {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}},
+                {"type": "text", "text": "¿Qué está pasando en el stream?"},
+            ]}],
+        )
+        comment = res.content[0].text.strip()
+        if comment:
+            await room.broadcast({
+                "type": "message",
+                "user": "CORILLO BOT",
+                "text": comment,
+                "ts": time.time(),
+                "bot": True,
+            })
+    except:
+        pass
+
+async def vision_loop(room: Room, channel: str):
+    # Espera inicial antes del primer comentario (2-3 min)
+    await asyncio.sleep(random.uniform(120, 180))
+    while len(room.clients) > 0:
+        live = await get_live()
+        live_keys = {p["name"].removeprefix("live/") for p in live}
+        if channel in live_keys:
+            await bot_vision_comment(room, channel)
+        # Próximo comentario en 5-9 minutos
+        await asyncio.sleep(random.uniform(300, 540))
