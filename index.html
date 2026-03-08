@@ -684,7 +684,12 @@ function loadFeatured(streamer, viewers) {
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url; v.play().catch(() => {});
   } else if (window.Hls && Hls.isSupported()) {
-    featHls = new Hls({ lowLatencyMode:true, backBufferLength:30 });
+    featHls = new Hls({
+      lowLatencyMode:true, backBufferLength:30,
+      manifestLoadingMaxRetry:8, manifestLoadingRetryDelay:2000,
+      levelLoadingMaxRetry:8,    levelLoadingRetryDelay:2000,
+      fragLoadingMaxRetry:6,     fragLoadingRetryDelay:2000,
+    });
     featHls.loadSource(url);
     featHls.attachMedia(v);
     featHls.on(Hls.Events.MANIFEST_PARSED, () => v.play().catch(() => {}));
