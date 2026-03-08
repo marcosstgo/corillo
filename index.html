@@ -686,9 +686,18 @@ function loadFeatured(streamer, viewers) {
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8?_=' + Date.now();
   const v   = $('#featuredVideo');
 
-  // Keep offline overlay visible until the video actually produces frames
+  // Keep offline overlay visible until the video actually produces frames.
+  // If no frames in 8s, retry immediately — don't wait for the next 15s poll.
   featAbort   = new AbortController();
-  featTimeout = setTimeout(() => { featTimeout = null; showOffline(); }, 12000);
+  featTimeout = setTimeout(() => {
+    featTimeout = null;
+    showOffline();
+    if (_liveStreamers.length > 0) {
+      const next = _liveStreamers.find(s => s.host) || _liveStreamers[0];
+      const pd   = _livePaths.find(p => p.name === 'live/' + next.key);
+      loadFeatured(next, pd ? (pd.readers || []).length : 0);
+    }
+  }, 8000);
   v.addEventListener('playing', () => {
     if (featTimeout) { clearTimeout(featTimeout); featTimeout = null; }
     $('#featOffline').style.display = 'none';
