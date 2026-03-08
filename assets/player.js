@@ -70,8 +70,10 @@ function showUnmuteBanner() {
   if (!$('#video').muted) return;
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   if (!isTouch && localStorage.getItem('corillo_muted') === 'false') {
-    // Desktop: auto-desmutear con delay — evita interrumpir el playing event en Chrome
-    setTimeout(() => { if (!$('#video').paused) $('#video').muted = false; }, 250);
+    // Desktop: auto-desmutear — si Chrome pausa el video al desmutear, retomar play
+    const v = $('#video');
+    v.muted = false;
+    if (v.paused) v.play().catch(() => { v.muted = true; $('#unmuteBtn').classList.add('show'); });
   } else {
     // Mobile: siempre requiere tap del usuario — no se puede auto-desmutear
     $('#unmuteBtn').classList.add('show');
