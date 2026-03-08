@@ -806,8 +806,9 @@ function updateGrid(livePaths) {
       if (live) {
         img.src = '/assets/thumbs/' + key + '.jpg?t=' + Date.now();
         img.classList.add('has-thumb');
-      } else if (!img.classList.contains('has-thumb')) {
-        // First time offline and no thumb yet — try loading saved thumb
+      } else if (!img.classList.contains('has-thumb') && !img.dataset.probed) {
+        // Try loading saved thumb once — don't retry if 404
+        img.dataset.probed = '1';
         const saved = '/assets/thumbs/' + key + '.jpg';
         const probe = new Image();
         probe.onload = () => { img.src = saved; img.classList.add('has-thumb'); };
