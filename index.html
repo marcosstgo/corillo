@@ -162,6 +162,8 @@
     .featHead .left{display:flex;align-items:center;gap:8px}
     .featTtl{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55)}
     .featVideo{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}
+    #featThumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s;pointer-events:none;z-index:1}
+    #featThumb.show{opacity:.7}
     #featuredVideo{width:100%;height:100%;object-fit:cover;display:block}
     .featOffline{
       position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
@@ -470,6 +472,7 @@
               <div class="featTtl" id="featChannel">—</div>
             </div>
             <div class="featVideo">
+              <img id="featThumb" alt="">
               <video id="featuredVideo" playsinline muted autoplay></video>
               <div class="featOffline" id="featOffline">
                 <div class="icon"><i class="fa-solid fa-broadcast-tower"></i></div>
@@ -674,8 +677,18 @@ function loadFeatured(streamer, viewers) {
   $('#featuredCard').onclick      = nav;
   $('#featuredCard').onkeydown    = e => (e.key === 'Enter' || e.key === ' ') && nav();
 
+  // Show thumbnail while HLS loads
+  const thumb = $('#featThumb');
+  const thumbSrc = '/assets/thumbs/' + streamer.key + '.jpg';
+  thumb.src = thumbSrc;
+  thumb.classList.add('show');
+
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
   const v   = $('#featuredVideo');
+
+  // Hide thumbnail when video starts playing
+  v.addEventListener('playing', () => thumb.classList.remove('show'), { once: true });
+
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url; v.play().catch(() => {});
   } else if (window.Hls && Hls.isSupported()) {
