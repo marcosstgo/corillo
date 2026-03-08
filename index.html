@@ -682,8 +682,9 @@ function loadFeatured(streamer, viewers) {
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
   const v   = $('#featuredVideo');
 
-  // Use video poster — browser shows it until first decoded frame, no JS listeners needed
+  // Show thumbnail as poster while HLS loads; clear it when first frame renders
   v.poster = '/assets/thumbs/' + streamer.key + '.jpg';
+  v.addEventListener('playing', () => { v.poster = ''; }, { once: true });
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url; v.play().catch(() => {});
