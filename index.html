@@ -656,6 +656,8 @@ let featAbort   = null;
 function destroyFeatured() {
   if (featTimeout) { clearTimeout(featTimeout); featTimeout = null; }
   if (featAbort)   { featAbort.abort(); featAbort = null; }
+  if (_featSinceTicker) { clearInterval(_featSinceTicker); _featSinceTicker = null; }
+  _featSince = null; _featSubData = null;
   const v = $('#featuredVideo');
   try { v.pause(); } catch {}
   v.removeAttribute('src'); v.load();
@@ -665,6 +667,26 @@ function destroyFeatured() {
 function featuredHealthy() {
   const v = $('#featuredVideo');
   return !v.paused && v.readyState >= 3 && v.currentTime > 0;
+}
+
+function fmtDuration(iso) {
+  if (!iso) return '';
+  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (mins < 1)  return 'en vivo ahora';
+  if (mins < 60) return 'en vivo ' + mins + 'm';
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return 'en vivo ' + h + 'h' + (m ? ' ' + m + 'm' : '');
+}
+
+let _featSince = null, _featSinceTicker = null, _featSubData = null;
+function updateFeatSub() {
+  if (!_featSubData) return;
+  const { sub, viewers } = _featSubData;
+  const dur = fmtDuration(_featSince);
+  const parts = [sub];
+  if (dur) parts.push(dur);
+  if (viewers) parts.push(viewers + ' viewers');
+  $('#featSub').textContent = parts.join(' · ');
 }
 
 function showOffline() {
@@ -687,10 +709,14 @@ function showOffline() {
 }
 
 let lastFeatKey = null;
-function loadFeatured(streamer, viewers) {
+function loadFeatured(streamer, viewers, since) {
   if (streamer.key === lastFeatKey) return;
   lastFeatKey = streamer.key;
   destroyFeatured();
+
+  _featSince   = since || null;
+  _featSubData = { sub: streamer.sub, viewers };
+  _featSinceTicker = setInterval(updateFeatSub, 30000);
 
   $('#featDot').className       = 'dot on';
   $('#featChannel').textContent = streamer.name;
@@ -698,7 +724,7 @@ function loadFeatured(streamer, viewers) {
   $('#featAva').style.background = streamer.color;
   $('#featAva').textContent      = streamer.ava;
   $('#featName').textContent     = streamer.name;
-  $('#featSub').textContent      = streamer.sub + (viewers ? ' · ' + viewers + ' viewers' : '');
+  updateFeatSub();
   $('#featBadge').style.display  = streamer.host ? 'block' : 'none';
   $('#featBadge').textContent    = 'HOST';
 
@@ -719,7 +745,7 @@ function loadFeatured(streamer, viewers) {
     if (_liveStreamers.length > 0) {
       const next = _liveStreamers.find(s => s.host) || _liveStreamers[0];
       const pd   = _livePaths.find(p => p.name === 'live/' + next.key);
-      loadFeatured(next, pd ? (pd.readers || []).length : 0);
+      loadFeatured(next, pd ? (pd.readers || []).length : 0, pd?.readySince);
     }
   }, 8000);
   v.addEventListener('playing', () => {
@@ -951,7 +977,7 @@ async function refresh() {
       // Host first, then others
       const next = _liveStreamers.find(s => s.host) || _liveStreamers[0];
       const pd = livePaths.find(p => p.name === 'live/' + next.key);
-      loadFeatured(next, pd ? (pd.readers || []).length : 0);
+      loadFeatured(next, pd ? (pd.readers || []).length : 0, pd?.readySince);
     } else if (!featuredHealthy()) {
       // Featured is still live but player is stalled — force a fresh load
       const curKey = lastFeatKey;
@@ -959,7 +985,7 @@ async function refresh() {
       const cur = _liveStreamers.find(s => s.key === curKey);
       if (cur) {
         const pd = livePaths.find(p => p.name === 'live/' + cur.key);
-        loadFeatured(cur, pd ? (pd.readers || []).length : 0);
+        loadFeatured(cur, pd ? (pd.readers || []).length : 0, pd?.readySince);
       }
     }
     // Start rotator if not running
@@ -988,7 +1014,7 @@ function rotateFeatured() {
   const pd   = _livePaths.find(p => p.name === 'live/' + next.key);
   // Force reload even if same key
   lastFeatKey = null;
-  loadFeatured(next, pd ? (pd.readers || []).length : 0);
+  loadFeatured(next, pd ? (pd.readers || []).length : 0, pd?.readySince);
 
   // Flash indicator
   const dot = $('#featDot');
