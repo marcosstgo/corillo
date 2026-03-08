@@ -629,15 +629,21 @@ function getLive(data) {
 
 // ── FEATURED ──
 let featHls = null;
+let _featAbort = null;
 
 function destroyFeatured() {
+  if (_featAbort) { _featAbort.abort(); _featAbort = null; }
   const v = $('#featuredVideo');
   try { v.pause(); } catch {}
   v.removeAttribute('src'); v.load();
   if (featHls) { try { featHls.destroy(); } catch {} featHls = null; }
+  const thumb = $('#featThumb');
+  thumb.classList.remove('show');
+  thumb.src = '';
 }
 
 function showOffline() {
+  lastFeatKey = null;  // allow re-load if stream restarts while API still reports live
   destroyFeatured();
   const s = STREAMERS[0];
   $('#featDot').className      = 'dot';
@@ -680,15 +686,16 @@ function loadFeatured(streamer, viewers) {
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
   const v   = $('#featuredVideo');
 
-  // Show thumbnail while HLS loads — probe first, only display if video hasn't rendered frames yet
+  // Thumbnail: probe first (avoid broken-image flash), toggle on playing/waiting
   const thumb = $('#featThumb');
-  thumb.classList.remove('show');
-  thumb.src = '';
-  const _pk = streamer.key;
+  const _pk   = streamer.key;
   let _playing = false;
+  _featAbort = new AbortController();
+  const _sig = _featAbort.signal;
 
-  // 'playing' fires when the first frame renders — v.paused goes false earlier (on play() call)
-  v.addEventListener('playing', () => { _playing = true; thumb.classList.remove('show'); }, { once: true });
+  // Hide thumbnail when video renders frames; re-show during buffering (better than black screen)
+  v.addEventListener('playing', () => { _playing = true; thumb.classList.remove('show'); }, { signal: _sig });
+  v.addEventListener('waiting', () => { if (thumb.naturalWidth > 0 && lastFeatKey === _pk) thumb.classList.add('show'); }, { signal: _sig });
 
   const _probe = new Image();
   _probe.onload = () => {
