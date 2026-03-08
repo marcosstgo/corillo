@@ -211,7 +211,7 @@ body.theme-terminal .playerWrap::before{
 body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,255,.14),transparent 55%),var(--ink)}
 
 /* Unmute banner */
-.unmute-btn{position:absolute;bottom:52px;left:14px;z-index:11;display:none;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;transition:background .15s,border-color .15s}
+.unmute-btn{position:absolute;bottom:52px;left:14px;z-index:13;display:none;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(0,0,0,.72);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;transition:background .15s,border-color .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .unmute-btn.show{display:inline-flex}
 .unmute-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4)}
 
