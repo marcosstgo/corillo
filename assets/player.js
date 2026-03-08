@@ -58,8 +58,12 @@ function showOverlay(title, msg) {
   $('#ovTitle').textContent = title;
   $('#ovMsg').textContent   = msg;
   $('#overlay').classList.add('show');
+  _offlineThumb.classList.add('visible');
 }
-function hideOverlay() { $('#overlay').classList.remove('show'); }
+function hideOverlay() {
+  $('#overlay').classList.remove('show');
+  _offlineThumb.classList.remove('visible');
+}
 
 // ── UNMUTE ──
 function showUnmuteBanner() {
@@ -85,6 +89,13 @@ $('#unmuteBtn').addEventListener('click', () => {
 let ctrlTimer = null;
 const ctrlBar = document.getElementById('ctrlBar');
 const playerWrap = document.querySelector('.playerWrap');
+
+// ── OFFLINE THUMBNAIL BACKDROP ──
+const _offlineThumb = document.createElement('img');
+_offlineThumb.className = 'offline-thumb';
+_offlineThumb.src = '/assets/thumbs/' + channel + '.jpg';
+playerWrap.insertBefore(_offlineThumb, playerWrap.firstChild);
+
 function showCtrl() {
   ctrlBar.classList.add('visible');
   clearTimeout(ctrlTimer);
