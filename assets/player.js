@@ -70,8 +70,8 @@ function showUnmuteBanner() {
   if (!$('#video').muted) return;
   const isTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   if (!isTouch && localStorage.getItem('corillo_muted') === 'false') {
-    // Desktop: auto-desmutear (safe)
-    $('#video').muted = false;
+    // Desktop: auto-desmutear con delay — evita interrumpir el playing event en Chrome
+    setTimeout(() => { if (!$('#video').paused) $('#video').muted = false; }, 250);
   } else {
     // Mobile: siempre requiere tap del usuario — no se puede auto-desmutear
     $('#unmuteBtn').classList.add('show');
