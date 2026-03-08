@@ -58,7 +58,7 @@ function showOverlay(title, msg) {
   $('#ovTitle').textContent = title;
   $('#ovMsg').textContent   = msg;
   $('#overlay').classList.add('show');
-  _offlineThumb.classList.add('visible');
+  if (_thumbReady) _offlineThumb.classList.add('visible');
 }
 function hideOverlay() {
   $('#overlay').classList.remove('show');
@@ -93,6 +93,11 @@ const playerWrap = document.querySelector('.playerWrap');
 // ── OFFLINE THUMBNAIL BACKDROP ──
 const _offlineThumb = document.createElement('img');
 _offlineThumb.className = 'offline-thumb';
+let _thumbReady = false;
+_offlineThumb.onload = () => {
+  _thumbReady = true;
+  if ($('#overlay').classList.contains('show')) _offlineThumb.classList.add('visible');
+};
 _offlineThumb.src = '/assets/thumbs/' + channel + '.jpg';
 playerWrap.insertBefore(_offlineThumb, playerWrap.firstChild);
 
