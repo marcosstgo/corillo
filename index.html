@@ -818,12 +818,14 @@ function buildGrid() {
 
 function updateGrid(livePaths) {
   _livePaths = livePaths;
+  let newlyLive = false;
   document.querySelectorAll('.card[data-key]').forEach(card => {
     const key  = card.dataset.key;
     const path = livePaths.find(p => p.name === 'live/' + key);
     const live = !!path;
     const views = path ? (path.readers || []).length : 0;
     const wasLive = card.classList.contains('is-live');
+    if (live && !wasLive) newlyLive = true;
     card.classList.toggle('is-live', live);
     const vc = card.querySelector('.vcount');
     if (vc) vc.textContent = views;
@@ -857,6 +859,9 @@ function updateGrid(livePaths) {
     return (bHost ? 1 : 0) - (aHost ? 1 : 0);
   });
   cards.forEach(c => grid.appendChild(c));
+
+  // If a channel just went live, scroll carousel back to show it
+  if (newlyLive) grid.scrollTo({ left: 0, behavior: 'smooth' });
 }
 
 // ── REFRESH ──
