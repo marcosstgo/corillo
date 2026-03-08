@@ -255,7 +255,8 @@
     .card.is-live{border-color:rgba(223,48,48,.2)}
     .card.is-host{border-color:rgba(232,200,74,.12)}
     .thumb{aspect-ratio:16/9;background:#000;position:relative;overflow:hidden}
-    .thumb video{width:100%;height:100%;object-fit:cover;opacity:.9}
+    .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;display:none}
+    .is-live .thumb-img{display:block}
     .ch-offline{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.52rem;letter-spacing:2px;color:var(--muted);background:var(--panel)}
     .is-live .ch-offline{display:none}
     .live-tag{
@@ -760,7 +761,7 @@ function buildGrid() {
     } else {
       a.innerHTML  = `
         <div class="thumb">
-          <video playsinline muted autoplay loop></video>
+          <img class="thumb-img" alt="">
           <div class="ch-offline">Offline</div>
           <div class="live-tag"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
           <div class="views-tag"><i class="fa-solid fa-eye"></i>&nbsp;<span class="vcount">0</span></div>
@@ -773,32 +774,6 @@ function buildGrid() {
           </div>
         </div>`;
 
-      // Only load preview if streamer is live
-      const v = a.querySelector('video');
-      a._loadPreview = function() {
-        if (a._previewLoaded) return;
-        a._previewLoaded = true;
-        const url = '/live/' + encodeURIComponent(s.key) + '/index.m3u8';
-        if (v.canPlayType('application/vnd.apple.mpegurl')) {
-          v.src = url; v.play().catch(() => {});
-        } else if (window.Hls && Hls.isSupported()) {
-          const h = new Hls({ lowLatencyMode:true, backBufferLength:10 });
-          h.loadSource(url);
-          h.attachMedia(v);
-          h.on(Hls.Events.ERROR, (_, d) => { if (d?.fatal) { try{h.destroy()}catch{} a._previewLoaded = false; } });
-          v.play().catch(() => {});
-          a._hls = h;
-          const io = new IntersectionObserver(entries => {
-            if (!entries[0].isIntersecting) { try{h.destroy()}catch{} a._previewLoaded = false; io.disconnect(); }
-          }, { threshold:0 });
-          io.observe(a);
-        }
-      };
-      a._stopPreview = function() {
-        if (a._hls) { try{a._hls.destroy()}catch{} a._hls = null; }
-        v.removeAttribute('src'); v.load();
-        a._previewLoaded = false;
-      };
     }
 
     grid.appendChild(a);
@@ -824,9 +799,12 @@ function updateGrid(livePaths) {
     card.classList.toggle('is-live', live);
     const vc = card.querySelector('.vcount');
     if (vc) vc.textContent = views;
-    // Start preview when goes live, stop when goes offline
-    if (live && !wasLive && card._loadPreview) card._loadPreview();
-    if (!live && wasLive && card._stopPreview) card._stopPreview();
+    // Refresh thumbnail on every poll while live
+    const img = card.querySelector('.thumb-img');
+    if (img) {
+      if (live) img.src = '/assets/thumbs/' + key + '.jpg?t=' + Date.now();
+      else img.removeAttribute('src');
+    }
   });
 
   // Re-sort carousel: live cards move to front
