@@ -256,7 +256,8 @@
     .card.is-host{border-color:rgba(232,200,74,.12)}
     .thumb{aspect-ratio:16/9;background:#000;position:relative;overflow:hidden}
     .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;display:none}
-    .is-live .thumb-img{display:block}
+    .thumb-img.has-thumb{display:block;opacity:.55}
+    .is-live .thumb-img.has-thumb{opacity:.9}
     .ch-offline{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.52rem;letter-spacing:2px;color:var(--muted);background:var(--panel)}
     .is-live .ch-offline{display:none}
     .live-tag{
@@ -801,8 +802,16 @@ function updateGrid(livePaths) {
     // Refresh thumbnail on every poll while live
     const img = card.querySelector('.thumb-img');
     if (img) {
-      if (live) img.src = '/assets/thumbs/' + key + '.jpg?t=' + Date.now();
-      else img.removeAttribute('src');
+      if (live) {
+        img.src = '/assets/thumbs/' + key + '.jpg?t=' + Date.now();
+        img.classList.add('has-thumb');
+      } else if (!img.classList.contains('has-thumb')) {
+        // First time offline and no thumb yet — try loading saved thumb
+        const saved = '/assets/thumbs/' + key + '.jpg';
+        const probe = new Image();
+        probe.onload = () => { img.src = saved; img.classList.add('has-thumb'); };
+        probe.src = saved;
+      }
     }
   });
 
