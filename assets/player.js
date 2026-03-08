@@ -90,6 +90,7 @@ function hideUnmuteBanner() { $('#unmuteBtn').classList.remove('show'); }
 $('#unmuteBtn').addEventListener('click', () => {
   const v = $('#video');
   v.muted = false; v.volume = v.volume || 1;
+  if (v.paused) v.play().catch(() => {});
   localStorage.setItem('corillo_muted', 'false');
   hideUnmuteBanner();
 });
