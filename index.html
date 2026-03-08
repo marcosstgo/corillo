@@ -638,6 +638,11 @@ function destroyFeatured() {
   if (featHls) { try { featHls.destroy(); } catch {} featHls = null; }
 }
 
+function featuredHealthy() {
+  const v = $('#featuredVideo');
+  return !v.paused && v.readyState >= 3 && v.currentTime > 0;
+}
+
 function showOffline() {
   lastFeatKey = null;  // allow re-load if stream restarts while API still reports live
   destroyFeatured();
@@ -665,7 +670,6 @@ function loadFeatured(streamer, viewers) {
 
   $('#featDot').className       = 'dot on';
   $('#featChannel').textContent = streamer.name;
-  $('#featOffline').style.display    = 'none';
   $('#featuredVideo').style.display  = 'block';
   $('#featAva').style.background = streamer.color;
   $('#featAva').textContent      = streamer.ava;
@@ -679,14 +683,15 @@ function loadFeatured(streamer, viewers) {
   $('#featuredCard').onclick      = nav;
   $('#featuredCard').onkeydown    = e => (e.key === 'Enter' || e.key === ' ') && nav();
 
-  const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
+  const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8?_=' + Date.now();
   const v   = $('#featuredVideo');
 
-  // If the video hasn't produced a frame within 12s, go offline and let the poll retry
+  // Keep offline overlay visible until the video actually produces frames
   featAbort   = new AbortController();
   featTimeout = setTimeout(() => { featTimeout = null; showOffline(); }, 12000);
   v.addEventListener('playing', () => {
     if (featTimeout) { clearTimeout(featTimeout); featTimeout = null; }
+    $('#featOffline').style.display = 'none';
   }, { once: true, signal: featAbort.signal });
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
@@ -883,6 +888,15 @@ async function refresh() {
       const next = _liveStreamers.find(s => s.host) || _liveStreamers[0];
       const pd = livePaths.find(p => p.name === 'live/' + next.key);
       loadFeatured(next, pd ? (pd.readers || []).length : 0);
+    } else if (!featuredHealthy()) {
+      // Featured is still live but player is stalled — force a fresh load
+      const curKey = lastFeatKey;
+      lastFeatKey = null;
+      const cur = _liveStreamers.find(s => s.key === curKey);
+      if (cur) {
+        const pd = livePaths.find(p => p.name === 'live/' + cur.key);
+        loadFeatured(cur, pd ? (pd.readers || []).length : 0);
+      }
     }
     // Start rotator if not running
     if (!_featTimer && _liveStreamers.length > 1) {
