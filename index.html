@@ -629,13 +629,17 @@ function getLive(data) {
 
 // ── FEATURED ──
 let featHls = null;
+let _featAbort = null;
 
 function destroyFeatured() {
+  if (_featAbort) { _featAbort.abort(); _featAbort = null; }
   const v = $('#featuredVideo');
-  v.poster = '';
   try { v.pause(); } catch {}
   v.removeAttribute('src'); v.load();
   if (featHls) { try { featHls.destroy(); } catch {} featHls = null; }
+  const thumb = $('#featThumb');
+  thumb.classList.remove('show');
+  thumb.src = '';
 }
 
 function showOffline() {
@@ -682,9 +686,27 @@ function loadFeatured(streamer, viewers) {
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
   const v   = $('#featuredVideo');
 
-  // Show thumbnail as poster while HLS loads; clear it when first frame renders
-  v.poster = '/assets/thumbs/' + streamer.key + '.jpg';
-  v.addEventListener('playing', () => { v.poster = ''; }, { once: true });
+  // Show thumbnail while HLS loads; hide once video has 1s of real content
+  // (timeupdate is more reliable than 'playing' — covers initial black encoder frames)
+  const thumb = $('#featThumb');
+  const _pk   = streamer.key;
+  _featAbort  = new AbortController();
+  const _sig  = _featAbort.signal;
+
+  const _probe = new Image();
+  _probe.onload = () => {
+    if (lastFeatKey === _pk) { thumb.src = _probe.src; thumb.classList.add('show'); }
+  };
+  _probe.src = '/assets/thumbs/' + _pk + '.jpg';
+
+  let _t0 = null;
+  v.addEventListener('timeupdate', () => {
+    if (_t0 === null) _t0 = v.currentTime;
+    if (v.currentTime - _t0 >= 1) {
+      thumb.classList.remove('show');
+      if (_featAbort) { _featAbort.abort(); _featAbort = null; }
+    }
+  }, { signal: _sig });
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url; v.play().catch(() => {});
