@@ -79,9 +79,14 @@
     /* divider */
     .divider{border:none;border-top:1px solid var(--border);margin:28px 0}
 
+    .card.chuleria{border-color:rgba(180,100,255,.25);background:linear-gradient(to bottom,rgba(180,100,255,.05),rgba(12,12,16,.45))}
+    .badge.chuleria{background:rgba(180,100,255,.12);border:1px solid rgba(180,100,255,.35);color:rgba(210,160,255,.95)}
+    .items li .ico.purple{color:rgba(180,100,255,.85)}
+
     [data-theme="light"] .card{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
     [data-theme="light"] .card.done{background:rgba(232,200,74,.07);border-color:rgba(180,130,0,.25)}
     [data-theme="light"] .card.next{background:rgba(100,180,255,.05);border-color:rgba(100,180,255,.2)}
+    [data-theme="light"] .card.chuleria{background:rgba(180,100,255,.05);border-color:rgba(180,100,255,.2)}
     [data-theme="light"] .sub{color:rgba(0,0,0,.5)}
     [data-theme="light"] .items li{color:rgba(0,0,0,.7)}
   </style>
@@ -127,8 +132,29 @@
       <li><i class="fa-solid fa-check ico"></i> Menú mobile responsive — hamburger con panel deslizante</li>
       <li><i class="fa-solid fa-check ico"></i> Thumbnails de canales — última foto visible aunque el canal esté offline</li>
       <li><i class="fa-solid fa-check ico"></i> Player mobile optimizado — sin zoom en chat, autoplay garantizado en todos los dispositivos</li>
-      <li><i class="fa-solid fa-check ico"></i> Fondo del player con último screenshot cuando el canal está offline</li>
-      <li><i class="fa-solid fa-check ico"></i> Bot con visión — ve el stream y comenta espontáneamente como viewer</li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHULERÍAS -->
+  <div class="card chuleria">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Chulerías</div>
+        <div class="card-desc">Las cosas cool que hacen a CORILLO diferente</div>
+      </div>
+      <span class="badge chuleria"><i class="fa-solid fa-star"></i>&nbsp; Cool</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-solid fa-check ico"></i> Bot con visión — ve el stream y comenta como viewer</li>
+      <li><i class="fa-solid fa-check ico"></i> Fondo con último screenshot en player offline</li>
+      <li><i class="fa-solid fa-check ico"></i> Thumbnails auto-generados cada 30s por canal en vivo</li>
+      <li><i class="fa-solid fa-check ico"></i> Compartir canal con imagen del stream via Web Share API</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> GIFs animados del stream en las cards del homepage</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> VODs automáticos — grabación para ver después del live</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> Clips compartibles — los mejores momentos del stream</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> Reacciones emoji en el chat en tiempo real</li>
     </ul>
   </div>
 
@@ -180,8 +206,6 @@
       <span class="badge pendiente"><i class="fa-regular fa-clock"></i>&nbsp; Pendiente</span>
     </div>
     <ul class="items">
-      <li><i class="fa-regular fa-clock ico muted"></i> GIFs animados de los streams — preview en movimiento en las cards</li>
-      <li><i class="fa-regular fa-clock ico muted"></i> VODs automáticos — grabación de streams para verlos después</li>
       <li><i class="fa-regular fa-clock ico muted"></i> Estadísticas para streamers</li>
       <li><i class="fa-regular fa-clock ico muted"></i> Perfil editable por canal</li>
       <li><i class="fa-regular fa-clock ico muted"></i> Términos de uso y privacidad</li>
