@@ -629,17 +629,13 @@ function getLive(data) {
 
 // ── FEATURED ──
 let featHls = null;
-let _featAbort = null;
 
 function destroyFeatured() {
-  if (_featAbort) { _featAbort.abort(); _featAbort = null; }
   const v = $('#featuredVideo');
+  v.poster = '';
   try { v.pause(); } catch {}
   v.removeAttribute('src'); v.load();
   if (featHls) { try { featHls.destroy(); } catch {} featHls = null; }
-  const thumb = $('#featThumb');
-  thumb.classList.remove('show');
-  thumb.src = '';
 }
 
 function showOffline() {
@@ -686,22 +682,8 @@ function loadFeatured(streamer, viewers) {
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
   const v   = $('#featuredVideo');
 
-  // Thumbnail: probe first (avoid broken-image flash), toggle on playing/waiting
-  const thumb = $('#featThumb');
-  const _pk   = streamer.key;
-  let _playing = false;
-  _featAbort = new AbortController();
-  const _sig = _featAbort.signal;
-
-  // Hide thumbnail when video renders frames; re-show during buffering (better than black screen)
-  v.addEventListener('playing', () => { _playing = true; thumb.classList.remove('show'); }, { signal: _sig });
-  v.addEventListener('waiting', () => { if (thumb.naturalWidth > 0 && lastFeatKey === _pk) thumb.classList.add('show'); }, { signal: _sig });
-
-  const _probe = new Image();
-  _probe.onload = () => {
-    if (lastFeatKey === _pk && !_playing) { thumb.src = _probe.src; thumb.classList.add('show'); }
-  };
-  _probe.src = '/assets/thumbs/' + streamer.key + '.jpg';
+  // Use video poster — browser shows it until first decoded frame, no JS listeners needed
+  v.poster = '/assets/thumbs/' + streamer.key + '.jpg';
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url; v.play().catch(() => {});
