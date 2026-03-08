@@ -726,7 +726,6 @@ function initCarousel() {
 let _livePaths = [];
 function buildGrid() {
   const grid = $('#channelsGrid');
-  grid.querySelectorAll('.card[data-key]').forEach(c => { if (c._stopPreview) c._stopPreview(); });
   grid.innerHTML = '';
   // Sort: live first, then offline, host always first within group
   const sorted = [...STREAMERS].sort((a, b) => {
