@@ -12,6 +12,10 @@ const TWITCH_MAP = {
 };
 const twitchUser = TWITCH_MAP[channel] || channel;
 
+// Update og:image to channel thumbnail — works for Web Share API and future channels
+const _ogImg = document.querySelector('meta[property="og:image"]');
+if (_ogImg) _ogImg.setAttribute('content', 'https://corillo.live/assets/thumbs/' + channel + '.jpg');
+
 $('#chTag').textContent      = '— ' + channel.toUpperCase();
 document.title               = 'CORILLO — ' + channel.toUpperCase();
 $('#twitchLink').href        = 'https://twitch.tv/' + twitchUser;
