@@ -680,19 +680,21 @@ function loadFeatured(streamer, viewers) {
   const url = '/live/' + encodeURIComponent(streamer.key) + '/index.m3u8';
   const v   = $('#featuredVideo');
 
-  // Show thumbnail while HLS loads — only if it exists and video hasn't started yet
+  // Show thumbnail while HLS loads — probe first, only display if video hasn't rendered frames yet
   const thumb = $('#featThumb');
   thumb.classList.remove('show');
   thumb.src = '';
   const _pk = streamer.key;
+  let _playing = false;
+
+  // 'playing' fires when the first frame renders — v.paused goes false earlier (on play() call)
+  v.addEventListener('playing', () => { _playing = true; thumb.classList.remove('show'); }, { once: true });
+
   const _probe = new Image();
   _probe.onload = () => {
-    if (lastFeatKey === _pk && v.paused) { thumb.src = _probe.src; thumb.classList.add('show'); }
+    if (lastFeatKey === _pk && !_playing) { thumb.src = _probe.src; thumb.classList.add('show'); }
   };
   _probe.src = '/assets/thumbs/' + streamer.key + '.jpg';
-
-  // Hide thumbnail when video starts playing
-  v.addEventListener('playing', () => thumb.classList.remove('show'), { once: true });
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url; v.play().catch(() => {});
