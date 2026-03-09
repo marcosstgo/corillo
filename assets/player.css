@@ -64,7 +64,7 @@ header{
   position:relative;background:#000;flex-shrink:0;
 }
 #video{width:100%;display:block;background:#000}
-#video.horizontal{aspect-ratio:16/9}
+#video.horizontal{aspect-ratio:16/9;max-height:calc(100vh - 140px)}
 #video.vertical{aspect-ratio:9/16;max-height:80vh;margin:0 auto}
 
 /* Offline thumbnail backdrop */
