@@ -184,6 +184,12 @@ let statsTimer = null;
 function startStatsPolling() {
   if (statsTimer) return;
   let hooked = false, emaBitrate = null;
+  // Cachear referencias DOM — evita querySelector 5× por segundo (60 veces/min)
+  const v        = $('#video');
+  const elBitrate = $('#sBitrate');
+  const elBuffer  = $('#sBuffer');
+  const elLatency = $('#sLatency');
+  const elLevel   = $('#sLevel');
   function fmtMbps(bps) {
     if (!bps || !isFinite(bps) || bps <= 0) return '—';
     return (bps / 1_000_000).toFixed(1) + ' Mbps';
@@ -205,20 +211,19 @@ function startStatsPolling() {
     });
   }
   statsTimer = setInterval(() => {
-    const v = $('#video');
     if (!v) return;
     hookHls();
     if (v.readyState >= 2 && v.buffered.length) {
       const buf = v.buffered.end(v.buffered.length - 1) - v.currentTime;
-      $('#sBuffer').textContent = isFinite(buf) ? buf.toFixed(1) + 's' : '—';
+      elBuffer.textContent = isFinite(buf) ? buf.toFixed(1) + 's' : '—';
     }
     if (v.seekable?.length > 0) {
       const lat = v.seekable.end(v.seekable.length - 1) - v.currentTime;
-      $('#sLatency').textContent = (isFinite(lat) && lat >= 0) ? lat.toFixed(1) + 's' : '—';
+      elLatency.textContent = (isFinite(lat) && lat >= 0) ? lat.toFixed(1) + 's' : '—';
     }
     const w = v.videoWidth, h = v.videoHeight;
-    $('#sLevel').textContent   = (w > 0 && h > 0) ? `${w}×${h}` : '—';
-    $('#sBitrate').textContent = fmtMbps(emaBitrate);
+    elLevel.textContent   = (w > 0 && h > 0) ? `${w}×${h}` : '—';
+    elBitrate.textContent = fmtMbps(emaBitrate);
   }, 1000);
 }
 function stopStatsPolling() {

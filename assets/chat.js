@@ -36,7 +36,7 @@ const WS_BASE = location.protocol === 'https:' ? 'wss:' : 'ws:';
 const _savedUser = localStorage.getItem('corillo_username') || '';
 const WS_URL  = `${WS_BASE}//${location.host}/chat-api/ws/${channel}${_savedUser ? '?user=' + encodeURIComponent(_savedUser) : ''}`;
 
-let ws = null, wsTimer = null;
+let ws = null, wsTimer = null, _wsRetries = 0;
 
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -68,7 +68,7 @@ function addChatMsg(msg) {
 function connectWs() {
   if (ws && ws.readyState < 2) return;
   ws = new WebSocket(WS_URL);
-  ws.onopen = () => clearTimeout(wsTimer);
+  ws.onopen = () => { clearTimeout(wsTimer); _wsRetries = 0; };
   ws.onmessage = ({ data }) => {
     try {
       const msg = JSON.parse(data);
@@ -80,7 +80,13 @@ function connectWs() {
       addChatMsg(msg);
     } catch {}
   };
-  ws.onclose = () => { wsTimer = setTimeout(connectWs, 3000); };
+  ws.onclose = () => {
+    // Backoff exponencial: 3s → 4.5s → 6.75s → … → 30s máx
+    // Evita tormenta de reconexiones si el servidor cae y vuelve
+    const delay = Math.min(30000, 3000 * Math.pow(1.5, _wsRetries));
+    _wsRetries++;
+    wsTimer = setTimeout(connectWs, delay);
+  };
   ws.onerror = () => ws.close();
 }
 

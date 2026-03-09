@@ -18,6 +18,22 @@ app.add_middleware(
 
 ac = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
+# ── HTTP client compartido — reutiliza conexiones TCP/TLS (evita handshake en cada llamada) ──
+# Para máximo rendimiento, configura MEDIAMTX_HOST=http://{IP_LAN_Pi3Bplus}:9997
+# en el .env del Pi 3B para llamar directo a MediaMTX sin pasar por Internet.
+MEDIAMTX_HOST = os.environ.get("MEDIAMTX_HOST", "https://corillo.live/mediamtx-api")
+THUMBS_HOST   = os.environ.get("THUMBS_HOST",   "https://corillo.live")
+
+_http: httpx.AsyncClient = None  # inicializado en startup
+
+# Caché de estado en vivo — evita llamadas redundantes desde múltiples fuentes
+_live_cache: dict = {"data": [], "ts": 0.0}
+LIVE_CACHE_TTL = 12  # segundos
+
+# Caché de thumbnails — evita re-descargar 50-150 KB en cada comentario del bot
+_thumb_cache: dict = {}
+THUMB_CACHE_TTL = 35  # segundos (FFmpeg los refresca cada 30s)
+
 NAMES = [
     "Coqui","Pitirre","Manatí","Gandule","Sofrito","Tostón",
     "Colmado","Boricua","Mofongo","Platano","Lechón","Bacalao",
@@ -30,23 +46,34 @@ class Msg(BaseModel):
     message: str
 
 async def get_live():
+    """Retorna streams activos. Usa caché de 12s para evitar llamadas redundantes."""
+    now = time.time()
+    if now - _live_cache["ts"] < LIVE_CACHE_TTL:
+        return _live_cache["data"]
     try:
-        async with httpx.AsyncClient(timeout=5) as c:
-            r = await c.get("https://corillo.live/mediamtx-api/v3/paths/list")
-            return [p for p in r.json().get("items", []) if p.get("ready")]
+        r = await _http.get(f"{MEDIAMTX_HOST}/v3/paths/list")
+        result = [p for p in r.json().get("items", []) if p.get("ready")]
+        _live_cache.update({"data": result, "ts": now})
+        return result
     except:
-        return []
+        return _live_cache["data"]  # retorna datos stale si falla la llamada
 
 async def fetch_thumb_b64(channel: str) -> str | None:
-    url = f"https://corillo.live/assets/thumbs/{channel}.jpg"
+    """Retorna thumbnail en base64. Caché de 35s — evita re-descargar el JPEG en cada llamada."""
+    now = time.time()
+    cached = _thumb_cache.get(channel)
+    if cached and (now - cached["ts"]) < THUMB_CACHE_TTL:
+        return cached["data"]
+    url = f"{THUMBS_HOST}/assets/thumbs/{channel}.jpg"
     try:
-        async with httpx.AsyncClient(timeout=8) as c:
-            r = await c.get(url)
-            if r.status_code == 200:
-                return base64.standard_b64encode(r.content).decode()
+        r = await _http.get(url)
+        if r.status_code == 200:
+            data = base64.standard_b64encode(r.content).decode()
+            _thumb_cache[channel] = {"data": data, "ts": now}
+            return data
     except:
         pass
-    return None
+    return cached["data"] if cached else None  # retorna stale si falla
 
 @app.get("/health")
 def health():
@@ -278,16 +305,16 @@ async def vision_loop(room: Room, channel: str):
 
 # ── STREAMER GREETER ─────────────────────────────────────────────
 STREAMER_NAMES = {
-    "katatonia": "Katatonia",
-    "tea": "Tea",
+    "katatonia":      "Katatonia",
+    "tea":            "Tea",
     "mira_sanganooo": "Mira_Sanganooo",
-    "404": "404",
-    "elbala": "Elbala",
-    "marcos": "Marcos",
-    "pataecabra": "Pataecabra",
-    "streamerpro": "StreamerPro",
-    "radblaster": "Radblaster",
-    "elhermanoquiles": "ElHermanoQuiles",
+    "404":            "404",
+    "elbala":         "Elbala",
+    "marcos":         "Marcos",
+    "pataecabra":     "Pataecabra",
+    "streamerpro":    "StreamerPro",
+    "radblaster":     "Radblaster",
+    "elhermanoquiles":"ElHermanoQuiles",
 }
 
 _prev_live: set = set()
@@ -342,4 +369,14 @@ async def live_monitor():
 
 @app.on_event("startup")
 async def startup():
+    global _http
+    _http = httpx.AsyncClient(
+        timeout=8,
+        limits=httpx.Limits(max_connections=20, max_keepalive_connections=5),
+    )
     asyncio.create_task(live_monitor())
+
+@app.on_event("shutdown")
+async def shutdown():
+    if _http:
+        await _http.aclose()

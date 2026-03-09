@@ -11,6 +11,9 @@ Plataforma de streaming en vivo hecha para boricuas. Contenido en español, cult
 - ELBALA — Gaming, Entretenimiento
 - MARCOS — Gaming, Puerto Rico
 - PATAECABRA — Gaming, Puerto Rico
+- STREAMERPRO — Gaming, Puerto Rico
+- RADBLASTER — Gaming, Puerto Rico
+- ELHERMANOQUILES — Gaming, Puerto Rico
 
 El player de cada streamer está en: corillo.live/{handle}/
 
@@ -27,7 +30,7 @@ El proceso es 100% manual:
 Si alguien pregunta cómo registrarse o unirse, la respuesta siempre es: escribir a hello@marcossantiago.com.
 
 ## Handles reservados (no disponibles)
-join, assets, mediamtx-api, live, api, static, admin, katatonia, tea, mira_sanganooo, 404, elbala, marcos
+join, assets, mediamtx-api, live, api, static, admin, katatonia, tea, mira_sanganooo, 404, elbala, marcos, pataecabra, streamerpro, radblaster, elhermanoquiles
 
 ## Reglas del handle
 - Solo letras minúsculas, números y guion bajo (_)

@@ -47,6 +47,12 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/stream/
 
+      - name: Sync Caddyfile and reload Caddy
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "sudo cp /var/www/stream/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy && echo 'Caddy reloaded'"
+
       - name: Deploy chat bot to Pi
         run: |
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \

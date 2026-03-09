@@ -1,0 +1,55 @@
+corillo.live, stream.marcossantiago.com {
+    # Compresión — reduce transferencia 60-80% en HTML/CSS/JS/JSON/m3u8
+    encode zstd gzip
+
+    # 1) Proxy HLS → MediaMTX :8888
+    handle /live/* {
+        reverse_proxy 127.0.0.1:8888
+    }
+
+    # 2) Proxy API MediaMTX → :9997
+    handle /mediamtx-api/* {
+        uri strip_prefix /mediamtx-api
+        reverse_proxy 127.0.0.1:9997
+    }
+
+    # 3) Proxy Twitch API → :8880
+    # El Client Secret nunca sale del servidor
+    handle /twitch-api/* {
+        uri strip_prefix /twitch-api
+        reverse_proxy 127.0.0.1:8880
+    }
+
+    # 4) Proxy Chat Bot → Pi 3B :3001
+    handle /chat-api/* {
+        uri strip_prefix /chat-api
+        reverse_proxy 192.168.8.167:3001
+    }
+
+    # 5) Frontend estático
+    handle {
+        root * /var/www/stream
+        file_server
+    }
+
+    # ── Cache-Control headers para assets estáticos ──
+    # JS/CSS: 1 hora — ETag revalida automáticamente tras cada deploy
+    @js_css path_regexp \.(js|css)$
+    header @js_css Cache-Control "public, max-age=3600, stale-while-revalidate=300"
+
+    # Thumbnails: 30 s — FFmpeg los refresca cada 30s; JS usa ?t= para cache-bust
+    @thumbs path /assets/thumbs/*
+    header @thumbs Cache-Control "public, max-age=30"
+
+    # Imágenes e iconos estáticos: 7 días — cambian solo con deploy
+    @static_img path_regexp \.(png|svg|ico|webp)$
+    header @static_img Cache-Control "public, max-age=604800, stale-while-revalidate=86400"
+
+    # manifest.json y version.json: sin cache largo — se actualizan en cada deploy
+    @meta path /manifest.json /version.json
+    header @meta Cache-Control "public, max-age=60"
+}
+
+vault.marcossantiago.com {
+    reverse_proxy 192.168.8.148:8080
+}
