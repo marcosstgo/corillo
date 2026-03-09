@@ -1,5 +1,5 @@
 import os, time, json, asyncio, random, base64
-import httpx, anthropic
+import httpx, anthropic, aiosqlite
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,8 +23,10 @@ ac = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 # en el .env del Pi 3B para llamar directo a MediaMTX sin pasar por Internet.
 MEDIAMTX_HOST = os.environ.get("MEDIAMTX_HOST", "https://corillo.live/mediamtx-api")
 THUMBS_HOST   = os.environ.get("THUMBS_HOST",   "https://corillo.live")
+DB_PATH       = os.environ.get("DB_PATH", "/home/marcos/corillo-bot/chat.db")
 
-_http: httpx.AsyncClient = None  # inicializado en startup
+_http: httpx.AsyncClient = None   # inicializado en startup
+_db:   aiosqlite.Connection = None  # conexión SQLite persistente
 
 # Caché de estado en vivo — evita llamadas redundantes desde múltiples fuentes
 _live_cache: dict = {"data": [], "ts": 0.0}
@@ -74,6 +76,32 @@ async def fetch_thumb_b64(channel: str) -> str | None:
     except:
         pass
     return cached["data"] if cached else None  # retorna stale si falla
+
+async def db_save(channel: str, msg: dict):
+    """Persiste un mensaje de chat en SQLite."""
+    if msg.get("type") != "message" or not _db:
+        return
+    await _db.execute(
+        "INSERT INTO messages (channel, user, text, ts, bot) VALUES (?, ?, ?, ?, ?)",
+        (channel, msg["user"], msg["text"], msg["ts"], 1 if msg.get("bot") else 0),
+    )
+    await _db.commit()
+
+async def db_history(channel: str, limit: int = 50) -> list:
+    """Retorna los últimos N mensajes de un canal desde SQLite."""
+    if not _db:
+        return []
+    _db.row_factory = aiosqlite.Row
+    async with _db.execute(
+        "SELECT user, text, ts, bot FROM messages WHERE channel=? ORDER BY ts DESC LIMIT ?",
+        (channel, limit),
+    ) as cur:
+        rows = await cur.fetchall()
+    return [
+        {"type": "message", "user": r["user"], "text": r["text"],
+         "ts": r["ts"], "bot": bool(r["bot"])}
+        for r in reversed(rows)
+    ]
 
 @app.get("/health")
 def health():
@@ -131,9 +159,10 @@ async def digest():
 RATE_LIMIT = 1.0  # segundos mínimos entre mensajes
 
 class Room:
-    def __init__(self):
+    def __init__(self, channel: str):
+        self.channel = channel
         self.clients: dict = {}    # websocket → username
-        self.history: list = []    # últimos 50 mensajes
+        self.history: list = []    # últimos 50 mensajes (cache en RAM)
         self.last_msg: dict = {}   # websocket → timestamp último mensaje
         self._vision_task = None   # loop de comentarios espontáneos
 
@@ -145,6 +174,9 @@ class Room:
             username = random.choice(NAMES) + "_" + str(random.randint(10, 99))
         self.clients[ws] = username
         self.last_msg[ws] = 0.0
+        # Cargar historial desde SQLite si la RAM está vacía (primer viewer tras restart)
+        if not self.history:
+            self.history = await db_history(self.channel)
         return username
 
     def leave(self, ws: WebSocket):
@@ -162,6 +194,7 @@ class Room:
         self.history.append(msg)
         if len(self.history) > 50:
             self.history = self.history[-50:]
+        asyncio.create_task(db_save(self.channel, msg))
         for ws in list(self.clients):
             try:
                 await ws.send_json(msg)
@@ -172,7 +205,7 @@ rooms: dict = {}
 
 def get_room(channel: str) -> Room:
     if channel not in rooms:
-        rooms[channel] = Room()
+        rooms[channel] = Room(channel)
     return rooms[channel]
 
 @app.websocket("/ws/{channel}")
@@ -379,7 +412,24 @@ async def live_monitor():
 
 @app.on_event("startup")
 async def startup():
-    global _http
+    global _http, _db
+    _db = await aiosqlite.connect(DB_PATH)
+    await _db.execute("PRAGMA journal_mode=WAL")
+    await _db.execute("PRAGMA synchronous=NORMAL")
+    await _db.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id      INTEGER PRIMARY KEY AUTOINCREMENT,
+            channel TEXT NOT NULL,
+            user    TEXT NOT NULL,
+            text    TEXT NOT NULL,
+            ts      REAL NOT NULL,
+            bot     INTEGER NOT NULL DEFAULT 0
+        )
+    """)
+    await _db.execute(
+        "CREATE INDEX IF NOT EXISTS idx_channel_ts ON messages(channel, ts)"
+    )
+    await _db.commit()
     _http = httpx.AsyncClient(
         timeout=8,
         limits=httpx.Limits(max_connections=20, max_keepalive_connections=5),
@@ -390,3 +440,5 @@ async def startup():
 async def shutdown():
     if _http:
         await _http.aclose()
+    if _db:
+        await _db.close()
