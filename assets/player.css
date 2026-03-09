@@ -67,6 +67,12 @@ header{
 #video.horizontal{aspect-ratio:16/9}
 #video.vertical{aspect-ratio:9/16;max-height:80vh;margin:0 auto}
 
+/* Mobile vertical 9:16 — maximizar video, ocultar stats */
+@media(max-width:900px){
+  #video.vertical{max-height:calc(100dvh - 60px);width:auto;max-width:100%}
+  body:has(#video.vertical) .statsRow{display:none}
+}
+
 /* ── DESKTOP: limitar alto del video para que el UI quepa en el viewport ── */
 @media(min-width:901px){
   #video.horizontal{max-height:calc(100dvh - 140px)}
