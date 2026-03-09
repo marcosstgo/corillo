@@ -9,5 +9,6 @@ window.STREAMERS = [
   { key:'marcos',        name:'MARCOS',        sub:'Gaming · Puerto Rico',     ava:'M', color:'linear-gradient(135deg,#74b9ff,#0984e3)', host:false },
   { key:'pataecabra',   name:'PATAECABRA',    sub:'Gaming · Puerto Rico',     ava:'P', color:'linear-gradient(135deg,#ff7675,#d63031)', host:false },
   { key:'streamerpro',  name:'STREAMERPRO',   sub:'Gaming · Puerto Rico',     ava:'S', color:'linear-gradient(135deg,#00cec9,#00838f)', host:false },
+  { key:'radblaster',   name:'RADBLASTER',    sub:'Gaming · Puerto Rico',     ava:'R', color:'linear-gradient(135deg,#fd79a8,#e84393)', host:false },
   { key:null,            name:'???',           sub:'Próximamente · Invitación', ava:'?', color:'linear-gradient(135deg,#2a2a3a,#1a1a28)', host:false, soon:true },
 ];
