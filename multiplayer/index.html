@@ -110,9 +110,6 @@
     .filter-chip.active{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
     .filter-chip:not(.active){opacity:.4}
     .filter-chip:hover{opacity:1 !important;border-color:rgba(255,255,255,.2);color:var(--white)}
-    /* Last active chip — can't be deselected */
-    .filter-chip.active.locked{cursor:default}
-    .filter-chip.active.locked:hover{border-color:rgba(255,255,255,.15);color:rgba(255,255,255,.85)}
     .filter-count{
       margin-left:auto;flex-shrink:0;
       font-family:var(--mono);font-size:.44rem;letter-spacing:1px;
@@ -280,7 +277,7 @@
   </div>
 
   <!-- Empty state -->
-  <div class="empty" id="emptyState">
+  <div class="empty show" id="emptyState">
     <div class="empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
     <h2 id="emptyTitle">NADIE EN VIVO</h2>
     <p id="emptyMsg">Cuando alguien inicie stream aparecerá aquí</p>
@@ -410,30 +407,25 @@ function updateUI() {
   $('navViewers').textContent = totalView;
   $('viewersPill').style.display = totalLive > 0 ? 'flex' : 'none';
 
-  // Filter panel visibility
-  $('filterPanel').style.display = totalLive > 1 ? 'flex' : 'none';
+  // Filter panel visibility — show whenever there's ≥1 live streamer
+  $('filterPanel').style.display = totalLive > 0 ? 'flex' : 'none';
 
   // Filter count label
-  if (totalLive > 1) {
-    $('filterCount').textContent = visible < totalLive ? `${visible} de ${totalLive}` : '';
+  if (totalLive > 0) {
+    $('filterCount').textContent = visible > 0 ? `${visible} de ${totalLive}` : '';
   }
 
   // All button state
   const allSel = totalLive > 0 && liveKeys.every(k => selectedKeys.has(k));
   $('filterAll').classList.toggle('active', allSel);
 
-  // Lock last active chip
-  const activeChips = $('filterChips').querySelectorAll('.filter-chip.active');
-  $('filterChips').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('locked'));
-  if (activeChips.length === 1) activeChips[0].classList.add('locked');
-
   // Gallery class + empty state
   gallery.className = `gallery count-${Math.min(visible, 8)}`;
   if (visible === 0) {
     $('emptyState').classList.add('show');
     if (totalLive > 0) {
-      $('emptyTitle').textContent = 'NINGUNO SELECCIONADO';
-      $('emptyMsg').textContent   = 'Selecciona un streamer arriba';
+      $('emptyTitle').textContent = 'ELIGE A QUIÉN VER';
+      $('emptyMsg').textContent   = 'Selecciona uno o varios streamers arriba';
     } else {
       $('emptyTitle').textContent = 'NADIE EN VIVO';
       $('emptyMsg').textContent   = 'Cuando alguien inicie stream aparecerá aquí';
@@ -445,7 +437,7 @@ function updateUI() {
 
 function addChip(streamer) {
   const chip = document.createElement('button');
-  chip.className   = 'filter-chip active';
+  chip.className   = 'filter-chip';
   chip.dataset.key = streamer.key;
   chip.title       = streamer.name;
   chip.innerHTML   = `<span class="chip-ava" style="background:${streamer.color}">${streamer.ava}</span>${streamer.name}`;
@@ -455,7 +447,6 @@ function addChip(streamer) {
 
 function toggleChip(key) {
   if (selectedKeys.has(key)) {
-    if (selectedKeys.size === 1) return; // prevent empty selection — last chip is locked
     selectedKeys.delete(key);
     $('filterChips').querySelector(`[data-key="${key}"]`)?.classList.remove('active');
     destroyHls(key);
@@ -496,13 +487,11 @@ function updateLiveState(apiStreamers) {
     }
   }
 
-  // Add newly live streamers (auto-selected)
+  // Add newly live streamers — not auto-selected, user picks
   for (const s of apiStreamers) {
     if (!oldKeys.has(s.key)) {
       liveMap[s.key] = { streamer:s, viewers:s.viewers };
-      selectedKeys.add(s.key);
       addChip(s);
-      insertInOrder($('gallery'), buildCard(s, s.viewers), s.key, '.stream-card');
     }
   }
 
