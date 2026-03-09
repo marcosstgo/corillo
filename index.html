@@ -73,7 +73,6 @@
     /* Section */
     [data-theme="light"] .secTop h2{color:var(--white)}
     [data-theme="light"] footer{border-color:rgba(0,0,0,.08)}
-    [data-theme="light"] .car-btn{background:rgba(240,239,233,.9);color:var(--white)}
 
     html{scroll-behavior:smooth}
     body{background:var(--ink);color:var(--white);font-family:var(--body);font-size:15px;line-height:1.6;min-height:100vh;overflow-x:hidden}
@@ -186,46 +185,54 @@
     /* ── CHANNELS ── */
     .channels{padding:8px 0 64px}
     .secTop{
-      display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
-      padding:20px 0 14px;flex-wrap:wrap;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:20px 0 16px;flex-wrap:wrap;
     }
-    .secTop h2{font-family:var(--display);letter-spacing:3px;font-size:2rem;line-height:1}
+    .secTop h2{font-family:var(--display);letter-spacing:3px;font-size:2rem;line-height:1;margin:0}
     .secTop p{color:var(--muted);font-size:.85rem;margin-top:3px}
 
-    /* ── CAROUSEL ── */
+    /* Filter tabs */
+    .filter-tabs{display:flex;gap:4px}
+    .filter-tab{
+      font-family:var(--mono);font-size:.48rem;letter-spacing:1.5px;text-transform:uppercase;
+      padding:5px 12px;border-radius:6px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.4);cursor:pointer;transition:.15s;
+      display:inline-flex;align-items:center;gap:5px;
+    }
+    .filter-tab.active{border-color:rgba(255,255,255,.2);color:var(--white);background:rgba(255,255,255,.06)}
+    .filter-tab.live-tab.active{border-color:rgba(223,48,48,.35);color:var(--live);background:rgba(223,48,48,.07)}
+    .filter-tab:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
+
+    /* ── GRID — Desktop: CSS Grid ── */
     .carousel-wrap{position:relative}
     .grid{
-      display:flex;gap:14px;
-      overflow-x:auto;overflow-y:visible;
-      scroll-snap-type:x mandatory;
-      -webkit-overflow-scrolling:touch;
-      padding:4px 0 16px;
-      scrollbar-width:none;
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+      gap:14px;padding:4px 0 8px;
     }
-    .grid::-webkit-scrollbar{display:none}
-    .card{flex:0 0 280px;scroll-snap-align:start}
-    @media(max-width:600px){.card{flex:0 0 240px}}
+    .card.hidden{display:none !important}
 
-    /* Nav arrows */
-    .car-btn{
-      position:absolute;top:50%;transform:translateY(-60%);z-index:5;
-      width:40px;height:40px;border-radius:50%;border:1px solid var(--border-h);
-      background:rgba(6,6,8,.85);backdrop-filter:blur(8px);
-      color:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;
-      font-size:.8rem;transition:.2s;opacity:0;pointer-events:none;
+    /* ── GRID — Mobile: horizontal scroll carousel ── */
+    @media(max-width:767px){
+      .carousel-wrap{overflow:hidden;margin:0 -16px}
+      .grid{
+        display:flex;gap:12px;
+        overflow-x:auto;overflow-y:visible;
+        scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+        padding:4px 16px 4px;scrollbar-width:none;
+      }
+      .grid::-webkit-scrollbar{display:none}
+      .card{flex:0 0 240px;scroll-snap-align:start}
     }
-    .carousel-wrap:hover .car-btn{opacity:1;pointer-events:auto}
-    .car-btn:hover{background:rgba(232,200,74,.15);border-color:rgba(232,200,74,.4)}
-    .car-btn.left{left:-16px}
-    .car-btn.right{right:-16px}
-    .car-btn:disabled{opacity:.2!important;pointer-events:none}
 
-    /* Live sort indicator */
-    .live-first-badge{
-      display:inline-flex;align-items:center;gap:5px;
-      font-size:.5rem;letter-spacing:1.5px;color:var(--live);
-      border:1px solid rgba(223,48,48,.2);padding:3px 8px;border-radius:2px;
+    /* Scroll dots — mobile only */
+    .grid-dots{display:none;justify-content:center;gap:5px;margin-top:14px}
+    @media(max-width:767px){.grid-dots{display:flex}}
+    .grid-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:rgba(255,255,255,.15);transition:background .2s,width .25s;flex-shrink:0;
     }
+    .grid-dot.active{background:var(--accent);width:20px;border-radius:3px}
 
     @keyframes cardIn{
       from{opacity:0;transform:translateY(14px) scale(.98)}
@@ -235,11 +242,10 @@
       border:1px solid var(--border);border-radius:12px;overflow:hidden;display:block;
       background:linear-gradient(to bottom,rgba(18,18,24,.65),rgba(12,12,16,.45));
       transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+      text-decoration:none;
     }
-    .card.animate-in{
-      animation:cardIn .45s cubic-bezier(.22,.68,0,1.2) both;
-    }
-    .card:hover{transform:translateY(-2px);border-color:var(--border-h);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+    .card.animate-in{animation:cardIn .45s cubic-bezier(.22,.68,0,1.2) both}
+    .card:hover{transform:translateY(-3px);border-color:var(--border-h);box-shadow:0 12px 32px rgba(0,0,0,.5)}
     .card.is-soon{border-style:dashed;border-color:rgba(255,255,255,.08);cursor:default;pointer-events:none}
     .card.is-soon:hover{transform:none;box-shadow:none}
     .soon-overlay{
@@ -252,30 +258,40 @@
       color:rgba(255,255,255,.3);border:1px dashed rgba(255,255,255,.12);
       padding:4px 10px;border-radius:2px;
     }
-    .card.is-live{border-color:rgba(223,48,48,.2)}
-    .card.is-host{border-color:rgba(232,200,74,.12)}
+    .card.is-live{border-color:rgba(223,48,48,.35);box-shadow:0 0 0 1px rgba(223,48,48,.08)}
+    .card.is-host{border-color:rgba(232,200,74,.18)}
+    .card.is-live.is-host{border-color:rgba(232,200,74,.35)}
     .thumb{aspect-ratio:16/9;background:#000;position:relative;overflow:hidden}
-    .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.9;display:none}
-    .thumb-img.has-thumb{display:block;opacity:.55}
-    .is-live .thumb-img.has-thumb{opacity:.9}
+    .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+    .thumb-img.has-thumb{display:block;opacity:.45}
+    .is-live .thumb-img.has-thumb{opacity:.88}
     .thumb-img.has-thumb ~ .ch-offline{display:none}
     .ch-offline{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.52rem;letter-spacing:2px;color:var(--muted);background:var(--panel)}
     .is-live .ch-offline{display:none}
+    /* Play overlay on hover */
+    .play-hover{
+      position:absolute;inset:0;z-index:2;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.22);opacity:0;transition:opacity .18s;
+    }
+    .card:hover .play-hover{opacity:1}
+    .play-hover i{font-size:2rem;color:rgba(255,255,255,.92);filter:drop-shadow(0 2px 8px rgba(0,0,0,.7))}
+    .card.is-soon .play-hover{display:none}
     .live-tag{
-      position:absolute;top:8px;left:8px;display:none;align-items:center;gap:4px;z-index:1;
+      position:absolute;top:8px;left:8px;display:none;align-items:center;gap:4px;z-index:3;
       background:var(--live);color:#fff;font-family:var(--mono);font-size:.5rem;letter-spacing:1.5px;padding:3px 7px;border-radius:2px;
     }
     .is-live .live-tag{display:flex}
     .views-tag{
-      position:absolute;top:8px;right:8px;display:none;align-items:center;gap:4px;z-index:1;
+      position:absolute;top:8px;right:8px;display:none;align-items:center;gap:4px;z-index:3;
       background:rgba(0,0,0,.7);color:var(--white);font-family:var(--mono);font-size:.5rem;padding:3px 7px;border-radius:2px;
     }
     .is-live .views-tag{display:flex}
     .cardBody{padding:10px 12px;display:flex;align-items:center;gap:8px}
-    .card-ava{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.8rem;color:var(--ink);flex-shrink:0}
+    .card-ava{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:.85rem;color:var(--ink);flex-shrink:0}
     .card-meta{flex:1;min-width:0}
     .card-name{font-family:var(--mono);font-size:.6rem;letter-spacing:1px;font-weight:700;display:flex;align-items:center;gap:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-    .card-desc{font-size:.72rem;color:var(--muted);margin-top:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .card-desc{font-size:.72rem;color:var(--muted);margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
     .share-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:.15s;touch-action:manipulation}
     .share-btn:hover{border-color:var(--border-h);color:var(--white)}
     .share-btn.copied{border-color:rgba(74,222,128,.4);color:#4ade80}
@@ -535,27 +551,27 @@
     <div class="container">
       <div class="secTop">
         <div>
-          <div>
-            <h2>CANALES</h2>
-            <p>Todos los streamers en la plataforma</p>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="live-first-badge"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;Live primero</span>
-          </div>
+          <h2>CANALES</h2>
+          <p>Todos los streamers en la plataforma</p>
         </div>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="filter-tabs">
+            <button class="filter-tab active" id="filterAll">Todos</button>
+            <button class="filter-tab live-tab" id="filterLive">
+              <span class="dot on" style="width:5px;height:5px"></span>En vivo
+            </button>
+          </div>
           <div class="live-pill" id="livePill" style="opacity:0;pointer-events:none">
             <span class="dot on"></span>
             <span id="liveCount">0 en vivo</span>
           </div>
-          <button class="btn" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+          <button class="btn" id="refreshBtn" title="Actualizar"><i class="fa-solid fa-rotate"></i></button>
         </div>
       </div>
       <div class="carousel-wrap">
-        <button class="car-btn left" id="carLeft" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
         <div class="grid" id="channelsGrid"></div>
-        <button class="car-btn right" id="carRight" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
       </div>
+      <div class="grid-dots" id="gridDots"></div>
     </div>
   </section>
 </main>
@@ -779,40 +795,29 @@ function loadFeatured(streamer, viewers, since) {
 }
 
 // ── CAROUSEL NAV ──
-function initCarousel() {
-  const grid  = $('#channelsGrid');
-  const left  = $('#carLeft');
-  const right = $('#carRight');
-  if (!grid || !left || !right) return;
+function initGrid() {
+  const grid = $('#channelsGrid');
+  const dots = $('#gridDots');
+  if (!grid || !dots) return;
 
-  const scroll = (dir) => {
-    grid.scrollBy({ left: dir * 300, behavior: 'smooth' });
-  };
-  left.addEventListener('click',  () => scroll(-1));
-  right.addEventListener('click', () => scroll(1));
+  // Dots indicator — mobile only
+  if (!window.matchMedia('(max-width:767px)').matches) return;
+  const cards = [...grid.querySelectorAll('.card:not(.hidden)')];
+  dots.innerHTML = '';
+  if (cards.length <= 1) return;
 
-  const updateBtns = () => {
-    left.disabled  = grid.scrollLeft <= 0;
-    right.disabled = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 4;
-  };
-  grid.addEventListener('scroll', updateBtns);
-  updateBtns();
-
-  // Drag to scroll
-  let isDown = false, startX, scrollL;
-  grid.addEventListener('mousedown', e => {
-    isDown = true; startX = e.pageX - grid.offsetLeft; scrollL = grid.scrollLeft;
-    grid.style.cursor = 'grabbing';
+  cards.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.className = 'grid-dot' + (i === 0 ? ' active' : '');
+    dots.appendChild(d);
   });
-  grid.addEventListener('mouseleave', () => { isDown = false; grid.style.cursor = ''; });
-  grid.addEventListener('mouseup',    () => { isDown = false; grid.style.cursor = ''; });
-  grid.addEventListener('mousemove',  e => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x    = e.pageX - grid.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    grid.scrollLeft = scrollL - walk;
-  });
+
+  const dotEls = [...dots.querySelectorAll('.grid-dot')];
+  grid.addEventListener('scroll', () => {
+    const cardW = cards[0]?.offsetWidth + 12 || 1;
+    const idx   = Math.min(Math.round(grid.scrollLeft / cardW), dotEls.length - 1);
+    dotEls.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }, { passive: true });
 }
 
 // ── TOAST ──
@@ -839,6 +844,7 @@ function showToast(streamer) {
 
 // ── GRID ──
 let _livePaths = [];
+let _activeFilter = 'all';
 function buildGrid() {
   const grid = $('#channelsGrid');
   grid.innerHTML = '';
@@ -879,6 +885,7 @@ function buildGrid() {
           <div class="ch-offline">Offline</div>
           <div class="live-tag"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
           <div class="views-tag"><i class="fa-solid fa-eye"></i>&nbsp;<span class="vcount">0</span></div>
+          <div class="play-hover"><i class="fa-solid fa-play"></i></div>
         </div>
         <div class="cardBody">
           <div class="card-ava" style="background:${s.color}">${s.ava}</div>
@@ -922,7 +929,7 @@ function buildGrid() {
 
     grid.appendChild(a);
   });
-  initCarousel();
+  initGrid();
   // Staggered entrance animation
   requestAnimationFrame(() => {
     grid.querySelectorAll('.card').forEach((card, i) => {
@@ -947,6 +954,7 @@ function updateGrid(livePaths) {
       if (s) showToast(s);
     }
     card.classList.toggle('is-live', live);
+    if (_activeFilter === 'live') card.classList.toggle('hidden', !live);
     const vc = card.querySelector('.vcount');
     if (vc) vc.textContent = views;
     // Refresh thumbnail on every poll while live
@@ -1084,6 +1092,24 @@ buildGrid();
 showOffline();
 refresh();
 $('#refreshBtn').addEventListener('click', () => { cache.t = 0; refresh(); });
+
+// Filter tabs
+$('#filterAll').addEventListener('click', () => {
+  _activeFilter = 'all';
+  $('#filterAll').classList.add('active');
+  $('#filterLive').classList.remove('active');
+  document.querySelectorAll('.card[data-key]').forEach(c => c.classList.remove('hidden'));
+  initGrid();
+});
+$('#filterLive').addEventListener('click', () => {
+  _activeFilter = 'live';
+  $('#filterLive').classList.add('active');
+  $('#filterAll').classList.remove('active');
+  document.querySelectorAll('.card[data-key]').forEach(c => {
+    c.classList.toggle('hidden', !c.classList.contains('is-live'));
+  });
+  initGrid();
+});
 let pollTimer = setInterval(refresh, POLL_MS);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
