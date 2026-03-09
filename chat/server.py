@@ -289,6 +289,8 @@ STREAMER_NAMES = {
 }
 
 _prev_live: set = set()
+_greeted_at: dict = {}  # channel → timestamp del último saludo
+GREET_COOLDOWN = 7200   # 2 horas — no saludar de nuevo si el stream cae y vuelve
 
 async def greet_streamer(room: Room, channel: str):
     name = STREAMER_NAMES.get(channel, channel.upper())
@@ -326,8 +328,11 @@ async def live_monitor():
             current_live = {p["name"].removeprefix("live/") for p in live}
             newly_live = current_live - _prev_live
             for ch in newly_live:
-                room = get_room(ch)
-                asyncio.create_task(greet_streamer(room, ch))
+                now = time.time()
+                if now - _greeted_at.get(ch, 0) > GREET_COOLDOWN:
+                    _greeted_at[ch] = now
+                    room = get_room(ch)
+                    asyncio.create_task(greet_streamer(room, ch))
             _prev_live = current_live
         except:
             pass
