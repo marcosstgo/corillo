@@ -64,8 +64,13 @@ header{
   position:relative;background:#000;flex-shrink:0;
 }
 #video{width:100%;display:block;background:#000}
-#video.horizontal{aspect-ratio:16/9;max-height:calc(100vh - 140px)}
+#video.horizontal{aspect-ratio:16/9}
 #video.vertical{aspect-ratio:9/16;max-height:80vh;margin:0 auto}
+
+/* Desktop: limitar alto del video para que el UI quepa en el viewport */
+@media(min-width:901px){
+  #video.horizontal{max-height:calc(100dvh - 140px)}
+}
 
 /* Offline thumbnail backdrop */
 .offline-thumb{
