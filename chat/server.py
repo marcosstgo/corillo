@@ -287,6 +287,7 @@ STREAMER_NAMES = {
     "pataecabra": "Pataecabra",
     "streamerpro": "StreamerPro",
     "radblaster": "Radblaster",
+    "elhermanoquiles": "ElHermanoQuiles",
 }
 
 _prev_live: set = set()
