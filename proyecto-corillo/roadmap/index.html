@@ -23,8 +23,7 @@
 
     /* ── TOP ── */
     .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:32px}
-    .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1}
-    .brand span{color:var(--accent)}
+    .brand{display:inline-block;color:var(--white);text-decoration:none}
     .title{font-family:var(--display);letter-spacing:2px;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1;margin-top:4px}
     .sub{margin-top:8px;color:rgba(255,255,255,.55);max-width:54ch;font-size:.88rem;line-height:1.5}
     .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -97,7 +96,23 @@
   <!-- TOP -->
   <div class="top">
     <div>
-      <a href="/" class="brand">C<span>O</span>RILLO</a>
+      <a href="/" class="brand">
+        <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:160px;height:44px;display:block">
+          <defs>
+            <radialGradient id="rGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="currentColor">C</text>
+          <circle cx="72" cy="42" r="36" fill="url(#rGlow)"/>
+          <circle cx="72" cy="42" r="34" stroke="currentColor" stroke-width="9" fill="none"/>
+          <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+          <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+          <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="currentColor">RILLO</text>
+        </svg>
+      </a>
       <div class="title">ROADMAP</div>
       <div class="sub">Hacia dónde va el corillo. Lo que ya funciona y lo que viene. Sin drama, con visión. 🇵🇷</div>
     </div>
