@@ -48,6 +48,10 @@ async def fetch_thumb_b64(channel: str) -> str | None:
         pass
     return None
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 @app.post("/message")
 async def chat(body: Msg):
     live = await get_live()
@@ -281,6 +285,7 @@ STREAMER_NAMES = {
     "elbala": "Elbala",
     "marcos": "Marcos",
     "pataecabra": "Pataecabra",
+    "streamerpro": "StreamerPro",
 }
 
 _prev_live: set = set()
