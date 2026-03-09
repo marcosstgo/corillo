@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Roadmap</title>
+  <meta name="description" content="Hacia dónde va CORILLO — lo que ya funciona y lo que viene." />
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/styles.css">
+
+  <style>
+    :root{ --radius:14px; }
+    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+    .container{max-width:860px;margin:0 auto;padding:22px 18px}
+    @media(max-width:600px){.container{padding:16px 12px}}
+
+    /* ── TOP ── */
+    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:32px}
+    .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1}
+    .brand span{color:var(--accent)}
+    .title{font-family:var(--display);letter-spacing:2px;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1;margin-top:4px}
+    .sub{margin-top:8px;color:rgba(255,255,255,.55);max-width:54ch;font-size:.88rem;line-height:1.5}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.6rem;font-weight:700;
+      padding:10px 14px;border-radius:8px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.7);transition:.2s ease;white-space:nowrap;text-decoration:none;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
+    .btn.primary:hover{opacity:.88}
+
+    /* ── CARDS ── */
+    .card{
+      border:1px solid var(--border);border-radius:var(--radius);
+      background:linear-gradient(to bottom,rgba(18,18,24,.65),rgba(12,12,16,.45));
+      padding:22px 24px;margin-bottom:14px;
+    }
+    .card.done{border-color:rgba(232,200,74,.25);background:linear-gradient(to bottom,rgba(232,200,74,.04),rgba(12,12,16,.45))}
+    .card.next{border-color:rgba(100,180,255,.2);background:linear-gradient(to bottom,rgba(100,180,255,.03),rgba(12,12,16,.45))}
+
+    /* ── CARD HEADER ── */
+    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .card-title{font-family:var(--display);letter-spacing:2px;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1}
+    .card-desc{margin-top:4px;color:rgba(255,255,255,.5);font-size:.83rem}
+
+    /* ── STATUS BADGES ── */
+    .badge{
+      font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
+      padding:5px 10px;border-radius:999px;white-space:nowrap;flex-shrink:0;
+    }
+    .badge.listo{background:rgba(232,200,74,.15);border:1px solid rgba(232,200,74,.3);color:var(--accent)}
+    .badge.proximo{background:rgba(100,180,255,.1);border:1px solid rgba(100,180,255,.25);color:rgba(140,200,255,.9)}
+    .badge.pendiente{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+
+    /* ── ITEMS LIST ── */
+    .items{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:0;padding:0;list-style:none}
+    @media(max-width:600px){.items{grid-template-columns:1fr}}
+    .items li{
+      display:flex;align-items:flex-start;gap:10px;
+      font-size:.875rem;color:rgba(255,255,255,.75);line-height:1.4;padding:6px 0;
+    }
+    .items li .ico{
+      font-size:.75rem;margin-top:2px;flex-shrink:0;
+      color:var(--accent);width:14px;text-align:center;
+    }
+    .items li .ico.muted{color:rgba(255,255,255,.2)}
+    .items li .ico.blue{color:rgba(140,200,255,.7)}
+
+    /* divider */
+    .divider{border:none;border-top:1px solid var(--border);margin:28px 0}
+
+    .card.chuleria{border-color:rgba(180,100,255,.25);background:linear-gradient(to bottom,rgba(180,100,255,.05),rgba(12,12,16,.45))}
+    .badge.chuleria{background:rgba(180,100,255,.12);border:1px solid rgba(180,100,255,.35);color:rgba(210,160,255,.95)}
+    .items li .ico.purple{color:rgba(180,100,255,.85)}
+
+    [data-theme="light"] .card{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
+    [data-theme="light"] .card.done{background:rgba(232,200,74,.07);border-color:rgba(180,130,0,.25)}
+    [data-theme="light"] .card.next{background:rgba(100,180,255,.05);border-color:rgba(100,180,255,.2)}
+    [data-theme="light"] .card.chuleria{background:rgba(180,100,255,.05);border-color:rgba(180,100,255,.2)}
+    [data-theme="light"] .sub{color:rgba(0,0,0,.5)}
+    [data-theme="light"] .items li{color:rgba(0,0,0,.7)}
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- TOP -->
+  <div class="top">
+    <div>
+      <a href="/" class="brand">C<span>O</span>RILLO</a>
+      <div class="title">ROADMAP</div>
+      <div class="sub">Hacia dónde va el corillo. Lo que ya funciona y lo que viene. Sin drama, con visión. 🇵🇷</div>
+    </div>
+    <div class="row">
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+      <a class="btn primary" href="/join/"><i class="fa-solid fa-plus"></i> Crear Canal</a>
+    </div>
+  </div>
+
+  <!-- YA ESTÁ LISTO -->
+  <div class="card done">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Ya está listo</div>
+        <div class="card-desc">Lo que funciona hoy en corillo.live</div>
+      </div>
+      <span class="badge listo"><i class="fa-solid fa-check"></i>&nbsp; Listo</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-solid fa-check ico"></i> Streaming HLS multi-canal en vivo</li>
+      <li><i class="fa-solid fa-check ico"></i> Chat en vivo por canal</li>
+      <li><i class="fa-solid fa-check ico"></i> @bot con inteligencia artificial</li>
+      <li><i class="fa-solid fa-check ico"></i> Notificaciones en Discord al inicio del stream</li>
+      <li><i class="fa-solid fa-check ico"></i> Deploy automático con GitHub Actions</li>
+      <li><i class="fa-solid fa-check ico"></i> SEO para compartir en redes sociales</li>
+      <li><i class="fa-solid fa-check ico"></i> Anti-spam en el chat</li>
+      <li><i class="fa-solid fa-check ico"></i> Vista multiplayer — todos los canales en vivo</li>
+      <li><i class="fa-solid fa-check ico"></i> Diseño responsive dark/light mode</li>
+      <li><i class="fa-solid fa-check ico"></i> Guía de configuración OBS & Meld Studio</li>
+      <li><i class="fa-solid fa-check ico"></i> Assets compartidos — player, chat y estilos en un solo lugar</li>
+      <li><i class="fa-solid fa-check ico"></i> Menú mobile responsive — hamburger con panel deslizante</li>
+      <li><i class="fa-solid fa-check ico"></i> Thumbnails de canales — última foto visible aunque el canal esté offline</li>
+      <li><i class="fa-solid fa-check ico"></i> Player mobile optimizado — sin zoom en chat, autoplay garantizado en todos los dispositivos</li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <!-- CHULERÍAS -->
+  <div class="card chuleria">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Chulerías</div>
+        <div class="card-desc">Las cosas cool que hacen a CORILLO diferente</div>
+      </div>
+      <span class="badge chuleria"><i class="fa-solid fa-star"></i>&nbsp; Cool</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-solid fa-check ico"></i> Bot con visión — ve el stream y comenta como viewer</li>
+      <li><i class="fa-solid fa-check ico"></i> Fondo con último screenshot en player offline</li>
+      <li><i class="fa-solid fa-check ico"></i> Thumbnails auto-generados cada 30s por canal en vivo</li>
+      <li><i class="fa-solid fa-check ico"></i> Compartir canal con imagen del stream via Web Share API</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> GIFs animados del stream en las cards del homepage</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> VODs automáticos — grabación para ver después del live</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> Clips compartibles — los mejores momentos del stream</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> Reacciones emoji en el chat en tiempo real</li>
+      <li><i class="fa-regular fa-clock ico purple"></i> Buscador en Multiplayer — encuentra streamers rápido cuando el roster crezca</li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <!-- FASE 2 -->
+  <div class="card next">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Fase 2 — Registro de streamers</div>
+        <div class="card-desc">Sin registro no hay escala — esta es la próxima gran pieza</div>
+      </div>
+      <span class="badge proximo"><i class="fa-solid fa-rotate"></i>&nbsp; Próximo</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-solid fa-circle ico blue"></i> Formulario para solicitar canal</li>
+      <li><i class="fa-solid fa-circle ico blue"></i> Aprobación del admin vía Telegram</li>
+      <li><i class="fa-solid fa-circle ico blue"></i> Generación automática de página por canal</li>
+      <li><i class="fa-solid fa-circle ico blue"></i> Stream keys protegidas por contraseña</li>
+      <li><i class="fa-solid fa-circle ico blue"></i> Instrucciones de OBS enviadas al streamer</li>
+      <li><i class="fa-solid fa-circle ico blue"></i> Clave de moderación por canal</li>
+    </ul>
+  </div>
+
+  <!-- FASE 3 -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Fase 3 — Moderación</div>
+        <div class="card-desc">Herramientas para que cada streamer gestione su canal</div>
+      </div>
+      <span class="badge pendiente"><i class="fa-regular fa-clock"></i>&nbsp; Pendiente</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-regular fa-clock ico muted"></i> Panel de moderación por canal</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Ban temporal por sesión o IP</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Lista negra de palabras automática</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Reportar mensajes</li>
+    </ul>
+  </div>
+
+  <!-- FASE 4 -->
+  <div class="card">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Fase 4 — Producto maduro</div>
+        <div class="card-desc">El largo plazo — cuando el corillo sea grande de verdad</div>
+      </div>
+      <span class="badge pendiente"><i class="fa-regular fa-clock"></i>&nbsp; Pendiente</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-regular fa-clock ico muted"></i> Estadísticas para streamers</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Perfil editable por canal</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Términos de uso y privacidad</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Monitoreo del servidor</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Modelo de sostenibilidad</li>
+      <li><i class="fa-regular fa-clock ico muted"></i> Sistema de registro abierto al público</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  if (btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+</script>
+</body>
+</html>
