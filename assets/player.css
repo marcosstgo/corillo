@@ -249,7 +249,7 @@ body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,2
   .stat:nth-child(3n){border-right:none}
   .stat:nth-child(n+4){border-top:1px solid var(--border)}
   .chat-col{height:360px}
-  .nav-controls .divider,.nav-controls .btn:not(.primary):not(#chatToggleBtn){display:none}
+  .nav-controls .divider,.nav-controls .btn:not(.primary):not(#chatToggleBtn):not(#btnH):not(#btnV){display:none}
   /* Prevent iOS/Android zoom on input focus (requires font-size >= 16px) */
   #chatInput{font-size:16px}
 }
