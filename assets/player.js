@@ -12,12 +12,21 @@ const TWITCH_MAP = {
 };
 const twitchUser = TWITCH_MAP[channel] || channel;
 
-// Update og:image to channel thumbnail — works for Web Share API and future channels
-const _ogImg = document.querySelector('meta[property="og:image"]');
-if (_ogImg) _ogImg.setAttribute('content', 'https://corillo.live/assets/thumbs/' + channel + '.jpg');
+// Update meta tags dinamicamente — title, OG, og:image
+const _chUpper = channel.toUpperCase();
+const _thumbUrl = 'https://corillo.live/assets/thumbs/' + channel + '.jpg';
+const _pageUrl  = 'https://corillo.live/' + channel + '/';
+const _desc     = 'Stream en vivo de ' + _chUpper + ' en CORILLO — plataforma independiente desde Puerto Rico.';
+document.title = 'CORILLO — ' + _chUpper;
+[['og:title','CORILLO — ' + _chUpper], ['og:url', _pageUrl], ['og:description', _desc],
+ ['og:image', _thumbUrl], ['twitter:title','CORILLO — ' + _chUpper],
+ ['twitter:description', _desc], ['twitter:image', _thumbUrl]]
+  .forEach(([prop, val]) => {
+    const el = document.querySelector(`meta[property="${prop}"],meta[name="${prop}"]`);
+    if (el) el.setAttribute('content', val);
+  });
 
-$('#chTag').textContent      = '— ' + channel.toUpperCase();
-document.title               = 'CORILLO — ' + channel.toUpperCase();
+$('#chTag').textContent      = '— ' + _chUpper;
 $('#twitchLink').href        = 'https://twitch.tv/' + twitchUser;
 if ($('#chatChannelLabel')) $('#chatChannelLabel').textContent = twitchUser;
 
@@ -280,13 +289,15 @@ async function start() {
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url;
+    v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { once:true });
     try {
       await v.play();
       hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner();
-    } catch {
-      showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
+    } catch (e) {
+      if (e?.name === 'NotAllowedError') {
+        showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
+      }
     }
-    v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { once:true });
     return;
   }
 

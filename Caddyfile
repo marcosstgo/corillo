@@ -26,9 +26,10 @@ corillo.live, stream.marcossantiago.com {
         reverse_proxy 192.168.8.167:3001
     }
 
-    # 5) Frontend estático
+    # 5) Frontend estático — try_files sirve player/index.html para cualquier canal nuevo
     handle {
         root * /var/www/stream
+        try_files {path} {path}/index.html /player/index.html
         file_server
     }
 

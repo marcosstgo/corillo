@@ -322,6 +322,10 @@ _greeted_at: dict = {}  # channel → timestamp del último saludo
 GREET_COOLDOWN = 7200   # 2 horas — no saludar de nuevo si el stream cae y vuelve
 
 async def greet_streamer(room: Room, channel: str):
+    # Verificar que el stream sigue activo antes de saludar (evita race condition)
+    live = await get_live()
+    if channel not in {p["name"].removeprefix("live/") for p in live}:
+        return
     name = STREAMER_NAMES.get(channel, channel.upper())
     try:
         res = await asyncio.to_thread(
@@ -351,6 +355,12 @@ async def greet_streamer(room: Room, channel: str):
 async def live_monitor():
     global _prev_live
     await asyncio.sleep(20)  # espera inicial al arrancar el servidor
+    # Primera poll — establece baseline sin saludar (evita falsos saludos al reiniciar)
+    try:
+        live = await get_live()
+        _prev_live = {p["name"].removeprefix("live/") for p in live}
+    except:
+        pass
     while True:
         try:
             live = await get_live()
