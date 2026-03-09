@@ -899,12 +899,14 @@ function updateGrid(livePaths) {
     if (_activeFilter === 'live') card.classList.toggle('hidden', !live);
     const vc = card.querySelector('.vcount');
     if (vc) vc.textContent = views;
-    // Refresh thumbnail on every poll while live
+    // Refresh thumbnail on every poll while live — preload to avoid flash
     const img = card.querySelector('.thumb-img');
     if (img) {
       if (live) {
-        img.src = '/assets/thumbs/' + key + '.jpg?t=' + Date.now();
-        img.classList.add('has-thumb');
+        const newSrc = '/assets/thumbs/' + key + '.jpg?t=' + Date.now();
+        const probe = new Image();
+        probe.onload = () => { img.src = newSrc; img.classList.add('has-thumb'); };
+        probe.src = newSrc;
       } else if (!img.classList.contains('has-thumb') && !img.dataset.probed) {
         // Try loading saved thumb once — don't retry if 404
         img.dataset.probed = '1';
