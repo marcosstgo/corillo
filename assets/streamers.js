@@ -11,6 +11,6 @@ window.STREAMERS = [
   { key:'streamerpro',  name:'STREAMERPRO',   sub:'Gaming · Puerto Rico',     ava:'S', color:'linear-gradient(135deg,#00cec9,#00838f)', host:false },
   { key:'radblaster',      name:'RADBLASTER',       sub:'Gaming · Puerto Rico',     ava:'R', color:'linear-gradient(135deg,#fd79a8,#e84393)', host:false },
   { key:'elhermanoquiles', name:'ELHERMANOQUILES',  sub:'Gaming · Puerto Rico',     ava:'E', color:'linear-gradient(135deg,#fdcb6e,#e17055)', host:false },
-  { key:'xxdur3xx',      name:'XXDUR3XX',      sub:'Gaming · Puerto Rico',     ava:'X', color:'linear-gradient(135deg,#e17055,#c0392b)', host:false },
+  { key:'xxdur3xx',      name:'XXDUR3XX',      sub:'Gaming · Ponce PR',        ava:'X', color:'linear-gradient(135deg,#e17055,#c0392b)', host:false },
   { key:null,            name:'???',           sub:'Próximamente · Invitación', ava:'?', color:'linear-gradient(135deg,#2a2a3a,#1a1a28)', host:false, soon:true },
 ];
