@@ -197,8 +197,10 @@ async def auto_create_streamer(handle: str, nombre: str, contenido: str):
         name_fmt = nombre.title().replace(" ", "") if nombre else handle.title()
         py = py.replace(
             '"kamikazepr":     "KamikazePR",
+    "teststreamer": "TestStreamer",
     "adrian": "AdrianSantiago",',
             f'"kamikazepr":     "KamikazePR",
+    "teststreamer": "TestStreamer",
     "adrian": "AdrianSantiago",\n    "{handle}": "{name_fmt}",'
         )
         await _gh_put("chat/server.py", py, py_sha,
@@ -624,6 +626,7 @@ STREAMER_NAMES = {
     "radblaster":     "Radblaster",
     "elhermanoquiles":"ElHermanoQuiles",
     "kamikazepr":     "KamikazePR",
+    "teststreamer": "TestStreamer",
     "adrian": "AdrianSantiago",
 }
 
