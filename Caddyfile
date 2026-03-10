@@ -60,5 +60,6 @@ uptime.corillo.live {
 }
 
 status.corillo.live {
-    redir https://uptime.corillo.live/status/corillo permanent
+    reverse_proxy 192.168.8.148:3001
+    rewrite * /status/corillo{uri}
 }
