@@ -61,7 +61,15 @@ function addChatMsg(msg) {
   } else {
     const color = msg.bot ? '#9147ff' : userColor(msg.user);
     el.className = 'chat-msg' + (msg.bot ? ' is-bot' : '');
-    el.innerHTML = `<span class="msg-user" style="color:${color}">${escHtml(msg.user)}:</span> <span class="msg-text">${escHtml(msg.text)}</span>`;
+    el.innerHTML = `<span class="msg-user" style="color:${color}">${escHtml(msg.user)}:</span> <span class="msg-text">${escHtml(msg.text)}</span>${msg.bot ? '<button class="reply-btn" tabindex="-1">↩ responder</button>' : ''}`;
+    if (msg.bot) {
+      el.querySelector('.reply-btn').addEventListener('click', () => {
+        const input = $('#chatInput');
+        input.value = '@bot ';
+        input.focus();
+        input.selectionStart = input.selectionEnd = input.value.length;
+      });
+    }
   }
   box.appendChild(el);
   if (atBottom) box.scrollTop = box.scrollHeight;
