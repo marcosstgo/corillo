@@ -337,6 +337,7 @@ async def submit_join(req: JoinRequest, request: Request):
     if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
         lines = [f"📥 *Nueva solicitud — @{handle}*"]
         lines.append(f"Nombre: {req.nombre.strip()[:60]}")
+        lines.append(f"Email: {req.email.strip()[:120]}")
         lines.append(f"Contenido: {req.contenido.strip()[:120]}")
         if req.plataforma.strip():
             lines.append(f"Plataforma: {req.plataforma.strip()[:60]}")
