@@ -45,14 +45,14 @@ header{
 .page{display:flex;flex-direction:column;height:calc(100vh - 51px);overflow:hidden}
 .content{
   flex:1;min-height:0;display:grid;
-  grid-template-columns:1fr 20px var(--chat-w);
+  grid-template-columns:1fr var(--chat-w);
   grid-template-rows:auto 1fr;
   gap:0;
   max-width:100%;
   overflow:hidden;
 }
-.content.chat-hidden{grid-template-columns:1fr 20px 0}
-.content.vertical-mode{grid-template-columns:minmax(0,1fr) 20px var(--chat-w)}
+.content.chat-hidden{grid-template-columns:1fr 0}
+.content.vertical-mode{grid-template-columns:minmax(0,1fr) var(--chat-w)}
 
 /* ── PLAYER COLUMN ── */
 .player-col{
@@ -153,28 +153,30 @@ header{
 .stat-val{font-family:var(--mono);font-size:.68rem;letter-spacing:1px;color:var(--white)}
 .stat-lbl{font-family:var(--mono);font-size:.44rem;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:2px}
 
-/* ── CHAT RAIL ── */
-.chat-rail{
-  grid-row:1/3;
-  display:flex;
-  border-left:1px solid var(--border);
-  border-right:1px solid var(--border);
-  background:rgba(255,255,255,.012);
-}
-.rail-btn{
-  width:100%;background:transparent;border:none;
-  color:rgba(255,255,255,.18);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  transition:color .15s,background .15s;
+/* ── CHAT TOGGLE TAB (fixed, always visible) ── */
+.chat-tab{
+  position:fixed;
+  right:var(--chat-w);
+  top:50%;transform:translateY(-50%);
+  z-index:200;
+  width:18px;height:52px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-right:none;
+  border-radius:6px 0 0 6px;
+  cursor:pointer;
+  color:rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  transition:right .25s ease,color .15s,background .15s;
   padding:0;
 }
-.rail-btn:hover{color:rgba(255,255,255,.6);background:rgba(255,255,255,.04)}
-.rail-label{display:none}
+.chat-tab:hover{color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+body.chat-is-hidden .chat-tab{right:0;border-right:none}
+body.chat-is-hidden #railIcon{transform:rotate(180deg)}
 .rail-icon-wrap{position:relative;display:inline-flex}
-#railIcon{font-size:.55rem;transition:transform .25s ease}
-.content.chat-hidden #railIcon{transform:rotate(180deg)}
+#railIcon{font-size:.5rem;transition:transform .25s ease}
 .rail-badge{
-  position:absolute;top:-4px;right:-5px;
+  position:absolute;top:-4px;right:-4px;
   width:7px;height:7px;border-radius:50%;
   background:#4ade80;
   opacity:0;transition:opacity .3s ease;
@@ -238,21 +240,20 @@ body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,2
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .page{height:auto;min-height:calc(100vh - 51px);overflow:visible}
-  .content{grid-template-columns:1fr;grid-template-rows:auto auto auto;overflow:visible}
-  .player-col{grid-row:auto;border-right:none;border-bottom:none}
-  .chat-rail{
-    grid-row:auto;
-    height:38px;
-    border-left:none;border-right:none;
-    border-top:1px solid var(--border);
-    border-bottom:1px solid var(--border);
-  }
-  .rail-btn{flex-direction:row;font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase}
-  .rail-label{display:block}
-  #railIcon{font-size:.6rem;transform:rotate(-90deg)}
-  .content.chat-hidden #railIcon{transform:rotate(90deg)}
-  .chat-col{grid-row:auto;height:420px;border-top:none}
+  .content{grid-template-columns:1fr;grid-template-rows:auto auto;overflow:visible}
+  .player-col{grid-row:auto;border-right:none;border-bottom:1px solid var(--border)}
+  .chat-col{grid-row:auto;height:420px}
   .content.chat-hidden .chat-col{height:0;border:none}
+  /* On mobile: tab is bottom-right corner circular button */
+  .chat-tab{
+    right:20px;bottom:20px;top:auto;transform:none;
+    width:44px;height:44px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    transition:opacity .2s,color .15s,background .15s;
+  }
+  #railIcon{transform:rotate(-90deg)}
+  body.chat-is-hidden #railIcon{transform:rotate(90deg)}
   :root{--chat-w:100%}
 }
 @media(max-width:600px){

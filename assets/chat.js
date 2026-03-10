@@ -9,6 +9,7 @@ function showChat() {
   chatVisible = true;
   localStorage.setItem('corillo_chat', 'visible');
   $('#content').classList.remove('chat-hidden');
+  document.body.classList.remove('chat-is-hidden');
   if ($('#railBadge')) $('#railBadge').classList.remove('show');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
 }
@@ -17,11 +18,13 @@ function hideChat() {
   chatVisible = false;
   localStorage.setItem('corillo_chat', 'hidden');
   $('#content').classList.add('chat-hidden');
+  document.body.classList.add('chat-is-hidden');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.remove('active');
 }
 
 if (!chatVisible) {
   $('#content').classList.add('chat-hidden');
+  document.body.classList.add('chat-is-hidden');
 } else {
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
 }
