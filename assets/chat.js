@@ -2,13 +2,13 @@
 /* Requires: player.js loaded first (provides `channel` global) */
 
 // ── CHAT VISIBILITY ──
-let chatVisible = localStorage.getItem('corillo_chat') === 'visible';
+// Default: visible (chat shows on first visit, like Kick)
+let chatVisible = localStorage.getItem('corillo_chat') !== 'hidden';
 
 function showChat() {
   chatVisible = true;
   localStorage.setItem('corillo_chat', 'visible');
   $('#content').classList.remove('chat-hidden');
-  $('#chatFab').classList.remove('visible');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
 }
 
@@ -16,20 +16,18 @@ function hideChat() {
   chatVisible = false;
   localStorage.setItem('corillo_chat', 'hidden');
   $('#content').classList.add('chat-hidden');
-  $('#chatFab').classList.add('visible');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.remove('active');
 }
 
 if (!chatVisible) {
   $('#content').classList.add('chat-hidden');
-  $('#chatFab').classList.add('visible');
 } else {
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
 }
 
 if ($('#chatToggleBtn')) $('#chatToggleBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
 if ($('#chatCloseBtn'))  $('#chatCloseBtn').addEventListener('click', hideChat);
-$('#chatFab').addEventListener('click', showChat);
+if ($('#chatRailBtn'))   $('#chatRailBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
 
 // ── WEBSOCKET CHAT ──
 const WS_BASE = location.protocol === 'https:' ? 'wss:' : 'ws:';

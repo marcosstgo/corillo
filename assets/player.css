@@ -45,13 +45,13 @@ header{
 .page{display:flex;flex-direction:column;min-height:calc(100vh - 51px)}
 .content{
   flex:1;display:grid;
-  grid-template-columns:1fr var(--chat-w);
+  grid-template-columns:1fr 20px var(--chat-w);
   grid-template-rows:auto 1fr;
   gap:0;
   max-width:100%;
 }
-.content.chat-hidden{grid-template-columns:1fr 0}
-.content.vertical-mode{grid-template-columns:minmax(0,1fr) var(--chat-w)}
+.content.chat-hidden{grid-template-columns:1fr 20px 0}
+.content.vertical-mode{grid-template-columns:minmax(0,1fr) 20px var(--chat-w)}
 
 /* ── PLAYER COLUMN ── */
 .player-col{
@@ -152,6 +152,26 @@ header{
 .stat-val{font-family:var(--mono);font-size:.68rem;letter-spacing:1px;color:var(--white)}
 .stat-lbl{font-family:var(--mono);font-size:.44rem;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:2px}
 
+/* ── CHAT RAIL ── */
+.chat-rail{
+  grid-row:1/3;
+  display:flex;
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+  background:rgba(255,255,255,.012);
+}
+.rail-btn{
+  width:100%;background:transparent;border:none;
+  color:rgba(255,255,255,.18);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:color .15s,background .15s;
+  padding:0;
+}
+.rail-btn:hover{color:rgba(255,255,255,.6);background:rgba(255,255,255,.04)}
+.rail-label{display:none}
+#railIcon{font-size:.55rem;transition:transform .25s ease}
+.content.chat-hidden #railIcon{transform:rotate(180deg)}
+
 /* ── CHAT COLUMN ── */
 .chat-col{
   grid-row:1/3;
@@ -190,38 +210,6 @@ header{
 #chatSend:hover{border-color:var(--border-h);color:var(--white)}
 .chat-you{font-family:var(--mono);font-size:.48rem;letter-spacing:1px;color:rgba(255,255,255,.25)}
 
-/* Chat toggle button floating */
-@keyframes fabPulse{
-  0%{box-shadow:0 4px 16px rgba(145,71,255,.5),0 0 0 0 rgba(145,71,255,.4)}
-  70%{box-shadow:0 4px 16px rgba(145,71,255,.5),0 0 0 12px rgba(145,71,255,0)}
-  100%{box-shadow:0 4px 16px rgba(145,71,255,.5),0 0 0 0 rgba(145,71,255,0)}
-}
-@keyframes fabBounce{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-4px)}
-}
-.chat-fab{
-  position:fixed;bottom:24px;right:24px;z-index:90;
-  display:none;align-items:center;gap:8px;
-  padding:10px 16px;border-radius:999px;
-  background:var(--accent);color:var(--ink);border:none;cursor:pointer;
-  font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;
-  box-shadow:0 4px 16px rgba(232,200,74,.35);
-  transition:background .2s,transform .2s;
-}
-.chat-fab .fab-icon{font-size:1rem;animation:fabBounce 2s ease-in-out infinite}
-.chat-fab .fab-dot{
-  width:7px;height:7px;border-radius:50%;background:#4ade80;flex-shrink:0;
-  box-shadow:0 0 0 0 rgba(74,222,128,.4);
-  animation:fabDotPulse 1.5s ease-out infinite;
-}
-@keyframes fabDotPulse{
-  0%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}
-  70%{box-shadow:0 0 0 6px rgba(74,222,128,0)}
-  100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}
-}
-.chat-fab:hover{background:#d4b43c;transform:scale(1.04)}
-.chat-fab.visible{display:flex;animation:fabPulse 2.5s ease-out 1s 3}
 
 /* Themes */
 body.theme-terminal{background:#06080a}
@@ -240,13 +228,21 @@ body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,2
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .content{grid-template-columns:1fr;grid-template-rows:auto auto auto}
-  .player-col{grid-row:auto;border-right:none;border-bottom:1px solid var(--border)}
-  .chat-col{
-    grid-row:auto;height:420px;
+  .player-col{grid-row:auto;border-right:none;border-bottom:none}
+  .chat-rail{
+    grid-row:auto;
+    height:38px;
+    border-left:none;border-right:none;
     border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
   }
-  .content.chat-hidden .chat-col{height:0}
-    :root{--chat-w:100%}
+  .rail-btn{flex-direction:row;font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase}
+  .rail-label{display:block}
+  #railIcon{font-size:.6rem;transform:rotate(-90deg)}
+  .content.chat-hidden #railIcon{transform:rotate(90deg)}
+  .chat-col{grid-row:auto;height:420px;border-top:none}
+  .content.chat-hidden .chat-col{height:0;border:none}
+  :root{--chat-w:100%}
 }
 @media(max-width:600px){
   .topbar{padding:8px 12px}
