@@ -54,3 +54,7 @@ corillo.live, stream.marcossantiago.com {
 vault.marcossantiago.com {
     reverse_proxy 192.168.8.148:8080
 }
+
+uptime.corillo.live {
+    reverse_proxy 192.168.8.148:3001
+}
