@@ -78,8 +78,16 @@
 
     .hero-eyebrow{
       font-family:var(--mono);font-size:.52rem;letter-spacing:3px;text-transform:uppercase;
-      color:var(--accent);margin-bottom:14px;
+      color:var(--accent);margin-bottom:10px;
     }
+    .by-corillo{
+      display:inline-flex;align-items:center;gap:6px;
+      font-family:var(--mono);font-size:.48rem;letter-spacing:1.5px;text-transform:uppercase;
+      color:rgba(242,239,233,.4);margin-bottom:14px;
+    }
+    .by-corillo i{color:#4ade80;font-size:.5rem}
+    .by-corillo a{color:var(--accent);text-decoration:none;transition:.15s}
+    .by-corillo a:hover{color:var(--white)}
     .hero-title{
       font-family:var(--display);font-size:clamp(2.8rem,6vw,4.4rem);
       letter-spacing:3px;line-height:1;color:var(--white);margin-bottom:18px;
@@ -264,6 +272,7 @@
     <div class="hero-inner">
       <div>
         <div class="hero-eyebrow">Software · Windows · RTMP</div>
+        <div class="by-corillo"><i class="fa-solid fa-circle-check"></i> Auspiciado por <a href="/">corillo.live</a></div>
         <h1 class="hero-title">STREAMER<br><span>PRO</span></h1>
         <div class="version-badge"><i class="fa-solid fa-circle" style="font-size:.35rem;color:#4ade80"></i> v2.0.2 — estable</div>
         <p class="hero-desc">
@@ -403,7 +412,7 @@
   <div class="wrap">
     <div class="cta">
       <h2 class="cta-title">Listo para transmitir</h2>
-      <p class="cta-sub">Descarga gratuita. Sin cuenta, sin suscripción, sin anuncios.</p>
+      <p class="cta-sub">Descarga gratuita. Sin cuenta, sin suscripción, sin anuncios.<br>Hecho para la comunidad de <a href="/" style="color:var(--accent);text-decoration:none">corillo.live</a>.</p>
       <div class="cta-actions">
         <a href="https://github.com/marcosstgo/streamerpro/releases" target="_blank" rel="noopener" class="btn primary lg">
           <i class="fa-solid fa-download"></i> Descargar gratis
@@ -412,7 +421,7 @@
           <i class="fa-brands fa-github"></i> Ver código fuente
         </a>
       </div>
-      <p class="beta-note">Windows 10 / 11 · .NET 8 · 64-bit · FFmpeg incluido · Desarrollado por Marcos Santiago</p>
+      <p class="beta-note">Windows 10 / 11 · .NET 8 · 64-bit · FFmpeg incluido · Desarrollado por Marcos Santiago · Auspiciado por corillo.live</p>
       <div class="smartscreen-note">
         <i class="fa-solid fa-triangle-exclamation"></i>
         Windows puede mostrar una advertencia de SmartScreen al ejecutar el instalador por primera vez.
