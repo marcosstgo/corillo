@@ -24,7 +24,9 @@ ac = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 MEDIAMTX_HOST = os.environ.get("MEDIAMTX_HOST", "https://corillo.live/mediamtx-api")
 THUMBS_HOST   = os.environ.get("THUMBS_HOST",   "https://corillo.live")
 DB_PATH       = os.environ.get("DB_PATH", "/home/marcos/corillo-bot/chat.db")
-ADMIN_TOKEN   = os.environ.get("ADMIN_TOKEN", "")
+ADMIN_TOKEN      = os.environ.get("ADMIN_TOKEN", "")
+TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 _http: httpx.AsyncClient = None   # inicializado en startup
 _db:   aiosqlite.Connection = None  # conexión SQLite persistente
@@ -117,6 +119,15 @@ async def db_history(channel: str, limit: int = 50) -> list:
         for r in reversed(rows)
     ]
 
+async def _telegram(lines: list[str]):
+    try:
+        await _http.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+            json={"chat_id": TELEGRAM_CHAT_ID, "text": "\n".join(lines), "parse_mode": "Markdown"},
+        )
+    except:
+        pass
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -156,6 +167,17 @@ async def submit_join(req: JoinRequest, request: Request):
          req.plataforma.strip()[:60], req.mensaje.strip()[:300], time.time()),
     )
     await _db.commit()
+    # Notificar por Telegram
+    if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
+        lines = [f"📥 *Nueva solicitud — @{handle}*"]
+        lines.append(f"Nombre: {req.nombre.strip()[:60]}")
+        lines.append(f"Contenido: {req.contenido.strip()[:120]}")
+        if req.plataforma.strip():
+            lines.append(f"Plataforma: {req.plataforma.strip()[:60]}")
+        if req.mensaje.strip():
+            lines.append(f"Mensaje: {req.mensaje.strip()[:200]}")
+        asyncio.create_task(_telegram(lines))
+
     # Notificar al host en el chat de katatonia
     lines = [f"📥 Nueva solicitud de canal — @{handle}"]
     lines.append(f"Nombre: {req.nombre.strip()[:60]}")
