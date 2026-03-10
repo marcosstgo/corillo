@@ -1,7 +1,7 @@
-import os, time, json, asyncio, random, base64
+import os, re, time, json, asyncio, random, base64
 import httpx, anthropic, aiosqlite
 from dotenv import load_dotenv
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from system_prompt import SYSTEM
@@ -24,6 +24,7 @@ ac = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 MEDIAMTX_HOST = os.environ.get("MEDIAMTX_HOST", "https://corillo.live/mediamtx-api")
 THUMBS_HOST   = os.environ.get("THUMBS_HOST",   "https://corillo.live")
 DB_PATH       = os.environ.get("DB_PATH", "/home/marcos/corillo-bot/chat.db")
+ADMIN_TOKEN   = os.environ.get("ADMIN_TOKEN", "")
 
 _http: httpx.AsyncClient = None   # inicializado en startup
 _db:   aiosqlite.Connection = None  # conexión SQLite persistente
@@ -46,6 +47,13 @@ NAMES = [
 
 class Msg(BaseModel):
     message: str
+
+class JoinRequest(BaseModel):
+    handle:    str
+    nombre:    str
+    contenido: str
+    plataforma: str = ""
+    mensaje:   str = ""
 
 async def get_live():
     """Retorna streams activos. Usa caché de 12s para evitar llamadas redundantes."""
@@ -106,6 +114,33 @@ async def db_history(channel: str, limit: int = 50) -> list:
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.post("/join")
+async def submit_join(req: JoinRequest):
+    handle = req.handle.strip().lower()
+    if not re.match(r'^[a-z0-9_]{3,24}$', handle):
+        raise HTTPException(status_code=400, detail="Handle inválido")
+    if not req.nombre.strip() or not req.contenido.strip():
+        raise HTTPException(status_code=400, detail="Faltan campos requeridos")
+    await _db.execute(
+        "INSERT INTO join_requests (handle, nombre, contenido, plataforma, mensaje, ts) VALUES (?, ?, ?, ?, ?, ?)",
+        (handle, req.nombre.strip()[:60], req.contenido.strip()[:120],
+         req.plataforma.strip()[:60], req.mensaje.strip()[:300], time.time()),
+    )
+    await _db.commit()
+    return {"ok": True}
+
+@app.get("/admin/requests")
+async def admin_requests(token: str = ""):
+    if not ADMIN_TOKEN or token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    _db.row_factory = aiosqlite.Row
+    async with _db.execute(
+        "SELECT id, handle, nombre, contenido, plataforma, mensaje, ts, status "
+        "FROM join_requests ORDER BY ts DESC"
+    ) as cur:
+        rows = await cur.fetchall()
+    return [dict(r) for r in rows]
 
 @app.post("/message")
 async def chat(body: Msg):
@@ -435,6 +470,18 @@ async def startup():
     await _db.execute(
         "CREATE INDEX IF NOT EXISTS idx_channel_ts ON messages(channel, ts)"
     )
+    await _db.execute("""
+        CREATE TABLE IF NOT EXISTS join_requests (
+            id         INTEGER PRIMARY KEY AUTOINCREMENT,
+            handle     TEXT NOT NULL,
+            nombre     TEXT NOT NULL,
+            contenido  TEXT NOT NULL,
+            plataforma TEXT DEFAULT '',
+            mensaje    TEXT DEFAULT '',
+            ts         REAL NOT NULL,
+            status     TEXT DEFAULT 'pending'
+        )
+    """)
     await _db.commit()
     _http = httpx.AsyncClient(
         timeout=8,

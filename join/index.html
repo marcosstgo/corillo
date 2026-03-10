@@ -148,6 +148,27 @@
     [data-theme="light"] .hint{color:rgba(18,18,15,.4)}
     [data-theme="light"] .rtmp-block{background:rgba(180,130,0,.03);border-color:rgba(180,130,0,.15)}
 
+    /* ── FORMULARIO ── */
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+    .field{display:flex;flex-direction:column;gap:4px}
+    .field label{font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0}
+    .field input,.field textarea{
+      padding:10px 12px;border-radius:7px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.25);color:var(--white);outline:none;
+      font-family:var(--body);font-size:.9rem;transition:border-color .18s;
+      resize:none;
+    }
+    .field input:focus,.field textarea:focus{border-color:rgba(232,200,74,.35)}
+    .field-hint{font-size:.75rem;color:rgba(255,255,255,.3)}
+    .field-full{grid-column:1/-1}
+    .form-err{padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size:.5rem;display:none}
+    .form-success{display:none;text-align:center;padding:20px 0}
+    .form-success .check{font-size:2.4rem;margin-bottom:12px;color:#4ade80}
+    [data-theme="light"] .field input,[data-theme="light"] .field textarea{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:#12120f}
+    [data-theme="light"] .field label{color:rgba(18,18,15,.5)}
+
     /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:24px 0}
     .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -194,9 +215,7 @@
       manualmente para mantener la comunidad que hemos construido.
       No es un registro automático — es una conversación.
     </p>
-    <a href="mailto:hello@marcossantiago.com" class="contact-email">
-      <i class="fa-solid fa-envelope"></i> hello@marcossantiago.com
-    </a>
+    <a class="btn primary" href="#aplicar"><i class="fa-solid fa-arrow-down"></i> Aplica ahora</a>
   </div>
 </section>
 
@@ -211,9 +230,8 @@
         <div class="step-body">
           <div class="step-title">Escríbenos</div>
           <p class="step-desc">
-            Manda un mensaje a <a href="mailto:hello@marcossantiago.com">hello@marcossantiago.com</a>
-            con tu nombre de usuario, qué tipo de contenido haces y en qué plataforma transmites actualmente.
-            No hay formulario, no hay requisitos formales — solo queremos conocerte.
+            Completa el formulario más abajo con tu handle, tipo de contenido y un poco sobre ti.
+            También puedes escribirnos directo a <a href="mailto:hello@marcossantiago.com">hello@marcossantiago.com</a>.
           </p>
         </div>
       </div>
@@ -245,15 +263,48 @@
 
 <hr>
 
-<!-- ── CONTACT BOX ── -->
-<section class="section" style="border-bottom:none">
+<!-- ── FORMULARIO ── -->
+<section class="section" id="aplicar" style="border-bottom:none">
   <div class="wrap">
-    <div class="contact-box">
-      <div class="contact-title">¿LISTO?</div>
-      <p class="contact-sub">Un correo es todo lo que necesitas.<br>Sin formularios, sin esperas largas.</p>
-      <a href="mailto:hello@marcossantiago.com" class="contact-email">
-        <i class="fa-solid fa-paper-plane"></i> hello@marcossantiago.com
-      </a>
+    <div class="contact-box" id="formWrap">
+      <div class="contact-title">APLICA AHORA</div>
+      <p class="contact-sub">Respondemos a todas las solicitudes en menos de 24 horas.</p>
+
+      <form id="joinForm" style="text-align:left;margin-top:20px">
+        <div class="form-grid">
+          <div class="field">
+            <label for="f-handle">Handle del canal *</label>
+            <input id="f-handle" type="text" placeholder="ej: kamikazepr" maxlength="24" required autocomplete="off" spellcheck="false" />
+            <div class="field-hint">Solo: a-z, 0-9, _ · 3–24 caracteres</div>
+          </div>
+          <div class="field">
+            <label for="f-nombre">Tu nombre *</label>
+            <input id="f-nombre" type="text" placeholder="Como quieres que te llamen" maxlength="60" required />
+          </div>
+          <div class="field field-full">
+            <label for="f-contenido">Tipo de contenido *</label>
+            <input id="f-contenido" type="text" placeholder="ej: Gaming FPS, Just chatting, Música en vivo..." maxlength="120" required />
+          </div>
+          <div class="field">
+            <label for="f-plataforma">¿Dónde transmites ahora? <span style="opacity:.45">(opcional)</span></label>
+            <input id="f-plataforma" type="text" placeholder="ej: Twitch, YouTube, ninguno" maxlength="60" />
+          </div>
+          <div class="field">
+            <label for="f-mensaje">Algo más <span style="opacity:.45">(opcional)</span></label>
+            <textarea id="f-mensaje" rows="3" placeholder="Por qué quieres unirte, qué transmites, etc." maxlength="300"></textarea>
+          </div>
+        </div>
+        <div class="form-err" id="formErr"></div>
+        <button type="submit" class="btn primary" id="submitBtn" style="width:100%;justify-content:center;margin-top:16px;padding:12px 20px">
+          <i class="fa-solid fa-paper-plane"></i> Enviar solicitud
+        </button>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="check">✓</div>
+        <div class="contact-title" style="font-size:clamp(1.2rem,3vw,1.8rem)">SOLICITUD ENVIADA</div>
+        <p class="contact-sub">Te contactamos pronto. Respondemos a todos.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -411,6 +462,79 @@ $('#resetBtn').addEventListener('click', () => {
   $('#okMsg').style.display    = 'none';
   $('#rtmpCard').style.display = 'none';
   ['playerH','hlsUrl','rtmpKey'].forEach(id => document.getElementById(id).textContent = '—');
+});
+
+// ── JOIN FORM ──
+const JOIN_URL = '/chat-api/join';
+const RESERVED_H = new Set([
+  'join','assets','mediamtx-api','live','api','static','admin','robots',
+  'sitemap','favicon','index','stream','dual','multiplayer','configuracion',
+  'roadmap','dmca','legal','streamer-pro','player','katatonia','tea',
+  'mira_sanganooo','404','elbala','marcos','pataecabra','streamerpro',
+  'radblaster','elhermanoquiles','xxdur3xx','kamikazepr',
+]);
+
+function sanitizeH(v){ return (v||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,''); }
+function validateH(h){
+  if (!h)            return 'Escribe un handle.';
+  if (h.length < 3)  return 'Mínimo 3 caracteres.';
+  if (h.length > 24) return 'Máximo 24 caracteres.';
+  if (/__/.test(h))  return 'Evita guiones bajos dobles.';
+  if (RESERVED_H.has(h)) return 'Este handle está reservado.';
+  return '';
+}
+
+const fHandle    = document.getElementById('f-handle');
+const fNombre    = document.getElementById('f-nombre');
+const fContenido = document.getElementById('f-contenido');
+const fPlat      = document.getElementById('f-plataforma');
+const fMensaje   = document.getElementById('f-mensaje');
+const formErr    = document.getElementById('formErr');
+const submitBtn  = document.getElementById('submitBtn');
+const joinForm   = document.getElementById('joinForm');
+const formSuccess = document.getElementById('formSuccess');
+
+fHandle?.addEventListener('input', e => {
+  const s = sanitizeH(e.target.value);
+  if (s !== e.target.value) e.target.value = s;
+});
+
+function showErr(msg){ formErr.textContent = msg; formErr.style.display = msg ? 'block' : 'none'; }
+
+joinForm?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const handle = sanitizeH(fHandle.value);
+  fHandle.value = handle;
+  const hErr = validateH(handle);
+  if (hErr) { showErr(hErr); fHandle.focus(); return; }
+  if (!fNombre.value.trim()) { showErr('Escribe tu nombre.'); fNombre.focus(); return; }
+  if (!fContenido.value.trim()) { showErr('Describe tu tipo de contenido.'); fContenido.focus(); return; }
+  showErr('');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+  try {
+    const res = await fetch(JOIN_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        handle,
+        nombre:    fNombre.value.trim(),
+        contenido: fContenido.value.trim(),
+        plataforma: fPlat.value.trim(),
+        mensaje:   fMensaje.value.trim(),
+      }),
+    });
+    if (!res.ok) {
+      const d = await res.json().catch(()=>({}));
+      throw new Error(d.detail || 'Error al enviar.');
+    }
+    joinForm.style.display = 'none';
+    formSuccess.style.display = 'block';
+  } catch(err) {
+    showErr(err.message || 'No se pudo enviar. Intenta de nuevo.');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar solicitud';
+  }
 });
 
 document.querySelectorAll('.copy-btn').forEach(btn => {
