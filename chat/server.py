@@ -119,14 +119,72 @@ async def db_history(channel: str, limit: int = 50) -> list:
         for r in reversed(rows)
     ]
 
-async def _telegram(lines: list[str]):
+async def _telegram(lines: list[str], handle: str = ""):
     try:
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": "\n".join(lines),
+            "parse_mode": "Markdown",
+        }
+        if handle:
+            payload["reply_markup"] = {"inline_keyboard": [[
+                {"text": "✅ Aprobar", "callback_data": f"approve:{handle}"},
+                {"text": "❌ Rechazar", "callback_data": f"reject:{handle}"},
+            ]]}
         await _http.post(
             f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
-            json={"chat_id": TELEGRAM_CHAT_ID, "text": "\n".join(lines), "parse_mode": "Markdown"},
+            json=payload,
         )
     except:
         pass
+
+@app.post("/telegram-webhook")
+async def telegram_webhook(request: Request):
+    data = await request.json()
+    cb = data.get("callback_query")
+    if not cb:
+        return {"ok": True}
+
+    # Verificar que viene del chat autorizado
+    chat_id = str(cb.get("message", {}).get("chat", {}).get("id", ""))
+    if chat_id != TELEGRAM_CHAT_ID:
+        return {"ok": True}
+
+    action, _, handle = cb["data"].partition(":")
+    msg_id = cb["message"]["message_id"]
+    original_text = cb["message"].get("text", "")
+
+    if action == "approve":
+        await _db.execute(
+            "UPDATE join_requests SET status='approved' WHERE handle=? AND status='pending'", (handle,)
+        )
+        await _db.commit()
+        new_text = original_text + "\n\n✅ *APROBADO* — crea el canal en Claude Code"
+        answer_text = f"✅ {handle} aprobado"
+    elif action == "reject":
+        await _db.execute(
+            "UPDATE join_requests SET status='rejected' WHERE handle=? AND status='pending'", (handle,)
+        )
+        await _db.commit()
+        new_text = original_text + "\n\n❌ *RECHAZADO*"
+        answer_text = f"❌ {handle} rechazado"
+    else:
+        return {"ok": True}
+
+    # Editar el mensaje para quitar los botones y mostrar el resultado
+    try:
+        await _http.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/editMessageText",
+            json={"chat_id": TELEGRAM_CHAT_ID, "message_id": msg_id,
+                  "text": new_text, "parse_mode": "Markdown"},
+        )
+        await _http.post(
+            f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/answerCallbackQuery",
+            json={"callback_query_id": cb["id"], "text": answer_text},
+        )
+    except:
+        pass
+    return {"ok": True}
 
 @app.get("/health")
 def health():
@@ -176,7 +234,7 @@ async def submit_join(req: JoinRequest, request: Request):
             lines.append(f"Plataforma: {req.plataforma.strip()[:60]}")
         if req.mensaje.strip():
             lines.append(f"Mensaje: {req.mensaje.strip()[:200]}")
-        asyncio.create_task(_telegram(lines))
+        asyncio.create_task(_telegram(lines, handle=handle))
 
     # Notificar al host en el chat de katatonia
     lines = [f"📥 Nueva solicitud de canal — @{handle}"]
@@ -554,6 +612,16 @@ async def startup():
         limits=httpx.Limits(max_connections=20, max_keepalive_connections=5),
     )
     asyncio.create_task(live_monitor())
+    # Registrar webhook de Telegram
+    if TELEGRAM_TOKEN:
+        try:
+            await _http.post(
+                f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/setWebhook",
+                json={"url": "https://corillo.live/chat-api/telegram-webhook",
+                      "allowed_updates": ["callback_query"]},
+            )
+        except:
+            pass
 
 @app.on_event("shutdown")
 async def shutdown():
