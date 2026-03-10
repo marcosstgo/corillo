@@ -128,6 +128,22 @@ async def submit_join(req: JoinRequest):
          req.plataforma.strip()[:60], req.mensaje.strip()[:300], time.time()),
     )
     await _db.commit()
+    # Notificar al host en el chat de katatonia
+    lines = [f"📥 Nueva solicitud de canal — @{handle}"]
+    lines.append(f"Nombre: {req.nombre.strip()[:60]}")
+    lines.append(f"Contenido: {req.contenido.strip()[:120]}")
+    if req.plataforma.strip():
+        lines.append(f"Plataforma: {req.plataforma.strip()[:60]}")
+    if req.mensaje.strip():
+        lines.append(f"Mensaje: {req.mensaje.strip()[:200]}")
+    room = get_room("katatonia")
+    await room.broadcast({
+        "type": "message",
+        "user": "CORILLO BOT",
+        "text": " · ".join(lines),
+        "ts": time.time(),
+        "bot": True,
+    })
     return {"ok": True}
 
 @app.get("/admin/requests")
