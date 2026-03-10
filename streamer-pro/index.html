@@ -233,6 +233,19 @@
     .foot-links a{font-family:var(--mono);font-size:.48rem;letter-spacing:1px;color:var(--muted);text-decoration:none;transition:.15s}
     .foot-links a:hover{color:var(--white)}
 
+    /* ── HOW IT WORKS ── */
+    .steps{display:flex;align-items:flex-start;gap:0}
+    @media(max-width:700px){.steps{flex-direction:column;gap:0}}
+    .step{flex:1;padding:24px 20px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+    .step-num{font-family:var(--display);font-size:2.4rem;letter-spacing:2px;color:rgba(232,200,74,.15);line-height:1;margin-bottom:10px}
+    .step-icon{font-size:1.1rem;color:var(--accent);margin-bottom:12px}
+    .step-title{font-family:var(--mono);font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:8px}
+    .step-desc{font-size:.85rem;line-height:1.6;color:rgba(242,239,233,.5)}
+    .step-arrow{display:flex;align-items:center;justify-content:center;padding:0 10px;color:rgba(255,255,255,.12);font-size:.7rem;flex-shrink:0;padding-top:40px}
+    @media(max-width:700px){.step-arrow{transform:rotate(90deg);padding:8px 0 8px 24px}}
+    [data-theme="light"] .step{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
+    [data-theme="light"] .step-desc{color:rgba(18,18,15,.55)}
+
     /* divider */
     hr{border:none;border-top:1px solid var(--border);margin:0}
   </style>
@@ -271,14 +284,14 @@
   <div class="wrap">
     <div class="hero-inner">
       <div>
-        <div class="hero-eyebrow">Software · Windows · RTMP</div>
+        <div class="hero-eyebrow">Playlist Streamer · Windows · RTMP</div>
         <div class="by-corillo"><i class="fa-solid fa-circle-check"></i> Auspiciado por <a href="/">corillo.live</a></div>
         <h1 class="hero-title">STREAMER<br><span>PRO</span></h1>
         <div class="version-badge"><i class="fa-solid fa-circle" style="font-size:.35rem;color:#4ade80"></i> v2.0.2 — estable</div>
         <p class="hero-desc">
-          Transmite a cualquier plataforma RTMP directamente desde Windows.
-          FFmpeg incluido, aceleración por GPU, perfiles de calidad y reconexión automática.
-          Sin complicaciones.
+          Dale una carpeta de videos y Streamer Pro los transmite a Corillo, Twitch, YouTube
+          o cualquier plataforma RTMP — sin que tengas que estar frente al PC.
+          Tu canal, en autopiloto.
         </p>
         <div class="hero-actions">
           <a href="https://github.com/marcosstgo/streamerpro/releases" target="_blank" rel="noopener" class="btn primary lg">
@@ -296,6 +309,36 @@
         <div class="app-window">
           <img src="/streamer-pro/app.jpg" alt="Interfaz de Streamer Pro v2.0.2" loading="eager">
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CÓMO FUNCIONA ── -->
+<section class="section" style="padding-top:48px;padding-bottom:48px">
+  <div class="wrap">
+    <div class="section-label">Cómo funciona</div>
+    <h2 class="section-title">Tres pasos y listo</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon"><i class="fa-solid fa-folder-open"></i></div>
+        <div class="step-title">Elige tu fuente</div>
+        <p class="step-desc">Una carpeta de videos, un archivo directo o una URL de stream. Streamer Pro la convierte en una transmisión continua.</p>
+      </div>
+      <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon"><i class="fa-solid fa-key"></i></div>
+        <div class="step-title">Configura el destino</div>
+        <p class="step-desc">Selecciona la plataforma o pega tu URL RTMP y stream key. Compatible con Corillo, Twitch, YouTube y cualquier servidor RTMP.</p>
+      </div>
+      <div class="step-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon"><i class="fa-solid fa-tower-broadcast"></i></div>
+        <div class="step-title">Transmite solo</div>
+        <p class="step-desc">Dale inicio y cierra la ventana. Reconexión automática, loop infinito y métricas en vivo. No necesitas estar presente.</p>
       </div>
     </div>
   </div>
@@ -327,8 +370,8 @@
 
     <!-- Features grid -->
     <div class="section-label">Características</div>
-    <h2 class="section-title">Todo lo que necesitas para transmitir</h2>
-    <p class="section-sub">Diseñado para streamers que quieren control total sin la complejidad de OBS.</p>
+    <h2 class="section-title">Hecho para correr sin supervisión</h2>
+    <p class="section-sub">No es un reemplazo de OBS. Es una herramienta diferente — para transmitir contenido pregrabado de forma continua y automática.</p>
 
     <div class="features-grid">
       <div class="feat-card">
@@ -344,12 +387,12 @@
       <div class="feat-card">
         <div class="feat-icon" style="background:rgba(74,222,128,.1);color:#4ade80"><i class="fa-solid fa-rotate"></i></div>
         <div class="feat-title">Reconexión automática</div>
-        <p class="feat-desc">Backoff progresivo: 2s → 4s → 8s → 16s → 30s. Loop infinito opcional para playlists y archivos. Nunca pierdas un stream por un corte temporal.</p>
+        <p class="feat-desc">Si la conexión se cae, reconecta solo — 2s → 4s → 8s → 16s → 30s. Loop infinito para que el canal siga vivo 24/7 sin que tengas que estar pendiente.</p>
       </div>
       <div class="feat-card">
         <div class="feat-icon" style="background:rgba(96,165,250,.1);color:#60a5fa"><i class="fa-solid fa-folder-open"></i></div>
         <div class="feat-title">3 modos de entrada</div>
-        <p class="feat-desc">Fuentes online desde un combo configurable. Carpeta local como playlist con loop y shuffle. Archivo directo con soporte MP4, MKV, MOV, AVI, WEBM.</p>
+        <p class="feat-desc">Una carpeta de videos se convierte en playlist automática con loop y shuffle. O transmite un solo archivo o una URL de stream. MP4, MKV, MOV, AVI, WEBM.</p>
       </div>
       <div class="feat-card">
         <div class="feat-icon" style="background:rgba(251,146,60,.1);color:#fb923c"><i class="fa-solid fa-chart-line"></i></div>
@@ -411,7 +454,7 @@
 <section class="section">
   <div class="wrap">
     <div class="cta">
-      <h2 class="cta-title">Listo para transmitir</h2>
+      <h2 class="cta-title">Tu canal, en autopiloto</h2>
       <p class="cta-sub">Descarga gratuita. Sin cuenta, sin suscripción, sin anuncios.<br>Hecho para la comunidad de <a href="/" style="color:var(--accent);text-decoration:none">corillo.live</a>.</p>
       <div class="cta-actions">
         <a href="https://github.com/marcosstgo/streamerpro/releases" target="_blank" rel="noopener" class="btn primary lg">
