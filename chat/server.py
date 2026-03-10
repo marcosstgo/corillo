@@ -27,6 +27,20 @@ DB_PATH       = os.environ.get("DB_PATH", "/home/marcos/corillo-bot/chat.db")
 ADMIN_TOKEN      = os.environ.get("ADMIN_TOKEN", "")
 TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
+GITHUB_TOKEN     = os.environ.get("GITHUB_TOKEN", "")
+GITHUB_REPO      = os.environ.get("GITHUB_REPO", "marcosstgo/corillo")
+GH_API           = "https://api.github.com"
+
+STREAMER_COLORS = [
+    "linear-gradient(135deg,#74b9ff,#0984e3)",
+    "linear-gradient(135deg,#55efc4,#00b894)",
+    "linear-gradient(135deg,#fd79a8,#e84393)",
+    "linear-gradient(135deg,#fdcb6e,#e17055)",
+    "linear-gradient(135deg,#a29bfe,#6c5ce7)",
+    "linear-gradient(135deg,#00cec9,#00838f)",
+    "linear-gradient(135deg,#ff7675,#d63031)",
+    "linear-gradient(135deg,#ff9f43,#e06010)",
+]
 
 _http: httpx.AsyncClient = None   # inicializado en startup
 _db:   aiosqlite.Connection = None  # conexión SQLite persistente
@@ -120,6 +134,90 @@ async def db_history(channel: str, limit: int = 50) -> list:
         for r in reversed(rows)
     ]
 
+async def _gh_get(path: str) -> tuple[str, str]:
+    """Retorna (contenido, sha) de un archivo en GitHub."""
+    r = await _http.get(
+        f"{GH_API}/repos/{GITHUB_REPO}/contents/{path}",
+        headers={"Authorization": f"token {GITHUB_TOKEN}",
+                 "Accept": "application/vnd.github.v3+json"},
+    )
+    data = r.json()
+    return base64.b64decode(data["content"]).decode(), data["sha"]
+
+async def _gh_put(path: str, content: str, sha: str | None, message: str):
+    """Crea o actualiza un archivo en GitHub."""
+    payload = {
+        "message": message,
+        "content": base64.standard_b64encode(content.encode()).decode(),
+        "branch": "main",
+    }
+    if sha:
+        payload["sha"] = sha
+    await _http.put(
+        f"{GH_API}/repos/{GITHUB_REPO}/contents/{path}",
+        headers={"Authorization": f"token {GITHUB_TOKEN}",
+                 "Accept": "application/vnd.github.v3+json"},
+        json=payload,
+    )
+
+async def auto_create_streamer(handle: str, nombre: str, contenido: str):
+    """Crea streamers.js entry + player page + STREAMER_NAMES via GitHub API."""
+    if not GITHUB_TOKEN:
+        return
+    try:
+        color  = STREAMER_COLORS[hash(handle) % len(STREAMER_COLORS)]
+        ava    = (nombre[0] if nombre else handle[0]).upper()
+        name_up = nombre.upper() if nombre else handle.upper()
+        sub    = contenido[:50] if contenido else "Gaming · CORILLO"
+
+        # 1 — streamers.js
+        js, js_sha = await _gh_get("assets/streamers.js")
+        new_entry = (
+            f"  {{ key:'{handle}', name:'{name_up}', "
+            f"sub:'{sub}', ava:'{ava}', color:'{color}', host:false }},"
+        )
+        if "soon:true" in js:
+            js = js.replace("  { key:null,", f"{new_entry}\n  {{ key:null,")
+        else:
+            js = js.rstrip().rstrip("]").rstrip() + f"\n{new_entry}\n];\n"
+        await _gh_put("assets/streamers.js", js, js_sha,
+                      f"feat: add streamer {handle} [auto]")
+
+        # 2 — player page desde template katatonia
+        tpl, _ = await _gh_get("katatonia/index.html")
+        player = (tpl
+                  .replace("KATATONIA", name_up)
+                  .replace("/katatonia/", f"/{handle}/")
+                  .replace("katatonia", handle))
+        await _gh_put(f"{handle}/index.html", player, None,
+                      f"feat: add player page for {handle} [auto]")
+
+        # 3 — STREAMER_NAMES en server.py
+        py, py_sha = await _gh_get("chat/server.py")
+        name_fmt = nombre.title().replace(" ", "") if nombre else handle.title()
+        py = py.replace(
+            '"kamikazepr":     "KamikazePR",',
+            f'"kamikazepr":     "KamikazePR",\n    "{handle}": "{name_fmt}",'
+        )
+        await _gh_put("chat/server.py", py, py_sha,
+                      f"feat: add {handle} to STREAMER_NAMES [auto]")
+
+        # Notificar por Telegram
+        if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
+            await _http.post(
+                f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                json={"chat_id": TELEGRAM_CHAT_ID,
+                      "text": f"🚀 Canal @{handle} creado — deploy en curso (~1 min)",
+                      "parse_mode": "Markdown"},
+            )
+    except Exception as e:
+        if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
+            await _http.post(
+                f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                json={"chat_id": TELEGRAM_CHAT_ID,
+                      "text": f"❌ Error creando @{handle}: {e}"},
+            )
+
 async def _telegram(lines: list[str], handle: str = ""):
     try:
         payload = {
@@ -160,7 +258,16 @@ async def telegram_webhook(request: Request):
             "UPDATE join_requests SET status='approved' WHERE handle=? AND status='pending'", (handle,)
         )
         await _db.commit()
-        new_text = original_text + "\n\n✅ *APROBADO* — crea el canal en Claude Code"
+        # Obtener datos del solicitante para crear el streamer
+        _db.row_factory = aiosqlite.Row
+        async with _db.execute(
+            "SELECT nombre, contenido FROM join_requests WHERE handle=? ORDER BY ts DESC LIMIT 1",
+            (handle,)
+        ) as cur:
+            row = await cur.fetchone()
+        if row:
+            asyncio.create_task(auto_create_streamer(handle, row["nombre"], row["contenido"]))
+        new_text = original_text + "\n\n✅ *APROBADO* — creando canal automáticamente..."
         answer_text = f"✅ {handle} aprobado"
     elif action == "reject":
         await _db.execute(
