@@ -283,6 +283,11 @@
             <input id="f-nombre" type="text" placeholder="Como quieres que te llamen" maxlength="60" required />
           </div>
           <div class="field field-full">
+            <label for="f-email">Email *</label>
+            <input id="f-email" type="email" placeholder="tu@email.com" maxlength="120" required />
+            <div class="field-hint">Solo para contactarte — no se muestra públicamente</div>
+          </div>
+          <div class="field field-full">
             <label for="f-contenido">Tipo de contenido *</label>
             <input id="f-contenido" type="text" placeholder="ej: Gaming FPS, Just chatting, Música en vivo..." maxlength="120" required />
           </div>
@@ -509,6 +514,8 @@ joinForm?.addEventListener('submit', async e => {
   const hErr = validateH(handle);
   if (hErr) { showErr(hErr); fHandle.focus(); return; }
   if (!fNombre.value.trim()) { showErr('Escribe tu nombre.'); fNombre.focus(); return; }
+  const fEmail = document.getElementById('f-email');
+  if (!fEmail.value.trim()) { showErr('Escribe tu email.'); fEmail.focus(); return; }
   if (!fContenido.value.trim()) { showErr('Describe tu tipo de contenido.'); fContenido.focus(); return; }
   showErr('');
   submitBtn.disabled = true;
@@ -520,6 +527,7 @@ joinForm?.addEventListener('submit', async e => {
       body: JSON.stringify({
         handle,
         nombre:    fNombre.value.trim(),
+        email:     document.getElementById('f-email').value.trim(),
         contenido: fContenido.value.trim(),
         plataforma: fPlat.value.trim(),
         mensaje:   fMensaje.value.trim(),

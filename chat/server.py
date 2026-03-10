@@ -53,6 +53,7 @@ class Msg(BaseModel):
 class JoinRequest(BaseModel):
     handle:    str
     nombre:    str
+    email:     str
     contenido: str
     plataforma: str = ""
     mensaje:   str = ""
@@ -210,7 +211,7 @@ async def submit_join(req: JoinRequest, request: Request):
     handle = req.handle.strip().lower()
     if not re.match(r'^[a-z0-9_]{3,24}$', handle):
         raise HTTPException(status_code=400, detail="Handle inválido")
-    if not req.nombre.strip() or not req.contenido.strip():
+    if not req.nombre.strip() or not req.contenido.strip() or not req.email.strip():
         raise HTTPException(status_code=400, detail="Faltan campos requeridos")
 
     # Handle duplicado pendiente
@@ -220,8 +221,8 @@ async def submit_join(req: JoinRequest, request: Request):
         if await cur.fetchone():
             raise HTTPException(status_code=409, detail="Este handle ya tiene una solicitud pendiente.")
     await _db.execute(
-        "INSERT INTO join_requests (handle, nombre, contenido, plataforma, mensaje, ts) VALUES (?, ?, ?, ?, ?, ?)",
-        (handle, req.nombre.strip()[:60], req.contenido.strip()[:120],
+        "INSERT INTO join_requests (handle, nombre, email, contenido, plataforma, mensaje, ts) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (handle, req.nombre.strip()[:60], req.email.strip()[:120], req.contenido.strip()[:120],
          req.plataforma.strip()[:60], req.mensaje.strip()[:300], time.time()),
     )
     await _db.commit()
@@ -239,6 +240,7 @@ async def submit_join(req: JoinRequest, request: Request):
     # Notificar al host en el chat de katatonia
     lines = [f"📥 Nueva solicitud de canal — @{handle}"]
     lines.append(f"Nombre: {req.nombre.strip()[:60]}")
+    lines.append(f"Email: {req.email.strip()[:120]}")
     lines.append(f"Contenido: {req.contenido.strip()[:120]}")
     if req.plataforma.strip():
         lines.append(f"Plataforma: {req.plataforma.strip()[:60]}")
@@ -599,6 +601,7 @@ async def startup():
             id         INTEGER PRIMARY KEY AUTOINCREMENT,
             handle     TEXT NOT NULL,
             nombre     TEXT NOT NULL,
+            email      TEXT DEFAULT '',
             contenido  TEXT NOT NULL,
             plataforma TEXT DEFAULT '',
             mensaje    TEXT DEFAULT '',
