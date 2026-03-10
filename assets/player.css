@@ -42,13 +42,14 @@ header{
 .divider{width:1px;height:20px;background:var(--border);flex-shrink:0}
 
 /* ── MAIN LAYOUT ── */
-.page{display:flex;flex-direction:column;min-height:calc(100vh - 51px)}
+.page{display:flex;flex-direction:column;height:calc(100vh - 51px);overflow:hidden}
 .content{
-  flex:1;display:grid;
+  flex:1;min-height:0;display:grid;
   grid-template-columns:1fr 20px var(--chat-w);
   grid-template-rows:auto 1fr;
   gap:0;
   max-width:100%;
+  overflow:hidden;
 }
 .content.chat-hidden{grid-template-columns:1fr 20px 0}
 .content.vertical-mode{grid-template-columns:minmax(0,1fr) 20px var(--chat-w)}
@@ -236,7 +237,8 @@ body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,2
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
-  .content{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .page{height:auto;min-height:calc(100vh - 51px);overflow:visible}
+  .content{grid-template-columns:1fr;grid-template-rows:auto auto auto;overflow:visible}
   .player-col{grid-row:auto;border-right:none;border-bottom:none}
   .chat-rail{
     grid-row:auto;
