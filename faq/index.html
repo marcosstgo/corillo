@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Preguntas Frecuentes</title>
+  <meta name="description" content="Respuestas a las preguntas más comunes sobre hacer stream en CORILLO — configuración, problemas de conexión, bitrate y más." />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/faq/">
+  <meta property="og:title" content="CORILLO — FAQ">
+  <meta property="og:description" content="Preguntas frecuentes sobre streaming en CORILLO.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:locale" content="es_PR">
+  <meta property="og:site_name" content="CORILLO">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/styles.css">
+
+  <style>
+    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+    .wrap{max-width:780px;margin:0 auto;padding:0 20px}
+    @media(max-width:600px){.wrap{padding:0 14px}}
+
+    /* ── NAV ── */
+    nav{
+      position:sticky;top:0;z-index:60;
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.6));
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .brand-svg{width:110px;height:30px}
+    .nav-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--border);padding-left:10px}
+    .nav-right{display:flex;gap:8px;align-items:center}
+    .btn{
+      display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.55rem;
+      padding:7px 14px;border-radius:7px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.6);transition:.18s;text-decoration:none;white-space:nowrap;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+    .theme-btn{
+      width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+      background:transparent;color:var(--white);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:.75rem;transition:.2s;flex-shrink:0;
+    }
+    .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
+    [data-theme="light"] nav{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
+    [data-theme="light"] #navLogo text{fill:#12120f!important}
+    [data-theme="light"] #navLogo circle[stroke="#f2efe9"]{stroke:#12120f!important}
+
+    /* ── HERO ── */
+    .hero{padding:56px 0 40px;border-bottom:1px solid var(--border)}
+    .eyebrow{font-family:var(--mono);font-size:.5rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+    .hero-title{font-family:var(--display);font-size:clamp(2.4rem,6vw,3.6rem);letter-spacing:3px;line-height:1;margin-bottom:14px}
+    .hero-desc{font-size:.95rem;line-height:1.7;color:rgba(242,239,233,.55);max-width:54ch}
+    [data-theme="light"] .hero-desc{color:rgba(18,18,15,.55)}
+
+    /* ── CATEGORÍAS ── */
+    .cat{padding:40px 0;border-bottom:1px solid var(--border)}
+    .cat:last-of-type{border-bottom:none}
+    .cat-label{font-family:var(--mono);font-size:.48rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+    .cat-title{font-family:var(--display);font-size:clamp(1.2rem,3vw,1.6rem);letter-spacing:2px;margin-bottom:24px}
+
+    /* ── ACCORDION ── */
+    .faq-list{display:flex;flex-direction:column;gap:0}
+    details{border-bottom:1px solid var(--border)}
+    details:first-child{border-top:1px solid var(--border)}
+    summary{
+      list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:18px 0;cursor:pointer;
+      font-family:var(--mono);font-size:.6rem;letter-spacing:1px;text-transform:uppercase;
+      color:rgba(242,239,233,.85);transition:color .18s;
+      user-select:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    summary:hover{color:var(--white)}
+    summary .icon{
+      flex-shrink:0;width:22px;height:22px;border-radius:50%;
+      border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+      font-size:.55rem;color:var(--muted);transition:.2s;
+    }
+    details[open] summary .icon{border-color:var(--accent);color:var(--accent);transform:rotate(45deg)}
+    details[open] summary{color:var(--white)}
+    .answer{
+      padding:0 0 20px;font-size:.9rem;line-height:1.75;
+      color:rgba(242,239,233,.6);
+    }
+    .answer strong{color:var(--white)}
+    .answer code{
+      font-family:var(--mono);font-size:.75rem;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+      border-radius:4px;padding:2px 6px;color:rgba(255,255,255,.8);
+    }
+    .answer a{color:var(--accent);text-decoration:none}
+    .answer a:hover{text-decoration:underline}
+    .answer ul{margin:10px 0 0 18px;display:flex;flex-direction:column;gap:6px}
+    .answer .tip{
+      margin-top:12px;padding:10px 14px;border-radius:8px;
+      border:1px solid rgba(232,200,74,.15);background:rgba(232,200,74,.04);
+      font-size:.82rem;color:rgba(232,200,74,.8);
+    }
+    .answer .warn{
+      margin-top:12px;padding:10px 14px;border-radius:8px;
+      border:1px dashed rgba(223,48,48,.25);background:rgba(223,48,48,.04);
+      font-size:.82rem;color:rgba(255,120,120,.8);
+    }
+    [data-theme="light"] .answer{color:rgba(18,18,15,.6)}
+    [data-theme="light"] .answer strong{color:#12120f}
+
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--border);padding:24px 0}
+    .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .foot-copy{font-family:var(--mono);font-size:.45rem;letter-spacing:1px;color:var(--muted)}
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <svg id="navLogo" class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
+        <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+        <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+      </svg>
+      <span class="nav-tag">FAQ</span>
+    </a>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Soporte · Documentación</div>
+    <h1 class="hero-title">PREGUNTAS FRECUENTES</h1>
+    <p class="hero-desc">Respuestas a los problemas más comunes al transmitir en CORILLO.</p>
+  </div>
+</section>
+
+<!-- CATEGORÍA: CONFIGURACIÓN BÁSICA -->
+<section class="cat">
+  <div class="wrap">
+    <div class="cat-label">Primeros pasos</div>
+    <h2 class="cat-title">CONFIGURACIÓN BÁSICA</h2>
+    <div class="faq-list">
+
+      <details>
+        <summary>¿Cuál es el servidor RTMP? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          <strong>Servidor:</strong> <code>rtmp://corillo.live/live</code><br><br>
+          <strong>Stream Key:</strong> tu handle de canal (ej: <code>katatonia</code>, <code>kamikazepr</code>)<br><br>
+          En OBS: <strong>Configuración → Emisión → Tipo: Stream personalizado</strong><br>
+          En Meld Studio: <strong>Settings → Stream Settings</strong>
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Qué bitrate debo usar? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Depende de tu conexión de subida:<br><br>
+          <ul>
+            <li><strong>Puerto Rico / conexión rápida:</strong> 4000–5000 kbps</li>
+            <li><strong>Fuera de Puerto Rico:</strong> 2500–3500 kbps</li>
+            <li><strong>Conexión lenta o inestable:</strong> 2000–2500 kbps</li>
+          </ul>
+          <div class="tip"><i class="fa-solid fa-lightbulb"></i> Regla general: no uses más del 70% de tu velocidad de subida.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Qué configuración de keyframe debo usar? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Siempre usa <strong>Keyframe Interval = 2</strong> (fijo, no automático).<br><br>
+          Esto es crítico para que el HLS funcione correctamente. Un keyframe interval variable causa segmentos irregulares y cortes en el stream.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Desde qué apps puedo transmitir? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Cualquier encoder que soporte RTMP:<br><br>
+          <ul>
+            <li><strong>Meld Studio</strong> — recomendado</li>
+            <li><strong>OBS Studio</strong> — gratis, más opciones avanzadas</li>
+            <li><strong>Streamlabs</strong></li>
+            <li><strong>XSplit</strong></li>
+            <li>Cualquier encoder con salida RTMP personalizada</li>
+          </ul>
+          <a href="/configuracion/">Ver guía completa de OBS y Meld Studio →</a>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORÍA: PROBLEMAS DE CONEXIÓN -->
+<section class="cat">
+  <div class="wrap">
+    <div class="cat-label">Problemas comunes</div>
+    <h2 class="cat-title">EL STREAM SE CORTA</h2>
+    <div class="faq-list">
+
+      <details>
+        <summary>El stream se corta cada pocos minutos <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          El servidor recibe frames con timestamps desordenados y reinicia el muxer HLS. Causas más comunes:<br><br>
+          <ul>
+            <li>El encoder de GPU (Hardware Encoder) genera timestamps inconsistentes</li>
+            <li>Bitrate muy alto para la velocidad de subida disponible</li>
+            <li>Frames perdidos por CPU/GPU saturada</li>
+          </ul>
+          <strong>Solución:</strong>
+          <ul>
+            <li>Desactivar <strong>Hardware Encoder</strong> → usar x264 (software)</li>
+            <li>Bajar el bitrate a 3000 kbps</li>
+            <li>Keyframe interval → 2 fijo</li>
+            <li>Bajar a 30fps si transmites desde lejos del servidor</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Transmito desde fuera de Puerto Rico y el stream es inestable <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          El servidor está en Puerto Rico. Más distancia = más latencia = más probabilidad de que los paquetes lleguen desordenados.<br><br>
+          <strong>Configuración recomendada para conexiones lejanas:</strong>
+          <ul>
+            <li>Desactivar <strong>Hardware Encoder</strong></li>
+            <li>Bitrate: <strong>2500–3000 kbps</strong></li>
+            <li>Frame rate: <strong>30fps</strong></li>
+            <li>Keyframe interval: <strong>2</strong></li>
+          </ul>
+          <div class="tip"><i class="fa-solid fa-lightbulb"></i> x264 (software encoder) maneja mejor las conexiones con alta latencia que los encoders de GPU.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Cómo desactivo el Hardware Encoder en Meld Studio <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          En Meld Studio ve a <strong>Settings → Stream Settings</strong> y desactiva el toggle <strong>"Hardware Encoder"</strong>.<br><br>
+          Al desactivarlo, Meld usa x264 (software) automáticamente — más estable para conexiones con latencia alta.
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation"></i> El Hardware Encoder puede causar el error "DTS not monotonically increasing" que corta el stream cada pocos minutos.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>El stream se ve con retraso o buffering para los viewers <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          CORILLO usa HLS con low-latency mode. El retraso normal es de 3–8 segundos.<br><br>
+          Si hay buffering excesivo:
+          <ul>
+            <li>Bajar el bitrate — puede ser muy alto para la conexión del viewer</li>
+            <li>Verificar que el keyframe interval sea exactamente 2</li>
+            <li>Asegurarse de que el stream llegue estable al servidor (sin cortes)</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORÍA: GENERAL -->
+<section class="cat">
+  <div class="wrap">
+    <div class="cat-label">General</div>
+    <h2 class="cat-title">PREGUNTAS GENERALES</h2>
+    <div class="faq-list">
+
+      <details>
+        <summary>¿Cómo me uno a CORILLO? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Los canales son por invitación y aprobación manual. Llena el formulario en <a href="/join/">corillo.live/join</a> y el host revisa tu solicitud.<br><br>
+          El proceso toma menos de 24 horas.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Es gratis transmitir en CORILLO? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Sí, completamente gratis. CORILLO es una plataforma independiente sin costo para los streamers.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Puedo transmitir en CORILLO y Twitch al mismo tiempo? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Sí. Puedes usar <strong>multistream</strong> en OBS o Meld Studio para transmitir a ambas plataformas simultáneamente.<br><br>
+          En OBS: instala el plugin <strong>obs-multi-rtmp</strong>.<br>
+          En Meld Studio: <strong>Settings → Outputs → Add Output</strong>.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Dónde puedo ver el guía completo de configuración? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          <a href="/configuracion/">corillo.live/configuracion</a> — guía paso a paso para OBS Studio y Meld Studio.
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <span class="foot-copy">© 2025 CORILLO · Plataforma independiente desde Puerto Rico</span>
+      <div style="display:flex;gap:8px">
+        <a class="btn" href="/configuracion/"><i class="fa-solid fa-book-open"></i> Guía OBS</a>
+        <a class="btn" href="/join/"><i class="fa-solid fa-plus"></i> Unirse</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  btn?.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+</script>
+</body>
+</html>
