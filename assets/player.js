@@ -360,4 +360,24 @@ document.addEventListener('visibilitychange', () => {
   });
 })();
 
+// ── GRAIN TOGGLE ──
+(function(){
+  const grainOff = localStorage.getItem('corillo_grain') === 'off';
+  if (grainOff) document.body.classList.add('no-grain');
+  const btn = document.createElement('button');
+  btn.className = 'theme-btn';
+  btn.title = grainOff ? 'Activar efecto de grano' : 'Desactivar efecto de grano';
+  btn.innerHTML = '&#9641;'; // ▩ — grain/texture icon
+  btn.style.fontSize = '.65rem';
+  if (grainOff) btn.style.opacity = '.35';
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.parentNode.insertBefore(btn, themeBtn.nextSibling);
+  btn.addEventListener('click', () => {
+    const nowOff = document.body.classList.toggle('no-grain');
+    localStorage.setItem('corillo_grain', nowOff ? 'off' : 'on');
+    btn.style.opacity = nowOff ? '.35' : '';
+    btn.title = nowOff ? 'Activar efecto de grano' : 'Desactivar efecto de grano';
+  });
+})();
+
 start();
