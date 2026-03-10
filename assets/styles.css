@@ -39,6 +39,30 @@ body::after{
 /* User-toggled grain off */
 body.no-grain::after { display:none }
 
+/* ── Logo animations ── */
+/* Yellow ring: small gap orbiting clockwise (radar sweep) */
+#navLogo circle:nth-of-type(3){
+  stroke-dasharray:113 13;
+  animation:logo-ring-orbit 6s linear infinite;
+}
+@keyframes logo-ring-orbit{to{stroke-dashoffset:-126}}
+
+/* Red dot: sonar ping — expands and fades */
+#navLogo circle:nth-of-type(5){
+  transform-box:fill-box;transform-origin:center;
+  animation:logo-dot-ping 3s ease-out infinite;
+}
+@keyframes logo-dot-ping{
+  0%  {transform:scale(1);opacity:1}
+  55% {transform:scale(2.6);opacity:0}
+  56% {transform:scale(1);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  #navLogo circle:nth-of-type(3){animation:none;stroke-dasharray:none}
+  #navLogo circle:nth-of-type(5){animation:none}
+}
+
 /* ── Live indicator pulse ── */
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
