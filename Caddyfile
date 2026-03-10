@@ -58,3 +58,7 @@ vault.marcossantiago.com {
 uptime.corillo.live {
     reverse_proxy 192.168.8.148:3001
 }
+
+status.corillo.live {
+    redir https://uptime.corillo.live/status/corillo permanent
+}
