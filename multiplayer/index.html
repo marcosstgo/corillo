@@ -138,26 +138,42 @@
     .empty h2{font-family:var(--display);font-size:2rem;letter-spacing:3px;color:rgba(255,255,255,.25);margin:0}
     .empty p{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:0}
 
-    /* ── GRID ── */
+    /* ── GRID — layout: equal (default) ── */
     .gallery{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
     .gallery.count-1{grid-template-columns:1fr}
     .gallery.count-2{grid-template-columns:repeat(2,1fr)}
-    .gallery.count-3{grid-template-columns:repeat(2,1fr)}
+    .gallery.count-3{grid-template-columns:repeat(3,1fr)}
     .gallery.count-4{grid-template-columns:repeat(2,1fr)}
     .gallery.count-5{grid-template-columns:repeat(3,1fr)}
     .gallery.count-6{grid-template-columns:repeat(3,1fr)}
     .gallery.count-7{grid-template-columns:repeat(3,1fr)}
     .gallery.count-8{grid-template-columns:repeat(4,1fr)}
 
-    .gallery.count-3 .stream-card:first-child{grid-column:1/-1}
+    /* layout: focus — primer card ocupa fila completa */
+    .gallery.layout-focus.count-3{grid-template-columns:repeat(2,1fr)}
+    .gallery.layout-focus .stream-card:first-child{grid-column:1/-1}
+
+    /* layout: col — una sola columna */
+    .gallery.layout-col{grid-template-columns:1fr !important}
 
     @media(max-width:768px){
       .gallery,.gallery.count-1,.gallery.count-2,.gallery.count-3,
       .gallery.count-4,.gallery.count-5,.gallery.count-6,.gallery.count-7,.gallery.count-8{
         grid-template-columns:1fr;
       }
-      .gallery.count-3 .stream-card:first-child{grid-column:auto}
     }
+
+    /* ── LAYOUT BUTTONS ── */
+    .layout-btns{display:flex;gap:3px;flex-shrink:0}
+    .layout-btn{
+      width:26px;height:26px;border-radius:5px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.3);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:.55rem;transition:.15s;flex-shrink:0;
+    }
+    .layout-btn.active{border-color:rgba(232,200,74,.4);color:var(--accent);background:rgba(232,200,74,.06)}
+    .layout-btn:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
+    @media(max-width:600px){.layout-btns{display:none}}
 
     /* ── STREAM CARD ── */
     .stream-card{
@@ -274,6 +290,12 @@
     <div class="filter-sep"></div>
     <div class="filter-chips" id="filterChips"></div>
     <span class="filter-count" id="filterCount"></span>
+    <div class="filter-sep"></div>
+    <div class="layout-btns">
+      <button class="layout-btn" id="btnLayoutEq" title="Cuadrícula igual"><i class="fa-solid fa-table-cells"></i></button>
+      <button class="layout-btn" id="btnLayoutFc" title="Destacado"><i class="fa-solid fa-table-cells-large"></i></button>
+      <button class="layout-btn" id="btnLayoutCl" title="Columna"><i class="fa-solid fa-bars"></i></button>
+    </div>
   </div>
 
   <!-- Empty state -->
@@ -459,6 +481,26 @@ function toggleChip(key) {
   }
   updateUI();
 }
+
+// ── LAYOUT ──
+let currentLayout = localStorage.getItem('corillo_multi_layout') || 'equal';
+
+function applyLayout(layout) {
+  currentLayout = layout;
+  localStorage.setItem('corillo_multi_layout', layout);
+  const g = $('gallery');
+  g.classList.remove('layout-focus','layout-col');
+  if (layout === 'focus') g.classList.add('layout-focus');
+  else if (layout === 'col')   g.classList.add('layout-col');
+  $('btnLayoutEq').classList.toggle('active', layout === 'equal');
+  $('btnLayoutFc').classList.toggle('active', layout === 'focus');
+  $('btnLayoutCl').classList.toggle('active', layout === 'col');
+}
+
+$('btnLayoutEq').addEventListener('click', () => applyLayout('equal'));
+$('btnLayoutFc').addEventListener('click', () => applyLayout('focus'));
+$('btnLayoutCl').addEventListener('click', () => applyLayout('col'));
+applyLayout(currentLayout);
 
 $('filterAll').addEventListener('click', () => {
   Object.entries(liveMap).forEach(([key, entry]) => {
