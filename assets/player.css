@@ -169,8 +169,17 @@ header{
 }
 .rail-btn:hover{color:rgba(255,255,255,.6);background:rgba(255,255,255,.04)}
 .rail-label{display:none}
+.rail-icon-wrap{position:relative;display:inline-flex}
 #railIcon{font-size:.55rem;transition:transform .25s ease}
 .content.chat-hidden #railIcon{transform:rotate(180deg)}
+.rail-badge{
+  position:absolute;top:-4px;right:-5px;
+  width:7px;height:7px;border-radius:50%;
+  background:#4ade80;
+  opacity:0;transition:opacity .3s ease;
+  pointer-events:none;
+}
+.rail-badge.show{opacity:1}
 
 /* ── CHAT COLUMN ── */
 .chat-col{

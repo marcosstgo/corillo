@@ -9,6 +9,7 @@ function showChat() {
   chatVisible = true;
   localStorage.setItem('corillo_chat', 'visible');
   $('#content').classList.remove('chat-hidden');
+  if ($('#railBadge')) $('#railBadge').classList.remove('show');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
 }
 
@@ -61,6 +62,10 @@ function addChatMsg(msg) {
   }
   box.appendChild(el);
   if (atBottom) box.scrollTop = box.scrollHeight;
+  // Show badge on rail if chat is hidden and it's a real message
+  if (!chatVisible && msg.type !== 'system') {
+    if ($('#railBadge')) $('#railBadge').classList.add('show');
+  }
 }
 
 function connectWs() {
