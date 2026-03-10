@@ -165,6 +165,7 @@ class Room:
         self.history: list = []    # últimos 50 mensajes (cache en RAM)
         self.last_msg: dict = {}   # websocket → timestamp último mensaje
         self._vision_task = None   # loop de comentarios espontáneos
+        self._last_bot_reply = 0.0 # última vez que el bot habló (greet o @bot)
 
     async def join(self, ws: WebSocket, requested: str = "") -> str:
         await ws.accept()
@@ -282,6 +283,7 @@ async def bot_reply(room: Room, query: str, channel: str = ""):
     except:
         reply = "No pude responder ahora mismo."
 
+    room._last_bot_reply = time.time()
     await room.broadcast({
         "type": "message",
         "user": "CORILLO BOT",
@@ -325,16 +327,18 @@ async def bot_vision_comment(room: Room, channel: str):
     except:
         pass
 
+VISION_INTERVAL = 600  # 10 minutos entre comentarios espontáneos
+
 async def vision_loop(room: Room, channel: str):
-    # Espera inicial antes del primer comentario (2-3 min)
-    await asyncio.sleep(random.uniform(120, 180))
+    # Espera inicial — misma que el intervalo para no pilar encima del saludo
+    await asyncio.sleep(VISION_INTERVAL)
     while len(room.clients) > 0:
         live = await get_live()
         live_keys = {p["name"].removeprefix("live/") for p in live}
-        if channel in live_keys:
+        # Si el bot ya habló en los últimos 10 min (greet o @bot), saltar este ciclo
+        if channel in live_keys and time.time() - room._last_bot_reply >= VISION_INTERVAL:
             await bot_vision_comment(room, channel)
-        # Próximo comentario en 5-9 minutos
-        await asyncio.sleep(random.uniform(300, 540))
+        await asyncio.sleep(VISION_INTERVAL)
 
 # ── STREAMER GREETER ─────────────────────────────────────────────
 STREAMER_NAMES = {
@@ -377,6 +381,7 @@ async def greet_streamer(room: Room, channel: str):
     except:
         greeting = f"¡Wepa {name}, arriba el stream! 🔥"
 
+    room._last_bot_reply = time.time()
     await room.broadcast({
         "type": "message",
         "user": "CORILLO BOT",
