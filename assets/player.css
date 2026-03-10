@@ -224,7 +224,7 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
 .reply-btn{
   display:none;margin-left:6px;
   background:none;border:none;cursor:pointer;
-  font-family:var(--mono);font-size:.42rem;letter-spacing:1px;
+  font-family:var(--mono);font-size:.52rem;letter-spacing:1px;
   color:rgba(145,71,255,.5);padding:0;
   transition:color .15s;
 }
