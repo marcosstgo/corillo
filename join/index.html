@@ -270,7 +270,8 @@
       <div class="contact-title">APLICA AHORA</div>
       <p class="contact-sub">Respondemos a todas las solicitudes en menos de 24 horas.</p>
 
-      <form id="joinForm" style="text-align:left;margin-top:20px">
+      <form id="joinForm" style="text-align:left;margin-top:20px" autocomplete="off">
+        <input id="f-hp" type="text" name="website" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
         <div class="form-grid">
           <div class="field">
             <label for="f-handle">Handle del canal *</label>
@@ -522,6 +523,7 @@ joinForm?.addEventListener('submit', async e => {
         contenido: fContenido.value.trim(),
         plataforma: fPlat.value.trim(),
         mensaje:   fMensaje.value.trim(),
+        hp:        document.getElementById('f-hp').value,
       }),
     });
     if (!res.ok) {

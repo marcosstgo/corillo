@@ -1,7 +1,7 @@
 import os, re, time, json, asyncio, random, base64
 import httpx, anthropic, aiosqlite
 from dotenv import load_dotenv
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from system_prompt import SYSTEM
@@ -54,6 +54,12 @@ class JoinRequest(BaseModel):
     contenido: str
     plataforma: str = ""
     mensaje:   str = ""
+    hp:        str = ""   # honeypot — debe llegar vacío
+
+# Rate limit: max 3 envíos por IP por hora
+_join_rl: dict[str, list] = {}
+JOIN_RL_MAX    = 3
+JOIN_RL_WINDOW = 3600  # segundos
 
 async def get_live():
     """Retorna streams activos. Usa caché de 12s para evitar llamadas redundantes."""
@@ -116,12 +122,34 @@ def health():
     return {"status": "ok"}
 
 @app.post("/join")
-async def submit_join(req: JoinRequest):
+async def submit_join(req: JoinRequest, request: Request):
+    # Honeypot — si el campo hp viene relleno es un bot; fingir éxito
+    if req.hp:
+        return {"ok": True}
+
+    # Rate limit por IP
+    ip = (request.headers.get("x-real-ip")
+          or request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+          or (request.client.host if request.client else "unknown"))
+    now = time.time()
+    hits = [t for t in _join_rl.get(ip, []) if now - t < JOIN_RL_WINDOW]
+    if len(hits) >= JOIN_RL_MAX:
+        raise HTTPException(status_code=429, detail="Demasiados intentos. Intenta más tarde.")
+    hits.append(now)
+    _join_rl[ip] = hits
+
     handle = req.handle.strip().lower()
     if not re.match(r'^[a-z0-9_]{3,24}$', handle):
         raise HTTPException(status_code=400, detail="Handle inválido")
     if not req.nombre.strip() or not req.contenido.strip():
         raise HTTPException(status_code=400, detail="Faltan campos requeridos")
+
+    # Handle duplicado pendiente
+    async with _db.execute(
+        "SELECT id FROM join_requests WHERE handle=? AND status='pending'", (handle,)
+    ) as cur:
+        if await cur.fetchone():
+            raise HTTPException(status_code=409, detail="Este handle ya tiene una solicitud pendiente.")
     await _db.execute(
         "INSERT INTO join_requests (handle, nombre, contenido, plataforma, mensaje, ts) VALUES (?, ?, ?, ?, ?, ?)",
         (handle, req.nombre.strip()[:60], req.contenido.strip()[:120],
