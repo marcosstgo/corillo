@@ -4,390 +4,426 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
-  <title>CORILLO — Únete</title>
-  <meta name="description" content="Crea tu canal en CORILLO en 2 minutos." />
-
+  <title>CORILLO — Únete al crew</title>
+  <meta name="description" content="CORILLO es una plataforma de streaming independiente desde Puerto Rico. Los canales son por invitación. Escríbenos si quieres transmitir." />
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
   <link rel="stylesheet" href="/assets/styles.css">
+
   <style>
-    :root{ --radius:14px; }
     body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+    .wrap{max-width:860px;margin:0 auto;padding:0 20px}
+    @media(max-width:600px){.wrap{padding:0 14px}}
 
-    .container{max-width:1100px;margin:0 auto;padding:22px 18px}
-    @media(max-width:600px){.container{padding:16px 12px}}
-
-    /* ── TOP ── */
-    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-    .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1}
-    .brand span{color:var(--accent)}
-    .title{font-family:var(--display);letter-spacing:2px;font-size:clamp(2rem,5vw,3.2rem);line-height:1;margin-top:4px}
-    .sub{margin-top:8px;color:rgba(255,255,255,.65);max-width:64ch;font-size:.9rem}
-
+    /* ── NAV ── */
+    nav{
+      position:sticky;top:0;z-index:60;
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      background:linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.6));
+      border-bottom:1px solid var(--border);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .brand-svg{width:110px;height:30px}
+    .nav-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--border);padding-left:10px}
+    .nav-right{display:flex;gap:8px;align-items:center}
     .btn{
-      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
-      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.6rem;font-weight:700;
-      padding:10px 14px;border-radius:8px;border:1px solid var(--border);
-      background:transparent;color:rgba(255,255,255,.7);transition:.2s ease;white-space:nowrap;
+      display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.55rem;
+      padding:7px 14px;border-radius:7px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.6);transition:.18s;text-decoration:none;white-space:nowrap;
     }
     .btn:hover{border-color:var(--border-h);color:var(--white)}
-    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent;font-weight:700}
     .btn.primary:hover{opacity:.88}
+    .theme-btn{
+      width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+      background:transparent;color:var(--white);cursor:pointer;
+      display:inline-flex;align-items:center;justify-content:center;
+      font-size:.75rem;transition:.2s;flex-shrink:0;
+    }
+    .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
+    [data-theme="light"] nav{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
+    [data-theme="light"] #navLogo text{fill:#12120f!important}
+    [data-theme="light"] #navLogo circle[stroke="#f2efe9"]{stroke:#12120f!important}
 
-    /* ── GRID ── */
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media(max-width:800px){.grid{grid-template-columns:1fr}}
+    /* ── HERO ── */
+    .hero{padding:64px 0 48px;border-bottom:1px solid var(--border)}
+    .eyebrow{font-family:var(--mono);font-size:.5rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+    .hero-title{font-family:var(--display);font-size:clamp(2.4rem,6vw,4rem);letter-spacing:3px;line-height:1;margin-bottom:18px}
+    .hero-desc{font-size:1rem;line-height:1.7;color:rgba(242,239,233,.6);max-width:52ch;margin-bottom:32px}
+    [data-theme="light"] .hero-desc{color:rgba(18,18,15,.6)}
+
+    /* ── PROCESO ── */
+    .section{padding:48px 0;border-bottom:1px solid var(--border)}
+    .section-label{font-family:var(--mono);font-size:.48rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .section-title{font-family:var(--display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:32px}
+
+    .steps{display:flex;flex-direction:column;gap:0}
+    .step{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--border)}
+    .step:last-child{border-bottom:none}
+    .step-num{font-family:var(--display);font-size:2rem;letter-spacing:2px;color:rgba(232,200,74,.2);flex-shrink:0;width:40px;line-height:1;padding-top:2px}
+    .step-body{flex:1}
+    .step-title{font-family:var(--mono);font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:6px}
+    .step-desc{font-size:.9rem;line-height:1.6;color:rgba(242,239,233,.55)}
+    .step-desc a{color:var(--accent);text-decoration:none}
+    .step-desc a:hover{text-decoration:underline}
+    [data-theme="light"] .step-desc{color:rgba(18,18,15,.6)}
+
+    /* ── CONTACT CTA ── */
+    .contact-box{
+      background:linear-gradient(135deg,rgba(232,200,74,.06),rgba(232,200,74,.02));
+      border:1px solid rgba(232,200,74,.2);border-radius:14px;
+      padding:36px 32px;text-align:center;
+    }
+    @media(max-width:600px){.contact-box{padding:24px 18px}}
+    .contact-title{font-family:var(--display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:10px}
+    .contact-sub{font-size:.9rem;color:rgba(242,239,233,.55);margin-bottom:24px;line-height:1.6}
+    .contact-email{
+      display:inline-flex;align-items:center;gap:10px;
+      font-family:var(--mono);font-size:.75rem;letter-spacing:1.5px;
+      color:var(--accent);background:rgba(232,200,74,.06);
+      border:1px solid rgba(232,200,74,.2);border-radius:8px;
+      padding:12px 20px;text-decoration:none;transition:.2s;
+    }
+    .contact-email:hover{background:rgba(232,200,74,.12);border-color:rgba(232,200,74,.4)}
+    [data-theme="light"] .contact-sub{color:rgba(18,18,15,.55)}
+    [data-theme="light"] .contact-box{background:rgba(255,255,255,.6);border-color:rgba(180,130,0,.25)}
+
+    /* ── GENERADOR (solo aprobados) ── */
+    .gen-section{padding:48px 0}
+    .gen-header{
+      display:flex;align-items:center;gap:12px;margin-bottom:28px;
+    }
+    .approved-badge{
+      font-family:var(--mono);font-size:.45rem;letter-spacing:2px;text-transform:uppercase;
+      background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);
+      color:#4ade80;padding:4px 10px;border-radius:4px;
+    }
+    .gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media(max-width:700px){.gen-grid{grid-template-columns:1fr}}
 
     .card{
-      border:1px solid var(--border);border-radius:var(--radius);
-      background:linear-gradient(to bottom,rgba(18,18,24,.65),rgba(12,12,16,.45));
-      padding:18px;
+      border:1px solid var(--border);border-radius:12px;
+      background:var(--surface);padding:20px;
     }
-    .card h3{
-      font-family:var(--mono);text-transform:uppercase;letter-spacing:2.5px;
-      font-size:11px;color:rgba(255,255,255,.6);margin-bottom:14px;
-      display:flex;align-items:center;gap:8px;
-    }
-    .card h3 .step-num{
-      font-family:var(--display);font-size:1.3rem;color:rgba(232,200,74,.3);letter-spacing:1px;line-height:1;
-    }
-
-    label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin:14px 0 6px}
+    .card-title{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .card-title .num{font-family:var(--display);font-size:1.2rem;color:rgba(232,200,74,.25);letter-spacing:1px;line-height:1}
+    label{display:block;font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin:14px 0 5px}
     label:first-of-type{margin-top:0}
     input[type="text"]{
-      width:100%;padding:11px 12px;border-radius:8px;
-      border:1px solid rgba(255,255,255,.1);
-      background:rgba(0,0,0,.3);color:var(--white);outline:none;font-family:var(--body);font-size:.9rem;
-      transition:border-color .2s;
+      width:100%;padding:10px 12px;border-radius:7px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(0,0,0,.25);color:var(--white);outline:none;
+      font-family:var(--body);font-size:.9rem;transition:border-color .18s;
     }
-    input[type="text"]:focus{border-color:rgba(232,200,74,.4)}
-    input[type="color"]{width:40px;height:36px;border:none;background:none;cursor:pointer;border-radius:6px;padding:0}
+    input[type="text"]:focus{border-color:rgba(232,200,74,.35)}
+    .hint{margin-top:5px;color:rgba(255,255,255,.35);font-size:.78rem}
+    .pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.45rem;letter-spacing:.5px;padding:3px 7px;border-radius:4px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+    .warn{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size:.5rem;display:none}
+    .ok-msg{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px solid rgba(74,222,128,.2);background:rgba(74,222,128,.05);color:#4ade80;font-family:var(--mono);font-size:.5rem;display:none}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px}
 
-    .hint{margin-top:6px;color:rgba(255,255,255,.5);font-size:.8rem}
-    .warn{
-      margin-top:10px;padding:10px 12px;border-radius:10px;
-      border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);
-      color:rgba(255,120,120,.9);font-family:var(--mono);font-size:11px;
-      display:none;
-    }
-    .ok-msg{
-      margin-top:10px;padding:10px 12px;border-radius:10px;
-      border:1px solid rgba(232,200,74,.25);background:rgba(232,200,74,.05);
-      color:rgba(232,200,74,.9);font-family:var(--mono);font-size:11px;
-      display:none;
-    }
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .toggle{display:flex;align-items:center;gap:8px;margin-top:12px;font-size:.85rem;color:rgba(255,255,255,.6)}
-    .toggle input{width:16px;height:16px;accent-color:var(--accent)}
-    .pill{
-      display:inline-flex;align-items:center;gap:5px;
-      font-family:var(--mono);font-size:10px;letter-spacing:1px;
-      padding:5px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
-      color:rgba(255,255,255,.6);
-    }
+    .out{margin-top:16px;border-top:1px solid var(--border);padding-top:16px}
+    .code-wrap{position:relative;margin-top:5px}
+    .code{font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:9px 44px 9px 12px;overflow-x:auto;white-space:nowrap;color:rgba(255,255,255,.75);letter-spacing:.3px}
+    .copy-btn{position:absolute;top:50%;right:6px;transform:translateY(-50%);font-family:var(--mono);font-size:.44rem;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.5);padding:3px 7px;cursor:pointer;transition:.15s}
+    .copy-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
 
-    /* Output */
-    .out{border-top:1px solid var(--border);margin-top:14px;padding-top:14px}
-    .code-wrap{position:relative;margin-top:4px}
-    .code{
-      font-family:var(--mono);font-size:11px;
-      background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:8px;
-      padding:10px 12px;overflow-x:auto;white-space:nowrap;color:rgba(255,255,255,.8);
-      letter-spacing:.3px;
-    }
-    .copy-btn{
-      position:absolute;top:50%;right:8px;transform:translateY(-50%);
-      font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
-      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;
-      color:rgba(255,255,255,.6);padding:4px 8px;cursor:pointer;transition:.2s;
-    }
-    .copy-btn:hover{background:rgba(255,255,255,.12);color:var(--white)}
-
-    /* RTMP instructions */
-    .rtmp-card{
-      margin-top:14px;border:1px solid rgba(232,200,74,.15);border-radius:var(--radius);
-      background:rgba(232,200,74,.03);padding:16px;
-    }
-    .rtmp-card h4{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(232,200,74,.7);margin-bottom:12px}
-    .rtmp-item{margin-bottom:12px}
-    .rtmp-item:last-child{margin-bottom:0}
-    .rtmp-item label{margin:0 0 4px;display:block}
-    .rtmp-note{margin-top:8px;font-size:.78rem;color:rgba(255,255,255,.45)}
+    .rtmp-block{margin-top:16px;border:1px solid rgba(232,200,74,.12);border-radius:10px;background:rgba(232,200,74,.025);padding:16px;display:none}
+    .rtmp-title{font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(232,200,74,.6);margin-bottom:12px}
+    .rtmp-note{margin-top:10px;font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.6}
+    .rtmp-note a{color:rgba(232,200,74,.7);text-decoration:none}
+    .rtmp-note a:hover{text-decoration:underline}
 
     [data-theme="light"] .card{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
-    [data-theme="light"] .sub{color:rgba(0,0,0,.6)}
+    [data-theme="light"] input[type="text"]{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:#12120f}
+    [data-theme="light"] .code{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);color:rgba(18,18,15,.75)}
+    [data-theme="light"] .hint{color:rgba(18,18,15,.4)}
+    [data-theme="light"] .rtmp-block{background:rgba(180,130,0,.03);border-color:rgba(180,130,0,.15)}
 
-    /* Reservation notice */
-    .reserved-note{
-      margin-top:12px;padding:10px 12px;border-radius:8px;
-      border:1px dashed rgba(255,255,255,.12);background:rgba(255,255,255,.02);
-      font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.5px;
-    }
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--border);padding:24px 0}
+    .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .foot-copy{font-family:var(--mono);font-size:.45rem;letter-spacing:1px;color:var(--muted)}
+    hr{border:none;border-top:1px solid var(--border);margin:0}
   </style>
 </head>
 <body>
-<div class="container">
 
-  <!-- TOP -->
-  <div class="top">
-    <div>
-      <a href="/" class="brand">C<span>O</span>RILLO</a>
-      <div class="title">ÚNETE A CORILLO</div>
-      <div class="sub">Tu canal en 2 minutos. Genera tus links y compártelos con el host para que te asigne tu stream key. El streaming lo haces con OBS u otro encoder RTMP.</div>
-    </div>
-    <div class="row">
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <svg id="navLogo" class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
+        <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+        <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+      </svg>
+      <span class="nav-tag">Únete</span>
+    </a>
+    <div class="nav-right">
       <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
-      <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
-      <a class="btn" href="/katatonia/"><i class="fa-solid fa-play"></i> Player</a>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
     </div>
   </div>
+</nav>
 
-  <!-- MAIN GRID -->
-  <div class="grid">
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Plataforma independiente · Puerto Rico</div>
+    <h1 class="hero-title">ÚNETE AL CREW</h1>
+    <p class="hero-desc">
+      CORILLO es una plataforma pequeña e independiente. Los canales se aprueban
+      manualmente para mantener la comunidad que hemos construido.
+      No es un registro automático — es una conversación.
+    </p>
+    <a href="mailto:hello@marcossantiago.com" class="contact-email">
+      <i class="fa-solid fa-envelope"></i> hello@marcossantiago.com
+    </a>
+  </div>
+</section>
 
-    <!-- PASO 1 -->
-    <div class="card">
-      <h3><span class="step-num">01</span> Tu handle de canal</h3>
-
-      <label for="handle">Handle (URL)</label>
-      <input id="handle" type="text" placeholder="ej: katatonia, mira_sangano, 404" autocomplete="off" spellcheck="false" maxlength="24" />
-      <div class="hint">Solo: <span class="pill">a-z</span> <span class="pill">0-9</span> <span class="pill">_</span> · 3–24 caracteres</div>
-      <div class="warn" id="handleWarn"></div>
-
-      <label for="accent">Color de acento</label>
-      <div class="row">
-        <input id="accent" type="text" value="#e8c84a" style="max-width:140px" />
-        <input id="accentPick" type="color" value="#e8c84a" title="Elige color" />
-        <span class="pill" style="font-size:9px;">Referencia visual</span>
+<!-- ── PROCESO ── -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-label">El proceso</div>
+    <h2 class="section-title">CÓMO FUNCIONA</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Escríbenos</div>
+          <p class="step-desc">
+            Manda un mensaje a <a href="mailto:hello@marcossantiago.com">hello@marcossantiago.com</a>
+            con tu nombre de usuario, qué tipo de contenido haces y en qué plataforma transmites actualmente.
+            No hay formulario, no hay requisitos formales — solo queremos conocerte.
+          </p>
+        </div>
       </div>
-
-      <div class="toggle">
-        <input id="useTwitch" type="checkbox" checked />
-        <label for="useTwitch">Mostrar botón de Twitch en el player</label>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">El host revisa</div>
+          <p class="step-desc">
+            Katatonia, el host del proyecto, revisa cada solicitud personalmente.
+            Buscamos streamers que quieran ser parte de una comunidad, no solo tener otro canal.
+            Respondemos a todos.
+          </p>
+        </div>
       </div>
-
-      <div class="row" style="margin-top:16px">
-        <button class="btn primary" id="buildBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar</button>
-        <button class="btn" id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Limpiar</button>
-      </div>
-
-      <div class="reserved-note">
-        Handles reservados: <strong>join, assets, katatonia, mediamtx-api, live, api, admin, static</strong>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Te enviamos tu configuración</div>
+          <p class="step-desc">
+            Si eres aprobado, te llegará tu stream key y las instrucciones para conectar OBS o Meld Studio.
+            Tu canal queda en vivo en <strong>corillo.live/{tu-handle}</strong>.
+            El proceso toma menos de 24 horas.
+          </p>
+        </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- PASO 2 -->
-    <div class="card">
-      <h3><span class="step-num">02</span> Tus links y configuración</h3>
+<hr>
 
-      <div class="ok-msg" id="okMsg"><i class="fa-solid fa-circle-check"></i>&nbsp; Listo. Copia tus links y envíalos al host.</div>
+<!-- ── CONTACT BOX ── -->
+<section class="section" style="border-bottom:none">
+  <div class="wrap">
+    <div class="contact-box">
+      <div class="contact-title">¿LISTO?</div>
+      <p class="contact-sub">Un correo es todo lo que necesitas.<br>Sin formularios, sin esperas largas.</p>
+      <a href="mailto:hello@marcossantiago.com" class="contact-email">
+        <i class="fa-solid fa-paper-plane"></i> hello@marcossantiago.com
+      </a>
+    </div>
+  </div>
+</section>
 
-      <div class="out">
+<hr>
 
-        <label>Player horizontal (16:9)</label>
-        <div class="code-wrap">
-          <div class="code" id="playerH">—</div>
-          <button class="copy-btn" data-target="playerH">Copiar</button>
-        </div>
+<!-- ── GENERADOR DE CONFIGURACIÓN (solo aprobados) ── -->
+<section class="gen-section">
+  <div class="wrap">
+    <div class="gen-header">
+      <div>
+        <div class="section-label">Solo si ya fuiste aprobado</div>
+        <h2 class="section-title" style="margin-bottom:0">GENERA TU CONFIGURACIÓN</h2>
+      </div>
+      <span class="approved-badge"><i class="fa-solid fa-circle-check"></i> Aprobado</span>
+    </div>
 
-        <label>Player vertical (9:16)</label>
-        <div class="code-wrap">
-          <div class="code" id="playerV">—</div>
-          <button class="copy-btn" data-target="playerV">Copiar</button>
-        </div>
+    <div class="gen-grid">
+      <!-- Handle -->
+      <div class="card">
+        <div class="card-title"><span class="num">01</span> Tu handle de canal</div>
 
-        <label>URL HLS (para verificar en VLC / OBS)</label>
-        <div class="code-wrap">
-          <div class="code" id="hlsUrl">—</div>
-          <button class="copy-btn" data-target="hlsUrl">Copiar</button>
-        </div>
+        <label for="handle">Handle (URL del canal)</label>
+        <input id="handle" type="text" placeholder="ej: kamikazepr, mira_sanganooo" autocomplete="off" spellcheck="false" maxlength="24" />
+        <div class="hint">Solo: <span class="pill">a-z</span> <span class="pill">0-9</span> <span class="pill">_</span> · 3–24 caracteres</div>
+        <div class="warn" id="handleWarn"></div>
 
-        <label>Twitch (si aplica)</label>
-        <div class="code-wrap">
-          <div class="code" id="twitchUrl">—</div>
-          <button class="copy-btn" data-target="twitchUrl">Copiar</button>
-        </div>
-
-        <div class="row" style="margin-top:14px">
-          <button class="btn primary" id="copyAllBtn"><i class="fa-solid fa-copy"></i> Copiar todo</button>
+        <div class="row">
+          <button class="btn primary" id="buildBtn"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar</button>
+          <button class="btn" id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Limpiar</button>
         </div>
       </div>
 
-      <!-- RTMP CONFIG -->
-      <div class="rtmp-card" id="rtmpCard" style="display:none">
-        <h4><i class="fa-solid fa-tower-broadcast"></i>&nbsp; Configuración OBS / Encoder RTMP</h4>
+      <!-- Output -->
+      <div class="card">
+        <div class="card-title"><span class="num">02</span> Links y configuración</div>
 
-        <div class="rtmp-item">
+        <div class="ok-msg" id="okMsg"><i class="fa-solid fa-circle-check"></i>&nbsp; Listo. Comparte estos datos con el host.</div>
+
+        <div class="out">
+          <label>Player (16:9)</label>
+          <div class="code-wrap">
+            <div class="code" id="playerH">—</div>
+            <button class="copy-btn" data-target="playerH">Copiar</button>
+          </div>
+
+          <label>HLS URL (verificar en VLC)</label>
+          <div class="code-wrap">
+            <div class="code" id="hlsUrl">—</div>
+            <button class="copy-btn" data-target="hlsUrl">Copiar</button>
+          </div>
+        </div>
+
+        <div class="rtmp-block" id="rtmpCard">
+          <div class="rtmp-title"><i class="fa-solid fa-tower-broadcast"></i>&nbsp; OBS / Encoder RTMP</div>
+
           <label>Servidor RTMP</label>
           <div class="code-wrap">
             <div class="code" id="rtmpServer">rtmp://corillo.live/live</div>
             <button class="copy-btn" data-target="rtmpServer">Copiar</button>
           </div>
-        </div>
 
-        <div class="rtmp-item">
-          <label>Stream Key (te la asigna el host)</label>
+          <label>Stream Key</label>
           <div class="code-wrap">
             <div class="code" id="rtmpKey">—</div>
             <button class="copy-btn" data-target="rtmpKey">Copiar</button>
           </div>
-        </div>
 
-        <div class="rtmp-note">
-          En OBS: <strong>Configuración → Emisión → Tipo: Stream personalizado</strong><br>
-          Pega el servidor y el stream key. El host te confirmará que puedes empezar.<br>
-          Para vertical (9:16): stream key es <code id="rtmpKeyV">—</code><br><br>
-          <a href="/configuracion/" style="color:rgba(232,200,74,.8);text-decoration:none;font-family:var(--mono);font-size:10px;letter-spacing:1px;">
-            <i class="fa-solid fa-book-open"></i>&nbsp; Ver guía completa de OBS & Meld Studio →
-          </a>
+          <div class="rtmp-note">
+            En OBS: <strong>Configuración → Emisión → Tipo: Stream personalizado</strong><br>
+            <a href="/configuracion/">Ver guía completa de OBS y Meld Studio →</a>
+          </div>
         </div>
       </div>
-
     </div>
   </div>
-</div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <span class="foot-copy">© 2025 CORILLO · Plataforma independiente desde Puerto Rico</span>
+      <a class="btn" href="/configuracion/"><i class="fa-solid fa-book-open"></i> Guía OBS</a>
+    </div>
+  </div>
+</footer>
 
 <script>
-// ── DARK/LIGHT THEME ──
 (function(){
   const root = document.documentElement;
   const btn  = document.getElementById('themeBtn');
   const saved = localStorage.getItem('corillo-theme') || 'dark';
   root.setAttribute('data-theme', saved);
-  if (btn) btn.addEventListener('click', () => {
+  btn?.addEventListener('click', () => {
     const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
     localStorage.setItem('corillo-theme', next);
   });
 })();
 
-const $ = (s, el=document) => el.querySelector(s);
+const $ = s => document.querySelector(s);
 
 const RESERVED = new Set([
-  'join','assets','mediamtx-api','live','api',
-  'static','admin','robots','sitemap','favicon','index','stream',
-  'dual','multiplayer','configuracion','roadmap','dmca','legal','streamer-pro',
-  'katatonia','tea','mira_sanganooo','404','elbala','marcos','pataecabra'
+  'join','assets','mediamtx-api','live','api','static','admin','robots',
+  'sitemap','favicon','index','stream','dual','multiplayer','configuracion',
+  'roadmap','dmca','legal','streamer-pro','player',
+  'katatonia','tea','mira_sanganooo','404','elbala','marcos','pataecabra',
+  'streamerpro','radblaster','elhermanoquiles','xxdur3xx','kamikazepr'
 ]);
 
 function sanitize(raw) {
-  return (raw || '').trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+  return (raw||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
 }
-
 function validate(h) {
-  if (!h)          return 'Escribe un handle.';
+  if (!h)           return 'Escribe un handle.';
   if (h.length < 3) return 'Mínimo 3 caracteres.';
-  if (h.length > 24) return 'Máximo 24 caracteres.';
-  if (RESERVED.has(h)) return 'Este handle está reservado. Elige otro.';
+  if (h.length > 24)return 'Máximo 24 caracteres.';
+  if (RESERVED.has(h)) return 'Este handle está reservado.';
   if (/__/.test(h)) return 'Evita guiones bajos dobles.';
   return '';
 }
-
 function setWarn(msg) {
   const w = $('#handleWarn');
   w.style.display = msg ? 'block' : 'none';
   w.textContent   = msg;
 }
 
-// Color sync
-$('#accentPick').addEventListener('input', e => $('#accent').value = e.target.value);
-$('#accent').addEventListener('input', e => {
-  const v = e.target.value.trim();
-  if (/^#[0-9a-fA-F]{6}$/.test(v)) $('#accentPick').value = v;
-});
-
-// Handle sanitize live
 $('#handle').addEventListener('input', e => {
   const s = sanitize(e.target.value);
   if (s !== e.target.value) e.target.value = s;
   setWarn(validate(s));
 });
 
-// Build
 function build() {
-  const h   = sanitize($('#handle').value);
+  const h = sanitize($('#handle').value);
   $('#handle').value = h;
   const err = validate(h);
   setWarn(err);
   if (err) return;
 
   const base = location.origin;
-  const pH  = `${base}/${encodeURIComponent(h)}/?mode=horizontal`;
-  const pV  = `${base}/${encodeURIComponent(h)}/?mode=vertical`;
-  const hls = `${base}/live/${encodeURIComponent(h)}/index.m3u8`;
-  const tw  = `https://twitch.tv/${encodeURIComponent(h)}`;
-
-  $('#playerH').textContent  = pH;
-  $('#playerV').textContent  = pV;
-  $('#hlsUrl').textContent   = hls;
-  $('#twitchUrl').textContent = tw;
-
-  // RTMP
-  $('#rtmpKey').textContent  = h;
-  $('#rtmpKeyV').textContent = h + '-vertical';
+  $('#playerH').textContent = `${base}/${encodeURIComponent(h)}/`;
+  $('#hlsUrl').textContent  = `${base}/live/${encodeURIComponent(h)}/index.m3u8`;
+  $('#rtmpKey').textContent = h;
   $('#rtmpCard').style.display = 'block';
   $('#okMsg').style.display    = 'flex';
 }
 
 $('#buildBtn').addEventListener('click', build);
-
 $('#handle').addEventListener('keydown', e => { if (e.key === 'Enter') build(); });
 
 $('#resetBtn').addEventListener('click', () => {
-  $('#handle').value        = '';
-  $('#accent').value        = '#e8c84a';
-  $('#accentPick').value    = '#e8c84a';
-  $('#useTwitch').checked   = true;
+  $('#handle').value = '';
   setWarn('');
   $('#okMsg').style.display    = 'none';
   $('#rtmpCard').style.display = 'none';
-  ['playerH','playerV','hlsUrl','twitchUrl','rtmpKey'].forEach(id => $(('#' + id)).textContent = '—');
-  $('#rtmpKeyV').textContent = '—';
+  ['playerH','hlsUrl','rtmpKey'].forEach(id => document.getElementById(id).textContent = '—');
 });
 
-// Individual copy buttons
 document.querySelectorAll('.copy-btn').forEach(btn => {
   btn.addEventListener('click', async () => {
-    const target = btn.dataset.target;
-    const text   = $(('#' + target))?.textContent?.trim();
+    const text = document.getElementById(btn.dataset.target)?.textContent?.trim();
     if (!text || text === '—') return;
     try {
       await navigator.clipboard.writeText(text);
       const orig = btn.textContent;
-      btn.textContent = '✓ Copiado';
+      btn.textContent = '✓';
       setTimeout(() => btn.textContent = orig, 1200);
-    } catch {
-      alert('Copia manualmente: ' + text);
-    }
+    } catch { alert('Copia manualmente: ' + text); }
   });
-});
-
-// Copy all
-$('#copyAllBtn').addEventListener('click', async () => {
-  const lines = [
-    '── CORILLO Links ──',
-    'Player (H):  ' + $('#playerH').textContent,
-    'Player (V):  ' + $('#playerV').textContent,
-    'HLS URL:     ' + $('#hlsUrl').textContent,
-    'Twitch:      ' + $('#twitchUrl').textContent,
-    '',
-    '── OBS / RTMP ──',
-    'Servidor:    ' + $('#rtmpServer').textContent,
-    'Stream Key:  ' + $('#rtmpKey').textContent,
-    'Key Vertical:' + $('#rtmpKeyV').textContent,
-  ].join('\n');
-  try {
-    await navigator.clipboard.writeText(lines);
-    $('#copyAllBtn').innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
-    setTimeout(() => $('#copyAllBtn').innerHTML = '<i class="fa-solid fa-copy"></i> Copiar todo', 1400);
-  } catch {
-    alert('Portapapeles bloqueado. Copia manualmente.');
-  }
 });
 </script>
 </body>
