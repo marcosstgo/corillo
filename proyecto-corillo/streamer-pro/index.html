@@ -446,9 +446,21 @@
       </article>
 
       <article class="card">
+        <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-globe"></i></div>
+        <h3 class="feat-title" data-t="f3_title">Online Sources</h3>
+        <p class="feat-desc" data-t="f3_desc">Relay or rebroadcast any stream URL — YouTube, Twitch, or any HTTP/RTMP source. Pull it in and push it to your destination with full quality control.</p>
+      </article>
+
+      <article class="card">
         <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-folder-open"></i></div>
-        <h3 class="feat-title" data-t="f3_title">Flexible Source Modes</h3>
-        <p class="feat-desc" data-t="f3_desc">Stream from an online URL, a single local file, or a full folder playlist. Wait Mode holds the stream open until new videos appear — no manual restarts.</p>
+        <h3 class="feat-title" data-t="f11_title">Folder Playlist</h3>
+        <p class="feat-desc" data-t="f11_desc">Point to a local folder and stream all videos as a playlist. Supports Loop, Shuffle, Wait Mode (holds the stream until new files appear), and Highlight Mode.</p>
+      </article>
+
+      <article class="card">
+        <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-file-video"></i></div>
+        <h3 class="feat-title" data-t="f12_title">Single Local File</h3>
+        <p class="feat-desc" data-t="f12_desc">Stream a single video file directly — no playlist setup needed. Load the file and go live instantly. Ideal for events, presentations, or one-off broadcasts.</p>
       </article>
 
       <article class="card">
@@ -857,8 +869,12 @@ const STRINGS = {
     f1_desc:           'Stream simultaneously or selectively to Corillo, Twitch, Kick, YouTube, or any custom RTMP endpoint. One interface, multiple destinations.',
     f2_title:          'Built-in FFmpeg Engine',
     f2_desc:           'FFmpeg and FFprobe are bundled directly with the app. No external installs, no PATH configuration — everything works out of the box.',
-    f3_title:          'Flexible Source Modes',
-    f3_desc:           'Stream from an online URL, a single local file, or a full folder playlist. Wait Mode holds the stream open until new videos appear — no manual restarts.',
+    f3_title:          'Online Sources',
+    f3_desc:           'Relay or rebroadcast any stream URL — YouTube, Twitch, or any HTTP/RTMP source. Pull it in and push it to your destination with full quality control.',
+    f11_title:         'Folder Playlist',
+    f11_desc:          'Point to a local folder and stream all videos as a playlist. Supports Loop, Shuffle, Wait Mode (holds the stream until new files appear), and Highlight Mode.',
+    f12_title:         'Single Local File',
+    f12_desc:          'Stream a single video file directly — no playlist setup needed. Load the file and go live instantly. Ideal for events, presentations, or one-off broadcasts.',
     f4_title:          'Random + Loop Playlist Mode',
     f4_desc:           'Randomize your playlist order or loop continuously — perfect for automated 24/7 channels or looping highlight reels without any manual intervention.',
     f5_title:          'Quality Profiles',
@@ -955,8 +971,12 @@ const STRINGS = {
     f1_desc:           'Transmite a Corillo, Twitch, Kick, YouTube o cualquier endpoint RTMP personalizado. Una sola interfaz, múltiples destinos.',
     f2_title:          'Motor FFmpeg Integrado',
     f2_desc:           'FFmpeg y FFprobe vienen incluidos en la app. Sin instalaciones externas, sin configuración de PATH — funciona desde el primer momento.',
-    f3_title:          'Modos de Fuente Flexibles',
-    f3_desc:           'Transmite desde una URL online, un archivo local o una playlist de carpeta. Modo espera mantiene el stream abierto hasta que aparezcan nuevos videos — sin reinicios manuales.',
+    f3_title:          'Fuentes Online',
+    f3_desc:           'Retransmite cualquier URL de stream — YouTube, Twitch o cualquier fuente HTTP/RTMP. Capturala y envíala a tu destino con control total de calidad.',
+    f11_title:         'Playlist desde Carpeta',
+    f11_desc:          'Apunta a una carpeta local y transmite todos los videos como playlist. Incluye Loop, Random, Modo espera (mantiene el stream hasta que aparezcan nuevos archivos) y Modo Highlight.',
+    f12_title:         'Archivo Local Individual',
+    f12_desc:          'Transmite un solo archivo de video directamente — sin configurar playlist. Carga el archivo y sal en vivo al instante. Ideal para eventos, presentaciones o transmisiones únicas.',
     f4_title:          'Modo Random + Loop',
     f4_desc:           'Reproduce el playlist en orden aleatorio o en bucle continuo — ideal para canales automatizados 24/7 o highlights en loop sin intervención manual.',
     f5_title:          'Perfiles de Calidad',
