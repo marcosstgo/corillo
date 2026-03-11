@@ -544,7 +544,7 @@
         <ul class="tech-list">
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech1">Windows desktop app built with <strong>C# / .NET (WPF)</strong> in Visual Studio 2022.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech2">Uses <strong>FFmpeg</strong> to encode and stream video and audio to RTMP endpoints via the standard RTMP protocol.</span></li>
-          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech3">Supports folder-based playlists by dynamically generating <strong>FFmpeg concat playlist</strong> files.</span></li>
+          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech3">Folder playlist mode uses <strong>FFmpeg concat</strong> files. Highlight Mode uses a <strong>dual-process MPEG-TS pipe</strong> — a permanent streamer process keeps the RTMP connection alive while a per-clip supplier feeds data through a C# relay.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech4">Ships with <code class="mono-inline">ffmpeg.exe</code> and <code class="mono-inline">ffprobe.exe</code> bundled next to the executable — no external install needed.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech5">Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech6">UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.</span></li>
@@ -628,49 +628,38 @@
 
   <!-- ── PLATFORM SECTION ── -->
   <section class="section" id="platforms" aria-labelledby="plat-heading">
-    <div class="section-label" aria-hidden="true" data-t="plat_label">Coming Soon</div>
+    <div class="section-label" aria-hidden="true" data-t="plat_label">Platforms</div>
     <h2 class="section-title" id="plat-heading" data-t="plat_title">PLATFORM PRESETS</h2>
-    <p class="section-sub" data-t="plat_sub">Future versions of Streamer Pro will include one-click presets for the most popular RTMP platforms. Select your destination, enter your stream key, and go live — no URL lookup needed.</p>
+    <p class="section-sub" data-t="plat_sub">Streamer Pro includes built-in presets for the most popular RTMP platforms. Select your destination from the dropdown, enter your stream key, and go live — no URL lookup needed.</p>
 
-    <!-- Preview concept — feature not yet implemented -->
     <div class="plat-cs-wrap">
-
-      <!-- Coming Soon overlay -->
-      <div class="plat-cs-overlay" aria-label="Coming soon">
-        <div class="plat-cs-tag">
-          <i class="fa-regular fa-clock" aria-hidden="true"></i>
-          <span data-t="plat_cs_tag">Coming Soon</span>
-        </div>
-      </div>
-
-      <!-- Dimmed platform rows (preview concept only) -->
-      <div class="plat-preview-rows" aria-hidden="true">
+      <div class="plat-preview-rows">
         <div class="platform-note" data-t="plat_note">Destination = RTMP Base URL + Stream Key</div>
         <div class="platforms-list">
           <div class="platform-row">
             <div class="plat-name">CORILLO</div>
             <div class="plat-url">rtmp://corillo.live/live/</div>
-            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+            <span class="plat-badge builtin" data-t="badge_builtin">Built-in</span>
           </div>
           <div class="platform-row">
             <div class="plat-name">TWITCH</div>
             <div class="plat-url">rtmp://live.twitch.tv/app/</div>
-            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
-          </div>
-          <div class="platform-row">
-            <div class="plat-name">KICK</div>
-            <div class="plat-url">rtmp://ingest.kick.com/live/</div>
-            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+            <span class="plat-badge builtin" data-t="badge_builtin">Built-in</span>
           </div>
           <div class="platform-row">
             <div class="plat-name">YOUTUBE</div>
-            <div class="plat-url">rtmp://a.rtmp.youtube.com/live2</div>
-            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+            <div class="plat-url">rtmp://a.rtmp.youtube.com/live2/</div>
+            <span class="plat-badge builtin" data-t="badge_builtin">Built-in</span>
+          </div>
+          <div class="platform-row">
+            <div class="plat-name">KICK</div>
+            <div class="plat-url" data-t="kick_url_note">Personal ingest URL from Kick dashboard</div>
+            <span class="plat-badge custom" data-t="badge_custom">Custom</span>
           </div>
           <div class="platform-row">
             <div class="plat-name" data-t="plat_custom_label">CUSTOM RTMP</div>
             <div class="plat-url" data-t="plat_custom_url">Any RTMP endpoint — editable base URL</div>
-            <span class="plat-badge planned" data-t="badge_planned">Planned</span>
+            <span class="plat-badge custom" data-t="badge_custom">Custom</span>
           </div>
         </div>
         <div class="platform-formula">
@@ -678,13 +667,6 @@
           <span data-t="plat_formula">RTMP Base URL <strong style="color:rgba(255,255,255,.35)">+</strong> Your Stream Key</span>
         </div>
       </div>
-
-    </div>
-
-    <!-- Clarification note -->
-    <div class="plat-cs-info">
-      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-      <span data-t="plat_cs_note">Currently, the RTMP destination URL is entered manually in the app. Platform presets with auto-filled URLs will be available in a future update.</span>
     </div>
   </section>
 
@@ -897,7 +879,7 @@ const STRINGS = {
     tech_stack_label:  'Stack &amp; Architecture',
     tech1:             'Windows desktop app built with <strong>C# / .NET (WPF)</strong> in Visual Studio 2022.',
     tech2:             'Uses <strong>FFmpeg</strong> to encode and stream video and audio to RTMP endpoints via the standard RTMP protocol.',
-    tech3:             'Supports folder-based playlists by dynamically generating <strong>FFmpeg concat playlist</strong> files.',
+    tech3:             'Folder playlist mode uses <strong>FFmpeg concat</strong> files. Highlight Mode uses a <strong>dual-process MPEG-TS pipe</strong> — a permanent streamer process keeps the RTMP connection alive while a per-clip supplier feeds data through a C# relay.',
     tech4:             'Ships with <code class="mono-inline">ffmpeg.exe</code> and <code class="mono-inline">ffprobe.exe</code> bundled next to the executable — no external install needed.',
     tech5:             'Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.',
     tech6:             'UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.',
@@ -917,11 +899,10 @@ const STRINGS = {
     uc5_desc:          'Loop waiting room videos, promotional content, or branded playlists through a simple, reliable stream.',
     uc6_title:         'Small Teams',
     uc6_desc:          'For teams that need "set it and run" streaming — minimal setup, maximum reliability, no technical expertise required.',
-    plat_label:        'Coming Soon',
+    plat_label:        'Platforms',
     plat_title:        'PLATFORM PRESETS',
-    plat_sub:          'Future versions of Streamer Pro will include one-click presets for the most popular RTMP platforms. Select your destination, enter your stream key, and go live — no URL lookup needed.',
-    plat_cs_tag:       'Coming Soon',
-    plat_cs_note:      'Currently, the RTMP destination URL is entered manually in the app. Platform presets with auto-filled URLs will be available in a future update.',
+    plat_sub:          'Streamer Pro includes built-in presets for the most popular RTMP platforms. Select your destination from the dropdown, enter your stream key, and go live — no URL lookup needed.',
+    kick_url_note:     'Personal ingest URL from Kick dashboard',
     plat_note:         'Destination = RTMP Base URL + Stream Key',
     plat_custom_label: 'CUSTOM RTMP',
     plat_custom_url:   'Any RTMP endpoint — editable base URL',
@@ -999,7 +980,7 @@ const STRINGS = {
     tech_stack_label:  'Stack y Arquitectura',
     tech1:             'Aplicación de escritorio para Windows construida en <strong>C# / .NET (WPF)</strong> con Visual Studio 2022.',
     tech2:             'Usa <strong>FFmpeg</strong> para codificar video y audio, y luego transmite a los endpoints RTMP mediante el protocolo estándar.',
-    tech3:             'Soporta playlists por carpeta generando dinámicamente archivos de <strong>playlist concat de FFmpeg</strong>.',
+    tech3:             'El modo playlist usa archivos <strong>concat de FFmpeg</strong>. El Modo Highlight usa un <strong>pipe MPEG-TS de dos procesos</strong> — un proceso streamer permanente mantiene la conexión RTMP viva mientras un supplier por clip alimenta datos a través de un relay en C#.',
     tech4:             'Incluye <code class="mono-inline">ffmpeg.exe</code> y <code class="mono-inline">ffprobe.exe</code> junto al ejecutable — sin necesidad de instalación externa.',
     tech5:             'La lista de fuentes y configuración se guardan en un <strong>archivo JSON editable bajo <code class="mono-inline">%AppData%</code></strong> para portabilidad por usuario.',
     tech6:             'La interfaz permanece completamente responsiva durante el streaming gracias al <strong>manejo async de procesos</strong> y tokens de cancelación.',
@@ -1019,11 +1000,10 @@ const STRINGS = {
     uc5_desc:          'Reproduce videos de sala de espera, contenido promocional o playlists de marca con un stream simple y confiable.',
     uc6_title:         'Equipos Pequeños',
     uc6_desc:          'Para equipos que necesitan streaming tipo "configúralo y funciona" — configuración mínima, máxima confiabilidad.',
-    plat_label:        'Próximamente',
+    plat_label:        'Plataformas',
     plat_title:        'PRESETS DE PLATAFORMA',
-    plat_sub:          'Las próximas versiones de Streamer Pro incluirán presets de un clic para las plataformas RTMP más populares. Selecciona tu destino, ingresa tu stream key y sal en vivo — sin buscar URLs.',
-    plat_cs_tag:       'Próximamente',
-    plat_cs_note:      'Por el momento, la URL de destino RTMP se ingresa manualmente en la app. Los presets de plataforma con URLs pre-configuradas estarán disponibles en una futura actualización.',
+    plat_sub:          'Streamer Pro incluye presets integrados para las plataformas RTMP más populares. Selecciona tu destino en el menú, ingresa tu stream key y sal en vivo — sin buscar URLs.',
+    kick_url_note:     'URL de ingest personal desde el dashboard de Kick',
     plat_note:         'Destino = URL Base RTMP + Stream Key',
     plat_custom_label: 'RTMP PERSONALIZADO',
     plat_custom_url:   'Cualquier endpoint RTMP — URL base editable',
