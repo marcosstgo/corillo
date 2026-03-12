@@ -221,6 +221,17 @@
     .stream-card:hover .play-icon{opacity:1}
     .play-icon i{font-size:2.5rem;color:rgba(255,255,255,.9);filter:drop-shadow(0 2px 8px rgba(0,0,0,.6))}
 
+    .vol-btn{
+      position:absolute;bottom:10px;left:10px;z-index:4;
+      display:flex;align-items:center;justify-content:center;
+      width:28px;height:28px;border-radius:50%;border:none;
+      background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+      color:rgba(255,255,255,.45);font-size:.65rem;
+      cursor:pointer;transition:color .15s,background .15s,transform .1s;
+    }
+    .vol-btn:hover{background:rgba(0,0,0,.8);color:var(--white);transform:scale(1.1)}
+    .vol-btn.active{color:var(--accent);background:rgba(232,200,74,.18);border:1px solid rgba(232,200,74,.3)}
+
     .card-foot{
       display:flex;align-items:center;gap:10px;padding:10px 12px;
       border-top:1px solid var(--border);
@@ -319,11 +330,12 @@ const CACHE_MS       = 8000;
 const API_TIMEOUT_MS = 5000;
 const $              = id => document.getElementById(id);
 
-let cache        = { t:0, data:null };
-let hlsMap       = {};  // key → Hls instance
-let liveMap      = {};  // key → { streamer, viewers }
-let selectedKeys = new Set();
-let pollTimer    = null;
+let cache          = { t:0, data:null };
+let hlsMap         = {};  // key → Hls instance
+let liveMap        = {};  // key → { streamer, viewers }
+let selectedKeys   = new Set();
+let pollTimer      = null;
+let activeAudioKey = null;
 
 // ── API ──
 async function fetchPaths() {
@@ -375,8 +387,32 @@ function playVideo(video, key) {
   }
 }
 
+// ── AUDIO CONTROL ──
+function setAudioState(key, unmute) {
+  const card  = $('gallery').querySelector(`[data-key="${key}"]`);
+  const video = card?.querySelector('video');
+  const btn   = card?.querySelector('.vol-btn');
+  if (!video || !btn) return;
+  video.muted = !unmute;
+  if (unmute && video.paused) video.play().catch(() => {});
+  btn.classList.toggle('active', unmute);
+  btn.querySelector('i').className = unmute ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+}
+
+function toggleAudio(key) {
+  if (activeAudioKey === key) {
+    setAudioState(key, false);
+    activeAudioKey = null;
+  } else {
+    if (activeAudioKey) setAudioState(activeAudioKey, false);
+    setAudioState(key, true);
+    activeAudioKey = key;
+  }
+}
+
 // ── BUILD CARD ──
 function buildCard(streamer, viewers) {
+  const isAudioActive = activeAudioKey === streamer.key;
   const a = document.createElement('a');
   a.href  = `/${encodeURIComponent(streamer.key)}/`;
   a.className   = 'stream-card is-live' + (streamer.host ? ' is-featured' : '');
@@ -387,6 +423,9 @@ function buildCard(streamer, viewers) {
       <div class="tag-live"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
       ${streamer.host ? '<div class="tag-host">HOST</div>' : ''}
       <div class="tag-viewers"><i class="fa-solid fa-eye"></i>&nbsp;${viewers}</div>
+      <button class="vol-btn${isAudioActive ? ' active' : ''}" title="Activar/silenciar sonido">
+        <i class="fa-solid ${isAudioActive ? 'fa-volume-high' : 'fa-volume-xmark'}"></i>
+      </button>
       <div class="play-icon"><i class="fa-solid fa-play"></i></div>
     </div>
     <div class="card-foot">
@@ -397,7 +436,17 @@ function buildCard(streamer, viewers) {
       </div>
       <i class="fa-solid fa-arrow-up-right-from-square expand-icon"></i>
     </div>`;
-  playVideo(a.querySelector('video'), streamer.key);
+
+  const video = a.querySelector('video');
+  playVideo(video, streamer.key);
+  if (isAudioActive) video.muted = false;
+
+  a.querySelector('.vol-btn').addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleAudio(streamer.key);
+  });
+
   return a;
 }
 
@@ -526,6 +575,7 @@ function updateLiveState(apiStreamers) {
       destroyHls(key);
       $('gallery').querySelector(`[data-key="${key}"]`)?.remove();
       $('filterChips').querySelector(`[data-key="${key}"]`)?.remove();
+      if (activeAudioKey === key) activeAudioKey = null;
     }
   }
 
