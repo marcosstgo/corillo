@@ -175,52 +175,55 @@
     .layout-btn:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
     @media(max-width:600px){.layout-btns{display:none}}
 
-    /* ── ARC RAIDERS MODE — colores oficiales: #d00000 rojo / #1e0d1d dark ── */
+    /* ── ARC RAIDERS MODE ── */
+    /* Colores oficiales de los 4 stripes: #D00000 #FFEA00 #05FF74 #5FFFFF */
     .arc-btn{
-      display:inline-flex;align-items:center;gap:5px;
+      display:inline-flex;align-items:center;gap:6px;
       padding:5px 11px;border-radius:999px;flex-shrink:0;
-      border:1px solid rgba(208,0,0,.35);
-      background:transparent;color:rgba(208,0,0,.6);
+      border:1px solid transparent;
+      background:transparent padding-box,
+                 linear-gradient(to right,#D00000,#FFEA00,#05FF74,#5FFFFF) border-box;
+      color:rgba(255,255,255,.4);
       font-family:var(--mono);font-size:.48rem;letter-spacing:1.5px;text-transform:uppercase;
-      cursor:pointer;transition:border-color .15s,color .15s,background .15s,box-shadow .15s;
+      cursor:pointer;transition:color .15s,box-shadow .15s,background .15s;
       white-space:nowrap;
     }
-    .arc-btn:hover:not(.active){border-color:rgba(208,0,0,.6);color:rgba(208,0,0,.9)}
+    .arc-btn:hover:not(.active){color:rgba(255,255,255,.8)}
     .arc-btn.active{
-      border-color:rgba(208,0,0,.85);color:#d00000;
-      background:rgba(30,13,29,.6);
-      box-shadow:0 0 16px rgba(208,0,0,.3),inset 0 0 12px rgba(30,13,29,.5);
+      background:rgba(30,13,29,.85) padding-box,
+                 linear-gradient(to right,#D00000,#FFEA00,#05FF74,#5FFFFF) border-box;
+      color:#fff;
+      box-shadow:0 0 18px rgba(208,0,0,.25),0 0 18px rgba(95,255,255,.1);
     }
+    /* 4 mini stripes en el botón — igual que el logo */
+    .arc-btn-stripes{display:flex;gap:2px;align-items:center}
+    .arc-btn-stripes span{width:3px;height:11px;border-radius:1px;display:block}
+
     .arc-badge{
-      display:none;align-items:center;gap:8px;
+      display:none;align-items:center;gap:10px;
       font-family:var(--mono);font-size:.46rem;letter-spacing:2.5px;text-transform:uppercase;
-      color:rgba(208,0,0,.8);margin-bottom:14px;
-      padding:6px 12px;border-radius:4px;
-      border:1px solid rgba(208,0,0,.25);
-      background:rgba(30,13,29,.5);
+      color:rgba(255,255,255,.7);margin-bottom:14px;
+      padding:7px 14px 7px 10px;border-radius:4px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(30,13,29,.7);
       width:fit-content;
     }
     .arc-badge.show{display:flex}
-    .arc-badge-dot{
-      width:6px;height:6px;border-radius:50%;background:#d00000;
-      box-shadow:0 0 8px rgba(208,0,0,1);animation:blink 1s infinite;
+    /* 4 stripes verticales en el badge */
+    .arc-badge-stripes{display:flex;gap:2px;align-items:center;flex-shrink:0}
+    .arc-badge-stripes span{width:3px;height:14px;border-radius:1px;display:block}
+
+    /* Barra de 4 colores en la parte superior de cada card en arc mode */
+    .gallery.arc-active .stream-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:5;
+      background:linear-gradient(to right,#D00000 25%,#FFEA00 25% 50%,#05FF74 50% 75%,#5FFFFF 75%);
     }
-    /* Stream cards en arc mode — borde rojo sutil + vol button en rojo */
-    .gallery.arc-active .stream-card{
-      border-color:rgba(208,0,0,.25);
-    }
-    .gallery.arc-active .stream-card.is-live{
-      animation:pulse-arc 3s infinite;
-    }
-    @keyframes pulse-arc{
-      0%,100%{box-shadow:0 0 0 0 rgba(208,0,0,0)}
-      50%{box-shadow:0 0 0 3px rgba(208,0,0,.12)}
-    }
+    .gallery.arc-active .stream-card{border-color:rgba(255,255,255,.12)}
     .gallery.arc-active .vol-btn.active{
-      color:#d00000;
-      background:rgba(30,13,29,.75);
-      border:1px solid rgba(208,0,0,.6);
-      box-shadow:0 0 8px rgba(208,0,0,.3);
+      color:#5FFFFF;
+      background:rgba(30,13,29,.8);
+      border:1px solid rgba(95,255,255,.5);
+      box-shadow:0 0 8px rgba(95,255,255,.3);
     }
 
     /* ── STREAM CARD ── */
@@ -357,13 +360,24 @@
     </div>
     <div class="filter-sep"></div>
     <button class="arc-btn" id="btnArcRaider" title="Modo Arc Raider — audio simultáneo para todo el squad">
-      <i class="fa-solid fa-bolt"></i> ARC RAIDER
+      <span class="arc-btn-stripes">
+        <span style="background:#D00000"></span>
+        <span style="background:#FFEA00"></span>
+        <span style="background:#05FF74"></span>
+        <span style="background:#5FFFFF"></span>
+      </span>
+      ARC RAIDER
     </button>
   </div>
 
   <!-- Arc Raider badge -->
   <div class="arc-badge" id="arcBadge">
-    <span class="arc-badge-dot"></span>
+    <span class="arc-badge-stripes">
+      <span style="background:#D00000"></span>
+      <span style="background:#FFEA00"></span>
+      <span style="background:#05FF74"></span>
+      <span style="background:#5FFFFF"></span>
+    </span>
     ARC RAIDER MODE — audio simultáneo activo
   </div>
 
