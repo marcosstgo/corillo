@@ -682,6 +682,11 @@ async def live_monitor():
                     _greeted_at[ch] = now
                     room = get_room(ch)
                     asyncio.create_task(greet_streamer(room, ch))
+                    name = STREAMER_NAMES.get(ch, ch.upper())
+                    asyncio.create_task(_telegram([
+                        f"🔴 *{name} está en vivo*",
+                        f"corillo.live/{ch}",
+                    ]))
             _prev_live = current_live
         except:
             pass
