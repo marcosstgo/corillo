@@ -175,30 +175,52 @@
     .layout-btn:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
     @media(max-width:600px){.layout-btns{display:none}}
 
+    /* ── ARC RAIDERS MODE — colores oficiales: #d00000 rojo / #1e0d1d dark ── */
     .arc-btn{
       display:inline-flex;align-items:center;gap:5px;
       padding:5px 11px;border-radius:999px;flex-shrink:0;
-      border:1px solid rgba(255,90,40,.3);
-      background:transparent;color:rgba(255,90,40,.55);
+      border:1px solid rgba(208,0,0,.35);
+      background:transparent;color:rgba(208,0,0,.6);
       font-family:var(--mono);font-size:.48rem;letter-spacing:1.5px;text-transform:uppercase;
       cursor:pointer;transition:border-color .15s,color .15s,background .15s,box-shadow .15s;
       white-space:nowrap;
     }
-    .arc-btn:hover:not(.active){border-color:rgba(255,90,40,.55);color:rgba(255,90,40,.9)}
+    .arc-btn:hover:not(.active){border-color:rgba(208,0,0,.6);color:rgba(208,0,0,.9)}
     .arc-btn.active{
-      border-color:rgba(255,90,40,.8);color:#ff5a28;
-      background:rgba(255,90,40,.1);
-      box-shadow:0 0 14px rgba(255,90,40,.2);
+      border-color:rgba(208,0,0,.85);color:#d00000;
+      background:rgba(30,13,29,.6);
+      box-shadow:0 0 16px rgba(208,0,0,.3),inset 0 0 12px rgba(30,13,29,.5);
     }
     .arc-badge{
-      display:none;align-items:center;gap:7px;
-      font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;
-      color:rgba(255,90,40,.7);margin-bottom:14px;
+      display:none;align-items:center;gap:8px;
+      font-family:var(--mono);font-size:.46rem;letter-spacing:2.5px;text-transform:uppercase;
+      color:rgba(208,0,0,.8);margin-bottom:14px;
+      padding:6px 12px;border-radius:4px;
+      border:1px solid rgba(208,0,0,.25);
+      background:rgba(30,13,29,.5);
+      width:fit-content;
     }
     .arc-badge.show{display:flex}
     .arc-badge-dot{
-      width:6px;height:6px;border-radius:50%;background:#ff5a28;
-      box-shadow:0 0 6px rgba(255,90,40,.8);animation:blink 1s infinite;
+      width:6px;height:6px;border-radius:50%;background:#d00000;
+      box-shadow:0 0 8px rgba(208,0,0,1);animation:blink 1s infinite;
+    }
+    /* Stream cards en arc mode — borde rojo sutil + vol button en rojo */
+    .gallery.arc-active .stream-card{
+      border-color:rgba(208,0,0,.25);
+    }
+    .gallery.arc-active .stream-card.is-live{
+      animation:pulse-arc 3s infinite;
+    }
+    @keyframes pulse-arc{
+      0%,100%{box-shadow:0 0 0 0 rgba(208,0,0,0)}
+      50%{box-shadow:0 0 0 3px rgba(208,0,0,.12)}
+    }
+    .gallery.arc-active .vol-btn.active{
+      color:#d00000;
+      background:rgba(30,13,29,.75);
+      border:1px solid rgba(208,0,0,.6);
+      box-shadow:0 0 8px rgba(208,0,0,.3);
     }
 
     /* ── STREAM CARD ── */
@@ -464,6 +486,7 @@ function toggleArcRaider() {
   arcRaiderMode = !arcRaiderMode;
   $('btnArcRaider').classList.toggle('active', arcRaiderMode);
   $('arcBadge').classList.toggle('show', arcRaiderMode);
+  $('gallery').classList.toggle('arc-active', arcRaiderMode);
 
   if (arcRaiderMode) {
     // Exit exclusive mode first
