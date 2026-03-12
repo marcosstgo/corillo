@@ -175,6 +175,32 @@
     .layout-btn:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
     @media(max-width:600px){.layout-btns{display:none}}
 
+    .arc-btn{
+      display:inline-flex;align-items:center;gap:5px;
+      padding:5px 11px;border-radius:999px;flex-shrink:0;
+      border:1px solid rgba(255,90,40,.3);
+      background:transparent;color:rgba(255,90,40,.55);
+      font-family:var(--mono);font-size:.48rem;letter-spacing:1.5px;text-transform:uppercase;
+      cursor:pointer;transition:border-color .15s,color .15s,background .15s,box-shadow .15s;
+      white-space:nowrap;
+    }
+    .arc-btn:hover:not(.active){border-color:rgba(255,90,40,.55);color:rgba(255,90,40,.9)}
+    .arc-btn.active{
+      border-color:rgba(255,90,40,.8);color:#ff5a28;
+      background:rgba(255,90,40,.1);
+      box-shadow:0 0 14px rgba(255,90,40,.2);
+    }
+    .arc-badge{
+      display:none;align-items:center;gap:7px;
+      font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;
+      color:rgba(255,90,40,.7);margin-bottom:14px;
+    }
+    .arc-badge.show{display:flex}
+    .arc-badge-dot{
+      width:6px;height:6px;border-radius:50%;background:#ff5a28;
+      box-shadow:0 0 6px rgba(255,90,40,.8);animation:blink 1s infinite;
+    }
+
     /* ── STREAM CARD ── */
     .stream-card{
       position:relative;border-radius:12px;overflow:hidden;
@@ -307,6 +333,16 @@
       <button class="layout-btn" id="btnLayoutFc" title="Destacado"><i class="fa-solid fa-table-cells-large"></i></button>
       <button class="layout-btn" id="btnLayoutCl" title="Columna"><i class="fa-solid fa-bars"></i></button>
     </div>
+    <div class="filter-sep"></div>
+    <button class="arc-btn" id="btnArcRaider" title="Modo Arc Raider — audio simultáneo para todo el squad">
+      <i class="fa-solid fa-bolt"></i> ARC RAIDER
+    </button>
+  </div>
+
+  <!-- Arc Raider badge -->
+  <div class="arc-badge" id="arcBadge">
+    <span class="arc-badge-dot"></span>
+    ARC RAIDER MODE — audio simultáneo activo
   </div>
 
   <!-- Empty state -->
@@ -335,7 +371,9 @@ let hlsMap         = {};  // key → Hls instance
 let liveMap        = {};  // key → { streamer, viewers }
 let selectedKeys   = new Set();
 let pollTimer      = null;
-let activeAudioKey = null;
+let activeAudioKey = null;   // normal mode: exclusive (one at a time)
+let arcRaiderMode  = false;
+let arcAudioKeys   = new Set(); // arc mode: independent per-stream
 
 // ── API ──
 async function fetchPaths() {
@@ -400,19 +438,52 @@ function setAudioState(key, unmute) {
 }
 
 function toggleAudio(key) {
-  if (activeAudioKey === key) {
-    setAudioState(key, false);
-    activeAudioKey = null;
+  if (arcRaiderMode) {
+    // Independent toggle — each stream controls its own audio
+    if (arcAudioKeys.has(key)) {
+      arcAudioKeys.delete(key);
+      setAudioState(key, false);
+    } else {
+      arcAudioKeys.add(key);
+      setAudioState(key, true);
+    }
   } else {
-    if (activeAudioKey) setAudioState(activeAudioKey, false);
-    setAudioState(key, true);
-    activeAudioKey = key;
+    // Exclusive toggle — only one stream at a time
+    if (activeAudioKey === key) {
+      setAudioState(key, false);
+      activeAudioKey = null;
+    } else {
+      if (activeAudioKey) setAudioState(activeAudioKey, false);
+      setAudioState(key, true);
+      activeAudioKey = key;
+    }
+  }
+}
+
+function toggleArcRaider() {
+  arcRaiderMode = !arcRaiderMode;
+  $('btnArcRaider').classList.toggle('active', arcRaiderMode);
+  $('arcBadge').classList.toggle('show', arcRaiderMode);
+
+  if (arcRaiderMode) {
+    // Exit exclusive mode first
+    if (activeAudioKey) { setAudioState(activeAudioKey, false); activeAudioKey = null; }
+    // Unmute all visible streams
+    $('gallery').querySelectorAll('.stream-card').forEach(card => {
+      const key = card.dataset.key;
+      arcAudioKeys.add(key);
+      setAudioState(key, true);
+    });
+  } else {
+    // Mute all arc streams and reset
+    arcAudioKeys.forEach(key => setAudioState(key, false));
+    arcAudioKeys.clear();
   }
 }
 
 // ── BUILD CARD ──
 function buildCard(streamer, viewers) {
-  const isAudioActive = activeAudioKey === streamer.key;
+  const isAudioActive = arcRaiderMode ? arcAudioKeys.has(streamer.key) : (activeAudioKey === streamer.key);
   const a = document.createElement('a');
   a.href  = `/${encodeURIComponent(streamer.key)}/`;
   a.className   = 'stream-card is-live' + (streamer.host ? ' is-featured' : '');
@@ -551,6 +622,8 @@ $('btnLayoutFc').addEventListener('click', () => applyLayout('focus'));
 $('btnLayoutCl').addEventListener('click', () => applyLayout('col'));
 applyLayout(currentLayout);
 
+$('btnArcRaider').addEventListener('click', toggleArcRaider);
+
 $('filterAll').addEventListener('click', () => {
   Object.entries(liveMap).forEach(([key, entry]) => {
     if (!selectedKeys.has(key)) {
@@ -576,6 +649,7 @@ function updateLiveState(apiStreamers) {
       $('gallery').querySelector(`[data-key="${key}"]`)?.remove();
       $('filterChips').querySelector(`[data-key="${key}"]`)?.remove();
       if (activeAudioKey === key) activeAudioKey = null;
+      arcAudioKeys.delete(key);
     }
   }
 
@@ -584,6 +658,13 @@ function updateLiveState(apiStreamers) {
     if (!oldKeys.has(s.key)) {
       liveMap[s.key] = { streamer:s, viewers:s.viewers };
       addChip(s);
+      // In arc raider mode: auto-select and auto-unmute new streamers
+      if (arcRaiderMode) {
+        selectedKeys.add(s.key);
+        $('filterChips').querySelector(`[data-key="${s.key}"]`)?.classList.add('active');
+        arcAudioKeys.add(s.key);
+        insertInOrder($('gallery'), buildCard(s, s.viewers), s.key, '.stream-card');
+      }
     }
   }
 
