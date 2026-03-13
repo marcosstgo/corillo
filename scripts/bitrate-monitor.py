@@ -8,7 +8,7 @@ Env vars (set in /home/marcos/bitrate-monitor.env):
   TELEGRAM_BOT_TOKEN
   TELEGRAM_CHAT_ID
 """
-import os, time, requests
+import os, time, json, requests
 
 TELEGRAM_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT  = os.environ["TELEGRAM_CHAT_ID"]
@@ -19,10 +19,13 @@ ALERT_KBPS     = 8000  # 🔴 alerta alta
 AUTO_KICK_KBPS = 6000  # ⛔ kick automático
 COOLDOWN       = 300   # segundos entre alertas por streamer
 KICK_COOLDOWN  = 120   # segundos entre kicks por streamer (evita loop en reconexión)
+KICK_DIR       = "/var/www/stream/assets/kick"
 
 prev_bytes  = {}
 last_alert  = {}
 last_kick   = {}
+
+os.makedirs(KICK_DIR, exist_ok=True)
 
 
 def send_telegram(msg):
@@ -69,6 +72,16 @@ def kick_publisher(path_item, kbps):
         f"Estado: {status}"
     )
     print(f"KICK: {name} @ {kbps} Kbps — {status}")
+
+    # Escribir flag para que el player muestre mensaje de kick al streamer
+    if ok:
+        channel_key = name.removeprefix("live/")
+        try:
+            with open(f"{KICK_DIR}/{channel_key}.json", "w") as f:
+                json.dump({"ts": time.time(), "kbps": kbps}, f)
+        except Exception as e:
+            print(f"KICK FLAG ERROR: {e}")
+
     return ok
 
 

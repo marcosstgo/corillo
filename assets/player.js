@@ -272,6 +272,20 @@ function scheduleRetry(reason) {
     (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(wait/1000) + 's…'
   );
   retryTimer = setTimeout(start, wait);
+
+  // Verificar si fue kick por bitrate — mostrar mensaje específico al streamer
+  fetch('/assets/kick/' + channel + '.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(kick => {
+      if (!kick) return;
+      if ((Date.now() / 1000 - kick.ts) > 300) return; // expirado (>5 min)
+      showOverlay(
+        'Desconectado por bitrate alto',
+        'Tu stream superó ' + kick.kbps.toLocaleString() + ' Kbps. ' +
+        'Configura tu encoder a 4,000–4,500 Kbps en OBS o Meld Studio y reconecta.'
+      );
+    })
+    .catch(() => {});
 }
 
 function getUrl() {
