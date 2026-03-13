@@ -241,7 +241,7 @@ function stopStatsPolling() {
 }
 
 // ── PLAYER ──
-let hls = null, retries = 0, retryTimer = null;
+let hls = null, retries = 0, retryTimer = null, _nativeErrHandler = null;
 window._hlsInstance = null;
 
 function setLive(on) {
@@ -251,6 +251,7 @@ function setLive(on) {
 
 function cleanup() {
   if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+  if (_nativeErrHandler) { $('#video').removeEventListener('error', _nativeErrHandler); _nativeErrHandler = null; }
   _unmuteAttemptPending = false;
   stopStatsPolling();
   const v = $('#video');
@@ -289,7 +290,8 @@ async function start() {
 
   if (v.canPlayType('application/vnd.apple.mpegurl')) {
     v.src = url;
-    v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { once:true });
+    _nativeErrHandler = () => { _nativeErrHandler = null; scheduleRetry('Error de HLS nativo'); };
+    v.addEventListener('error', _nativeErrHandler, { once:true });
     try {
       await v.play();
       hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner();
