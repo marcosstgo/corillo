@@ -615,8 +615,10 @@ function updateUI() {
   const allSel = totalLive > 0 && liveKeys.every(k => selectedKeys.has(k));
   $('filterAll').classList.toggle('active', allSel);
 
-  // Gallery class + empty state
-  gallery.className = `gallery count-${Math.min(visible, 8)}`;
+  // Gallery class + empty state — preserve arc-active and layout classes
+  const arcCls    = arcRaiderMode ? ' arc-active' : '';
+  const layoutCls = currentLayout === 'focus' ? ' layout-focus' : currentLayout === 'col' ? ' layout-col' : '';
+  gallery.className = `gallery count-${Math.min(visible, 8)}${arcCls}${layoutCls}`;
   if (visible === 0) {
     $('emptyState').classList.add('show');
     if (totalLive > 0) {
