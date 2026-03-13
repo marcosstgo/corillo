@@ -47,11 +47,11 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/stream/
 
-      - name: Sync Caddyfile and reload Caddy
+      - name: Sync nginx.conf and reload nginx
         run: |
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "sudo cp /var/www/stream/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy && echo 'Caddy reloaded'"
+            "sudo cp /var/www/stream/nginx.conf /etc/nginx/nginx.conf && sudo nginx -t && sudo systemctl reload nginx && echo 'nginx reloaded'"
 
       - name: Sync mediamtx.yml and restart MediaMTX if changed
         run: |
