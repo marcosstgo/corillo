@@ -48,11 +48,17 @@ jobs:
             -e "ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/stream/
 
-      - name: Sync nginx.conf and reload nginx
+      - name: Sync nginx.conf and reload nginx if changed
         run: |
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "sudo cp /var/www/stream/nginx.conf /etc/nginx/nginx.conf && sudo nginx -t && sudo systemctl reload nginx && echo 'nginx reloaded'"
+            "if ! diff -q /var/www/stream/nginx.conf /etc/nginx/nginx.conf > /dev/null 2>&1; then
+               sudo cp /var/www/stream/nginx.conf /etc/nginx/nginx.conf
+               sudo nginx -t && sudo systemctl reload nginx
+               echo 'nginx config changed — reloaded'
+             else
+               echo 'nginx config unchanged — skipped'
+             fi"
 
       - name: Sync mediamtx.yml and restart MediaMTX if changed
         run: |
@@ -75,14 +81,20 @@ jobs:
              scp /var/www/stream/chat/requirements.txt marcos@192.168.8.167:/home/marcos/corillo-bot/requirements.txt && \
              ssh marcos@192.168.8.167 '/home/marcos/corillo-bot/venv/bin/pip install -q -r /home/marcos/corillo-bot/requirements.txt && sudo systemctl restart corillo-bot'"
 
-      - name: Deploy bitrate monitor to Pi
+      - name: Deploy bitrate monitor to Pi if changed
         run: |
           scp -i ~/.ssh/deploy_key -P 2222 -o StrictHostKeyChecking=no \
             scripts/bitrate-monitor.py \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/home/marcos/bitrate-monitor.py
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/bitrate-monitor.py
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "sudo systemctl restart bitrate-monitor"
+            "if ! diff -q /tmp/bitrate-monitor.py /home/marcos/bitrate-monitor.py > /dev/null 2>&1; then
+               cp /tmp/bitrate-monitor.py /home/marcos/bitrate-monitor.py
+               sudo systemctl restart bitrate-monitor
+               echo 'bitrate-monitor changed — restarted'
+             else
+               echo 'bitrate-monitor unchanged — skipped'
+             fi"
 
       - name: Commit bumped version
         run: |
