@@ -53,6 +53,18 @@ jobs:
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "sudo cp /var/www/stream/Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy && echo 'Caddy reloaded'"
 
+      - name: Sync mediamtx.yml and restart MediaMTX if changed
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "if ! diff -q /var/www/stream/mediamtx.yml /etc/mediamtx/mediamtx.yml > /dev/null 2>&1; then
+               sudo cp /var/www/stream/mediamtx.yml /etc/mediamtx/mediamtx.yml
+               sudo systemctl restart mediamtx
+               echo 'MediaMTX config changed — restarted'
+             else
+               echo 'MediaMTX config unchanged — skipped'
+             fi"
+
       - name: Deploy chat bot to Pi
         run: |
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
