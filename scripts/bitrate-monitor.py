@@ -8,7 +8,7 @@ Env vars (set in /home/marcos/bitrate-monitor.env):
   TELEGRAM_BOT_TOKEN
   TELEGRAM_CHAT_ID
 """
-import os, time, json, requests
+import os, time, json, subprocess, requests
 
 TELEGRAM_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT  = os.environ["TELEGRAM_CHAT_ID"]
@@ -40,29 +40,28 @@ def send_telegram(msg):
 
 
 def kick_publisher(path_item, kbps):
-    """Kickea al publisher via MediaMTX API y notifica por Telegram."""
-    name   = path_item["name"]
-    source = path_item.get("source", {})
-    src_id = source.get("id")
-    src_type = source.get("type", "")
+    """Kickea al publisher cortando el socket TCP via ss -K y notifica por Telegram."""
+    name = path_item["name"]
 
-    # Mapeo tipo → endpoint de kick
-    endpoint_map = {
-        "rtmpConn":  f"{MEDIAMTX_API}/v3/rtmpconns/{src_id}/kick",
-        "rtmpsConn": f"{MEDIAMTX_API}/v3/rtmpsconns/{src_id}/kick",
-        "srtConn":   f"{MEDIAMTX_API}/v3/srtconns/{src_id}/kick",
-    }
-    url = endpoint_map.get(src_type)
-    if not url or not src_id:
-        print(f"KICK SKIP: {name} — tipo desconocido o sin ID ({src_type})")
-        return False
-
+    # Obtener remoteAddr desde /v3/rtmpconns/list (la API de kick no existe en v1.16.1)
+    ok = False
     try:
-        r = requests.post(url, timeout=5)
-        ok = r.status_code == 200
+        r = requests.get(f"{MEDIAMTX_API}/v3/rtmpconns/list", timeout=5)
+        conns = r.json().get("items", [])
+        conn = next((c for c in conns if c.get("path") == name and c.get("state") == "publish"), None)
+        if conn:
+            remote = conn["remoteAddr"]          # "ip:port"
+            ip, port = remote.rsplit(":", 1)
+            result = subprocess.run(
+                ["sudo", "ss", "-K", f"dst {ip}", f"dport = {port}"],
+                capture_output=True, text=True, timeout=5
+            )
+            ok = result.returncode == 0
+            print(f"KICK ss -K dst {ip} dport {port}: rc={result.returncode}")
+        else:
+            print(f"KICK SKIP: {name} — no encontrado en rtmpconns/list")
     except Exception as e:
         print(f"KICK ERROR: {name} — {e}")
-        ok = False
 
     status = "⛔ kickeado" if ok else "⚠️ fallo el kick"
     send_telegram(
