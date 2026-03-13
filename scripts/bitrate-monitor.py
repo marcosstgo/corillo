@@ -18,12 +18,14 @@ WARN_KBPS      = 5000  # 🟡 aviso
 ALERT_KBPS     = 8000  # 🔴 alerta alta
 AUTO_KICK_KBPS = 6000  # ⛔ kick automático
 COOLDOWN       = 300   # segundos entre alertas por streamer
-KICK_COOLDOWN  = 120   # segundos entre kicks por streamer (evita loop en reconexión)
+KICK_COOLDOWN  = 35    # segundos entre kicks — permite reconexión pero vuelve a kickear si bitrate sigue alto
+KICK_NOTIFY_COOLDOWN = 300  # segundos entre notificaciones Telegram por kick (no spamear)
 KICK_DIR       = "/var/www/stream/assets/kick"
 
-prev_bytes  = {}
-last_alert  = {}
-last_kick   = {}
+prev_bytes       = {}
+last_alert       = {}
+last_kick        = {}
+last_kick_notify = {}
 
 os.makedirs(KICK_DIR, exist_ok=True)
 
@@ -63,14 +65,7 @@ def kick_publisher(path_item, kbps):
     except Exception as e:
         print(f"KICK ERROR: {name} — {e}")
 
-    status = "⛔ kickeado" if ok else "⚠️ fallo el kick"
-    send_telegram(
-        f"⛔ <b>AUTO-KICK</b>\n"
-        f"Streamer: <code>{name}</code>\n"
-        f"Bitrate: <b>{kbps:,} Kbps</b> (límite: {AUTO_KICK_KBPS:,} Kbps)\n"
-        f"Estado: {status}"
-    )
-    print(f"KICK: {name} @ {kbps} Kbps — {status}")
+    print(f"KICK: {name} @ {kbps} Kbps — {'⛔ kickeado' if ok else '⚠️ fallo'}")
 
     # Escribir flag para que el player muestre mensaje de kick al streamer
     if ok:
@@ -108,7 +103,17 @@ def check():
                 if now - last_kick.get(name, 0) > KICK_COOLDOWN:
                     last_kick[name] = now
                     last_alert[name] = now  # resetea alerta también
-                    kick_publisher(p, kbps)
+                    ok = kick_publisher(p, kbps)
+                    # Notificar por Telegram solo una vez cada KICK_NOTIFY_COOLDOWN
+                    if now - last_kick_notify.get(name, 0) > KICK_NOTIFY_COOLDOWN:
+                        last_kick_notify[name] = now
+                        status = "⛔ kickeado" if ok else "⚠️ fallo el kick"
+                        send_telegram(
+                            f"⛔ <b>AUTO-KICK</b>\n"
+                            f"Streamer: <code>{name}</code>\n"
+                            f"Bitrate: <b>{kbps:,} Kbps</b> (límite: {AUTO_KICK_KBPS:,} Kbps)\n"
+                            f"Estado: {status}"
+                        )
 
             # 🔴 Alerta alta (entre ALERT y KICK, o si el kick falló)
             elif kbps >= ALERT_KBPS:

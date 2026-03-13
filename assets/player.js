@@ -123,6 +123,34 @@ _offlineThumb.onload = () => {
 _offlineThumb.src = '/assets/thumbs/' + channel + '.jpg';
 playerWrap.insertBefore(_offlineThumb, playerWrap.firstChild);
 
+// ── KICK BANNER — avisa al streamer cuando fue kickeado por bitrate alto ──
+const _kickBanner = document.createElement('div');
+_kickBanner.style.cssText = [
+  'display:none','position:absolute','bottom:56px','left:50%','transform:translateX(-50%)',
+  'background:rgba(180,30,30,.92)','color:#fff','padding:10px 18px','border-radius:8px',
+  'font-size:.82rem','text-align:center','z-index:50','max-width:92%','cursor:pointer',
+  'box-shadow:0 2px 12px rgba(0,0,0,.5)','line-height:1.4'
+].join(';');
+playerWrap.appendChild(_kickBanner);
+_kickBanner.addEventListener('click', () => { _kickBanner.style.display = 'none'; });
+
+let _kickBannerTimer = null;
+function checkKickBanner() {
+  fetch('/assets/kick/' + channel + '.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(kick => {
+      if (!kick || (Date.now() / 1000 - kick.ts) >= 300) return;
+      _kickBanner.textContent =
+        '⛔ Este stream fue desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
+        'Si eres el streamer: baja a 4,000–4,500 Kbps en OBS o Meld Studio. ' +
+        '(Toca para cerrar)';
+      _kickBanner.style.display = 'block';
+      clearTimeout(_kickBannerTimer);
+      _kickBannerTimer = setTimeout(() => { _kickBanner.style.display = 'none'; }, 20000);
+    })
+    .catch(() => {});
+}
+
 function showCtrl() {
   ctrlBar.classList.add('visible');
   clearTimeout(ctrlTimer);
@@ -350,7 +378,7 @@ async function start() {
 
 $('#ovRetry').addEventListener('click', () => { retries = 0; start(); });
 $('#video').addEventListener('waiting',  () => setLive(false));
-$('#video').addEventListener('playing',  () => { setLive(true); hideOverlay(); startStatsPolling(); showUnmuteBanner(); });
+$('#video').addEventListener('playing',  () => { setLive(true); hideOverlay(); startStatsPolling(); showUnmuteBanner(); checkKickBanner(); });
 
 // ── WAKE LOCK — evita que el móvil apague la pantalla durante el stream ──
 let wakeLock = null;
