@@ -1,8 +1,6 @@
 corillo.live, stream.marcossantiago.com {
-    # Compresión — solo para texto (HTML/CSS/JS/JSON/m3u8)
-    # Excluye /live/* — video ya comprimido, comprimir gasta CPU sin beneficio
-    @compressable not path /live/*
-    encode @compressable zstd gzip
+    # Sin compresión — en Pi 3B+ el CPU es más valioso que el ancho de banda
+    # HLS es video ya comprimido, HTML/CSS/JS son pequeños y se cachean en el cliente
 
     # 1) Proxy HLS → MediaMTX :8888
     handle /live/* {
