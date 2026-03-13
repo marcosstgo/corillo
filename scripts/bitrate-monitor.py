@@ -17,16 +17,18 @@ INTERVAL       = 30    # segundos entre polls
 WARN_KBPS      = 5000  # 🟡 aviso
 ALERT_KBPS     = 8000  # 🔴 alerta alta
 AUTO_KICK_KBPS = 6000  # ⛔ kick automático
-COOLDOWN       = 300   # segundos entre alertas por streamer
-KICK_COOLDOWN  = 35    # segundos entre kicks — permite reconexión pero vuelve a kickear si bitrate sigue alto
-KICK_NOTIFY_COOLDOWN = 300  # segundos entre notificaciones Telegram por kick (no spamear)
+COOLDOWN             = 300   # segundos entre alertas por streamer
+KICK_COOLDOWN        = 35    # segundos entre kicks — permite reconexión pero vuelve a kickear si bitrate sigue alto
+KICK_NOTIFY_COOLDOWN = 300   # segundos entre notificaciones Telegram por kick (no spamear)
+KICK_STRIKES_NEEDED  = 2     # polls consecutivos sobre AUTO_KICK_KBPS antes de kickear (~60s sostenido)
 KICK_DIR       = "/var/www/stream/assets/kick"
 
 prev_bytes       = {}
 last_alert       = {}
 last_kick        = {}
 last_kick_notify = {}
-was_over_limit   = set()  # streamers que estuvieron sobre AUTO_KICK_KBPS
+kick_strikes     = {}   # contador de polls consecutivos sobre AUTO_KICK_KBPS por streamer
+was_over_limit   = set()
 
 os.makedirs(KICK_DIR, exist_ok=True)
 
@@ -99,59 +101,66 @@ def check():
             delta_bytes = rx - prev_bytes[name]
             kbps = int(delta_bytes * 8 / 1000 / INTERVAL)
 
-            # ⛔ Auto-kick por exceder límite
+            # ⛔ Auto-kick — requiere KICK_STRIKES_NEEDED polls consecutivos sobre el límite
             if kbps >= AUTO_KICK_KBPS:
                 was_over_limit.add(name)
-                if now - last_kick.get(name, 0) > KICK_COOLDOWN:
-                    last_kick[name] = now
-                    last_alert[name] = now  # resetea alerta también
-                    ok = kick_publisher(p, kbps)
-                    # Notificar por Telegram solo una vez cada KICK_NOTIFY_COOLDOWN
-                    if now - last_kick_notify.get(name, 0) > KICK_NOTIFY_COOLDOWN:
-                        last_kick_notify[name] = now
-                        status = "⛔ kickeado" if ok else "⚠️ fallo el kick"
+                kick_strikes[name] = kick_strikes.get(name, 0) + 1
+                strikes = kick_strikes[name]
+                print(f"BITRATE ALTO: {name} @ {kbps} Kbps (strike {strikes}/{KICK_STRIKES_NEEDED})")
+
+                if strikes == 1:
+                    # Primer poll alto: aviso anticipado, aún no kickear
+                    if now - last_alert.get(name, 0) > COOLDOWN:
+                        last_alert[name] = now
                         send_telegram(
-                            f"⛔ <b>AUTO-KICK</b>\n"
+                            f"⚠️ <b>BITRATE ALTO</b>\n"
                             f"Streamer: <code>{name}</code>\n"
                             f"Bitrate: <b>{kbps:,} Kbps</b> (límite: {AUTO_KICK_KBPS:,} Kbps)\n"
-                            f"Estado: {status}"
+                            f"Si continúa en el próximo poll (~30s), se kickeará automáticamente."
                         )
 
-            # ✅ Bitrate recuperado — notificar si estaba sobre el límite
-            elif name in was_over_limit and kbps < AUTO_KICK_KBPS:
-                was_over_limit.discard(name)
-                send_telegram(
-                    f"✅ <b>BITRATE RECUPERADO</b>\n"
-                    f"Streamer: <code>{name}</code>\n"
-                    f"Bitrate actual: <b>{kbps:,} Kbps</b> — dentro del límite"
-                )
-                print(f"RECUPERADO: {name} @ {kbps} Kbps")
+                elif strikes >= KICK_STRIKES_NEEDED:
+                    # Bitrate sostenido — kickear
+                    if now - last_kick.get(name, 0) > KICK_COOLDOWN:
+                        last_kick[name] = now
+                        last_alert[name] = now
+                        ok = kick_publisher(p, kbps)
+                        if now - last_kick_notify.get(name, 0) > KICK_NOTIFY_COOLDOWN:
+                            last_kick_notify[name] = now
+                            status = "⛔ kickeado" if ok else "⚠️ fallo el kick"
+                            send_telegram(
+                                f"⛔ <b>AUTO-KICK</b>\n"
+                                f"Streamer: <code>{name}</code>\n"
+                                f"Bitrate: <b>{kbps:,} Kbps</b> (límite: {AUTO_KICK_KBPS:,} Kbps)\n"
+                                f"Estado: {status}"
+                            )
 
-            # 🔴 Alerta alta (entre ALERT y KICK, o si el kick falló)
-            elif kbps >= ALERT_KBPS:
-                if now - last_alert.get(name, 0) > COOLDOWN:
-                    send_telegram(
-                        f"🔴 <b>ALERTA 4K</b>\n"
-                        f"Streamer: <code>{name}</code>\n"
-                        f"Bitrate: <b>{kbps:,} Kbps</b>\n"
-                        f"Límite recomendado: 5,000 Kbps\n"
-                        f"Resolución estimada: 4K — avisa al streamer"
-                    )
-                    last_alert[name] = now
-                    print(f"ALERTA 4K: {name} @ {kbps} Kbps")
+            else:
+                # Bitrate bajo el límite — resetear strikes
+                kick_strikes.pop(name, None)
 
-            # 🟡 Aviso moderado
-            elif kbps >= WARN_KBPS:
-                if now - last_alert.get(name, 0) > COOLDOWN:
-                    send_telegram(
-                        f"🟡 <b>AVISO 2K</b>\n"
-                        f"Streamer: <code>{name}</code>\n"
-                        f"Bitrate: <b>{kbps:,} Kbps</b>\n"
-                        f"Límite recomendado: 5,000 Kbps\n"
-                        f"Resolución estimada: 2K — considera bajar calidad"
-                    )
-                    last_alert[name] = now
-                    print(f"AVISO 2K: {name} @ {kbps} Kbps")
+                # ✅ Recuperado — notificar si hubo kick reciente
+                if name in was_over_limit:
+                    was_over_limit.discard(name)
+                    if last_kick.get(name, 0) > now - 600:
+                        send_telegram(
+                            f"✅ <b>BITRATE RECUPERADO</b>\n"
+                            f"Streamer: <code>{name}</code>\n"
+                            f"Bitrate actual: <b>{kbps:,} Kbps</b> — dentro del límite"
+                        )
+                        print(f"RECUPERADO: {name} @ {kbps} Kbps")
+
+                # 🟡 Aviso moderado (5,000–5,999 Kbps)
+                elif kbps >= WARN_KBPS:
+                    if now - last_alert.get(name, 0) > COOLDOWN:
+                        send_telegram(
+                            f"🟡 <b>AVISO BITRATE</b>\n"
+                            f"Streamer: <code>{name}</code>\n"
+                            f"Bitrate: <b>{kbps:,} Kbps</b>\n"
+                            f"Límite recomendado: 5,000 Kbps — considera bajar calidad"
+                        )
+                        last_alert[name] = now
+                        print(f"AVISO: {name} @ {kbps} Kbps")
 
         prev_bytes[name] = rx
 
