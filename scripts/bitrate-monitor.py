@@ -26,6 +26,7 @@ prev_bytes       = {}
 last_alert       = {}
 last_kick        = {}
 last_kick_notify = {}
+was_over_limit   = set()  # streamers que estuvieron sobre AUTO_KICK_KBPS
 
 os.makedirs(KICK_DIR, exist_ok=True)
 
@@ -100,6 +101,7 @@ def check():
 
             # ⛔ Auto-kick por exceder límite
             if kbps >= AUTO_KICK_KBPS:
+                was_over_limit.add(name)
                 if now - last_kick.get(name, 0) > KICK_COOLDOWN:
                     last_kick[name] = now
                     last_alert[name] = now  # resetea alerta también
@@ -114,6 +116,16 @@ def check():
                             f"Bitrate: <b>{kbps:,} Kbps</b> (límite: {AUTO_KICK_KBPS:,} Kbps)\n"
                             f"Estado: {status}"
                         )
+
+            # ✅ Bitrate recuperado — notificar si estaba sobre el límite
+            elif name in was_over_limit and kbps < AUTO_KICK_KBPS:
+                was_over_limit.discard(name)
+                send_telegram(
+                    f"✅ <b>BITRATE RECUPERADO</b>\n"
+                    f"Streamer: <code>{name}</code>\n"
+                    f"Bitrate actual: <b>{kbps:,} Kbps</b> — dentro del límite"
+                )
+                print(f"RECUPERADO: {name} @ {kbps} Kbps")
 
             # 🔴 Alerta alta (entre ALERT y KICK, o si el kick falló)
             elif kbps >= ALERT_KBPS:

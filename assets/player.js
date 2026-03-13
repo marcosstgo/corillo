@@ -141,8 +141,8 @@ function checkKickBanner() {
     .then(kick => {
       if (!kick || (Date.now() / 1000 - kick.ts) >= 300) return;
       _kickBanner.textContent =
-        '⛔ Este stream fue desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
-        'Si eres el streamer: baja a 4,000–4,500 Kbps en OBS o Meld Studio. ' +
+        '⛔ Stream desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
+        'Si eres el streamer y aún no lo corregiste: configura 4,000–4,500 Kbps en OBS / Meld Studio. ' +
         '(Toca para cerrar)';
       _kickBanner.style.display = 'block';
       clearTimeout(_kickBannerTimer);
