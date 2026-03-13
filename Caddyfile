@@ -1,6 +1,8 @@
 corillo.live, stream.marcossantiago.com {
-    # Compresión — reduce transferencia 60-80% en HTML/CSS/JS/JSON/m3u8
-    encode zstd gzip
+    # Compresión — solo para texto (HTML/CSS/JS/JSON/m3u8)
+    # Excluye /live/* — video ya comprimido, comprimir gasta CPU sin beneficio
+    @compressable not path /live/*
+    encode @compressable zstd gzip
 
     # 1) Proxy HLS → MediaMTX :8888
     handle /live/* {
