@@ -266,26 +266,35 @@ function scheduleRetry(reason) {
   $('#sRetries').textContent = retries;
   $('#retryTxt').textContent = retries;
   const wait = Math.min(30000, 1200 * Math.pow(1.6, Math.min(retries, 10)));
+  const secs = Math.round(wait / 1000);
   const offline = reason === 'networkError' || reason === 'Error de HLS nativo';
-  showOverlay(
-    offline ? 'Sin transmisión' : 'Reconectando',
-    (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(wait/1000) + 's…'
-  );
-  retryTimer = setTimeout(start, wait);
 
-  // Verificar si fue kick por bitrate — mostrar mensaje específico al streamer
+  // Verificar kick antes de mostrar overlay — evita el flash del mensaje genérico
   fetch('/assets/kick/' + channel + '.json?t=' + Date.now(), { cache: 'no-store' })
     .then(r => r.ok ? r.json() : null)
     .then(kick => {
-      if (!kick) return;
-      if ((Date.now() / 1000 - kick.ts) > 300) return; // expirado (>5 min)
-      showOverlay(
-        'Desconectado por bitrate alto',
-        'Tu stream superó ' + kick.kbps.toLocaleString() + ' Kbps. ' +
-        'Configura tu encoder a 4,000–4,500 Kbps en OBS o Meld Studio y reconecta.'
-      );
+      if (kick && (Date.now() / 1000 - kick.ts) < 300) {
+        showOverlay(
+          'Stream pausado temporalmente',
+          'El stream fue desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
+          'Si eres el streamer: configura 4,000–4,500 Kbps en OBS o Meld Studio y reconecta. ' +
+          'Reintentando en ' + secs + 's…'
+        );
+      } else {
+        showOverlay(
+          offline ? 'Sin transmisión' : 'Reconectando',
+          (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + secs + 's…'
+        );
+      }
     })
-    .catch(() => {});
+    .catch(() => {
+      showOverlay(
+        offline ? 'Sin transmisión' : 'Reconectando',
+        (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + secs + 's…'
+      );
+    });
+
+  retryTimer = setTimeout(start, wait);
 }
 
 function getUrl() {
