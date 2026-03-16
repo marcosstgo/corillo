@@ -471,7 +471,7 @@
       <article class="card">
         <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-star"></i></div>
         <h3 class="feat-title" data-t="f8_title">Highlight Mode</h3>
-        <p class="feat-desc" data-t="f8_desc">Built for SteelSeries Moments and NVIDIA Highlights. Watches your clips folder in real time — new clips stream instantly, and the last clip loops so your stream never goes black.</p>
+        <p class="feat-desc" data-t="f8_desc">Built for SteelSeries Moments and NVIDIA Highlights. Watches one or more clip folders in real time — new clips stream instantly, and the last clip loops so your stream never goes black.</p>
       </article>
 
       <article class="card">
@@ -502,6 +502,18 @@
         <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-bookmark"></i></div>
         <h3 class="feat-title" data-t="f10_title">Favorites &amp; System Tray</h3>
         <p class="feat-desc" data-t="f10_desc">Save your go-to quality settings as favorites for instant recall. Minimize to system tray and keep streaming in the background — the stream never stops.</p>
+      </article>
+
+      <article class="card">
+        <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-copyright"></i></div>
+        <h3 class="feat-title" data-t="f13_title">Logo Overlay</h3>
+        <p class="feat-desc" data-t="f13_desc">Add a custom logo or watermark to your stream. Choose the corner position and size — FFmpeg burns it in automatically on every frame, in every mode.</p>
+      </article>
+
+      <article class="card">
+        <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-desktop"></i></div>
+        <h3 class="feat-title" data-t="f14_title">Screen Capture Mode</h3>
+        <p class="feat-desc" data-t="f14_desc">Stream directly from your desktop or any monitor — no OBS required. Uses Windows Desktop Duplication with NVIDIA NVENC hardware encoding for a lightweight, zero-overhead capture pipeline.</p>
       </article>
 
     </div>
@@ -547,6 +559,8 @@
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech4">Ships with <code class="mono-inline">ffmpeg.exe</code> and <code class="mono-inline">ffprobe.exe</code> bundled next to the executable — no external install needed.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech5">Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech6">UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.</span></li>
+          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech7"><strong>Frame-based watchdog</strong> monitors real FFmpeg output frames. If no new frames are produced for 20 seconds, the process is restarted automatically — detects true freezes without false positives.</span></li>
+          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech8"><strong>Auto-recovery in all modes</strong> — File, Folder, Highlight, and Capture modes reconnect automatically after any unexpected drop, keeping your channel live with minimal downtime.</span></li>
         </ul>
       </div>
 
@@ -850,11 +864,15 @@ const STRINGS = {
     f7_title:          'Real-time Performance Monitoring',
     f7_desc:           'Live stats bar shows bitrate, FPS, CPU, GPU, memory, and encoding speed while streaming — spot issues before your viewers do.',
     f8_title:          'Highlight Mode',
-    f8_desc:           'Built for SteelSeries Moments and NVIDIA Highlights. Watches your clips folder in real time — new clips stream instantly, and the last clip loops so your stream never goes black.',
+    f8_desc:           'Built for SteelSeries Moments and NVIDIA Highlights. Watches one or more clip folders in real time — new clips stream instantly, and the last clip loops so your stream never goes black.',
     f9_title:          'Hardware Acceleration',
     f9_desc:           'Automatic NVIDIA NVENC detection. Enable GPU encoding to drastically reduce CPU load during high-bitrate or 1080p60 streams.',
     f10_title:         'Favorites & System Tray',
     f10_desc:          'Save your go-to quality settings as favorites for instant recall. Minimize to system tray and keep streaming in the background — the stream never stops.',
+    f13_title:         'Logo Overlay',
+    f13_desc:          'Add a custom logo or watermark to your stream. Choose the corner position and size — FFmpeg burns it in automatically on every frame, in every mode.',
+    f14_title:         'Screen Capture Mode',
+    f14_desc:          'Stream directly from your desktop or any monitor — no OBS required. Uses Windows Desktop Duplication with NVIDIA NVENC hardware encoding for a lightweight, zero-overhead capture pipeline.',
     feat_shot1_caption:'Streaming settings and destination configuration',
     feat_shot2_caption:'Quality profile presets and custom bitrate controls',
     tech_label:        'Technical Overview',
@@ -867,6 +885,8 @@ const STRINGS = {
     tech4:             'Ships with <code class="mono-inline">ffmpeg.exe</code> and <code class="mono-inline">ffprobe.exe</code> bundled next to the executable — no external install needed.',
     tech5:             'Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.',
     tech6:             'UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.',
+    tech7:             '<strong>Frame-based watchdog</strong> monitors real FFmpeg output frames. If no new frames are produced for 20 seconds, the process is restarted automatically — detects true freezes without false positives.',
+    tech8:             '<strong>Auto-recovery in all modes</strong> — File, Folder, Highlight, and Capture modes reconnect automatically after any unexpected drop, keeping your channel live with minimal downtime.',
     tech_img_caption:  'Streamer Pro architecture or full UI overview',
     uc_label:          'Use Cases',
     uc_title:          'WHO IS IT FOR?',
@@ -951,11 +971,15 @@ const STRINGS = {
     f7_title:          'Monitoreo de Rendimiento en Tiempo Real',
     f7_desc:           'Barra de métricas en vivo muestra bitrate, FPS, CPU, GPU, memoria y velocidad de codificación — detecta problemas antes que tus viewers.',
     f8_title:          'Modo Highlight',
-    f8_desc:           'Diseñado para SteelSeries Moments y NVIDIA Highlights. Vigila tu carpeta de clips en tiempo real — los nuevos clips se transmiten al instante y el último se repite para que el stream nunca se caiga.',
+    f8_desc:           'Diseñado para SteelSeries Moments y NVIDIA Highlights. Vigila una o varias carpetas de clips en tiempo real — los nuevos clips se transmiten al instante y el último se repite para que el stream nunca se caiga.',
     f9_title:          'Aceleración por Hardware',
     f9_desc:           'Detección automática de NVIDIA NVENC. Activa la codificación por GPU para reducir drásticamente la carga de CPU en streams de alto bitrate o 1080p60.',
     f10_title:         'Favoritos y Bandeja del Sistema',
     f10_desc:          'Guarda tus configuraciones favoritas para acceso instantáneo. Minimiza a la bandeja del sistema y sigue transmitiendo en segundo plano — el stream nunca se detiene.',
+    f13_title:         'Overlay de Logo',
+    f13_desc:          'Agrega un logo o marca de agua personalizado a tu stream. Elige la esquina y el tamaño — FFmpeg lo incrusta automáticamente en cada frame, en todos los modos.',
+    f14_title:         'Modo Captura de Pantalla',
+    f14_desc:          'Transmite directamente desde tu escritorio o cualquier monitor — sin OBS. Usa Desktop Duplication de Windows con codificación por hardware NVIDIA NVENC para una captura liviana y eficiente.',
     feat_shot1_caption:'Configuración de streaming y destinos',
     feat_shot2_caption:'Perfiles de calidad predefinidos y bitrate personalizado',
     tech_label:        'Descripción Técnica',
@@ -968,6 +992,8 @@ const STRINGS = {
     tech4:             'Incluye <code class="mono-inline">ffmpeg.exe</code> y <code class="mono-inline">ffprobe.exe</code> junto al ejecutable — sin necesidad de instalación externa.',
     tech5:             'La lista de fuentes y configuración se guardan en un <strong>archivo JSON editable bajo <code class="mono-inline">%AppData%</code></strong> para portabilidad por usuario.',
     tech6:             'La interfaz permanece completamente responsiva durante el streaming gracias al <strong>manejo async de procesos</strong> y tokens de cancelación.',
+    tech7:             '<strong>Watchdog basado en frames</strong> monitorea la salida real de FFmpeg. Si no se generan frames nuevos en 20 segundos, el proceso se reinicia automáticamente — detecta congelamientos reales sin falsos positivos.',
+    tech8:             '<strong>Auto-recovery en todos los modos</strong> — Archivo, Carpeta, Highlights y Captura se reconectan automáticamente tras cualquier caída inesperada, manteniendo tu canal en vivo con mínimo downtime.',
     tech_img_caption:  'Arquitectura o vista completa de la UI de Streamer Pro',
     uc_label:          'Casos de Uso',
     uc_title:          '¿PARA QUIÉN ES?',
