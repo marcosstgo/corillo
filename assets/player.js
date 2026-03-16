@@ -293,7 +293,11 @@ function scheduleRetry(reason) {
   retries++;
   $('#sRetries').textContent = retries;
   $('#retryTxt').textContent = retries;
-  const wait = Math.min(30000, 1200 * Math.pow(1.6, Math.min(retries, 10)));
+  // Retries 1-4: agresivo (1200ms c/u) — cubre reconexiones breves del streamer (~5s ventana)
+  // Retry 5+: exponencial — canal probablemente offline de verdad
+  const wait = retries <= 4
+    ? 1200
+    : Math.min(30000, 1200 * Math.pow(1.8, Math.min(retries - 4, 9)));
   const secs = Math.round(wait / 1000);
   const offline = reason === 'networkError' || reason === 'Error de HLS nativo';
 
