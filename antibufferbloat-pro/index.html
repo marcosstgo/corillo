@@ -147,6 +147,20 @@
     .req-note{margin-top:16px;font-size:.75rem;color:rgba(255,255,255,.28);font-family:var(--mono);letter-spacing:1px}
 
     /* ── FOOTER ── */
+    /* ── TAMBIÉN TE PUEDE GUSTAR ── */
+    .also-section{padding:32px 0 8px}
+    .also-label{font-family:var(--mono);font-size:.55rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);text-align:center;margin-bottom:18px}
+    .also-card{display:flex;align-items:center;gap:20px;padding:20px 24px;border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.02);text-decoration:none;color:inherit;transition:.2s ease;max-width:680px;margin:0 auto}
+    .also-card:hover{border-color:rgba(232,200,74,.35);background:rgba(232,200,74,.03);transform:translateY(-1px)}
+    .also-icon{font-size:2.4rem;flex-shrink:0;line-height:1}
+    .also-body{flex:1;min-width:0}
+    .also-name{font-family:var(--display);font-size:1.4rem;letter-spacing:2px;margin-bottom:4px;color:var(--accent)}
+    .also-desc{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.5}
+    .also-cta{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0}
+    [data-theme="light"] .also-card{background:rgba(255,255,255,.6);border-color:rgba(0,0,0,.1)}
+    [data-theme="light"] .also-card:hover{border-color:rgba(232,200,74,.5);background:rgba(232,200,74,.06)}
+    [data-theme="light"] .also-desc{color:rgba(0,0,0,.5)}
+    @media(max-width:600px){.also-card{flex-wrap:wrap;gap:14px}.also-cta{display:none}}
     footer{border-top:1px solid var(--border);padding:28px 0;margin-top:32px}
     .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
     .footer-brand{font-family:var(--display);letter-spacing:3px;font-size:18px}
@@ -326,6 +340,21 @@
         </div>
         <p class="req-note">Windows 10 / 11 · .NET 8 Runtime requerido · Ejecutar como administrador</p>
       </div>
+    </div>
+  </section>
+
+  <!-- TAMBIÉN TE PUEDE GUSTAR -->
+  <section class="also-section">
+    <div class="container">
+      <p class="also-label">También te puede gustar</p>
+      <a href="/streamer-pro/" class="also-card">
+        <div class="also-icon">🎬</div>
+        <div class="also-body">
+          <div class="also-name">Streamer Pro</div>
+          <div class="also-desc">Graba y transmite en vivo desde tu PC. Modo highlights automático, clips, overlay, y captura de pantalla. Un solo ejecutable.</div>
+        </div>
+        <span class="also-cta">Ver app →</span>
+      </a>
     </div>
   </section>
 

@@ -73,6 +73,21 @@
     [data-theme="light"] .credit-line{color:rgba(0,0,0,.7)}
     [data-theme="light"] footer{border-color:rgba(0,0,0,.08)}
 
+    /* ── TAMBIÉN TE PUEDE GUSTAR ── */
+    .also-section{padding:32px 0 8px}
+    .also-label{font-family:var(--mono);font-size:.55rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.3);text-align:center;margin-bottom:18px}
+    .also-card{display:flex;align-items:center;gap:20px;padding:20px 24px;border-radius:var(--radius);border:1px solid var(--border);background:rgba(255,255,255,.02);text-decoration:none;color:inherit;transition:.2s ease;max-width:680px;margin:0 auto}
+    .also-card:hover{border-color:rgba(0,240,255,.35);background:rgba(0,240,255,.03);transform:translateY(-1px)}
+    .also-icon{font-size:2.4rem;flex-shrink:0;line-height:1}
+    .also-body{flex:1;min-width:0}
+    .also-name{font-family:var(--display);font-size:1.4rem;letter-spacing:2px;margin-bottom:4px;color:#00f0ff}
+    .also-desc{font-size:.82rem;color:rgba(255,255,255,.45);line-height:1.5}
+    .also-cta{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);white-space:nowrap;flex-shrink:0}
+    [data-theme="light"] .also-card{background:rgba(255,255,255,.6);border-color:rgba(0,0,0,.1)}
+    [data-theme="light"] .also-card:hover{border-color:rgba(0,240,255,.5);background:rgba(0,240,255,.05)}
+    [data-theme="light"] .also-desc{color:rgba(0,0,0,.5)}
+    @media(max-width:600px){.also-card{flex-wrap:wrap;gap:14px}.also-cta{display:none}}
+
     /* ── TOP NAV ── */
     .top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:18px 0 10px}
     .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1;text-decoration:none}
@@ -730,6 +745,19 @@
       </p>
       <div class="credit-sub" data-t="credits_footer">Corillo.live — Puerto Rico independent streaming platform</div>
     </div>
+  </section>
+
+  <!-- TAMBIÉN TE PUEDE GUSTAR -->
+  <section class="also-section">
+    <p class="also-label">También te puede gustar</p>
+    <a href="/antibufferbloat-pro/" class="also-card">
+      <div class="also-icon">📡</div>
+      <div class="also-body">
+        <div class="also-name">Anti-BufferBloat Pro</div>
+        <div class="also-desc">Optimiza tu conexión para gaming. Test de latencia A–F bajo carga real, perfiles TCP con un click. Gratis y open source.</div>
+      </div>
+      <span class="also-cta">Ver app →</span>
+    </a>
   </section>
 
 </div><!-- /container -->
