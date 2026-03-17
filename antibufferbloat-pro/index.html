@@ -91,12 +91,15 @@
     .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
 
     /* ── LOGO VISUAL ── */
-    .hero-logo-wrap{
-      display:flex;align-items:center;justify-content:center;
-      background:radial-gradient(circle at 50% 50%,rgba(0,240,255,.07) 0%,transparent 65%);
-      border:1px solid rgba(0,240,255,.1);border-radius:20px;padding:48px;
+    .hero-screenshot{
+      border:1px solid rgba(0,240,255,.15);border-radius:14px;overflow:hidden;
+      box-shadow:0 0 40px rgba(0,240,255,.08),0 20px 60px rgba(0,0,0,.5);
     }
-    .hero-logo-svg{filter:drop-shadow(0 0 28px rgba(0,240,255,.35)) drop-shadow(0 0 10px rgba(255,0,229,.2))}
+    .hero-screenshot img{width:100%;display:block}
+    .screenshot-caption{
+      font-family:var(--mono);font-size:.55rem;letter-spacing:1px;
+      color:rgba(255,255,255,.25);text-align:center;margin-top:8px;
+    }
 
     /* ── SECTIONS ── */
     .section{padding:52px 0}
@@ -200,27 +203,12 @@
           </div>
         </div>
 
-        <!-- Logo visual -->
-        <div class="hero-logo-wrap">
-          <svg class="hero-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="220" height="220">
-            <defs>
-              <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00E5FF"/>
-                <stop offset="100%" stop-color="#FF00FF"/>
-              </linearGradient>
-              <linearGradient id="bolt" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#00E5FF"/>
-                <stop offset="100%" stop-color="#FF00FF"/>
-              </linearGradient>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="2" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-            <circle cx="50" cy="50" r="46" fill="#12122A"/>
-            <circle cx="50" cy="50" r="46" fill="none" stroke="url(#ring)" stroke-width="3" filter="url(#glow)"/>
-            <path d="M57 16 L37 51 L50 51 L43 84 L67 47 L53 47 Z" fill="url(#bolt)" filter="url(#glow)"/>
-          </svg>
+        <!-- Screenshot -->
+        <div>
+          <div class="hero-screenshot">
+            <img src="/assets/antibufferbloat-pro/screenshot-main.jpg" alt="Anti-BufferBloat Pro interface">
+          </div>
+          <p class="screenshot-caption">Anti-BufferBloat Pro v1.1.0 — dashboard view</p>
         </div>
 
       </div>
