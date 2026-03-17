@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Anti-BufferBloat Pro — Network Optimizer | CORILLO</title>
+  <meta name="description" content="Anti-BufferBloat Pro: optimizador de red para Windows. Reduce latencia, jitter y bufferbloat. Perfiles de gaming, test integrado y monitor en tiempo real." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/antibufferbloat-pro/">
+  <meta property="og:title" content="Anti-BufferBloat Pro — Network Optimizer | CORILLO">
+  <meta property="og:description" content="Optimizador de red para Windows. Reduce latencia y bufferbloat con un click. Test integrado, perfiles de gaming y monitor en tiempo real.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:site_name" content="CORILLO">
+
+  <!-- Favicon & manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
+  <link rel="canonical" href="https://corillo.live/antibufferbloat-pro/">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Shared design tokens -->
+  <link rel="stylesheet" href="/assets/styles.css">
+
+  <style>
+    :root{ --radius:14px; --cyan:#00f0ff; --magenta:#ff00e5; --green:#00ff88; }
+    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+    .container{max-width:1100px;margin:0 auto;padding:22px 18px}
+    @media(max-width:600px){.container{padding:16px 12px}}
+
+    /* ── LIGHT MODE ── */
+    [data-theme="light"] .card{background:rgba(255,255,255,.75);border-color:rgba(0,0,0,.1)}
+    [data-theme="light"] .hero-desc{color:rgba(0,0,0,.65)}
+    [data-theme="light"] .section-sub{color:rgba(0,0,0,.6)}
+    [data-theme="light"] .feat-desc{color:rgba(0,0,0,.6)}
+    [data-theme="light"] .download-box{background:rgba(0,240,255,.05);border-color:rgba(0,240,255,.2)}
+    [data-theme="light"] footer{border-color:rgba(0,0,0,.08)}
+
+    /* ── TOP NAV ── */
+    .top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:18px 0 10px}
+    .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1;text-decoration:none}
+    .brand span{color:var(--accent)}
+    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+    /* ── BUTTONS ── */
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.6rem;font-weight:700;
+      padding:10px 14px;border-radius:8px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.7);transition:.2s ease;white-space:nowrap;
+      text-decoration:none;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+    .btn.primary{background:var(--cyan);color:#060608;border-color:transparent}
+    .btn.primary:hover{opacity:.88;box-shadow:0 0 20px rgba(0,240,255,.25)}
+    .btn.lg{padding:13px 22px;font-size:.65rem;letter-spacing:2px}
+    .btn.ghost{border-color:rgba(255,255,255,.15)}
+    .btn.ghost:hover{border-color:rgba(255,255,255,.3)}
+
+    /* ── HERO ── */
+    .hero{padding:40px 0 20px}
+    .hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+    @media(max-width:800px){.hero-inner{grid-template-columns:1fr;gap:32px}}
+
+    .version-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;
+      color:var(--cyan);border:1px solid rgba(0,240,255,.3);background:rgba(0,240,255,.06);
+      padding:4px 10px;border-radius:4px;margin-bottom:14px;
+    }
+    .hero-title{
+      font-family:var(--display);font-size:clamp(2.8rem,6.5vw,5rem);line-height:.9;letter-spacing:2px;
+      margin-bottom:10px;
+    }
+    .hero-title .cyan{color:var(--cyan)}
+    .hero-title .mag{color:var(--magenta)}
+    .hero-tagline{
+      font-family:var(--mono);font-size:.65rem;letter-spacing:3px;text-transform:uppercase;
+      color:rgba(255,255,255,.35);margin-bottom:16px;
+    }
+    .hero-desc{color:rgba(255,255,255,.68);line-height:1.75;font-size:.93rem;max-width:52ch;margin-bottom:24px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+    /* ── LOGO VISUAL ── */
+    .hero-logo-wrap{
+      display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(circle at 50% 50%,rgba(0,240,255,.07) 0%,transparent 65%);
+      border:1px solid rgba(0,240,255,.1);border-radius:20px;padding:48px;
+    }
+    .hero-logo-svg{filter:drop-shadow(0 0 28px rgba(0,240,255,.35)) drop-shadow(0 0 10px rgba(255,0,229,.2))}
+
+    /* ── SECTIONS ── */
+    .section{padding:52px 0}
+    .section-label{
+      font-family:var(--mono);font-size:.58rem;letter-spacing:3px;text-transform:uppercase;
+      color:var(--cyan);margin-bottom:10px;
+    }
+    .section-title{
+      font-family:var(--display);font-size:clamp(2rem,4vw,3rem);letter-spacing:2px;margin-bottom:10px;
+    }
+    .section-sub{color:rgba(255,255,255,.55);font-size:.92rem;line-height:1.7;max-width:58ch;margin-bottom:40px}
+    .section-divider{border:none;border-top:1px solid var(--border);margin:0}
+
+    /* ── FEATURE CARDS ── */
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media(max-width:900px){.feat-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.feat-grid{grid-template-columns:1fr}}
+    .card{
+      background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius);
+      padding:22px 20px;transition:.2s;
+    }
+    .card:hover{border-color:rgba(0,240,255,.2);background:rgba(0,240,255,.03)}
+    .feat-icon{font-size:1.4rem;margin-bottom:12px}
+    .feat-title{font-family:var(--mono);font-size:.68rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px;color:var(--white)}
+    .feat-desc{font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.6}
+
+    /* ── METRICS ROW ── */
+    .metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:48px}
+    @media(max-width:700px){.metrics-row{grid-template-columns:repeat(2,1fr)}}
+    .metric-card{
+      background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;
+      padding:18px 16px;text-align:center;
+    }
+    .metric-val{font-family:var(--display);font-size:2rem;letter-spacing:2px;line-height:1}
+    .metric-label{font-family:var(--mono);font-size:.52rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-top:5px}
+
+    /* ── DOWNLOAD BOX ── */
+    .download-box{
+      background:rgba(0,240,255,.04);border:1px solid rgba(0,240,255,.18);
+      border-radius:var(--radius);padding:32px 28px;text-align:center;
+    }
+    .download-title{font-family:var(--display);font-size:2.2rem;letter-spacing:3px;margin-bottom:8px}
+    .download-sub{color:rgba(255,255,255,.45);font-size:.85rem;margin-bottom:24px;font-family:var(--mono)}
+    .download-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .req-note{margin-top:16px;font-size:.75rem;color:rgba(255,255,255,.28);font-family:var(--mono);letter-spacing:1px}
+
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--border);padding:28px 0;margin-top:32px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+    .footer-brand{font-family:var(--display);letter-spacing:3px;font-size:18px}
+    .footer-brand span{color:var(--accent)}
+    .footer-copy{font-family:var(--mono);font-size:.55rem;letter-spacing:1.5px;color:rgba(255,255,255,.3)}
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="container">
+  <nav class="top" aria-label="Navegación">
+    <a class="brand" href="/"><span>C</span>ORILLO</a>
+    <div class="row">
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema" aria-label="Cambiar tema">☀</button>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+      <div class="nav-dropdown">
+        <button class="btn" style="background:none;cursor:pointer"><i class="fa-solid fa-box-open"></i> Software <i class="fa-solid fa-chevron-down" style="font-size:.45rem;opacity:.6;margin-left:2px"></i></button>
+        <div class="dropdown-menu">
+          <a href="/streamer-pro/"><i class="fa-solid fa-rocket"></i> Streamer Pro</a>
+          <a href="/antibufferbloat-pro/"><i class="fa-solid fa-bolt"></i> Anti-BufferBloat Pro</a>
+        </div>
+      </div>
+      <a class="btn" href="https://github.com/marcosstgo/AntiBufferBloatPro" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> GitHub</a>
+      <a class="btn primary" href="https://github.com/marcosstgo/AntiBufferBloatPro/releases/latest/download/Anti.BufferBloat.Pro.exe"><i class="fa-solid fa-download"></i> Descargar</a>
+    </div>
+  </nav>
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+
+        <div>
+          <div class="version-badge"><i class="fa-solid fa-circle-dot"></i> v1.0.0 · Windows</div>
+          <h1 class="hero-title">
+            ANTI-BUFFERBLOAT<br>
+            <span class="cyan">PRO</span>
+          </h1>
+          <p class="hero-tagline">Network Optimizer · Latency Killer</p>
+          <p class="hero-desc">
+            Optimizador de red para Windows diseñado para gaming y streaming. Reduce latencia, jitter y bufferbloat con perfiles de un click. Incluye test de BufferBloat integrado y monitor de ping en tiempo real.
+          </p>
+          <div class="hero-actions">
+            <a class="btn primary lg" href="https://github.com/marcosstgo/AntiBufferBloatPro/releases/latest/download/Anti.BufferBloat.Pro.exe">
+              <i class="fa-solid fa-download"></i> Descargar gratis
+            </a>
+            <a class="btn ghost lg" href="https://github.com/marcosstgo/AntiBufferBloatPro" target="_blank" rel="noopener">
+              <i class="fa-brands fa-github"></i> GitHub
+            </a>
+          </div>
+        </div>
+
+        <!-- Logo visual -->
+        <div class="hero-logo-wrap">
+          <svg class="hero-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="220" height="220">
+            <defs>
+              <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00E5FF"/>
+                <stop offset="100%" stop-color="#FF00FF"/>
+              </linearGradient>
+              <linearGradient id="bolt" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#00E5FF"/>
+                <stop offset="100%" stop-color="#FF00FF"/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="2" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <circle cx="50" cy="50" r="46" fill="#12122A"/>
+            <circle cx="50" cy="50" r="46" fill="none" stroke="url(#ring)" stroke-width="3" filter="url(#glow)"/>
+            <path d="M57 16 L37 51 L50 51 L43 84 L67 47 L53 47 Z" fill="url(#bolt)" filter="url(#glow)"/>
+          </svg>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- MÉTRICAS -->
+  <section class="section" style="padding-bottom:0">
+    <div class="container">
+      <div class="metrics-row">
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--cyan)">TCP</div>
+          <div class="metric-label">Optimización automática</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--green)">3</div>
+          <div class="metric-label">Perfiles de red</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--magenta)">120</div>
+          <div class="metric-label">Puntos de historial</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val" style="color:var(--cyan)">0$</div>
+          <div class="metric-label">Gratis para siempre</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section">
+    <div class="container">
+      <p class="section-label">Características</p>
+      <h2 class="section-title">Todo lo que necesitas</h2>
+      <p class="section-sub">Anti-BufferBloat Pro ajusta los parámetros de red de Windows que Windows no expone — para que tengas la menor latencia posible mientras juegas o streameas.</p>
+
+      <div class="feat-grid">
+
+        <div class="card">
+          <div class="feat-icon">⚡</div>
+          <div class="feat-title">Optimización TCP</div>
+          <div class="feat-desc">Configura ECN, TOS, nagling, autotuning, RSS y DCA automáticamente con un click. Sin tocar el registro manualmente.</div>
+        </div>
+
+        <div class="card">
+          <div class="feat-icon">🎮</div>
+          <div class="feat-title">Perfiles de red</div>
+          <div class="feat-desc">Tres perfiles preconfigurados: <strong>Gaming</strong> (latencia mínima), <strong>Streaming</strong> (throughput alto) y <strong>Balanceado</strong>.</div>
+        </div>
+
+        <div class="card">
+          <div class="feat-icon">📡</div>
+          <div class="feat-title">Test de BufferBloat</div>
+          <div class="feat-desc">Test integrado bajo carga real: mide ping en descarga, carga y simultáneo. Calificación A–F con recomendaciones.</div>
+        </div>
+
+        <div class="card">
+          <div class="feat-icon">📈</div>
+          <div class="feat-title">Monitor en tiempo real</div>
+          <div class="feat-desc">Gráfica de ping con los últimos 120 puntos. Métricas de jitter, packet loss, auto-tuning e IP externa en vivo.</div>
+        </div>
+
+        <div class="card">
+          <div class="feat-icon">🔔</div>
+          <div class="feat-title">Alertas de latencia</div>
+          <div class="feat-desc">Notificación en el system tray cuando el ping supera el umbral configurado. Monitorea sin tener la ventana abierta.</div>
+        </div>
+
+        <div class="card">
+          <div class="feat-icon">↑</div>
+          <div class="feat-title">Auto-update</div>
+          <div class="feat-desc">Detecta nuevas versiones en GitHub al iniciar. Descarga e instala con un click — sin desinstalar ni buscar manualmente.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- DOWNLOAD -->
+  <section class="section">
+    <div class="container">
+      <div class="download-box">
+        <div class="download-title">DESCARGAR</div>
+        <p class="download-sub">Un solo archivo · Sin instalador · Requiere administrador</p>
+        <div class="download-actions">
+          <a class="btn primary lg" href="https://github.com/marcosstgo/AntiBufferBloatPro/releases/latest/download/Anti.BufferBloat.Pro.exe">
+            <i class="fa-solid fa-download"></i> Anti.BufferBloat.Pro.exe
+          </a>
+          <a class="btn ghost lg" href="https://github.com/marcosstgo/AntiBufferBloatPro/releases" target="_blank" rel="noopener">
+            <i class="fa-brands fa-github"></i> Ver todos los releases
+          </a>
+        </div>
+        <p class="req-note">Windows 10 / 11 · .NET 8 Runtime requerido · Ejecutar como administrador</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand"><span>C</span>ORILLO · Software</div>
+      <div class="footer-copy">Anti-BufferBloat Pro · Free & Open Source · <a href="https://github.com/marcosstgo/AntiBufferBloatPro" style="color:rgba(255,255,255,.4)">github.com/marcosstgo</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Theme
+  const root = document.documentElement;
+  const saved = localStorage.getItem('corillo-theme');
+  if (saved === 'light') root.setAttribute('data-theme', 'light');
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const isLight = root.getAttribute('data-theme') === 'light';
+    root.setAttribute('data-theme', isLight ? 'dark' : 'light');
+    localStorage.setItem('corillo-theme', isLight ? 'dark' : 'light');
+  });
+</script>
+
+</body>
+</html>

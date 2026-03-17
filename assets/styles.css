@@ -75,3 +75,31 @@ body.no-grain::after { display:none }
   font-size:.75rem;transition:.2s;flex-shrink:0;
 }
 .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
+
+/* ── Software nav dropdown ── */
+.nav-dropdown{position:relative}
+.nav-dropdown .dropdown-menu{
+  position:absolute;top:calc(100% + 8px);left:50%;
+  transform:translateX(-50%);
+  background:#0d0d14;border:1px solid var(--border);border-radius:10px;
+  padding:6px;min-width:210px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .15s,visibility .15s,transform .15s;
+  transform:translateX(-50%) translateY(-4px);
+  z-index:300;
+}
+.nav-dropdown:hover .dropdown-menu,
+.nav-dropdown:focus-within .dropdown-menu{
+  opacity:1;visibility:visible;pointer-events:auto;
+  transform:translateX(-50%) translateY(0);
+}
+.dropdown-menu a{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 14px;border-radius:7px;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.65);transition:.15s;white-space:nowrap;
+}
+.dropdown-menu a:hover{background:rgba(255,255,255,.07);color:var(--white)}
+.dropdown-menu a i{width:14px;text-align:center;font-size:.8rem;flex-shrink:0}
+[data-theme="light"] .nav-dropdown .dropdown-menu{background:#e8e6df;border-color:rgba(0,0,0,.12)}
+[data-theme="light"] .dropdown-menu a:hover{background:rgba(0,0,0,.07)}
