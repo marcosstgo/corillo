@@ -456,8 +456,8 @@
 
       <article class="card">
         <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-gears"></i></div>
-        <h3 class="feat-title" data-t="f2_title">Built-in FFmpeg Engine</h3>
-        <p class="feat-desc" data-t="f2_desc">FFmpeg and FFprobe are bundled directly with the app. No external installs, no PATH configuration — everything works out of the box.</p>
+        <h3 class="feat-title" data-t="f2_title">Integrated FFmpeg Downloader</h3>
+        <p class="feat-desc" data-t="f2_desc">No FFmpeg on your system? No problem. The app detects it's missing and downloads it automatically (~35 MB) with a progress indicator. No PATH configuration needed.</p>
       </article>
 
       <article class="card">
@@ -557,7 +557,7 @@
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech1">Windows desktop app built with <strong>C# / .NET (WPF)</strong> in Visual Studio 2022.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech2">Uses <strong>FFmpeg</strong> to encode and stream video and audio to RTMP endpoints via the standard RTMP protocol.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech3">Folder playlist mode uses <strong>FFmpeg concat</strong> files. Highlight Mode uses a <strong>dual-process MPEG-TS pipe</strong> — a permanent streamer process keeps the RTMP connection alive while a per-clip supplier feeds data through a C# relay.</span></li>
-          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech4">Ships with <code class="mono-inline">ffmpeg.exe</code> and <code class="mono-inline">ffprobe.exe</code> bundled next to the executable — no external install needed.</span></li>
+          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech4">Detects missing <code class="mono-inline">ffmpeg.exe</code> / <code class="mono-inline">ffprobe.exe</code> on startup and downloads them automatically (~35 MB) — no manual install or PATH setup needed.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech5">Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech6">UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech7"><strong>Frame-based watchdog</strong> monitors real FFmpeg output frames. If no new frames are produced for 20 seconds, the process is restarted automatically — detects true freezes without false positives.</span></li>
@@ -792,8 +792,8 @@ const STRINGS = {
     features_sub:      'Streamer Pro bundles all the tools a broadcaster needs — no extra installs, no configuration headaches. Just open, configure, and go live.',
     f1_title:          'Multi-Platform RTMP Streaming',
     f1_desc:           'Stream simultaneously or selectively to Corillo, Twitch, Kick, YouTube, or any custom RTMP endpoint. One interface, multiple destinations.',
-    f2_title:          'Built-in FFmpeg Engine',
-    f2_desc:           'FFmpeg and FFprobe are bundled directly with the app. No external installs, no PATH configuration — everything works out of the box.',
+    f2_title:          'Integrated FFmpeg Downloader',
+    f2_desc:           'No FFmpeg on your system? No problem. The app detects it\'s missing and downloads it automatically (~35 MB) with a progress indicator. No PATH configuration needed.',
     f3_title:          'Online Sources',
     f3_desc:           'Relay or rebroadcast any stream URL — YouTube, Twitch, or any HTTP/RTMP source. Pull it in and push it to your destination with full quality control.',
     f11_title:         'Folder Playlist',
@@ -829,7 +829,7 @@ const STRINGS = {
     tech1:             'Windows desktop app built with <strong>C# / .NET (WPF)</strong> in Visual Studio 2022.',
     tech2:             'Uses <strong>FFmpeg</strong> to encode and stream video and audio to RTMP endpoints via the standard RTMP protocol.',
     tech3:             'Folder playlist mode uses <strong>FFmpeg concat</strong> files. Highlight Mode uses a <strong>dual-process MPEG-TS pipe</strong> — a permanent streamer process keeps the RTMP connection alive while a per-clip supplier feeds data through a C# relay.',
-    tech4:             'Ships with <code class="mono-inline">ffmpeg.exe</code> and <code class="mono-inline">ffprobe.exe</code> bundled next to the executable — no external install needed.',
+    tech4:             'Detects missing <code class="mono-inline">ffmpeg.exe</code> / <code class="mono-inline">ffprobe.exe</code> on startup and downloads them automatically (~35 MB) — no manual install or PATH setup needed.',
     tech5:             'Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.',
     tech6:             'UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.',
     tech7:             '<strong>Frame-based watchdog</strong> monitors real FFmpeg output frames. If no new frames are produced for 20 seconds, the process is restarted automatically — detects true freezes without false positives.',
@@ -892,7 +892,7 @@ const STRINGS = {
     nav_home:          'Inicio',
     nav_join:          'Crear Canal',
     hero_tagline:      'Motor avanzado de streaming',
-    hero_desc:         'Aplicación de escritorio para Windows con streaming RTMP multi-plataforma. Motor FFmpeg integrado para transmitir desde playlists locales, fuentes online o feeds directos — a Corillo, Twitch, Kick, YouTube o cualquier endpoint RTMP personalizado.',
+    hero_desc:         'Aplicación de escritorio para Windows con streaming RTMP multi-plataforma. Transmite desde playlists locales, fuentes online o feeds directos — a Corillo, Twitch, Kick, YouTube o cualquier endpoint RTMP personalizado.',
     hero_img_caption:  'Interfaz principal de Streamer Pro — vista del dashboard',
     cta_download:      'Descargar v2.1.5',
     cta_features:      'Ver Funciones',
@@ -901,8 +901,8 @@ const STRINGS = {
     features_sub:      'Streamer Pro incluye todas las herramientas que un streamer necesita — sin instalaciones adicionales, sin complicaciones de configuración. Abre, configura y comienza a transmitir.',
     f1_title:          'Streaming RTMP Multi-Plataforma',
     f1_desc:           'Transmite a Corillo, Twitch, Kick, YouTube o cualquier endpoint RTMP personalizado. Una sola interfaz, múltiples destinos.',
-    f2_title:          'Motor FFmpeg Integrado',
-    f2_desc:           'FFmpeg y FFprobe vienen incluidos en la app. Sin instalaciones externas, sin configuración de PATH — funciona desde el primer momento.',
+    f2_title:          'Descargador de FFmpeg Integrado',
+    f2_desc:           '¿No tienes FFmpeg instalado? La app lo detecta y lo descarga automáticamente (~35 MB) con barra de progreso. Sin configuración de PATH.',
     f3_title:          'Fuentes Online',
     f3_desc:           'Retransmite cualquier URL de stream — YouTube, Twitch o cualquier fuente HTTP/RTMP. Capturala y envíala a tu destino con control total de calidad.',
     f11_title:         'Playlist desde Carpeta',
@@ -938,7 +938,7 @@ const STRINGS = {
     tech1:             'Aplicación de escritorio para Windows construida en <strong>C# / .NET (WPF)</strong> con Visual Studio 2022.',
     tech2:             'Usa <strong>FFmpeg</strong> para codificar video y audio, y luego transmite a los endpoints RTMP mediante el protocolo estándar.',
     tech3:             'El modo playlist usa archivos <strong>concat de FFmpeg</strong>. El Modo Highlight usa un <strong>pipe MPEG-TS de dos procesos</strong> — un proceso streamer permanente mantiene la conexión RTMP viva mientras un supplier por clip alimenta datos a través de un relay en C#.',
-    tech4:             'Incluye <code class="mono-inline">ffmpeg.exe</code> y <code class="mono-inline">ffprobe.exe</code> junto al ejecutable — sin necesidad de instalación externa.',
+    tech4:             'Detecta si falta <code class="mono-inline">ffmpeg.exe</code> / <code class="mono-inline">ffprobe.exe</code> al arrancar y los descarga automáticamente (~35 MB) — sin instalación manual ni configuración de PATH.',
     tech5:             'La lista de fuentes y configuración se guardan en un <strong>archivo JSON editable bajo <code class="mono-inline">%AppData%</code></strong> para portabilidad por usuario.',
     tech6:             'La interfaz permanece completamente responsiva durante el streaming gracias al <strong>manejo async de procesos</strong> y tokens de cancelación.',
     tech7:             '<strong>Watchdog basado en frames</strong> monitorea la salida real de FFmpeg. Si no se generan frames nuevos en 20 segundos, el proceso se reinicia automáticamente — detecta congelamientos reales sin falsos positivos.',
