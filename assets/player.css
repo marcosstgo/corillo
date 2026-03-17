@@ -11,6 +11,7 @@
 
 html{scroll-behavior:smooth}
 body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+body::after{display:none} /* no grain on player pages */
 
 /* ── NAV ── */
 header{
