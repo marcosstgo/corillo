@@ -79,18 +79,19 @@ body.no-grain::after { display:none }
 /* ── Software nav dropdown ── */
 .nav-dropdown{position:relative}
 .nav-dropdown .dropdown-menu{
-  position:absolute;top:calc(100% + 8px);left:50%;
+  position:absolute;top:100%;left:50%;
   transform:translateX(-50%);
+  padding-top:8px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .15s,visibility .15s;
+  z-index:300;
+}
+.nav-dropdown .dropdown-menu-inner{
   background:#0d0d14;border:1px solid var(--border);border-radius:10px;
   padding:6px;min-width:210px;
-  opacity:0;visibility:hidden;pointer-events:none;
-  transition:opacity .15s,visibility .15s,transform .15s;
-  transform:translateX(-50%) translateY(-4px);
-  z-index:300;
 }
 .nav-dropdown:hover .dropdown-menu{
   opacity:1;visibility:visible;pointer-events:auto;
-  transform:translateX(-50%) translateY(0);
 }
 .dropdown-menu a{
   display:flex;align-items:center;gap:10px;
