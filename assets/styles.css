@@ -88,8 +88,7 @@ body.no-grain::after { display:none }
   transform:translateX(-50%) translateY(-4px);
   z-index:300;
 }
-.nav-dropdown:hover .dropdown-menu,
-.nav-dropdown:focus-within .dropdown-menu{
+.nav-dropdown:hover .dropdown-menu{
   opacity:1;visibility:visible;pointer-events:auto;
   transform:translateX(-50%) translateY(0);
 }
