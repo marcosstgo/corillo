@@ -372,7 +372,23 @@
 
   <!-- ── TOP NAV ── -->
   <nav class="top" aria-label="Site navigation">
-    <a href="/" class="brand" aria-label="CORILLO home">C<span>O</span>RILLO</a>
+    <a href="/" aria-label="CORILLO home" style="display:flex;align-items:center;text-decoration:none">
+      <svg id="navLogo" width="140" height="38" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
+        <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+        <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+      </svg>
+    </a>
     <div class="row">
       <div class="lang-toggle" role="group" aria-label="Language selector">
         <button class="lang-btn active" id="btnEN" onclick="setLang('en')" aria-label="English">EN</button>
