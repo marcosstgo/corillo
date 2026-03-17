@@ -347,6 +347,20 @@ async function start() {
     v.src = url;
     _nativeErrHandler = () => { _nativeErrHandler = null; scheduleRetry('Error de HLS nativo'); };
     v.addEventListener('error', _nativeErrHandler, { once:true });
+    // Stall detection — Safari puede congelarse sin lanzar error
+    let _nativeStallTimer = null, _lastTime = -1;
+    function _startStallWatch() {
+      _nativeStallTimer = setInterval(() => {
+        if (!v.paused && v.currentTime === _lastTime) {
+          clearInterval(_nativeStallTimer);
+          scheduleRetry('stall nativo');
+        }
+        _lastTime = v.currentTime;
+      }, 5000);
+    }
+    function _stopStallWatch() { clearInterval(_nativeStallTimer); _nativeStallTimer = null; }
+    v.addEventListener('playing', _startStallWatch, { once:true });
+    v.addEventListener('pause',   _stopStallWatch);
     try {
       await v.play();
       hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner();
@@ -359,7 +373,15 @@ async function start() {
   }
 
   if (window.Hls && Hls.isSupported()) {
-    hls = new Hls({ lowLatencyMode:true, backBufferLength:30, maxBufferLength:8, maxLiveSyncPlaybackRate:1.3 });
+    hls = new Hls({
+      lowLatencyMode: true,
+      liveSyncDuration: 2,          // target ~2s latency (aprovecha LL-HLS parts de 500ms)
+      backBufferLength: 8,          // era 30 — innecesario en live, ahorra RAM
+      maxBufferLength: 6,           // stay close to live edge
+      maxLiveSyncPlaybackRate: 1.5, // catch-up más rápido al live edge
+      manifestLoadingMaxRetry: 1,
+      fragLoadingMaxRetry: 2,
+    });
     window._hlsInstance = hls;
     hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
     hls.on(Hls.Events.MANIFEST_PARSED, async () => {
@@ -371,7 +393,9 @@ async function start() {
       }
     });
     hls.on(Hls.Events.ERROR, (_, d) => {
-      if (d?.fatal) { cleanup(); scheduleRetry(d.type || 'Error fatal'); }
+      if (!d) return;
+      if (d.fatal) { cleanup(); scheduleRetry(d.type || 'Error fatal'); return; }
+      if (d.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR) { try { hls.recoverMediaError(); } catch {} }
     });
     hls.attachMedia(v);
     return;
