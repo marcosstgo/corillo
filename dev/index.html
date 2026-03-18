@@ -85,6 +85,7 @@
     .app-card-accent{height:3px;width:100%}
     .accent-cyan{background:linear-gradient(90deg,#00f0ff,#0080ff)}
     .accent-amber{background:linear-gradient(90deg,#e8c84a,#ff8c00)}
+    .accent-natcheck{background:linear-gradient(90deg,#00FF88,#00DCFF)}
 
     .app-card-body{padding:28px;flex:1;display:flex;flex-direction:column}
     .app-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
@@ -162,7 +163,7 @@
       <p class="hero-sub">Software gratuito y open source para streamers y gamers. Hecho en Puerto Rico.</p>
       <div class="stats">
         <div class="stat">
-          <div class="stat-val">3</div>
+          <div class="stat-val">4</div>
           <div class="stat-lbl">Apps publicadas</div>
         </div>
         <div class="stat">
@@ -284,6 +285,43 @@
                 <i class="fa-solid fa-download"></i> Descargar
               </a>
               <a href="https://github.com/marcosstgo/PingGuard" target="_blank" rel="noopener" class="btn-app ghost">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- NATCheck -->
+        <article class="app-card">
+          <div class="app-card-accent accent-natcheck"></div>
+          <div class="app-card-body">
+            <div class="app-header">
+              <div class="app-icon">🌐</div>
+              <div class="app-meta">
+                <div class="app-name" style="color:#00FF88">NATCheck</div>
+                <div class="app-tagline">NAT · UPnP · MTU · Gaming</div>
+                <div class="app-badge">v1.0.0 · Windows</div>
+              </div>
+            </div>
+            <p class="app-desc">
+              Diagnóstico de red orientado a gaming. Detecta tu tipo de NAT, verifica puertos por juego, mide el MTU óptimo y abre puertos vía UPnP automáticamente.
+            </p>
+            <ul class="feat-list">
+              <li class="feat-item">Detección de NAT type via STUN — Full Cone, Restricted, Symmetric</li>
+              <li class="feat-item">Verificación de puertos por juego — BF6, Valorant, CoD, más</li>
+              <li class="feat-item">Detección automática de MTU óptimo por búsqueda binaria</li>
+              <li class="feat-item">Apertura de puertos vía UPnP con un click (Fix Ports)</li>
+              <li class="feat-item">Diagnóstico inteligente en lenguaje natural</li>
+              <li class="feat-item">Auto-detecta el juego activo y carga su perfil</li>
+            </ul>
+            <div class="app-actions">
+              <a href="https://github.com/marcosstgo/NATCheck/releases/latest/download/NATCheck.exe" class="btn-app" style="background:#00FF88;color:#060608;border-color:transparent;font-weight:700">
+                <i class="fa-solid fa-download"></i> Descargar
+              </a>
+              <a href="/natcheck/" class="btn-app ghost">
+                <i class="fa-solid fa-circle-info"></i> Más info
+              </a>
+              <a href="https://github.com/marcosstgo/NATCheck" target="_blank" rel="noopener" class="btn-app ghost">
                 <i class="fa-brands fa-github"></i> GitHub
               </a>
             </div>
