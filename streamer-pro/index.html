@@ -421,9 +421,9 @@
 
       <!-- Left: copy -->
       <div>
-        <div class="version-badge" aria-label="Version 2.2.0">
+        <div class="version-badge" aria-label="Version 2.2.2">
           <i class="fa-solid fa-microchip" aria-hidden="true"></i>
-          v2.2.0
+          v2.2.2
         </div>
         <h1 class="hero-title">
           STREAMER<span class="gold">PRO</span>
@@ -431,9 +431,9 @@
         <p class="hero-tagline" data-t="hero_tagline">Advanced Streaming Engine</p>
         <p class="hero-desc" data-t="hero_desc">A Windows desktop application for multi-platform RTMP streaming. Powered by a built-in FFmpeg engine — broadcast live from local playlists, online sources, or direct feeds to Corillo, Twitch, Kick, YouTube, or any custom RTMP endpoint.</p>
         <div class="hero-actions">
-          <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/download/v2.2.0/Streamer.Pro.exe" aria-label="Download Streamer Pro v2.1.0">
+          <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe" aria-label="Download Streamer Pro v2.1.0">
             <i class="fa-solid fa-download" aria-hidden="true"></i>
-            <span data-t="cta_download">Download v2.2.0</span>
+            <span data-t="cta_download">Download v2.2.2</span>
           </a>
           <a class="btn lg" href="https://github.com/marcosstgo/Streamer" target="_blank" rel="noopener" aria-label="View source on GitHub">
             <i class="fa-brands fa-github" aria-hidden="true"></i>
@@ -514,7 +514,7 @@
       <article class="card">
         <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-bolt"></i></div>
         <h3 class="feat-title" data-t="f9_title">Hardware Acceleration</h3>
-        <p class="feat-desc" data-t="f9_desc">Automatic NVIDIA NVENC detection. Enable GPU encoding to drastically reduce CPU load during high-bitrate or 1080p60 streams.</p>
+        <p class="feat-desc" data-t="f9_desc">Auto-detects NVIDIA (NVENC), AMD (AMF), and Intel (QSV) GPUs. Enable hardware encoding to drastically reduce CPU load during high-bitrate or 1080p60 streams.</p>
       </article>
 
       <article class="card">
@@ -544,7 +544,7 @@
       <article class="card">
         <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-desktop"></i></div>
         <h3 class="feat-title" data-t="f14_title">Screen Capture Mode</h3>
-        <p class="feat-desc" data-t="f14_desc">Stream directly from your desktop or any monitor — no OBS required. Uses Windows Desktop Duplication with NVIDIA NVENC hardware encoding for a lightweight, zero-overhead capture pipeline.</p>
+        <p class="feat-desc" data-t="f14_desc">Stream directly from your desktop or any monitor — no OBS required. Uses Windows Desktop Duplication with GPU hardware encoding (NVIDIA, AMD, or Intel) for a lightweight, zero-overhead capture pipeline.</p>
       </article>
 
       <article class="card">
@@ -711,9 +711,9 @@
       <p class="download-sub" data-t="dl_sub">Windows 10/11 · No extra install required</p>
 
       <div class="download-actions">
-        <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/download/v2.2.0/Streamer.Pro.exe" aria-label="Download Streamer Pro v2.1.0">
+        <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe" aria-label="Download Streamer Pro v2.1.0">
           <i class="fa-solid fa-download" aria-hidden="true"></i>
-          <span data-t="dl_btn">Download v2.2.0 (.exe)</span>
+          <span data-t="dl_btn">Download v2.2.2 (.exe)</span>
         </a>
         <a class="btn lg" href="https://github.com/marcosstgo/Streamer/releases" target="_blank" rel="noopener" aria-label="View all releases on GitHub">
           <i class="fa-brands fa-github" aria-hidden="true"></i>
@@ -819,7 +819,7 @@ const STRINGS = {
     hero_tagline:      'Advanced Streaming Engine',
     hero_desc:         'A Windows desktop application for multi-platform RTMP streaming. Powered by a built-in FFmpeg engine — broadcast live from local playlists, online sources, or direct feeds to Corillo, Twitch, Kick, YouTube, or any custom RTMP endpoint.',
     hero_img_caption:  'Streamer Pro main interface — dashboard view',
-    cta_download:      'Download v2.2.0',
+    cta_download:      'Download v2.2.2',
     cta_features:      'View Features',
     features_label:    'Key Features',
     features_title:    'EVERYTHING YOU NEED TO STREAM',
@@ -845,13 +845,13 @@ const STRINGS = {
     f8_title:          'Highlight Mode',
     f8_desc:           'Built for SteelSeries Moments and NVIDIA Highlights. Watches one or more clip folders in real time — new clips stream instantly, and the last clip loops so your stream never goes black.',
     f9_title:          'Hardware Acceleration',
-    f9_desc:           'Automatic NVIDIA NVENC detection. Enable GPU encoding to drastically reduce CPU load during high-bitrate or 1080p60 streams.',
+    f9_desc:           'Auto-detects NVIDIA (NVENC), AMD (AMF), and Intel (QSV) GPUs. Enable hardware encoding to drastically reduce CPU load during high-bitrate or 1080p60 streams.',
     f10_title:         'Favorites & System Tray',
     f10_desc:          'Save your go-to quality settings as favorites for instant recall. Minimize to system tray and keep streaming in the background — the stream never stops.',
     f13_title:         'Logo Overlay',
     f13_desc:          'Add a custom logo or watermark to your stream. Choose the corner position and size — FFmpeg burns it in automatically on every frame, in every mode.',
     f14_title:         'Screen Capture Mode',
-    f14_desc:          'Stream directly from your desktop or any monitor — no OBS required. Uses Windows Desktop Duplication with NVIDIA NVENC hardware encoding for a lightweight, zero-overhead capture pipeline.',
+    f14_desc:          'Stream directly from your desktop or any monitor — no OBS required. Uses Windows Desktop Duplication with GPU hardware encoding (NVIDIA, AMD, or Intel) for a lightweight, zero-overhead capture pipeline.',
     f15_title:         'Auto-Update',
     f15_desc:          'Streamer Pro checks for new versions on every launch. When an update is available, a badge appears in the header — one click downloads and installs it automatically, no manual downloads needed.',
     f16_title:         'EN / ES Language Toggle',
@@ -901,7 +901,7 @@ const STRINGS = {
     dl_label:          'Download',
     dl_title:          'DOWNLOAD STREAMER PRO',
     dl_sub:            'Windows 10/11 · No extra install required',
-    dl_btn:            'Download v2.2.0 (.exe)',
+    dl_btn:            'Download v2.2.2 (.exe)',
     req_ffmpeg:        'FFmpeg Bundled',
     req_noinstall:     'No Extra Install',
     dl_beta_note:      'This is a beta release. Some features may be incomplete or change between versions. Report issues to the developer.',
@@ -930,7 +930,7 @@ const STRINGS = {
     hero_tagline:      'Motor avanzado de streaming',
     hero_desc:         'Aplicación de escritorio para Windows con streaming RTMP multi-plataforma. Transmite desde playlists locales, fuentes online o feeds directos — a Corillo, Twitch, Kick, YouTube o cualquier endpoint RTMP personalizado.',
     hero_img_caption:  'Interfaz principal de Streamer Pro — vista del dashboard',
-    cta_download:      'Descargar v2.2.0',
+    cta_download:      'Descargar v2.2.2',
     cta_features:      'Ver Funciones',
     features_label:    'Funciones principales',
     features_title:    'TODO LO QUE NECESITAS PARA STREAMEAR',
@@ -956,13 +956,13 @@ const STRINGS = {
     f8_title:          'Modo Highlight',
     f8_desc:           'Diseñado para SteelSeries Moments y NVIDIA Highlights. Vigila una o varias carpetas de clips en tiempo real — los nuevos clips se transmiten al instante y el último se repite para que el stream nunca se caiga.',
     f9_title:          'Aceleración por Hardware',
-    f9_desc:           'Detección automática de NVIDIA NVENC. Activa la codificación por GPU para reducir drásticamente la carga de CPU en streams de alto bitrate o 1080p60.',
+    f9_desc:           'Detección automática de NVIDIA (NVENC), AMD (AMF) e Intel (QSV). Activa la codificación por GPU para reducir drásticamente la carga de CPU en streams de alto bitrate o 1080p60.',
     f10_title:         'Favoritos y Bandeja del Sistema',
     f10_desc:          'Guarda tus configuraciones favoritas para acceso instantáneo. Minimiza a la bandeja del sistema y sigue transmitiendo en segundo plano — el stream nunca se detiene.',
     f13_title:         'Overlay de Logo',
     f13_desc:          'Agrega un logo o marca de agua personalizado a tu stream. Elige la esquina y el tamaño — FFmpeg lo incrusta automáticamente en cada frame, en todos los modos.',
     f14_title:         'Modo Captura de Pantalla',
-    f14_desc:          'Transmite directamente desde tu escritorio o cualquier monitor — sin OBS. Usa Desktop Duplication de Windows con codificación por hardware NVIDIA NVENC para una captura liviana y eficiente.',
+    f14_desc:          'Transmite directamente desde tu escritorio o cualquier monitor — sin OBS. Usa Desktop Duplication de Windows con codificación por hardware GPU (NVIDIA, AMD o Intel) para una captura liviana y eficiente.',
     f15_title:         'Actualización Automática',
     f15_desc:          'Streamer Pro verifica si hay versiones nuevas cada vez que arranca. Cuando hay una actualización disponible, aparece un badge en el header — un click la descarga e instala automáticamente.',
     f16_title:         'Toggle de Idioma EN / ES',
@@ -1012,7 +1012,7 @@ const STRINGS = {
     dl_label:          'Descarga',
     dl_title:          'DESCARGA STREAMER PRO',
     dl_sub:            'Windows 10/11 · Sin instalación adicional',
-    dl_btn:            'Descargar v2.2.0 (.exe)',
+    dl_btn:            'Descargar v2.2.2 (.exe)',
     req_ffmpeg:        'FFmpeg Incluido',
     req_noinstall:     'Sin instalación extra',
     dl_beta_note:      'Esta es una versión beta. Algunas funciones pueden estar incompletas o cambiar entre versiones. Reporta los problemas al desarrollador.',
