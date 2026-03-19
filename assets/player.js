@@ -270,6 +270,7 @@ function stopStatsPolling() {
 
 // ── PLAYER ──
 let hls = null, retries = 0, retryTimer = null, _nativeErrHandler = null;
+let _rtcPc = null, _useWebRTC = false;
 window._hlsInstance = null;
 
 function setLive(on) {
@@ -284,6 +285,8 @@ function cleanup() {
   stopStatsPolling();
   const v = $('#video');
   try { v.pause(); } catch {}
+  if (_rtcPc) { try { _rtcPc.close(); } catch {} _rtcPc = null; }
+  if (v.srcObject) { v.srcObject.getTracks().forEach(t => t.stop()); v.srcObject = null; }
   v.removeAttribute('src'); v.load();
   if (hls) { try { hls.destroy(); } catch {} hls = null; window._hlsInstance = null; }
   setLive(false);
@@ -334,7 +337,51 @@ function getUrl() {
   return '/live/' + encodeURIComponent(path) + '/index.m3u8';
 }
 
+async function startWebRTC() {
+  cleanup();
+  showOverlay('Cargando', 'Conectando (WebRTC)…');
+  const v = $('#video');
+  v.muted = true;
+  $('#hlsTxt').textContent = '⚡ RTC';
+  try {
+    _rtcPc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+    _rtcPc.addTransceiver('video', { direction: 'recvonly' });
+    _rtcPc.addTransceiver('audio', { direction: 'recvonly' });
+    _rtcPc.ontrack = (e) => {
+      if (!v.srcObject) v.srcObject = new MediaStream();
+      v.srcObject.addTrack(e.track);
+    };
+    const offer = await _rtcPc.createOffer();
+    await _rtcPc.setLocalDescription(offer);
+    await new Promise((resolve) => {
+      if (_rtcPc.iceGatheringState === 'complete') return resolve();
+      _rtcPc.addEventListener('icegatheringstatechange', function onState() {
+        if (_rtcPc.iceGatheringState === 'complete') {
+          _rtcPc.removeEventListener('icegatheringstatechange', onState);
+          resolve();
+        }
+      });
+      setTimeout(resolve, 4000);
+    });
+    const whepUrl = '/webrtc/live/' + encodeURIComponent(channel) + '/whep';
+    const resp = await fetch(whepUrl, { method: 'POST', headers: { 'Content-Type': 'application/sdp' }, body: _rtcPc.localDescription.sdp });
+    if (!resp.ok) { scheduleRetry('networkError'); return; }
+    await _rtcPc.setRemoteDescription({ type: 'answer', sdp: await resp.text() });
+    _rtcPc.onconnectionstatechange = () => {
+      const s = _rtcPc?.connectionState;
+      if (s === 'failed' || s === 'disconnected') scheduleRetry('WebRTC disconnected');
+    };
+    try {
+      await v.play();
+      hideOverlay(); setLive(true); showUnmuteBanner();
+    } catch {
+      showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
+    }
+  } catch { scheduleRetry('networkError'); }
+}
+
 async function start() {
+  if (_useWebRTC) { startWebRTC(); return; }
   cleanup();
   const url = getUrl();
   $('#hlsTxt').textContent = mode === 'vertical' ? '9:16' : '16:9';
@@ -458,6 +505,26 @@ document.addEventListener('visibilitychange', () => {
     localStorage.setItem('corillo_grain', nowOff ? 'off' : 'on');
     btn.style.opacity = nowOff ? '.35' : '';
     btn.title = nowOff ? 'Activar efecto de grano' : 'Desactivar efecto de grano';
+  });
+})();
+
+// ── WEBRTC TOGGLE ──
+(function(){
+  const pill = $('#hlsTxt').closest('.pill') || $('#hlsTxt').parentElement;
+  const btn = document.createElement('button');
+  btn.id = 'ctrlRtc';
+  btn.className = 'ctrl-btn';
+  btn.title = 'Activar WebRTC (latencia baja ~200ms)';
+  btn.innerHTML = '<i class="fa-solid fa-bolt"></i>';
+  btn.style.cssText = 'opacity:.4;font-size:.8rem';
+  pill.after(btn);
+  btn.addEventListener('click', () => {
+    _useWebRTC = !_useWebRTC;
+    btn.style.opacity = _useWebRTC ? '1' : '.4';
+    btn.style.color = _useWebRTC ? '#00D4FF' : '';
+    btn.title = _useWebRTC ? 'Cambiar a HLS' : 'Activar WebRTC (latencia baja ~200ms)';
+    retries = 0;
+    start();
   });
 })();
 
