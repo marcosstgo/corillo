@@ -704,7 +704,7 @@ function populateDashboard(r) {
   sessionEmail.textContent = r.email;
 
   // Stream key — oculta por defecto
-  streamKeyVal.textContent = r.stream_key || '(sin stream key — contacta al admin)';
+  streamKeyVal.textContent = r.stream_key ? `${r.key}?secret=${r.stream_key}` : '(sin stream key — contacta al admin)';
   streamKeyVal.classList.add('hidden-key');
   keyVisible = false;
   toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
@@ -1071,7 +1071,7 @@ document.getElementById('regenKeyBtn').addEventListener('click', async () => {
     currentRecord.stream_key = data.stream_key;
 
     // Actualizar UI
-    streamKeyVal.textContent = data.stream_key;
+    streamKeyVal.textContent = `${currentRecord.key}?secret=${data.stream_key}`;
     if (keyVisible) {
       const fullKey = `${currentRecord.key}?secret=${data.stream_key}`;
       obsKeyHint.textContent = fullKey;
