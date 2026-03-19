@@ -468,7 +468,8 @@
           <strong>En OBS / Meld Studio</strong><br>
           Configuración → Stream → Servicio: <code>Personalizado</code><br>
           Servidor: <code>rtmp://corillo.live/live</code><br>
-          Clave de retransmisión: <code id="obsKeyHint">••••••••</code>
+          Clave de retransmisión: <code id="obsKeyHint">••••••••</code><br>
+          <span style="color:rgba(242,239,233,.4);font-size:.75rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.4)">{canal}?secret=••••••••</code></span>
         </div>
 
       </div>
@@ -658,7 +659,8 @@ function populateDashboard(r) {
   streamKeyVal.classList.add('hidden-key');
   keyVisible = false;
   toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
-  obsKeyHint.textContent = '••••••••';
+  obsKeyHint.textContent = `${r.key}?secret=••••••••`;
+  document.getElementById('obsKeyFormat').textContent = `${r.key}?secret=••••••••`;
 
   // Perfil
   fDisplayName.value = r.display_name || '';
@@ -735,16 +737,22 @@ toggleKey.addEventListener('click', () => {
   if (keyVisible) {
     streamKeyVal.classList.remove('hidden-key');
     toggleKey.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
-    obsKeyHint.textContent = currentRecord?.stream_key || '';
+    const fullKey = `${currentRecord?.key}?secret=${currentRecord?.stream_key}`;
+    obsKeyHint.textContent = fullKey;
+    document.getElementById('obsKeyFormat').textContent = fullKey;
   } else {
     streamKeyVal.classList.add('hidden-key');
     toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
-    obsKeyHint.textContent = '••••••••';
+    obsKeyHint.textContent = `${currentRecord?.key}?secret=••••••••`;
+    document.getElementById('obsKeyFormat').textContent = `${currentRecord?.key}?secret=••••••••`;
   }
 });
 
 // ── Copy buttons ──
-copyKey.addEventListener('click', () => copyText(currentRecord?.stream_key, copyKey));
+copyKey.addEventListener('click', () => {
+  const fullKey = `${currentRecord?.key}?secret=${currentRecord?.stream_key}`;
+  copyText(fullKey, copyKey);
+});
 copyServer.addEventListener('click', () => copyText('rtmp://corillo.live/live', copyServer));
 
 async function copyText(text, btn) {
