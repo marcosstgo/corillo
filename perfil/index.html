@@ -116,6 +116,17 @@
       display: none;
     }
     .login-submit { width: 100%; justify-content: center; padding: 10px; font-size: .8rem; margin-top: 8px; }
+    .forgot-link {
+      display: block; width: 100%; margin-top: 12px;
+      background: none; border: none; color: var(--muted);
+      font-size: .78rem; font-family: var(--mono); cursor: pointer;
+      text-align: center; transition: color .15s;
+    }
+    .forgot-link:hover { color: var(--white); }
+    .success-msg {
+      color: #00b894; font-size: .8rem;
+      font-family: var(--mono); margin-bottom: 12px;
+    }
 
     /* ── Dashboard ── */
     #dashboard { display: none; }
@@ -387,6 +398,23 @@
     <button class="btn primary login-submit" id="loginBtn">
       <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
     </button>
+    <button class="forgot-link" id="forgotBtn">¿Olvidaste tu contraseña?</button>
+  </div>
+
+  <!-- Reset password form -->
+  <div class="login-card" id="resetCard" style="display:none">
+    <h2>RESET</h2>
+    <p>Ingresa tu email y te enviaremos un link para crear una nueva contraseña.</p>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="resetEmail" placeholder="tu@email.com" autocomplete="email">
+    </div>
+    <div class="error-msg" id="resetErr"></div>
+    <div class="success-msg" id="resetOk" style="display:none"></div>
+    <button class="btn primary login-submit" id="resetBtn">
+      <i class="fa-solid fa-paper-plane"></i> Enviar link
+    </button>
+    <button class="forgot-link" id="backToLogin">← Volver al login</button>
   </div>
 </div>
 
@@ -546,6 +574,13 @@ const pb = new PocketBase(PB_URL);
 
 // ── Elementos ──
 const loginScreen  = document.getElementById('loginScreen');
+const resetCard    = document.getElementById('resetCard');
+const resetEmail   = document.getElementById('resetEmail');
+const resetBtn     = document.getElementById('resetBtn');
+const resetErr     = document.getElementById('resetErr');
+const resetOk      = document.getElementById('resetOk');
+const forgotBtn    = document.getElementById('forgotBtn');
+const backToLogin  = document.getElementById('backToLogin');
 const dashboard    = document.getElementById('dashboard');
 const loginEmail   = document.getElementById('loginEmail');
 const loginPass    = document.getElementById('loginPass');
@@ -832,6 +867,50 @@ changePassBtn.addEventListener('click', async () => {
   } finally {
     changePassBtn.disabled = false;
     changePassBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Cambiar contraseña';
+  }
+});
+
+// ── Forgot password ──
+forgotBtn.addEventListener('click', () => {
+  document.querySelector('.login-card').style.display = 'none';
+  resetCard.style.display = 'block';
+  resetEmail.value = loginEmail.value;
+  resetErr.style.display = 'none';
+  resetOk.style.display = 'none';
+});
+
+backToLogin.addEventListener('click', () => {
+  resetCard.style.display = 'none';
+  document.querySelector('.login-card').style.display = 'block';
+});
+
+resetBtn.addEventListener('click', async () => {
+  const email = resetEmail.value.trim();
+  resetErr.style.display = 'none';
+  resetOk.style.display = 'none';
+
+  if (!email) {
+    resetErr.textContent = 'Ingresa tu email.';
+    resetErr.style.display = 'block';
+    return;
+  }
+
+  resetBtn.disabled = true;
+  resetBtn.innerHTML = '<span class="spinner"></span> Enviando…';
+
+  try {
+    await pb.collection('streamers').requestPasswordReset(email);
+    resetOk.textContent = 'Si ese email existe, recibirás el link en unos momentos.';
+    resetOk.style.display = 'block';
+    resetBtn.style.display = 'none';
+  } catch (e) {
+    // Siempre mostrar éxito para no revelar si el email existe
+    resetOk.textContent = 'Si ese email existe, recibirás el link en unos momentos.';
+    resetOk.style.display = 'block';
+    resetBtn.style.display = 'none';
+  } finally {
+    resetBtn.disabled = false;
+    resetBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar link';
   }
 });
 
