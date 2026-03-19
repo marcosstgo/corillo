@@ -331,6 +331,58 @@
 
     /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:20px 0 28px}
+
+    /* ── Streamer CTA ── */
+    .streamer-cta{
+      padding:40px 0;
+      border-top:1px solid var(--border);
+    }
+    .cta-inner{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:24px;flex-wrap:wrap;
+      background:linear-gradient(135deg,rgba(232,200,74,.06) 0%,rgba(232,200,74,.02) 100%);
+      border:1px solid rgba(232,200,74,.15);
+      border-radius:16px;
+      padding:32px 36px;
+      position:relative;
+      overflow:hidden;
+    }
+    .cta-inner::before{
+      content:'';position:absolute;top:-40px;right:-40px;
+      width:200px;height:200px;border-radius:50%;
+      background:radial-gradient(circle,rgba(232,200,74,.08) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .cta-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;
+      color:var(--accent);margin-bottom:10px;
+    }
+    .cta-title{
+      font-family:var(--display);font-size:1.9rem;letter-spacing:1px;
+      margin:0 0 8px;line-height:1.1;
+    }
+    .cta-sub{
+      color:var(--muted);font-size:.85rem;line-height:1.6;margin:0;max-width:420px;
+    }
+    .cta-btn{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:14px 28px;
+      background:var(--accent);color:#000;
+      font-family:var(--mono);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
+      font-weight:700;border-radius:10px;text-decoration:none;
+      transition:.2s;white-space:nowrap;flex-shrink:0;
+      box-shadow:0 4px 20px rgba(232,200,74,.25);
+    }
+    .cta-btn:hover{opacity:.88;box-shadow:0 6px 28px rgba(232,200,74,.35);transform:translateY(-1px)}
+    .cta-btn i{font-size:.9rem}
+    @media(max-width:600px){
+      .cta-inner{padding:24px 20px;flex-direction:column;align-items:flex-start}
+      .cta-title{font-size:1.5rem}
+      .cta-btn{width:100%;justify-content:center}
+    }
+    [data-theme="light"] .cta-inner{background:linear-gradient(135deg,rgba(176,128,16,.06) 0%,rgba(176,128,16,.02) 100%);border-color:rgba(176,128,16,.2)}
+    [data-theme="light"] .cta-btn{background:var(--accent);color:#fff}
     .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
     .foot-left{display:flex;align-items:center;gap:12px}
     .foot-right{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.75rem;letter-spacing:1px;color:var(--muted)}
@@ -555,6 +607,24 @@
         <div class="grid" id="channelsGrid"></div>
       </div>
       <div class="grid-dots" id="gridDots"></div>
+    </div>
+  </section>
+  <!-- STREAMER CTA -->
+  <section class="streamer-cta">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="cta-left">
+          <div class="cta-badge"><span class="dot on" style="width:6px;height:6px"></span> Streamers</div>
+          <h2 class="cta-title">¿Tienes canal en CORILLO?</h2>
+          <p class="cta-sub">Accede a tu panel para ver tu stream key, editar tu perfil y configurar tus redes sociales.</p>
+        </div>
+        <div class="cta-right">
+          <a href="/perfil/" class="cta-btn">
+            <i class="fa-solid fa-user-circle"></i>
+            Mi perfil
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 </main>
