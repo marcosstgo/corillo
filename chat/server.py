@@ -456,6 +456,48 @@ async def mtx_auth(request: Request):
     return FastResponse(status_code=401)
 
 
+@app.post("/regen-stream-key")
+async def regen_stream_key(request: Request):
+    """Regenera el stream key de un streamer. Requiere token del propio streamer."""
+    auth_header = request.headers.get("Authorization", "")
+    if not auth_header:
+        raise HTTPException(status_code=401)
+    try:
+        data = await request.json()
+        record_id = data.get("record_id", "")
+        if not record_id:
+            raise HTTPException(status_code=400)
+
+        # Verificar que el token pertenece al record solicitado
+        r = await _http.get(
+            f"{PB_URL}/api/collections/streamers/records/{record_id}",
+            headers={"Authorization": auth_header},
+        )
+        if r.status_code != 200:
+            raise HTTPException(status_code=401)
+
+        # Generar nueva key y actualizar con token de admin
+        new_key = secrets.token_urlsafe(24)
+        admin_token = await _pb_admin_token()
+        r2 = await _http.patch(
+            f"{PB_URL}/api/collections/streamers/records/{record_id}",
+            headers={"Authorization": admin_token},
+            json={"stream_key": new_key},
+        )
+        if r2.status_code != 200:
+            raise HTTPException(status_code=500)
+
+        # Invalidar caché del canal
+        channel_key = r2.json().get("key", "")
+        _key_cache.pop(channel_key, None)
+
+        return {"stream_key": new_key}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500)
+
+
 @app.get("/profile/{key}")
 async def get_profile(key: str):
     """Retorna datos públicos de un streamer (sin stream_key)."""

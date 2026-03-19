@@ -464,6 +464,16 @@
           </div>
         </div>
 
+        <div class="key-warning" style="background:rgba(255,255,255,.03);border-color:var(--border)">
+          <i class="fa-solid fa-rotate" style="color:var(--muted)"></i>
+          <div style="flex:1">
+            <span style="font-size:.82rem">¿Tu stream key fue comprometida? Genera una nueva. Los streams activos se cortarán.</span>
+          </div>
+          <button class="btn danger" id="regenKeyBtn" style="flex-shrink:0;font-size:.7rem">
+            <i class="fa-solid fa-rotate"></i> Regenerar
+          </button>
+        </div>
+
         <div class="obs-hint">
           <strong>En OBS / Meld Studio</strong><br>
           Configuración → Stream → Servicio: <code>Personalizado</code><br>
@@ -524,6 +534,27 @@
           </button>
         </div>
 
+      </div>
+    </div>
+
+    <!-- Cambiar email -->
+    <div class="card">
+      <div class="card-title">Cambiar email</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Nuevo email</label>
+          <input type="email" id="fNewEmail" placeholder="nuevo@email.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label>Contraseña actual (para confirmar)</label>
+          <input type="password" id="fEmailPass" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div class="form-actions">
+          <span class="save-status" id="emailStatus"></span>
+          <button class="btn primary" id="changeEmailBtn">
+            <i class="fa-solid fa-envelope"></i> Cambiar email
+          </button>
+        </div>
       </div>
     </div>
 
@@ -919,6 +950,80 @@ resetBtn.addEventListener('click', async () => {
   } finally {
     resetBtn.disabled = false;
     resetBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar link';
+  }
+});
+
+// ── Regenerar stream key ──
+document.getElementById('regenKeyBtn').addEventListener('click', async () => {
+  if (!confirm('¿Seguro? Esto invalidará tu stream key actual. Si estás en vivo, el stream se cortará.')) return;
+
+  const btn = document.getElementById('regenKeyBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    // Generar nueva key en el servidor via admin
+    const res = await fetch('/chat-api/regen-stream-key', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
+      body: JSON.stringify({ record_id: currentRecord.id }),
+    });
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    currentRecord.stream_key = data.stream_key;
+
+    // Actualizar UI
+    streamKeyVal.textContent = data.stream_key;
+    if (keyVisible) {
+      const fullKey = `${currentRecord.key}?secret=${data.stream_key}`;
+      obsKeyHint.textContent = fullKey;
+      document.getElementById('obsKeyFormat').textContent = fullKey;
+    }
+    showToast('Stream key regenerada');
+  } catch (e) {
+    showToast('Error al regenerar. Intenta de nuevo.', 'err');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Regenerar';
+  }
+});
+
+// ── Cambiar email ──
+const fNewEmail    = document.getElementById('fNewEmail');
+const fEmailPass   = document.getElementById('fEmailPass');
+const changeEmailBtn = document.getElementById('changeEmailBtn');
+const emailStatus  = document.getElementById('emailStatus');
+
+changeEmailBtn.addEventListener('click', async () => {
+  const newEmail = fNewEmail.value.trim();
+  const pass     = fEmailPass.value;
+
+  emailStatus.textContent = '';
+  emailStatus.className = 'save-status';
+
+  if (!newEmail || !pass) {
+    emailStatus.textContent = 'Completa ambos campos.';
+    emailStatus.className = 'save-status err';
+    return;
+  }
+
+  changeEmailBtn.disabled = true;
+  changeEmailBtn.innerHTML = '<span class="spinner"></span> Enviando…';
+
+  try {
+    await pb.collection('streamers').requestEmailChange(newEmail);
+    emailStatus.textContent = 'Revisa tu nuevo email para confirmar el cambio.';
+    emailStatus.className = 'save-status ok';
+    fNewEmail.value = '';
+    fEmailPass.value = '';
+    showToast('Email de confirmación enviado');
+  } catch (e) {
+    emailStatus.textContent = 'Error. Verifica tu contraseña o el email.';
+    emailStatus.className = 'save-status err';
+    showToast('Error al cambiar el email', 'err');
+  } finally {
+    changeEmailBtn.disabled = false;
+    changeEmailBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> Cambiar email';
   }
 });
 
