@@ -1,4 +1,4 @@
-import os, re, time, json, asyncio, random, base64
+import os, re, time, json, asyncio, random, base64, secrets
 import httpx, anthropic, aiosqlite
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
@@ -30,6 +30,9 @@ TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "")
 GITHUB_TOKEN     = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO      = os.environ.get("GITHUB_REPO", "marcosstgo/corillo")
 GH_API           = "https://api.github.com"
+PB_URL           = os.environ.get("PB_URL", "https://pb.corillo.live")
+PB_ADMIN_EMAIL   = os.environ.get("PB_ADMIN_EMAIL", "")
+PB_ADMIN_PASS    = os.environ.get("PB_ADMIN_PASS", "")
 
 STREAMER_COLORS = [
     "linear-gradient(135deg,#74b9ff,#0984e3)",
@@ -160,7 +163,71 @@ async def _gh_put(path: str, content: str, sha: str | None, message: str):
         json=payload,
     )
 
-async def auto_create_streamer(handle: str, nombre: str, contenido: str):
+async def pb_create_streamer(handle: str, nombre: str, email: str, color: str):
+    """Crea cuenta en Pocketbase y envía email de reset para que el streamer cree su password."""
+    if not PB_ADMIN_EMAIL or not PB_ADMIN_PASS or not email:
+        return
+    try:
+        # Auth como admin
+        r = await _http.post(
+            f"{PB_URL}/api/collections/_superusers/auth-with-password",
+            json={"identity": PB_ADMIN_EMAIL, "password": PB_ADMIN_PASS},
+        )
+        token = r.json()["token"]
+        headers = {"Authorization": token}
+
+        name_up = nombre.upper() if nombre else handle.upper()
+        stream_key = secrets.token_urlsafe(24)
+        pw = secrets.token_urlsafe(32)
+
+        # Crear cuenta — si ya existe, actualizar email y stream_key
+        r = await _http.post(
+            f"{PB_URL}/api/collections/streamers/records",
+            headers=headers,
+            json={
+                "email": email,
+                "password": pw,
+                "passwordConfirm": pw,
+                "key": handle,
+                "display_name": name_up,
+                "color": color,
+                "stream_key": stream_key,
+                "active": True,
+                "emailVisibility": False,
+                "verified": True,
+            },
+        )
+        if r.status_code not in (200, 201):
+            # Si ya existe, buscar por key y actualizar email
+            r2 = await _http.get(
+                f"{PB_URL}/api/collections/streamers/records",
+                headers=headers,
+                params={"filter": f'key="{handle}"'},
+            )
+            items = r2.json().get("items", [])
+            if items:
+                rec_id = items[0]["id"]
+                await _http.patch(
+                    f"{PB_URL}/api/collections/streamers/records/{rec_id}",
+                    headers=headers,
+                    json={"email": email, "active": True},
+                )
+
+        # Enviar email de reset para que el streamer cree su password
+        await _http.post(
+            f"{PB_URL}/api/collections/streamers/request-password-reset",
+            json={"email": email},
+        )
+    except Exception as e:
+        if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
+            await _http.post(
+                f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
+                json={"chat_id": TELEGRAM_CHAT_ID,
+                      "text": f"⚠️ Pocketbase: no se pudo crear cuenta para @{handle}: {e}"},
+            )
+
+
+async def auto_create_streamer(handle: str, nombre: str, contenido: str, email: str = ""):
     """Crea streamers.js entry + player page + STREAMER_NAMES via GitHub API."""
     if not GITHUB_TOKEN:
         return
@@ -203,12 +270,16 @@ async def auto_create_streamer(handle: str, nombre: str, contenido: str):
         await _gh_put("chat/server.py", py, py_sha,
                       f"feat: add {handle} to STREAMER_NAMES [auto]")
 
+        # Crear cuenta en Pocketbase y enviar email al streamer
+        await pb_create_streamer(handle, nombre, email, color)
+
         # Notificar por Telegram
         if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID:
+            pb_note = f" · email enviado a {email}" if email else ""
             await _http.post(
                 f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage",
                 json={"chat_id": TELEGRAM_CHAT_ID,
-                      "text": f"🚀 Canal @{handle} creado — deploy en curso (~1 min)",
+                      "text": f"🚀 Canal @{handle} creado — deploy en curso (~1 min){pb_note}",
                       "parse_mode": "Markdown"},
             )
     except Exception as e:
@@ -262,12 +333,12 @@ async def telegram_webhook(request: Request):
         # Obtener datos del solicitante para crear el streamer
         _db.row_factory = aiosqlite.Row
         async with _db.execute(
-            "SELECT nombre, contenido FROM join_requests WHERE handle=? ORDER BY ts DESC LIMIT 1",
+            "SELECT nombre, email, contenido FROM join_requests WHERE handle=? ORDER BY ts DESC LIMIT 1",
             (handle,)
         ) as cur:
             row = await cur.fetchone()
         if row:
-            asyncio.create_task(auto_create_streamer(handle, row["nombre"], row["contenido"]))
+            asyncio.create_task(auto_create_streamer(handle, row["nombre"], row["contenido"], row["email"]))
         new_text = original_text + "\n\n✅ *APROBADO* — creando canal automáticamente..."
         answer_text = f"✅ {handle} aprobado"
     elif action == "reject":
