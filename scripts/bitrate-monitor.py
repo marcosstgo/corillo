@@ -21,7 +21,7 @@ COOLDOWN             = 300   # segundos entre alertas por streamer
 KICK_COOLDOWN        = 35    # segundos entre kicks — permite reconexión pero vuelve a kickear si bitrate sigue alto
 KICK_NOTIFY_COOLDOWN = 300   # segundos entre notificaciones Telegram por kick (no spamear)
 KICK_STRIKES_NEEDED  = 2     # polls consecutivos sobre AUTO_KICK_KBPS antes de kickear (~60s sostenido)
-KICK_EXEMPT          = {"live/streamerpro"}  # streamers exentos del auto-kick (alertas siguen activas)
+KICK_EXEMPT          = {"live/streamerpro", "live/katatonia", "live/marcos"}  # streamers exentos del auto-kick (alertas siguen activas)
 KICK_DIR       = "/var/www/stream/assets/kick"
 
 prev_bytes       = {}
