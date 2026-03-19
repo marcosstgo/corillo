@@ -417,6 +417,7 @@ const API            = '/mediamtx-api/v3/paths/list';
 const POLL_MS        = 15000;
 const CACHE_MS       = 8000;
 const API_TIMEOUT_MS = 5000;
+const MAX_SELECTIONS = 4;
 const $              = id => document.getElementById(id);
 
 let cache          = { t:0, data:null };
@@ -608,12 +609,18 @@ function updateUI() {
 
   // Filter count label
   if (totalLive > 0) {
-    $('filterCount').textContent = visible > 0 ? `${visible} de ${totalLive}` : '';
+    const atMax = selectedKeys.size >= MAX_SELECTIONS;
+    $('filterCount').textContent = visible > 0
+      ? `${visible}/${MAX_SELECTIONS}${atMax ? ' — máx' : ''}`
+      : '';
   }
 
-  // All button state
+  // All button state — disabled if more live streams than max
   const allSel = totalLive > 0 && liveKeys.every(k => selectedKeys.has(k));
+  const allDisabled = totalLive > MAX_SELECTIONS && !allSel;
   $('filterAll').classList.toggle('active', allSel);
+  $('filterAll').style.opacity = allDisabled ? '.3' : '';
+  $('filterAll').style.pointerEvents = allDisabled ? 'none' : '';
 
   // Gallery class + empty state — preserve arc-active and layout classes
   const arcCls    = arcRaiderMode ? ' arc-active' : '';
@@ -650,11 +657,18 @@ function toggleChip(key) {
     destroyHls(key);
     $('gallery').querySelector(`[data-key="${key}"]`)?.remove();
   } else {
+    if (selectedKeys.size >= MAX_SELECTIONS) return;
     selectedKeys.add(key);
     $('filterChips').querySelector(`[data-key="${key}"]`)?.classList.add('active');
     const entry = liveMap[key];
     if (entry) insertInOrder($('gallery'), buildCard(entry.streamer, entry.viewers), key, '.stream-card');
   }
+  // Dim unselected chips when at max
+  const atMax = selectedKeys.size >= MAX_SELECTIONS;
+  $('filterChips').querySelectorAll('.filter-chip:not(.active)').forEach(c => {
+    c.style.opacity = atMax ? '.2' : '';
+    c.style.pointerEvents = atMax ? 'none' : '';
+  });
   updateUI();
 }
 
