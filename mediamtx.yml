@@ -30,7 +30,7 @@ runOnDisconnect:
 # Autenticación
 ###############################################
 authMethod: http
-authHTTPAddress: http://127.0.0.1:3001/mtx-auth
+authHTTPAddress: http://127.0.0.1:3002/auth
 authHTTPExclude:
   - action: read
   - action: playback

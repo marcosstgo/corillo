@@ -1,6 +1,4 @@
 import os, re, time, json, asyncio, random, base64, secrets
-from urllib.parse import parse_qs
-from fastapi.responses import Response as FastResponse
 import httpx, anthropic, aiosqlite
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
@@ -57,10 +55,6 @@ LIVE_CACHE_TTL = 12  # segundos
 # Caché de thumbnails — evita re-descargar 50-150 KB en cada comentario del bot
 _thumb_cache: dict = {}
 THUMB_CACHE_TTL = 35  # segundos (FFmpeg los refresca cada 30s)
-
-# Caché de stream keys de Pocketbase — evita query en cada intento de publish
-_key_cache: dict = {}   # channel_key → {"stream_key": str, "ts": float}
-KEY_CACHE_TTL = 60      # segundos
 
 # Token de admin PB cacheado — se renueva solo cuando expira
 _pb_token: dict = {"token": "", "ts": 0.0}
@@ -388,72 +382,6 @@ async def _pb_admin_token() -> str:
     token = r.json()["token"]
     _pb_token.update({"token": token, "ts": now})
     return token
-
-
-async def _validate_stream_key(channel_key: str, secret: str) -> bool:
-    """Valida stream key contra Pocketbase con caché de 60s."""
-    now = time.time()
-    cached = _key_cache.get(channel_key)
-    if cached and now - cached["ts"] < KEY_CACHE_TTL:
-        return cached["stream_key"] == secret
-    try:
-        token = await _pb_admin_token()
-        r = await _http.get(
-            f"{PB_URL}/api/collections/streamers/records",
-            headers={"Authorization": token},
-            params={"filter": f'key="{channel_key}" && active=true', "fields": "stream_key"},
-        )
-        items = r.json().get("items", [])
-        if not items:
-            return False
-        sk = items[0]["stream_key"]
-        _key_cache[channel_key] = {"stream_key": sk, "ts": now}
-        return sk == secret
-    except:
-        return False
-
-
-@app.post("/mtx-auth")
-async def mtx_auth(request: Request):
-    """Webhook de autenticación para MediaMTX."""
-    try:
-        data = await request.json()
-    except Exception:
-        return FastResponse(status_code=401)
-
-    action = data.get("action", "")
-    path   = data.get("path", "")    # e.g. "live/katatonia"
-    ip     = data.get("ip", "")
-    query  = data.get("query", "")   # e.g. "secret=ABC123"
-
-    # Viewers y playback — libre para todos
-    if action in ("read", "playback"):
-        return FastResponse(status_code=200)
-
-    # API/metrics/pprof — solo localhost
-    if action in ("api", "metrics", "pprof"):
-        if ip in ("127.0.0.1", "::1"):
-            return FastResponse(status_code=200)
-        return FastResponse(status_code=401)
-
-    # Publish — validar stream key
-    if action == "publish":
-        if not PB_ADMIN_EMAIL or not PB_ADMIN_PASS:
-            return FastResponse(status_code=200)  # PB no configurado → permitir (compatibilidad)
-
-        params = parse_qs(query.lstrip("?"))
-        secret = (params.get("secret") or params.get("pass") or [None])[0]
-
-        if not secret:
-            return FastResponse(status_code=401)
-
-        # Extraer canal: "live/katatonia" → "katatonia"
-        channel_key = path.removeprefix("live/").split("?")[0]
-
-        valid = await _validate_stream_key(channel_key, secret)
-        return FastResponse(status_code=200 if valid else 401)
-
-    return FastResponse(status_code=401)
 
 
 @app.post("/regen-stream-key")

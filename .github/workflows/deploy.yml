@@ -72,6 +72,28 @@ jobs:
                echo 'MediaMTX config unchanged — skipped'
              fi"
 
+      - name: Deploy auth service
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "set -e
+             mkdir -p /home/corillo-adm/corillo-auth
+             cp /var/www/stream/auth/server.py /home/corillo-adm/corillo-auth/server.py
+             cp /var/www/stream/auth/requirements.txt /home/corillo-adm/corillo-auth/requirements.txt
+             if [ ! -d /home/corillo-adm/corillo-auth/venv ]; then
+               python3 -m venv /home/corillo-adm/corillo-auth/venv
+             fi
+             /home/corillo-adm/corillo-auth/venv/bin/pip install -q -r /home/corillo-adm/corillo-auth/requirements.txt
+             if [ ! -f /home/corillo-adm/corillo-auth/.env ]; then
+               cp /home/corillo-adm/corillo-bot/.env /home/corillo-adm/corillo-auth/.env
+             fi
+             if [ ! -f /etc/systemd/system/corillo-auth.service ]; then
+               sudo cp /var/www/stream/auth/corillo-auth.service /etc/systemd/system/corillo-auth.service
+               sudo systemctl daemon-reload
+               sudo systemctl enable corillo-auth
+             fi
+             sudo systemctl restart corillo-auth"
+
       - name: Deploy chat bot
         run: |
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \

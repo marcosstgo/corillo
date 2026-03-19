@@ -1,0 +1,15 @@
+[Unit]
+Description=Corillo Auth — RTMP stream key validation
+After=network.target
+
+[Service]
+Type=simple
+User=corillo-adm
+WorkingDirectory=/home/corillo-adm/corillo-auth
+EnvironmentFile=/home/corillo-adm/corillo-auth/.env
+ExecStart=/home/corillo-adm/corillo-auth/venv/bin/uvicorn server:app --host 127.0.0.1 --port 3002
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
