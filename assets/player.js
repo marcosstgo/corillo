@@ -572,55 +572,67 @@ start();
       const hasAvatar = data.avatar_url;
       if (!hasBio && !hasLinks && !hasAvatar) return;
 
-      const div = document.createElement('div');
-      div.className = 'profile-card';
+      const sec = document.createElement('div');
+      sec.className = 'profile-section';
 
-      // Header: avatar + nombre
-      const head = document.createElement('div');
-      head.className = 'profile-head';
+      // Label "SOBRE {NOMBRE}"
+      const label = document.createElement('div');
+      label.className = 'profile-label';
+      label.textContent = 'SOBRE ' + (data.display_name || channel).toUpperCase();
+      sec.appendChild(label);
+
+      // Row: avatar + info
+      const row = document.createElement('div');
+      row.className = 'profile-row';
+
+      // Avatar
       if (hasAvatar) {
         const img = document.createElement('img');
         img.className = 'profile-avatar';
         img.src = data.avatar_url;
         img.alt = data.display_name || channel;
-        head.appendChild(img);
+        row.appendChild(img);
       } else {
         const ava = document.createElement('div');
         ava.className = 'profile-avatar profile-avatar-initial';
         ava.style.background = data.color || 'var(--panel)';
         ava.textContent = (data.display_name || channel)[0].toUpperCase();
-        head.appendChild(ava);
+        row.appendChild(ava);
       }
+
+      // Info: nombre + bio + redes
       const info = document.createElement('div');
       info.className = 'profile-info';
+
       if (data.display_name) {
         const name = document.createElement('div');
         name.className = 'profile-name';
         name.textContent = data.display_name;
         info.appendChild(name);
       }
+
+      if (hasBio) {
+        const bio = document.createElement('p');
+        bio.className = 'profile-bio';
+        bio.textContent = data.bio.trim();
+        info.appendChild(bio);
+      }
+
       if (hasLinks) {
         const links = document.createElement('div');
         links.className = 'profile-links';
         if (data.twitch)
-          links.innerHTML += `<a href="https://twitch.tv/${data.twitch}" target="_blank" rel="noopener"><i class="fa-brands fa-twitch"></i>${data.twitch}</a>`;
+          links.innerHTML += `<a href="https://twitch.tv/${data.twitch}" target="_blank" rel="noopener"><i class="fa-brands fa-twitch"></i><span>Twitch</span></a>`;
         if (data.instagram)
-          links.innerHTML += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i>${data.instagram}</a>`;
+          links.innerHTML += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i><span>Instagram</span></a>`;
         if (data.tiktok)
-          links.innerHTML += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i>${data.tiktok}</a>`;
+          links.innerHTML += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></a>`;
         info.appendChild(links);
       }
-      head.appendChild(info);
-      div.appendChild(head);
 
-      if (hasBio) {
-        const p = document.createElement('p');
-        p.className = 'profile-bio';
-        p.textContent = data.bio.trim();
-        div.appendChild(p);
-      }
-
-      statsRow.after(div);
+      row.appendChild(info);
+      sec.appendChild(row);
+      statsRow.after(sec);
 
       // Paneles
       const panels = Array.isArray(data.panels) ? data.panels.filter(p => p && p.title) : [];
@@ -643,7 +655,7 @@ start();
           }
           grid.appendChild(card);
         });
-        div.after(grid);
+        sec.after(grid);
       }
     })
     .catch(() => {});
