@@ -234,7 +234,12 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
 
 
 /* ── Profile section ── */
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(14px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
 .profile-section{
+  animation:cardIn .45s cubic-bezier(.22,.68,0,1.2) both;
   margin:12px 16px 16px;
   padding:28px 28px 24px;
   background:linear-gradient(135deg,rgba(242,239,233,.05) 0%,rgba(242,239,233,.01) 100%);
