@@ -266,6 +266,9 @@
     .thumb-img.has-thumb{display:block;opacity:.45}
     .is-live .thumb-img.has-thumb{opacity:.88}
     .thumb-img.has-thumb ~ .ch-offline{display:none}
+    .thumb-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+    .thumb-vid.has-preview{display:block}
+    .thumb-vid.has-preview ~ .thumb-img{display:none}
     .ch-offline{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.52rem;letter-spacing:2px;color:var(--muted);background:var(--panel)}
     .is-live .ch-offline{display:none}
     /* Play overlay on hover */
@@ -843,6 +846,7 @@ function buildGrid() {
     } else {
       a.innerHTML  = `
         <div class="thumb">
+          <video class="thumb-vid" playsinline muted loop></video>
           <img class="thumb-img" alt="">
           <div class="ch-offline">Offline</div>
           <div class="live-tag"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
@@ -919,14 +923,29 @@ function updateGrid(livePaths) {
     if (vc) vc.textContent = views;
     // Refresh thumbnail on every poll while live — preload to avoid flash
     const img = card.querySelector('.thumb-img');
-    if (img) {
-      if (live) {
-        const newSrc = '/assets/thumbs/' + key + '.jpg?t=' + Date.now();
+    const vid = card.querySelector('.thumb-vid');
+    if (live) {
+      const t = Date.now();
+      // Video preview
+      if (vid && !vid.classList.contains('has-preview')) {
+        const mp4 = '/assets/thumbs/' + key + '.mp4?t=' + t;
+        vid.src = mp4;
+        vid.load();
+        vid.play().then(() => vid.classList.add('has-preview')).catch(() => {});
+      }
+      // Still image fallback
+      if (img) {
+        const newSrc = '/assets/thumbs/' + key + '.jpg?t=' + t;
         const probe = new Image();
         probe.onload = () => { img.src = newSrc; img.classList.add('has-thumb'); };
         probe.src = newSrc;
-      } else if (!img.classList.contains('has-thumb') && !img.dataset.probed) {
-        // Try loading saved thumb once — don't retry if 404
+      }
+    } else {
+      // Went offline — stop video
+      if (vid && vid.classList.contains('has-preview')) {
+        vid.pause(); vid.removeAttribute('src'); vid.classList.remove('has-preview');
+      }
+      if (img && !img.classList.contains('has-thumb') && !img.dataset.probed) {
         img.dataset.probed = '1';
         const saved = '/assets/thumbs/' + key + '.jpg';
         const probe = new Image();
