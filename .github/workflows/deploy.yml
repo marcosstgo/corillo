@@ -72,24 +72,26 @@ jobs:
                echo 'MediaMTX config unchanged — skipped'
              fi"
 
-      - name: Deploy chat bot to Pi
+      - name: Deploy chat bot
         run: |
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "scp /var/www/stream/chat/system_prompt.py marcos@192.168.8.167:/home/marcos/corillo-bot/system_prompt.py && \
-             scp /var/www/stream/chat/server.py marcos@192.168.8.167:/home/marcos/corillo-bot/server.py && \
-             scp /var/www/stream/chat/requirements.txt marcos@192.168.8.167:/home/marcos/corillo-bot/requirements.txt && \
-             ssh marcos@192.168.8.167 '/home/marcos/corillo-bot/venv/bin/pip install -q -r /home/marcos/corillo-bot/requirements.txt && sudo systemctl restart corillo-bot'"
+            "cd /home/corillo-adm/corillo-bot && \
+             cp /var/www/stream/chat/system_prompt.py . && \
+             cp /var/www/stream/chat/server.py . && \
+             cp /var/www/stream/chat/requirements.txt . && \
+             venv/bin/pip install -q -r requirements.txt && \
+             sudo systemctl restart corillo-bot"
 
-      - name: Deploy bitrate monitor to Pi if changed
+      - name: Deploy bitrate monitor if changed
         run: |
           scp -i ~/.ssh/deploy_key -P 2222 -o StrictHostKeyChecking=no \
             scripts/bitrate-monitor.py \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/bitrate-monitor.py
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "if ! diff -q /tmp/bitrate-monitor.py /home/marcos/bitrate-monitor.py > /dev/null 2>&1; then
-               cp /tmp/bitrate-monitor.py /home/marcos/bitrate-monitor.py
+            "if ! diff -q /tmp/bitrate-monitor.py /home/corillo-adm/bitrate-monitor.py > /dev/null 2>&1; then
+               cp /tmp/bitrate-monitor.py /home/corillo-adm/bitrate-monitor.py
                sudo systemctl restart bitrate-monitor
                echo 'bitrate-monitor changed — restarted'
              else
