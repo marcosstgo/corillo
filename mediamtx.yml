@@ -3,7 +3,7 @@
 # Versión: v1.16.1 | Raspberry Pi 3B+
 # Cambios vs default:
 #   - API habilitada (era: no)
-#   - hlsAlwaysRemux: no (era: yes) → ahorra CPU cuando no hay viewers
+#   - hlsAlwaysRemux: yes → normaliza timestamps (mini PC tiene CPU de sobra)
 #   - hlsSegmentCount: 7 → mínimo requerido por LL-HLS
 #   - hlsPartDuration: 500ms (era: 200ms) → menos requests/seg por viewer
 #   - hlsSegmentDuration: 2s → estable con OBS como fuente RTMP
@@ -122,7 +122,7 @@ hlsAllowOrigins: ['*']
 hlsTrustedProxies: []
 
 # no → ahorra CPU cuando no hay viewers (agrega ~2s delay al primer viewer)
-hlsAlwaysRemux: no
+hlsAlwaysRemux: yes
 
 # Low-Latency HLS con fmp4
 hlsVariant: fmp4
