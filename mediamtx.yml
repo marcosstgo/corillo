@@ -3,9 +3,9 @@
 # Versión: v1.16.1 | Raspberry Pi 3B+
 # Cambios vs default:
 #   - API habilitada (era: no)
-#   - hlsAlwaysRemux: yes → normaliza timestamps (mini PC tiene CPU de sobra)
-#   - hlsSegmentCount: 7 → mínimo requerido por LL-HLS
-#   - hlsPartDuration: 500ms (era: 200ms) → menos requests/seg por viewer
+#   - hlsVariant: mpegts (era: fmp4) → tolera DTS no-monotónico de Streamer Lite
+#   - hlsAlwaysRemux: no → ahorra CPU cuando no hay viewers
+#   - hlsSegmentCount: 7 → mínimo recomendado
 #   - hlsSegmentDuration: 2s → estable con OBS como fuente RTMP
 #   - writeQueueSize: 1024 (era: 512) → mejor throughput
 ###############################################
@@ -122,19 +122,16 @@ hlsAllowOrigins: ['*']
 hlsTrustedProxies: []
 
 # no → ahorra CPU cuando no hay viewers (agrega ~2s delay al primer viewer)
-hlsAlwaysRemux: yes
+hlsAlwaysRemux: no
 
-# Low-Latency HLS con fmp4
-hlsVariant: fmp4
+# mpegts tolera DTS no-monotónico (fmp4 crasheaba con Streamer Lite)
+hlsVariant: mpegts
 
-# Mínimo requerido por LL-HLS — no bajar de 7
+# Mínimo requerido — no bajar de 7
 hlsSegmentCount: 7
 
-# 2s es estable con OBS; 500ms causaba errores
+# 2s es estable con OBS
 hlsSegmentDuration: 2s
-
-# 500ms → reduce requests de 5/seg a 2/seg por viewer vs 200ms original
-hlsPartDuration: 500ms
 
 hlsSegmentMaxSize: 50M
 hlsDirectory: ''
