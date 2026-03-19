@@ -498,7 +498,32 @@
       </div>
     </div>
 
-    <!-- Danger zone -->
+    <!-- Cambiar contraseña -->
+    <div class="card">
+      <div class="card-title">Cambiar contraseña</div>
+      <div class="form-grid">
+        <div class="field">
+          <label>Contraseña actual</label>
+          <input type="password" id="fOldPass" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div class="field">
+          <label>Nueva contraseña</label>
+          <input type="password" id="fNewPass" placeholder="••••••••" autocomplete="new-password">
+        </div>
+        <div class="field">
+          <label>Confirmar nueva contraseña</label>
+          <input type="password" id="fNewPassConfirm" placeholder="••••••••" autocomplete="new-password">
+        </div>
+        <div class="form-actions">
+          <span class="save-status" id="passStatus"></span>
+          <button class="btn primary" id="changePassBtn">
+            <i class="fa-solid fa-lock"></i> Cambiar contraseña
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sesión -->
     <div class="card">
       <div class="card-title">Sesión</div>
       <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
@@ -751,6 +776,62 @@ saveBtn.addEventListener('click', async () => {
   } finally {
     saveBtn.disabled = false;
     saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
+  }
+});
+
+// ── Cambiar contraseña ──
+const fOldPass       = document.getElementById('fOldPass');
+const fNewPass       = document.getElementById('fNewPass');
+const fNewPassConfirm= document.getElementById('fNewPassConfirm');
+const changePassBtn  = document.getElementById('changePassBtn');
+const passStatus     = document.getElementById('passStatus');
+
+changePassBtn.addEventListener('click', async () => {
+  const oldPass = fOldPass.value;
+  const newPass = fNewPass.value;
+  const confirm = fNewPassConfirm.value;
+
+  passStatus.className = 'save-status';
+  passStatus.textContent = '';
+
+  if (!oldPass || !newPass || !confirm) {
+    passStatus.textContent = 'Completa todos los campos';
+    passStatus.className = 'save-status err';
+    return;
+  }
+  if (newPass.length < 8) {
+    passStatus.textContent = 'Mínimo 8 caracteres';
+    passStatus.className = 'save-status err';
+    return;
+  }
+  if (newPass !== confirm) {
+    passStatus.textContent = 'Las contraseñas no coinciden';
+    passStatus.className = 'save-status err';
+    return;
+  }
+
+  changePassBtn.disabled = true;
+  changePassBtn.innerHTML = '<span class="spinner"></span> Guardando…';
+
+  try {
+    await pb.collection('streamers').update(currentRecord.id, {
+      oldPassword:     oldPass,
+      password:        newPass,
+      passwordConfirm: confirm,
+    });
+    fOldPass.value = '';
+    fNewPass.value = '';
+    fNewPassConfirm.value = '';
+    passStatus.textContent = 'Contraseña actualizada';
+    passStatus.className = 'save-status ok';
+    showToast('Contraseña actualizada');
+  } catch (e) {
+    passStatus.textContent = 'Contraseña actual incorrecta';
+    passStatus.className = 'save-status err';
+    showToast('Error al cambiar la contraseña', 'err');
+  } finally {
+    changePassBtn.disabled = false;
+    changePassBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Cambiar contraseña';
   }
 });
 
