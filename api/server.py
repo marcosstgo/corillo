@@ -84,12 +84,13 @@ async def regen_stream_key(request: Request):
         )
         if r.status_code != 200:
             raise HTTPException(status_code=401)
+        handle = r.json().get("key", record_id)
         new_key = secrets.token_urlsafe(24)
         admin_token = await _admin_token()
         r2 = await _http.patch(
             f"{PB_URL}/api/collections/streamers/records/{record_id}",
             headers={"Authorization": admin_token},
-            json={"stream_key": new_key},
+            json={"stream_key": new_key, "stream_key_full": f"{handle}?secret={new_key}"},
         )
         if r2.status_code != 200:
             raise HTTPException(status_code=500)

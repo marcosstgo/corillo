@@ -150,7 +150,9 @@ async def pb_create_streamer(handle: str, nombre: str, email: str, color: str):
             json={
                 "email": email, "password": pw, "passwordConfirm": pw,
                 "key": handle, "display_name": name_up, "color": color,
-                "stream_key": stream_key, "active": True,
+                "stream_key": stream_key,
+                "stream_key_full": f"{handle}?secret={stream_key}",
+                "active": True,
                 "emailVisibility": False, "verified": True,
             },
         )
