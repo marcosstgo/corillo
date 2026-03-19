@@ -269,6 +269,8 @@
     .thumb-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
     .thumb-vid.has-preview{display:block}
     .thumb-vid.has-preview ~ .thumb-img{display:none}
+    .card:hover .thumb-vid.has-mp4{display:block}
+    .card:hover .thumb-vid.has-mp4 ~ .thumb-img{display:none}
     .ch-offline{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.52rem;letter-spacing:2px;color:var(--muted);background:var(--panel)}
     .is-live .ch-offline{display:none}
     /* Play overlay on hover */
@@ -862,6 +864,16 @@ function buildGrid() {
           <button class="share-btn" title="Compartir"><i class="fa-solid fa-share-nodes"></i></button>
         </div>`;
 
+      // Hover video preview
+      a.addEventListener('mouseenter', () => {
+        const vid = a.querySelector('.thumb-vid');
+        if (vid && vid.classList.contains('has-mp4')) vid.play().catch(() => {});
+      });
+      a.addEventListener('mouseleave', () => {
+        const vid = a.querySelector('.thumb-vid');
+        if (vid && !vid.classList.contains('has-preview')) { vid.pause(); vid.currentTime = 0; }
+      });
+
       // Share button logic
       a.querySelector('.share-btn').addEventListener('click', async e => {
         e.preventDefault();
@@ -931,7 +943,7 @@ function updateGrid(livePaths) {
         const mp4 = '/assets/thumbs/' + key + '.mp4?t=' + t;
         vid.src = mp4;
         vid.load();
-        vid.play().then(() => vid.classList.add('has-preview')).catch(() => {});
+        vid.play().then(() => { vid.classList.add('has-preview'); vid.classList.add('has-mp4'); }).catch(() => {});
       }
       // Still image fallback
       if (img) {
@@ -941,9 +953,17 @@ function updateGrid(livePaths) {
         probe.src = newSrc;
       }
     } else {
-      // Went offline — stop video
+      // Went offline — stop autoplay, keep src for hover
       if (vid && vid.classList.contains('has-preview')) {
-        vid.pause(); vid.removeAttribute('src'); vid.classList.remove('has-preview');
+        vid.pause(); vid.currentTime = 0;
+        vid.classList.remove('has-preview');
+      }
+      // Probe for MP4 if not already set
+      if (vid && !vid.classList.contains('has-mp4') && !vid.dataset.probed) {
+        vid.dataset.probed = '1';
+        fetch('/assets/thumbs/' + key + '.mp4', { method: 'HEAD' })
+          .then(r => { if (r.ok) { vid.src = '/assets/thumbs/' + key + '.mp4'; vid.classList.add('has-mp4'); } })
+          .catch(() => {});
       }
       if (img && !img.classList.contains('has-thumb') && !img.dataset.probed) {
         img.dataset.probed = '1';
