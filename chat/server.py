@@ -510,7 +510,7 @@ async def get_profile(key: str):
             headers={"Authorization": token},
             params={
                 "filter": f'key="{key}" && active=true',
-                "fields": "id,key,display_name,bio,color,twitch,instagram,tiktok,avatar",
+                "fields": "id,key,display_name,bio,color,twitch,instagram,tiktok,avatar,panels",
             },
         )
         items = r.json().get("items", [])

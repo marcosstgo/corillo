@@ -276,6 +276,34 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
 .profile-links a .fa-instagram{color:#e1306c}
 [data-theme="light"] .profile-bio{color:rgba(18,18,15,.75)}
 
+/* Panels */
+.panels-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  margin-top:10px;
+}
+.panel-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;transition:border-color .15s;
+}
+.panel-card:has(.panel-link):hover{border-color:var(--border-h)}
+.panel-link{
+  display:flex;flex-direction:column;gap:6px;
+  padding:14px 16px;text-decoration:none;color:inherit;
+  height:100%;
+}
+.panel-card:not(:has(.panel-link)){padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.panel-title{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--white);
+}
+.panel-text{
+  font-size:.82rem;line-height:1.5;color:rgba(242,239,233,.65);flex:1;
+}
+.panel-url-lbl{
+  font-size:.65rem;color:var(--muted);margin-top:4px;
+}
+@media(max-width:480px){.panels-grid{grid-template-columns:1fr}}
+
 /* Themes */
 body.theme-terminal{background:#06080a}
 body.theme-terminal .playerWrap{border:1px solid rgba(232,200,74,.15)}

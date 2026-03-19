@@ -593,6 +593,51 @@ start();
       }
 
       statsRow.after(div);
+
+      // Paneles
+      const panels = Array.isArray(data.panels) ? data.panels.filter(p => p && p.title) : [];
+      if (panels.length) {
+        const grid = document.createElement('div');
+        grid.className = 'panels-grid';
+        panels.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'panel-card';
+          if (p.url) {
+            const a = document.createElement('a');
+            a.href = p.url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = 'panel-link';
+            buildPanel(a, p);
+            card.appendChild(a);
+          } else {
+            buildPanel(card, p);
+          }
+          grid.appendChild(card);
+        });
+        div.after(grid);
+      }
     })
     .catch(() => {});
+
+  function buildPanel(el, p) {
+    if (p.title) {
+      const t = document.createElement('div');
+      t.className = 'panel-title';
+      t.textContent = p.title;
+      el.appendChild(t);
+    }
+    if (p.text) {
+      const d = document.createElement('div');
+      d.className = 'panel-text';
+      d.textContent = p.text;
+      el.appendChild(d);
+    }
+    if (p.url) {
+      const lbl = document.createElement('div');
+      lbl.className = 'panel-url-lbl';
+      lbl.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+      el.appendChild(lbl);
+    }
+  }
 })();

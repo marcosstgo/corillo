@@ -537,6 +537,24 @@
       </div>
     </div>
 
+    <!-- Paneles -->
+    <div class="card">
+      <div class="card-title">Paneles</div>
+      <p style="font-size:.82rem;color:var(--muted);margin:0 0 16px">Aparecen debajo de tu perfil en tu canal. Máximo 4 paneles.</p>
+      <div id="panelsList" style="display:flex;flex-direction:column;gap:12px"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:14px">
+        <button class="btn" id="addPanelBtn">
+          <i class="fa-solid fa-plus"></i> Agregar panel
+        </button>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="save-status" id="panelsStatus"></span>
+          <button class="btn primary" id="savePanelsBtn">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar paneles
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Cambiar email -->
     <div class="card">
       <div class="card-title">Cambiar email</div>
@@ -703,6 +721,10 @@ function populateDashboard(r) {
   // Avatar
   updateAvatarPreview(r);
 
+  // Paneles
+  panels = (r.panels || []).map(p => ({title:p.title||'',text:p.text||'',url:p.url||''}));
+  renderPanels();
+
   // Nav — link al canal
   if (r.key) {
     const channelLink = document.createElement('a');
@@ -850,6 +872,82 @@ saveBtn.addEventListener('click', async () => {
   } finally {
     saveBtn.disabled = false;
     saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
+  }
+});
+
+// ── Paneles ──
+const panelsList   = document.getElementById('panelsList');
+const addPanelBtn  = document.getElementById('addPanelBtn');
+const savePanelsBtn= document.getElementById('savePanelsBtn');
+const panelsStatus = document.getElementById('panelsStatus');
+
+let panels = [];
+
+function renderPanels() {
+  panelsList.innerHTML = '';
+  panels.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px';
+    row.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span style="font-family:var(--mono);font-size:.65rem;letter-spacing:2px;color:var(--muted)">PANEL ${i+1}</span>
+        <button class="btn danger" style="font-size:.7rem;padding:4px 10px" data-del="${i}"><i class="fa-solid fa-trash"></i></button>
+      </div>
+      <div class="field" style="margin:0"><label>Título</label>
+        <input type="text" value="${esc(p.title)}" placeholder="Mi Discord" maxlength="40" data-field="title" data-idx="${i}">
+      </div>
+      <div class="field" style="margin:0"><label>Texto</label>
+        <input type="text" value="${esc(p.text)}" placeholder="Únete al servidor" maxlength="100" data-field="text" data-idx="${i}">
+      </div>
+      <div class="field" style="margin:0"><label>Link (opcional)</label>
+        <input type="url" value="${esc(p.url)}" placeholder="https://discord.gg/..." maxlength="200" data-field="url" data-idx="${i}">
+      </div>`;
+    row.querySelector('[data-del]').addEventListener('click', () => {
+      panels.splice(i, 1);
+      renderPanels();
+    });
+    row.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('input', () => {
+        panels[inp.dataset.idx][inp.dataset.field] = inp.value;
+      });
+    });
+    panelsList.appendChild(row);
+  });
+  addPanelBtn.disabled = panels.length >= 4;
+}
+
+function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+addPanelBtn.addEventListener('click', () => {
+  if (panels.length >= 4) return;
+  panels.push({title:'',text:'',url:''});
+  renderPanels();
+});
+
+savePanelsBtn.addEventListener('click', async () => {
+  savePanelsBtn.disabled = true;
+  savePanelsBtn.innerHTML = '<span class="spinner"></span> Guardando…';
+  panelsStatus.textContent = '';
+  panelsStatus.className = 'save-status';
+  try {
+    const clean = panels.filter(p => p.title.trim()).map(p => ({
+      title: p.title.trim(),
+      text:  p.text.trim(),
+      url:   p.url.trim(),
+    }));
+    currentRecord = await pb.collection('streamers').update(currentRecord.id, { panels: clean });
+    panels = (currentRecord.panels || []).map(p => ({...p}));
+    renderPanels();
+    panelsStatus.textContent = 'Paneles guardados';
+    panelsStatus.className = 'save-status ok';
+    showToast('Paneles actualizados');
+  } catch(e) {
+    panelsStatus.textContent = 'Error al guardar';
+    panelsStatus.className = 'save-status err';
+    showToast('Error al guardar los paneles', 'err');
+  } finally {
+    savePanelsBtn.disabled = false;
+    savePanelsBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar paneles';
   }
 });
 
