@@ -449,11 +449,11 @@ async function start() {
 
   if (window.Hls && Hls.isSupported()) {
     hls = new Hls({
-      lowLatencyMode: true,
-      liveSyncDuration: 2,          // target ~2s latency (aprovecha LL-HLS parts de 500ms)
-      backBufferLength: 8,          // era 30 — innecesario en live, ahorra RAM
-      maxBufferLength: 6,           // stay close to live edge
-      maxLiveSyncPlaybackRate: 1.5, // catch-up más rápido al live edge
+      lowLatencyMode: false,
+      liveSyncDurationCount: 3,     // 3 segmentos × 2s = 6s detrás del live edge — estable con mpegts
+      backBufferLength: 8,
+      maxBufferLength: 12,
+      maxLiveSyncPlaybackRate: 1.1, // catch-up suave
       manifestLoadingMaxRetry: 1,
       fragLoadingMaxRetry: 2,
     });
