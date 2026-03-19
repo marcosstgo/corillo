@@ -529,3 +529,43 @@ document.addEventListener('visibilitychange', () => {
 })();
 
 start();
+
+// ── PUBLIC PROFILE ──
+(function() {
+  const statsRow = document.getElementById('statsRow');
+  if (!statsRow) return;
+
+  fetch('/chat-api/profile/' + channel)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data) return;
+      const hasBio   = data.bio && data.bio.trim();
+      const hasLinks = data.twitch || data.instagram || data.tiktok;
+      if (!hasBio && !hasLinks) return;
+
+      const div = document.createElement('div');
+      div.className = 'profile-card';
+
+      if (hasBio) {
+        const p = document.createElement('p');
+        p.className = 'profile-bio';
+        p.textContent = data.bio.trim();
+        div.appendChild(p);
+      }
+
+      if (hasLinks) {
+        const links = document.createElement('div');
+        links.className = 'profile-links';
+        if (data.twitch)
+          links.innerHTML += `<a href="https://twitch.tv/${data.twitch}" target="_blank" rel="noopener"><i class="fa-brands fa-twitch"></i>${data.twitch}</a>`;
+        if (data.instagram)
+          links.innerHTML += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i>${data.instagram}</a>`;
+        if (data.tiktok)
+          links.innerHTML += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i>${data.tiktok}</a>`;
+        div.appendChild(links);
+      }
+
+      statsRow.after(div);
+    })
+    .catch(() => {});
+})();

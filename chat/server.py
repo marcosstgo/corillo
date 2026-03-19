@@ -456,6 +456,34 @@ async def mtx_auth(request: Request):
     return FastResponse(status_code=401)
 
 
+@app.get("/profile/{key}")
+async def get_profile(key: str):
+    """Retorna datos públicos de un streamer (sin stream_key)."""
+    if not PB_ADMIN_EMAIL or not PB_ADMIN_PASS:
+        raise HTTPException(status_code=404)
+    try:
+        token = await _pb_admin_token()
+        r = await _http.get(
+            f"{PB_URL}/api/collections/streamers/records",
+            headers={"Authorization": token},
+            params={
+                "filter": f'key="{key}" && active=true',
+                "fields": "id,key,display_name,bio,color,twitch,instagram,tiktok,avatar",
+            },
+        )
+        items = r.json().get("items", [])
+        if not items:
+            raise HTTPException(status_code=404)
+        rec = items[0]
+        if rec.get("avatar"):
+            rec["avatar_url"] = f"{PB_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
+        return rec
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=404)
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}

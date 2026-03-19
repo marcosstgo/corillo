@@ -233,6 +233,30 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
 .reply-btn:hover{color:rgba(145,71,255,.9)}
 
 
+/* ── Profile card ── */
+.profile-card{
+  padding:14px 16px;
+  border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:10px;
+}
+.profile-bio{
+  font-size:.85rem;line-height:1.6;color:rgba(242,239,233,.75);
+}
+.profile-links{
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+.profile-links a{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:.65rem;letter-spacing:1px;
+  color:var(--muted);text-decoration:none;
+  border:1px solid var(--border);border-radius:6px;
+  padding:5px 10px;transition:.15s;
+}
+.profile-links a:hover{color:var(--white);border-color:var(--border-h);background:rgba(255,255,255,.05)}
+.profile-links a .fa-twitch{color:#9146ff}
+.profile-links a .fa-instagram{color:#e1306c}
+[data-theme="light"] .profile-bio{color:rgba(18,18,15,.75)}
+
 /* Themes */
 body.theme-terminal{background:#06080a}
 body.theme-terminal .playerWrap{border:1px solid rgba(232,200,74,.15)}
