@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Mi perfil — CORILLO</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.js"></script>
+  <style>
+    body {
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--body);
+      min-height: 100vh;
+    }
+
+    /* ── Topbar ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6,6,8,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 52px;
+    }
+    .brand-link a {
+      display: flex;
+      align-items: center;
+    }
+    .brand-svg { height: 28px; width: auto; }
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 7px; font-size: .75rem;
+      font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--white); cursor: pointer; transition: .15s;
+      text-decoration: none;
+    }
+    .btn:hover { border-color: var(--border-h); background: rgba(255,255,255,.05); }
+    .btn.primary { background: var(--accent); color: #000; border-color: transparent; font-weight: 700; }
+    .btn.primary:hover { opacity: .88; }
+    .btn.danger { border-color: rgba(223,48,48,.4); color: var(--live); }
+    .btn.danger:hover { background: rgba(223,48,48,.1); }
+
+    /* ── Page layout ── */
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── Login screen ── */
+    #loginScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 52px);
+      gap: 32px;
+    }
+    .login-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 36px 40px;
+      width: 100%;
+      max-width: 380px;
+    }
+    .login-card h2 {
+      font-family: var(--display);
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+    .login-card p {
+      color: var(--muted);
+      font-size: .85rem;
+      margin-bottom: 28px;
+    }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .field label { font-size: .72rem; font-family: var(--mono); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    .field input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--white);
+      font-family: var(--body);
+      font-size: .95rem;
+      transition: .15s;
+      width: 100%;
+    }
+    .field input:focus { outline: none; border-color: var(--accent); }
+    .error-msg {
+      color: var(--live);
+      font-size: .8rem;
+      font-family: var(--mono);
+      margin-bottom: 12px;
+      display: none;
+    }
+    .login-submit { width: 100%; justify-content: center; padding: 10px; font-size: .8rem; margin-top: 8px; }
+
+    /* ── Dashboard ── */
+    #dashboard { display: none; }
+
+    .welcome {
+      margin-bottom: 36px;
+    }
+    .welcome h1 {
+      font-family: var(--display);
+      font-size: 2.4rem;
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+    .welcome p { color: var(--muted); font-size: .85rem; margin-top: 6px; }
+
+    /* ── Section cards ── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Stream key ── */
+    .key-row {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .key-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .key-label {
+      font-size: .7rem;
+      font-family: var(--mono);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .key-value-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+    }
+    .key-value {
+      flex: 1;
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--white);
+      word-break: break-all;
+      letter-spacing: 1px;
+    }
+    .key-value.hidden-key { filter: blur(6px); user-select: none; }
+    .key-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .icon-btn {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--white);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .8rem;
+      transition: .15s;
+      flex-shrink: 0;
+    }
+    .icon-btn:hover { border-color: var(--border-h); background: rgba(255,255,255,.07); }
+    .icon-btn.copied { border-color: #00b894; color: #00b894; }
+
+    .obs-hint {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: .78rem;
+      line-height: 1.7;
+    }
+    .obs-hint strong {
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: 1px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .obs-hint code {
+      font-family: var(--mono);
+      color: var(--accent);
+      font-size: .82rem;
+    }
+    .obs-hint .copy-server {
+      display: inline-flex; align-items: center; gap: 4px;
+      cursor: pointer; transition: .15s;
+    }
+    .obs-hint .copy-server:hover { color: var(--accent); }
+
+    /* ── Warning ── */
+    .key-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: rgba(223,48,48,.08);
+      border: 1px solid rgba(223,48,48,.2);
+      border-radius: 8px;
+      font-size: .8rem;
+      color: rgba(242,239,233,.7);
+    }
+    .key-warning i { color: var(--live); margin-top: 2px; flex-shrink: 0; }
+
+    /* ── Profile form ── */
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .field textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--white);
+      font-family: var(--body);
+      font-size: .95rem;
+      resize: vertical;
+      min-height: 80px;
+      width: 100%;
+      transition: .15s;
+    }
+    .field textarea:focus { outline: none; border-color: var(--accent); }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 480px) { .social-grid { grid-template-columns: 1fr; } }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+    .save-status {
+      font-size: .78rem;
+      font-family: var(--mono);
+      color: var(--muted);
+    }
+    .save-status.ok { color: #00b894; }
+    .save-status.err { color: var(--live); }
+
+    /* ── Avatar section ── */
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .avatar-preview {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      object-fit: cover;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--display);
+      font-size: 1.8rem;
+      color: var(--muted);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .file-input { display: none; }
+    .avatar-actions { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── Spinner ── */
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,.2);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: .82rem;
+      font-family: var(--mono);
+      letter-spacing: 1px;
+      z-index: 200;
+      transition: transform .25s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.ok { border-color: rgba(0,184,148,.4); color: #00b894; }
+    #toast.err { border-color: rgba(223,48,48,.4); color: var(--live); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="brand-link">
+      <a href="/">
+        <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+          <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
+          <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+          <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+          <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+          <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+        </svg>
+      </a>
+    </div>
+    <div class="nav-right" id="navRight">
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
+    </div>
+  </div>
+</header>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h2>MI PERFIL</h2>
+    <p>Entra con tu cuenta de CORILLO para ver tu stream key y editar tu perfil.</p>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email">
+    </div>
+    <div class="field">
+      <label>Contraseña</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="error-msg" id="loginErr"></div>
+    <button class="btn primary login-submit" id="loginBtn">
+      <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
+    </button>
+  </div>
+</div>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard">
+  <div class="page">
+
+    <div class="welcome">
+      <h1 id="welcomeName">BIENVENIDO</h1>
+      <p>Gestiona tu stream key y tu perfil público en CORILLO.</p>
+    </div>
+
+    <!-- Stream key -->
+    <div class="card">
+      <div class="card-title">Stream Key</div>
+      <div class="key-row">
+
+        <div class="key-warning">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>No compartas tu stream key con nadie. Quien la tenga puede transmitir en tu canal.</span>
+        </div>
+
+        <div class="key-info">
+          <div class="key-label">Servidor RTMP</div>
+          <div class="key-value-wrap">
+            <span class="key-value" id="rtmpServer">rtmp://corillo.live/live</span>
+            <div class="key-actions">
+              <button class="icon-btn" id="copyServer" title="Copiar servidor">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-info">
+          <div class="key-label">Stream Key</div>
+          <div class="key-value-wrap">
+            <span class="key-value hidden-key" id="streamKeyVal">cargando...</span>
+            <div class="key-actions">
+              <button class="icon-btn" id="toggleKey" title="Mostrar / ocultar">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+              <button class="icon-btn" id="copyKey" title="Copiar stream key">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="obs-hint">
+          <strong>En OBS / Meld Studio</strong><br>
+          Configuración → Stream → Servicio: <code>Personalizado</code><br>
+          Servidor: <code>rtmp://corillo.live/live</code><br>
+          Clave de retransmisión: <code id="obsKeyHint">••••••••</code>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Perfil -->
+    <div class="card">
+      <div class="card-title">Tu perfil</div>
+      <div class="form-grid">
+
+        <!-- Avatar -->
+        <div class="avatar-row">
+          <div class="avatar-preview" id="avatarPreview">
+            <span id="avatarInitial">?</span>
+          </div>
+          <div class="avatar-actions">
+            <button class="btn" id="avatarBtn"><i class="fa-solid fa-image"></i> Cambiar foto</button>
+            <input type="file" id="avatarFile" class="file-input" accept="image/jpeg,image/png,image/webp">
+            <span style="font-size:.75rem;color:var(--muted)">JPG, PNG o WebP · máx 5MB</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Nombre visible</label>
+          <input type="text" id="fDisplayName" placeholder="KATATONIA" maxlength="40">
+        </div>
+
+        <div class="field">
+          <label>Bio</label>
+          <textarea id="fBio" placeholder="Cuéntale algo a tu audiencia…" maxlength="280"></textarea>
+        </div>
+
+        <div class="social-grid">
+          <div class="field">
+            <label><i class="fa-brands fa-twitch" style="color:#9146ff"></i> Twitch</label>
+            <input type="text" id="fTwitch" placeholder="tu_usuario">
+          </div>
+          <div class="field">
+            <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram</label>
+            <input type="text" id="fInstagram" placeholder="tu_usuario">
+          </div>
+          <div class="field">
+            <label><i class="fa-brands fa-tiktok"></i> TikTok</label>
+            <input type="text" id="fTiktok" placeholder="tu_usuario">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <span class="save-status" id="saveStatus"></span>
+          <button class="btn primary" id="saveBtn">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Danger zone -->
+    <div class="card">
+      <div class="card-title">Sesión</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <span style="font-size:.85rem;color:var(--muted)" id="sessionEmail"></span>
+        <button class="btn danger" id="logoutBtn">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+const PB_URL = 'https://pb.corillo.live';
+const pb = new PocketBase(PB_URL);
+
+// ── Elementos ──
+const loginScreen  = document.getElementById('loginScreen');
+const dashboard    = document.getElementById('dashboard');
+const loginEmail   = document.getElementById('loginEmail');
+const loginPass    = document.getElementById('loginPass');
+const loginBtn     = document.getElementById('loginBtn');
+const loginErr     = document.getElementById('loginErr');
+const welcomeName  = document.getElementById('welcomeName');
+const sessionEmail = document.getElementById('sessionEmail');
+const streamKeyVal = document.getElementById('streamKeyVal');
+const obsKeyHint   = document.getElementById('obsKeyHint');
+const toggleKey    = document.getElementById('toggleKey');
+const copyKey      = document.getElementById('copyKey');
+const copyServer   = document.getElementById('copyServer');
+const avatarPreview= document.getElementById('avatarPreview');
+const avatarInitial= document.getElementById('avatarInitial');
+const avatarBtn    = document.getElementById('avatarBtn');
+const avatarFile   = document.getElementById('avatarFile');
+const fDisplayName = document.getElementById('fDisplayName');
+const fBio         = document.getElementById('fBio');
+const fTwitch      = document.getElementById('fTwitch');
+const fInstagram   = document.getElementById('fInstagram');
+const fTiktok      = document.getElementById('fTiktok');
+const saveBtn      = document.getElementById('saveBtn');
+const saveStatus   = document.getElementById('saveStatus');
+const logoutBtn    = document.getElementById('logoutBtn');
+const navRight     = document.getElementById('navRight');
+const toast        = document.getElementById('toast');
+
+let keyVisible = false;
+let currentRecord = null;
+let toastTimer = null;
+
+// ── Toast ──
+function showToast(msg, type = 'ok') {
+  clearTimeout(toastTimer);
+  toast.textContent = msg;
+  toast.className = `show ${type}`;
+  toastTimer = setTimeout(() => toast.className = '', 2800);
+}
+
+// ── Inicializar ──
+function init() {
+  if (pb.authStore.isValid) {
+    showDashboard();
+  } else {
+    showLogin();
+  }
+}
+
+function showLogin() {
+  loginScreen.style.display = 'flex';
+  dashboard.style.display = 'none';
+}
+
+async function showDashboard() {
+  loginScreen.style.display = 'none';
+  dashboard.style.display = 'block';
+
+  try {
+    // Refrescar datos del streamer
+    const record = await pb.collection('streamers').authRefresh();
+    currentRecord = pb.authStore.record;
+    populateDashboard(currentRecord);
+  } catch (e) {
+    pb.authStore.clear();
+    showLogin();
+  }
+}
+
+function populateDashboard(r) {
+  welcomeName.textContent = `BIENVENIDO, ${(r.display_name || r.key || '').toUpperCase()}`;
+  sessionEmail.textContent = r.email;
+
+  // Stream key — oculta por defecto
+  streamKeyVal.textContent = r.stream_key || '(sin stream key — contacta al admin)';
+  streamKeyVal.classList.add('hidden-key');
+  keyVisible = false;
+  toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
+  obsKeyHint.textContent = '••••••••';
+
+  // Perfil
+  fDisplayName.value = r.display_name || '';
+  fBio.value = r.bio || '';
+  fTwitch.value = r.twitch || '';
+  fInstagram.value = r.instagram || '';
+  fTiktok.value = r.tiktok || '';
+
+  // Avatar
+  updateAvatarPreview(r);
+
+  // Nav — link al canal
+  if (r.key) {
+    const channelLink = document.createElement('a');
+    channelLink.className = 'btn';
+    channelLink.href = `/${r.key}/`;
+    channelLink.innerHTML = '<i class="fa-solid fa-tv"></i> Mi canal';
+    navRight.insertBefore(channelLink, navRight.firstChild);
+  }
+
+  navRight.innerHTML = '';
+  if (r.key) {
+    navRight.innerHTML = `<a class="btn" href="/${r.key}/"><i class="fa-solid fa-tv"></i> Mi canal</a>`;
+  }
+  navRight.innerHTML += `<a class="btn" href="/"><i class="fa-solid fa-house"></i></a>`;
+}
+
+function updateAvatarPreview(r) {
+  if (r.avatar) {
+    const url = pb.files.getURL(r, r.avatar, { thumb: '100x100' });
+    avatarInitial.style.display = 'none';
+    const img = avatarPreview.querySelector('img') || document.createElement('img');
+    img.src = url;
+    if (!img.parentNode) avatarPreview.appendChild(img);
+  } else {
+    const letter = (r.display_name || r.key || '?')[0].toUpperCase();
+    avatarInitial.textContent = letter;
+    avatarInitial.style.display = '';
+    const img = avatarPreview.querySelector('img');
+    if (img) img.remove();
+  }
+}
+
+// ── Login ──
+loginBtn.addEventListener('click', doLogin);
+loginEmail.addEventListener('keydown', e => { if (e.key === 'Enter') loginPass.focus(); });
+loginPass.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+async function doLogin() {
+  const email = loginEmail.value.trim();
+  const pass = loginPass.value;
+  if (!email || !pass) return;
+
+  loginBtn.disabled = true;
+  loginBtn.innerHTML = '<span class="spinner"></span> Entrando…';
+  loginErr.style.display = 'none';
+
+  try {
+    await pb.collection('streamers').authWithPassword(email, pass);
+    currentRecord = pb.authStore.record;
+    showDashboard();
+  } catch (e) {
+    loginErr.textContent = 'Email o contraseña incorrectos.';
+    loginErr.style.display = 'block';
+  } finally {
+    loginBtn.disabled = false;
+    loginBtn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar';
+  }
+}
+
+// ── Stream key toggle ──
+toggleKey.addEventListener('click', () => {
+  keyVisible = !keyVisible;
+  if (keyVisible) {
+    streamKeyVal.classList.remove('hidden-key');
+    toggleKey.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
+    obsKeyHint.textContent = currentRecord?.stream_key || '';
+  } else {
+    streamKeyVal.classList.add('hidden-key');
+    toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
+    obsKeyHint.textContent = '••••••••';
+  }
+});
+
+// ── Copy buttons ──
+copyKey.addEventListener('click', () => copyText(currentRecord?.stream_key, copyKey));
+copyServer.addEventListener('click', () => copyText('rtmp://corillo.live/live', copyServer));
+
+async function copyText(text, btn) {
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 1800);
+    showToast('Copiado al portapapeles');
+  } catch (e) {
+    showToast('No se pudo copiar', 'err');
+  }
+}
+
+// ── Avatar upload ──
+avatarBtn.addEventListener('click', () => avatarFile.click());
+avatarFile.addEventListener('change', async () => {
+  const file = avatarFile.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('La imagen es demasiado grande (máx 5MB)', 'err'); return; }
+
+  avatarBtn.disabled = true;
+  avatarBtn.innerHTML = '<span class="spinner"></span> Subiendo…';
+  try {
+    const fd = new FormData();
+    fd.append('avatar', file);
+    currentRecord = await pb.collection('streamers').update(currentRecord.id, fd);
+    updateAvatarPreview(currentRecord);
+    showToast('Foto actualizada');
+  } catch (e) {
+    showToast('Error subiendo la foto', 'err');
+  } finally {
+    avatarBtn.disabled = false;
+    avatarBtn.innerHTML = '<i class="fa-solid fa-image"></i> Cambiar foto';
+    avatarFile.value = '';
+  }
+});
+
+// ── Guardar perfil ──
+saveBtn.addEventListener('click', async () => {
+  saveBtn.disabled = true;
+  saveBtn.innerHTML = '<span class="spinner"></span> Guardando…';
+  saveStatus.textContent = '';
+  saveStatus.className = 'save-status';
+
+  try {
+    currentRecord = await pb.collection('streamers').update(currentRecord.id, {
+      display_name: fDisplayName.value.trim(),
+      bio:          fBio.value.trim(),
+      twitch:       fTwitch.value.trim(),
+      instagram:    fInstagram.value.trim(),
+      tiktok:       fTiktok.value.trim(),
+    });
+    saveStatus.textContent = 'Cambios guardados';
+    saveStatus.className = 'save-status ok';
+    showToast('Perfil actualizado');
+    welcomeName.textContent = `BIENVENIDO, ${(currentRecord.display_name || currentRecord.key || '').toUpperCase()}`;
+  } catch (e) {
+    saveStatus.textContent = 'Error al guardar';
+    saveStatus.className = 'save-status err';
+    showToast('Error al guardar los cambios', 'err');
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Guardar cambios';
+  }
+});
+
+// ── Logout ──
+logoutBtn.addEventListener('click', () => {
+  pb.authStore.clear();
+  showLogin();
+  loginEmail.value = '';
+  loginPass.value = '';
+});
+
+// ── Inicio ──
+init();
+</script>
+</body>
+</html>
