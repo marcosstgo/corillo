@@ -541,18 +541,36 @@ start();
       if (!data) return;
       const hasBio   = data.bio && data.bio.trim();
       const hasLinks = data.twitch || data.instagram || data.tiktok;
-      if (!hasBio && !hasLinks) return;
+      const hasAvatar = data.avatar_url;
+      if (!hasBio && !hasLinks && !hasAvatar) return;
 
       const div = document.createElement('div');
       div.className = 'profile-card';
 
-      if (hasBio) {
-        const p = document.createElement('p');
-        p.className = 'profile-bio';
-        p.textContent = data.bio.trim();
-        div.appendChild(p);
+      // Header: avatar + nombre
+      const head = document.createElement('div');
+      head.className = 'profile-head';
+      if (hasAvatar) {
+        const img = document.createElement('img');
+        img.className = 'profile-avatar';
+        img.src = data.avatar_url;
+        img.alt = data.display_name || channel;
+        head.appendChild(img);
+      } else {
+        const ava = document.createElement('div');
+        ava.className = 'profile-avatar profile-avatar-initial';
+        ava.style.background = data.color || 'var(--panel)';
+        ava.textContent = (data.display_name || channel)[0].toUpperCase();
+        head.appendChild(ava);
       }
-
+      const info = document.createElement('div');
+      info.className = 'profile-info';
+      if (data.display_name) {
+        const name = document.createElement('div');
+        name.className = 'profile-name';
+        name.textContent = data.display_name;
+        info.appendChild(name);
+      }
       if (hasLinks) {
         const links = document.createElement('div');
         links.className = 'profile-links';
@@ -562,7 +580,16 @@ start();
           links.innerHTML += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i>${data.instagram}</a>`;
         if (data.tiktok)
           links.innerHTML += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i>${data.tiktok}</a>`;
-        div.appendChild(links);
+        info.appendChild(links);
+      }
+      head.appendChild(info);
+      div.appendChild(head);
+
+      if (hasBio) {
+        const p = document.createElement('p');
+        p.className = 'profile-bio';
+        p.textContent = data.bio.trim();
+        div.appendChild(p);
       }
 
       statsRow.after(div);

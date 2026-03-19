@@ -239,18 +239,37 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
   border-top:1px solid var(--border);
   display:flex;flex-direction:column;gap:10px;
 }
+.profile-head{
+  display:flex;align-items:center;gap:12px;
+}
+.profile-avatar{
+  width:48px;height:48px;border-radius:50%;
+  object-fit:cover;flex-shrink:0;
+  border:2px solid var(--border);
+}
+.profile-avatar-initial{
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:1.2rem;color:#fff;
+}
+.profile-info{
+  display:flex;flex-direction:column;gap:6px;min-width:0;
+}
+.profile-name{
+  font-family:var(--mono);font-size:.65rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--white);
+}
 .profile-bio{
   font-size:.85rem;line-height:1.6;color:rgba(242,239,233,.75);
 }
 .profile-links{
-  display:flex;flex-wrap:wrap;gap:8px;
+  display:flex;flex-wrap:wrap;gap:6px;
 }
 .profile-links a{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--mono);font-size:.65rem;letter-spacing:1px;
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:1px;
   color:var(--muted);text-decoration:none;
   border:1px solid var(--border);border-radius:6px;
-  padding:5px 10px;transition:.15s;
+  padding:4px 9px;transition:.15s;
 }
 .profile-links a:hover{color:var(--white);border-color:var(--border-h);background:rgba(255,255,255,.05)}
 .profile-links a .fa-twitch{color:#9146ff}
