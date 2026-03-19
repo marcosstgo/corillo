@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Nueva contraseña — CORILLO</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.js"></script>
+  <style>
+    body { background: var(--ink); color: var(--white); font-family: var(--body); min-height: 100vh; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(6,6,8,.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; height: 52px;
+    }
+    .brand-svg { height: 28px; width: auto; }
+
+    .page {
+      display: flex; align-items: center; justify-content: center;
+      min-height: calc(100vh - 52px); padding: 40px 20px;
+    }
+
+    .card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 36px 40px;
+      width: 100%; max-width: 380px;
+    }
+    .card h2 {
+      font-family: var(--display); font-size: 1.8rem;
+      margin-bottom: 6px; letter-spacing: 1px;
+    }
+    .card p { color: var(--muted); font-size: .85rem; margin-bottom: 28px; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+    .field label {
+      font-size: .72rem; font-family: var(--mono);
+      letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+    }
+    .field input {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 14px;
+      color: var(--white); font-family: var(--body); font-size: .95rem;
+      transition: .15s; width: 100%;
+    }
+    .field input:focus { outline: none; border-color: var(--accent); }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 7px; font-size: .75rem;
+      font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--white); cursor: pointer; transition: .15s; text-decoration: none;
+    }
+    .btn:hover { border-color: var(--border-h); background: rgba(255,255,255,.05); }
+    .btn.primary { background: var(--accent); color: #000; border-color: transparent; font-weight: 700; }
+    .btn.primary:hover { opacity: .88; }
+    .btn-full { width: 100%; justify-content: center; padding: 10px; font-size: .8rem; margin-top: 8px; }
+
+    .msg { font-size: .8rem; font-family: var(--mono); margin-bottom: 12px; display: none; }
+    .msg.err { color: var(--live); }
+    .msg.ok  { color: #00b894; }
+
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,.2); border-top-color: var(--white);
+      border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Estado: token inválido o expirado */
+    #invalidState { display: none; text-align: center; }
+    #invalidState i { font-size: 2rem; color: var(--live); margin-bottom: 16px; display: block; }
+    #invalidState p { margin-bottom: 20px; }
+
+    /* Estado: éxito */
+    #successState { display: none; text-align: center; }
+    #successState i { font-size: 2rem; color: #00b894; margin-bottom: 16px; display: block; }
+    #successState p { margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <a href="/">
+      <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
+        <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
+        <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+      </svg>
+    </a>
+  </div>
+</header>
+
+<div class="page">
+  <div class="card">
+
+    <!-- Formulario de reset -->
+    <div id="resetForm">
+      <h2>NUEVA CONTRASEÑA</h2>
+      <p>Crea una nueva contraseña para tu cuenta de CORILLO.</p>
+      <div class="field">
+        <label>Nueva contraseña</label>
+        <input type="password" id="newPass" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="field">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="newPassConfirm" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="msg err" id="errMsg"></div>
+      <button class="btn primary btn-full" id="submitBtn">
+        <i class="fa-solid fa-lock"></i> Guardar contraseña
+      </button>
+    </div>
+
+    <!-- Token inválido / expirado -->
+    <div id="invalidState">
+      <i class="fa-solid fa-circle-xmark"></i>
+      <h2 style="font-family:var(--display);font-size:1.6rem;margin-bottom:8px">LINK INVÁLIDO</h2>
+      <p>Este link ya expiró o no es válido. Solicita uno nuevo desde el login.</p>
+      <a href="/perfil/" class="btn primary btn-full">Volver al login</a>
+    </div>
+
+    <!-- Éxito -->
+    <div id="successState">
+      <i class="fa-solid fa-circle-check"></i>
+      <h2 style="font-family:var(--display);font-size:1.6rem;margin-bottom:8px">¡LISTO!</h2>
+      <p>Tu contraseña fue actualizada. Ya puedes entrar con tu nueva contraseña.</p>
+      <a href="/perfil/" class="btn primary btn-full">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Ir al login
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const PB_URL = 'https://pb.corillo.live';
+const pb = new PocketBase(PB_URL);
+
+const resetForm    = document.getElementById('resetForm');
+const invalidState = document.getElementById('invalidState');
+const successState = document.getElementById('successState');
+const newPass      = document.getElementById('newPass');
+const newPassConfirm = document.getElementById('newPassConfirm');
+const errMsg       = document.getElementById('errMsg');
+const submitBtn    = document.getElementById('submitBtn');
+
+// Extraer token de la URL: /perfil/reset/?token=XXX
+const params = new URLSearchParams(window.location.search);
+const token  = params.get('token');
+
+if (!token) {
+  resetForm.style.display = 'none';
+  invalidState.style.display = 'block';
+}
+
+submitBtn.addEventListener('click', async () => {
+  const pass    = newPass.value;
+  const confirm = newPassConfirm.value;
+
+  errMsg.style.display = 'none';
+
+  if (!pass || !confirm) {
+    errMsg.textContent = 'Completa ambos campos.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  if (pass.length < 8) {
+    errMsg.textContent = 'Mínimo 8 caracteres.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  if (pass !== confirm) {
+    errMsg.textContent = 'Las contraseñas no coinciden.';
+    errMsg.style.display = 'block';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner"></span> Guardando…';
+
+  try {
+    await pb.collection('streamers').confirmPasswordReset(token, pass, confirm);
+    resetForm.style.display = 'none';
+    successState.style.display = 'block';
+  } catch (e) {
+    const expired = e?.response?.code === 400;
+    if (expired) {
+      resetForm.style.display = 'none';
+      invalidState.style.display = 'block';
+    } else {
+      errMsg.textContent = 'Error al guardar. Intenta de nuevo.';
+      errMsg.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Guardar contraseña';
+    }
+  }
+});
+
+newPass.addEventListener('keydown', e => { if (e.key === 'Enter') newPassConfirm.focus(); });
+newPassConfirm.addEventListener('keydown', e => { if (e.key === 'Enter') submitBtn.click(); });
+</script>
+</body>
+</html>
