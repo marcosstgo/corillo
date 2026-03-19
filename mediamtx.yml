@@ -157,21 +157,22 @@ hlsDirectory: ''
 hlsMuxerCloseAfter: 60s
 
 ###############################################
-# WebRTC — deshabilitado
+# WebRTC (WHEP)
 ###############################################
-webrtc: no
+webrtc: yes
 webrtcAddress: :8889
 webrtcEncryption: no
 webrtcServerKey: server.key
 webrtcServerCert: server.crt
 webrtcAllowOrigins: ['*']
-webrtcTrustedProxies: []
+webrtcTrustedProxies: ['0.0.0.0/0']
 webrtcLocalUDPAddress: :8189
 webrtcLocalTCPAddress: ''
 webrtcIPsFromInterfaces: yes
 webrtcIPsFromInterfacesList: []
-webrtcAdditionalHosts: []
-webrtcICEServers2: []
+webrtcAdditionalHosts: ['corillo.live']
+webrtcICEServers2:
+  - urls: ['stun:stun.l.google.com:19302']
 webrtcHandshakeTimeout: 10s
 webrtcTrackGatherTimeout: 2s
 webrtcSTUNGatherTimeout: 5s
