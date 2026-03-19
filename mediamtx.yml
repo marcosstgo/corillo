@@ -282,6 +282,6 @@ pathDefaults:
 ###############################################
 paths:
     "~^live/":
-      runOnReady: /usr/local/bin/thumbgen.sh $MTX_PATH
-      runOnReadyRestart: yes
+      runOnReady: ""
+      runOnReadyRestart: no
     all_others:
