@@ -72,6 +72,50 @@ jobs:
                echo 'MediaMTX config unchanged — skipped'
              fi"
 
+      - name: Deploy telegram service
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "set -e
+             mkdir -p /home/corillo-adm/corillo-telegram
+             cp /var/www/stream/telegram/server.py /home/corillo-adm/corillo-telegram/server.py
+             cp /var/www/stream/telegram/requirements.txt /home/corillo-adm/corillo-telegram/requirements.txt
+             if [ ! -d /home/corillo-adm/corillo-telegram/venv ]; then
+               python3 -m venv /home/corillo-adm/corillo-telegram/venv
+             fi
+             /home/corillo-adm/corillo-telegram/venv/bin/pip install -q -r /home/corillo-adm/corillo-telegram/requirements.txt
+             if [ ! -f /home/corillo-adm/corillo-telegram/.env ]; then
+               cp /home/corillo-adm/corillo-bot/.env /home/corillo-adm/corillo-telegram/.env
+             fi
+             if [ ! -f /etc/systemd/system/corillo-telegram.service ]; then
+               sudo cp /var/www/stream/telegram/corillo-telegram.service /etc/systemd/system/corillo-telegram.service
+               sudo systemctl daemon-reload
+               sudo systemctl enable corillo-telegram
+             fi
+             sudo systemctl restart corillo-telegram"
+
+      - name: Deploy api service
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "set -e
+             mkdir -p /home/corillo-adm/corillo-api
+             cp /var/www/stream/api/server.py /home/corillo-adm/corillo-api/server.py
+             cp /var/www/stream/api/requirements.txt /home/corillo-adm/corillo-api/requirements.txt
+             if [ ! -d /home/corillo-adm/corillo-api/venv ]; then
+               python3 -m venv /home/corillo-adm/corillo-api/venv
+             fi
+             /home/corillo-adm/corillo-api/venv/bin/pip install -q -r /home/corillo-adm/corillo-api/requirements.txt
+             if [ ! -f /home/corillo-adm/corillo-api/.env ]; then
+               cp /home/corillo-adm/corillo-bot/.env /home/corillo-adm/corillo-api/.env
+             fi
+             if [ ! -f /etc/systemd/system/corillo-api.service ]; then
+               sudo cp /var/www/stream/api/corillo-api.service /etc/systemd/system/corillo-api.service
+               sudo systemctl daemon-reload
+               sudo systemctl enable corillo-api
+             fi
+             sudo systemctl restart corillo-api"
+
       - name: Deploy auth service
         run: |
           ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \

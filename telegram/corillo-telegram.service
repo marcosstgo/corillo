@@ -1,0 +1,15 @@
+[Unit]
+Description=Corillo Telegram — webhook, aprobación de streamers, notificaciones en vivo
+After=network.target
+
+[Service]
+Type=simple
+User=corillo-adm
+WorkingDirectory=/home/corillo-adm/corillo-telegram
+EnvironmentFile=/home/corillo-adm/corillo-telegram/.env
+ExecStart=/home/corillo-adm/corillo-telegram/venv/bin/uvicorn server:app --host 127.0.0.1 --port 3003
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
