@@ -279,6 +279,7 @@ function setLive(on) {
 }
 
 function cleanup() {
+  stopWatch();
   if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
   if (_nativeErrHandler) { $('#video').removeEventListener('error', _nativeErrHandler); _nativeErrHandler = null; }
   _unmuteAttemptPending = false;
@@ -292,44 +293,71 @@ function cleanup() {
   setLive(false);
 }
 
+// ── WATCH MODE — polling ligero cuando el canal está offline ──────
+let _watchTimer = null;
+
+function stopWatch() {
+  if (_watchTimer) { clearInterval(_watchTimer); _watchTimer = null; }
+}
+
+function startWatch() {
+  stopWatch();
+  showOverlay('Sin transmisión', 'El canal no está en vivo ahora mismo.');
+  _watchTimer = setInterval(async () => {
+    try {
+      const r = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store' });
+      const data = await r.json();
+      const live = (data.items || []).find(p => p.name === 'live/' + channel && p.ready);
+      if (live) { stopWatch(); retries = 0; start(); }
+    } catch {}
+  }, 15000);
+}
+
 function scheduleRetry(reason) {
   retries++;
   $('#sRetries').textContent = retries;
   $('#retryTxt').textContent = retries;
   // Retries 1-4: agresivo (1200ms c/u) — cubre reconexiones breves del streamer (~5s ventana)
-  // Retry 5+: exponencial — canal probablemente offline de verdad
-  const wait = retries <= 4
-    ? 1200
-    : Math.min(30000, 1200 * Math.pow(1.8, Math.min(retries - 4, 9)));
-  const secs = Math.round(wait / 1000);
+  const wait = retries <= 4 ? 1200 : null;
   const offline = reason === 'networkError' || reason === 'Error de HLS nativo';
 
-  // Verificar kick antes de mostrar overlay — evita el flash del mensaje genérico
+  // Verificar kick antes de mostrar overlay
   fetch('/assets/kick/' + channel + '.json?t=' + Date.now(), { cache: 'no-store' })
     .then(r => r.ok ? r.json() : null)
     .then(kick => {
       if (kick && (Date.now() / 1000 - kick.ts) < 300) {
+        const secs = wait ? Math.round(wait / 1000) : '…';
         showOverlay(
           'Stream pausado temporalmente',
           'El stream fue desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
           'Si eres el streamer: configura 4,000–4,500 Kbps en OBS o Meld Studio y reconecta. ' +
           'Reintentando en ' + secs + 's…'
         );
+        retryTimer = setTimeout(start, wait || 30000);
+      } else if (offline && retries > 4) {
+        // Canal confirmado offline — cambiar a watch mode, sin más reintentos HLS
+        startWatch();
       } else {
+        const secs = wait ? Math.round(wait / 1000) : Math.round(Math.min(30000, 1200 * Math.pow(1.8, Math.min(retries - 4, 9))) / 1000);
         showOverlay(
           offline ? 'Sin transmisión' : 'Reconectando',
           (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + secs + 's…'
         );
+        retryTimer = setTimeout(start, wait || Math.min(30000, 1200 * Math.pow(1.8, Math.min(retries - 4, 9))));
       }
     })
     .catch(() => {
-      showOverlay(
-        offline ? 'Sin transmisión' : 'Reconectando',
-        (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + secs + 's…'
-      );
+      if (offline && retries > 4) {
+        startWatch();
+      } else {
+        const w = wait || Math.min(30000, 1200 * Math.pow(1.8, Math.min(retries - 4, 9)));
+        showOverlay(
+          offline ? 'Sin transmisión' : 'Reconectando',
+          (offline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(w / 1000) + 's…'
+        );
+        retryTimer = setTimeout(start, w);
+      }
     });
-
-  retryTimer = setTimeout(start, wait);
 }
 
 function getUrl() {
