@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Streamers</title>
+  <meta name="description" content="Conoce a los streamers de CORILLO — plataforma independiente desde Puerto Rico." />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="/assets/streamers.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css">
+
+  <style>
+    /* ── Layout ── */
+    body { min-height: 100vh; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(6,6,8,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; padding: 12px 24px; max-width: 1400px; margin: 0 auto;
+    }
+
+    .brand-svg { width: 110px; height: 30px; }
+
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+
+    .nav-link {
+      font-family: 'Space Mono', monospace; font-size: .72rem; letter-spacing: .06em;
+      color: var(--muted); text-decoration: none; padding: 6px 12px;
+      border: 1px solid var(--border); border-radius: 6px;
+      transition: color .2s, border-color .2s;
+    }
+    .nav-link:hover { color: var(--fg); border-color: var(--muted); }
+    .nav-link.active { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center; padding: 64px 24px 40px;
+      max-width: 1400px; margin: 0 auto;
+    }
+    .hero-label {
+      font-family: 'Space Mono', monospace; font-size: .7rem;
+      letter-spacing: .2em; color: var(--accent); margin-bottom: 12px;
+    }
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1; color: var(--fg); margin: 0 0 16px;
+      letter-spacing: .02em;
+    }
+    .hero-sub {
+      color: var(--muted); font-size: .95rem; max-width: 480px; margin: 0 auto 28px;
+    }
+    .live-pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.3);
+      color: #ef4444; font-family: 'Space Mono', monospace; font-size: .7rem;
+      letter-spacing: .1em; padding: 6px 14px; border-radius: 99px;
+      opacity: 0;
+    }
+    .live-pill.show { opacity: 1; }
+    .live-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; animation: blink 1.2s ease-in-out infinite; }
+
+    /* ── Grid ── */
+    .grid-wrap { max-width: 1400px; margin: 0 auto; padding: 0 24px 80px; }
+
+    .streamers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── Card ── */
+    .s-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s ease, border-color .25s ease;
+      position: relative;
+    }
+    .s-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,.15);
+    }
+    .s-card.is-live { border-color: rgba(239,68,68,.4); }
+    .s-card.is-live:hover { box-shadow: 0 16px 48px rgba(239,68,68,.18); }
+    .s-card:not(.is-live):hover { box-shadow: 0 16px 48px rgba(0,0,0,.5); }
+
+    /* Accent bar top */
+    .s-card-accent {
+      height: 3px;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    /* Avatar area */
+    .s-card-top {
+      padding: 24px 24px 0;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px;
+    }
+
+    .s-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,.08);
+    }
+    .s-avatar-fallback {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+      color: rgba(255,255,255,.9); flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,.08);
+    }
+
+    .s-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+    .s-live-badge {
+      display: none; align-items: center; gap: 5px;
+      background: rgba(239,68,68,.15); border: 1px solid rgba(239,68,68,.4);
+      color: #ef4444; font-family: 'Space Mono', monospace;
+      font-size: .62rem; letter-spacing: .08em;
+      padding: 4px 9px; border-radius: 99px;
+    }
+    .s-live-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: #ef4444; animation: blink 1.2s ease-in-out infinite; }
+    .is-live .s-live-badge { display: flex; }
+
+    .s-viewers {
+      display: none; font-family: 'Space Mono', monospace;
+      font-size: .6rem; color: var(--muted); letter-spacing: .05em;
+    }
+    .is-live .s-viewers { display: block; }
+
+    /* Body */
+    .s-card-body { padding: 16px 24px 20px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+
+    .s-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem; letter-spacing: .04em;
+      color: var(--fg); line-height: 1; margin: 0;
+    }
+
+    .s-sub {
+      font-family: 'Space Mono', monospace; font-size: .65rem;
+      letter-spacing: .08em; color: var(--accent); margin: 0;
+    }
+
+    .s-bio {
+      font-size: .85rem; color: var(--muted); line-height: 1.55;
+      margin: 4px 0 0; flex: 1;
+      display: -webkit-box; -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    /* Footer */
+    .s-card-footer {
+      padding: 0 24px 20px;
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    }
+
+    .s-socials { display: flex; gap: 8px; }
+    .s-social-btn {
+      width: 32px; height: 32px; border-radius: 8px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); font-size: .8rem;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; transition: color .2s, border-color .2s, background .2s;
+    }
+    .s-social-btn:hover { color: var(--fg); border-color: var(--muted); background: rgba(255,255,255,.05); }
+    .s-social-btn.twitch:hover { color: #9147ff; border-color: #9147ff; }
+    .s-social-btn.instagram:hover { color: #e1306c; border-color: #e1306c; }
+    .s-social-btn.tiktok:hover { color: #69c9d0; border-color: #69c9d0; }
+
+    .s-watch-btn {
+      font-family: 'Space Mono', monospace; font-size: .65rem;
+      letter-spacing: .06em; padding: 8px 16px; border-radius: 8px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--fg); text-decoration: none; white-space: nowrap;
+      transition: background .2s, border-color .2s, color .2s;
+    }
+    .s-watch-btn:hover { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.2); }
+    .is-live .s-watch-btn {
+      background: #ef4444; border-color: #ef4444; color: #fff;
+    }
+    .is-live .s-watch-btn:hover { background: #dc2626; border-color: #dc2626; }
+
+    /* Soon card */
+    .s-card.soon {
+      opacity: .45; pointer-events: none; cursor: default;
+      background: rgba(255,255,255,.02);
+    }
+
+    /* ── Mobile ── */
+    @media(max-width: 600px) {
+      .topbar { padding: 10px 16px; }
+      .hero { padding: 40px 16px 28px; }
+      .grid-wrap { padding: 0 16px 60px; }
+      .streamers-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .s-card-top { padding: 16px 16px 0; }
+      .s-avatar, .s-avatar-fallback { width: 52px; height: 52px; font-size: 1.5rem; }
+      .s-card-body { padding: 12px 16px 14px; }
+      .s-name { font-size: 1.3rem; }
+      .s-bio { display: none; }
+      .s-card-footer { padding: 0 16px 14px; }
+      .s-socials { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <a href="/" aria-label="CORILLO">
+      <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e8c84a" stop-opacity=".35"/>
+            <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="72" cy="42" r="36" fill="url(#g2)"/>
+        <circle cx="72" cy="42" r="29" stroke="#e8c84a" stroke-width="2.5" fill="none"/>
+        <circle cx="72" cy="42" r="18" stroke="#e8c84a" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+        <circle cx="72" cy="42" r="7" fill="#e8c84a"/>
+        <circle cx="72" cy="42" r="3" fill="#060608"/>
+        <text x="116" y="60" font-family="'Bebas Neue',sans-serif" font-size="42" fill="#f2efe9" letter-spacing="2">CORILLO</text>
+      </svg>
+    </a>
+    <div class="nav-right">
+      <a href="/" class="nav-link">INICIO</a>
+      <a href="/streamers/" class="nav-link active">STREAMERS</a>
+      <a href="/multiplayer/" class="nav-link">MULTIPLAYER</a>
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema" style="margin-left:4px">☀</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-label">CORILLO · PLATAFORMA INDEPENDIENTE</div>
+    <h1 class="hero-title">STREAMERS</h1>
+    <p class="hero-sub">Los creadores de contenido que hacen vibrar la plataforma desde Puerto Rico y más allá.</p>
+    <div class="live-pill" id="livePill">
+      <span class="dot"></span>
+      <span id="liveCount">0</span> EN VIVO
+    </div>
+  </div>
+
+  <div class="grid-wrap">
+    <div class="streamers-grid" id="grid"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  const POLL_MS = 15000;
+  const API_URL = '/mediamtx-api/v3/paths/list';
+  const PROFILE_URL = '/chat-api/profile/';
+
+  // ── Theme ──
+  const html = document.documentElement;
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  html.setAttribute('data-theme', saved);
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+
+  // ── Build cards ──
+  const grid = document.getElementById('grid');
+
+  window.STREAMERS.forEach(s => {
+    if (s.soon) {
+      const el = document.createElement('div');
+      el.className = 's-card soon';
+      el.innerHTML = `
+        <div class="s-card-accent" style="background:${s.color}"></div>
+        <div class="s-card-top">
+          <div class="s-avatar-fallback" style="background:${s.color}">?</div>
+        </div>
+        <div class="s-card-body">
+          <p class="s-name">${s.name}</p>
+          <p class="s-sub">${s.sub}</p>
+        </div>`;
+      grid.appendChild(el);
+      return;
+    }
+
+    const card = document.createElement('a');
+    card.className = 's-card';
+    card.href = `/${s.key}/`;
+    card.dataset.key = s.key;
+    card.innerHTML = `
+      <div class="s-card-accent" style="background:${s.color}"></div>
+      <div class="s-card-top">
+        <img class="s-avatar" id="ava-${s.key}"
+             src="/assets/thumbs/${s.key}.jpg"
+             onerror="this.style.display='none';document.getElementById('avaf-${s.key}').style.display='flex'"
+             alt="${s.name}" style="display:none">
+        <div class="s-avatar-fallback" id="avaf-${s.key}" style="background:${s.color}">${s.ava}</div>
+        <div class="s-badges">
+          <span class="s-live-badge"><span class="dot"></span>EN VIVO</span>
+          <span class="s-viewers" id="vw-${s.key}"></span>
+        </div>
+      </div>
+      <div class="s-card-body">
+        <h2 class="s-name">${s.name}</h2>
+        <p class="s-sub">${s.sub}</p>
+        <p class="s-bio" id="bio-${s.key}"></p>
+      </div>
+      <div class="s-card-footer">
+        <div class="s-socials" id="soc-${s.key}"></div>
+        <a href="/${s.key}/" class="s-watch-btn" id="btn-${s.key}">VER CANAL →</a>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  // ── Load profiles async ──
+  window.STREAMERS.filter(s => s.key).forEach(async s => {
+    try {
+      const res = await fetch(PROFILE_URL + s.key);
+      if (!res.ok) return;
+      const d = await res.json();
+
+      // Avatar
+      if (d.avatar_url) {
+        const img = document.getElementById('ava-' + s.key);
+        const fb  = document.getElementById('avaf-' + s.key);
+        if (img) {
+          img.src = d.avatar_url;
+          img.style.display = '';
+          if (fb) fb.style.display = 'none';
+        }
+      }
+
+      // Bio
+      const bio = document.getElementById('bio-' + s.key);
+      if (bio && d.bio) bio.textContent = d.bio;
+
+      // Socials
+      const soc = document.getElementById('soc-' + s.key);
+      if (soc) {
+        if (d.twitch)    soc.innerHTML += `<a href="https://twitch.tv/${d.twitch}" class="s-social-btn twitch" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-brands fa-twitch"></i></a>`;
+        if (d.instagram) soc.innerHTML += `<a href="https://instagram.com/${d.instagram}" class="s-social-btn instagram" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-brands fa-instagram"></i></a>`;
+        if (d.tiktok)    soc.innerHTML += `<a href="https://tiktok.com/@${d.tiktok}" class="s-social-btn tiktok" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-brands fa-tiktok"></i></a>`;
+      }
+    } catch {}
+  });
+
+  // ── Poll live status ──
+  let liveSet = new Set();
+
+  async function poll() {
+    try {
+      const res = await fetch(API_URL, { signal: AbortSignal.timeout(5000) });
+      const d   = await res.json();
+      const items = d.items || [];
+
+      liveSet = new Set(
+        items.filter(p => p.ready).map(p => p.name.replace('live/', ''))
+      );
+
+      let count = 0;
+      window.STREAMERS.filter(s => s.key).forEach(s => {
+        const card = document.querySelector(`[data-key="${s.key}"]`);
+        if (!card) return;
+        const live = liveSet.has(s.key);
+
+        card.classList.toggle('is-live', live);
+
+        const path  = items.find(p => p.name === 'live/' + s.key);
+        const views = path ? (path.readers || []).length : 0;
+        const vw    = document.getElementById('vw-' + s.key);
+        if (vw) vw.textContent = views + (views === 1 ? ' viewer' : ' viewers');
+
+        const btn = document.getElementById('btn-' + s.key);
+        if (btn) btn.textContent = live ? '▶ VER EN VIVO →' : 'VER CANAL →';
+
+        if (live) count++;
+      });
+
+      const pill = document.getElementById('livePill');
+      document.getElementById('liveCount').textContent = count;
+      pill.classList.toggle('show', count > 0);
+
+    } catch {}
+  }
+
+  poll();
+  setInterval(poll, POLL_MS);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) poll();
+  });
+})();
+</script>
+</body>
+</html>
