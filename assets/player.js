@@ -674,6 +674,7 @@
     // Channel
     const pathParts = location.pathname.replace(/^\/|\/$/g, '').split('/');
     App.channel    = (pathParts[0] || new URLSearchParams(location.search).get('ch') || 'katatonia').trim();
+    window.channel = App.channel; // expose for chat.js
     const TWITCH_MAP = { katatonia: 'katat0nia' };
     App.twitchUser = TWITCH_MAP[App.channel] || App.channel;
 
