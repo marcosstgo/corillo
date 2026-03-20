@@ -233,7 +233,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
         if (!banner) return;
         banner.textContent =
           '⛔ Stream desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
-          'Si eres el streamer y aún no lo corregiste: configura 4,000–4,500 Kbps en OBS / Meld Studio. ' +
+          'Si eres el streamer y aún no lo corregiste: configura máximo 6,500 Kbps en OBS / Meld Studio. ' +
           '(Toca para cerrar)';
         banner.style.display = 'block';
         clearTimeout(App.kickBannerTimer);
@@ -511,7 +511,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
           showOverlay(
             'Stream pausado temporalmente',
             'El stream fue desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
-            'Si eres el streamer: configura 4,000–4,500 Kbps en OBS o Meld Studio y reconecta. ' +
+            'Si eres el streamer: configura máximo 6,500 Kbps en OBS o Meld Studio y reconecta. ' +
             'Reintentando en ' + Math.round(delay / 1000) + 's…'
           );
           App.retryTimer = setTimeout(startPlayer, delay);
