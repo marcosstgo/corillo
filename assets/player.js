@@ -1,5 +1,10 @@
 /* ── PLAYER SHARED JS — loaded by all individual channel pages ── */
 
+// Globals needed by chat.js (which runs synchronously after this file)
+window.$ = (s, el = document) => el.querySelector(s);
+window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
+  || new URLSearchParams(location.search).get('ch') || 'katatonia').trim();
+
 (function () {
   "use strict";
 
@@ -671,10 +676,8 @@
   // ================================
 
   function init() {
-    // Channel
-    const pathParts = location.pathname.replace(/^\/|\/$/g, '').split('/');
-    App.channel    = (pathParts[0] || new URLSearchParams(location.search).get('ch') || 'katatonia').trim();
-    window.channel = App.channel; // expose for chat.js
+    // Channel (already set as window.channel before IIFE for chat.js)
+    App.channel = window.channel;
     const TWITCH_MAP = { katatonia: 'katat0nia' };
     App.twitchUser = TWITCH_MAP[App.channel] || App.channel;
 
