@@ -421,8 +421,10 @@ const MAX_SELECTIONS = 4;
 const $              = id => document.getElementById(id);
 
 let cache          = { t:0, data:null };
-let hlsMap         = {};  // key → Hls instance
+let hlsMap         = {};  // key → Hls instance (fallback)
+let pcMap          = {};  // key → RTCPeerConnection (WebRTC)
 let liveMap        = {};  // key → { streamer, viewers }
+const useWebRTC    = !!window.RTCPeerConnection;
 let selectedKeys   = new Set();
 let pollTimer      = null;
 let activeAudioKey = null;   // normal mode: exclusive (one at a time)
@@ -448,18 +450,14 @@ function getLive(data) {
   return (Array.isArray(data?.items) ? data.items : []).filter(p => p.ready);
 }
 
-// ── HLS ──
+// ── STREAM (WebRTC + HLS fallback) ──
 function destroyHls(key) {
-  if (hlsMap[key]) {
-    try { hlsMap[key].destroy(); } catch {}
-    delete hlsMap[key];
-  }
+  if (hlsMap[key]) { try { hlsMap[key].destroy(); } catch {} delete hlsMap[key]; }
+  if (pcMap[key])  { try { pcMap[key].close();    } catch {} delete pcMap[key];  }
 }
 
-function playVideo(video, key) {
+function playVideoHLS(video, key) {
   const url = `/live/${encodeURIComponent(key)}/index.m3u8`;
-  destroyHls(key);
-
   if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = url; video.play().catch(() => {}); return;
   }
@@ -470,13 +468,58 @@ function playVideo(video, key) {
     h.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
     h.on(Hls.Events.ERROR, (_, d) => { if (d?.fatal) { try{h.destroy()}catch{} delete hlsMap[key]; } });
     hlsMap[key] = h;
-
     const io = new IntersectionObserver(entries => {
       if (!entries[0].isIntersecting) { try{video.pause()}catch{} }
       else { video.play().catch(()=>{}); }
     }, { threshold:0.1 });
     io.observe(video);
   }
+}
+
+async function playVideoWebRTC(video, key) {
+  const whepUrl = `/webrtc/live/${encodeURIComponent(key)}_rtc/whep`;
+  const pc = new RTCPeerConnection({ iceServers:[{ urls:'stun:stun.l.google.com:19302' }] });
+  pcMap[key] = pc;
+  pc.addTransceiver('video', { direction:'recvonly' });
+  pc.addTransceiver('audio', { direction:'recvonly' });
+  pc.ontrack = e => {
+    if (!video.srcObject) video.srcObject = new MediaStream();
+    video.srcObject.addTrack(e.track);
+  };
+  pc.onconnectionstatechange = () => {
+    const s = pc.connectionState;
+    if (s === 'failed' || s === 'disconnected') {
+      try { pc.close(); } catch {}
+      delete pcMap[key];
+      playVideoHLS(video, key);
+    }
+  };
+  try {
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    await Promise.race([
+      new Promise(resolve => {
+        if (pc.iceGatheringState === 'complete') { resolve(); return; }
+        pc.addEventListener('icegatheringstatechange', function fn() {
+          if (pc.iceGatheringState === 'complete') { pc.removeEventListener('icegatheringstatechange', fn); resolve(); }
+        });
+      }),
+      new Promise(resolve => setTimeout(resolve, 4000)),
+    ]);
+    const resp = await fetch(whepUrl, { method:'POST', headers:{ 'Content-Type':'application/sdp' }, body:pc.localDescription.sdp });
+    if (!resp.ok) throw new Error('WHEP ' + resp.status);
+    await pc.setRemoteDescription({ type:'answer', sdp: await resp.text() });
+    video.play().catch(() => {});
+  } catch {
+    try { pc.close(); } catch {}
+    delete pcMap[key];
+    playVideoHLS(video, key);
+  }
+}
+
+function playVideo(video, key) {
+  if (useWebRTC) playVideoWebRTC(video, key);
+  else           playVideoHLS(video, key);
 }
 
 // ── AUDIO CONTROL ──

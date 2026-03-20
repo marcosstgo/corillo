@@ -34,6 +34,8 @@ authHTTPAddress: http://127.0.0.1:3002/auth
 authHTTPExclude:
   - action: read
   - action: playback
+  - action: publish
+    path: "~^live/[^/]+_rtc$"
 
 ###############################################
 # Control API
@@ -80,12 +82,12 @@ playbackAllowOrigins: ['*']
 playbackTrustedProxies: []
 
 ###############################################
-# RTSP — deshabilitado
+# RTSP — solo localhost (para re-encoding AAC→Opus)
 ###############################################
-rtsp: no
-rtspTransports: [udp, multicast, tcp]
+rtsp: yes
+rtspTransports: [tcp]
 rtspEncryption: "no"
-rtspAddress: :8554
+rtspAddress: 127.0.0.1:8554
 rtspsAddress: :8322
 rtpAddress: :8000
 rtcpAddress: :8001
@@ -121,8 +123,8 @@ hlsServerCert: server.crt
 hlsAllowOrigins: ['*']
 hlsTrustedProxies: []
 
-# no → ahorra CPU cuando no hay viewers (agrega ~2s delay al primer viewer)
-hlsAlwaysRemux: no
+# yes → segmentos siempre listos = arranque instantáneo para el primer viewer
+hlsAlwaysRemux: yes
 
 # mpegts tolera DTS no-monotónico (fmp4 crasheaba con Streamer Lite)
 hlsVariant: mpegts
@@ -262,7 +264,20 @@ pathDefaults:
 # Paths específicos
 ###############################################
 paths:
-    "~^live/":
-      runOnReady: ""
-      runOnReadyRestart: no
-    all_others:
+  # Re-encoding paths: AAC → Opus para WebRTC
+  # Se inicia ffmpeg bajo demanda cuando alguien se conecta via WebRTC
+  "~^live/[^/]+_rtc$":
+    runOnDemand: >-
+      ffmpeg -rtsp_transport tcp
+      -i rtsp://127.0.0.1:8554/${MTX_PATH%_rtc}
+      -c:v copy -c:a libopus -b:a 96k -ar 48000 -ac 2
+      -f rtsp rtsp://127.0.0.1:8554/$MTX_PATH 2>/dev/null
+    runOnDemandRestart: yes
+    runOnDemandStartTimeout: 15s
+    runOnDemandCloseAfter: 10s
+
+  "~^live/":
+    runOnReady: ""
+    runOnReadyRestart: no
+
+  all_others:
