@@ -220,7 +220,8 @@ $('#video').addEventListener('webkitendfullscreen',   () => { ctrlFs.querySelect
 let statsTimer = null;
 function startStatsPolling() {
   if (statsTimer) return;
-  let hooked = false, emaBitrate = null;
+  _hlsHooked = false;
+  let emaBitrate = null;
   // Cachear referencias DOM — evita querySelector 5× por segundo (60 veces/min)
   const v        = $('#video');
   const elBitrate = $('#sBitrate');
@@ -232,10 +233,10 @@ function startStatsPolling() {
     return (bps / 1_000_000).toFixed(1) + ' Mbps';
   }
   function hookHls() {
-    if (hooked) return;
+    if (_hlsHooked) return;
     const h = window._hlsInstance;
     if (!h) return;
-    hooked = true;
+    _hlsHooked = true;
     h.on(Hls.Events.FRAG_LOADED, (_, data) => {
       try {
         const bytes = data?.stats?.loaded || 0;
@@ -265,12 +266,15 @@ function startStatsPolling() {
 }
 function stopStatsPolling() {
   clearInterval(statsTimer); statsTimer = null;
+  _hlsHooked = false;
   ['sBitrate','sBuffer','sLatency','sLevel'].forEach(id => $('#'+id).textContent = '—');
 }
 
 // ── PLAYER ──
 let hls = null, retries = 0, retryTimer = null, _nativeErrHandler = null;
 let _rtcPc = null, _useWebRTC = false;
+let _stallCleanup = null; // cleanup fn para el native stall watcher (Safari)
+let _hlsHooked = false;   // evita registrar FRAG_LOADED múltiples veces en la misma sesión
 window._hlsInstance = null;
 
 function setLive(on) {
@@ -282,6 +286,7 @@ function cleanup() {
   stopWatch();
   if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
   if (_nativeErrHandler) { $('#video').removeEventListener('error', _nativeErrHandler); _nativeErrHandler = null; }
+  if (_stallCleanup) { _stallCleanup(); _stallCleanup = null; }
   _unmuteAttemptPending = false;
   stopStatsPolling();
   const v = $('#video');
@@ -434,6 +439,11 @@ async function start() {
       }, 5000);
     }
     function _stopStallWatch() { clearInterval(_nativeStallTimer); _nativeStallTimer = null; }
+    _stallCleanup = () => {
+      v.removeEventListener('playing', _startStallWatch);
+      v.removeEventListener('pause',   _stopStallWatch);
+      _stopStallWatch();
+    };
     v.addEventListener('playing', _startStallWatch, { once:true });
     v.addEventListener('pause',   _stopStallWatch);
     try {
