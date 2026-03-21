@@ -474,7 +474,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
         new Promise(resolve => setTimeout(resolve, 4000)),
       ]);
 
-      const whepUrl = '/webrtc/live/' + encodeURIComponent(App.channel) + '/whep';
+      const whepUrl = '/webrtc/live/' + encodeURIComponent(App.channel) + '_rtc/whep';
       const resp = await fetch(whepUrl, { method: 'POST', headers: { 'Content-Type': 'application/sdp' }, body: pc.localDescription.sdp });
       if (!resp.ok) throw new Error('WHEP response not OK');
       await pc.setRemoteDescription({ type: 'answer', sdp: await resp.text() });

@@ -270,7 +270,8 @@ paths:
     runOnDemand: >-
       ffmpeg -rtsp_transport tcp
       -i rtsp://127.0.0.1:8554/${MTX_PATH%_rtc}
-      -c:v copy -c:a libopus -b:a 96k -ar 48000 -ac 2
+      -c:v libx264 -profile:v baseline -level:v 3.1 -bf 0 -preset ultrafast -tune zerolatency
+      -c:a libopus -b:a 96k -ar 48000 -ac 2
       -f rtsp rtsp://127.0.0.1:8554/$MTX_PATH 2>/dev/null
     runOnDemandRestart: yes
     runOnDemandStartTimeout: 15s
