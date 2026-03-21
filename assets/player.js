@@ -501,6 +501,16 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     DOM.sRetries.textContent = App.retries;
     DOM.retryTxt.textContent = App.retries;
 
+    // WebRTC fallback: after 2 failures switch silently to HLS
+    if (App.useWebRTC && App.retries >= 2) {
+      App.useWebRTC = false;
+      const btn = $('#ctrlRtc');
+      if (btn) { btn.style.opacity = '.4'; btn.style.color = ''; btn.title = 'Activar WebRTC (latencia baja ~200ms)'; }
+      showOverlay('Reconectando', 'WebRTC no disponible en esta red. Cambiando a HLS…');
+      App.retryTimer = setTimeout(startPlayer, 1500);
+      return;
+    }
+
     const delay     = getRetryDelay(App.retries);
     const isOffline = reason === 'networkError' || reason === 'Error de HLS nativo';
 
