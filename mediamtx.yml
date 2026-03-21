@@ -150,7 +150,7 @@ webrtcServerCert: server.crt
 webrtcAllowOrigins: ['*']
 webrtcTrustedProxies: ['0.0.0.0/0']
 webrtcLocalUDPAddress: :8189
-webrtcLocalTCPAddress: ''
+webrtcLocalTCPAddress: :8189
 webrtcIPsFromInterfaces: yes
 webrtcIPsFromInterfacesList: []
 webrtcAdditionalHosts: ['corillo.live']
