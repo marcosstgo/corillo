@@ -164,8 +164,9 @@
     .field-hint{font-size:.75rem;color:rgba(255,255,255,.3)}
     .field-full{grid-column:1/-1}
     .form-err{padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size:.5rem;display:none}
-    .form-success{display:none;text-align:center;padding:20px 0}
-    .form-success .check{font-size:2.4rem;margin-bottom:12px;color:#4ade80}
+    .form-success{display:none;text-align:center;padding:32px 0;animation:fadeInUp .4s ease}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    .form-success .check{width:56px;height:56px;border-radius:50%;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;color:#4ade80}
     [data-theme="light"] .field input,[data-theme="light"] .field textarea{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:#12120f}
     [data-theme="light"] .field label{color:rgba(18,18,15,.5)}
 
@@ -476,6 +477,7 @@ joinForm?.addEventListener('submit', async e => {
     }
     joinForm.style.display = 'none';
     formSuccess.style.display = 'block';
+    formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch(err) {
     showErr(err.message || 'No se pudo enviar. Intenta de nuevo.');
     submitBtn.disabled = false;
