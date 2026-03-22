@@ -348,65 +348,6 @@
   });
 })();
 
-const $ = s => document.querySelector(s);
-
-const RESERVED = new Set([
-  'join','assets','mediamtx-api','live','api','static','admin','robots',
-  'sitemap','favicon','index','stream','dual','multiplayer','configuracion',
-  'roadmap','dmca','legal','streamer-pro','player',
-  'katatonia','tea','mira_sanganooo','404','elbala','marcos','pataecabra',
-  'streamerpro','radblaster','elhermanoquiles','xxdur3xx','kamikazepr'
-]);
-
-function sanitize(raw) {
-  return (raw||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
-}
-function validate(h) {
-  if (!h)           return 'Escribe un handle.';
-  if (h.length < 3) return 'Mínimo 3 caracteres.';
-  if (h.length > 24)return 'Máximo 24 caracteres.';
-  if (RESERVED.has(h)) return 'Este handle está reservado.';
-  if (/__/.test(h)) return 'Evita guiones bajos dobles.';
-  return '';
-}
-function setWarn(msg) {
-  const w = $('#handleWarn');
-  w.style.display = msg ? 'block' : 'none';
-  w.textContent   = msg;
-}
-
-$('#handle').addEventListener('input', e => {
-  const s = sanitize(e.target.value);
-  if (s !== e.target.value) e.target.value = s;
-  setWarn(validate(s));
-});
-
-function build() {
-  const h = sanitize($('#handle').value);
-  $('#handle').value = h;
-  const err = validate(h);
-  setWarn(err);
-  if (err) return;
-
-  const base = location.origin;
-  $('#playerH').textContent = `${base}/${encodeURIComponent(h)}/`;
-  $('#hlsUrl').textContent  = `${base}/live/${encodeURIComponent(h)}/index.m3u8`;
-  $('#rtmpKey').textContent = h;
-  $('#rtmpCard').style.display = 'block';
-  $('#okMsg').style.display    = 'flex';
-}
-
-$('#buildBtn').addEventListener('click', build);
-$('#handle').addEventListener('keydown', e => { if (e.key === 'Enter') build(); });
-
-$('#resetBtn').addEventListener('click', () => {
-  $('#handle').value = '';
-  setWarn('');
-  $('#okMsg').style.display    = 'none';
-  $('#rtmpCard').style.display = 'none';
-  ['playerH','hlsUrl','rtmpKey'].forEach(id => document.getElementById(id).textContent = '—');
-});
-
 // ── JOIN FORM ──
 const JOIN_URL = '/chat-api/join';
 const RESERVED_H = new Set([
