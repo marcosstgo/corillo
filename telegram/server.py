@@ -47,6 +47,7 @@ STREAMER_NAMES = {
     "radblaster":     "Radblaster",
     "elhermanoquiles":"ElHermanoQuiles",
     "kamikazepr":     "KamikazePR",
+    "bambua": "AntonioLopez",
     # AUTO_STREAMER_NAMES_END
 }
 
@@ -207,7 +208,8 @@ async def auto_create_streamer(handle: str, nombre: str, contenido: str, email: 
         # 3 — STREAMER_NAMES en telegram/server.py
         py, py_sha = await _gh_get("telegram/server.py")
         name_fmt = nombre.title().replace(" ", "") if nombre else handle.title()
-        sentinel = "# AUTO_STREAMER_NAMES_END"
+        sentinel = ""bambua": "AntonioLopez",
+    # AUTO_STREAMER_NAMES_END"
         py = py.replace(sentinel, f'"{handle}": "{name_fmt}",\n    {sentinel}')
         await _gh_put("telegram/server.py", py, py_sha, f"feat: add {handle} to STREAMER_NAMES [auto]")
 
