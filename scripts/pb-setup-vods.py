@@ -7,7 +7,7 @@ Ejecutar una sola vez en el servidor:
 
 Qué hace:
   1. Agrega vod_enabled (bool) y vod_plan (select) a la colección streamers
-  2. Crea la colección vods si no existe
+  2. Crea la colección vods si no existe, o agrega campos faltantes si ya existe
 """
 import os, sys
 import httpx
@@ -49,25 +49,26 @@ def setup_streamers(client: httpx.Client, token: str):
     if not col:
         err("Colección 'streamers' no encontrada")
 
-    schema = col.get("schema", [])
-    existing = {f["name"] for f in schema}
+    # PocketBase v0.23+ usa "fields", versiones anteriores usan "schema"
+    fields = col.get("fields", col.get("schema", []))
+    existing = {f["name"] for f in fields}
 
     added = []
     if "vod_enabled" not in existing:
-        schema.append({
+        fields.append({
             "name": "vod_enabled",
             "type": "bool",
             "required": False,
-            "options": {},
         })
         added.append("vod_enabled")
 
     if "vod_plan" not in existing:
-        schema.append({
+        fields.append({
             "name": "vod_plan",
             "type": "select",
             "required": False,
-            "options": {"maxSelect": 1, "values": ["free", "pro"]},
+            "maxSelect": 1,
+            "values": ["free", "pro"],
         })
         added.append("vod_plan")
 
@@ -78,7 +79,7 @@ def setup_streamers(client: httpx.Client, token: str):
     r = client.patch(
         f"{PB_URL}/api/collections/{col['id']}",
         headers={"Authorization": token},
-        json={"schema": schema},
+        json={"fields": fields},
     )
     if r.status_code not in (200, 204):
         err(f"Error actualizando streamers ({r.status_code}): {r.text}")
@@ -87,37 +88,69 @@ def setup_streamers(client: httpx.Client, token: str):
         ok(f"Campo '{field}' agregado")
 
 
+VOD_FIELDS = [
+    {"name": "channel",  "type": "text",   "required": True},
+    {"name": "filename", "type": "text",   "required": True},
+    {"name": "filepath", "type": "text",   "required": True},
+    {"name": "duration", "type": "number", "required": False},
+    {"name": "size",     "type": "number", "required": False},
+    {"name": "date",     "type": "date",   "required": False},
+]
+
+
 def setup_vods(client: httpx.Client, token: str):
     print("\n[2/2] Colección vods")
     existing = get_collection(client, token, "vods")
-    if existing:
-        ok("Colección 'vods' ya existe — sin cambios")
+
+    if not existing:
+        # Crear colección nueva
+        r = client.post(
+            f"{PB_URL}/api/collections",
+            headers={"Authorization": token},
+            json={
+                "name": "vods",
+                "type": "base",
+                "listRule":   "",    # público — sin auth
+                "viewRule":   "",
+                "createRule": None,  # solo admin
+                "updateRule": None,
+                "deleteRule": None,
+                "fields": VOD_FIELDS,
+            },
+        )
+        if r.status_code not in (200, 201):
+            err(f"Error creando colección vods ({r.status_code}): {r.text}")
+        ok("Colección 'vods' creada con 6 campos")
         return
 
-    r = client.post(
-        f"{PB_URL}/api/collections",
+    # Colección existe — verificar campos faltantes
+    current_fields = existing.get("fields", existing.get("schema", []))
+    existing_names = {f["name"] for f in current_fields}
+    missing = [f for f in VOD_FIELDS if f["name"] not in existing_names]
+
+    if not missing:
+        ok("Colección 'vods' ya existe con todos los campos")
+        return
+
+    # Agregar campos faltantes
+    updated_fields = current_fields + missing
+    r = client.patch(
+        f"{PB_URL}/api/collections/{existing['id']}",
         headers={"Authorization": token},
         json={
-            "name": "vods",
-            "type": "base",
-            "listRule":   "",   # público — sin auth
+            "fields":     updated_fields,
+            "listRule":   "",
             "viewRule":   "",
-            "createRule": None, # solo admin
+            "createRule": None,
             "updateRule": None,
             "deleteRule": None,
-            "schema": [
-                {"name": "channel",  "type": "text",   "required": True,  "options": {}},
-                {"name": "filename", "type": "text",   "required": True,  "options": {}},
-                {"name": "filepath", "type": "text",   "required": True,  "options": {}},
-                {"name": "duration", "type": "number", "required": False, "options": {}},
-                {"name": "size",     "type": "number", "required": False, "options": {}},
-                {"name": "date",     "type": "date",   "required": False, "options": {}},
-            ],
         },
     )
-    if r.status_code not in (200, 201):
-        err(f"Error creando colección vods ({r.status_code}): {r.text}")
-    ok("Colección 'vods' creada con 6 campos")
+    if r.status_code not in (200, 204):
+        err(f"Error actualizando vods ({r.status_code}): {r.text}")
+
+    for f in missing:
+        ok(f"Campo '{f['name']}' agregado a vods")
 
 
 def main():
