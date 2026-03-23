@@ -170,6 +170,10 @@ def generate_preview(filepath: Path, duration: int) -> Path | None:
 # ── Main ──────────────────────────────────────────────────────────
 
 def main():
+    # Log all env vars que empiezan con MTX o RECORD para debug
+    mtx_env = {k: v for k, v in os.environ.items() if k.startswith(("MTX_", "RECORD"))}
+    log.info(f"DEBUG env vars: {mtx_env}")
+
     mtx_path    = os.environ.get("MTX_PATH", "")
     record_path = os.environ.get("MTX_RECORD_PATH", "")
 
