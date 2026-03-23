@@ -185,6 +185,14 @@
     .drawer-close:hover{color:var(--white);border-color:var(--bh)}
     .drawer-body{flex:1;overflow-y:auto;scrollbar-width:none;padding:16px 0}
     .drawer-body::-webkit-scrollbar{display:none}
+    .nav-link{display:flex;align-items:center;gap:10px;padding:9px 20px;font-family:var(--mono);font-size:11px;letter-spacing:.5px;color:rgba(232,246,255,.55);transition:.15s;border-radius:0}
+    .nav-link i{width:14px;text-align:center;font-size:.75rem;color:var(--muted)}
+    .nav-link:hover{color:var(--white);background:rgba(0,191,255,.05)}
+    .nav-link:hover i{color:var(--accent)}
+    .sidebar-nav-link{display:flex;align-items:center;gap:10px;padding:8px 20px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:rgba(232,246,255,.45);transition:.15s}
+    .sidebar-nav-link i{width:12px;text-align:center;font-size:.7rem;color:var(--muted)}
+    .sidebar-nav-link:hover{color:var(--white);background:rgba(0,191,255,.04)}
+    .sidebar-nav-link:hover i{color:var(--accent)}
 
     /* ── RESPONSIVE ── */
     @media(max-width:1100px){.live-grid{grid-template-columns:repeat(2,1fr)}}
@@ -220,6 +228,12 @@
     </div>
     <div class="aside-label">Canales</div>
     <div id="drawerOfflineRows"></div>
+    <hr class="aside-divider">
+    <div class="aside-label">Navegar</div>
+    <a href="/multiplayer/" class="nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
+    <a href="/join/" class="nav-link"><i class="fa-solid fa-plus"></i> Crear Canal</a>
+    <a href="/perfil/" class="nav-link"><i class="fa-solid fa-user"></i> Mi Perfil</a>
+    <a href="/configuracion/" class="nav-link"><i class="fa-solid fa-gear"></i> Config OBS</a>
   </div>
 </div>
 
@@ -243,8 +257,7 @@
     <span class="live-dot"></span>
     <span id="navLiveCount">0 en vivo</span>
   </div>
-  <a href="join/" class="nav-btn">Software</a>
-  <a href="join/" class="nav-btn solid">+ Unirse</a>
+  <a href="/join/" class="nav-btn solid">+ Unirse</a>
 </nav>
 
 <div class="layout">
@@ -258,6 +271,11 @@
       <div class="aside-label">Canales</div>
       <div id="sidebarOfflineRows"></div>
     </div>
+    <hr class="aside-divider">
+    <a href="/multiplayer/" class="sidebar-nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
+    <a href="/join/" class="sidebar-nav-link"><i class="fa-solid fa-plus"></i> Crear Canal</a>
+    <a href="/perfil/" class="sidebar-nav-link"><i class="fa-solid fa-user"></i> Mi Perfil</a>
+    <a href="/configuracion/" class="sidebar-nav-link"><i class="fa-solid fa-gear"></i> Config OBS</a>
     <div class="aside-footer">CORILLO<br>STREAM PLATFORM<br>PUERTO RICO</div>
   </aside>
 
