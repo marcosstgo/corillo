@@ -16,6 +16,9 @@ MEDIAMTX_HOST = os.environ.get("MEDIAMTX_HOST", "https://corillo.live/mediamtx-a
 THUMBS_HOST   = os.environ.get("THUMBS_HOST",   "https://corillo.live")
 DB_PATH       = os.environ.get("DB_PATH", "/home/corillo-adm/corillo-bot/chat.db")
 
+DISCORD_URL   = os.environ.get("DISCORD_URL",   "")
+INSTAGRAM_URL = os.environ.get("INSTAGRAM_URL", "")
+
 ac = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 app = FastAPI()
@@ -256,7 +259,9 @@ async def ws_chat(ws: WebSocket, channel: str):
                 continue
             msg = {"type": "message", "user": username, "text": text, "ts": time.time(), "bot": False}
             await room.broadcast(msg)
-            if "@bot" in text.lower():
+            if text.startswith("!"):
+                asyncio.create_task(handle_command(room, channel, text))
+            elif "@bot" in text.lower():
                 query = text.lower().split("@bot", 1)[-1].strip() or "hola"
                 asyncio.create_task(bot_reply(room, query, channel))
     except WebSocketDisconnect:
@@ -328,6 +333,46 @@ async def vision_loop(room: Room, channel: str):
         if channel in live_keys and time.time() - room._last_bot_reply >= VISION_INTERVAL:
             await bot_vision_comment(room, channel)
         await asyncio.sleep(VISION_INTERVAL)
+
+
+# ── Quick commands ────────────────────────────────────────────────
+COMMANDS = {"!canal", "!config", "!crew", "!discord", "!instagram"}
+
+async def handle_command(room: Room, channel: str, cmd: str) -> bool:
+    """Handle ! commands. Returns True if a known command was handled."""
+    key = cmd.strip().lower().split()[0]
+    if key not in COMMANDS:
+        return False
+
+    if key == "!canal":
+        name = STREAMER_NAMES.get(channel, channel.upper())
+        live = await get_live()
+        live_keys = {p["name"].removeprefix("live/") for p in live}
+        if channel in live_keys:
+            viewers = next((len(p.get("readers", [])) for p in live if p["name"].removeprefix("live/") == channel), 0)
+            status = f"🟢 En vivo ahora ({viewers} viewer{'s' if viewers != 1 else ''})"
+        else:
+            status = "⚫ Offline"
+        reply = f"{name} — {status} | corillo.live/{channel}/"
+
+    elif key == "!crew":
+        names = " · ".join(STREAMER_NAMES.values())
+        reply = f"Crew de CORILLO: {names} — corillo.live"
+
+    elif key == "!config":
+        reply = "Guía de configuración OBS / Meld Studio → corillo.live/configuracion/"
+
+    elif key == "!discord":
+        reply = f"Discord de CORILLO: {DISCORD_URL}" if DISCORD_URL else "Todavía no tenemos Discord oficial. ¡Pronto!"
+
+    elif key == "!instagram":
+        reply = f"Instagram de CORILLO: {INSTAGRAM_URL}" if INSTAGRAM_URL else "Todavía no tenemos Instagram oficial. ¡Pronto!"
+
+    await room.broadcast({
+        "type": "message", "user": "CORILLO BOT",
+        "text": reply, "ts": time.time(), "bot": True,
+    })
+    return True
 
 
 # ── Greeter ───────────────────────────────────────────────────────
