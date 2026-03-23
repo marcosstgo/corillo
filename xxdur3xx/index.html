@@ -203,7 +203,7 @@
       const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);
       const dur=s?(h?h+'h ':'')+m+'m':'';
       const d=v.date?new Date(v.date).toLocaleDateString('es-PR',{month:'short',day:'numeric'}):'';
-      return `<a class="cvod-card" href="/vods/${v.channel}/${v.filename}" target="_blank" rel="noopener"><div class="cvod-thumb"><i class="fa-solid fa-play"></i>${dur?`<span class="cvod-dur">${dur}</span>`:''}</div><div class="cvod-date">${d}</div></a>`;
+      return `<a class="cvod-card" href="/vods/v/?id=${v.id}"><div class="cvod-thumb"><i class="fa-solid fa-play"></i>${dur?`<span class="cvod-dur">${dur}</span>`:''}</div><div class="cvod-date">${d}</div></a>`;
     }).join('');
     document.getElementById('channelVods').style.display='';
   }catch(e){}

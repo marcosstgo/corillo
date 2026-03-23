@@ -338,8 +338,7 @@ function renderGrid() {
 
   grid.querySelectorAll('.vod-card').forEach(card => {
     card.addEventListener('click', () => {
-      const vod = allVods.find(v => v.id === card.dataset.id);
-      if (vod) openModal(vod);
+      location.href = `/vods/v/?id=${card.dataset.id}`;
     });
   });
 }
