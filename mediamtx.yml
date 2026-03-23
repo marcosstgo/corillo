@@ -258,7 +258,7 @@ pathDefaults:
   runOnReadRestart: no
   runOnUnread:
   runOnRecordSegmentCreate:
-  runOnRecordSegmentComplete: /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
+  runOnRecordSegmentComplete:
 
 ###############################################
 # Paths específicos
@@ -281,5 +281,6 @@ paths:
     runOnReady: ""
     runOnReadyRestart: no
     record: yes
+    runOnRecordSegmentComplete: /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
 
   all_others:
