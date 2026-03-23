@@ -418,7 +418,7 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
 .chat-msgs{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-height:0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
 .chat-msg{font-size: var(--text-base);line-height:1.45;word-break:break-word}
 .msg-user{font-size: var(--text-base);font-weight:700;margin-right:2px}
-.chat-msg.is-bot .msg-user{color:#9147ff}
+.chat-msg.is-bot .msg-user{color:var(--accent)}
 .chat-msg.is-system{font-family:var(--mono);font-size: var(--text-2xs);letter-spacing:1px;color:rgba(255,255,255,.2);text-align:center;padding:3px 0}
 .chat-input-wrap{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;align-items:center}
 #chatInput{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--white);font-size: var(--text-base);font-family:var(--body);outline:none;transition:.15s;min-width:0}
@@ -431,11 +431,11 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
   display:none;margin-left:6px;
   background:none;border:none;cursor:pointer;
   font-family:var(--mono);font-size: var(--text-xs);letter-spacing:1px;
-  color:rgba(145,71,255,.5);padding:0;
+  color:rgba(0,191,255,.4);padding:0;
   transition:color .15s;
 }
 .chat-msg.is-bot:hover .reply-btn{display:inline}
-.reply-btn:hover{color:rgba(145,71,255,.9)}
+.reply-btn:hover{color:rgba(0,191,255,.9)}
 
 
 /* ── Profile section ── */

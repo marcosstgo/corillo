@@ -233,8 +233,9 @@ async def ws_chat(ws: WebSocket, channel: str):
     requested = ws.query_params.get("user", "").strip()[:40]
     username = await room.join(ws, requested)
 
-    if room._vision_task is None or room._vision_task.done():
-        room._vision_task = asyncio.create_task(vision_loop(room, channel))
+    # VISION DISABLED — uncomment to re-enable periodic screen comments
+    # if room._vision_task is None or room._vision_task.done():
+    #     room._vision_task = asyncio.create_task(vision_loop(room, channel))
 
     await ws.send_json({"type": "welcome", "user": username})
     for msg in room.history:
@@ -267,10 +268,11 @@ async def bot_reply(room: Room, query: str, channel: str = ""):
     status = ("En vivo:\n" + "\n".join(
         f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live
     )) if live else "Sin streams en vivo."
-    b64 = await fetch_thumb_b64(channel) if channel else None
+    # VISION DISABLED — re-enable fetch_thumb_b64 and image block when ready
+    # b64 = await fetch_thumb_b64(channel) if channel else None
     user_content = []
-    if b64:
-        user_content.append({"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}})
+    # if b64:
+    #     user_content.append({"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}})
     user_content.append({"type": "text", "text": query})
     try:
         res = await asyncio.to_thread(

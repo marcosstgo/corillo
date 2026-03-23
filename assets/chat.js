@@ -59,7 +59,7 @@ function addChatMsg(msg) {
     el.className = 'chat-msg is-system';
     el.textContent = msg.text;
   } else {
-    const color = msg.bot ? '#9147ff' : userColor(msg.user);
+    const color = msg.bot ? '#00bfff' : userColor(msg.user);
     el.className = 'chat-msg' + (msg.bot ? ' is-bot' : '');
     el.innerHTML = `<span class="msg-user" style="color:${color}">${escHtml(msg.user)}:</span> <span class="msg-text">${escHtml(msg.text)}</span>${msg.bot ? '<button class="reply-btn" tabindex="-1">↩ responder</button>' : ''}`;
     if (msg.bot) {
