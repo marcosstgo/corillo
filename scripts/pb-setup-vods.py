@@ -140,6 +140,7 @@ def setup_vods(client: httpx.Client, token: str):
         ok("Colección 'vods' ya existe con todos los campos y reglas correctas")
         return
 
+
     updated_fields = current_fields + missing
     r = client.patch(
         f"{PB_URL}/api/collections/{existing['id']}",
