@@ -128,11 +128,12 @@ def setup_vods(client: httpx.Client, token: str):
     existing_names = {f["name"] for f in current_fields}
     missing = [f for f in VOD_FIELDS if f["name"] not in existing_names]
 
-    if not missing:
-        ok("Colección 'vods' ya existe con todos los campos")
+    # Siempre asegurar reglas de acceso correctas
+    needs_rule_fix = existing.get("listRule") != "" or existing.get("viewRule") != ""
+    if not missing and not needs_rule_fix:
+        ok("Colección 'vods' ya existe con todos los campos y reglas correctas")
         return
 
-    # Agregar campos faltantes
     updated_fields = current_fields + missing
     r = client.patch(
         f"{PB_URL}/api/collections/{existing['id']}",
@@ -151,6 +152,8 @@ def setup_vods(client: httpx.Client, token: str):
 
     for f in missing:
         ok(f"Campo '{f['name']}' agregado a vods")
+    if needs_rule_fix:
+        ok("Reglas de acceso público aplicadas (listRule/viewRule = '')")
 
 
 def main():
