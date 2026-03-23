@@ -61,16 +61,18 @@ def get_streamer(channel: str, token: str) -> dict | None:
     return items[0] if items else None
 
 
-def save_vod(channel: str, filepath: str, duration: int, size: int, token: str) -> str:
+def save_vod(channel: str, filepath: str, duration: int, size: int, thumb: str, token: str) -> str:
+    p = Path(filepath)
     r = httpx.post(
         f"{PB_URL}/api/collections/vods/records",
         headers={"Authorization": token},
         json={
             "channel":  channel,
-            "filename": Path(filepath).name,
+            "filename": p.name,
             "filepath": filepath,
             "duration": duration,
             "size":     size,
+            "thumb":    thumb,
             "date":     datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S.000Z'),
         },
         timeout=10,
@@ -117,6 +119,25 @@ def get_duration(filepath: str) -> int:
     except Exception:
         return 0
 
+
+def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
+    """Extrae un frame del video como thumbnail JPEG. Retorna el path o None."""
+    thumb_path = filepath.with_suffix(".jpg")
+    # Capturar frame a los 10s, o al 20% de la duración, lo que sea menor
+    seek = min(10, max(1, int(duration * 0.2))) if duration > 0 else 5
+    try:
+        subprocess.run(
+            ["ffmpeg", "-y", "-ss", str(seek), "-i", str(filepath),
+             "-vframes", "1", "-q:v", "3", "-vf", "scale=640:-1",
+             str(thumb_path)],
+            capture_output=True, timeout=60,
+        )
+        if thumb_path.exists():
+            return thumb_path
+    except Exception as e:
+        log.warning(f"Thumbnail generation failed: {e}")
+    return None
+
 # ── Main ──────────────────────────────────────────────────────────
 
 def main():
@@ -159,7 +180,14 @@ def main():
     duration = get_duration(str(filepath))
     size     = filepath.stat().st_size
 
-    vod_id = save_vod(channel, str(filepath), duration, size, token)
+    thumb_path = generate_thumbnail(filepath, duration)
+    thumb_url  = f"/vods/{channel}/{thumb_path.name}" if thumb_path else ""
+    if thumb_path:
+        log.info(f"Thumbnail generated: {thumb_path.name}")
+    else:
+        log.warning(f"No thumbnail generated for {filepath.name}")
+
+    vod_id = save_vod(channel, str(filepath), duration, size, thumb_url, token)
     log.info(f"VOD saved: {channel} — {filepath.name} ({duration}s, {size//1024//1024}MB) — id={vod_id}")
 
     apply_retention(channel, plan["keep"], token)

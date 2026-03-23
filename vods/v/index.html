@@ -174,14 +174,15 @@ async function init() {
 
   const s = streamerInfo(vod.channel);
   const colorStyle = s.color ? `background:${s.color}` : 'background:var(--accent)';
-  const videoUrl = `/vods/${vod.channel}/${vod.filename}`;
+  const videoUrl  = `/vods/${vod.channel}/${vod.filename}`;
+  const posterAttr = vod.thumb ? `poster="${vod.thumb}"` : '';
 
   // OG / title
   document.title = `${s.name} — VOD — CORILLO`;
 
   document.getElementById('content').innerHTML = `
     <div class="player-wrap">
-      <video id="vodVideo" controls preload="metadata" src="${videoUrl}"></video>
+      <video id="vodVideo" controls preload="metadata" src="${videoUrl}" ${posterAttr}></video>
     </div>
     <div class="meta-bar">
       <div class="meta-channel">

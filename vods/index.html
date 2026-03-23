@@ -318,6 +318,7 @@ function renderGrid() {
           <div class="vod-thumb-letter" style="color:${s.color || 'var(--accent)'}">${initial(s.name)}</div>
         </div>
         <div class="vod-thumb-grid"></div>
+        ${vod.thumb ? `<img src="${vod.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" loading="lazy">` : ''}
         <div class="vod-play-btn">
           <div class="vod-play-icon"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
         </div>
