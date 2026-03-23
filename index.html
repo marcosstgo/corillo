@@ -87,7 +87,7 @@
     header{
       position:sticky;top:0;z-index:60;
       backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom,rgba(6,6,8,.95),rgba(6,6,8,.6));
+      background:linear-gradient(to bottom,rgba(3,10,14,.96),rgba(3,10,14,.6));
       border-bottom:1px solid var(--border);
     }
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;flex-wrap:wrap}
@@ -98,11 +98,11 @@
     .live-pill{
       display:flex;align-items:center;gap:7px;
       font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
-      color:var(--live);background:rgba(223,48,48,.08);border:1px solid rgba(223,48,48,.2);
+      color:var(--live);background:rgba(0,255,157,.07);border:1px solid rgba(0,255,157,.18);
       padding:5px 12px 5px 9px;border-radius:999px;
     }
     .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:.3s}
-    .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.2);animation:blink 1.4s infinite}
+    .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(0,255,157,.2);animation:blink 1.4s infinite}
     nav{display:flex;gap:8px;align-items:center}
     .btn{
       display:inline-flex;align-items:center;gap:8px;cursor:pointer;
@@ -114,7 +114,7 @@
     }
     .btn:hover{border-color:var(--border-h);color:var(--white)}
     .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
-    .btn.primary:hover{opacity:.88;box-shadow:0 0 20px rgba(232,200,74,.25)}
+    .btn.primary:hover{opacity:.88;box-shadow:0 0 20px rgba(0,191,255,.35)}
 
     /* ── DIGEST ── */
     .digest-bar{display:flex;align-items:center;gap:8px;margin-top:16px;font-family:var(--mono);font-size: .85rem;color:rgba(255,255,255,.45);min-height:18px}
@@ -124,9 +124,9 @@
     .hero{position:relative;padding:48px 0 20px}
     .heroCard{
       position:relative;border:1px solid var(--border);border-radius:16px;overflow:hidden;
-      background:radial-gradient(1000px 500px at 20% 0%,rgba(232,200,74,.1),transparent 55%),
-                 radial-gradient(900px 420px at 85% 10%,rgba(223,48,48,.1),transparent 55%),
-                 linear-gradient(to bottom,rgba(18,18,24,.75),rgba(12,12,16,.55));
+      background:radial-gradient(1000px 500px at 20% 0%,rgba(0,191,255,.07),transparent 55%),
+                 radial-gradient(900px 420px at 85% 10%,rgba(0,255,157,.05),transparent 55%),
+                 linear-gradient(to bottom,rgba(7,17,24,.75),rgba(3,10,14,.55));
     }
     .canvasWrap{position:absolute;inset:0;pointer-events:none;opacity:.7}
     #heroCanvas{width:100%;height:100%;display:block}
@@ -142,7 +142,7 @@
       font-family:var(--display);font-size:clamp(3.2rem,6.5vw,6rem);line-height:.88;letter-spacing:2px;
     }
     .heroTitle .stroke{-webkit-text-stroke:1.5px rgba(242,239,233,.85);color:transparent;display:block}
-    .heroTitle .gold{color:var(--accent);display:block;text-shadow:0 0 60px rgba(232,200,74,.2)}
+    .heroTitle .gold{color:var(--accent);display:block;text-shadow:0 0 60px rgba(0,191,255,.25)}
     .heroSub{margin-top:14px;max-width:52ch;color:rgba(255,255,255,.7);line-height:1.7;font-size:.95rem}
     .heroActions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 
@@ -172,7 +172,7 @@
     .feat-info{flex:1;min-width:0}
     .feat-name{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
     .feat-sub{font-size:.75rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;margin-top:1px}
-    .feat-badge{font-family:var(--mono);font-size: .75rem;letter-spacing:1.5px;color:var(--accent);border:1px solid rgba(232,200,74,.2);padding:2px 6px;border-radius:2px;flex-shrink:0}
+    .feat-badge{font-family:var(--mono);font-size: .75rem;letter-spacing:1.5px;color:var(--accent);border:1px solid rgba(0,191,255,.2);padding:2px 6px;border-radius:2px;flex-shrink:0}
 
     /* API notice */
     .notice{
@@ -199,7 +199,7 @@
       display:inline-flex;align-items:center;gap:5px;
     }
     .filter-tab.active{border-color:rgba(255,255,255,.2);color:var(--white);background:rgba(255,255,255,.06)}
-    .filter-tab.live-tab.active{border-color:rgba(223,48,48,.35);color:var(--live);background:rgba(223,48,48,.07)}
+    .filter-tab.live-tab.active{border-color:rgba(0,255,157,.25);color:var(--live);background:rgba(0,255,157,.07)}
     .filter-tab:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
 
     /* ── GRID — Desktop: CSS Grid ── */
@@ -258,9 +258,9 @@
       color:rgba(255,255,255,.3);border:1px dashed rgba(255,255,255,.12);
       padding:4px 10px;border-radius:2px;
     }
-    .card.is-live{border-color:rgba(223,48,48,.35);box-shadow:0 0 0 1px rgba(223,48,48,.08)}
-    .card.is-host{border-color:rgba(232,200,74,.18)}
-    .card.is-live.is-host{border-color:rgba(232,200,74,.35)}
+    .card.is-live{border-color:rgba(0,255,157,.25);box-shadow:0 0 0 1px rgba(0,255,157,.07)}
+    .card.is-host{border-color:rgba(0,191,255,.15)}
+    .card.is-live.is-host{border-color:rgba(0,191,255,.3)}
     .thumb{aspect-ratio:16/9;background:#000;position:relative;overflow:hidden}
     .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
     .thumb-img.has-thumb{display:block;opacity:.45}
@@ -306,7 +306,7 @@
 
     /* ── CHAT WIDGET ── */
     #chatWidget{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
-    #chatToggle{width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 20px rgba(232,200,74,.3);transition:.2s}
+    #chatToggle{width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--ink);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;box-shadow:0 4px 20px rgba(0,191,255,.3);transition:.2s}
     #chatToggle:hover{opacity:.88;transform:scale(1.05)}
     #chatPanel{width:300px;max-height:420px;border-radius:12px;overflow:hidden;background:rgba(10,10,14,.97);border:1px solid var(--border);display:none;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.6);backdrop-filter:blur(12px)}
     #chatPanel.open{display:flex}
