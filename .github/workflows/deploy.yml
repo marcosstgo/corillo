@@ -156,6 +156,7 @@ jobs:
             "set -e
              mkdir -p /home/corillo-adm/corillo-vod /var/vods
              cp /var/www/stream/scripts/vod-process.py /home/corillo-adm/corillo-vod/vod-process.py
+             cp /var/www/stream/scripts/pb-setup-vods.py /home/corillo-adm/corillo-vod/pb-setup-vods.py
              chmod +x /home/corillo-adm/corillo-vod/vod-process.py
              if [ ! -d /home/corillo-adm/corillo-vod/venv ]; then
                python3 -m venv /home/corillo-adm/corillo-vod/venv
@@ -164,6 +165,7 @@ jobs:
              if [ ! -f /home/corillo-adm/corillo-vod/.env ]; then
                cp /home/corillo-adm/corillo-bot/.env /home/corillo-adm/corillo-vod/.env
              fi
+             /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/pb-setup-vods.py
              echo 'vod-process deployed'"
 
       - name: Deploy bitrate monitor if changed
