@@ -31,11 +31,11 @@
     .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px}
     .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
     .brand-svg{width:110px;height:30px}
-    .nav-tag{font-family:var(--mono);font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--border);padding-left:10px}
+    .nav-tag{font-family:var(--mono);font-size: .75rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--border);padding-left:10px}
     .nav-right{display:flex;gap:8px;align-items:center}
     .btn{
       display:inline-flex;align-items:center;gap:7px;cursor:pointer;
-      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.55rem;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size: .78rem;
       padding:7px 14px;border-radius:7px;border:1px solid var(--border);
       background:transparent;color:rgba(255,255,255,.6);transition:.18s;text-decoration:none;white-space:nowrap;
     }
@@ -55,14 +55,14 @@
 
     /* ── HERO ── */
     .hero{padding:64px 0 48px;border-bottom:1px solid var(--border)}
-    .eyebrow{font-family:var(--mono);font-size:.5rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+    .eyebrow{font-family:var(--mono);font-size: .75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
     .hero-title{font-family:var(--display);font-size:clamp(2.4rem,6vw,4rem);letter-spacing:3px;line-height:1;margin-bottom:18px}
     .hero-desc{font-size:1rem;line-height:1.7;color:rgba(242,239,233,.6);max-width:52ch;margin-bottom:32px}
     [data-theme="light"] .hero-desc{color:rgba(18,18,15,.6)}
 
     /* ── PROCESO ── */
     .section{padding:48px 0;border-bottom:1px solid var(--border)}
-    .section-label{font-family:var(--mono);font-size:.48rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+    .section-label{font-family:var(--mono);font-size: .72rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
     .section-title{font-family:var(--display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:32px}
 
     .steps{display:flex;flex-direction:column;gap:0}
@@ -70,7 +70,7 @@
     .step:last-child{border-bottom:none}
     .step-num{font-family:var(--display);font-size:2rem;letter-spacing:2px;color:rgba(232,200,74,.2);flex-shrink:0;width:40px;line-height:1;padding-top:2px}
     .step-body{flex:1}
-    .step-title{font-family:var(--mono);font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:6px}
+    .step-title{font-family:var(--mono);font-size: .92rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:6px}
     .step-desc{font-size:.9rem;line-height:1.6;color:rgba(242,239,233,.55)}
     .step-desc a{color:var(--accent);text-decoration:none}
     .step-desc a:hover{text-decoration:underline}
@@ -102,7 +102,7 @@
       display:flex;align-items:center;gap:12px;margin-bottom:28px;
     }
     .approved-badge{
-      font-family:var(--mono);font-size:.45rem;letter-spacing:2px;text-transform:uppercase;
+      font-family:var(--mono);font-size: .85rem;letter-spacing:2px;text-transform:uppercase;
       background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);
       color:#4ade80;padding:4px 10px;border-radius:4px;
     }
@@ -113,9 +113,9 @@
       border:1px solid var(--border);border-radius:12px;
       background:var(--surface);padding:20px;
     }
-    .card-title{font-family:var(--mono);font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .card-title{font-family:var(--mono);font-size: .78rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px;display:flex;align-items:center;gap:8px}
     .card-title .num{font-family:var(--display);font-size:1.2rem;color:rgba(232,200,74,.25);letter-spacing:1px;line-height:1}
-    label{display:block;font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin:14px 0 5px}
+    label{display:block;font-family:var(--mono);font-size: .72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin:14px 0 5px}
     label:first-of-type{margin-top:0}
     input[type="text"]{
       width:100%;padding:10px 12px;border-radius:7px;
@@ -125,19 +125,19 @@
     }
     input[type="text"]:focus{border-color:rgba(232,200,74,.35)}
     .hint{margin-top:5px;color:rgba(255,255,255,.35);font-size:.78rem}
-    .pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size:.45rem;letter-spacing:.5px;padding:3px 7px;border-radius:4px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
-    .warn{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size:.5rem;display:none}
-    .ok-msg{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px solid rgba(74,222,128,.2);background:rgba(74,222,128,.05);color:#4ade80;font-family:var(--mono);font-size:.5rem;display:none}
+    .pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size: .85rem;letter-spacing:.5px;padding:3px 7px;border-radius:4px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+    .warn{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size: .75rem;display:none}
+    .ok-msg{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px solid rgba(74,222,128,.2);background:rgba(74,222,128,.05);color:#4ade80;font-family:var(--mono);font-size: .75rem;display:none}
     .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px}
 
     .out{margin-top:16px;border-top:1px solid var(--border);padding-top:16px}
     .code-wrap{position:relative;margin-top:5px}
-    .code{font-family:var(--mono);font-size:.58rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:9px 44px 9px 12px;overflow-x:auto;white-space:nowrap;color:rgba(255,255,255,.75);letter-spacing:.3px}
-    .copy-btn{position:absolute;top:50%;right:6px;transform:translateY(-50%);font-family:var(--mono);font-size:.44rem;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.5);padding:3px 7px;cursor:pointer;transition:.15s}
+    .code{font-family:var(--mono);font-size: .78rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:9px 44px 9px 12px;overflow-x:auto;white-space:nowrap;color:rgba(255,255,255,.75);letter-spacing:.3px}
+    .copy-btn{position:absolute;top:50%;right:6px;transform:translateY(-50%);font-family:var(--mono);font-size: .85rem;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.5);padding:3px 7px;cursor:pointer;transition:.15s}
     .copy-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
 
     .rtmp-block{margin-top:16px;border:1px solid rgba(232,200,74,.12);border-radius:10px;background:rgba(232,200,74,.025);padding:16px;display:none}
-    .rtmp-title{font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(232,200,74,.6);margin-bottom:12px}
+    .rtmp-title{font-family:var(--mono);font-size: .72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(232,200,74,.6);margin-bottom:12px}
     .rtmp-note{margin-top:10px;font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.6}
     .rtmp-note a{color:rgba(232,200,74,.7);text-decoration:none}
     .rtmp-note a:hover{text-decoration:underline}
@@ -152,7 +152,7 @@
     .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
     .field{display:flex;flex-direction:column;gap:4px}
-    .field label{font-family:var(--mono);font-size:.48rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0}
+    .field label{font-family:var(--mono);font-size: .72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0}
     .field input,.field textarea{
       padding:10px 12px;border-radius:7px;
       border:1px solid rgba(255,255,255,.08);
@@ -163,7 +163,7 @@
     .field input:focus,.field textarea:focus{border-color:rgba(232,200,74,.35)}
     .field-hint{font-size:.75rem;color:rgba(255,255,255,.3)}
     .field-full{grid-column:1/-1}
-    .form-err{padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size:.5rem;display:none}
+    .form-err{padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size: .75rem;display:none}
     .form-success{display:none;text-align:center;padding:32px 0;animation:fadeInUp .4s ease}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     .form-success .check{width:56px;height:56px;border-radius:50%;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;color:#4ade80}
@@ -173,7 +173,7 @@
     /* ── FOOTER ── */
     footer{border-top:1px solid var(--border);padding:24px 0}
     .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .foot-copy{font-family:var(--mono);font-size:.45rem;letter-spacing:1px;color:var(--muted)}
+    .foot-copy{font-family:var(--mono);font-size: .85rem;letter-spacing:1px;color:var(--muted)}
     hr{border:none;border-top:1px solid var(--border);margin:0}
   </style>
 </head>
@@ -323,8 +323,8 @@
         <p class="contact-sub" style="max-width:360px;margin:0 auto 20px">
           Recibimos tu solicitud. Te vamos a contactar al email que pusiste en menos de 24 horas.
         </p>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:10px 18px;font-family:var(--mono);font-size:.55rem;letter-spacing:1px;color:rgba(74,222,128,.8)">
-          <i class="fa-solid fa-envelope" style="font-size:.7rem"></i>
+        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:10px 18px;font-family:var(--mono);font-size: .78rem;letter-spacing:1px;color:rgba(74,222,128,.8)">
+          <i class="fa-solid fa-envelope" style="font-size: .85rem"></i>
           Revisa tu bandeja de entrada
         </div>
       </div>
