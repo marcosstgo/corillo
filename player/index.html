@@ -203,9 +203,16 @@
       const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);
       const dur=s?(h?h+'h ':'')+m+'m':'';
       const d=v.date?new Date(v.date).toLocaleDateString('es-PR',{month:'short',day:'numeric'}):'';
-      return `<a class="cvod-card" href="/vods/v/?id=${v.id}"><div class="cvod-thumb">${v.thumb?`<img src="${v.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" loading="lazy">`:''}<i class="fa-solid fa-play" style="position:relative;z-index:1"></i>${dur?`<span class="cvod-dur">${dur}</span>`:''}</div><div class="cvod-date">${d}</div></a>`;
+      return `<a class="cvod-card" href="/vods/v/?id=${v.id}"><div class="cvod-thumb">${v.thumb?`<img src="${v.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" loading="lazy">`:''}${v.preview?`<video style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s;" src="${v.preview}" muted playsinline preload="none" loop data-preview></video>`:''}<i class="fa-solid fa-play" style="position:relative;z-index:1"></i>${dur?`<span class="cvod-dur">${dur}</span>`:''}</div><div class="cvod-date">${d}</div></a>`;
     }).join('');
     document.getElementById('channelVods').style.display='';
+    document.querySelectorAll('.cvod-card').forEach(card=>{
+      const vid=card.querySelector('[data-preview]');
+      if(vid){
+        card.addEventListener('mouseenter',()=>vid.play().catch(()=>{}));
+        card.addEventListener('mouseleave',()=>{vid.pause();vid.currentTime=0;});
+      }
+    });
   }catch(e){}
 })();
 </script>
