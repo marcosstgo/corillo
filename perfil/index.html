@@ -302,6 +302,19 @@
     .save-status.ok { color: #00b894; }
     .save-status.err { color: var(--live); }
 
+    /* ── VOD list ── */
+    .vod-row { display:flex; align-items:center; gap:12px; padding:10px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+    .vod-row-thumb { width:96px; height:54px; border-radius:5px; background:rgba(0,191,255,.07); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:1.2rem; color:rgba(0,191,255,.2); position:relative; }
+    .vod-row-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+    .vod-row-info { flex:1; min-width:0; }
+    .vod-row-date { font-family:var(--mono); font-size:.72rem; color:var(--muted); }
+    .vod-row-meta { font-family:var(--mono); font-size:.68rem; color:rgba(232,246,255,.3); margin-top:2px; }
+    .vod-row-del { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; }
+    .vod-row-del:hover { border-color:#e17055; color:#e17055; }
+    .vod-row-del.loading { opacity:.5; pointer-events:none; }
+    .vod-row-link { text-decoration:none; color:inherit; flex:1; min-width:0; }
+    .vod-row-link:hover .vod-row-date { color:var(--accent); }
+
     /* ── Avatar section ── */
     .avatar-row {
       display: flex;
@@ -576,6 +589,14 @@
       </div>
     </div>
 
+    <!-- Mis transmisiones -->
+    <div class="card" id="vodsCard" style="display:none">
+      <div class="card-title"><i class="fa-solid fa-film" style="color:var(--accent);font-size:.9em"></i> Mis transmisiones</div>
+      <p style="font-size:.85rem;color:var(--muted);margin:0 0 16px">Haz clic en el ícono de borrar para eliminar un VOD de tu canal.</p>
+      <div id="vodsList" style="display:flex;flex-direction:column;gap:10px"></div>
+      <p id="vodsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono)">No tienes transmisiones guardadas aún.</p>
+    </div>
+
     <!-- Cambiar email -->
     <div class="card">
       <div class="card-title">Cambiar email</div>
@@ -747,6 +768,9 @@ function populateDashboard(r) {
   panels = (r.panels || []).map(p => ({title:p.title||'',text:p.text||'',url:p.url||''}));
   renderPanels();
 
+  // Mis transmisiones
+  if (r.vod_enabled) loadMyVods(r.key);
+
   // Nav — link al canal
   if (r.key) {
     const channelLink = document.createElement('a');
@@ -776,6 +800,67 @@ function updateAvatarPreview(r) {
     avatarInitial.style.display = '';
     const img = avatarPreview.querySelector('img');
     if (img) img.remove();
+  }
+}
+
+// ── Mis transmisiones ──
+function fmtDur(s) {
+  if (!s) return '';
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = Math.floor(s % 60);
+  return h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}:${String(ss).padStart(2,'0')}`;
+}
+function fmtMB(b) {
+  if (!b) return '';
+  return b > 1073741824 ? (b/1073741824).toFixed(1)+' GB' : Math.round(b/1048576)+' MB';
+}
+function fmtVodDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('es-PR', { day:'numeric', month:'short', year:'numeric' });
+}
+
+async function loadMyVods(channel) {
+  try {
+    const res = await pb.collection('vods').getList(1, 50, {
+      filter: `channel = "${channel}"`,
+      sort: '-date',
+    });
+    const items = res.items || [];
+    const card = document.getElementById('vodsCard');
+    const list = document.getElementById('vodsList');
+    const empty = document.getElementById('vodsEmpty');
+    card.style.display = '';
+    if (!items.length) { empty.style.display = ''; return; }
+    list.innerHTML = items.map(v => `
+      <div class="vod-row" id="vrow-${v.id}">
+        <a class="vod-row-thumb" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener" title="Ver VOD">
+          ${v.thumb ? `<img src="${v.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
+        </a>
+        <a class="vod-row-link" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener">
+          <div class="vod-row-date">${fmtVodDate(v.date)}</div>
+          <div class="vod-row-meta">${[fmtDur(v.duration), fmtMB(v.size)].filter(Boolean).join(' · ')}</div>
+        </a>
+        <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>`).join('');
+  } catch(e) {
+    console.error('loadMyVods:', e);
+  }
+}
+
+async function deleteVod(id) {
+  if (!confirm('¿Seguro que quieres borrar este VOD? No se puede deshacer.')) return;
+  const btn = document.querySelector(`#vrow-${id} .vod-row-del`);
+  if (btn) btn.classList.add('loading');
+  try {
+    await pb.collection('vods').delete(id);
+    document.getElementById(`vrow-${id}`)?.remove();
+    if (!document.querySelector('.vod-row')) {
+      document.getElementById('vodsEmpty').style.display = '';
+    }
+  } catch(e) {
+    if (btn) btn.classList.remove('loading');
+    alert('No se pudo borrar el VOD. Intenta de nuevo.');
   }
 }
 
