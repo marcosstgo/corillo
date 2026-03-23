@@ -100,6 +100,11 @@ def setup_vods(client: httpx.Client, token: str):
         json={
             "name": "vods",
             "type": "base",
+            "listRule":   "",   # público — sin auth
+            "viewRule":   "",
+            "createRule": None, # solo admin
+            "updateRule": None,
+            "deleteRule": None,
             "schema": [
                 {"name": "channel",  "type": "text",   "required": True,  "options": {}},
                 {"name": "filename", "type": "text",   "required": True,  "options": {}},
