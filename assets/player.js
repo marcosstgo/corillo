@@ -55,6 +55,17 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     ctrlFs:           $('#ctrlFs'),
     themeBtn:         $('#themeBtn'),
     statsRow:         $('#statsRow'),
+    // ch-info-bar (new design)
+    navChAva:         $('#navChAva'),
+    navChName:        $('#navChName'),
+    chAva:            $('#chAva'),
+    chName:           $('#chName'),
+    chHostTag:        $('#chHostTag'),
+    chSub:            $('#chSub'),
+    chBio:            $('#chBio'),
+    chLinks:          $('#chLinks'),
+    otherLiveSection: $('#otherLiveSection'),
+    otherLiveList:    $('#otherLiveList'),
   };
 
   // ================================
@@ -119,6 +130,8 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
   function setLive(on) {
     DOM.liveDot.className   = 'dot' + (on ? ' on' : '');
     DOM.liveTxt.textContent = on ? 'en vivo' : 'offline';
+    const pill = document.getElementById('navLivePill');
+    if (pill) pill.classList.toggle('live', on);
   }
 
   function showOverlay(title, msg) {
@@ -595,72 +608,48 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     }
   }
 
+  function initChannelUI() {
+    const s = (window.STREAMERS || []).find(st => st.key === App.channel);
+    if (!s) return;
+    const initial = (s.name || s.key)[0].toUpperCase();
+    const color   = s.color || '#1a3040';
+    if (DOM.chAva)    { DOM.chAva.textContent = initial; DOM.chAva.style.background = color; }
+    if (DOM.navChAva) { DOM.navChAva.textContent = initial; DOM.navChAva.style.background = color; }
+    if (DOM.chName)    DOM.chName.textContent = (s.name || s.key).toUpperCase();
+    if (DOM.navChName) DOM.navChName.textContent = (s.name || s.key).toUpperCase();
+    if (DOM.chHostTag && s.host) DOM.chHostTag.style.display = '';
+    if (DOM.chSub && s.sub) DOM.chSub.textContent = s.sub;
+  }
+
   function loadProfile() {
-    if (!DOM.statsRow) return;
+    initChannelUI();
     fetch('/chat-api/profile/' + App.channel)
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (!data) return;
-        const hasBio    = data.bio && data.bio.trim();
-        const hasLinks  = data.twitch || data.instagram || data.tiktok;
-        const hasAvatar = data.avatar_url;
-        if (!hasBio && !hasLinks && !hasAvatar) return;
-
-        const sec = document.createElement('div');
-        sec.className = 'profile-section';
-        const label = document.createElement('div');
-        label.className = 'profile-label';
-        label.textContent = 'SOBRE ' + (data.display_name || App.channel).toUpperCase();
-        sec.appendChild(label);
-
-        const row = document.createElement('div');
-        row.className = 'profile-row';
-
-        if (hasAvatar) {
-          const img = document.createElement('img');
-          img.className = 'profile-avatar';
-          img.src = data.avatar_url;
-          img.alt = data.display_name || App.channel;
-          row.appendChild(img);
-        } else {
-          const ava = document.createElement('div');
-          ava.className = 'profile-avatar profile-avatar-initial';
-          ava.style.background = data.color || 'var(--panel)';
-          ava.textContent = (data.display_name || App.channel)[0].toUpperCase();
-          row.appendChild(ava);
+        if (data.avatar_url) {
+          [DOM.chAva, DOM.navChAva].forEach(el => {
+            if (!el) return;
+            const img = document.createElement('img');
+            img.src = data.avatar_url;
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%';
+            el.textContent = '';
+            el.appendChild(img);
+          });
         }
-
-        const info = document.createElement('div');
-        info.className = 'profile-info';
-        if (data.display_name) {
-          const name = document.createElement('div');
-          name.className = 'profile-name';
-          name.textContent = data.display_name;
-          info.appendChild(name);
+        if (data.bio && data.bio.trim() && DOM.chBio) {
+          DOM.chBio.textContent = data.bio.trim();
+          DOM.chBio.style.display = '';
         }
-        if (hasBio) {
-          const bio = document.createElement('p');
-          bio.className = 'profile-bio';
-          bio.textContent = data.bio.trim();
-          info.appendChild(bio);
+        if (DOM.chLinks) {
+          let html = '';
+          if (data.twitch)    html += `<a href="https://twitch.tv/${data.twitch}" target="_blank" rel="noopener" class="ch-link twitch"><i class="fa-brands fa-twitch"></i> Twitch</a>`;
+          if (data.instagram) html += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener" class="ch-link"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
+          if (data.tiktok)    html += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener" class="ch-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>`;
+          DOM.chLinks.innerHTML = html;
         }
-        if (hasLinks) {
-          const links = document.createElement('div');
-          links.className = 'profile-links';
-          if (data.twitch)
-            links.innerHTML += `<a href="https://twitch.tv/${data.twitch}" target="_blank" rel="noopener"><i class="fa-brands fa-twitch"></i><span>Twitch</span></a>`;
-          if (data.instagram)
-            links.innerHTML += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i><span>Instagram</span></a>`;
-          if (data.tiktok)
-            links.innerHTML += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i><span>TikTok</span></a>`;
-          info.appendChild(links);
-        }
-        row.appendChild(info);
-        sec.appendChild(row);
-        DOM.statsRow.after(sec);
-
         const panels = Array.isArray(data.panels) ? data.panels.filter(p => p && p.title) : [];
-        if (panels.length) {
+        if (panels.length && DOM.statsRow) {
           const grid = document.createElement('div');
           grid.className = 'panels-grid';
           panels.forEach(p => {
@@ -670,13 +659,45 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
               const a = document.createElement('a');
               a.href = p.url; a.target = '_blank'; a.rel = 'noopener'; a.className = 'panel-link';
               buildPanel(a, p); card.appendChild(a);
-            } else {
-              buildPanel(card, p);
-            }
+            } else { buildPanel(card, p); }
             grid.appendChild(card);
           });
-          sec.after(grid);
+          DOM.statsRow.after(grid);
         }
+      })
+      .catch(() => {});
+  }
+
+  function loadOthersLive() {
+    const sec  = DOM.otherLiveSection;
+    const list = DOM.otherLiveList;
+    if (!sec || !list) return;
+    fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(5000) })
+      .then(r => r.ok ? r.json() : null)
+      .then(j => {
+        if (!j) return;
+        const paths   = j.items || [];
+        const liveMap = {};
+        paths.filter(p => p.ready).forEach(p => {
+          liveMap[p.name.replace('live/', '')] = p.readers ? p.readers.length : 0;
+        });
+        const others = (window.STREAMERS || [])
+          .filter(s => !s.soon && s.key !== App.channel && liveMap[s.key] !== undefined);
+        if (!others.length) { sec.style.display = 'none'; return; }
+        sec.style.display = '';
+        list.innerHTML = others.map(s => {
+          const v = liveMap[s.key] || 0;
+          const c = s.color || 'var(--panel)';
+          const i = (s.name || s.key)[0].toUpperCase();
+          return `<a href="/${s.key}/" class="other-row">
+            <div class="other-ava" style="background:${c};color:#000">${i}</div>
+            <div class="other-info">
+              <div class="other-name">${s.name || s.key.toUpperCase()}</div>
+              <div class="other-status">En vivo</div>
+            </div>
+            <div class="other-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>
+          </a>`;
+        }).join('');
       })
       .catch(() => {});
   }
@@ -847,8 +868,10 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     const savedGlobalTheme = localStorage.getItem('corillo-theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedGlobalTheme);
 
-    // Profile + start
+    // Profile + others live + start
     loadProfile();
+    loadOthersLive();
+    setInterval(loadOthersLive, 15000);
     startPlayer();
   }
 
