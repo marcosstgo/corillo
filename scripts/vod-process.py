@@ -71,7 +71,7 @@ def save_vod(channel: str, filepath: str, duration: int, size: int, token: str) 
             "filepath": filepath,
             "duration": duration,
             "size":     size,
-            "date":     datetime.now(timezone.utc).isoformat(),
+            "date":     datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S.000Z'),
         },
         timeout=10,
     )

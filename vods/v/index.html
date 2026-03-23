@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>VOD — CORILLO</title>
+  <meta name="description" content="Transmisión grabada en CORILLO — plataforma independiente desde Puerto Rico." />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#030a0e">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="/assets/streamers.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <style>
+    body { min-height: 100vh; }
+
+    /* ── NAV ── */
+    nav { position: sticky; top: 0; z-index: 100; height: 52px; display: flex; align-items: center; padding: 0 32px; background: rgba(3,10,14,.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); gap: 20px; }
+    .nav-logo svg { height: 34px; width: auto; }
+    .nav-spacer { flex: 1; }
+    .nav-btn { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: rgba(232,246,255,.4); cursor: pointer; transition: .15s; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+    .nav-btn:hover { border-color: var(--border-h); color: var(--white); }
+    @media(max-width:600px) { nav { padding: 0 16px; gap: 12px; } }
+
+    /* ── PLAYER ── */
+    .player-wrap { background: #000; width: 100%; aspect-ratio: 16/9; max-height: 70vh; display: flex; align-items: center; justify-content: center; }
+    .player-wrap video { width: 100%; height: 100%; display: block; }
+
+    /* ── META ── */
+    .meta-bar { max-width: 900px; margin: 0 auto; padding: 20px 24px 0; }
+    .meta-channel { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .meta-ava { width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 16px; color: #030a0e; }
+    .meta-name { font-family: var(--display); font-size: 1.5rem; letter-spacing: 3px; }
+    .meta-stats { display: flex; align-items: center; gap: 20px; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .5px; flex-wrap: wrap; }
+    .meta-stats i { color: var(--accent); font-size: .65rem; }
+    .meta-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+    /* ── ACTIONS ── */
+    .actions { max-width: 900px; margin: 0 auto; padding: 0 24px 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .action-btn { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: .15s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    .action-btn:hover { border-color: var(--border-h); color: var(--white); }
+    .action-btn.primary { border-color: rgba(0,191,255,.4); color: var(--accent); }
+    .action-btn.primary:hover { background: rgba(0,191,255,.08); }
+
+    /* ── NOT FOUND ── */
+    .not-found { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; text-align: center; padding: 40px; }
+    .not-found-icon { font-size: 3rem; color: var(--muted); margin-bottom: 8px; }
+    .not-found h2 { font-family: var(--display); font-size: 2.5rem; letter-spacing: 4px; color: rgba(232,246,255,.2); }
+    .not-found p { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    .site-footer { border-top: 1px solid var(--border); padding: 28px 32px; margin-top: 32px; }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .foot-left { display: flex; align-items: center; gap: 12px; }
+    .foot-brand svg { height: 28px; width: auto; opacity: .7; }
+    .foot-info { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,.25); text-transform: uppercase; line-height: 1.7; }
+    .foot-links { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .5px; color: var(--muted); flex-wrap: wrap; }
+    .foot-links a { color: var(--muted); transition: .15s; }
+    .foot-links a:hover { color: var(--accent); }
+    .foot-sep { color: rgba(255,255,255,.15); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+      <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
+      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+    </svg>
+  </a>
+  <div class="nav-spacer"></div>
+  <a href="/vods/" class="nav-btn"><i class="fa-solid fa-film"></i> VODs</a>
+  <a href="/" class="nav-btn"><i class="fa-solid fa-house"></i></a>
+</nav>
+
+<!-- CONTENT -->
+<div id="content">
+  <!-- populated by JS -->
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div class="foot-left">
+      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
+        <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
+        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+      </svg>
+      <div class="foot-info">Puerto Rico<br>Plataforma independiente</div>
+    </div>
+    <div class="foot-links">
+      <a href="/multiplayer/">Multiplayer</a>
+      <span class="foot-sep">·</span>
+      <a href="/streamers/">Streamers</a>
+      <span class="foot-sep">·</span>
+      <a href="/join/">Crear Canal</a>
+      <span class="foot-sep">·</span>
+      <a href="/legal/">Términos</a>
+      <span class="foot-sep">·</span>
+      <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const PB = 'https://pb.corillo.live';
+
+function fmtDuration(s) {
+  if (!s) return '—';
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = Math.floor(s % 60);
+  if (h > 0) return `${h}h ${m.toString().padStart(2,'0')}m`;
+  return `${m}:${ss.toString().padStart(2,'0')}`;
+}
+
+function fmtSize(bytes) {
+  if (!bytes) return '—';
+  if (bytes > 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
+  return (bytes / 1048576).toFixed(0) + ' MB';
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('es-PR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function streamerInfo(channel) {
+  const s = (window.STREAMERS || []).find(x => x.key === channel);
+  return s || { key: channel, name: channel.toUpperCase(), color: '#00bfff' };
+}
+
+function showNotFound() {
+  document.getElementById('content').innerHTML = `
+    <div class="not-found">
+      <div class="not-found-icon"><i class="fa-solid fa-film"></i></div>
+      <h2>VOD NO ENCONTRADO</h2>
+      <p>Este VOD no existe o fue eliminado</p>
+      <a href="/vods/" class="action-btn primary" style="margin-top:8px"><i class="fa-solid fa-arrow-left"></i> Ver todos los VODs</a>
+    </div>`;
+}
+
+async function init() {
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) { showNotFound(); return; }
+
+  let vod;
+  try {
+    const r = await fetch(`${PB}/api/collections/vods/records/${id}`);
+    if (!r.ok) { showNotFound(); return; }
+    vod = await r.json();
+  } catch {
+    showNotFound();
+    return;
+  }
+
+  const s = streamerInfo(vod.channel);
+  const colorStyle = s.color ? `background:${s.color}` : 'background:var(--accent)';
+  const videoUrl = `/vods/${vod.channel}/${vod.filename}`;
+
+  // OG / title
+  document.title = `${s.name} — VOD — CORILLO`;
+
+  document.getElementById('content').innerHTML = `
+    <div class="player-wrap">
+      <video id="vodVideo" controls preload="metadata" src="${videoUrl}"></video>
+    </div>
+    <div class="meta-bar">
+      <div class="meta-channel">
+        <div class="meta-ava" style="${colorStyle}">${(s.name||'?')[0].toUpperCase()}</div>
+        <a href="/${vod.channel}/" class="meta-name" style="color:${s.color||'var(--white)'};text-decoration:none">${s.name}</a>
+      </div>
+      <div class="meta-stats">
+        <span><i class="fa-regular fa-calendar"></i> ${fmtDate(vod.date)}</span>
+        <span><i class="fa-solid fa-clock"></i> ${fmtDuration(vod.duration)}</span>
+        <span><i class="fa-solid fa-weight-hanging"></i> ${fmtSize(vod.size)}</span>
+      </div>
+      <hr class="meta-divider">
+    </div>
+    <div class="actions">
+      <a href="/${vod.channel}/" class="action-btn"><i class="fa-solid fa-tower-broadcast"></i> Canal de ${s.name}</a>
+      <a href="/vods/?ch=${vod.channel}" class="action-btn"><i class="fa-solid fa-film"></i> Más VODs de ${s.name}</a>
+      <button class="action-btn" onclick="copyLink()"><i class="fa-solid fa-link"></i> Copiar enlace</button>
+    </div>`;
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(location.href).then(() => {
+    const btn = document.querySelector('[onclick="copyLink()"]');
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
+    setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-link"></i> Copiar enlace'; }, 2000);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
