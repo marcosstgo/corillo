@@ -8,7 +8,7 @@ CORILLO is a static HTML streaming platform for Puerto Rico, built without a bui
 
 ## Architecture
 
-The site is served as static files. **Caddy** handles reverse proxy and SSL, proxying:
+The site is served as static files. **Nginx** handles reverse proxy and SSL, proxying:
 - `/mediamtx-api/` → MediaMTX HTTP API (stream state/metadata)
 - `/live/{key}/index.m3u8` → MediaMTX HLS output per streamer
 
