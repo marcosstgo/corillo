@@ -7,6 +7,13 @@
   --border:rgba(255,255,255,.07); --border-h:rgba(255,255,255,.14);
   --white:#f2efe9; --muted:#48485a; --accent:#e8c84a; --live:#df3030;
   --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
+
+  /* ── Type scale ── */
+  --text-2xs: .7rem;   /* badges mínimos, stat labels */
+  --text-xs:  .75rem;  /* tags, mono labels, captions */
+  --text-sm:  .85rem;  /* meta, descripciones secundarias */
+  --text-base: 1rem;   /* body */
+  --text-lg:  1.1rem;  /* subtítulos, énfasis */
 }
 
 /* ── Light-mode token overrides ── */
@@ -96,10 +103,10 @@ body.no-grain::after { display:none }
 .dropdown-menu a{
   display:flex;align-items:center;gap:10px;
   padding:9px 14px;border-radius:7px;
-  font-family:var(--mono);font-size: .78rem;letter-spacing:2px;text-transform:uppercase;
+  font-family:var(--mono);font-size: var(--text-xs);letter-spacing:2px;text-transform:uppercase;
   color:rgba(255,255,255,.65);transition:.15s;white-space:nowrap;
 }
 .dropdown-menu a:hover{background:rgba(255,255,255,.07);color:var(--white)}
-.dropdown-menu a i{width:14px;text-align:center;font-size: .92rem;flex-shrink:0}
+.dropdown-menu a i{width:14px;text-align:center;font-size: var(--text-base);flex-shrink:0}
 [data-theme="light"] .nav-dropdown .dropdown-menu{background:#e8e6df;border-color:rgba(0,0,0,.12)}
 [data-theme="light"] .dropdown-menu a:hover{background:rgba(0,0,0,.07)}
