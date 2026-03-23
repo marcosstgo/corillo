@@ -237,6 +237,7 @@
     </div>
     <div class="aside-label">Canales</div>
     <div id="drawerOfflineRows"></div>
+    <button class="sidebar-show-all" id="drawerShowAll" style="display:none"><i class="fa-solid fa-chevron-down"></i> Ver todos</button>
   </div>
 </div>
 
@@ -626,7 +627,9 @@
     } else {
       liveSection.style.display = 'none';
     }
-    offlineRows.innerHTML = offline.map(s => `
+    const MAX = 8;
+    const showAllBtn = document.getElementById('drawerShowAll');
+    const renderOffline = (list) => list.map(s => `
       <a href="/${s.key}/" class="channel-row" onclick="closeDrawer()">
         <div class="ch-ava" style="${avaStyle(s)};opacity:.45">${initial(s.name)}</div>
         <div class="ch-info">
@@ -634,6 +637,18 @@
           <div class="ch-status">Offline</div>
         </div>
       </a>`).join('');
+
+    if (offline.length > MAX) {
+      offlineRows.innerHTML = renderOffline(offline.slice(0, MAX));
+      showAllBtn.style.display = '';
+      showAllBtn.onclick = () => {
+        offlineRows.innerHTML = renderOffline(offline);
+        showAllBtn.style.display = 'none';
+      };
+    } else {
+      offlineRows.innerHTML = renderOffline(offline);
+      showAllBtn.style.display = 'none';
+    }
   }
 
   function openDrawer()  { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open') }
