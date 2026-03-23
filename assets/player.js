@@ -868,6 +868,21 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     const savedGlobalTheme = localStorage.getItem('corillo-theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedGlobalTheme);
 
+    // Dropdown menu
+    const dropBtn   = document.getElementById('dropBtn');
+    const dropPanel = document.getElementById('dropPanel');
+    const dropBdrop = document.getElementById('dropBackdrop');
+    function openDrop()  { if (dropPanel) dropPanel.classList.add('open');  if (dropBdrop) dropBdrop.classList.add('show'); }
+    function closeDrop() { if (dropPanel) dropPanel.classList.remove('open'); if (dropBdrop) dropBdrop.classList.remove('show'); }
+    if (dropBtn)  dropBtn.addEventListener('click', e => { e.stopPropagation(); dropPanel.classList.contains('open') ? closeDrop() : openDrop(); });
+    if (dropBdrop) dropBdrop.addEventListener('click', closeDrop);
+    document.addEventListener('click', e => {
+      if (dropPanel && dropPanel.classList.contains('open') && !dropPanel.contains(e.target) && e.target !== dropBtn) closeDrop();
+    });
+    if (dropPanel) dropPanel.addEventListener('click', e => {
+      if (e.target.closest('.drop-btn, .drop-item') && !e.target.closest('#twitchLink, [href]')) closeDrop();
+    });
+
     // Profile + others live + start
     loadProfile();
     loadOthersLive();

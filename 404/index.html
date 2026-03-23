@@ -63,8 +63,31 @@
   </div>
   <div class="nav-space"></div>
   <button class="nav-btn active" id="chatToggleBtn" title="Chat"><i class="fa-solid fa-message"></i></button>
+  <button class="nav-btn" id="dropBtn" title="Más opciones"><i class="fa-solid fa-ellipsis"></i></button>
   <a href="/" class="nav-btn" title="Inicio"><i class="fa-solid fa-house"></i></a>
 </nav>
+
+<!-- Dropdown / bottom sheet -->
+<div class="drop-backdrop" id="dropBackdrop"></div>
+<div class="drop-panel" id="dropPanel">
+  <div class="drop-section-lbl">Modo</div>
+  <div class="drop-row">
+    <button class="drop-btn" id="btnH"><i class="fa-solid fa-rectangle-wide"></i> 16:9</button>
+    <button class="drop-btn" id="btnV"><i class="fa-solid fa-mobile-screen"></i> 9:16</button>
+  </div>
+  <div class="drop-sep"></div>
+  <div class="drop-section-lbl">Tema player</div>
+  <div class="drop-row">
+    <button class="drop-btn" id="btnThemeOg">Original</button>
+    <button class="drop-btn" id="btnThemeTm"><i class="fa-solid fa-terminal"></i></button>
+    <button class="drop-btn" id="btnThemeTw"><i class="fa-brands fa-twitch"></i></button>
+  </div>
+  <div class="drop-sep"></div>
+  <button class="drop-item" id="themeBtn"><i class="fa-solid fa-circle-half-stroke"></i> Tema del sitio</button>
+  <div class="drop-sep"></div>
+  <a class="drop-item" id="twitchLink" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-twitch"></i> Ver en Twitch</a>
+  <a class="drop-item" href="/streamers/"><i class="fa-solid fa-users"></i> Ver streamers</a>
+</div>
 
 <div class="app" id="content">
 
@@ -154,15 +177,8 @@
 
 </div>
 
-<!-- Hidden compat: player.js expects these IDs but they're not in the new UI -->
-<a id="twitchLink" href="#" style="display:none" target="_blank" rel="noopener"></a>
+<!-- Hidden compat: used by player.js but not visible in new UI -->
 <span id="chTag" style="display:none"></span>
-<button id="btnH" style="display:none"></button>
-<button id="btnV" style="display:none"></button>
-<button id="btnThemeOg" style="display:none"></button>
-<button id="btnThemeTm" style="display:none"></button>
-<button id="btnThemeTw" style="display:none"></button>
-<button id="themeBtn" style="display:none"></button>
 
 <script src="/assets/player.js"></script>
 <script src="/assets/chat.js"></script>
