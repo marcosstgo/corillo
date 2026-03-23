@@ -111,11 +111,11 @@ def setup_vods(client: httpx.Client, token: str):
             json={
                 "name": "vods",
                 "type": "base",
-                "listRule":   "",    # público — sin auth
+                "listRule":   "",                        # público — sin auth
                 "viewRule":   "",
-                "createRule": None,  # solo admin
+                "createRule": None,                      # solo admin
                 "updateRule": None,
-                "deleteRule": None,
+                "deleteRule": "channel = @request.auth.key",  # el streamer borra sus propios VODs
                 "fields": VOD_FIELDS,
             },
         )
@@ -130,7 +130,12 @@ def setup_vods(client: httpx.Client, token: str):
     missing = [f for f in VOD_FIELDS if f["name"] not in existing_names]
 
     # Siempre asegurar reglas de acceso correctas
-    needs_rule_fix = existing.get("listRule") != "" or existing.get("viewRule") != ""
+    DELETE_RULE = "channel = @request.auth.key"
+    needs_rule_fix = (
+        existing.get("listRule") != "" or
+        existing.get("viewRule") != "" or
+        existing.get("deleteRule") != DELETE_RULE
+    )
     if not missing and not needs_rule_fix:
         ok("Colección 'vods' ya existe con todos los campos y reglas correctas")
         return
@@ -145,7 +150,7 @@ def setup_vods(client: httpx.Client, token: str):
             "viewRule":   "",
             "createRule": None,
             "updateRule": None,
-            "deleteRule": None,
+            "deleteRule": DELETE_RULE,
         },
     )
     if r.status_code not in (200, 204):
