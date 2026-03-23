@@ -174,6 +174,15 @@
     .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
     .foot-copy{font-family:var(--mono);font-size: .85rem;letter-spacing:1px;color:var(--muted)}
     hr{border:none;border-top:1px solid var(--border);margin:0}
+    .site-footer{border-top:1px solid var(--border);padding:28px 32px;margin-top:16px}
+    .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .foot-left{display:flex;align-items:center;gap:12px}
+    .foot-brand svg{height:28px;width:auto;opacity:.7}
+    .foot-info{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.25);text-transform:uppercase;line-height:1.7}
+    .foot-links{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--muted);flex-wrap:wrap}
+    .foot-links a{color:var(--muted);transition:.15s}
+    .foot-links a:hover{color:var(--accent)}
+    .foot-sep{color:var(--dim)}
   </style>
 </head>
 <body>
@@ -331,11 +340,35 @@
   </div>
 </section>
 
-<footer>
-  <div class="wrap">
-    <div class="foot">
-      <span class="foot-copy">© 2026 CORILLO · Plataforma independiente desde Puerto Rico</span>
-      <a class="btn" href="/configuracion/"><i class="fa-solid fa-book-open"></i> Guía OBS</a>
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div class="foot-left">
+      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
+        <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
+        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+      </svg>
+      <div class="foot-info">Puerto Rico<br>Plataforma independiente</div>
+    </div>
+    <div class="foot-links">
+      <a href="/multiplayer/">Multiplayer</a>
+      <span class="foot-sep">·</span>
+      <a href="/streamers/">Streamers</a>
+      <span class="foot-sep">·</span>
+      <a href="/join/">Crear Canal</a>
+      <span class="foot-sep">·</span>
+      <a href="/configuracion/">Config OBS</a>
+      <span class="foot-sep">·</span>
+      <a href="/legal/">Términos</a>
+      <span class="foot-sep">·</span>
+      <a href="/dmca/">DMCA</a>
+      <span class="foot-sep">·</span>
+      <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
     </div>
   </div>
 </footer>
