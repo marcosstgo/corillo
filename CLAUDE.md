@@ -12,7 +12,7 @@ The site is served as static files. **Caddy** handles reverse proxy and SSL, pro
 - `/mediamtx-api/` → MediaMTX HTTP API (stream state/metadata)
 - `/live/{key}/index.m3u8` → MediaMTX HLS output per streamer
 
-**MediaMTX** handles RTMP ingestion and HLS output. Deployed on a **Raspberry Pi 3B+** to `/var/www/stream/`.
+**MediaMTX** handles RTMP ingestion and HLS output. Deployed on a **mini server running Ubuntu Server** to `/var/www/stream/`.
 
 ### Page structure
 
