@@ -145,6 +145,27 @@ def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
     return None
 
 
+def remux_faststart(filepath: Path) -> bool:
+    """Remuxea fmp4 → MP4 progresivo con moov al inicio. Reemplaza el archivo original."""
+    tmp = filepath.with_suffix(".tmp.mp4")
+    try:
+        result = subprocess.run(
+            ["ffmpeg", "-y", "-i", str(filepath),
+             "-c", "copy", "-movflags", "+faststart",
+             str(tmp)],
+            capture_output=True, timeout=600,
+        )
+        if result.returncode == 0 and tmp.exists():
+            tmp.replace(filepath)
+            return True
+        tmp.unlink(missing_ok=True)
+        log.warning(f"remux_faststart failed (rc={result.returncode})")
+    except Exception as e:
+        log.warning(f"remux_faststart error: {e}")
+        tmp.unlink(missing_ok=True)
+    return False
+
+
 def generate_preview(filepath: Path, duration: int) -> Path | None:
     """Genera un clip MP4 mudo de 4s para hover preview. Retorna el path o None."""
     if duration < 5:
@@ -208,6 +229,12 @@ def main():
     plan      = PLANS.get(plan_name, PLANS["free"])
 
     duration = int(float(os.environ.get("MTX_SEGMENT_DURATION", "0"))) or get_duration(str(filepath))
+
+    if remux_faststart(filepath):
+        log.info(f"Remuxed to faststart: {filepath.name}")
+    else:
+        log.warning(f"Remux failed, keeping original fmp4: {filepath.name}")
+
     size     = filepath.stat().st_size
 
     thumb_path = generate_thumbnail(filepath, duration)
