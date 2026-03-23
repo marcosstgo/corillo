@@ -3,9 +3,10 @@
 vod-process.py — Post-procesamiento de grabaciones MediaMTX para CORILLO VOD.
 
 Llamado por MediaMTX via runOnRecordSegmentComplete.
-Variables de entorno provistas por MediaMTX:
-  MTX_PATH        — path del stream (ej: live/katatonia)
-  MTX_RECORD_PATH — ruta del archivo grabado
+Variables de entorno provistas por MediaMTX (v1.17+):
+  MTX_PATH             — path del stream (ej: live/katatonia)
+  MTX_SEGMENT_PATH     — ruta del archivo grabado
+  MTX_SEGMENT_DURATION — duración del segmento en segundos
 """
 import os, sys, subprocess, logging
 from datetime import datetime, timezone
@@ -170,15 +171,11 @@ def generate_preview(filepath: Path, duration: int) -> Path | None:
 # ── Main ──────────────────────────────────────────────────────────
 
 def main():
-    # Log all env vars que empiezan con MTX o RECORD para debug
-    mtx_env = {k: v for k, v in os.environ.items() if k.startswith(("MTX_", "RECORD"))}
-    log.info(f"DEBUG env vars: {mtx_env}")
-
     mtx_path    = os.environ.get("MTX_PATH", "")
-    record_path = os.environ.get("MTX_RECORD_PATH", "")
+    record_path = os.environ.get("MTX_SEGMENT_PATH", "")
 
     if not mtx_path or not record_path:
-        log.error("MTX_PATH or MTX_RECORD_PATH not set — aborting")
+        log.error("MTX_PATH or MTX_SEGMENT_PATH not set — aborting")
         sys.exit(1)
 
     channel  = mtx_path.removeprefix("live/")
@@ -210,7 +207,7 @@ def main():
     plan_name = streamer.get("vod_plan", "free")
     plan      = PLANS.get(plan_name, PLANS["free"])
 
-    duration = get_duration(str(filepath))
+    duration = int(float(os.environ.get("MTX_SEGMENT_DURATION", "0"))) or get_duration(str(filepath))
     size     = filepath.stat().st_size
 
     thumb_path = generate_thumbnail(filepath, duration)
