@@ -251,7 +251,10 @@ async function loadVods() {
   }
 
   buildFilters();
-  renderGrid();
+
+  const initCh = new URLSearchParams(location.search).get('ch');
+  if (initCh && initCh !== 'all') setFilter(initCh);
+  else renderGrid();
 
   const heroSub = document.getElementById('heroSub');
   if (allVods.length === 0) {
