@@ -55,8 +55,7 @@
     }
     .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
     [data-theme="light"] nav{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
-    [data-theme="light"] #navLogo text{fill:#12120f!important}
-    [data-theme="light"] #navLogo circle[stroke="#f2efe9"]{stroke:#12120f!important}
+
 
     /* ── HERO ── */
     .hero{padding:56px 0 40px;border-bottom:1px solid var(--border)}
@@ -127,21 +126,21 @@
 
 <nav>
   <div class="nav-inner">
-    <a href="/" class="nav-brand">
-      <svg id="navLogo" class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a href="/" class="nav-logo nav-brand">
+      <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
         <defs>
-          <radialGradient id="navGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#e8c84a" stop-opacity="0.15"/>
-            <stop offset="100%" stop-color="#e8c84a" stop-opacity="0"/>
+          <radialGradient id="ng" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
           </radialGradient>
         </defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">C</text>
-        <circle cx="72" cy="42" r="36" fill="url(#navGlow)"/>
-        <circle cx="72" cy="42" r="34" stroke="#f2efe9" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="#e8c84a" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="#e8c84a"/>
-        <circle cx="72" cy="42" r="3.5" fill="#df3030"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#f2efe9">RILLO</text>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
+        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
       </svg>
       <span class="nav-tag">FAQ</span>
     </a>
