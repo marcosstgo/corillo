@@ -61,7 +61,7 @@ def get_streamer(channel: str, token: str) -> dict | None:
     return items[0] if items else None
 
 
-def save_vod(channel: str, filepath: str, duration: int, size: int, thumb: str, token: str) -> str:
+def save_vod(channel: str, filepath: str, duration: int, size: int, thumb: str, preview: str, token: str) -> str:
     p = Path(filepath)
     r = httpx.post(
         f"{PB_URL}/api/collections/vods/records",
@@ -73,6 +73,7 @@ def save_vod(channel: str, filepath: str, duration: int, size: int, thumb: str, 
             "duration": duration,
             "size":     size,
             "thumb":    thumb,
+            "preview":  preview,
             "date":     datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S.000Z'),
         },
         timeout=10,
@@ -120,11 +121,15 @@ def get_duration(filepath: str) -> int:
         return 0
 
 
+def _seek_point(duration: int) -> int:
+    """Punto de inicio para thumbnail y preview (10s o 20% de la duración)."""
+    return min(10, max(1, int(duration * 0.2))) if duration > 0 else 5
+
+
 def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
     """Extrae un frame del video como thumbnail JPEG. Retorna el path o None."""
     thumb_path = filepath.with_suffix(".jpg")
-    # Capturar frame a los 10s, o al 20% de la duración, lo que sea menor
-    seek = min(10, max(1, int(duration * 0.2))) if duration > 0 else 5
+    seek = _seek_point(duration)
     try:
         subprocess.run(
             ["ffmpeg", "-y", "-ss", str(seek), "-i", str(filepath),
@@ -136,6 +141,30 @@ def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
             return thumb_path
     except Exception as e:
         log.warning(f"Thumbnail generation failed: {e}")
+    return None
+
+
+def generate_preview(filepath: Path, duration: int) -> Path | None:
+    """Genera un clip MP4 mudo de 4s para hover preview. Retorna el path o None."""
+    if duration < 5:
+        return None  # video demasiado corto
+    preview_path = filepath.with_name(filepath.stem + "-preview.mp4")
+    seek = _seek_point(duration)
+    try:
+        subprocess.run(
+            ["ffmpeg", "-y", "-ss", str(seek), "-i", str(filepath),
+             "-t", "4",
+             "-c:v", "libx264", "-profile:v", "baseline", "-level:v", "3.1",
+             "-preset", "ultrafast", "-crf", "32",
+             "-vf", "scale=640:-2",
+             "-an",
+             str(preview_path)],
+            capture_output=True, timeout=120,
+        )
+        if preview_path.exists():
+            return preview_path
+    except Exception as e:
+        log.warning(f"Preview generation failed: {e}")
     return None
 
 # ── Main ──────────────────────────────────────────────────────────
@@ -187,7 +216,14 @@ def main():
     else:
         log.warning(f"No thumbnail generated for {filepath.name}")
 
-    vod_id = save_vod(channel, str(filepath), duration, size, thumb_url, token)
+    preview_path = generate_preview(filepath, duration)
+    preview_url  = f"/vods/{channel}/{preview_path.name}" if preview_path else ""
+    if preview_path:
+        log.info(f"Preview generated: {preview_path.name}")
+    else:
+        log.info(f"No preview (video too short or ffmpeg error)")
+
+    vod_id = save_vod(channel, str(filepath), duration, size, thumb_url, preview_url, token)
     log.info(f"VOD saved: {channel} — {filepath.name} ({duration}s, {size//1024//1024}MB) — id={vod_id}")
 
     apply_retention(channel, plan["keep"], token)

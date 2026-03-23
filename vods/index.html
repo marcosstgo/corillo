@@ -60,6 +60,8 @@
     .vod-card:hover .vod-play-btn { opacity: 1; }
     .vod-play-icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(0,191,255,.15); border: 1px solid rgba(0,191,255,.4); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.1rem; backdrop-filter: blur(8px); transition: transform .15s; }
     .vod-card:hover .vod-play-icon { transform: scale(1.08); }
+    .vod-preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .3s; pointer-events: none; }
+    .vod-card:hover .vod-preview { opacity: 1; }
     .vod-duration { position: absolute; bottom: 8px; right: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .5px; background: rgba(3,10,14,.85); backdrop-filter: blur(6px); color: rgba(232,246,255,.85); padding: 3px 8px; border-radius: 4px; }
     .vod-body { padding: 12px 14px 14px; }
     .vod-channel-row { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
@@ -319,6 +321,7 @@ function renderGrid() {
         </div>
         <div class="vod-thumb-grid"></div>
         ${vod.thumb ? `<img src="${vod.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" loading="lazy">` : ''}
+        ${vod.preview ? `<video class="vod-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
         <div class="vod-play-btn">
           <div class="vod-play-icon"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
         </div>
@@ -341,6 +344,11 @@ function renderGrid() {
     card.addEventListener('click', () => {
       location.href = `/vods/v/?id=${card.dataset.id}`;
     });
+    const vid = card.querySelector('.vod-preview');
+    if (vid) {
+      card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+      card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+    }
   });
 }
 
