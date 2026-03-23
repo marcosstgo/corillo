@@ -160,6 +160,7 @@
     .stream-thumb{aspect-ratio:16/9;position:relative;overflow:hidden;background:linear-gradient(135deg,#071118,#0d1c28)}
     .stream-thumb-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
     .stream-thumb-letter{font-family:var(--display);font-size:3.5rem;letter-spacing:4px;color:rgba(0,191,255,.06)}
+    .stream-thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
     .stream-live-tag{position:absolute;top:8px;left:8px;display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:var(--live);color:#030a0e;padding:3px 8px;border-radius:3px}
     .stream-viewers{position:absolute;top:8px;right:8px;font-family:var(--mono);font-size:10px;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);color:rgba(232,246,255,.7);padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:5px}
     .stream-body{padding:12px 14px}
@@ -729,6 +730,7 @@
         return `<a href="/${s.key}/" class="stream-card">
           <div class="stream-thumb">
             <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
+            <img src="/assets/thumbs/${s.key}.jpg" alt="" class="stream-thumb-img" onerror="this.style.display='none'" loading="lazy">
             <div class="stream-live-tag"><span class="live-dot" style="width:5px;height:5px;box-shadow:none;animation:none"></span> LIVE</div>
             ${v > 0 ? `<div class="stream-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>` : ''}
           </div>

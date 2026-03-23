@@ -95,6 +95,7 @@ VOD_FIELDS = [
     {"name": "duration", "type": "number", "required": False},
     {"name": "size",     "type": "number", "required": False},
     {"name": "date",     "type": "date",   "required": False},
+    {"name": "thumb",    "type": "text",   "required": False},
 ]
 
 
