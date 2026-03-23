@@ -185,12 +185,12 @@ pathDefaults:
     - codec: H264
 
   record: no
-  recordPath: ./recordings/%path/%Y-%m-%d_%H-%M-%S-%f
+  recordPath: /var/vods/%path/%Y-%m-%d_%H-%M-%S
   recordFormat: fmp4
   recordPartDuration: 1s
   recordMaxPartSize: 50M
-  recordSegmentDuration: 1h
-  recordDeleteAfter: 1d
+  recordSegmentDuration: 6h
+  recordDeleteAfter: 0s
 
   overridePublisher: yes
   srtPublishPassphrase:
@@ -258,7 +258,7 @@ pathDefaults:
   runOnReadRestart: no
   runOnUnread:
   runOnRecordSegmentCreate:
-  runOnRecordSegmentComplete:
+  runOnRecordSegmentComplete: /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
 
 ###############################################
 # Paths específicos
@@ -280,5 +280,6 @@ paths:
   "~^live/":
     runOnReady: ""
     runOnReadyRestart: no
+    record: yes
 
   all_others:

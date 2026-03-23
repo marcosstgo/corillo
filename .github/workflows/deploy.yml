@@ -149,6 +149,23 @@ jobs:
              venv/bin/pip install -q -r requirements.txt && \
              sudo systemctl restart corillo-bot"
 
+      - name: Deploy vod-process script
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "set -e
+             mkdir -p /home/corillo-adm/corillo-vod /var/vods
+             cp /var/www/stream/scripts/vod-process.py /home/corillo-adm/corillo-vod/vod-process.py
+             chmod +x /home/corillo-adm/corillo-vod/vod-process.py
+             if [ ! -d /home/corillo-adm/corillo-vod/venv ]; then
+               python3 -m venv /home/corillo-adm/corillo-vod/venv
+             fi
+             /home/corillo-adm/corillo-vod/venv/bin/pip install -q httpx python-dotenv
+             if [ ! -f /home/corillo-adm/corillo-vod/.env ]; then
+               cp /home/corillo-adm/corillo-bot/.env /home/corillo-adm/corillo-vod/.env
+             fi
+             echo 'vod-process deployed'"
+
       - name: Deploy bitrate monitor if changed
         run: |
           scp -i ~/.ssh/deploy_key -P 2222 -o StrictHostKeyChecking=no \
