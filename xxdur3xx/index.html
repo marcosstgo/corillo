@@ -142,7 +142,16 @@
         <div class="stat"><div class="stat-val" id="sLevel">—</div><div class="stat-lbl">Calidad</div></div>
         <div class="stat"><div class="stat-val" id="sRetries">0</div><div class="stat-lbl">Reconexiones</div></div>
       </div>
+  
+    <!-- Últimas transmisiones -->
+    <div class="channel-vods" id="channelVods" style="display:none">
+      <div class="cvods-hd">
+        <span>Últimas transmisiones</span>
+        <a class="cvods-all" id="cvodsAll" href="/vods/">Ver todas</a>
+      </div>
+      <div class="cvods-list" id="cvodsList"></div>
     </div>
+  </div>
 
     <!-- CHAT COLUMN -->
     <div class="chat-col" id="chatCol">
@@ -177,6 +186,29 @@
 </button>
 
 
+<script>
+(async()=>{
+  const seg=location.pathname.split('/').filter(Boolean);
+  const ch=seg[0]||'';
+  if(!ch)return;
+  try{
+    const r=await fetch(`https://pb.corillo.live/api/collections/vods/records?filter=channel%3D%22${ch}%22&sort=-date&perPage=5`);
+    const {items=[]}=await r.json();
+    if(!items.length)return;
+    const allLink=document.getElementById('cvodsAll');
+    if(allLink)allLink.href=`/vods/?ch=${ch}`;
+    const list=document.getElementById('cvodsList');
+    list.innerHTML=items.map(v=>{
+      const s=v.duration||0;
+      const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);
+      const dur=s?(h?h+'h ':'')+m+'m':'';
+      const d=v.date?new Date(v.date).toLocaleDateString('es-PR',{month:'short',day:'numeric'}):'';
+      return `<a class="cvod-card" href="/vods/${v.channel}/${v.filename}" target="_blank" rel="noopener"><div class="cvod-thumb"><i class="fa-solid fa-play"></i>${dur?`<span class="cvod-dur">${dur}</span>`:''}</div><div class="cvod-date">${d}</div></a>`;
+    }).join('');
+    document.getElementById('channelVods').style.display='';
+  }catch(e){}
+})();
+</script>
 <script src="/assets/player.js"></script>
 <script src="/assets/chat.js"></script>
 </body>
