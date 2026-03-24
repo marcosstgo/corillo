@@ -46,6 +46,12 @@
     .action-btn.primary { border-color: rgba(0,191,255,.4); color: var(--accent); }
     .action-btn.primary:hover { background: rgba(0,191,255,.08); }
 
+    /* ── UNMUTE BTN ── */
+    .unmute-btn { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10; font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 10px 20px; border-radius: 8px; border: 1px solid rgba(0,191,255,.5); background: rgba(3,10,14,.85); color: var(--accent); cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(8px); transition: .15s; white-space: nowrap; }
+    .unmute-btn:hover { background: rgba(0,191,255,.1); border-color: var(--accent); }
+    .unmute-btn.hidden { display: none; }
+    .player-wrap { position: relative; }
+
     /* ── NOT FOUND ── */
     .not-found { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: 16px; text-align: center; padding: 40px; }
     .not-found-icon { font-size: 3rem; color: var(--muted); margin-bottom: 8px; }
@@ -182,7 +188,8 @@ async function init() {
 
   document.getElementById('content').innerHTML = `
     <div class="player-wrap">
-      <video id="vodVideo" controls preload="metadata" src="${videoUrl}" ${posterAttr}></video>
+      <video id="vodVideo" controls autoplay muted preload="metadata" src="${videoUrl}" ${posterAttr}></video>
+      <button class="unmute-btn" id="unmuteBtn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
     </div>
     <div class="meta-bar">
       <div class="meta-channel">
@@ -201,6 +208,16 @@ async function init() {
       <a href="/vods/?ch=${vod.channel}" class="action-btn"><i class="fa-solid fa-film"></i> Más VODs de ${s.name}</a>
       <button class="action-btn" onclick="copyLink()"><i class="fa-solid fa-link"></i> Copiar enlace</button>
     </div>`;
+
+  const video = document.getElementById('vodVideo');
+  const unmuteBtn = document.getElementById('unmuteBtn');
+  unmuteBtn.addEventListener('click', () => {
+    video.muted = false;
+    unmuteBtn.classList.add('hidden');
+  });
+  video.addEventListener('volumechange', () => {
+    if (!video.muted) unmuteBtn.classList.add('hidden');
+  });
 }
 
 function copyLink() {
