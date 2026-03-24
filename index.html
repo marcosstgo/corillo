@@ -178,6 +178,20 @@
     .offline-action{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--accent);opacity:0;transition:opacity .15s}
     .offline-row:hover .offline-action{opacity:1}
 
+    /* ── FEATURED VOD EMPTY STATE ── */
+    .featured-vod-thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s;pointer-events:none}
+    .featured-vod-thumb.show{opacity:.28}
+    .featured-wrap.playing .featured-vod-thumb{opacity:0!important}
+    .featured-vod-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(13,28,40,.8);color:rgba(232,246,255,.5);border:1px solid var(--border);padding:3px 10px;border-radius:3px;margin-bottom:10px}
+
+    /* ── VOD CARDS EN GRID ── */
+    .vod-duration{position:absolute;bottom:6px;right:8px;font-family:var(--mono);font-size:10px;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);color:rgba(232,246,255,.8);padding:2px 7px;border-radius:3px}
+    .vods-row-header{grid-column:1/-1;display:flex;align-items:center;gap:12px}
+    .vods-row-header span{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+    .vods-row-header .section-line{flex:1}
+    .vods-row-header a{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--accent);white-space:nowrap;transition:.15s}
+    .vods-row-header a:hover{opacity:.75}
+
     /* ── DRAWER ── */
     .drawer-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
     .drawer-overlay.open{display:block}
@@ -305,6 +319,7 @@
   <main>
     <div class="featured-wrap" id="featuredWrap">
       <div class="featured-bg"></div>
+      <div class="featured-vod-thumb" id="featuredVodThumb"></div>
       <div class="glow-a" id="glowA"></div>
       <div class="glow-b" id="glowB"></div>
       <div class="featured-letter" id="featuredLetter"></div>
@@ -388,6 +403,8 @@
   const API_TIMEOUT = 5000;
   const CACHE_MS    = 8000;
   const ROTATE_MS   = 8000;
+  const PB_URL      = 'https://pb.corillo.live';
+  const VOD_TTL     = 120000; // refresca VOD data cada 2 min
 
   let cache       = { t: 0, data: null };
   let hlsInstance = null;
@@ -400,6 +417,11 @@
   let rotateIdx   = 0;
   let lastPaths   = [];
   let glowActive  = 'a'; // which glow layer is currently visible
+
+  // VOD data
+  let _recentVods        = [];
+  let _lastVodByChannel  = {};
+  let _vodLoadedAt       = 0;
 
   /* ── API ── */
   async function fetchPaths() {
@@ -432,6 +454,71 @@
   function getViewers(paths, key) {
     const p = paths.find(p => p.name === 'live/' + key);
     return p ? (p.readers?.length ?? 0) : 0;
+  }
+
+  /* ── VOD helpers ── */
+  async function fetchRecentVods(limit) {
+    try {
+      const r = await fetch(
+        `${PB_URL}/api/collections/vods/records?sort=-date&perPage=${limit}&fields=id,channel,thumb,duration,date`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      return (await r.json()).items || [];
+    } catch { return []; }
+  }
+
+  async function loadVodData() {
+    const vods = await fetchRecentVods(30);
+    _recentVods = vods.slice(0, 6);
+    _lastVodByChannel = {};
+    for (const v of vods) {
+      if (!_lastVodByChannel[v.channel]) _lastVodByChannel[v.channel] = v.date;
+    }
+    _vodLoadedAt = Date.now();
+  }
+
+  function fmtDuration(s) {
+    if (!s) return '';
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return h > 0
+      ? `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`
+      : `${m}:${String(sec).padStart(2,'0')}`;
+  }
+
+  function relativeTime(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 2)  return 'Hace un momento';
+    if (mins < 60) return `Hace ${mins}m`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24)  return `Hace ${hrs}h`;
+    const days = Math.floor(hrs / 24);
+    if (days === 1) return 'Ayer';
+    if (days < 7)  return `Hace ${days} días`;
+    return `Hace ${Math.floor(days / 7)} sem`;
+  }
+
+  function renderFeaturedVod() {
+    const thumbEl   = document.getElementById('featuredVodThumb');
+    const offlineEl = document.getElementById('featuredOffline');
+    const vod = _recentVods[0];
+    if (!vod) return; // nada que mostrar — mantiene el empty state por defecto
+    const s = (window.STREAMERS || []).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
+    // fondo con thumbnail del VOD
+    if (vod.thumb) {
+      thumbEl.style.backgroundImage = `url(${vod.thumb})`;
+      thumbEl.classList.add('show');
+    }
+    offlineEl.style.cssText = 'opacity:0;pointer-events:none';
+    setGlow(s.color);
+    document.getElementById('featuredLetter').textContent = s.name.charAt(0);
+    document.getElementById('featuredInfo').innerHTML = `
+      <div class="featured-vod-tag"><i class="fa-solid fa-film" style="font-size:8px"></i> Última transmisión</div>
+      <div class="featured-name">${splitName(s.name)}</div>
+      <div class="featured-sub">${relativeTime(vod.date)}${vod.duration ? ' · ' + fmtDuration(vod.duration) : ''}</div>`;
+    document.getElementById('featuredActions').innerHTML = `
+      <a href="/vods/v/?id=${vod.id}" class="nav-btn solid"><i class="fa-solid fa-play"></i> Ver VOD</a>
+      <a href="/vods/" class="nav-btn"><i class="fa-solid fa-film"></i> Todos los VODs</a>`;
   }
 
   /* ── Helpers ── */
@@ -505,13 +592,18 @@
       vid.src = '';
       wrap.classList.remove('playing');
       featuredKey = null;
-      document.getElementById('featuredInfo').innerHTML = '';
-      document.getElementById('featuredActions').innerHTML = '';
-      document.getElementById('featuredLetter').textContent = '';
       cancelAnimationFrame(rafId);
       document.getElementById('rotateBar').style.width = '0%';
+      renderFeaturedVod();
       return;
     }
+
+    // Volvió a haber stream — resetear el estado VOD del featured
+    const thumbEl   = document.getElementById('featuredVodThumb');
+    const offlineEl = document.getElementById('featuredOffline');
+    thumbEl.className = 'featured-vod-thumb';
+    thumbEl.style.backgroundImage = '';
+    offlineEl.style.cssText = '';
 
     // Solo actualizar viewers si no cambió el canal
     if (key === featuredKey) {
@@ -725,7 +817,30 @@
       : 'ninguno en vivo';
 
     if (!live.length) {
-      grid.innerHTML = `<div class="no-live-msg"><i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem"></i>Sin streams activos ahora mismo</div>`;
+      if (_recentVods.length) {
+        grid.innerHTML = `
+          <div class="vods-row-header">
+            <span>Últimas transmisiones</span>
+            <div class="section-line"></div>
+            <a href="/vods/">Ver todos →</a>
+          </div>
+          ${_recentVods.map(vod => {
+            const s = (window.STREAMERS||[]).find(x=>x.key===vod.channel)||{name:vod.channel.toUpperCase(),color:''};
+            return `<a href="/vods/v/?id=${vod.id}" class="stream-card">
+              <div class="stream-thumb">
+                <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
+                ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img">` : ''}
+                ${vod.duration ? `<div class="vod-duration">${fmtDuration(vod.duration)}</div>` : ''}
+              </div>
+              <div class="stream-body">
+                <div class="stream-name">${s.name}</div>
+                <div class="stream-desc">${relativeTime(vod.date)}</div>
+              </div>
+            </a>`;
+          }).join('')}`;
+      } else {
+        grid.innerHTML = `<div class="no-live-msg"><i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem"></i>Sin streams activos ahora mismo</div>`;
+      }
     } else {
       grid.innerHTML = live.map(s => {
         const v = getViewers(paths, s.key);
@@ -753,20 +868,25 @@
     }
 
     document.getElementById('offlineCount').textContent = `${offline.length} offline`;
-    document.getElementById('offlineList').innerHTML = offline.map(s => `
-      <a href="/${s.key}/" class="offline-row">
+    document.getElementById('offlineList').innerHTML = offline.map(s => {
+      const lastDate = _lastVodByChannel[s.key];
+      return `<a href="/${s.key}/" class="offline-row">
         <div class="offline-ava" style="${avaStyle(s)}">${initial(s.name)}</div>
         <div class="offline-info">
           <div class="offline-name">${s.name}</div>
-          <div class="offline-status">Offline</div>
+          <div class="offline-status">Offline${lastDate ? ' · ' + relativeTime(lastDate) : ''}</div>
         </div>
         <div class="offline-action">Ver canal →</div>
-      </a>`).join('');
+      </a>`;
+    }).join('');
   }
 
   /* ── Update ── */
   async function update() {
-    const paths     = await fetchPaths();
+    const now = Date.now();
+    const tasks = [fetchPaths()];
+    if (now - _vodLoadedAt > VOD_TTL) tasks.push(loadVodData());
+    const [paths] = await Promise.all(tasks);
     lastPaths       = paths;
     const liveSet   = getLiveSet(paths);
     const streamers = (window.STREAMERS || []).filter(s => !s.soon);
