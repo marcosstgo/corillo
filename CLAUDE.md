@@ -91,6 +91,7 @@ All 11 HTML pages link `styles.css`. Each page's inline `<style>` keeps only pag
 | `corillo-auth.service` | RTMP stream key validation |
 | `corillo-bot.service` | Chat API bot |
 | `corillo-telegram.service` | Telegram webhook — streamer approval + live notifications |
+| `corillo-thumbs.service` | Live thumbnail generator — polling `/mediamtx-api/v3/paths/list` cada 60s, captura frame del HLS activo y lo guarda en `/var/www/stream/thumbs/{channel}.jpg` |
 
 ### Key paths on the server
 
@@ -103,6 +104,7 @@ All 11 HTML pages link `styles.css`. Each page's inline `<style>` keeps only pag
 | `/home/corillo-adm/corillo-bot/` | Chat bot + `.env` file with shared secrets |
 | `/home/corillo-adm/corillo-bot/.env` | Env file loaded by `vod-process.py` (PB_URL, PB_ADMIN_EMAIL, PB_ADMIN_PASS) |
 | `/var/log/corillo-vod.log` | VOD processing log |
+| `/var/log/corillo-thumbs.log` | Live thumbnail generator log |
 | `/etc/mediamtx/mediamtx.yml` | MediaMTX config |
 
 ### VOD pipeline
@@ -117,12 +119,13 @@ On `runOnRecordSegmentComplete`, MediaMTX calls:
 **IMPORTANT:** The live VOD script is at `/home/corillo-adm/corillo-vod/vod-process.py` — this is **separate from** `scripts/vod-process.py` in the repo. Changes to `scripts/vod-process.py` must be manually synced to the server path.
 
 The script:
-1. Reads `MTX_PATH` and `MTX_RECORD_PATH` env vars from MediaMTX
+1. Reads `MTX_PATH` and `MTX_SEGMENT_PATH` env vars from MediaMTX
 2. Looks up the channel in PocketBase (`streamers` collection) — checks `vod_enabled` and `vod_plan`
-3. Generates a thumbnail JPEG via ffmpeg (`{timestamp}.jpg`)
-4. Generates a 4s muted MP4 preview clip via ffmpeg (`{timestamp}-preview.mp4`)
-5. Saves VOD record to PocketBase (`vods` collection) with `thumb` and `preview` URLs
-6. Applies retention policy (`free` plan: keep 5, `pro` plan: unlimited)
+3. Remuxea el fmp4 a MP4 progresivo con `faststart` (moov al inicio) para que sea streamable
+4. Generates a thumbnail JPEG via ffmpeg (`{timestamp}.jpg`)
+5. Generates a 4s muted MP4 preview clip via ffmpeg (`{timestamp}-preview.mp4`)
+6. Saves VOD record to PocketBase (`vods` collection) with `thumb` and `preview` URLs
+7. Applies retention policy (`free` plan: keep 5, `pro` plan: unlimited)
 
 Thumbnail/preview URLs are served as `/vods/{channel}/{filename}` — Nginx must map this to `/var/vods/live/{channel}/`.
 
@@ -167,6 +170,63 @@ Keep these keys stable — they're spread across every replicated page and chang
 | `corillo-theme` | All pages | `'dark'` / `'light'` |
 | `corillo_theme` | All player pages (katatonia, 404, tea, mira_sanganooo, elbala, marcos) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared across all players) |
 | `corillo_chat` | `katatonia/index.html` | `'visible'` / `'hidden'` (chat panel visibility) |
+
+## Notas operacionales
+
+### Sincronizar vod-process.py al servidor
+
+El script vivo en `/home/corillo-adm/corillo-vod/vod-process.py` es **independiente del repo**. Cada vez que se haga deploy y se modifique `scripts/vod-process.py`, hay que copiarlo manualmente:
+
+```bash
+sudo cp /var/www/stream/scripts/vod-process.py /home/corillo-adm/corillo-vod/vod-process.py
+```
+
+### Permisos en /var/vods/
+
+MediaMTX graba como `root`, pero `vod-process.py` corre como `corillo-adm`. Para que el script pueda escribir thumbnails y previews junto a los MP4:
+
+```bash
+sudo chown -R corillo-adm:corillo-adm /var/vods/
+```
+
+Esto hay que repetirlo si MediaMTX crea nuevas carpetas de canal (corriendo como root).
+
+### Procesar VODs manualmente
+
+Si un VOD quedó sin procesar (ej. porque el script falló o el canal tenía `vod_enabled=false`), se puede reprocesar manualmente:
+
+```bash
+MTX_PATH=live/{channel} MTX_SEGMENT_PATH=/var/vods/live/{channel}/{timestamp}.mp4 \
+  /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
+```
+
+Nota: la retención aplica en cada ejecución — con plan `free`, solo se conservan los 5 más recientes.
+
+### corillo-thumbs: permisos del log
+
+El servicio `corillo-thumbs` escribe en `/var/log/corillo-thumbs.log`. Si el archivo no existe o es de `root`, el servicio falla al arrancar. Fix:
+
+```bash
+sudo touch /var/log/corillo-thumbs.log
+sudo chown corillo-adm:corillo-adm /var/log/corillo-thumbs.log
+sudo systemctl restart corillo-thumbs
+```
+
+### Variables de entorno de MediaMTX (v1.17+)
+
+MediaMTX provee estas variables al llamar `runOnRecordSegmentComplete`:
+
+| Variable | Valor |
+|----------|-------|
+| `MTX_PATH` | Path del stream, ej. `live/katatonia` |
+| `MTX_SEGMENT_PATH` | Ruta absoluta del archivo grabado |
+| `MTX_SEGMENT_DURATION` | Duración del segmento en segundos |
+
+**Importante:** En versiones anteriores era `MTX_RECORD_PATH` — la versión correcta para v1.17+ es `MTX_SEGMENT_PATH`.
+
+### VOD player — autoplay y sonido
+
+El player de VODs (`vods/v/index.html`) usa `autoplay muted` para cumplir con la política de autoplay de los navegadores. Aparece un botón "Activar sonido" encima del video que desactiva el mute al presionarlo.
 
 ## Conventions
 
