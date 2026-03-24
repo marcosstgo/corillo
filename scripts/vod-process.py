@@ -125,8 +125,8 @@ def get_duration(filepath: str) -> int:
 
 
 def _seek_point(duration: int) -> int:
-    """Punto de inicio para thumbnail y preview (10s o 20% de la duración)."""
-    return min(10, max(1, int(duration * 0.2))) if duration > 0 else 5
+    """Punto de inicio para thumbnail y preview: 5% de la duración, mínimo 60s, máximo 300s."""
+    return max(60, min(300, int(duration * 0.05))) if duration > 0 else 60
 
 
 def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
