@@ -84,6 +84,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     statsTimer:      null,
     kickBannerTimer: null,
     ctrlTimer:       null,
+    othersTimer:     null,
     wakeLock:        null,
     // FIX #1: separate controller for per-session video listeners only.
     // Permanent UI listeners (buttons, controls) live in initAc and are never aborted.
@@ -348,6 +349,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     stopStatsPolling();
     if (App.retryTimer)      { clearTimeout(App.retryTimer);      App.retryTimer      = null; }
     if (App.kickBannerTimer) { clearTimeout(App.kickBannerTimer); App.kickBannerTimer = null; }
+    if (App.othersTimer)     { clearInterval(App.othersTimer);    App.othersTimer     = null; }
 
     // FIX #1: only abort per-session listeners, never the permanent UI listeners from init()
     if (App.sessionAc) { App.sessionAc.abort(); App.sessionAc = null; }
@@ -623,7 +625,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
 
   function loadProfile() {
     initChannelUI();
-    fetch('/chat-api/profile/' + App.channel)
+    fetch('/chat-api/profile/' + App.channel, { signal: AbortSignal.timeout(5000) })
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (!data) return;
@@ -709,8 +711,8 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
   function init() {
     // Channel (already set as window.channel before IIFE for chat.js)
     App.channel = window.channel;
-    const TWITCH_MAP = { katatonia: 'katat0nia' };
-    App.twitchUser = TWITCH_MAP[App.channel] || App.channel;
+    const streamerDef = (window.STREAMERS || []).find(s => s.key === App.channel);
+    App.twitchUser = (streamerDef && streamerDef.twitch) ? streamerDef.twitch : App.channel;
 
     // Meta tags
     const chUpper  = App.channel.toUpperCase();
@@ -902,7 +904,8 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     // Profile + others live + start
     loadProfile();
     loadOthersLive();
-    setInterval(loadOthersLive, 15000);
+    if (App.othersTimer) clearInterval(App.othersTimer);
+    App.othersTimer = setInterval(loadOthersLive, 15000);
     startPlayer();
   }
 

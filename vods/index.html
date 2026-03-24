@@ -278,12 +278,13 @@ function buildFilters() {
     btn.className = 'filter-pill';
     btn.dataset.channel = ch;
     btn.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.color || 'var(--accent)'};margin-right:6px"></span>${s.name}`;
-    btn.addEventListener('click', () => setFilter(ch));
     container.appendChild(btn);
   });
 
-  container.querySelectorAll('.filter-pill').forEach(btn => {
-    btn.addEventListener('click', () => setFilter(btn.dataset.channel));
+  // Event delegation — un solo listener cubre "Todos" y todos los canales
+  container.addEventListener('click', e => {
+    const pill = e.target.closest('.filter-pill');
+    if (pill) setFilter(pill.dataset.channel);
   });
 }
 
