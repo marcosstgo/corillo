@@ -8,11 +8,11 @@ CORILLO is a static HTML streaming platform for Puerto Rico, built without a bui
 
 ## Architecture
 
-The site is served as static files. **Caddy** handles reverse proxy and SSL, proxying:
+The site is served as static files. **Nginx** handles reverse proxy and SSL, proxying:
 - `/mediamtx-api/` → MediaMTX HTTP API (stream state/metadata)
 - `/live/{key}/index.m3u8` → MediaMTX HLS output per streamer
 
-**MediaMTX** handles RTMP ingestion and HLS output. Deployed on a **Raspberry Pi 3B+** to `/var/www/stream/`.
+**MediaMTX** handles RTMP ingestion and HLS output. Deployed on a **mini server running Ubuntu Server 24.04 LTS** to `/var/www/stream/`.
 
 ### Page structure
 
@@ -72,6 +72,72 @@ All 11 HTML pages link `styles.css`. Each page's inline `<style>` keeps only pag
 - Font Awesome is loaded from `cdnjs.cloudflare.com` (free tier, no account/kit needed).
 - Fonts: Bebas Neue (display), Space Mono (mono/UI), DM Sans (body) — loaded from Google Fonts.
 
+## Server Infrastructure
+
+**Host:** Mini server, Ubuntu Server 24.04 LTS (`corillo-server`)
+**User:** `corillo-adm`
+**Web root:** `/var/www/stream/` (this repo deploys here)
+**Reverse proxy:** Nginx 1.24
+**Disk:** ~98GB total, ~56GB free (as of 2026-03-23)
+
+### systemd Services
+
+| Service | Description |
+|---------|-------------|
+| `mediamtx.service` | MediaMTX — RTMP ingestion + HLS output |
+| `nginx.service` | Nginx reverse proxy + SSL |
+| `pocketbase.service` | PocketBase — auth, streamer profiles, VODs |
+| `corillo-api.service` | Corillo API — public profiles + stream key management |
+| `corillo-auth.service` | RTMP stream key validation |
+| `corillo-bot.service` | Chat API bot |
+| `corillo-telegram.service` | Telegram webhook — streamer approval + live notifications |
+
+### Key paths on the server
+
+| Path | Description |
+|------|-------------|
+| `/var/www/stream/` | Web root — this repo deployed here |
+| `/var/vods/` | VOD recordings stored here (NOT in the web root) — format: `/var/vods/live/{channel}/{timestamp}.mp4` |
+| `/home/corillo-adm/corillo-vod/` | VOD post-processing script (separate from repo) |
+| `/home/corillo-adm/corillo-vod/venv/` | Python virtualenv for VOD script |
+| `/home/corillo-adm/corillo-bot/` | Chat bot + `.env` file with shared secrets |
+| `/home/corillo-adm/corillo-bot/.env` | Env file loaded by `vod-process.py` (PB_URL, PB_ADMIN_EMAIL, PB_ADMIN_PASS) |
+| `/var/log/corillo-vod.log` | VOD processing log |
+| `/etc/mediamtx/mediamtx.yml` | MediaMTX config |
+
+### VOD pipeline
+
+MediaMTX records streams to `/var/vods/live/{channel}/{timestamp}.mp4` with segments up to 6 hours.
+
+On `runOnRecordSegmentComplete`, MediaMTX calls:
+```
+/home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
+```
+
+**IMPORTANT:** The live VOD script is at `/home/corillo-adm/corillo-vod/vod-process.py` — this is **separate from** `scripts/vod-process.py` in the repo. Changes to `scripts/vod-process.py` must be manually synced to the server path.
+
+The script:
+1. Reads `MTX_PATH` and `MTX_RECORD_PATH` env vars from MediaMTX
+2. Looks up the channel in PocketBase (`streamers` collection) — checks `vod_enabled` and `vod_plan`
+3. Generates a thumbnail JPEG via ffmpeg (`{timestamp}.jpg`)
+4. Generates a 4s muted MP4 preview clip via ffmpeg (`{timestamp}-preview.mp4`)
+5. Saves VOD record to PocketBase (`vods` collection) with `thumb` and `preview` URLs
+6. Applies retention policy (`free` plan: keep 5, `pro` plan: unlimited)
+
+Thumbnail/preview URLs are served as `/vods/{channel}/{filename}` — Nginx must map this to `/var/vods/live/{channel}/`.
+
+### MediaMTX recording config (relevant excerpt)
+
+```yaml
+recordPath: /var/vods/%path/%Y-%m-%d_%H-%M-%S
+recordFormat: fmp4
+recordSegmentDuration: 6h
+paths:
+  "~^live/":
+    record: yes
+    runOnRecordSegmentComplete: /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
+```
+
 ## Deployment
 
 Push to `main` → GitHub Actions deploys automatically via SSH on port 2222 to `corillo.live`.
@@ -90,7 +156,7 @@ python -m http.server 8080
 npx serve .
 ```
 
-For live status and HLS playback, a MediaMTX instance must be running with the Caddy proxy configured.
+For live status and HLS playback, a MediaMTX instance must be running with the Nginx proxy configured.
 
 ### LocalStorage keys
 

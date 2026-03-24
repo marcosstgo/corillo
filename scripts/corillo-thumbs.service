@@ -1,0 +1,14 @@
+[Unit]
+Description=Corillo live thumbnail generator
+After=network.target mediamtx.service
+
+[Service]
+Type=simple
+User=corillo-adm
+ExecStart=/usr/bin/python3 /var/www/stream/scripts/thumb-gen.py
+Restart=always
+RestartSec=10
+Environment=THUMB_INTERVAL=60
+
+[Install]
+WantedBy=multi-user.target

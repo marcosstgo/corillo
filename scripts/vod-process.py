@@ -3,9 +3,10 @@
 vod-process.py — Post-procesamiento de grabaciones MediaMTX para CORILLO VOD.
 
 Llamado por MediaMTX via runOnRecordSegmentComplete.
-Variables de entorno provistas por MediaMTX:
-  MTX_PATH        — path del stream (ej: live/katatonia)
-  MTX_RECORD_PATH — ruta del archivo grabado
+Variables de entorno provistas por MediaMTX (v1.17+):
+  MTX_PATH             — path del stream (ej: live/katatonia)
+  MTX_SEGMENT_PATH     — ruta del archivo grabado
+  MTX_SEGMENT_DURATION — duración del segmento en segundos
 """
 import os, sys, subprocess, logging
 from datetime import datetime, timezone
@@ -144,6 +145,25 @@ def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
     return None
 
 
+def remux_faststart(filepath: Path) -> bool:
+    """Remuxea fmp4 → MP4 progresivo con moov al inicio. Reemplaza el archivo original."""
+    tmp = filepath.with_suffix(".tmp.mp4")
+    try:
+        result = subprocess.run(
+            ["ffmpeg", "-y", "-i", str(filepath),
+             "-c", "copy", "-movflags", "+faststart",
+             str(tmp)],
+            capture_output=True, timeout=600,
+        )
+        if result.returncode == 0 and tmp.exists():
+            tmp.replace(filepath)
+            return True
+        tmp.unlink(missing_ok=True)
+        log.warning(f"remux_faststart failed (rc={result.returncode})")
+    except Exception as e:
+        log.warning(f"remux_faststart error: {e}")
+        tmp.unlink(missing_ok=True)
+    return False
 def generate_preview(filepath: Path, duration: int) -> Path | None:
     """Genera un clip MP4 mudo de 4s para hover preview. Retorna el path o None."""
     if duration < 5:
@@ -171,10 +191,10 @@ def generate_preview(filepath: Path, duration: int) -> Path | None:
 
 def main():
     mtx_path    = os.environ.get("MTX_PATH", "")
-    record_path = os.environ.get("MTX_RECORD_PATH", "")
+    record_path = os.environ.get("MTX_SEGMENT_PATH", "")
 
     if not mtx_path or not record_path:
-        log.error("MTX_PATH or MTX_RECORD_PATH not set — aborting")
+        log.error("MTX_PATH or MTX_SEGMENT_PATH not set — aborting")
         sys.exit(1)
 
     channel  = mtx_path.removeprefix("live/")
@@ -206,7 +226,13 @@ def main():
     plan_name = streamer.get("vod_plan", "free")
     plan      = PLANS.get(plan_name, PLANS["free"])
 
-    duration = get_duration(str(filepath))
+    duration = int(float(os.environ.get("MTX_SEGMENT_DURATION", "0"))) or get_duration(str(filepath))
+
+    if remux_faststart(filepath):
+        log.info(f"Remuxed to faststart: {filepath.name}")
+    else:
+        log.warning(f"Remux failed, keeping original fmp4: {filepath.name}")
+
     size     = filepath.stat().st_size
 
     thumb_path = generate_thumbnail(filepath, duration)
