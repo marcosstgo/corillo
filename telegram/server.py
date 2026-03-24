@@ -199,15 +199,7 @@ async def auto_create_streamer(handle: str, nombre: str, contenido: str, email: 
             js = js.rstrip().rstrip("]").rstrip() + f"\n{new_entry}\n];\n"
         await _gh_put("assets/streamers.js", js, js_sha, f"feat: add streamer {handle} [auto]")
 
-        # 2 — player page
-        tpl, _ = await _gh_get("katatonia/index.html")
-        player = (tpl
-                  .replace("KATATONIA", name_up)
-                  .replace("/katatonia/", f"/{handle}/")
-                  .replace("katatonia", handle))
-        await _gh_put(f"{handle}/index.html", player, None, f"feat: add player page for {handle} [auto]")
-
-        # 3 — STREAMER_NAMES en telegram/server.py
+        # 2 — STREAMER_NAMES en telegram/server.py (self-update)
         py, py_sha = await _gh_get("telegram/server.py")
         name_fmt = nombre.title().replace(" ", "") if nombre else handle.title()
         sentinel = "# AUTO_STREAMER_" + "NAMES_END"
