@@ -422,6 +422,8 @@
   let _recentVods        = [];
   let _lastVodByChannel  = {};
   let _vodLoadedAt       = 0;
+  let vodRotateIdx       = 0;
+  let vodRotateTimer     = null;
 
   /* ── API ── */
   async function fetchPaths() {
@@ -498,6 +500,55 @@
     return `Hace ${Math.floor(days / 7)} sem`;
   }
 
+  function applyVodContent(vod) {
+    const vid = document.getElementById('featuredVideo');
+    const s = (window.STREAMERS || []).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
+    setGlow(s.color);
+    document.getElementById('featuredLetter').textContent = s.name.charAt(0);
+    document.getElementById('featuredInfo').innerHTML = `
+      <div class="featured-vod-tag"><i class="fa-solid fa-film" style="font-size:8px"></i> Última transmisión</div>
+      <div class="featured-name">${splitName(s.name)}</div>
+      <div class="featured-sub">${relativeTime(vod.date)}${vod.duration ? ' · ' + fmtDuration(vod.duration) : ''}</div>`;
+    document.getElementById('featuredActions').innerHTML = `
+      <a href="/vods/v/?id=${vod.id}" class="nav-btn solid"><i class="fa-solid fa-play"></i> Ver VOD</a>
+      <a href="/vods/" class="nav-btn"><i class="fa-solid fa-film"></i> Todos los VODs</a>`;
+    vid.src = `/vods/${vod.channel}/${vod.filename}`;
+    vid.muted = true;
+    vid.addEventListener('loadedmetadata', () => {
+      if (vid.duration > 60) vid.currentTime = 30;
+      vid.play().catch(() => {});
+    }, { once: true });
+  }
+
+  function startVodRotation() {
+    clearInterval(vodRotateTimer);
+    if (_recentVods.length <= 1) return;
+    startProgressBar();
+    vodRotateTimer = setInterval(() => {
+      vodRotateIdx = (vodRotateIdx + 1) % _recentVods.length;
+      const content = document.getElementById('featuredContent');
+      const actions = document.getElementById('featuredActions');
+      const letter  = document.getElementById('featuredLetter');
+      content.classList.add('out');
+      actions.classList.add('out');
+      letter.classList.add('out');
+      setTimeout(() => {
+        applyVodContent(_recentVods[vodRotateIdx]);
+        content.classList.remove('out');
+        actions.classList.remove('out');
+        setTimeout(() => letter.classList.remove('out'), 60);
+      }, 380);
+      startProgressBar();
+    }, ROTATE_MS);
+  }
+
+  function stopVodRotation() {
+    clearInterval(vodRotateTimer);
+    vodRotateTimer = null;
+    cancelAnimationFrame(rafId);
+    document.getElementById('rotateBar').style.width = '0%';
+  }
+
   function renderFeaturedVod() {
     const wrap      = document.getElementById('featuredWrap');
     const vid       = document.getElementById('featuredVideo');
@@ -514,28 +565,12 @@
       return;
     }
 
-    const s = (window.STREAMERS || []).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
-
+    vodRotateIdx = 0;
     offlineEl.style.cssText = 'opacity:0;pointer-events:none';
     document.getElementById('featuredViewers').style.display = 'none';
-    setGlow(s.color);
-    document.getElementById('featuredLetter').textContent = s.name.charAt(0);
-    document.getElementById('featuredInfo').innerHTML = `
-      <div class="featured-vod-tag"><i class="fa-solid fa-film" style="font-size:8px"></i> Última transmisión</div>
-      <div class="featured-name">${splitName(s.name)}</div>
-      <div class="featured-sub">${relativeTime(vod.date)}${vod.duration ? ' · ' + fmtDuration(vod.duration) : ''}</div>`;
-    document.getElementById('featuredActions').innerHTML = `
-      <a href="/vods/v/?id=${vod.id}" class="nav-btn solid"><i class="fa-solid fa-play"></i> Ver VOD</a>
-      <a href="/vods/" class="nav-btn"><i class="fa-solid fa-film"></i> Todos los VODs</a>`;
-
-    // Reproducir VOD
-    vid.src = `/vods/${vod.channel}/${vod.filename}`;
-    vid.muted = true;
-    vid.addEventListener('loadedmetadata', () => {
-      if (vid.duration > 60) vid.currentTime = 30;
-      vid.play().catch(() => {});
-    }, { once: true });
+    applyVodContent(vod);
     wrap.classList.add('playing');
+    startVodRotation();
   }
 
   /* ── Helpers ── */
@@ -664,6 +699,7 @@
   function startRotation(live) {
     clearInterval(rotateTimer);
     cancelAnimationFrame(rafId);
+    stopVodRotation();
     livePlayers = live.map(s => s.key);
     if (livePlayers.length <= 1) {
       document.getElementById('rotateBar').style.width = '0%';
@@ -926,7 +962,7 @@
   /* ── Polling ── */
   function startPoll() { clearInterval(pollTimer); pollTimer = setInterval(update, POLL_MS) }
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { clearInterval(pollTimer); clearInterval(rotateTimer); cancelAnimationFrame(rafId); }
+    if (document.hidden) { clearInterval(pollTimer); clearInterval(rotateTimer); clearInterval(vodRotateTimer); cancelAnimationFrame(rafId); }
     else { cache.t = 0; update(); startPoll(); }
   });
 
