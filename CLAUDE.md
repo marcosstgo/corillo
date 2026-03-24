@@ -74,11 +74,14 @@ All 11 HTML pages link `styles.css`. Each page's inline `<style>` keeps only pag
 
 ## Server Infrastructure
 
-**Host:** Mini server, Ubuntu Server 24.04 LTS (`corillo-server`)
+**Host:** Mini server, Ubuntu Server 24.04.4 LTS (`corillo-server`) — kernel 6.8.0-106-generic x86_64
 **User:** `corillo-adm`
+**IP local:** `192.168.8.166`
 **Web root:** `/var/www/stream/` (this repo deploys here)
 **Reverse proxy:** Nginx 1.24
-**Disk:** ~98GB total, ~56GB free (as of 2026-03-23)
+**Disk:** ~98GB total (~40% usado, as of 2026-03-24)
+**RAM:** ~3% uso típico en idle
+**Temp CPU:** ~48°C en idle
 
 ### systemd Services
 
