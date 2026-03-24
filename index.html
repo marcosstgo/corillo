@@ -613,16 +613,16 @@
       return;
     }
 
-    // Volvió a haber stream — resetear estado VOD
-    document.getElementById('featuredOffline').style.cssText = '';
-    document.getElementById('featuredViewers').style.display = '';
-    wrap.classList.remove('playing');
-
     // Solo actualizar viewers si no cambió el canal
     if (key === featuredKey) {
       document.getElementById('featuredViewerCount').textContent = getViewers(paths, key);
       return;
     }
+
+    // Canal nuevo — resetear estado VOD si venimos de modo sin stream
+    document.getElementById('featuredOffline').style.cssText = '';
+    document.getElementById('featuredViewers').style.display = '';
+    wrap.classList.remove('playing');
 
     const doSwitch = () => {
       featuredKey = key;
