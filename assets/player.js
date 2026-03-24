@@ -359,8 +359,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
   }
 
   async function startWatch() {
-    stopWatch();
-    setLive(false);
+    cleanup();   // limpia timers, hls, retryTimer — garantiza estado limpio
 
     // Try to show the latest VOD while the channel is offline
     try {
@@ -374,6 +373,11 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
       if (vod && vod.filename) {
         App.inVodMode  = true;
         App.currentVod = vod;
+        App.retries    = 0;
+        DOM.sRetries.textContent = 0;
+        DOM.retryTxt.textContent = 0;
+        const statsRow = document.getElementById('statsRow');
+        if (statsRow) statsRow.style.display = 'none';
         const v = DOM.video;
         v.muted = true;
         v.src   = '/vods/' + vod.channel + '/' + vod.filename;
@@ -443,6 +447,9 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     // Reset overlay retry button to default
     DOM.ovRetry.innerHTML = '<i class="fa-solid fa-play"></i> Reintentar';
     DOM.ovRetry.onclick   = null;
+    // Restore stats row if it was hidden in VOD mode
+    const statsRow = document.getElementById('statsRow');
+    if (statsRow) statsRow.style.display = '';
     setLive(false);
   }
 
