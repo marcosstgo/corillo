@@ -564,10 +564,10 @@ body.chat-is-hidden #railIcon{transform:rotate(180deg)}
 }
 @media(max-width:820px){
   .panels-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin:0 12px 12px}
-  .panel-link,.panel-card:not(:has(.panel-link)){padding:10px 12px}
-  .panel-title{font-size:var(--text-xs);letter-spacing:1px}
-  .panel-text{font-size:var(--text-xs);line-height:1.4}
-  .panel-url-lbl{font-size:var(--text-2xs)}
+  .panel-link,.panel-card:not(:has(.panel-link)){padding:8px 10px;gap:3px}
+  .panel-title{font-size:var(--text-2xs);letter-spacing:.5px}
+  .panel-text{font-size:var(--text-2xs);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .panel-url-lbl{font-size:var(--text-2xs);margin-top:2px}
 }
 
 /* Themes */
