@@ -36,6 +36,8 @@ PLANS = {
     "pro":  {"keep": None},   # sin límite
 }
 
+MIN_VOD_DURATION = 600  # segundos — streams < 10 min se consideran pruebas y se descartan
+
 # ── PocketBase helpers ────────────────────────────────────────────
 
 def pb_token() -> str:
@@ -229,6 +231,11 @@ def main():
     plan      = PLANS.get(plan_name, PLANS["free"])
 
     duration = int(float(os.environ.get("MTX_SEGMENT_DURATION", "0"))) or get_duration(str(filepath))
+
+    if duration < MIN_VOD_DURATION:
+        log.info(f"Segment too short ({duration}s < {MIN_VOD_DURATION}s) — skipping, deleting file")
+        filepath.unlink(missing_ok=True)
+        return
 
     if remux_faststart(filepath):
         log.info(f"Remuxed to faststart: {filepath.name}")
