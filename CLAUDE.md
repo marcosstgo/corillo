@@ -19,12 +19,13 @@ The site is served as static files. **Nginx** handles reverse proxy and SSL, pro
 | Path | Description |
 |------|-------------|
 | `index.html` | Homepage — channel grid, featured player, live count |
-| `katatonia/index.html` | Individual channel player (the canonical player template) |
-| `{streamer}/index.html` | Same player template replicated per streamer (404, elbala, marcos, mira_sanganooo, tea) |
+| `player/index.html` | Universal channel player — serves ALL channels via Nginx fallback |
 | `multiplayer/index.html` | Multi-stream grid view — shows all live streamers simultaneously |
 | `dual/index.html` | Fixed 2-up layout for KATATONIA + MIRA_SANGANOOO (named "KATANA") |
 | `join/index.html` | Onboarding/info page for new streamers |
 | `configuracion/index.html` | Step-by-step guide for configuring OBS Studio and Meld Studio |
+
+> **Player unification (2026-03-24):** Individual `{canal}/index.html` files were eliminated. Nginx `try_files $uri $uri/index.html /player/index.html` already served as fallback — deleting the 14 duplicate files was enough. `player.js` derives the channel from `location.pathname`, so `/katatonia/` correctly loads KATATONIA. New streamers work automatically the moment they're added to `assets/streamers.js` — no HTML file creation needed.
 
 ### Streamers
 
@@ -37,7 +38,7 @@ The site is served as static files. **Nginx** handles reverse proxy and SSL, pro
 | `elbala` | ELBALA | — | — |
 | `marcos` | MARCOS | — | — |
 
-The `STREAMERS` roster lives in **`assets/streamers.js`** (`window.STREAMERS`). Only `index.html` and `multiplayer/index.html` load it — individual player pages don't use it. **Edit only `assets/streamers.js`** when adding or removing a streamer. Each entry: `key` (URL path + MediaMTX path prefix `live/{key}`), `name`, `sub`, `ava`, `color`, `host`, optionally `soon:true` for placeholder cards.
+The `STREAMERS` roster lives in **`assets/streamers.js`** (`window.STREAMERS`). Loaded by `index.html`, `multiplayer/index.html`, and `player/index.html`. **Edit only `assets/streamers.js`** when adding or removing a streamer. Each entry: `key` (URL path + MediaMTX path prefix `live/{key}`), `name`, `sub`, `ava`, `color`, `host`, optionally `soon:true` for placeholder cards.
 
 ### HLS playback pattern
 
@@ -182,8 +183,8 @@ Keep these keys stable — they're spread across every replicated page and chang
 | Key | Scope | Values |
 |-----|-------|--------|
 | `corillo-theme` | All pages | `'dark'` / `'light'` |
-| `corillo_theme` | All player pages (katatonia, 404, tea, mira_sanganooo, elbala, marcos) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared across all players) |
-| `corillo_chat` | `katatonia/index.html` | `'visible'` / `'hidden'` (chat panel visibility) |
+| `corillo_theme` | All player pages (via `player/index.html`) | `'original'` / `'terminal'` / `'twitch'` (player visual theme, shared across all players) |
+| `corillo_chat` | `player/index.html` | `'visible'` / `'hidden'` (chat panel visibility) |
 
 ## Notas operacionales
 
@@ -247,8 +248,7 @@ El player de VODs (`vods/v/index.html`) usa `autoplay muted` para cumplir con la
 | Ruta | Descripción |
 |------|-------------|
 | `index.html` | Homepage — featured player con rotación, grid de canales, sidebar/drawer |
-| `katatonia/index.html` | Plantilla canónica del player individual |
-| `tea/, 404/, elbala/, marcos/, mira_sanganooo/, pataecabra/, streamerpro/, radblaster/, elhermanoquiles/, xxdur3xx/, kamikazepr/, superman/, bambua/` | Réplicas de la plantilla por canal (14 total) |
+| `player/index.html` | Player universal — sirve todos los canales vía fallback Nginx (`try_files`) |
 | `multiplayer/index.html` | Grid multi-stream — todos los streamers en vivo simultáneamente |
 | `dual/index.html` | Layout fijo 2-up KATATONIA + MIRA_SANGANOOO ("KATANA") |
 | `vods/index.html` | Browser de VODs — filtros por canal, cards con preview en hover |
@@ -257,7 +257,6 @@ El player de VODs (`vods/v/index.html`) usa `autoplay muted` para cumplir con la
 | `configuracion/index.html` | Guía paso a paso OBS Studio y Meld Studio |
 | `perfil/index.html` | Dashboard del streamer — stream key, editar perfil, VOD settings |
 | `perfil/reset/index.html` | Reset de contraseña |
-| `player/index.html` | Player genérico — parámetros `?ch=` y `?mode=vertical` |
 | `streamers/index.html` | Directorio de streamers con status online/offline |
 | `legal/index.html` | Términos de servicio |
 | `dmca/index.html` | Info DMCA |
@@ -490,9 +489,9 @@ publish:
 4. Telegram: notificación con botones ✅ Aprobar / ❌ Rechazar
 5. Admin aprueba → `auto_create_streamer()`:
    - Actualiza `assets/streamers.js` via GitHub API
-   - Crea `{handle}/index.html` desde template de katatonia
    - Crea registro en PocketBase (email, password generado, stream_key)
    - Notifica al streamer
+   - ~~Crea `{handle}/index.html`~~ — eliminado: Nginx sirve `player/index.html` automáticamente para cualquier canal no encontrado
 
 ## Scripts — detalle técnico
 
