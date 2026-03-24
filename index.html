@@ -424,6 +424,7 @@
   let _vodLoadedAt       = 0;
   let vodRotateIdx       = 0;
   let vodRotateTimer     = null;
+  let vodInitialized     = false;
 
   /* ── API ── */
   async function fetchPaths() {
@@ -641,10 +642,14 @@
 
     if (!key) {
       if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+      const wasLive = featuredKey !== null;
       featuredKey = null;
-      cancelAnimationFrame(rafId);
-      document.getElementById('rotateBar').style.width = '0%';
-      renderFeaturedVod();
+      if (wasLive || !vodInitialized) {
+        vodInitialized = true;
+        cancelAnimationFrame(rafId);
+        document.getElementById('rotateBar').style.width = '0%';
+        renderFeaturedVod();
+      }
       return;
     }
 
@@ -660,6 +665,7 @@
     wrap.classList.remove('playing');
 
     const doSwitch = () => {
+      vodInitialized = false;
       featuredKey = key;
       applyFeaturedContent(key, paths);
 
@@ -698,10 +704,15 @@
   /* ── Auto-rotación ── */
   function startRotation(live) {
     clearInterval(rotateTimer);
+    livePlayers = live.map(s => s.key);
+    if (livePlayers.length === 0) {
+      // Nadie en vivo — la rotación de VODs maneja el featured
+      if (vodInitialized) startVodRotation();
+      return;
+    }
     cancelAnimationFrame(rafId);
     stopVodRotation();
-    livePlayers = live.map(s => s.key);
-    if (livePlayers.length <= 1) {
+    if (livePlayers.length === 1) {
       document.getElementById('rotateBar').style.width = '0%';
       return;
     }
