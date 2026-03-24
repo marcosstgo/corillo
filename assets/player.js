@@ -100,6 +100,10 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     // Volume
     volume: 1,
     muted:  true,
+    // VOD fallback mode
+    inVodMode:  false,
+    currentVod: null,
+    vodBadge:   null,
   };
 
   // ================================
@@ -166,6 +170,34 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
   }
 
   function hideUnmuteBanner() { DOM.unmuteBtn.classList.remove('show'); }
+
+  function showVodBadge(vod) {
+    if (!App.vodBadge) {
+      const badge = document.createElement('a');
+      badge.id = 'vodBadge';
+      badge.style.cssText = [
+        'position:absolute','top:12px','left:12px','z-index:15',
+        'display:none','align-items:center','gap:7px',
+        'background:rgba(3,10,14,.82)','backdrop-filter:blur(8px)',
+        'border:1px solid rgba(0,191,255,.15)','border-radius:6px',
+        'padding:5px 12px','font-family:var(--mono,monospace)',
+        'font-size:10px','letter-spacing:1.5px','text-transform:uppercase',
+        'color:rgba(232,246,255,.55)','text-decoration:none','cursor:pointer',
+      ].join(';');
+      DOM.playerWrap.appendChild(badge);
+      App.vodBadge = badge;
+    }
+    const date = vod.date ? new Date(vod.date).toLocaleDateString('es-PR', { month: 'short', day: 'numeric' }) : '';
+    App.vodBadge.href = '/vods/v/?id=' + vod.id;
+    App.vodBadge.innerHTML = '<i class="fa-solid fa-film" style="font-size:9px;color:rgba(0,191,255,.5)"></i>'
+      + ' Última transmisión' + (date ? ' · ' + date : '')
+      + ' <span style="color:var(--accent,#00bfff);margin-left:2px">Ver →</span>';
+    App.vodBadge.style.display = 'flex';
+  }
+
+  function hideVodBadge() {
+    if (App.vodBadge) App.vodBadge.style.display = 'none';
+  }
 
   function setMode(m) {
     App.mode = m;
@@ -326,9 +358,43 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     if (App.watchTimer) { clearInterval(App.watchTimer); App.watchTimer = null; }
   }
 
-  function startWatch() {
+  async function startWatch() {
     stopWatch();
-    showOverlay('Sin transmisión', 'El canal no está en vivo ahora mismo.');
+    setLive(false);
+
+    // Try to show the latest VOD while the channel is offline
+    try {
+      const r = await fetch(
+        'https://pb.corillo.live/api/collections/vods/records'
+        + '?filter=channel%3D%22' + encodeURIComponent(App.channel) + '%22&sort=-date&perPage=1',
+        { cache: 'no-store' }
+      );
+      const { items = [] } = await r.json();
+      const vod = items[0];
+      if (vod && vod.filename) {
+        App.inVodMode  = true;
+        App.currentVod = vod;
+        const v = DOM.video;
+        v.muted = true;
+        v.src   = '/vods/' + vod.channel + '/' + vod.filename;
+        v.addEventListener('loadedmetadata', () => {
+          if (v.duration > 60) v.currentTime = 30;
+          v.play().catch(() => {});
+        }, { once: true });
+        // Overlay while video loads
+        const date = vod.date ? new Date(vod.date).toLocaleDateString('es-PR', { month: 'short', day: 'numeric' }) : '';
+        DOM.ovTitle.textContent  = 'Última transmisión';
+        DOM.ovMsg.textContent    = (date ? date + ' · ' : '') + 'El canal está offline';
+        DOM.ovRetry.innerHTML    = '<i class="fa-solid fa-film"></i> Ver VOD completo';
+        DOM.ovRetry.onclick      = () => { location.href = '/vods/v/?id=' + vod.id; };
+        DOM.overlay.classList.add('show');
+      } else {
+        showOverlay('Sin transmisión', 'El canal no está en vivo ahora mismo.');
+      }
+    } catch {
+      showOverlay('Sin transmisión', 'El canal no está en vivo ahora mismo.');
+    }
+
     App.watchTimer = setInterval(async () => {
       try {
         const r    = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store' });
@@ -371,6 +437,12 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     }
 
     App.unmuteAttemptPending = false;
+    App.inVodMode  = false;
+    App.currentVod = null;
+    hideVodBadge();
+    // Reset overlay retry button to default
+    DOM.ovRetry.innerHTML = '<i class="fa-solid fa-play"></i> Reintentar';
+    DOM.ovRetry.onclick   = null;
     setLive(false);
   }
 
@@ -829,6 +901,11 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     // Video lifecycle
     DOM.video.addEventListener('waiting', () => setLive(false));
     DOM.video.addEventListener('playing', () => {
+      if (App.inVodMode) {
+        hideOverlay();
+        if (App.currentVod) showVodBadge(App.currentVod);
+        return;
+      }
       setLive(true); hideOverlay(); startStatsPolling(); showUnmuteBanner(); checkKickBanner(); requestWakeLock();
     });
     DOM.video.addEventListener('pause',   releaseWakeLock);
