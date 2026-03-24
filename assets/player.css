@@ -218,6 +218,8 @@ body{display:flex;flex-direction:column}
   .cvod-card{width:130px}
   .cvod-thumb{width:130px;height:73px}
   .ch-info-bar{padding:12px 14px;gap:12px}
+  .nav-channel{display:none}
+  .nav-divider{display:none}
   .chat-side{height:420px;border-left:none;border-top:1px solid var(--border)}
   .app.chat-hidden .chat-side{display:flex;height:0;overflow:hidden;border:none}
   /* Bottom sheet on mobile */
