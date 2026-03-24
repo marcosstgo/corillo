@@ -206,8 +206,8 @@ body{display:flex;flex-direction:column}
 /* Mobile */
 @media(max-width:820px){
   html,body{overflow:auto;height:auto}
-  .app{grid-template-columns:1fr;height:auto}
-  .player-side{overflow:visible}
+  .app{grid-template-columns:1fr;height:auto;flex:none;align-content:start}
+  .player-side{overflow:visible;min-height:0}
   .chat-side{height:420px;border-left:none;border-top:1px solid var(--border)}
   .app.chat-hidden .chat-side{display:flex;height:0;overflow:hidden;border:none}
   /* Bottom sheet on mobile */
