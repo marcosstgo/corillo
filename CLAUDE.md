@@ -242,6 +242,394 @@ MediaMTX provee estas variables al llamar `runOnRecordSegmentComplete`:
 
 El player de VODs (`vods/v/index.html`) usa `autoplay muted` para cumplir con la política de autoplay de los navegadores. Aparece un botón "Activar sonido" encima del video que desactiva el mute al presionarlo.
 
+## Inventario completo de páginas
+
+| Ruta | Descripción |
+|------|-------------|
+| `index.html` | Homepage — featured player con rotación, grid de canales, sidebar/drawer |
+| `katatonia/index.html` | Plantilla canónica del player individual |
+| `tea/, 404/, elbala/, marcos/, mira_sanganooo/, pataecabra/, streamerpro/, radblaster/, elhermanoquiles/, xxdur3xx/, kamikazepr/, superman/, bambua/` | Réplicas de la plantilla por canal (14 total) |
+| `multiplayer/index.html` | Grid multi-stream — todos los streamers en vivo simultáneamente |
+| `dual/index.html` | Layout fijo 2-up KATATONIA + MIRA_SANGANOOO ("KATANA") |
+| `vods/index.html` | Browser de VODs — filtros por canal, cards con preview en hover |
+| `vods/v/index.html` | Player individual de VOD — autoplay muted, botón "Activar sonido" |
+| `join/index.html` | Formulario de onboarding para nuevos streamers |
+| `configuracion/index.html` | Guía paso a paso OBS Studio y Meld Studio |
+| `perfil/index.html` | Dashboard del streamer — stream key, editar perfil, VOD settings |
+| `perfil/reset/index.html` | Reset de contraseña |
+| `player/index.html` | Player genérico — parámetros `?ch=` y `?mode=vertical` |
+| `streamers/index.html` | Directorio de streamers con status online/offline |
+| `legal/index.html` | Términos de servicio |
+| `dmca/index.html` | Info DMCA |
+| `faq/index.html` | Preguntas frecuentes |
+| `roadmap/index.html` | Roadmap de la plataforma |
+| `dev/index.html` | Página de debug/desarrollo |
+| `natcheck/index.html` | Utilidad de NAT test |
+| `antibufferbloat-pro/index.html` | Feature page |
+| `streamer-pro/index.html` | Feature page |
+
+## Assets compartidos — detalle técnico
+
+### `assets/streamers.js`
+
+Single source of truth de todos los streamers. Estructura de cada entrada:
+
+```javascript
+{
+  key: 'katatonia',           // URL path + prefijo MediaMTX (live/{key})
+  name: 'KATATONIA',          // Nombre display
+  sub: 'Gaming · Aibonito PR', // Subtítulo/descripción
+  ava: 'K',                   // Letra del avatar
+  color: 'linear-gradient(135deg,#e8c84a,#c09020)', // CSS color/gradient
+  host: true,                 // Flag de host (opcional)
+  twitch: 'katat0nia',        // Handle Twitch (opcional)
+  soon: false                 // Placeholder (opcional)
+}
+```
+
+14 streamers activos + 1 placeholder (`soon: true`). Auto-actualizado por `telegram/server.py` vía GitHub API al aprobar nuevos streamers.
+
+### `assets/styles.css` — Variables CSS globales
+
+```css
+:root {
+  /* Fondo */
+  --ink:     #030a0e;    /* bg oscuro */
+  --surface: #071118;    /* bg secundario */
+  --panel:   #0d1c28;    /* panels/dialogs */
+
+  /* Texto */
+  --white:   #e8f6ff;    /* texto claro */
+  --muted:   #3a6070;    /* texto muted */
+
+  /* Colores de acento */
+  --accent:  #00bfff;    /* cyan primario */
+  --live:    #00ff9d;    /* verde "en vivo" */
+
+  /* Bordes */
+  --border:   rgba(0,191,255,.08);   /* sutil */
+  --border-h: rgba(0,191,255,.2);    /* hover */
+
+  /* Tipografía */
+  --mono:    'Space Mono', monospace;
+  --display: 'Bebas Neue', cursive;
+  --body:    'DM Sans', sans-serif;
+
+  /* Escala de texto */
+  --text-2xs: .7rem;
+  --text-xs:  .75rem;
+  --text-sm:  .85rem;
+  --text-base: 1rem;
+  --text-lg:  1.1rem;
+}
+```
+
+Light mode: `[data-theme="light"]` — cambia `--ink` a `#eef7fb`, `--white` a `#051015`, `--accent` a `#0088bb`.
+
+Grain overlay: `body::after` con SVG fractalNoise — desactivado en pantallas HDR (`@media (dynamic-range: high)`), toggle con clase `.no-grain`.
+
+### `assets/player.js` — Player compartido (~900 líneas)
+
+Cargado por todas las páginas individuales de canal. Expone lógica completa del player.
+
+**Constantes clave:**
+```javascript
+RECONNECT_DELAYS = { FAST: 1200, BASE: 1200, MAX: 30000, BACKOFF_FACTOR: 1.8 }
+MAX_RETRIES_BEFORE_OFFLINE = 4   // Antes de entrar en watch mode
+KICK_BANNER_DURATION = 20000     // ms que dura el banner de kick
+KICK_MAX_AGE = 300               // segundos máx de antigüedad del kick
+STATS_INTERVAL = 1000            // ms entre actualizaciones de stats
+WATCH_INTERVAL = 15000           // ms entre checks de stream en watch mode
+STALL_CHECK_INTERVAL = 5000      // ms entre checks de stall (HLS nativo)
+```
+
+**Estado global `App`:**
+```javascript
+App = {
+  channel, mode, hls, rtcPc, retries, retryTimer,
+  watchTimer, statsTimer, kickBannerTimer, ctrlTimer,
+  wakeLock, sessionAc,       // AbortController por sesión
+  useWebRTC, unmuteAttemptPending,
+  emaBitrate,                // EMA del bitrate (75/25)
+  volume, muted
+}
+```
+
+**Funciones principales:**
+
+| Función | Descripción |
+|---------|-------------|
+| `startPlayer()` | Entry point — decide HLS nativo vs hls.js vs WebRTC |
+| `setupNativeHLS(url)` | HLS nativo para Safari/iOS, incluye stall detection |
+| `setupHlsJs(url)` | Fallback con hls.js, config: lowLatency off, buffer 8-12s, max 1.1x playback rate |
+| `startWebRTC()` | WHEP protocol — `POST /webrtc/live/{channel}_rtc/whep` |
+| `scheduleRetry(reason)` | Backoff exponencial: 1.2s→1.8s→2.7s→...→30s |
+| `startWatch()` | Poll `/mediamtx-api/v3/paths/list` cada 15s esperando que el stream vuelva |
+| `startStatsPolling()` | EMA bitrate por `FRAG_LOADED`, buffer/latency/calidad cada 1s |
+| `cleanup()` | Destruye HLS/RTC, aborta sessionAc, detiene video |
+| `setMode('horizontal'/'vertical')` | Cambia aspect ratio, guarda en URL (`?mode=vertical`) |
+| `setTheme('original'/'terminal'/'twitch')` | Cambia tema visual, guarda en localStorage |
+| `requestWakeLock()` / `releaseWakeLock()` | Screen Wake Lock API |
+| `loadProfile()` | `GET /chat-api/profile/{channel}` — avatar, bio, links, panels |
+| `loadOthersLive()` | Muestra otros streamers en vivo en el sidebar |
+| `checkKickBanner()` | Revisa `/assets/kick/{channel}.json` — muestra banner si fue kickeado |
+| `initChannelUI()` | Pinta avatar, nombre, sub, host tag desde `STREAMERS` |
+
+**EMA Bitrate:**
+```javascript
+// Hook en FRAG_LOADED de hls.js
+bps = (bytes_loaded * 8) / fragment_duration
+emaBitrate = emaBitrate * 0.75 + bps * 0.25  // peso 75/25
+```
+
+**Retry con backoff:**
+```javascript
+// retries 1-4: FAST = 1200ms
+// retries 5+: min(30000, 1200 * 1.8^(retries-4))
+// → 2.2s, 3.9s, 7s, 12.6s, 22.7s, 30s (max)
+```
+
+### `assets/chat.js` — Chat WebSocket (~126 líneas)
+
+```javascript
+// Conexión
+WS_URL = `wss://{host}/chat-api/ws/{channel}?user={username}`
+
+// Reconexión con backoff
+delay = Math.min(30000, 3000 * Math.pow(1.5, retries))
+// → 3s, 4.5s, 6.75s, ... → 30s max
+
+// Colores de usuario (determinístico por nombre, 10 colores)
+function userColor(name) {
+  // Hash del nombre → índice en palette de 10 colores
+  // Misma persona siempre tiene el mismo color
+}
+
+// Tipos de mensajes entrantes
+{ type: 'welcome', user: 'NombreAsignado' }
+{ type: 'message', user, text, ts, bot: false }
+{ type: 'system', text }
+
+// Límite: 280 caracteres por mensaje
+// Rate limit server-side: 1 mensaje/segundo
+```
+
+**LocalStorage keys adicionales de chat:**
+```
+corillo_username  — nombre de usuario guardado
+corillo_volume    — nivel de volumen (0.0 – 1.0)
+corillo_muted     — estado muted ('true'/'false')
+corillo_grain     — grain overlay ('on'/'off')
+```
+
+### `assets/player.css`
+
+Estilos del player: layout 2 columnas (player + chat 300px), overlay, control bar con auto-hide (3s), canal info bar, stats row, dropdown menu, responsive (<820px chat pasa a bottom sheet).
+
+## Backend services — detalle técnico
+
+### `api/server.py` — API pública (puerto 3004)
+
+| Endpoint | Método | Descripción |
+|----------|--------|-------------|
+| `/profile/{key}` | GET | Perfil público del streamer desde PocketBase |
+| `/regen-stream-key` | POST | Regenera stream key (requiere token de usuario) |
+| `/health` | GET | Health check |
+
+- Token admin cacheado 24h
+- CORS: `corillo.live`, `localhost:8080`
+- Avatar URL: `{PB_URL}/api/files/streamers/{id}/{avatar}`
+
+### `auth/server.py` — Validación RTMP (puerto 3002)
+
+Webhook de autenticación de MediaMTX. Valida stream keys contra PocketBase.
+
+```
+actions permitidas automáticamente:
+  read, playback → 200 (viewers)
+  api, metrics, pprof desde 127.0.0.1 → 200
+
+publish:
+  extrae channel y secret del path
+  valida contra PocketBase (cache 60s por canal)
+  → 200 si válido, 401 si no
+```
+
+### `chat/server.py` — Chat + Bot (puerto 3001)
+
+| Endpoint | Descripción |
+|----------|-------------|
+| `WebSocket /ws/{channel}` | Chat en vivo — historial desde SQLite (últimos 50 msgs) |
+| `POST /message` | REST API para consultas al bot (Claude haiku) |
+| `GET /digest` | Resumen de 1 oración del estado de streams (cacheado 120s) |
+| `GET /health` | Health check |
+
+**Bot:**
+- Modelo: `claude-haiku-4-5-20251001`
+- Se activa con `@bot {pregunta}` en el chat
+- Recibe estado actual de streams en el system prompt
+- Max 512 tokens por respuesta
+
+**Room:**
+- Cache de live: 12s TTL
+- Rate limit: 1 mensaje/segundo por usuario
+- Historia: últimos 50 mensajes en SQLite + en memoria
+- Nombres: aleatorios de lista boricua + sufijo 2 dígitos
+
+### `telegram/server.py` — Webhook + Aprobación (puerto 3003)
+
+| Endpoint | Descripción |
+|----------|-------------|
+| `POST /join` | Procesa solicitud de nuevo streamer |
+| `POST /telegram/webhook` | Recibe updates del bot de Telegram |
+
+**Flujo de onboarding:**
+1. `POST /join` desde `join/index.html`
+2. Validación: 3-24 chars, alfanumérico + underscore, no reservados, honeypot
+3. Rate limit: 3 solicitudes/hora por IP
+4. Telegram: notificación con botones ✅ Aprobar / ❌ Rechazar
+5. Admin aprueba → `auto_create_streamer()`:
+   - Actualiza `assets/streamers.js` via GitHub API
+   - Crea `{handle}/index.html` desde template de katatonia
+   - Crea registro en PocketBase (email, password generado, stream_key)
+   - Notifica al streamer
+
+## Scripts — detalle técnico
+
+### `scripts/vod-process.py`
+
+Ver sección "VOD pipeline" arriba. Funciones internas:
+
+| Función | Descripción |
+|---------|-------------|
+| `pb_token()` | Obtiene token admin de PocketBase |
+| `get_streamer(channel, token)` | Busca streamer en colección `streamers` |
+| `remux_faststart(filepath)` | fmp4 → MP4 con moov al inicio (ffmpeg `-movflags +faststart`) |
+| `generate_thumbnail(filepath, duration)` | JPEG 640px, quality 3, seek al `min(10, 20% duración)` |
+| `generate_preview(filepath, duration)` | Clip MP4 4s, libx264 baseline, CRF 32, sin audio |
+| `save_vod(...)` | POST a colección `vods` de PocketBase |
+| `apply_retention(channel, keep, token)` | Borra VODs más viejos si excede el plan |
+| `get_duration(filepath)` | ffprobe para obtener duración en segundos |
+
+### `scripts/thumb-gen.py`
+
+Daemon que genera thumbnails de streams en vivo cada 60s.
+
+```python
+MEDIAMTX_API = "http://127.0.0.1:9997"
+HLS_BASE     = "http://127.0.0.1:8888"
+THUMB_DIR    = Path("/var/www/stream/assets/thumbs")
+INTERVAL     = 60  # segundos
+
+# Por cada stream con ready=true:
+# ffmpeg -i /live/{key}/index.m3u8 -vframes 1 → {key}.jpg
+# ffmpeg -i /live/{key}/index.m3u8 -t 4 → {key}-preview.mp4
+```
+
+### `scripts/bitrate-monitor.py`
+
+Daemon de monitoreo de bitrate con auto-kick.
+
+**Thresholds:**
+
+| Nivel | Kbps | Acción |
+|-------|------|--------|
+| Warn | 5,000 | Telegram: ⚠️ |
+| Alert | 8,000 | Telegram: 🔴 |
+| Auto-kick | 6,500 | 2 polls consecutivos → corta conexión TCP |
+
+**Exentos de kick (solo alertas):** `streamerpro`, `katatonia`, `marcos`
+
+**Mecanismo de kick:**
+1. Poll 1 ≥ 6,500 Kbps → strike 1, warning Telegram
+2. Poll 2 ≥ 6,500 Kbps → strike 2 → `sudo ss -K dst {ip} dport {port}` (corta TCP)
+3. Escribe `/assets/kick/{channel}.json` → el player muestra banner
+4. Cooldown: 35s antes de poder volver a kickear
+5. Recuperación: si baja, limpia strikes y notifica ✅
+
+### `scripts/pb-setup-vods.py`
+
+Script one-time para crear la colección `vods` en PocketBase y agregar campos `vod_enabled`/`vod_plan` a `streamers`. No se ejecuta en producción, solo en setup inicial.
+
+## PocketBase — colecciones
+
+### `streamers`
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `key` | text | Handle del canal (URL path) |
+| `display_name` | text | Nombre display |
+| `bio` | text | Descripción del canal |
+| `color` | text | Color CSS |
+| `twitch` | text | Handle de Twitch |
+| `instagram` | text | Handle de Instagram |
+| `tiktok` | text | Handle de TikTok |
+| `avatar` | file | Foto de perfil |
+| `panels` | json | Panels personalizados |
+| `stream_key` | text | Clave de stream (secreta) |
+| `stream_key_full` | text | `{handle}?secret={stream_key}` |
+| `vod_enabled` | bool | Habilita grabación de VODs |
+| `vod_plan` | select | `free` (keep 5) / `pro` (ilimitado) |
+| `active` | bool | Canal activo |
+| `verified` | bool | Canal verificado |
+
+### `vods`
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `channel` | text | Key del canal |
+| `filename` | text | Nombre del archivo MP4 |
+| `filepath` | text | Ruta absoluta en el servidor |
+| `duration` | number | Duración en segundos |
+| `size` | number | Tamaño en bytes |
+| `date` | date | Fecha de grabación |
+| `thumb` | text | URL del thumbnail (`/vods/{channel}/{ts}.jpg`) |
+| `preview` | text | URL del preview clip (`/vods/{channel}/{ts}-preview.mp4`) |
+
+**Permisos:** listRule/viewRule = `""` (público). deleteRule = `'channel = @request.auth.key'` (streamer puede borrar sus propios VODs).
+
+## Flujo completo de streaming
+
+```
+1. Streamer → RTMP
+   rtmp://corillo.live/live/{key}?secret={stream_key}
+            ↓
+2. MediaMTX auth hook → auth/server.py:3002
+   Valida stream_key vs PocketBase (cache 60s)
+            ↓
+3. MediaMTX acepta → HLS disponible
+   /live/{key}/index.m3u8
+   Grabación: /var/vods/live/{key}/{timestamp}.mp4
+            ↓
+4. Browser solicita HLS
+   Safari: nativo | Chrome/Firefox: hls.js
+   Alternativa: WebRTC WHEP (/webrtc/live/{key}_rtc/whep)
+            ↓
+5. thumb-gen.py (daemon, cada 60s)
+   Captura frame → /assets/thumbs/{key}.jpg
+   Captura clip 4s → /assets/thumbs/{key}-preview.mp4
+            ↓
+6. bitrate-monitor.py (daemon, cada 30s)
+   Calcula Kbps desde bytesReceived delta
+   Si ≥ 6,500 Kbps × 2 polls → kick TCP + notify Telegram
+            ↓
+7. Fin del segmento (cada 6h o fin stream)
+   MediaMTX → runOnRecordSegmentComplete → vod-process.py
+   Remux → thumbnail → preview → PocketBase → retención
+```
+
+## Integraciones externas
+
+| Servicio | Uso |
+|----------|-----|
+| **Anthropic Claude** | Chat bot (haiku), digest de estado de streams |
+| **PocketBase** | Auth, perfiles de streamers, colección vods, archivos |
+| **GitHub API** | Auto-crear páginas HTML y actualizar streamers.js al aprobar streamers |
+| **Telegram Bot** | Alertas de bitrate, notificaciones de /join, aprobación de streamers |
+| **hls.js CDN** | Playback HLS en Chrome/Firefox (v1.5.18) |
+| **Font Awesome CDN** | Íconos (v6.5.1, free tier) |
+| **Google Fonts** | Bebas Neue, DM Sans, Space Mono |
+
 ## Conventions
 
 - The grain overlay (`body::after` with SVG fractalNoise) appears on every page — it's intentional, do not remove it.
