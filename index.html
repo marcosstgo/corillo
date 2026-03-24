@@ -460,7 +460,7 @@
   async function fetchRecentVods(limit) {
     try {
       const r = await fetch(
-        `${PB_URL}/api/collections/vods/records?sort=-date&perPage=${limit}&fields=id,channel,thumb,duration,date`,
+        `${PB_URL}/api/collections/vods/records?sort=-date&perPage=${limit}&fields=id,channel,filename,thumb,duration,date`,
         { signal: AbortSignal.timeout(5000) }
       );
       return (await r.json()).items || [];
@@ -499,17 +499,25 @@
   }
 
   function renderFeaturedVod() {
-    const thumbEl   = document.getElementById('featuredVodThumb');
+    const wrap      = document.getElementById('featuredWrap');
+    const vid       = document.getElementById('featuredVideo');
     const offlineEl = document.getElementById('featuredOffline');
     const vod = _recentVods[0];
-    if (!vod) return; // nada que mostrar — mantiene el empty state por defecto
-    const s = (window.STREAMERS || []).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
-    // fondo con thumbnail del VOD
-    if (vod.thumb) {
-      thumbEl.style.backgroundImage = `url(${vod.thumb})`;
-      thumbEl.classList.add('show');
+
+    if (!vod || !vod.filename) {
+      // Sin VODs — mostrar estado offline normal
+      vid.src = '';
+      wrap.classList.remove('playing');
+      document.getElementById('featuredInfo').innerHTML = '';
+      document.getElementById('featuredActions').innerHTML = '';
+      document.getElementById('featuredLetter').textContent = '';
+      return;
     }
+
+    const s = (window.STREAMERS || []).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
+
     offlineEl.style.cssText = 'opacity:0;pointer-events:none';
+    document.getElementById('featuredViewers').style.display = 'none';
     setGlow(s.color);
     document.getElementById('featuredLetter').textContent = s.name.charAt(0);
     document.getElementById('featuredInfo').innerHTML = `
@@ -519,6 +527,15 @@
     document.getElementById('featuredActions').innerHTML = `
       <a href="/vods/v/?id=${vod.id}" class="nav-btn solid"><i class="fa-solid fa-play"></i> Ver VOD</a>
       <a href="/vods/" class="nav-btn"><i class="fa-solid fa-film"></i> Todos los VODs</a>`;
+
+    // Reproducir VOD
+    vid.src = `/vods/${vod.channel}/${vod.filename}`;
+    vid.muted = true;
+    vid.addEventListener('loadedmetadata', () => {
+      if (vid.duration > 60) vid.currentTime = 30;
+      vid.play().catch(() => {});
+    }, { once: true });
+    wrap.classList.add('playing');
   }
 
   /* ── Helpers ── */
@@ -589,8 +606,6 @@
 
     if (!key) {
       if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-      vid.src = '';
-      wrap.classList.remove('playing');
       featuredKey = null;
       cancelAnimationFrame(rafId);
       document.getElementById('rotateBar').style.width = '0%';
@@ -598,12 +613,10 @@
       return;
     }
 
-    // Volvió a haber stream — resetear el estado VOD del featured
-    const thumbEl   = document.getElementById('featuredVodThumb');
-    const offlineEl = document.getElementById('featuredOffline');
-    thumbEl.className = 'featured-vod-thumb';
-    thumbEl.style.backgroundImage = '';
-    offlineEl.style.cssText = '';
+    // Volvió a haber stream — resetear estado VOD
+    document.getElementById('featuredOffline').style.cssText = '';
+    document.getElementById('featuredViewers').style.display = '';
+    wrap.classList.remove('playing');
 
     // Solo actualizar viewers si no cambió el canal
     if (key === featuredKey) {
