@@ -38,7 +38,7 @@ const WS_BASE = location.protocol === 'https:' ? 'wss:' : 'ws:';
 const _savedUser = localStorage.getItem('corillo_username') || '';
 const WS_URL  = `${WS_BASE}//${location.host}/chat-api/ws/${channel}${_savedUser ? '?user=' + encodeURIComponent(_savedUser) : ''}`;
 
-let ws = null, wsTimer = null, _wsRetries = 0;
+let ws = null, wsTimer = null, _wsRetries = 0, _lastMsgTs = 0;
 
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -52,6 +52,10 @@ function userColor(name) {
 }
 
 function addChatMsg(msg) {
+  if (msg.ts) {
+    if (msg.ts <= _lastMsgTs) return;
+    _lastMsgTs = msg.ts;
+  }
   const box = $('#chatMsgs');
   const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
   const el = document.createElement('div');
