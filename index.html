@@ -460,7 +460,7 @@
   async function fetchRecentVods(limit) {
     try {
       const r = await fetch(
-        `${PB_URL}/api/collections/vods/records?sort=-date&perPage=${limit}&fields=id,channel,filename,thumb,duration,date`,
+        `${PB_URL}/api/collections/vods/records?sort=-date&perPage=${limit}&fields=id,channel,filename,thumb,preview,duration,date`,
         { signal: AbortSignal.timeout(5000) }
       );
       return (await r.json()).items || [];
@@ -843,6 +843,7 @@
               <div class="stream-thumb">
                 <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
                 ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img">` : ''}
+                ${vod.preview ? `<video class="stream-thumb-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
                 ${vod.duration ? `<div class="vod-duration">${fmtDuration(vod.duration)}</div>` : ''}
               </div>
               <div class="stream-body">
@@ -851,6 +852,13 @@
               </div>
             </a>`;
           }).join('')}`;
+        grid.querySelectorAll('.stream-card').forEach(card => {
+          const vid = card.querySelector('.stream-thumb-preview');
+          if (vid) {
+            card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+            card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+          }
+        });
       } else {
         grid.innerHTML = `<div class="no-live-msg"><i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem"></i>Sin streams activos ahora mismo</div>`;
       }
