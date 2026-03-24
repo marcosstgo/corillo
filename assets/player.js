@@ -783,6 +783,22 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     pill.after(rtcBtn);
     rtcBtn.addEventListener('click', toggleWebRTC);
 
+    // Chat toggle
+    const appEl = document.querySelector('.app');
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    const chatCloseBtn  = document.getElementById('chatCloseBtn');
+    function setChatVisible(visible) {
+      if (appEl) appEl.classList.toggle('chat-hidden', !visible);
+      if (chatToggleBtn) chatToggleBtn.classList.toggle('active', visible);
+      localStorage.setItem('corillo_chat', visible ? 'visible' : 'hidden');
+    }
+    const savedChat = localStorage.getItem('corillo_chat');
+    setChatVisible(savedChat !== 'hidden');
+    if (chatToggleBtn) chatToggleBtn.addEventListener('click', () => {
+      setChatVisible(appEl && appEl.classList.contains('chat-hidden'));
+    });
+    if (chatCloseBtn) chatCloseBtn.addEventListener('click', () => setChatVisible(false));
+
     // Volume from storage
     const savedVol = parseFloat(localStorage.getItem('corillo_volume'));
     if (!isNaN(savedVol)) { DOM.video.volume = savedVol; App.volume = savedVol; }
