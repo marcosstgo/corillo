@@ -417,6 +417,7 @@
   let rotateIdx   = 0;
   let lastPaths   = [];
   let glowActive  = 'a'; // which glow layer is currently visible
+  let prevLiveKeys = null; // para detectar cambios en el set de streams en vivo
 
   // VOD data
   let _recentVods        = [];
@@ -705,17 +706,16 @@
   function startRotation(live) {
     clearInterval(rotateTimer);
     livePlayers = live.map(s => s.key);
-    if (livePlayers.length === 0) {
-      // Nadie en vivo — la rotación de VODs maneja el featured
-      if (vodInitialized) startVodRotation();
-      return;
-    }
+    if (livePlayers.length === 0) return; // VOD rotation ya la maneja setFeatured(null)
     cancelAnimationFrame(rafId);
     stopVodRotation();
     if (livePlayers.length === 1) {
       document.getElementById('rotateBar').style.width = '0%';
       return;
     }
+    // Anclar rotateIdx al streamer actualmente en featured para evitar repetir o saltar
+    const idx = livePlayers.indexOf(featuredKey);
+    rotateIdx = idx >= 0 ? idx : 0;
     startProgressBar();
     rotateTimer = setInterval(() => {
       rotateIdx = (rotateIdx + 1) % livePlayers.length;
@@ -962,12 +962,31 @@
     const offline   = streamers.filter(s => !liveSet.has(s.key));
     const preferred = (live.find(s => s.host) || live[0])?.key || null;
 
+    const liveKeys   = live.map(s => s.key).join(',');
+    const liveChanged = liveKeys !== prevLiveKeys;
+    prevLiveKeys = liveKeys;
+
     updateNav(live.length);
     renderDrawer(live, offline, paths);
     renderSidebar(live, offline, paths, featuredKey || preferred);
     renderGrid(live, offline, paths);
-    setFeatured(preferred, paths, false);
-    startRotation(live);
+
+    if (preferred === null) {
+      // Nadie en vivo — mostrar VODs (setFeatured maneja la rotación de VODs internamente)
+      setFeatured(null, paths, false);
+    } else if (liveChanged || !featuredKey) {
+      // El set de streams cambió o es la primera vez — decidir qué mostrar
+      const goTo = (featuredKey && liveSet.has(featuredKey)) ? featuredKey : preferred;
+      setFeatured(goTo, paths, false);
+      startRotation(live);
+    } else if (!liveSet.has(featuredKey)) {
+      // El streamer featured se desconectó — saltar al preferido
+      setFeatured(preferred, paths, false);
+      startRotation(live);
+    } else {
+      // Mismo set, mismo featured — solo actualizar viewer count
+      document.getElementById('featuredViewerCount').textContent = getViewers(paths, featuredKey);
+    }
   }
 
   /* ── Polling ── */
