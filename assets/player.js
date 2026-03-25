@@ -639,6 +639,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
             el.appendChild(img);
           });
         }
+        if (data.sub && data.sub.trim() && DOM.chSub) DOM.chSub.textContent = data.sub.trim();
         if (data.bio && data.bio.trim() && DOM.chBio) {
           DOM.chBio.textContent = data.bio.trim();
           DOM.chBio.style.display = '';
