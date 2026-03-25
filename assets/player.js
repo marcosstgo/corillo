@@ -55,6 +55,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     ctrlFs:           $('#ctrlFs'),
     themeBtn:         $('#themeBtn'),
     statsRow:         $('#statsRow'),
+    sViewers:         $('#sViewers'),
     // ch-info-bar (new design)
     navChAva:         $('#navChAva'),
     navChName:        $('#navChName'),
@@ -348,7 +349,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     App.statsTimer  = null;
     App.emaBitrate  = null;
     App.hookedHls   = false;
-    ['sBitrate','sBuffer','sLatency','sLevel'].forEach(id => DOM[id].textContent = '—');
+    ['sBitrate','sBuffer','sLatency','sLevel','sViewers'].forEach(id => DOM[id].textContent = '—');
   }
 
   // ================================
@@ -763,6 +764,10 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
         paths.filter(p => p.ready).forEach(p => {
           liveMap[p.name.replace('live/', '')] = p.readers ? p.readers.length : 0;
         });
+        if (DOM.sViewers) {
+          const v = liveMap[App.channel];
+          DOM.sViewers.textContent = v !== undefined ? String(v) : '—';
+        }
         const others = (window.STREAMERS || [])
           .filter(s => !s.soon && s.key !== App.channel && liveMap[s.key] !== undefined);
         if (!others.length) { sec.style.display = 'none'; return; }
