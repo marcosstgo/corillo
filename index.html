@@ -168,15 +168,6 @@
     .stream-body{padding:12px 14px}
     .stream-name{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:3px}
     .stream-desc{font-size:12px;color:var(--muted)}
-    .offline-list{display:flex;flex-direction:column;gap:2px}
-    .offline-row{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:6px;cursor:pointer;transition:background .15s;border:1px solid transparent;color:inherit}
-    .offline-row:hover{background:rgba(0,191,255,.03);border-color:var(--border)}
-    .offline-ava{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:16px;color:#000;flex-shrink:0;opacity:.6}
-    .offline-info{flex:1;min-width:0}
-    .offline-name{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;color:rgba(232,246,255,.4)}
-    .offline-status{font-size:11px;color:var(--muted);margin-top:1px}
-    .offline-action{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--accent);opacity:0;transition:opacity .15s}
-    .offline-row:hover .offline-action{opacity:1}
 
     /* ── FEATURED VOD EMPTY STATE ── */
     .featured-vod-thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s;pointer-events:none}
@@ -348,12 +339,6 @@
         <div class="section-line"></div>
       </div>
       <div class="live-grid" id="liveGrid"></div>
-      <div class="section-header">
-        <h2>CANALES</h2>
-        <span class="section-count" id="offlineCount">—</span>
-        <div class="section-line"></div>
-      </div>
-      <div class="offline-list" id="offlineList"></div>
     </div>
 
     <footer class="site-footer">
@@ -935,18 +920,6 @@
       });
     }
 
-    document.getElementById('offlineCount').textContent = `${offline.length} offline`;
-    document.getElementById('offlineList').innerHTML = offline.map(s => {
-      const lastDate = _lastVodByChannel[s.key];
-      return `<a href="/${s.key}/" class="offline-row">
-        <div class="offline-ava" style="${avaStyle(s)}">${initial(s.name)}</div>
-        <div class="offline-info">
-          <div class="offline-name">${s.name}</div>
-          <div class="offline-status">Offline${lastDate ? ' · ' + relativeTime(lastDate) : ''}</div>
-        </div>
-        <div class="offline-action">Ver canal →</div>
-      </a>`;
-    }).join('');
   }
 
   /* ── Update ── */
