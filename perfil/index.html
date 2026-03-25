@@ -531,6 +531,11 @@
         </div>
 
         <div class="field">
+          <label>Estado <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">— aparece debajo de tu nombre en el player</span></label>
+          <input type="text" id="fSub" placeholder="Just chatting · vibes" maxlength="60">
+        </div>
+
+        <div class="field">
           <label>Bio</label>
           <textarea id="fBio" placeholder="Cuéntale algo a tu audiencia…" maxlength="280"></textarea>
         </div>
@@ -755,6 +760,7 @@ function populateDashboard(r) {
 
   // Perfil
   fDisplayName.value = r.display_name || '';
+  document.getElementById('fSub').value = r.sub || '';
   fBio.value = r.bio || '';
   fTwitch.value = r.twitch || '';
   fInstagram.value = r.instagram || '';
@@ -963,6 +969,7 @@ saveBtn.addEventListener('click', async () => {
   try {
     currentRecord = await pb.collection('streamers').update(currentRecord.id, {
       display_name: fDisplayName.value.trim(),
+      sub:          document.getElementById('fSub').value.trim(),
       bio:          fBio.value.trim(),
       twitch:       fTwitch.value.trim(),
       instagram:    fInstagram.value.trim(),

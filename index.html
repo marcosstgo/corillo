@@ -168,15 +168,6 @@
     .stream-body{padding:12px 14px}
     .stream-name{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:3px}
     .stream-desc{font-size:12px;color:var(--muted)}
-    .offline-list{display:flex;flex-direction:column;gap:2px}
-    .offline-row{display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:6px;cursor:pointer;transition:background .15s;border:1px solid transparent;color:inherit}
-    .offline-row:hover{background:rgba(0,191,255,.03);border-color:var(--border)}
-    .offline-ava{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:16px;color:#000;flex-shrink:0;opacity:.6}
-    .offline-info{flex:1;min-width:0}
-    .offline-name{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;color:rgba(232,246,255,.4)}
-    .offline-status{font-size:11px;color:var(--muted);margin-top:1px}
-    .offline-action{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--accent);opacity:0;transition:opacity .15s}
-    .offline-row:hover .offline-action{opacity:1}
 
     /* ── FEATURED VOD EMPTY STATE ── */
     .featured-vod-thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s;pointer-events:none}
@@ -348,12 +339,6 @@
         <div class="section-line"></div>
       </div>
       <div class="live-grid" id="liveGrid"></div>
-      <div class="section-header">
-        <h2>CANALES</h2>
-        <span class="section-count" id="offlineCount">—</span>
-        <div class="section-line"></div>
-      </div>
-      <div class="offline-list" id="offlineList"></div>
     </div>
 
     <footer class="site-footer">
@@ -417,6 +402,7 @@
   let rotateIdx   = 0;
   let lastPaths   = [];
   let glowActive  = 'a'; // which glow layer is currently visible
+  let prevLiveKeys = null; // para detectar cambios en el set de streams en vivo
 
   // VOD data
   let _recentVods        = [];
@@ -705,17 +691,16 @@
   function startRotation(live) {
     clearInterval(rotateTimer);
     livePlayers = live.map(s => s.key);
-    if (livePlayers.length === 0) {
-      // Nadie en vivo — la rotación de VODs maneja el featured
-      if (vodInitialized) startVodRotation();
-      return;
-    }
+    if (livePlayers.length === 0) return; // VOD rotation ya la maneja setFeatured(null)
     cancelAnimationFrame(rafId);
     stopVodRotation();
     if (livePlayers.length === 1) {
       document.getElementById('rotateBar').style.width = '0%';
       return;
     }
+    // Anclar rotateIdx al streamer actualmente en featured para evitar repetir o saltar
+    const idx = livePlayers.indexOf(featuredKey);
+    rotateIdx = idx >= 0 ? idx : 0;
     startProgressBar();
     rotateTimer = setInterval(() => {
       rotateIdx = (rotateIdx + 1) % livePlayers.length;
@@ -935,18 +920,6 @@
       });
     }
 
-    document.getElementById('offlineCount').textContent = `${offline.length} offline`;
-    document.getElementById('offlineList').innerHTML = offline.map(s => {
-      const lastDate = _lastVodByChannel[s.key];
-      return `<a href="/${s.key}/" class="offline-row">
-        <div class="offline-ava" style="${avaStyle(s)}">${initial(s.name)}</div>
-        <div class="offline-info">
-          <div class="offline-name">${s.name}</div>
-          <div class="offline-status">Offline${lastDate ? ' · ' + relativeTime(lastDate) : ''}</div>
-        </div>
-        <div class="offline-action">Ver canal →</div>
-      </a>`;
-    }).join('');
   }
 
   /* ── Update ── */
@@ -962,12 +935,31 @@
     const offline   = streamers.filter(s => !liveSet.has(s.key));
     const preferred = (live.find(s => s.host) || live[0])?.key || null;
 
+    const liveKeys   = live.map(s => s.key).join(',');
+    const liveChanged = liveKeys !== prevLiveKeys;
+    prevLiveKeys = liveKeys;
+
     updateNav(live.length);
     renderDrawer(live, offline, paths);
     renderSidebar(live, offline, paths, featuredKey || preferred);
     renderGrid(live, offline, paths);
-    setFeatured(preferred, paths, false);
-    startRotation(live);
+
+    if (preferred === null) {
+      // Nadie en vivo — mostrar VODs (setFeatured maneja la rotación de VODs internamente)
+      setFeatured(null, paths, false);
+    } else if (liveChanged || !featuredKey) {
+      // El set de streams cambió o es la primera vez — decidir qué mostrar
+      const goTo = (featuredKey && liveSet.has(featuredKey)) ? featuredKey : preferred;
+      setFeatured(goTo, paths, false);
+      startRotation(live);
+    } else if (!liveSet.has(featuredKey)) {
+      // El streamer featured se desconectó — saltar al preferido
+      setFeatured(preferred, paths, false);
+      startRotation(live);
+    } else {
+      // Mismo set, mismo featured — solo actualizar viewer count
+      document.getElementById('featuredViewerCount').textContent = getViewers(paths, featuredKey);
+    }
   }
 
   /* ── Polling ── */
