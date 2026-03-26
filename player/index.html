@@ -215,7 +215,8 @@
       const dur=s?(h?h+'h ':'')+m+'m':'';
       const d=v.date?new Date(v.date).toLocaleDateString('es-PR',{month:'short',day:'numeric'}):'';
       const thumb=v.thumb?`<img src="${v.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.style.display='none'" loading="lazy">`:'';
-      const preview=v.preview?`<video data-preview src="${v.preview}" muted playsinline preload="none" loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px;opacity:0;transition:opacity .3s;pointer-events:none"></video>`:'';
+      const canHover=window.matchMedia('(hover: hover)').matches;
+      const preview=v.preview&&canHover?`<video data-preview src="${v.preview}" muted playsinline preload="none" loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px;opacity:0;transition:opacity .3s;pointer-events:none"></video>`:'';
       return `<a class="cvod-card" href="/vods/v/?id=${v.id}"><div class="cvod-thumb" style="overflow:hidden">${thumb}${preview}<i class="fa-solid fa-play" style="position:relative;z-index:1"></i>${dur?`<span class="cvod-dur">${dur}</span>`:''}</div><div class="cvod-date">${d}</div></a>`;
     }).join('');
     // Hover preview playback — desktop only (touch devices: tap = mouseenter + click, causes fullscreen)

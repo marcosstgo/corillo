@@ -855,6 +855,8 @@
   }
 
   /* ── Grid ── */
+  const _hover = window.matchMedia('(hover: hover)').matches;
+
   function renderGrid(live, offline, paths) {
     const grid = document.getElementById('liveGrid');
     document.getElementById('liveCount').textContent = live.length
@@ -875,7 +877,7 @@
               <div class="stream-thumb">
                 <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
                 ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img">` : ''}
-                ${vod.preview ? `<video class="stream-thumb-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
+                ${vod.preview && _hover ? `<video class="stream-thumb-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
                 ${vod.duration ? `<div class="vod-duration">${fmtDuration(vod.duration)}</div>` : ''}
               </div>
               <div class="stream-body">
@@ -903,7 +905,7 @@
           <div class="stream-thumb">
             <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
             <img src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" alt="" class="stream-thumb-img" onerror="this.style.display='none'">
-            <video class="stream-thumb-preview" src="/assets/thumbs/${s.key}-preview.mp4" muted playsinline preload="none" loop></video>
+            ${_hover ? `<video class="stream-thumb-preview" src="/assets/thumbs/${s.key}-preview.mp4" muted playsinline preload="none" loop></video>` : ''}
             <div class="stream-live-tag"><span class="live-dot" style="width:5px;height:5px;box-shadow:none;animation:none"></span> LIVE</div>
             ${v > 0 ? `<div class="stream-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>` : ''}
           </div>

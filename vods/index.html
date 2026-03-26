@@ -322,7 +322,7 @@ function renderGrid() {
         </div>
         <div class="vod-thumb-grid"></div>
         ${vod.thumb ? `<img src="${vod.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" loading="lazy">` : ''}
-        ${vod.preview ? `<video class="vod-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
+        ${vod.preview && window.matchMedia('(hover: hover)').matches ? `<video class="vod-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
         <div class="vod-play-btn">
           <div class="vod-play-icon"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
         </div>
