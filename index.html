@@ -988,6 +988,24 @@
     startSliderTimer();
   }
 
+  function vodCards(vods) {
+    return vods.map(vod => {
+      const s   = (window.STREAMERS||[]).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
+      const dur = vod.duration ? fmtDuration(vod.duration) : '';
+      return `<a href="/${vod.channel}/" class="stream-card">
+        <div class="stream-thumb">
+          <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name.charAt(0)}</span></div>
+          ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img" onerror="this.style.display='none'" loading="lazy">` : ''}
+          ${dur ? `<div class="vod-duration">${dur}</div>` : ''}
+        </div>
+        <div class="stream-body">
+          <div class="stream-name">${s.name}</div>
+          <div class="stream-desc">${relativeTime(vod.date)}</div>
+        </div>
+      </a>`;
+    }).join('');
+  }
+
   function renderGrid(live, offline, paths) {
     const grid = document.getElementById('liveGrid');
     document.getElementById('liveCount').textContent = live.length
@@ -998,27 +1016,12 @@
 
     if (!live.length) {
       if (_recentVods.length) {
-        // Only render once — don't reset on every poll while still offline
         if (_gridState !== 'offline') {
           grid.innerHTML = `<div class="vods-row-header">
             <span>Últimas transmisiones</span>
             <div class="section-line"></div>
             <a href="/vods/">Ver todos →</a>
-          </div>` + _recentVods.map(vod => {
-            const s   = (window.STREAMERS||[]).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
-            const dur = vod.duration ? fmtDuration(vod.duration) : '';
-            return `<a href="/${vod.channel}/" class="stream-card">
-              <div class="stream-thumb">
-                <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name.charAt(0)}</span></div>
-                ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img" onerror="this.style.display='none'" loading="lazy">` : ''}
-                ${dur ? `<div class="vod-duration">${dur}</div>` : ''}
-              </div>
-              <div class="stream-body">
-                <div class="stream-name">${s.name}</div>
-                <div class="stream-desc">${relativeTime(vod.date)}</div>
-              </div>
-            </a>`;
-          }).join('');
+          </div>` + vodCards(_recentVods);
         }
       } else {
         if (_gridState !== 'empty') {
@@ -1028,8 +1031,9 @@
       _gridState = newState;
       return;
     }
-    _gridState = newState;
-    grid.innerHTML = live.map(s => {
+
+    // Hay streamers en vivo — live cards + VODs de los offline debajo
+    const liveHtml = live.map(s => {
       const v = getViewers(paths, s.key);
       return `<a href="/${s.key}/" class="stream-card">
         <div class="stream-thumb">
@@ -1045,6 +1049,19 @@
         </div>
       </a>`;
     }).join('');
+
+    // VODs de canales offline (excluir los que están en vivo)
+    const liveKeys = new Set(live.map(s => s.key));
+    const offlineVods = _recentVods.filter(v => !liveKeys.has(v.channel));
+
+    grid.innerHTML = liveHtml + (offlineVods.length ? `
+      <div class="vods-row-header">
+        <span>Últimas transmisiones</span>
+        <div class="section-line"></div>
+        <a href="/vods/">Ver todos →</a>
+      </div>` + vodCards(offlineVods) : '');
+
+    _gridState = newState;
     if (_hover) {
       grid.querySelectorAll('.stream-card').forEach(card => {
         const vid = card.querySelector('.stream-thumb-preview');
