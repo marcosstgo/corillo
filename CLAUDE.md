@@ -276,7 +276,9 @@ MediaMTX provee estas variables al llamar `runOnRecordSegmentComplete`:
 
 ### VOD player — autoplay y sonido
 
-El player de VODs (`vods/v/index.html`) usa `autoplay muted` para cumplir con la política de autoplay de los navegadores. Aparece un botón "Activar sonido" encima del video que desactiva el mute al presionarlo.
+El player de VODs (`vods/v/index.html`) usa `autoplay muted playsinline` para cumplir con la política de autoplay de los navegadores. Aparece un botón "Activar sonido" encima del video que desactiva el mute al presionarlo.
+
+**CRÍTICO — `playsinline` en iOS:** Todo `<video>` con `autoplay` DEBE tener el atributo `playsinline`. Sin él, iOS Safari abre el video en fullscreen automáticamente al cargarse. Aplica a todos los players: `player/index.html`, `vods/v/index.html`, y cualquier `<video>` con autoplay. El `<video>` en el featured player del home (`index.html`) también usa `playsinline`.
 
 ## Inventario completo de páginas
 
