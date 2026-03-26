@@ -25,7 +25,40 @@ The site is served as static files. **Nginx** handles reverse proxy and SSL, pro
 | `join/index.html` | Onboarding/info page for new streamers |
 | `configuracion/index.html` | Step-by-step guide for configuring OBS Studio and Meld Studio |
 
-> **Player unification (2026-03-24):** Individual `{canal}/index.html` files were eliminated. Nginx `try_files $uri $uri/index.html /player/index.html` already served as fallback — deleting the 14 duplicate files was enough. `player.js` derives the channel from `location.pathname`, so `/katatonia/` correctly loads KATATONIA. New streamers work automatically the moment they're added to `assets/streamers.js` — no HTML file creation needed.
+> **Player unification (2026-03-25):** Individual `{canal}/index.html` files were eliminated. Nginx captures the channel key via `location ~ ^/([a-z][a-z0-9_]*)(/|$)` and injects it into `player/index.html` using `sub_filter '__CHANNEL__'`. New streamers work automatically — no HTML file creation needed.
+
+### `player/index.html` — contrato con `player.js` y `player.css`
+
+**CRÍTICO:** `player/index.html` es el único template para todos los canales. `player.js` busca IDs específicos en el DOM — si se cambia el HTML hay que verificar que estos elementos existen:
+
+| ID / Clase | Función |
+|------------|---------|
+| `#video` | Elemento `<video>` — HLS y VOD offline se cargan aquí |
+| `#overlay`, `#ovTitle`, `#ovMsg`, `#ovRetry` | Overlay de estado (cargando / offline / error) |
+| `#liveDot`, `#liveTxt` | Indicador en vivo en el nav |
+| `#navChAva`, `#navChName`, `#navLivePill` | Canal en la barra de navegación |
+| `#chAva`, `#chName`, `#chSub`, `#chBio`, `#chLinks`, `#chHostTag` | Info bar del canal (perfil público) |
+| `#statsRow`, `#sBitrate`, `#sBuffer`, `#sLatency`, `#sLevel`, `#sRetries` | Stats en tiempo real |
+| `#otherLiveSection`, `#otherLiveList` | Sección "Otros en vivo" |
+| `#channelVods`, `#cvodsList`, `#cvodsAll` | Slider de últimas transmisiones |
+| `#ctrlBar`, `#ctrlPlay`, `#ctrlMute`, `#ctrlVol`, `#ctrlFs`, `#hlsTxt`, `#retryTxt` | Controles del player |
+| `#unmuteBtn` | Banner de unmute (autoplay muted) |
+| `#chatCol`, `#chatMsgs`, `#chatInput`, `#chatSend`, `#chatYou`, `#chatChannelLabel` | Chat |
+| `#chatToggleBtn`, `#chatCloseBtn`, `#chatRailBtn`, `#railBadge`, `#railIcon` | Toggle de chat |
+| `#dropBtn`, `#dropPanel`, `#dropBackdrop` | Menú dropdown / bottom sheet |
+| `#btnH`, `#btnV` | Modo 16:9 / 9:16 |
+| `#btnThemeOg`, `#btnThemeTm`, `#btnThemeTw` | Temas del player |
+| `#themeBtn` | Toggle dark/light del sitio |
+| `#twitchLink` | Enlace a Twitch del canal |
+| `#chTag` | Compat oculto — no remover |
+| `.playerWrap.video-wrap` | Wrapper del video — `player.js` inserta aquí la `offline-thumb` |
+| `.app`, `.player-side`, `.chat-side` | Layout principal — clases que usa `player.css` |
+
+**VOD offline playback:** Cuando el canal está offline, `player.js` (líneas ~366–395) busca el último VOD en PocketBase y lo carga en `#video` automáticamente. Requiere que `.playerWrap` tenga la clase `video-wrap`.
+
+**VOD cards:** El script inline en `player/index.html` renderiza las últimas 5 transmisiones. Los links van a `/vods/v/?id={id}` (player de VOD), NO al archivo MP4 directo.
+
+**SEO / meta tags:** El `<head>` contiene `__CHANNEL__` como placeholder. Nginx lo reemplaza con el key del canal via `sub_filter`. No hardcodear valores de canal en el `<head>`.
 
 ### Streamers
 
