@@ -171,8 +171,12 @@
 
     /* ── FEATURED VOD EMPTY STATE ── */
     .featured-vod-thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .6s;pointer-events:none}
-    .featured-vod-thumb.show{opacity:.28}
+    .featured-vod-thumb.show{opacity:.4}
     .featured-wrap.playing .featured-vod-thumb{opacity:0!important}
+    .featured-wrap.vod-preview-mode .featured-video{display:block}
+    .featured-wrap.vod-preview-mode .featured-bg{opacity:0}
+    .featured-wrap.vod-preview-mode .featured-offline{opacity:0;pointer-events:none}
+    .featured-wrap.vod-preview-mode .featured-overlay{opacity:1;pointer-events:all}
     .featured-vod-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:rgba(13,28,40,.8);color:rgba(232,246,255,.5);border:1px solid var(--border);padding:3px 10px;border-radius:3px;margin-bottom:10px}
 
     /* ── VOD CARDS EN GRID ── */
@@ -515,8 +519,9 @@
   }
 
   function applyVodContent(vod) {
-    const vid = document.getElementById('featuredVideo');
-    const s = (window.STREAMERS || []).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
+    const vid  = document.getElementById('featuredVideo');
+    const wrap = document.getElementById('featuredWrap');
+    const s    = (window.STREAMERS || []).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
     setGlow(s.color);
     document.getElementById('featuredLetter').textContent = s.name.charAt(0);
     document.getElementById('featuredInfo').innerHTML = `
@@ -526,12 +531,26 @@
     document.getElementById('featuredActions').innerHTML = `
       <a href="/vods/v/?id=${vod.id}" class="nav-btn solid"><i class="fa-solid fa-play"></i> Ver VOD</a>
       <a href="/vods/" class="nav-btn"><i class="fa-solid fa-film"></i> Todos los VODs</a>`;
-    vid.src = `/vods/${vod.channel}/${vod.filename}`;
-    vid.muted = true;
-    vid.addEventListener('loadedmetadata', () => {
-      if (vid.duration > 60) vid.currentTime = 30;
+    // Set thumbnail as background
+    const thumb = document.getElementById('featuredVodThumb');
+    if (vod.thumb) {
+      thumb.style.backgroundImage = `url('${vod.thumb}')`;
+      thumb.classList.add('show');
+    } else {
+      thumb.style.backgroundImage = '';
+      thumb.classList.remove('show');
+    }
+    // Desktop: play 4s preview loop; Mobile: thumbnail only — no video src
+    if (_hover && vod.preview) {
+      vid.src = vod.preview;
+      vid.loop = true;
+      vid.muted = true;
       vid.play().catch(() => {});
-    }, { once: true });
+      wrap.classList.add('vod-preview-mode');
+    } else {
+      vid.src = '';
+      wrap.classList.remove('vod-preview-mode');
+    }
   }
 
   function startVodRotation() {
@@ -561,6 +580,8 @@
     vodRotateTimer = null;
     cancelAnimationFrame(rafId);
     document.getElementById('rotateBar').style.width = '0%';
+    document.getElementById('featuredWrap').classList.remove('vod-preview-mode');
+    document.getElementById('featuredVodThumb').classList.remove('show');
   }
 
   function renderFeaturedVod() {
@@ -572,7 +593,8 @@
     if (!vod || !vod.filename) {
       // Sin VODs — mostrar estado offline normal
       vid.src = '';
-      wrap.classList.remove('playing');
+      wrap.classList.remove('playing', 'vod-preview-mode');
+      document.getElementById('featuredVodThumb').classList.remove('show');
       document.getElementById('featuredInfo').innerHTML = '';
       document.getElementById('featuredActions').innerHTML = '';
       document.getElementById('featuredLetter').textContent = '';
@@ -582,8 +604,8 @@
     vodRotateIdx = 0;
     offlineEl.style.cssText = 'opacity:0;pointer-events:none';
     document.getElementById('featuredViewers').style.display = 'none';
+    wrap.classList.remove('playing'); // VOD mode never uses .playing
     applyVodContent(vod);
-    wrap.classList.add('playing');
     startVodRotation();
   }
 
@@ -675,7 +697,8 @@
     // Canal nuevo — resetear estado VOD si venimos de modo sin stream
     document.getElementById('featuredOffline').style.cssText = '';
     document.getElementById('featuredViewers').style.display = '';
-    wrap.classList.remove('playing');
+    wrap.classList.remove('playing', 'vod-preview-mode');
+    document.getElementById('featuredVodThumb').classList.remove('show');
 
     const doSwitch = () => {
       vodInitialized = false;
@@ -975,8 +998,28 @@
 
     if (!live.length) {
       if (_recentVods.length) {
-        // Only init slider once — don't reset on every poll while still offline
-        if (_gridState !== 'offline') renderOfflineSlider(_recentVods);
+        // Only render once — don't reset on every poll while still offline
+        if (_gridState !== 'offline') {
+          grid.innerHTML = `<div class="vods-row-header">
+            <span>Últimas transmisiones</span>
+            <div class="section-line"></div>
+            <a href="/vods/">Ver todos →</a>
+          </div>` + _recentVods.map(vod => {
+            const s   = (window.STREAMERS||[]).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
+            const dur = vod.duration ? fmtDuration(vod.duration) : '';
+            return `<a href="/${vod.channel}/" class="stream-card">
+              <div class="stream-thumb">
+                <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name.charAt(0)}</span></div>
+                ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img" onerror="this.style.display='none'" loading="lazy">` : ''}
+                ${dur ? `<div class="vod-duration">${dur}</div>` : ''}
+              </div>
+              <div class="stream-body">
+                <div class="stream-name">${s.name}</div>
+                <div class="stream-desc">${relativeTime(vod.date)}</div>
+              </div>
+            </a>`;
+          }).join('');
+        }
       } else {
         if (_gridState !== 'empty') {
           grid.innerHTML = `<div class="no-live-msg"><i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem"></i>Sin streams activos ahora mismo</div>`;
