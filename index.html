@@ -990,12 +990,14 @@
 
   function vodCards(vods) {
     return vods.map(vod => {
-      const s   = (window.STREAMERS||[]).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
-      const dur = vod.duration ? fmtDuration(vod.duration) : '';
+      const s       = (window.STREAMERS||[]).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase(), color: '' };
+      const dur     = vod.duration ? fmtDuration(vod.duration) : '';
+      const preview = _hover && vod.preview ? `<video class="stream-thumb-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : '';
       return `<a href="/${vod.channel}/" class="stream-card">
         <div class="stream-thumb">
           <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name.charAt(0)}</span></div>
           ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img" onerror="this.style.display='none'" loading="lazy">` : ''}
+          ${preview}
           ${dur ? `<div class="vod-duration">${dur}</div>` : ''}
         </div>
         <div class="stream-body">
@@ -1004,6 +1006,16 @@
         </div>
       </a>`;
     }).join('');
+  }
+
+  function attachPreviewListeners(container) {
+    if (!_hover) return;
+    container.querySelectorAll('.stream-card').forEach(card => {
+      const vid = card.querySelector('.stream-thumb-preview');
+      if (!vid) return;
+      card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+      card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+    });
   }
 
   function renderGrid(live, offline, paths) {
@@ -1022,6 +1034,7 @@
             <div class="section-line"></div>
             <a href="/vods/">Ver todos →</a>
           </div>` + vodCards(_recentVods);
+          attachPreviewListeners(grid);
         }
       } else {
         if (_gridState !== 'empty') {
@@ -1062,15 +1075,7 @@
       </div>` + vodCards(offlineVods) : '');
 
     _gridState = newState;
-    if (_hover) {
-      grid.querySelectorAll('.stream-card').forEach(card => {
-        const vid = card.querySelector('.stream-thumb-preview');
-        if (vid) {
-          card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
-          card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-        }
-      });
-    }
+    attachPreviewListeners(grid);
   }
 
   /* ── Update ── */
