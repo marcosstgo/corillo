@@ -871,7 +871,7 @@
           </div>
           ${_recentVods.map(vod => {
             const s = (window.STREAMERS||[]).find(x=>x.key===vod.channel)||{name:vod.channel.toUpperCase(),color:''};
-            return `<a href="/vods/v/?id=${vod.id}" class="stream-card">
+            return `<a href="/${vod.channel}/" class="stream-card">
               <div class="stream-thumb">
                 <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
                 ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img">` : ''}
