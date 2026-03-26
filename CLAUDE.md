@@ -54,9 +54,11 @@ The site is served as static files. **Nginx** handles reverse proxy and SSL, pro
 | `.playerWrap.video-wrap` | Wrapper del video — `player.js` inserta aquí la `offline-thumb` |
 | `.app`, `.player-side`, `.chat-side` | Layout principal — clases que usa `player.css` |
 
-**VOD offline playback:** Cuando el canal está offline, `player.js` (líneas ~366–395) busca el último VOD en PocketBase y lo carga en `#video` automáticamente. Requiere que `.playerWrap` tenga la clase `video-wrap`.
+**VOD offline playback:** Cuando el canal está offline, `player.js` salta directamente a `startWatch()` en ~1s (pre-check a MediaMTX antes de intentar HLS). `startWatch()` busca el último VOD en PocketBase, lo carga en `#video` (muted, salta al segundo 30), y muestra el overlay "Última transmisión · fecha · El canal está offline" con botón "Ver VOD completo". Cada 15s verifica si el stream volvió — cuando vuelve, para el VOD y arranca el live automáticamente. Requiere que `.playerWrap` tenga la clase `video-wrap`.
 
-**VOD cards:** El script inline en `player/index.html` renderiza las últimas 5 transmisiones. Los links van a `/vods/v/?id={id}` (player de VOD), NO al archivo MP4 directo.
+**Pre-check offline (2026-03-25):** `startPlayer()` es `async`. En el primer intento (`retries === 0`) hace un `fetch` a `/mediamtx-api/v3/paths/list` con timeout 3s. Si el canal no está `ready:true`, llama `startWatch()` directamente sin hacer ningún intento de HLS. Si el fetch falla (red), cae al flujo normal de HLS. Esto evita 4 reintentos ciegos (~8s) cuando el canal está offline.
+
+**VOD cards:** El script inline en `player/index.html` renderiza las últimas 5 transmisiones con thumbnail (`v.thumb`) y preview video en hover (`v.preview`). Los preview solo se activan en desktop (`matchMedia('(hover: hover)')`  — en móvil un tap dispara `mouseenter` antes de `click`, lo que causaba que iOS abriera el video en fullscreen. Los links van a `/vods/v/?id={id}` (player de VOD), NO al archivo MP4 directo.
 
 **SEO / meta tags:** El `<head>` contiene `__CHANNEL__` como placeholder. Nginx lo reemplaza con el key del canal via `sub_filter`. No hardcodear valores de canal en el `<head>`.
 
