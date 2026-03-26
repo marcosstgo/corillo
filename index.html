@@ -884,13 +884,15 @@
               </div>
             </a>`;
           }).join('')}`;
-        grid.querySelectorAll('.stream-card').forEach(card => {
-          const vid = card.querySelector('.stream-thumb-preview');
-          if (vid) {
-            card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
-            card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-          }
-        });
+        if (window.matchMedia('(hover: hover)').matches) {
+          grid.querySelectorAll('.stream-card').forEach(card => {
+            const vid = card.querySelector('.stream-thumb-preview');
+            if (vid) {
+              card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+              card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+            }
+          });
+        }
       } else {
         grid.innerHTML = `<div class="no-live-msg"><i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem"></i>Sin streams activos ahora mismo</div>`;
       }
@@ -911,13 +913,15 @@
           </div>
         </a>`;
       }).join('');
-      grid.querySelectorAll('.stream-card').forEach(card => {
-        const vid = card.querySelector('.stream-thumb-preview');
-        if (vid) {
-          card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
-          card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-        }
-      });
+      if (window.matchMedia('(hover: hover)').matches) {
+        grid.querySelectorAll('.stream-card').forEach(card => {
+          const vid = card.querySelector('.stream-thumb-preview');
+          if (vid) {
+            card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+            card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+          }
+        });
+      }
     }
 
   }

@@ -345,10 +345,12 @@ function renderGrid() {
     card.addEventListener('click', () => {
       location.href = `/vods/v/?id=${card.dataset.id}`;
     });
-    const vid = card.querySelector('.vod-preview');
-    if (vid) {
-      card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
-      card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+    if (window.matchMedia('(hover: hover)').matches) {
+      const vid = card.querySelector('.vod-preview');
+      if (vid) {
+        card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+        card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+      }
     }
   });
 }
