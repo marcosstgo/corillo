@@ -188,7 +188,7 @@ async function init() {
 
   document.getElementById('content').innerHTML = `
     <div class="player-wrap">
-      <video id="vodVideo" controls autoplay muted preload="metadata" src="${videoUrl}" ${posterAttr}></video>
+      <video id="vodVideo" controls autoplay muted playsinline preload="metadata" src="${videoUrl}" ${posterAttr}></video>
       <button class="unmute-btn" id="unmuteBtn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
     </div>
     <div class="meta-bar">
