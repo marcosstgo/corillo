@@ -66,14 +66,6 @@ function addChatMsg(msg) {
     const color = msg.bot ? '#00bfff' : userColor(msg.user);
     el.className = 'chat-msg' + (msg.bot ? ' is-bot' : '');
     el.innerHTML = `<span class="msg-user" style="color:${color}">${escHtml(msg.user)}:</span> <span class="msg-text">${escHtml(msg.text)}</span>${msg.bot ? '<button class="reply-btn" tabindex="-1">↩ responder</button>' : ''}`;
-    if (msg.bot) {
-      el.querySelector('.reply-btn').addEventListener('click', () => {
-        const input = $('#chatInput');
-        input.value = '@bot ';
-        input.focus();
-        input.selectionStart = input.selectionEnd = input.value.length;
-      });
-    }
   }
   box.appendChild(el);
   if (atBottom) box.scrollTop = box.scrollHeight;
@@ -83,6 +75,16 @@ function addChatMsg(msg) {
   }
 }
 
+// Event delegation for reply buttons — one listener instead of one per message
+$('#chatMsgs').addEventListener('click', e => {
+  const btn = e.target.closest('.reply-btn');
+  if (!btn) return;
+  const input = $('#chatInput');
+  input.value = '@bot ';
+  input.focus();
+  input.selectionStart = input.selectionEnd = input.value.length;
+});
+
 function connectWs() {
   if (ws && ws.readyState < 2) return;
   ws = new WebSocket(WS_URL);
@@ -90,11 +92,16 @@ function connectWs() {
   ws.onmessage = ({ data }) => {
     try {
       const msg = JSON.parse(data);
+      if (!msg || typeof msg !== 'object') return;
       if (msg.type === 'welcome') {
-        localStorage.setItem('corillo_username', msg.user);
-        if ($('#chatYou')) $('#chatYou').textContent = msg.user;
+        if (typeof msg.user === 'string') {
+          localStorage.setItem('corillo_username', msg.user);
+          if ($('#chatYou')) $('#chatYou').textContent = msg.user;
+        }
         return;
       }
+      if (msg.type !== 'system' && (typeof msg.user !== 'string' || typeof msg.text !== 'string')) return;
+      if (msg.type === 'system' && typeof msg.text !== 'string') return;
       addChatMsg(msg);
     } catch {}
   };
@@ -111,7 +118,12 @@ function connectWs() {
 function sendMsg() {
   const input = $('#chatInput');
   const text = input.value.trim();
-  if (!text || !ws || ws.readyState !== 1) return;
+  if (!text) return;
+  if (!ws || ws.readyState !== 1) {
+    input.classList.add('input-error');
+    setTimeout(() => input.classList.remove('input-error'), 600);
+    return;
+  }
   ws.send(JSON.stringify({ text }));
   input.value = '';
 }

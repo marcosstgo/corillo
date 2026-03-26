@@ -55,7 +55,6 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     ctrlFs:           $('#ctrlFs'),
     themeBtn:         $('#themeBtn'),
     statsRow:         $('#statsRow'),
-    sViewers:         $('#sViewers'),
     // ch-info-bar (new design)
     navChAva:         $('#navChAva'),
     navChName:        $('#navChName'),
@@ -272,7 +271,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
   // ================================
 
   function checkKickBanner() {
-    fetch('/assets/kick/' + App.channel + '.json?t=' + Date.now(), { cache: 'no-store' })
+    fetch('/assets/kick/' + App.channel + '.json?t=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(3000) })
       .then(r => r.ok ? r.json() : null)
       .then(kick => {
         if (!kick || (Date.now() / 1000 - kick.ts) >= KICK_MAX_AGE) return;
@@ -349,7 +348,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     App.statsTimer  = null;
     App.emaBitrate  = null;
     App.hookedHls   = false;
-    ['sBitrate','sBuffer','sLatency','sLevel','sViewers'].forEach(id => DOM[id].textContent = '—');
+    ['sBitrate','sBuffer','sLatency','sLevel'].forEach(id => { if (DOM[id]) DOM[id].textContent = '—'; });
   }
 
   // ================================
@@ -368,7 +367,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
       const r = await fetch(
         'https://pb.corillo.live/api/collections/vods/records'
         + '?filter=channel%3D%22' + encodeURIComponent(App.channel) + '%22&sort=-date&perPage=1',
-        { cache: 'no-store' }
+        { cache: 'no-store', signal: AbortSignal.timeout(5000) }
       );
       const { items = [] } = await r.json();
       const vod = items[0];
@@ -403,7 +402,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
 
     App.watchTimer = setInterval(async () => {
       try {
-        const r    = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store' });
+        const r    = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
         const data = await r.json();
         const live = (data.items || []).find(p => p.name === 'live/' + App.channel && p.ready);
         if (live) { stopWatch(); App.retries = 0; startPlayer(); }
@@ -420,7 +419,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     stopStatsPolling();
     if (App.retryTimer)      { clearTimeout(App.retryTimer);      App.retryTimer      = null; }
     if (App.kickBannerTimer) { clearTimeout(App.kickBannerTimer); App.kickBannerTimer = null; }
-    if (App.othersTimer)     { clearInterval(App.othersTimer);    App.othersTimer     = null; }
+    // NOTE: othersTimer is intentionally NOT cleared here — it runs independently of stream state
 
     // FIX #1: only abort per-session listeners, never the permanent UI listeners from init()
     if (App.sessionAc) { App.sessionAc.abort(); App.sessionAc = null; }
@@ -570,7 +569,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
       ]);
 
       const whepUrl = '/webrtc/live/' + encodeURIComponent(App.channel) + '_rtc/whep';
-      const resp = await fetch(whepUrl, { method: 'POST', headers: { 'Content-Type': 'application/sdp' }, body: pc.localDescription.sdp });
+      const resp = await fetch(whepUrl, { method: 'POST', headers: { 'Content-Type': 'application/sdp' }, body: pc.localDescription.sdp, signal: AbortSignal.timeout(10000) });
       if (!resp.ok) throw new Error('WHEP response not OK');
       await pc.setRemoteDescription({ type: 'answer', sdp: await resp.text() });
 
@@ -609,7 +608,20 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     const delay     = getRetryDelay(App.retries);
     const isOffline = reason === 'networkError' || reason === 'Error de HLS nativo';
 
-    fetch('/assets/kick/' + App.channel + '.json?t=' + Date.now(), { cache: 'no-store' })
+    // Debounce: skip kick check if last one was within 30s
+    const now = Date.now();
+    if (App.lastKickCheck && (now - App.lastKickCheck) < 30000) {
+      if (isOffline && App.retries > MAX_RETRIES_BEFORE_OFFLINE) { startWatch(); return; }
+      showOverlay(
+        isOffline ? 'Sin transmisión' : 'Reconectando',
+        (isOffline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(delay / 1000) + 's…'
+      );
+      App.retryTimer = setTimeout(startPlayer, delay);
+      return;
+    }
+    App.lastKickCheck = now;
+
+    fetch('/assets/kick/' + App.channel + '.json?t=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(3000) })
       .then(r => r.ok ? r.json() : null)
       .then(kick => {
         if (kick && (Date.now() / 1000 - kick.ts) < KICK_MAX_AGE) {
@@ -764,10 +776,6 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
         paths.filter(p => p.ready).forEach(p => {
           liveMap[p.name.replace('live/', '')] = p.readers ? p.readers.length : 0;
         });
-        if (DOM.sViewers) {
-          const v = liveMap[App.channel];
-          DOM.sViewers.textContent = v !== undefined ? String(v) : '—';
-        }
         const others = (window.STREAMERS || [])
           .filter(s => !s.soon && s.key !== App.channel && liveMap[s.key] !== undefined);
         if (!others.length) { sec.style.display = 'none'; return; }
@@ -996,6 +1004,17 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     loadOthersLive();
     if (App.othersTimer) clearInterval(App.othersTimer);
     App.othersTimer = setInterval(loadOthersLive, 15000);
+
+    // Pause othersTimer when tab is hidden, resume (with immediate fetch) when visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (App.othersTimer) { clearInterval(App.othersTimer); App.othersTimer = null; }
+      } else {
+        loadOthersLive();
+        if (!App.othersTimer) App.othersTimer = setInterval(loadOthersLive, 15000);
+      }
+    });
+
     startPlayer();
   }
 
