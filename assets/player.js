@@ -659,14 +659,27 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
   // Player Entry Point
   // ================================
 
-  function startPlayer() {
+  async function startPlayer() {
     if (App.useWebRTC) { startWebRTC(); return; }
     cleanup();
+    showOverlay('Cargando', 'Verificando…');
+    DOM.video.muted = true;
+
+    // First load only: check MediaMTX before attempting HLS.
+    // Skips 4 retry cycles (~8s) when channel is known offline.
+    if (App.retries === 0) {
+      try {
+        const r    = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
+        const data = await r.json();
+        const live = (data.items || []).find(p => p.name === 'live/' + App.channel && p.ready);
+        if (!live) { startWatch(); return; }
+      } catch {} // network error → fall through and attempt HLS normally
+    }
+
     const path = App.mode === 'vertical' ? App.channel + '-vertical' : App.channel;
     const url  = '/live/' + encodeURIComponent(path) + '/index.m3u8';
     DOM.hlsTxt.textContent = App.mode === 'vertical' ? '9:16' : '16:9';
     showOverlay('Cargando', 'Iniciando stream…');
-    DOM.video.muted = true;
 
     if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
       setupNativeHLS(url);
