@@ -183,6 +183,27 @@
     .vods-row-header a{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--accent);white-space:nowrap;transition:.15s}
     .vods-row-header a:hover{opacity:.75}
 
+    /* ── OFFLINE FEATURED SLIDER ── */
+    .offline-slider-wrap{grid-column:1/-1}
+    .offline-sl-hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .offline-sl-hd span{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+    .offline-sl-hd a{font-family:var(--mono);font-size:10px;color:var(--accent);white-space:nowrap;transition:.15s}
+    .offline-sl-hd a:hover{opacity:.75}
+    .offline-stage{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--surface);border:1px solid var(--border);cursor:pointer}
+    .offline-slide{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;pointer-events:none;text-decoration:none;color:inherit;display:block}
+    .offline-slide.active{opacity:1;pointer-events:auto;z-index:1}
+    .offline-slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-color:var(--surface)}
+    .offline-slide-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.15) 55%,transparent 100%)}
+    .offline-slide-info{position:absolute;bottom:0;left:0;right:0;padding:20px 20px 16px}
+    .offline-slide-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);padding:3px 8px;border-radius:3px;margin-bottom:8px}
+    .offline-slide-name{font-family:var(--display);font-size:clamp(1.8rem,5vw,2.8rem);letter-spacing:2px;color:#fff;line-height:1}
+    .offline-slide-meta{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.45);margin-top:6px}
+    .offline-bar-wrap{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.08);z-index:2}
+    .offline-bar{height:100%;background:var(--accent);width:0%;opacity:.7}
+    .offline-dots{display:flex;justify-content:center;gap:6px;margin-top:10px}
+    .offline-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);border:none;padding:0;cursor:pointer;transition:background .2s,transform .2s;flex-shrink:0}
+    .offline-dot.active{background:var(--accent);transform:scale(1.4)}
+
     /* ── DRAWER ── */
     .drawer-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
     .drawer-overlay.open{display:block}
@@ -410,6 +431,12 @@
   let _vodLoadedAt       = 0;
   let vodRotateIdx       = 0;
   let vodRotateTimer     = null;
+
+  // Offline slider state
+  let _sliderIdx   = 0;
+  let _sliderTimer = null;
+  let _gridState   = null; // 'live' | 'offline' | 'empty' — evita re-render innecesario
+  const SLIDE_INTERVAL = 60000;
   let vodInitialized     = false;
 
   /* ── API ── */
@@ -857,75 +884,133 @@
   /* ── Grid ── */
   const _hover = window.matchMedia('(hover: hover)').matches;
 
+  /* ── Offline featured slider ── */
+  function goToSlide(n) {
+    const slides = document.querySelectorAll('.offline-slide');
+    const dots   = document.querySelectorAll('.offline-dot');
+    if (!slides.length) return;
+    slides[_sliderIdx].classList.remove('active');
+    if (dots[_sliderIdx]) dots[_sliderIdx].classList.remove('active');
+    _sliderIdx = ((n % slides.length) + slides.length) % slides.length;
+    slides[_sliderIdx].classList.add('active');
+    if (dots[_sliderIdx]) dots[_sliderIdx].classList.add('active');
+    startSliderTimer();
+  }
+
+  function startSliderTimer() {
+    clearTimeout(_sliderTimer);
+    const bar = document.getElementById('offlineBar');
+    if (!bar) return;
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      bar.style.transition = `width ${SLIDE_INTERVAL}ms linear`;
+      bar.style.width = '100%';
+    }));
+    _sliderTimer = setTimeout(() => {
+      const slides = document.querySelectorAll('.offline-slide');
+      if (slides.length > 1) goToSlide(_sliderIdx + 1);
+    }, SLIDE_INTERVAL);
+  }
+
+  function renderOfflineSlider(vods) {
+    clearTimeout(_sliderTimer);
+    _sliderIdx = 0;
+    const grid = document.getElementById('liveGrid');
+    grid.innerHTML = `<div class="offline-slider-wrap">
+      <div class="offline-sl-hd">
+        <span>Últimas transmisiones</span>
+        <div class="section-line"></div>
+        <a href="/vods/">Ver todos →</a>
+      </div>
+      <div class="offline-stage" id="offlineStage">
+        ${vods.map((vod, i) => {
+          const s = (window.STREAMERS||[]).find(x => x.key === vod.channel) || { name: vod.channel.toUpperCase() };
+          const bg = vod.thumb ? `style="background-image:url('${vod.thumb}')"` : '';
+          const meta = [relativeTime(vod.date), vod.duration ? fmtDuration(vod.duration) : ''].filter(Boolean).join(' · ');
+          return `<a class="offline-slide${i === 0 ? ' active' : ''}" href="/${vod.channel}/">
+            <div class="offline-slide-bg" ${bg}></div>
+            <div class="offline-slide-grad"></div>
+            <div class="offline-slide-info">
+              <div class="offline-slide-tag"><i class="fa-solid fa-film"></i> Última transmisión</div>
+              <div class="offline-slide-name">${s.name}</div>
+              <div class="offline-slide-meta">${meta}</div>
+            </div>
+          </a>`;
+        }).join('')}
+        <div class="offline-bar-wrap"><div class="offline-bar" id="offlineBar"></div></div>
+      </div>
+      ${vods.length > 1 ? `<div class="offline-dots">${vods.map((_, i) =>
+        `<button class="offline-dot${i === 0 ? ' active' : ''}" data-i="${i}"></button>`
+      ).join('')}</div>` : ''}
+    </div>`;
+
+    if (vods.length > 1) {
+      document.querySelectorAll('.offline-dot').forEach(d => {
+        d.addEventListener('click', () => goToSlide(+d.dataset.i));
+      });
+      // Touch swipe
+      let tx = 0;
+      const stage = document.getElementById('offlineStage');
+      stage.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+      stage.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - tx;
+        if (Math.abs(dx) > 40) {
+          e.preventDefault();
+          goToSlide(dx < 0 ? _sliderIdx + 1 : _sliderIdx - 1);
+        }
+      }, { passive: false });
+    }
+
+    startSliderTimer();
+  }
+
   function renderGrid(live, offline, paths) {
     const grid = document.getElementById('liveGrid');
     document.getElementById('liveCount').textContent = live.length
       ? `${live.length} canal${live.length > 1 ? 'es' : ''} activo${live.length > 1 ? 's' : ''}`
       : 'ninguno en vivo';
 
+    const newState = live.length ? 'live' : (_recentVods.length ? 'offline' : 'empty');
+
     if (!live.length) {
       if (_recentVods.length) {
-        grid.innerHTML = `
-          <div class="vods-row-header">
-            <span>Últimas transmisiones</span>
-            <div class="section-line"></div>
-            <a href="/vods/">Ver todos →</a>
-          </div>
-          ${_recentVods.map(vod => {
-            const s = (window.STREAMERS||[]).find(x=>x.key===vod.channel)||{name:vod.channel.toUpperCase(),color:''};
-            return `<a href="/${vod.channel}/" class="stream-card">
-              <div class="stream-thumb">
-                <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
-                ${vod.thumb ? `<img src="${vod.thumb}" alt="" class="stream-thumb-img">` : ''}
-                ${vod.preview && _hover ? `<video class="stream-thumb-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
-                ${vod.duration ? `<div class="vod-duration">${fmtDuration(vod.duration)}</div>` : ''}
-              </div>
-              <div class="stream-body">
-                <div class="stream-name">${s.name}</div>
-                <div class="stream-desc">${relativeTime(vod.date)}</div>
-              </div>
-            </a>`;
-          }).join('')}`;
-        if (window.matchMedia('(hover: hover)').matches) {
-          grid.querySelectorAll('.stream-card').forEach(card => {
-            const vid = card.querySelector('.stream-thumb-preview');
-            if (vid) {
-              card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
-              card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-            }
-          });
-        }
+        // Only init slider once — don't reset on every poll while still offline
+        if (_gridState !== 'offline') renderOfflineSlider(_recentVods);
       } else {
-        grid.innerHTML = `<div class="no-live-msg"><i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem"></i>Sin streams activos ahora mismo</div>`;
+        if (_gridState !== 'empty') {
+          grid.innerHTML = `<div class="no-live-msg"><i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem"></i>Sin streams activos ahora mismo</div>`;
+        }
       }
-    } else {
-      grid.innerHTML = live.map(s => {
-        const v = getViewers(paths, s.key);
-        return `<a href="/${s.key}/" class="stream-card">
-          <div class="stream-thumb">
-            <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
-            <img src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" alt="" class="stream-thumb-img" onerror="this.style.display='none'">
-            ${_hover ? `<video class="stream-thumb-preview" src="/assets/thumbs/${s.key}-preview.mp4" muted playsinline preload="none" loop></video>` : ''}
-            <div class="stream-live-tag"><span class="live-dot" style="width:5px;height:5px;box-shadow:none;animation:none"></span> LIVE</div>
-            ${v > 0 ? `<div class="stream-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>` : ''}
-          </div>
-          <div class="stream-body">
-            <div class="stream-name">${s.name}</div>
-            <div class="stream-desc">En vivo ahora</div>
-          </div>
-        </a>`;
-      }).join('');
-      if (window.matchMedia('(hover: hover)').matches) {
-        grid.querySelectorAll('.stream-card').forEach(card => {
-          const vid = card.querySelector('.stream-thumb-preview');
-          if (vid) {
-            card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
-            card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-          }
-        });
-      }
+      _gridState = newState;
+      return;
     }
-
+    _gridState = newState;
+    grid.innerHTML = live.map(s => {
+      const v = getViewers(paths, s.key);
+      return `<a href="/${s.key}/" class="stream-card">
+        <div class="stream-thumb">
+          <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
+          <img src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" alt="" class="stream-thumb-img" onerror="this.style.display='none'">
+          ${_hover ? `<video class="stream-thumb-preview" src="/assets/thumbs/${s.key}-preview.mp4" muted playsinline preload="none" loop></video>` : ''}
+          <div class="stream-live-tag"><span class="live-dot" style="width:5px;height:5px;box-shadow:none;animation:none"></span> LIVE</div>
+          ${v > 0 ? `<div class="stream-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>` : ''}
+        </div>
+        <div class="stream-body">
+          <div class="stream-name">${s.name}</div>
+          <div class="stream-desc">En vivo ahora</div>
+        </div>
+      </a>`;
+    }).join('');
+    if (_hover) {
+      grid.querySelectorAll('.stream-card').forEach(card => {
+        const vid = card.querySelector('.stream-thumb-preview');
+        if (vid) {
+          card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+          card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+        }
+      });
+    }
   }
 
   /* ── Update ── */
