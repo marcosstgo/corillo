@@ -1162,6 +1162,19 @@
     const el = document.getElementById('footVersion');
     if (el && d.version) el.textContent = 'v' + d.version;
   }).catch(() => {});
+
+  /* ── DEMO: si nadie está en vivo, forzar info card visible para preview ── */
+  setTimeout(() => {
+    if (document.getElementById('featuredWrap').classList.contains('playing')) return;
+    const s = (window.STREAMERS || []).find(x => x.key === 'katatonia') || { name: 'KATATONIA', sub: 'Gaming · Aibonito PR', color: 'linear-gradient(135deg,#e8c84a,#c09020)' };
+    const ficAva = document.getElementById('ficAva');
+    ficAva.textContent = s.name.charAt(0);
+    ficAva.style.background = s.color || '#00bfff';
+    document.getElementById('ficName').textContent = s.name;
+    document.getElementById('ficSub').textContent = s.sub || 'corillo.live';
+    document.getElementById('ficViewers').textContent = '24';
+    document.getElementById('featuredInfoCard').style.display = 'flex';
+  }, 1500);
 })();
 </script>
 </body>
