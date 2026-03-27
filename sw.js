@@ -11,8 +11,7 @@ self.addEventListener('push', e => {
       body: d.body || '',
       icon: '/assets/icon-512.png',
       data: { url: d.url || '/' },
-      tag: d.channel,
-      renotify: true,
+      ...(d.channel ? { tag: d.channel, renotify: true } : {}),
     })
   );
 });
