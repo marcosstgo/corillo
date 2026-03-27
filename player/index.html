@@ -89,6 +89,7 @@
   </div>
   <div class="drop-sep"></div>
   <button class="drop-item" id="themeBtn"><i class="fa-solid fa-circle-half-stroke"></i> Tema del sitio</button>
+  <button class="drop-item" id="notifyBtn" style="display:none"><i class="fa-solid fa-bell"></i> Notificarme cuando esté en vivo</button>
   <div class="drop-sep"></div>
   <a class="drop-item" id="twitchLink" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-twitch"></i> Ver en Twitch</a>
   <a class="drop-item" href="/streamers/"><i class="fa-solid fa-users"></i> Ver streamers</a>
@@ -230,6 +231,67 @@
     }
     document.getElementById('channelVods').style.display='';
   }catch(e){}
+})();
+</script>
+<script>
+(async () => {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  const ch = location.pathname.split('/').filter(Boolean)[0] || '';
+  if (!ch) return;
+
+  function urlB64ToUint8Array(b64) {
+    const pad = '='.repeat((4 - b64.length % 4) % 4);
+    const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+    return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+  }
+
+  let reg, vapidKey;
+  try {
+    reg = await navigator.serviceWorker.register('/sw.js');
+    const r = await fetch('/chat-api/push-config');
+    if (!r.ok) return;
+    vapidKey = (await r.json()).public_key;
+  } catch(e) { return; }
+  if (!vapidKey) return;
+
+  const btn = document.getElementById('notifyBtn');
+  if (!btn) return;
+  btn.style.display = '';
+
+  async function refreshBtn() {
+    const sub = await reg.pushManager.getSubscription();
+    btn.innerHTML = sub
+      ? '<i class="fa-solid fa-bell-slash"></i> Desactivar notificaciones'
+      : '<i class="fa-solid fa-bell"></i> Notificarme cuando esté en vivo';
+  }
+  await refreshBtn();
+
+  btn.addEventListener('click', async () => {
+    try {
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) {
+        await sub.unsubscribe();
+        await fetch('/chat-api/subscribe', {
+          method: 'DELETE',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ channel: ch, endpoint: sub.endpoint }),
+        });
+      } else {
+        const perm = await Notification.requestPermission();
+        if (perm !== 'granted') return;
+        const newSub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlB64ToUint8Array(vapidKey),
+        });
+        await fetch('/chat-api/subscribe', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ channel: ch, subscription: newSub.toJSON() }),
+        });
+      }
+    } catch(e) {}
+    await refreshBtn();
+  });
 })();
 </script>
 <script src="/assets/player.js"></script>

@@ -2,11 +2,12 @@
 corillo-api — API pública de streamers: perfiles y regeneración de stream key.
 Puerto 3004. Sin dependencias del chat ni de Telegram.
 """
-import os, time, secrets
+import os, time, secrets, json
 import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pywebpush import webpush, WebPushException
 
 load_dotenv()
 
@@ -14,11 +15,15 @@ PB_URL         = os.environ.get("PB_URL", "https://pb.corillo.live")
 PB_ADMIN_EMAIL = os.environ.get("PB_ADMIN_EMAIL", "")
 PB_ADMIN_PASS  = os.environ.get("PB_ADMIN_PASS", "")
 
+VAPID_PUBLIC_KEY  = os.environ.get("VAPID_PUBLIC_KEY", "")
+VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY", "")
+VAPID_MAILTO      = os.environ.get("VAPID_MAILTO", "hello@corillo.live")
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://corillo.live", "http://localhost:8080"],
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -95,6 +100,139 @@ async def regen_stream_key(request: Request):
         if r2.status_code != 200:
             raise HTTPException(status_code=500)
         return {"stream_key": new_key}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500)
+
+
+# ── Push notifications ──────────────────────────────────────────────────────
+
+@app.get("/push-config")
+def push_config():
+    if not VAPID_PUBLIC_KEY:
+        raise HTTPException(status_code=503)
+    return {"public_key": VAPID_PUBLIC_KEY}
+
+
+@app.post("/subscribe")
+async def subscribe(request: Request):
+    try:
+        data = await request.json()
+        channel      = data.get("channel", "")
+        subscription = data.get("subscription", {})
+        endpoint     = subscription.get("endpoint", "")
+        if not channel or not endpoint:
+            raise HTTPException(status_code=400)
+        token = await _admin_token()
+        r = await _http.get(
+            f"{PB_URL}/api/collections/push_subscriptions/records",
+            headers={"Authorization": token},
+            params={"filter": f'endpoint="{endpoint}" && channel="{channel}"', "perPage": 1},
+        )
+        if not r.json().get("items"):
+            await _http.post(
+                f"{PB_URL}/api/collections/push_subscriptions/records",
+                headers={"Authorization": token},
+                json={"channel": channel, "endpoint": endpoint, "subscription": json.dumps(subscription)},
+            )
+        return {"ok": True}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500)
+
+
+@app.delete("/subscribe")
+async def unsubscribe(request: Request):
+    try:
+        data     = await request.json()
+        channel  = data.get("channel", "")
+        endpoint = data.get("endpoint", "")
+        if not channel or not endpoint:
+            raise HTTPException(status_code=400)
+        token = await _admin_token()
+        r = await _http.get(
+            f"{PB_URL}/api/collections/push_subscriptions/records",
+            headers={"Authorization": token},
+            params={"filter": f'endpoint="{endpoint}" && channel="{channel}"', "perPage": 1},
+        )
+        items = r.json().get("items", [])
+        if items:
+            await _http.delete(
+                f"{PB_URL}/api/collections/push_subscriptions/records/{items[0]['id']}",
+                headers={"Authorization": token},
+            )
+        return {"ok": True}
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(status_code=500)
+
+
+@app.post("/internal/notify")
+async def internal_notify(request: Request):
+    if request.client.host not in ("127.0.0.1", "::1"):
+        raise HTTPException(status_code=403)
+    if not VAPID_PRIVATE_KEY or not VAPID_PUBLIC_KEY:
+        raise HTTPException(status_code=503)
+    try:
+        data    = await request.json()
+        path    = data.get("path", "")
+        if not path.startswith("live/"):
+            raise HTTPException(status_code=400)
+        channel = path[5:]
+
+        token = await _admin_token()
+
+        # Suscripciones del canal
+        r = await _http.get(
+            f"{PB_URL}/api/collections/push_subscriptions/records",
+            headers={"Authorization": token},
+            params={"filter": f'channel="{channel}"', "perPage": 500},
+        )
+        items = r.json().get("items", [])
+        if not items:
+            return {"sent": 0, "stale": 0}
+
+        # Nombre del streamer
+        sr = await _http.get(
+            f"{PB_URL}/api/collections/streamers/records",
+            headers={"Authorization": token},
+            params={"filter": f'key="{channel}"', "fields": "display_name", "perPage": 1},
+        )
+        name = (sr.json().get("items") or [{}])[0].get("display_name", channel.upper())
+
+        payload = json.dumps({
+            "title": f"{name} está en vivo",
+            "body": "corillo.live · Puerto Rico",
+            "url": f"/{channel}/",
+            "channel": channel,
+        })
+
+        stale = []
+        for item in items:
+            try:
+                sub = json.loads(item["subscription"])
+                webpush(
+                    subscription_info=sub,
+                    data=payload,
+                    vapid_private_key=VAPID_PRIVATE_KEY,
+                    vapid_claims={"sub": f"mailto:{VAPID_MAILTO}"},
+                )
+            except WebPushException as ex:
+                if ex.response and ex.response.status_code in (404, 410):
+                    stale.append(item["id"])
+            except Exception:
+                pass
+
+        for rec_id in stale:
+            await _http.delete(
+                f"{PB_URL}/api/collections/push_subscriptions/records/{rec_id}",
+                headers={"Authorization": token},
+            )
+
+        return {"sent": len(items) - len(stale), "stale": len(stale)}
     except HTTPException:
         raise
     except Exception:
