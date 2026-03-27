@@ -107,7 +107,7 @@ button { font: inherit; cursor: pointer; }
 
 
 /* ── 5. BUTTONS ─────────────────────────────────────────── */
-.btn {
+.crl-btn, .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   font-family: var(--crl-mono); font-size: var(--crl-xs); font-weight: 700;
   letter-spacing: 1.5px; text-transform: uppercase;
@@ -117,47 +117,47 @@ button { font: inherit; cursor: pointer; }
   cursor: pointer; transition: .15s; white-space: nowrap;
   text-decoration: none; user-select: none;
 }
-.btn:hover { border-color: var(--crl-border-h); color: var(--crl-white); }
-.btn:active { transform: scale(.97); }
-.btn:disabled { opacity: .35; pointer-events: none; }
+.crl-btn:hover, .btn:hover { border-color: var(--crl-border-h); color: var(--crl-white); }
+.crl-btn:active, .btn:active { transform: scale(.97); }
+.crl-btn:disabled, .btn:disabled { opacity: .35; pointer-events: none; }
 
 /* Variants */
-.btn-primary {
+.crl-btn-primary, .btn-primary {
   background: var(--crl-accent); color: var(--crl-ink);
   border-color: transparent;
 }
-.btn-primary:hover { opacity: .88; box-shadow: 0 0 24px rgba(0,191,255,.35); }
+.crl-btn-primary:hover, .btn-primary:hover { opacity: .88; box-shadow: 0 0 24px rgba(0,191,255,.35); }
 
-.btn-gold {
+.crl-btn-gold, .btn-gold {
   background: var(--crl-live); color: var(--crl-ink);
   border-color: transparent;
 }
-.btn-gold:hover { opacity: .88; box-shadow: 0 0 24px rgba(232,200,74,.35); }
+.crl-btn-gold:hover, .btn-gold:hover { opacity: .88; box-shadow: 0 0 24px rgba(232,200,74,.35); }
 
-.btn-hot {
+.crl-btn-hot, .btn-hot {
   background: var(--crl-hot); color: #fff;
   border-color: transparent;
 }
-.btn-hot:hover { opacity: .88; box-shadow: 0 0 24px rgba(206,17,38,.35); }
+.crl-btn-hot:hover, .btn-hot:hover { opacity: .88; box-shadow: 0 0 24px rgba(206,17,38,.35); }
 
-.btn-ghost {
+.crl-btn-ghost, .btn-ghost {
   background: transparent; color: var(--crl-muted);
   border-color: var(--crl-border);
 }
-.btn-ghost:hover { color: var(--crl-white); border-color: var(--crl-border-h); }
+.crl-btn-ghost:hover, .btn-ghost:hover { color: var(--crl-white); border-color: var(--crl-border-h); }
 
-.btn-outline-accent {
+.crl-btn-outline-accent, .btn-outline-accent {
   background: transparent; color: var(--crl-accent);
   border-color: rgba(0,191,255,.3);
 }
-.btn-outline-accent:hover { background: rgba(0,191,255,.08); border-color: var(--crl-accent); }
+.crl-btn-outline-accent:hover, .btn-outline-accent:hover { background: rgba(0,191,255,.08); border-color: var(--crl-accent); }
 
 /* Sizes */
-.btn-sm { padding: 5px 12px; font-size: var(--crl-2xs); }
-.btn-lg { padding: 12px 28px; font-size: var(--crl-sm); }
-.btn-icon { width: 36px; height: 36px; padding: 0; }
-.btn-icon.btn-sm { width: 28px; height: 28px; }
-.btn-icon.btn-lg { width: 44px; height: 44px; }
+.crl-btn-sm, .btn-sm { padding: 5px 12px; font-size: var(--crl-2xs); }
+.crl-btn-lg, .btn-lg { padding: 12px 28px; font-size: var(--crl-sm); }
+.crl-btn-icon, .btn-icon { width: 36px; height: 36px; padding: 0; }
+.crl-btn-icon.crl-btn-sm, .btn-icon.btn-sm { width: 28px; height: 28px; }
+.crl-btn-icon.crl-btn-lg, .btn-icon.btn-lg { width: 44px; height: 44px; }
 
 
 /* ── 6. BADGES ──────────────────────────────────────────── */
@@ -354,14 +354,14 @@ button { font: inherit; cursor: pointer; }
 
 
 /* ── 17. THEME BUTTON ───────────────────────────────────── */
-.theme-btn {
+.crl-theme-btn, .theme-btn {
   width: 32px; height: 32px; border-radius: 50%;
   border: 1px solid var(--crl-border); background: transparent;
   color: var(--crl-white); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   font-size: .75rem; transition: .2s; flex-shrink: 0;
 }
-.theme-btn:hover { border-color: var(--crl-border-h); background: rgba(255,255,255,.06); }
+.crl-theme-btn:hover, .theme-btn:hover { border-color: var(--crl-border-h); background: rgba(255,255,255,.06); }
 
 
 /* ── 18. TOPBAR / NAV ───────────────────────────────────── */
