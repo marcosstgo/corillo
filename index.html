@@ -216,17 +216,25 @@
     .rdot::before{content:'';display:block;width:7px;height:7px;border-radius:50%;background:var(--crl-accent);animation:crl-blink 1.8s ease-in-out infinite}
 
     /* ── FOOTER ── */
-    .site-footer{border-top:1px solid var(--crl-border);padding:28px 32px;margin-top:16px}
-    .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    .foot-left{display:flex;align-items:center;gap:12px}
-    .foot-brand{display:flex;align-items:center;gap:8px}
-    .foot-brand svg{height:28px;width:auto;opacity:.7}
-    .foot-info{font-family:var(--crl-mono);font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.25);text-transform:uppercase;line-height:1.7}
-    .foot-links{display:flex;align-items:center;gap:8px;font-family:var(--crl-mono);font-size:10px;letter-spacing:.5px;color:var(--crl-muted);flex-wrap:wrap}
-    .foot-links a{color:var(--crl-muted);transition:.15s}
-    .foot-links a:hover{color:var(--crl-accent)}
-    .foot-sep{color:var(--dim)}
-    .foot-version{color:var(--dim)}
+    .site-footer{border-top:1px solid var(--crl-border);padding:48px 32px 28px;margin-top:16px}
+    .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+    @media(max-width:900px){.foot-top{grid-template-columns:1fr 1fr;gap:32px}}
+    @media(max-width:520px){.foot-top{grid-template-columns:1fr}}
+    .foot-brand{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    .foot-brand svg{height:28px;width:auto;opacity:.75}
+    .foot-tagline{font-family:var(--crl-mono);font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.25);text-transform:uppercase;line-height:1.8}
+    .foot-col-title{font-family:var(--crl-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--crl-white);margin-bottom:14px;font-weight:700}
+    .foot-col-links{display:flex;flex-direction:column;gap:9px}
+    .foot-col-links a{font-size:var(--crl-sm);color:rgba(255,255,255,.4);transition:.15s;text-decoration:none}
+    .foot-col-links a:hover{color:var(--crl-white)}
+    [data-theme="light"] .foot-col-links a{color:rgba(0,0,0,.4)}
+    [data-theme="light"] .foot-col-links a:hover{color:rgba(0,0,0,.85)}
+    .foot-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:24px;border-top:1px solid var(--crl-border)}
+    .foot-copy{font-family:var(--crl-mono);font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.18);text-transform:uppercase}
+    .foot-socials{display:flex;align-items:center;gap:4px}
+    .foot-social{width:32px;height:32px;border-radius:8px;border:1px solid var(--crl-border);display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35);font-size:.85rem;transition:.15s;text-decoration:none}
+    .foot-social:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
+    .foot-version{font-family:var(--crl-mono);font-size:9px;color:rgba(255,255,255,.15)}
 
     /* ── RESPONSIVE ── */
     @media(max-width:1100px){.live-grid{grid-template-columns:repeat(2,1fr)}}
@@ -353,8 +361,12 @@
     </div>
 
     <footer class="site-footer">
-      <div class="foot-inner">
-        <div class="foot-left">
+
+      <!-- Columnas -->
+      <div class="foot-top">
+
+        <!-- Marca -->
+        <div>
           <div class="foot-brand">
             <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
@@ -367,30 +379,62 @@
               <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
             </svg>
           </div>
-          <div class="foot-info">Puerto Rico<br>Plataforma independiente</div>
+          <div class="foot-tagline">Plataforma independiente<br>Puerto Rico</div>
         </div>
-        <div class="foot-links">
-          <a href="/multiplayer/">Multiplayer</a>
-          <span class="foot-sep">·</span>
-          <a href="/streamers/">Streamers</a>
-          <span class="foot-sep">·</span>
-          <a href="/join/">Crear Canal</a>
-          <span class="foot-sep">·</span>
-          <a href="/software/">Software</a>
-          <span class="foot-sep">·</span>
-          <a href="/roadmap/">Roadmap</a>
-          <span class="foot-sep">·</span>
-          <a href="/corillo-css/">Corillo CSS</a>
-          <span class="foot-sep">·</span>
-          <a href="/legal/">Términos</a>
-          <span class="foot-sep">·</span>
-          <a href="/dmca/">DMCA</a>
-          <span class="foot-sep">·</span>
-          <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
-          <span class="foot-sep">·</span>
-          <span class="foot-version" id="footVersion">—</span>
+
+        <!-- Plataforma -->
+        <div>
+          <div class="foot-col-title">Plataforma</div>
+          <div class="foot-col-links">
+            <a href="/">Inicio</a>
+            <a href="/multiplayer/">Multiplayer</a>
+            <a href="/vods/">VODs</a>
+            <a href="/streamers/">Streamers</a>
+            <a href="/join/">Crear Canal</a>
+            <a href="/configuracion/">Configuración</a>
+          </div>
         </div>
+
+        <!-- Software -->
+        <div>
+          <div class="foot-col-title">Software</div>
+          <div class="foot-col-links">
+            <a href="/software/">Todo el software</a>
+            <a href="/streamer-pro/">Streamer Pro</a>
+            <a href="/antibufferbloat-pro/">Anti-BufferBloat Pro</a>
+            <a href="/natcheck/">NATCheck</a>
+            <a href="https://github.com/marcosstgo/PingGuard" target="_blank" rel="noopener">Ping Guard</a>
+          </div>
+        </div>
+
+        <!-- Info & Legal -->
+        <div>
+          <div class="foot-col-title">Info</div>
+          <div class="foot-col-links">
+            <a href="/roadmap/">Roadmap</a>
+            <a href="/corillo-css/">Corillo CSS</a>
+            <a href="/faq/">FAQ</a>
+            <a href="/legal/">Términos</a>
+            <a href="/dmca/">DMCA</a>
+            <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
+          </div>
+        </div>
+
       </div>
+
+      <!-- Barra inferior -->
+      <div class="foot-bottom">
+        <div class="foot-socials">
+          <a class="foot-social" href="https://x.com/corillolive" target="_blank" rel="noopener" title="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a class="foot-social" href="https://instagram.com/corillolive" target="_blank" rel="noopener" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a class="foot-social" href="https://tiktok.com/@corillolive" target="_blank" rel="noopener" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a class="foot-social" href="https://discord.gg/corillo" target="_blank" rel="noopener" title="Discord"><i class="fa-brands fa-discord"></i></a>
+          <a class="foot-social" href="https://github.com/marcosstgo" target="_blank" rel="noopener" title="GitHub"><i class="fa-brands fa-github"></i></a>
+        </div>
+        <span class="foot-version" id="footVersion"></span>
+        <div class="foot-copy">© 2025 CORILLO · Puerto Rico</div>
+      </div>
+
     </footer>
   </main>
 </div>
