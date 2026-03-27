@@ -229,6 +229,8 @@
     .sidebar-nav-link:hover i{color:var(--accent)}
     .sidebar-show-all{display:block;width:100%;padding:8px 20px;background:transparent;border:none;color:rgba(232,246,255,.35);font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:.15s;gap:8px}
     .sidebar-show-all:hover{color:var(--accent)}
+    .rdot{display:inline-flex;align-items:center;justify-content:center;width:14px;flex-shrink:0}
+    .rdot::before{content:'';display:block;width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 1.8s ease-in-out infinite}
 
     /* ── FOOTER ── */
     .site-footer{border-top:1px solid var(--border);padding:28px 32px;margin-top:16px}
@@ -274,7 +276,7 @@
     <a href="/multiplayer/" class="nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
     <a href="/join/" class="nav-link"><i class="fa-solid fa-plus"></i> Crear Canal</a>
     <a href="/perfil/" class="nav-link"><i class="fa-solid fa-user"></i> Mi Perfil</a>
-    <a href="/configuracion/" class="nav-link"><i class="fa-solid fa-gear"></i> Config OBS</a>
+    <a href="/roadmap/" class="nav-link"><span class="rdot"></span> Roadmap</a>
     <hr class="aside-divider">
     <div id="drawerLiveSection" style="display:none">
       <div class="aside-label">En vivo</div>
@@ -316,7 +318,7 @@
       <a href="/multiplayer/" class="sidebar-nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
       <a href="/join/" class="sidebar-nav-link"><i class="fa-solid fa-plus"></i> Crear Canal</a>
       <a href="/perfil/" class="sidebar-nav-link"><i class="fa-solid fa-user"></i> Mi Perfil</a>
-      <a href="/configuracion/" class="sidebar-nav-link"><i class="fa-solid fa-gear"></i> Config OBS</a>
+      <a href="/roadmap/" class="sidebar-nav-link"><span class="rdot"></span> Roadmap</a>
     </div>
     <hr class="aside-divider">
     <div class="aside-section" id="sidebarLiveSection" style="display:none">
@@ -390,7 +392,7 @@
           <span class="foot-sep">·</span>
           <a href="/join/">Crear Canal</a>
           <span class="foot-sep">·</span>
-          <a href="/configuracion/">Config OBS</a>
+          <a href="/roadmap/">Roadmap</a>
           <span class="foot-sep">·</span>
           <a href="/legal/">Términos</a>
           <span class="foot-sep">·</span>
