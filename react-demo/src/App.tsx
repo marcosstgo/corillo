@@ -95,8 +95,15 @@ export default function App() {
                 )}
               </div>
             ) : vods.length > 0 ? (
-              /* Nobody live — offline slider */
-              <OfflineSlider vods={vods} />
+              /* Nobody live — VOD cards grid */
+              <div className="live-grid">
+                <div className="vods-row-header">
+                  <span>Últimas transmisiones</span>
+                  <div className="section-line" />
+                  <a href="https://corillo.live/vods/" target="_blank" rel="noopener">Ver todas →</a>
+                </div>
+                {vods.map(v => <VodCard key={v.id} vod={v} />)}
+              </div>
             ) : (
               /* Nothing at all */
               <div className="live-grid">
