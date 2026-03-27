@@ -2,11 +2,12 @@
 corillo-api — API pública de streamers: perfiles y regeneración de stream key.
 Puerto 3004. Sin dependencias del chat ni de Telegram.
 """
-import os, time, secrets, json
+import os, time, secrets, json, glob, asyncio, threading
 import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pywebpush import webpush, WebPushException
 
 load_dotenv()
@@ -238,6 +239,36 @@ async def internal_notify(request: Request):
         raise
     except Exception:
         raise HTTPException(status_code=500)
+
+
+@app.get("/clip/{channel}")
+async def get_clip(channel: str):
+    if not channel or '/' in channel or '..' in channel:
+        raise HTTPException(status_code=400)
+    files = sorted(glob.glob(f"/var/vods/live/{channel}/*.mp4"), key=os.path.getmtime)
+    if not files:
+        raise HTTPException(status_code=404, detail="Sin grabación activa")
+    latest = files[-1]
+    out = f"/tmp/clip_{channel}_{int(time.time())}.mp4"
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-sseof", "-30", "-i", latest,
+        "-c", "copy", "-movflags", "+faststart", out,
+        stdout=asyncio.subprocess.DEVNULL,
+        stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(proc.communicate(), timeout=25)
+    except asyncio.TimeoutError:
+        proc.kill()
+        raise HTTPException(status_code=504, detail="Timeout generando clip")
+    if proc.returncode != 0 or not os.path.exists(out):
+        raise HTTPException(status_code=500, detail="Error generando clip")
+    def _cleanup():
+        time.sleep(120)
+        try: os.unlink(out)
+        except: pass
+    threading.Thread(target=_cleanup, daemon=True).start()
+    return FileResponse(out, media_type="video/mp4", filename=f"clip_{channel}.mp4")
 
 
 @app.get("/health")

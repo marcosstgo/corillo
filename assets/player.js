@@ -44,6 +44,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     sBuffer:          $('#sBuffer'),
     sLatency:         $('#sLatency'),
     sLevel:           $('#sLevel'),
+    liveViewers:      $('#liveViewers'),
     btnH:             $('#btnH'),
     btnV:             $('#btnV'),
     btnThemeOg:       $('#btnThemeOg'),
@@ -82,6 +83,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     retryTimer:      null,
     watchTimer:      null,
     statsTimer:      null,
+    viewersTimer:    null,
     kickBannerTimer: null,
     ctrlTimer:       null,
     othersTimer:     null,
@@ -137,6 +139,27 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     DOM.liveTxt.textContent = on ? 'en vivo' : 'offline';
     const pill = document.getElementById('navLivePill');
     if (pill) pill.classList.toggle('live', on);
+    if (on) {
+      pollViewers();
+      if (!App.viewersTimer) App.viewersTimer = setInterval(pollViewers, 30000);
+    } else {
+      if (App.viewersTimer) { clearInterval(App.viewersTimer); App.viewersTimer = null; }
+      if (DOM.liveViewers) DOM.liveViewers.style.display = 'none';
+    }
+  }
+
+  async function pollViewers() {
+    try {
+      const r = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+      if (!r.ok) return;
+      const j = await r.json();
+      const path = (j.items || []).find(p => p.name === `live/${App.channel}`);
+      const count = path ? (path.readers?.length ?? 0) : 0;
+      if (DOM.liveViewers) {
+        DOM.liveViewers.textContent = ` · ${count}`;
+        DOM.liveViewers.style.display = '';
+      }
+    } catch(e) {}
   }
 
   function showOverlay(title, msg) {
@@ -990,6 +1013,50 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     if (dropPanel) dropPanel.addEventListener('click', e => {
       if (e.target.closest('.drop-btn, .drop-item') && !e.target.closest('#twitchLink, [href]')) closeDrop();
     });
+
+    // Share
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', async () => {
+        const s = (window.STREAMERS || []).find(x => x.key === App.channel);
+        const name = s?.name || App.channel.toUpperCase();
+        const url = `https://corillo.live/${App.channel}/`;
+        try {
+          if (navigator.share) {
+            await navigator.share({ title: `${name} en vivo — CORILLO`, url });
+          } else {
+            await navigator.clipboard.writeText(url);
+            shareBtn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
+            setTimeout(() => { shareBtn.innerHTML = '<i class="fa-solid fa-share-nodes"></i> Compartir'; }, 2000);
+          }
+        } catch(e) {}
+      });
+    }
+
+    // Clip
+    const clipBtn = document.getElementById('clipBtn');
+    if (clipBtn) {
+      clipBtn.addEventListener('click', async () => {
+        const orig = clipBtn.innerHTML;
+        clipBtn.disabled = true;
+        clipBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando…';
+        try {
+          const r = await fetch(`/chat-api/clip/${App.channel}`, { signal: AbortSignal.timeout(30000) });
+          if (!r.ok) throw new Error(r.status);
+          const blob = await r.blob();
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `clip_${App.channel}.mp4`;
+          a.click();
+          URL.revokeObjectURL(a.href);
+          clipBtn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado';
+          setTimeout(() => { clipBtn.innerHTML = orig; clipBtn.disabled = false; }, 2000);
+        } catch(e) {
+          clipBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Sin grabación';
+          setTimeout(() => { clipBtn.innerHTML = orig; clipBtn.disabled = false; }, 2500);
+        }
+      });
+    }
 
     // Profile + others live + start
     loadProfile();
