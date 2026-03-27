@@ -96,6 +96,18 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
 .docs-footer-logo{font-family:var(--crl-display);font-size:32px;letter-spacing:4px;margin-bottom:8px}
 .docs-footer p{font-size:var(--crl-sm);color:var(--crl-muted)}
 
+/* Roadmap items */
+.rdot-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px}
+.rdot-item i{font-size:11px;width:14px;text-align:center;flex-shrink:0}
+.rdot-confirm{background:rgba(0,255,157,.03);border:1px solid rgba(0,255,157,.08)}
+.rdot-confirm i{color:var(--crl-confirm)}
+.rdot-accent{background:rgba(0,191,255,.03);border:1px solid rgba(0,191,255,.08)}
+.rdot-accent i{color:var(--crl-accent)}
+.rdot-live{background:rgba(232,200,74,.03);border:1px solid rgba(232,200,74,.08)}
+.rdot-live i{color:var(--crl-live)}
+.rdot-dim{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)}
+.rdot-dim i{color:var(--crl-muted)}
+
 /* Animation ring demo */
 .anim-demo{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
 .anim-box{display:flex;flex-direction:column;align-items:center;gap:10px;font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:1px}
@@ -184,6 +196,8 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
     <a href="#layout">Layout</a>
     <a href="#code">Code block</a>
     <a href="#dividers">Divisores</a>
+    <div class="sidenav-divider"></div>
+    <a href="#roadmap" style="color:var(--crl-accent)">Roadmap</a>
   </aside>
 
   <!-- Docs content -->
@@ -680,6 +694,84 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- ── ROADMAP ── -->
+    <section class="doc-section" id="roadmap">
+      <p class="crl-section-label">Roadmap</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Lo que viene</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:32px">Corillo CSS crece con la plataforma. Lo que está listo, lo que viene y lo que se está pensando.</p>
+
+      <!-- v1.0 — LISTO -->
+      <div style="margin-bottom:32px">
+        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
+          <span class="badge badge-confirm"><i class="fa-solid fa-check"></i> v1.0 — Listo</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-palette"></i><span class="crl-xs">Tokens --crl-*</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-font"></i><span class="crl-xs">Tipografía + escala</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-hand-pointer"></i><span class="crl-xs">Botones (5 variantes)</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-tag"></i><span class="crl-xs">Badges (5 variantes)</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-pills"></i><span class="crl-xs">Pills (3 variantes)</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-square"></i><span class="crl-xs">Cards (5 variantes)</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-circle"></i><span class="crl-xs">Dots + animación</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-user-circle"></i><span class="crl-xs">Avatares + rings</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-keyboard"></i><span class="crl-xs">Inputs</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-grip-lines"></i><span class="crl-xs">Divisores</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-table-columns"></i><span class="crl-xs">Layout utilities</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-film"></i><span class="crl-xs">Animaciones (5)</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-code"></i><span class="crl-xs">Code block</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-sun"></i><span class="crl-xs">Light mode</span></div>
+        </div>
+      </div>
+
+      <!-- v1.1 — PRÓXIMO -->
+      <div style="margin-bottom:32px">
+        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
+          <span class="badge badge-accent"><i class="fa-solid fa-clock"></i> v1.1 — Próximo</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-window-maximize"></i><span class="crl-xs">Modal / Dialog</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-bell"></i><span class="crl-xs">Toast / Notificación</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-bars"></i><span class="crl-xs">Navbar component</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-chevron-down"></i><span class="crl-xs">Dropdown menu</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-comment"></i><span class="crl-xs">Tooltip</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-toggle-on"></i><span class="crl-xs">Toggle / Switch</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-bars-progress"></i><span class="crl-xs">Progress bar</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-spinner"></i><span class="crl-xs">Skeleton loader</span></div>
+        </div>
+      </div>
+
+      <!-- v1.2 — SIGUIENTE -->
+      <div style="margin-bottom:32px">
+        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
+          <span class="badge badge-live"><i class="fa-solid fa-hourglass-half"></i> v1.2 — Siguiente</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-table"></i><span class="crl-xs">Table component</span></div>
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-circle-exclamation"></i><span class="crl-xs">Form validation states</span></div>
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-folder-tree"></i><span class="crl-xs">Accordion / Collapse</span></div>
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-folder-open"></i><span class="crl-xs">Tabs</span></div>
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-magnifying-glass"></i><span class="crl-xs">Combobox / Select</span></div>
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-chart-bar"></i><span class="crl-xs">Stat / KPI card</span></div>
+        </div>
+      </div>
+
+      <!-- v2.0 — FUTURO -->
+      <div>
+        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
+          <span class="badge badge-dim"><i class="fa-solid fa-rocket"></i> v2.0 — Futuro</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div class="rdot-item rdot-dim"><i class="fa-solid fa-box"></i><span class="crl-xs crl-text-muted">npm package</span></div>
+          <div class="rdot-item rdot-dim"><i class="fa-solid fa-layer-group"></i><span class="crl-xs crl-text-muted">CSS @layer support</span></div>
+          <div class="rdot-item rdot-dim"><i class="fa-solid fa-wand-magic-sparkles"></i><span class="crl-xs crl-text-muted">Playground live editor</span></div>
+          <div class="rdot-item rdot-dim"><i class="fa-brands fa-figma"></i><span class="crl-xs crl-text-muted">Figma kit</span></div>
+          <div class="rdot-item rdot-dim"><i class="fa-solid fa-paintbrush"></i><span class="crl-xs crl-text-muted">Sass / PostCSS</span></div>
+          <div class="rdot-item rdot-dim"><i class="fa-solid fa-mobile-screen"></i><span class="crl-xs crl-text-muted">Container queries</span></div>
+        </div>
+      </div>
+
     </section>
 
   </main>
