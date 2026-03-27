@@ -489,7 +489,12 @@
 
   async function loadVodData() {
     const vods = await fetchRecentVods(30);
-    _recentVods = vods.slice(0, 6);
+    const _seen = new Set();
+    _recentVods = vods.filter(v => {
+      if (_seen.has(v.channel)) return false;
+      _seen.add(v.channel);
+      return true;
+    }).slice(0, 6);
     _lastVodByChannel = {};
     for (const v of vods) {
       if (!_lastVodByChannel[v.channel]) _lastVodByChannel[v.channel] = v.date;
