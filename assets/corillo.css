@@ -362,3 +362,381 @@ button { font: inherit; cursor: pointer; }
   font-size: .75rem; transition: .2s; flex-shrink: 0;
 }
 .theme-btn:hover { border-color: var(--crl-border-h); background: rgba(255,255,255,.06); }
+
+
+/* ── 18. TOPBAR / NAV ───────────────────────────────────── */
+/* Sticky topbar — use as <header class="crl-topbar"> */
+.crl-topbar {
+  position: sticky; top: 0; z-index: 200;
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 24px; height: 52px;
+  background: rgba(3,10,14,.88);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--crl-border);
+}
+.crl-topbar-logo {
+  font-family: var(--crl-display); font-size: 20px;
+  letter-spacing: 3px; color: var(--crl-white); flex-shrink: 0;
+}
+.crl-topbar-logo span { color: var(--crl-accent); }
+.crl-topbar-links { display: flex; align-items: center; gap: 4px; flex: 1; }
+.crl-topbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+/* Nav link */
+.crl-nav-link {
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 5px 10px; border-radius: var(--crl-r-sm);
+  color: rgba(232,246,255,.5); transition: .15s; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.crl-nav-link:hover { color: var(--crl-white); background: rgba(255,255,255,.05); }
+.crl-nav-link.active { color: var(--crl-accent); background: rgba(0,191,255,.07); }
+
+[data-theme="light"] .crl-topbar { background: rgba(220,238,245,.92); }
+[data-theme="light"] .crl-nav-link:hover { background: rgba(0,0,0,.06); }
+
+
+/* ── 19. DROPDOWN ───────────────────────────────────────── */
+/* Usage: <div class="crl-dropdown"><button>…</button><div class="crl-dropdown-menu">…</div></div> */
+.crl-dropdown { position: relative; }
+.crl-dropdown-menu {
+  position: absolute; top: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: #0d0d14; border: 1px solid var(--crl-border);
+  border-radius: var(--crl-r-md); padding: 6px; min-width: 200px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .15s, visibility .15s; z-index: 300;
+}
+.crl-dropdown-menu.right { left: auto; right: 0; transform: none; }
+.crl-dropdown-menu.open  { opacity: 1; visibility: visible; pointer-events: auto; }
+.crl-dropdown:hover .crl-dropdown-menu { opacity: 1; visibility: visible; pointer-events: auto; }
+
+.crl-dropdown-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: var(--crl-r-sm);
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(255,255,255,.6); transition: .15s; cursor: pointer;
+  background: transparent; border: none; width: 100%; text-align: left;
+  white-space: nowrap;
+}
+.crl-dropdown-item:hover { background: rgba(255,255,255,.07); color: var(--crl-white); }
+.crl-dropdown-item i { width: 14px; text-align: center; flex-shrink: 0; }
+.crl-dropdown-sep { height: 1px; background: var(--crl-border); margin: 4px 0; }
+.crl-dropdown-label {
+  font-family: var(--crl-mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--crl-muted);
+  padding: 6px 12px 2px;
+}
+[data-theme="light"] .crl-dropdown-menu { background: #e4f0f6; }
+
+
+/* ── 20. DRAWER (mobile sidebar) ────────────────────────── */
+/* <div class="crl-backdrop"></div><aside class="crl-drawer"> */
+.crl-backdrop {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  opacity: 0; visibility: hidden; pointer-events: none; transition: .2s;
+}
+.crl-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
+
+.crl-drawer {
+  position: fixed; top: 0; right: -100%; bottom: 0;
+  width: min(320px, 85vw); z-index: 500;
+  background: var(--crl-panel);
+  border-left: 1px solid var(--crl-border);
+  display: flex; flex-direction: column;
+  transition: right .25s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto;
+}
+.crl-drawer.left { right: auto; left: -100%; border-left: none; border-right: 1px solid var(--crl-border); }
+.crl-drawer.open { right: 0; }
+.crl-drawer.left.open { left: 0; }
+.crl-drawer-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; border-bottom: 1px solid var(--crl-border);
+  flex-shrink: 0;
+}
+.crl-drawer-body { padding: 16px 20px; flex: 1; }
+
+
+/* ── 21. OVERLAY ────────────────────────────────────────── */
+/* Centered state panel — loading, error, offline */
+.crl-overlay {
+  position: absolute; inset: 0; z-index: 50;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(3,10,14,.85);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  text-align: center; padding: 24px; gap: 10px;
+  border-radius: inherit;
+}
+.crl-overlay-icon { font-size: 2rem; color: var(--crl-muted); margin-bottom: 4px; }
+.crl-overlay-title { font-family: var(--crl-mono); font-size: var(--crl-sm); color: var(--crl-white); }
+.crl-overlay-msg   { font-size: var(--crl-xs); color: var(--crl-muted); max-width: 28ch; line-height: 1.5; }
+
+
+/* ── 22. MODAL ──────────────────────────────────────────── */
+.crl-modal-backdrop {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,.7);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; visibility: hidden; pointer-events: none; transition: .2s;
+}
+.crl-modal-backdrop.open { opacity: 1; visibility: visible; pointer-events: auto; }
+
+.crl-modal {
+  background: var(--crl-panel); border: 1px solid var(--crl-border);
+  border-radius: var(--crl-r-lg); width: 100%; max-width: 600px;
+  max-height: 90vh; display: flex; flex-direction: column;
+  overflow: hidden;
+  animation: crl-fade-up .2s ease;
+}
+.crl-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; border-bottom: 1px solid var(--crl-border); flex-shrink: 0;
+}
+.crl-modal-title { font-family: var(--crl-mono); font-size: var(--crl-xs); letter-spacing: 2px; text-transform: uppercase; }
+.crl-modal-body   { padding: 20px; overflow-y: auto; flex: 1; }
+.crl-modal-footer {
+  padding: 12px 20px; border-top: 1px solid var(--crl-border);
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+
+
+/* ── 23. EMPTY STATE ────────────────────────────────────── */
+.crl-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 48px 24px; gap: 12px;
+  border: 1px dashed var(--crl-border); border-radius: var(--crl-r-lg);
+}
+.crl-empty-icon {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,.04); border: 1px solid var(--crl-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; color: var(--crl-muted);
+}
+.crl-empty-title { font-family: var(--crl-mono); font-size: var(--crl-sm); color: var(--crl-white); }
+.crl-empty-sub   { font-size: var(--crl-xs); color: var(--crl-muted); max-width: 30ch; line-height: 1.5; }
+
+
+/* ── 24. STATS ROW ──────────────────────────────────────── */
+/* Horizontal row of labeled stats — Bitrate · Buffer · Latency */
+.crl-stats {
+  display: flex; align-items: stretch;
+  border: 1px solid var(--crl-border); border-radius: var(--crl-r-md);
+  overflow: hidden; flex-wrap: wrap;
+}
+.crl-stat {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 2px;
+  padding: 8px 14px; flex: 1; min-width: 0;
+  border-right: 1px solid var(--crl-border);
+}
+.crl-stat:last-child { border-right: none; }
+.crl-stat-label {
+  font-family: var(--crl-mono); font-size: 9px;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--crl-muted);
+}
+.crl-stat-value {
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  color: var(--crl-accent); font-weight: 700;
+}
+
+
+/* ── 25. FORM GROUP ─────────────────────────────────────── */
+.crl-form-group { display: flex; flex-direction: column; gap: 6px; }
+.crl-label {
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--crl-muted);
+}
+.crl-hint { font-size: var(--crl-xs); color: var(--crl-muted); line-height: 1.5; }
+.crl-hint.error { color: var(--crl-hot); }
+.crl-input-wrap { position: relative; }
+.crl-input-wrap .input { padding-right: 40px; }
+.crl-input-action {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  background: transparent; border: none; color: var(--crl-muted);
+  cursor: pointer; font-size: var(--crl-sm); padding: 4px;
+  transition: color .15s;
+}
+.crl-input-action:hover { color: var(--crl-white); }
+
+/* Error state */
+.crl-form-group.has-error .input { border-color: rgba(206,17,38,.4); }
+.crl-form-group.has-error .input:focus { box-shadow: 0 0 0 3px rgba(206,17,38,.1); }
+
+
+/* ── 26. FILTER PILLS ───────────────────────────────────── */
+/* Interactive filter row — extends .pill */
+.crl-filter-bar { display: flex; gap: 6px; flex-wrap: wrap; }
+.crl-filter-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--crl-mono); font-size: var(--crl-2xs);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: var(--crl-r-full);
+  border: 1px solid var(--crl-border);
+  background: transparent; color: var(--crl-muted);
+  cursor: pointer; transition: .15s; white-space: nowrap;
+}
+.crl-filter-pill:hover { border-color: var(--crl-border-h); color: var(--crl-white); }
+.crl-filter-pill.active {
+  background: var(--crl-accent); color: var(--crl-ink);
+  border-color: transparent;
+}
+.crl-filter-pill.active-live {
+  background: var(--crl-live); color: var(--crl-ink);
+  border-color: transparent;
+}
+
+
+/* ── 27. RESPONSIVE GRID ────────────────────────────────── */
+.crl-grid      { display: grid; gap: var(--crl-gap-md); }
+.crl-grid-auto { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.crl-grid-2    { grid-template-columns: repeat(2, 1fr); }
+.crl-grid-3    { grid-template-columns: repeat(3, 1fr); }
+.crl-grid-4    { grid-template-columns: repeat(4, 1fr); }
+
+@media(max-width:820px) {
+  .crl-grid-3, .crl-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media(max-width:560px) {
+  .crl-grid-2, .crl-grid-3, .crl-grid-4 { grid-template-columns: 1fr; }
+}
+
+
+/* ── 28. ASPECT RATIO ───────────────────────────────────── */
+.crl-aspect { position: relative; width: 100%; overflow: hidden; }
+.crl-aspect > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.crl-aspect-16-9 { padding-bottom: 56.25%; }
+.crl-aspect-9-16 { padding-bottom: 177.78%; }
+.crl-aspect-4-3  { padding-bottom: 75%; }
+.crl-aspect-1-1  { padding-bottom: 100%; }
+
+
+/* ── 29. SCROLL CONTAINERS ──────────────────────────────── */
+.crl-scroll-x {
+  display: flex; gap: var(--crl-gap-sm);
+  overflow-x: auto; overflow-y: hidden;
+  padding-bottom: 8px; /* room for scrollbar */
+  scrollbar-width: thin; scrollbar-color: var(--crl-border) transparent;
+}
+.crl-scroll-x::-webkit-scrollbar { height: 4px; }
+.crl-scroll-x::-webkit-scrollbar-track { background: transparent; }
+.crl-scroll-x::-webkit-scrollbar-thumb { background: var(--crl-border); border-radius: 2px; }
+.crl-scroll-x > * { flex-shrink: 0; }
+
+
+/* ── 30. UTILITIES ──────────────────────────────────────── */
+
+/* Line clamp */
+.crl-clamp-1 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; }
+.crl-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.crl-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+
+/* Hover lift */
+.crl-hover-lift { transition: transform .2s, box-shadow .2s; }
+.crl-hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.4); }
+
+/* Thin scrollbar */
+.crl-scrollbar-thin {
+  scrollbar-width: thin; scrollbar-color: var(--crl-border) transparent;
+}
+.crl-scrollbar-thin::-webkit-scrollbar { width: 4px; }
+.crl-scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.crl-scrollbar-thin::-webkit-scrollbar-thumb { background: var(--crl-border); border-radius: 2px; }
+
+/* Backdrop blur */
+.crl-blur-sm  { backdrop-filter: blur(4px);  -webkit-backdrop-filter: blur(4px);  }
+.crl-blur-md  { backdrop-filter: blur(8px);  -webkit-backdrop-filter: blur(8px);  }
+.crl-blur-lg  { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+
+/* Position */
+.crl-relative { position: relative; }
+.crl-absolute { position: absolute; }
+.crl-fixed    { position: fixed; }
+.crl-inset    { inset: 0; }
+
+/* Overflow */
+.crl-overflow-hidden { overflow: hidden; }
+
+/* Text align */
+.crl-text-center { text-align: center; }
+.crl-text-right  { text-align: right; }
+
+/* Cursor */
+.crl-pointer { cursor: pointer; }
+
+/* Radius */
+.crl-rounded-sm { border-radius: var(--crl-r-sm); }
+.crl-rounded    { border-radius: var(--crl-r-md); }
+.crl-rounded-lg { border-radius: var(--crl-r-lg); }
+.crl-rounded-full { border-radius: var(--crl-r-full); }
+
+/* Shake animation */
+@keyframes crl-shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-6px); }
+  40%     { transform: translateX(6px); }
+  60%     { transform: translateX(-4px); }
+  80%     { transform: translateX(4px); }
+}
+.crl-animate-shake { animation: crl-shake .3s ease; }
+
+@media(prefers-reduced-motion:reduce) { .crl-animate-shake { animation: none; } }
+
+
+/* ── 31. COPY BLOCK ─────────────────────────────────────── */
+/* Stream key, tokens, code with copy button */
+.crl-copy-block {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--crl-surface); border: 1px solid var(--crl-border);
+  border-radius: var(--crl-r-sm); padding: 8px 10px 8px 14px;
+}
+.crl-copy-value {
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  color: var(--crl-accent); flex: 1; overflow: hidden;
+  white-space: nowrap; text-overflow: ellipsis;
+}
+.crl-copy-btn {
+  flex-shrink: 0; background: transparent; border: none;
+  color: var(--crl-muted); cursor: pointer; font-size: var(--crl-sm);
+  padding: 4px 6px; border-radius: var(--crl-r-sm); transition: .15s;
+}
+.crl-copy-btn:hover { color: var(--crl-white); background: rgba(255,255,255,.06); }
+.crl-copy-btn.copied { color: var(--crl-confirm); }
+
+
+/* ── 32. HERO ───────────────────────────────────────────── */
+.crl-hero {
+  text-align: center; padding: 72px 24px 56px;
+  position: relative; overflow: hidden;
+}
+.crl-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,191,255,.07), transparent);
+  pointer-events: none;
+}
+.crl-hero-eyebrow {
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--crl-accent); margin-bottom: 16px;
+}
+.crl-hero-title {
+  font-family: var(--crl-display);
+  font-size: clamp(3rem, 8vw, 7rem);
+  letter-spacing: 4px; line-height: 1;
+  color: var(--crl-white); margin-bottom: 16px;
+}
+.crl-hero-sub {
+  font-size: var(--crl-base); color: var(--crl-muted);
+  max-width: 46ch; margin: 0 auto 32px; line-height: 1.6;
+}
+.crl-hero-actions {
+  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+}
