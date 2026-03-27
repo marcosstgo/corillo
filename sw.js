@@ -4,7 +4,8 @@
 self.addEventListener('fetch', () => {});
 
 self.addEventListener('push', e => {
-  const d = e.data?.json() ?? {};
+  let d = {};
+  try { d = e.data?.json() ?? {}; } catch(_) {}
   e.waitUntil(
     self.registration.showNotification(d.title || 'CORILLO', {
       body: d.body || '',
