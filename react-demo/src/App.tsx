@@ -78,19 +78,19 @@ export default function App() {
             </div>
 
             {liveStreamers.length > 0 ? (
-              /* Live cards + VODs for offline channels below */
+              /* Live cards on top, all recent VODs below */
               <div className="live-grid">
                 {liveStreamers.map(s => (
                   <StreamCard key={s.key} streamer={s} live={live} />
                 ))}
-                {offlineVods.length > 0 && (
+                {vods.length > 0 && (
                   <>
                     <div className="vods-row-header">
                       <span>Últimas transmisiones</span>
                       <div className="section-line" />
                       <a href="https://corillo.live/vods/" target="_blank" rel="noopener">Ver todas →</a>
                     </div>
-                    {offlineVods.map(v => <VodCard key={v.id} vod={v} />)}
+                    {vods.map(v => <VodCard key={v.id} vod={v} />)}
                   </>
                 )}
               </div>
