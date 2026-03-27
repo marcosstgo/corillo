@@ -67,6 +67,7 @@
     <span id="liveTxt">En vivo</span>
   </div>
   <div class="nav-space"></div>
+  <button class="nav-btn" id="notifyNavBtn" title="Notificarme" style="display:none"><i class="fa-regular fa-bell"></i></button>
   <button class="nav-btn active" id="chatToggleBtn" title="Chat"><i class="fa-solid fa-message"></i></button>
   <button class="nav-btn" id="dropBtn" title="Más opciones"><i class="fa-solid fa-ellipsis"></i></button>
   <a href="/" class="nav-btn" title="Inicio"><i class="fa-solid fa-house"></i></a>
@@ -89,7 +90,6 @@
   </div>
   <div class="drop-sep"></div>
   <button class="drop-item" id="themeBtn"><i class="fa-solid fa-circle-half-stroke"></i> Tema del sitio</button>
-  <button class="drop-item" id="notifyBtn" style="display:none"><i class="fa-solid fa-bell"></i> Notificarme cuando esté en vivo</button>
   <div class="drop-sep"></div>
   <a class="drop-item" id="twitchLink" href="#" target="_blank" rel="noopener"><i class="fa-brands fa-twitch"></i> Ver en Twitch</a>
   <a class="drop-item" href="/streamers/"><i class="fa-solid fa-users"></i> Ver streamers</a>
@@ -254,15 +254,17 @@
   } catch(e) { return; }
   if (!vapidKey) return;
 
-  const btn = document.getElementById('notifyBtn');
+  const btn = document.getElementById('notifyNavBtn');
   if (!btn) return;
   btn.style.display = '';
 
   async function refreshBtn() {
     const sub = await reg.pushManager.getSubscription();
     btn.innerHTML = sub
-      ? '<i class="fa-solid fa-bell-slash"></i> Desactivar notificaciones'
-      : '<i class="fa-solid fa-bell"></i> Notificarme cuando esté en vivo';
+      ? '<i class="fa-solid fa-bell"></i>'
+      : '<i class="fa-regular fa-bell"></i>';
+    btn.title = sub ? 'Desactivar notificaciones' : 'Notificarme cuando esté en vivo';
+    btn.classList.toggle('active', !!sub);
   }
   await refreshBtn();
 
