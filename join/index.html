@@ -14,189 +14,80 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/corillo.css">
 
   <style>
-    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
-    .wrap{max-width:860px;margin:0 auto;padding:0 20px}
-    @media(max-width:600px){.wrap{padding:0 14px}}
+    /* ── Page-specific ── */
+    .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+    @media(max-width:600px) { .wrap { padding: 0 14px; } }
 
-    /* ── NAV ── */
-    nav{
-      position:sticky;top:0;z-index:60;
-      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.6));
-      border-bottom:1px solid var(--border);
-    }
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px}
-    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .brand-svg{width:110px;height:30px}
-    .nav-tag{font-family:var(--mono);font-size: .75rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-left:1px solid var(--border);padding-left:10px}
-    .nav-right{display:flex;gap:8px;align-items:center}
-    .btn{
-      display:inline-flex;align-items:center;gap:7px;cursor:pointer;
-      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size: .78rem;
-      padding:7px 14px;border-radius:7px;border:1px solid var(--border);
-      background:transparent;color:rgba(255,255,255,.6);transition:.18s;text-decoration:none;white-space:nowrap;
-    }
-    .btn:hover{border-color:var(--border-h);color:var(--white)}
-    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent;font-weight:700}
-    .btn.primary:hover{opacity:.88}
-    .theme-btn{
-      width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
-      background:transparent;color:var(--white);cursor:pointer;
-      display:inline-flex;align-items:center;justify-content:center;
-      font-size:.75rem;transition:.2s;flex-shrink:0;
-    }
-    .theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
-    [data-theme="light"] nav{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
+    /* Nav tag */
+    .nav-tag { font-family: var(--crl-mono); font-size: .75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--crl-muted); border-left: 1px solid var(--crl-border); padding-left: 10px; }
+    [data-theme="light"] nav { background: linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8)); }
 
+    /* Hero */
+    .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--crl-border); }
+    .hero-title { font-family: var(--crl-display); font-size: clamp(2.4rem,6vw,4rem); letter-spacing: 3px; line-height: 1; margin-bottom: 18px; }
+    .hero-desc { font-size: 1rem; line-height: 1.7; color: rgba(242,239,233,.6); max-width: 52ch; margin-bottom: 32px; }
+    [data-theme="light"] .hero-desc { color: rgba(18,18,15,.6); }
 
-    /* ── HERO ── */
-    .hero{padding:64px 0 48px;border-bottom:1px solid var(--border)}
-    .eyebrow{font-family:var(--mono);font-size: .75rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
-    .hero-title{font-family:var(--display);font-size:clamp(2.4rem,6vw,4rem);letter-spacing:3px;line-height:1;margin-bottom:18px}
-    .hero-desc{font-size:1rem;line-height:1.7;color:rgba(242,239,233,.6);max-width:52ch;margin-bottom:32px}
-    [data-theme="light"] .hero-desc{color:rgba(18,18,15,.6)}
+    /* Process section */
+    .section { padding: 48px 0; border-bottom: 1px solid var(--crl-border); }
+    .section-label { font-family: var(--crl-mono); font-size: .72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--crl-accent); margin-bottom: 10px; }
+    .section-title { font-family: var(--crl-display); font-size: clamp(1.4rem,3vw,2rem); letter-spacing: 2px; margin-bottom: 32px; }
+    .steps { display: flex; flex-direction: column; }
+    .step { display: flex; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--crl-border); }
+    .step:last-child { border-bottom: none; }
+    .step-num { font-family: var(--crl-display); font-size: 2rem; letter-spacing: 2px; color: rgba(232,200,74,.2); flex-shrink: 0; width: 40px; line-height: 1; padding-top: 2px; }
+    .step-body { flex: 1; }
+    .step-title { font-family: var(--crl-mono); font-size: .92rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--crl-white); margin-bottom: 6px; }
+    .step-desc { font-size: .9rem; line-height: 1.6; color: rgba(242,239,233,.55); }
+    .step-desc a { color: var(--crl-accent); }
+    .step-desc a:hover { text-decoration: underline; }
+    [data-theme="light"] .step-desc { color: rgba(18,18,15,.6); }
 
-    /* ── PROCESO ── */
-    .section{padding:48px 0;border-bottom:1px solid var(--border)}
-    .section-label{font-family:var(--mono);font-size: .72rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
-    .section-title{font-family:var(--display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:32px}
+    /* CTA / form box */
+    .contact-box { background: linear-gradient(135deg,rgba(232,200,74,.06),rgba(232,200,74,.02)); border: 1px solid rgba(232,200,74,.2); border-radius: 14px; padding: 36px 32px; text-align: center; }
+    @media(max-width:600px) { .contact-box { padding: 24px 18px; } }
+    .contact-title { font-family: var(--crl-display); font-size: clamp(1.4rem,3vw,2rem); letter-spacing: 2px; margin-bottom: 10px; }
+    .contact-sub { font-size: .9rem; color: rgba(242,239,233,.55); margin-bottom: 24px; line-height: 1.6; }
+    [data-theme="light"] .contact-sub { color: rgba(18,18,15,.55); }
+    [data-theme="light"] .contact-box { background: rgba(255,255,255,.6); border-color: rgba(180,130,0,.25); }
 
-    .steps{display:flex;flex-direction:column;gap:0}
-    .step{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--border)}
-    .step:last-child{border-bottom:none}
-    .step-num{font-family:var(--display);font-size:2rem;letter-spacing:2px;color:rgba(232,200,74,.2);flex-shrink:0;width:40px;line-height:1;padding-top:2px}
-    .step-body{flex:1}
-    .step-title{font-family:var(--mono);font-size: .92rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--white);margin-bottom:6px}
-    .step-desc{font-size:.9rem;line-height:1.6;color:rgba(242,239,233,.55)}
-    .step-desc a{color:var(--accent);text-decoration:none}
-    .step-desc a:hover{text-decoration:underline}
-    [data-theme="light"] .step-desc{color:rgba(18,18,15,.6)}
+    /* Form grid */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:600px) { .form-grid { grid-template-columns: 1fr; } }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field textarea { padding: 10px 12px; border-radius: 7px; border: 1px solid var(--crl-border); background: var(--crl-surface); color: var(--crl-white); outline: none; font-family: var(--crl-body); font-size: .9rem; transition: border-color .18s; resize: none; }
+    .field textarea:focus { border-color: rgba(232,200,74,.35); box-shadow: 0 0 0 3px rgba(232,200,74,.08); }
+    .field .input:focus { border-color: rgba(232,200,74,.35); box-shadow: 0 0 0 3px rgba(232,200,74,.08); }
+    .field-full { grid-column: 1/-1; }
+    .form-err { padding: 8px 12px; border-radius: 7px; border: 1px dashed rgba(206,17,38,.3); background: rgba(206,17,38,.05); color: var(--crl-hot); font-family: var(--crl-mono); font-size: .75rem; display: none; margin-top: 8px; }
+    [data-theme="light"] .field textarea { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.12); color: #12120f; }
 
-    /* ── CONTACT CTA ── */
-    .contact-box{
-      background:linear-gradient(135deg,rgba(232,200,74,.06),rgba(232,200,74,.02));
-      border:1px solid rgba(232,200,74,.2);border-radius:14px;
-      padding:36px 32px;text-align:center;
-    }
-    @media(max-width:600px){.contact-box{padding:24px 18px}}
-    .contact-title{font-family:var(--display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:10px}
-    .contact-sub{font-size:.9rem;color:rgba(242,239,233,.55);margin-bottom:24px;line-height:1.6}
-    .contact-email{
-      display:inline-flex;align-items:center;gap:10px;
-      font-family:var(--mono);font-size:.75rem;letter-spacing:1.5px;
-      color:var(--accent);background:rgba(232,200,74,.06);
-      border:1px solid rgba(232,200,74,.2);border-radius:8px;
-      padding:12px 20px;text-decoration:none;transition:.2s;
-    }
-    .contact-email:hover{background:rgba(232,200,74,.12);border-color:rgba(232,200,74,.4)}
-    [data-theme="light"] .contact-sub{color:rgba(18,18,15,.55)}
-    [data-theme="light"] .contact-box{background:rgba(255,255,255,.6);border-color:rgba(180,130,0,.25)}
+    /* Success state */
+    .form-success { display: none; text-align: center; padding: 32px 0; animation: crl-fade-up .4s ease; }
+    .form-success .check { width: 56px; height: 56px; border-radius: 50%; background: rgba(0,255,157,.1); border: 1px solid rgba(0,255,157,.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.6rem; color: var(--crl-confirm); }
+    .success-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,255,157,.06); border: 1px solid rgba(0,255,157,.2); border-radius: 10px; padding: 10px 18px; font-family: var(--crl-mono); font-size: .78rem; letter-spacing: 1px; color: rgba(0,255,157,.8); }
 
-    /* ── GENERADOR (solo aprobados) ── */
-    .gen-section{padding:48px 0}
-    .gen-header{
-      display:flex;align-items:center;gap:12px;margin-bottom:28px;
-    }
-    .approved-badge{
-      font-family:var(--mono);font-size: .85rem;letter-spacing:2px;text-transform:uppercase;
-      background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);
-      color:#4ade80;padding:4px 10px;border-radius:4px;
-    }
-    .gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media(max-width:700px){.gen-grid{grid-template-columns:1fr}}
-
-    .card{
-      border:1px solid var(--border);border-radius:12px;
-      background:var(--surface);padding:20px;
-    }
-    .card-title{font-family:var(--mono);font-size: .78rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px;display:flex;align-items:center;gap:8px}
-    .card-title .num{font-family:var(--display);font-size:1.2rem;color:rgba(232,200,74,.25);letter-spacing:1px;line-height:1}
-    label{display:block;font-family:var(--mono);font-size: .72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.45);margin:14px 0 5px}
-    label:first-of-type{margin-top:0}
-    input[type="text"]{
-      width:100%;padding:10px 12px;border-radius:7px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(0,0,0,.25);color:var(--white);outline:none;
-      font-family:var(--body);font-size:.9rem;transition:border-color .18s;
-    }
-    input[type="text"]:focus{border-color:rgba(232,200,74,.35)}
-    .hint{margin-top:5px;color:rgba(255,255,255,.35);font-size:.78rem}
-    .pill{display:inline-flex;align-items:center;font-family:var(--mono);font-size: .85rem;letter-spacing:.5px;padding:3px 7px;border-radius:4px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
-    .warn{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size: .75rem;display:none}
-    .ok-msg{margin-top:8px;padding:8px 12px;border-radius:7px;border:1px solid rgba(74,222,128,.2);background:rgba(74,222,128,.05);color:#4ade80;font-family:var(--mono);font-size: .75rem;display:none}
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px}
-
-    .out{margin-top:16px;border-top:1px solid var(--border);padding-top:16px}
-    .code-wrap{position:relative;margin-top:5px}
-    .code{font-family:var(--mono);font-size: .78rem;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.07);border-radius:7px;padding:9px 44px 9px 12px;overflow-x:auto;white-space:nowrap;color:rgba(255,255,255,.75);letter-spacing:.3px}
-    .copy-btn{position:absolute;top:50%;right:6px;transform:translateY(-50%);font-family:var(--mono);font-size: .85rem;letter-spacing:1px;text-transform:uppercase;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.5);padding:3px 7px;cursor:pointer;transition:.15s}
-    .copy-btn:hover{background:rgba(255,255,255,.1);color:var(--white)}
-
-    .rtmp-block{margin-top:16px;border:1px solid rgba(232,200,74,.12);border-radius:10px;background:rgba(232,200,74,.025);padding:16px;display:none}
-    .rtmp-title{font-family:var(--mono);font-size: .72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(232,200,74,.6);margin-bottom:12px}
-    .rtmp-note{margin-top:10px;font-size:.78rem;color:rgba(255,255,255,.4);line-height:1.6}
-    .rtmp-note a{color:rgba(232,200,74,.7);text-decoration:none}
-    .rtmp-note a:hover{text-decoration:underline}
-
-    [data-theme="light"] .card{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
-    [data-theme="light"] input[type="text"]{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:#12120f}
-    [data-theme="light"] .code{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);color:rgba(18,18,15,.75)}
-    [data-theme="light"] .hint{color:rgba(18,18,15,.4)}
-    [data-theme="light"] .rtmp-block{background:rgba(180,130,0,.03);border-color:rgba(180,130,0,.15)}
-
-    /* ── FORMULARIO ── */
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-    .field{display:flex;flex-direction:column;gap:4px}
-    .field label{font-family:var(--mono);font-size: .72rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0}
-    .field input,.field textarea{
-      padding:10px 12px;border-radius:7px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(0,0,0,.25);color:var(--white);outline:none;
-      font-family:var(--body);font-size:.9rem;transition:border-color .18s;
-      resize:none;
-    }
-    .field input:focus,.field textarea:focus{border-color:rgba(232,200,74,.35)}
-    .field-hint{font-size:.75rem;color:rgba(255,255,255,.3)}
-    .field-full{grid-column:1/-1}
-    .form-err{padding:8px 12px;border-radius:7px;border:1px dashed rgba(223,48,48,.3);background:rgba(223,48,48,.05);color:rgba(255,120,120,.9);font-family:var(--mono);font-size: .75rem;display:none}
-    .form-success{display:none;text-align:center;padding:32px 0;animation:fadeInUp .4s ease}
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .form-success .check{width:56px;height:56px;border-radius:50%;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;color:#4ade80}
-    [data-theme="light"] .field input,[data-theme="light"] .field textarea{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:#12120f}
-    [data-theme="light"] .field label{color:rgba(18,18,15,.5)}
-
-    /* ── FOOTER ── */
-    footer{border-top:1px solid var(--border);padding:24px 0}
-    .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .foot-copy{font-family:var(--mono);font-size: .85rem;letter-spacing:1px;color:var(--muted)}
-    hr{border:none;border-top:1px solid var(--border);margin:0}
-    .site-footer{border-top:1px solid var(--border);padding:28px 32px;margin-top:16px}
-    .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    .foot-left{display:flex;align-items:center;gap:12px}
-    .foot-brand svg{height:28px;width:auto;opacity:.7}
-    .foot-info{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.25);text-transform:uppercase;line-height:1.7}
-    .foot-links{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--muted);flex-wrap:wrap}
-    .foot-links a{color:var(--muted);transition:.15s}
-    .foot-links a:hover{color:var(--accent)}
-    .foot-sep{color:var(--dim)}
+    /* Footer */
+    .site-footer { border-top: 1px solid var(--crl-border); padding: 28px 32px; margin-top: 16px; }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .foot-left { display: flex; align-items: center; gap: 12px; }
+    .foot-info { font-family: var(--crl-mono); font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,.25); text-transform: uppercase; line-height: 1.7; }
+    .foot-links { display: flex; align-items: center; gap: 8px; font-family: var(--crl-mono); font-size: 10px; color: var(--crl-muted); flex-wrap: wrap; }
+    .foot-links a { color: var(--crl-muted); transition: .15s; }
+    .foot-links a:hover { color: var(--crl-accent); }
+    .foot-sep { color: rgba(255,255,255,.12); }
   </style>
 </head>
-<body>
+<body class="crl-body">
 
-<nav>
-  <div class="nav-inner">
-    <a href="/" class="nav-logo nav-brand">
-      <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
-        <defs>
-          <radialGradient id="ng" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
-            <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
+<nav style="position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.6));border-bottom:1px solid var(--crl-border)">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px">
+    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
+        <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
         <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
         <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
@@ -207,28 +98,28 @@
       </svg>
       <span class="nav-tag">Únete</span>
     </a>
-    <div class="nav-right">
+    <div style="display:flex;gap:8px;align-items:center">
       <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
       <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
     </div>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- HERO -->
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">Plataforma independiente · Puerto Rico</div>
+    <div class="section-label">Plataforma independiente · Puerto Rico</div>
     <h1 class="hero-title">ÚNETE AL CREW</h1>
     <p class="hero-desc">
       CORILLO es una plataforma pequeña e independiente desde Puerto Rico.
       Los canales son <strong>por invitación y aprobación manual</strong> — no hay registro automático.
       Katatonia revisa cada solicitud personalmente antes de abrir un canal.
     </p>
-    <a class="btn primary" href="#aplicar"><i class="fa-solid fa-arrow-down"></i> Aplica ahora</a>
+    <a class="btn btn-primary" href="#aplicar"><i class="fa-solid fa-arrow-down"></i> Aplica ahora</a>
   </div>
 </section>
 
-<!-- ── PROCESO ── -->
+<!-- PROCESO -->
 <section class="section">
   <div class="wrap">
     <div class="section-label">El proceso</div>
@@ -238,51 +129,37 @@
         <div class="step-num">01</div>
         <div class="step-body">
           <div class="step-title">Completa el formulario</div>
-          <p class="step-desc">
-            Llena el formulario más abajo: elige tu handle de canal, cuéntanos qué tipo de contenido
-            haces y por qué quieres unirte. Es todo lo que necesitas para aplicar.
-          </p>
+          <p class="step-desc">Llena el formulario más abajo: elige tu handle de canal, cuéntanos qué tipo de contenido haces y por qué quieres unirte. Es todo lo que necesitas para aplicar.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <div class="step-body">
           <div class="step-title">Revisión manual — no es automático</div>
-          <p class="step-desc">
-            Katatonia revisa cada solicitud personalmente. No existe aprobación automática.
-            Buscamos streamers que quieran construir comunidad, no solo tener otro canal.
-            Respondemos a todas las solicitudes — aprobadas o no — en menos de 24 horas.
-          </p>
+          <p class="step-desc">Katatonia revisa cada solicitud personalmente. No existe aprobación automática. Buscamos streamers que quieran construir comunidad, no solo tener otro canal. Respondemos a todas las solicitudes — aprobadas o no — en menos de 24 horas.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <div class="step-body">
           <div class="step-title">Aprobación o rechazo</div>
-          <p class="step-desc">
-            Si tu solicitud es aprobada, te notificamos por email.
-            Si no encaja en este momento, también te avisamos — no dejamos solicitudes sin respuesta.
-          </p>
+          <p class="step-desc">Si tu solicitud es aprobada, te notificamos por email. Si no encaja en este momento, también te avisamos — no dejamos solicitudes sin respuesta.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <div class="step-body">
           <div class="step-title">Tu canal queda listo al instante</div>
-          <p class="step-desc">
-            Al aprobar, el sistema crea tu página automáticamente en <strong>corillo.live/{tu-handle}</strong>
-            y te enviamos tu stream key. Configuras OBS o Meld Studio con esa key
-            y ya puedes transmitir. El tiempo total desde aprobación hasta primer stream es de minutos.
-          </p>
+          <p class="step-desc">Al aprobar, el sistema crea tu página automáticamente en <strong>corillo.live/{tu-handle}</strong> y te enviamos tu stream key. Configuras OBS o Meld Studio con esa key y ya puedes transmitir. El tiempo total desde aprobación hasta primer stream es de minutos.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<hr>
+<hr class="crl-divider" style="margin:0">
 
-<!-- ── FORMULARIO ── -->
+<!-- FORMULARIO -->
 <section class="section" id="aplicar" style="border-bottom:none">
   <div class="wrap">
     <div class="contact-box" id="formWrap">
@@ -293,34 +170,34 @@
         <input id="f-hp" type="text" name="website" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
         <div class="form-grid">
           <div class="field">
-            <label for="f-handle">Handle del canal *</label>
-            <input id="f-handle" type="text" placeholder="ej: kamikazepr" maxlength="24" required autocomplete="off" spellcheck="false" />
-            <div class="field-hint">Solo: a-z, 0-9, _ · 3–24 caracteres</div>
+            <label class="crl-label" for="f-handle">Handle del canal *</label>
+            <input id="f-handle" class="input" type="text" placeholder="ej: kamikazepr" maxlength="24" required autocomplete="off" spellcheck="false" />
+            <span class="crl-hint">Solo: a-z, 0-9, _ · 3–24 caracteres</span>
           </div>
           <div class="field">
-            <label for="f-nombre">Tu nombre *</label>
-            <input id="f-nombre" type="text" placeholder="Como quieres que te llamen" maxlength="60" required />
+            <label class="crl-label" for="f-nombre">Tu nombre *</label>
+            <input id="f-nombre" class="input" type="text" placeholder="Como quieres que te llamen" maxlength="60" required />
           </div>
           <div class="field field-full">
-            <label for="f-email">Email *</label>
-            <input id="f-email" type="email" placeholder="tu@email.com" maxlength="120" required />
-            <div class="field-hint">Solo para contactarte — no se muestra públicamente</div>
+            <label class="crl-label" for="f-email">Email *</label>
+            <input id="f-email" class="input" type="email" placeholder="tu@email.com" maxlength="120" required />
+            <span class="crl-hint">Solo para contactarte — no se muestra públicamente</span>
           </div>
           <div class="field field-full">
-            <label for="f-contenido">Tipo de contenido *</label>
-            <input id="f-contenido" type="text" placeholder="ej: Gaming FPS, Just chatting, Música en vivo..." maxlength="120" required />
+            <label class="crl-label" for="f-contenido">Tipo de contenido *</label>
+            <input id="f-contenido" class="input" type="text" placeholder="ej: Gaming FPS, Just chatting, Música en vivo..." maxlength="120" required />
           </div>
           <div class="field">
-            <label for="f-plataforma">¿Dónde transmites ahora? <span style="opacity:.45">(opcional)</span></label>
-            <input id="f-plataforma" type="text" placeholder="ej: Twitch, YouTube, ninguno" maxlength="60" />
+            <label class="crl-label" for="f-plataforma">¿Dónde transmites ahora? <span style="opacity:.45">(opcional)</span></label>
+            <input id="f-plataforma" class="input" type="text" placeholder="ej: Twitch, YouTube, ninguno" maxlength="60" />
           </div>
           <div class="field">
-            <label for="f-mensaje">Algo más <span style="opacity:.45">(opcional)</span></label>
+            <label class="crl-label" for="f-mensaje">Algo más <span style="opacity:.45">(opcional)</span></label>
             <textarea id="f-mensaje" rows="3" placeholder="Por qué quieres unirte, qué transmites, etc." maxlength="300"></textarea>
           </div>
         </div>
         <div class="form-err" id="formErr"></div>
-        <button type="submit" class="btn primary" id="submitBtn" style="width:100%;justify-content:center;margin-top:16px;padding:12px 20px">
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;margin-top:16px;padding:12px 20px">
           <i class="fa-solid fa-paper-plane"></i> Enviar solicitud
         </button>
       </form>
@@ -331,8 +208,8 @@
         <p class="contact-sub" style="max-width:360px;margin:0 auto 20px">
           Recibimos tu solicitud. Te vamos a contactar al email que pusiste en menos de 24 horas.
         </p>
-        <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:10px 18px;font-family:var(--mono);font-size: .78rem;letter-spacing:1px;color:rgba(74,222,128,.8)">
-          <i class="fa-solid fa-envelope" style="font-size: .85rem"></i>
+        <div class="success-pill">
+          <i class="fa-solid fa-envelope" style="font-size:.85rem"></i>
           Revisa tu bandeja de entrada
         </div>
       </div>
