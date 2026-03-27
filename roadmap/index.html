@@ -6,9 +6,9 @@
   <meta name="color-scheme" content="dark" />
   <title>CORILLO — Roadmap</title>
   <meta name="description" content="Hacia dónde va CORILLO — lo que ya funciona y lo que viene." />
-
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -16,259 +16,326 @@
   <link rel="stylesheet" href="/assets/styles.css">
 
   <style>
-    :root{ --radius:14px; }
-    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
-    .container{max-width:860px;margin:0 auto;padding:22px 18px}
-    @media(max-width:600px){.container{padding:16px 12px}}
+    body { background: var(--ink); color: var(--white); font-family: var(--body); min-height: 100vh; overflow-x: hidden; }
 
-    /* ── TOP ── */
-    .top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:32px}
-    .brand{font-family:var(--display);letter-spacing:3px;font-size:26px;line-height:1}
-    .brand span{color:var(--accent)}
-    .title{font-family:var(--display);letter-spacing:2px;font-size:clamp(2.2rem,5vw,3.6rem);line-height:1;margin-top:4px}
-    .sub{margin-top:8px;color:rgba(255,255,255,.55);max-width:54ch;font-size:.88rem;line-height:1.5}
-    .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-
-    .btn{
-      display:inline-flex;align-items:center;gap:8px;cursor:pointer;
-      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size: .92rem;font-weight:700;
-      padding:10px 14px;border-radius:8px;border:1px solid var(--border);
-      background:transparent;color:rgba(255,255,255,.7);transition:.2s ease;white-space:nowrap;text-decoration:none;
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      position: relative;
     }
-    .btn:hover{border-color:var(--border-h);color:var(--white)}
-    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent}
-    .btn.primary:hover{opacity:.88}
-
-    /* ── CARDS ── */
-    .card{
-      border:1px solid var(--border);border-radius:var(--radius);
-      background:linear-gradient(to bottom,rgba(18,18,24,.65),rgba(12,12,16,.45));
-      padding:22px 24px;margin-bottom:14px;
+    .hero-logo { display: flex; justify-content: center; margin-bottom: 28px; }
+    .hero-logo svg { height: 72px; width: auto; }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 4px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
     }
-    .card.done{border-color:rgba(232,200,74,.25);background:linear-gradient(to bottom,rgba(232,200,74,.04),rgba(12,12,16,.45))}
-    .card.next{border-color:rgba(100,180,255,.2);background:linear-gradient(to bottom,rgba(100,180,255,.03),rgba(12,12,16,.45))}
+    .hero-title {
+      font-family: var(--display); font-size: clamp(3.5rem, 10vw, 6rem);
+      letter-spacing: 4px; line-height: 1; margin-bottom: 16px;
+    }
+    .hero-sub {
+      color: rgba(255,255,255,.5); font-size: var(--text-sm);
+      max-width: 46ch; margin: 0 auto 28px; line-height: 1.6;
+    }
+    .hero-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .hero-divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--border-h), transparent);
+      margin: 0;
+    }
+
+    /* ── NAV STRIP ── */
+    .nav-strip {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 28px; gap: 12px; flex-wrap: wrap;
+    }
+    @media(max-width:600px) { .nav-strip { padding: 12px 16px; } }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px 60px; }
+    @media(max-width:600px) { .container { padding: 0 14px 48px; } }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 3px;
+      text-transform: uppercase; color: var(--muted); margin: 40px 0 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: var(--border);
+    }
+
+    /* ── CARD ── */
+    .card {
+      border: 1px solid var(--border); border-radius: 16px;
+      background: linear-gradient(160deg, rgba(13,28,40,.8), rgba(7,17,24,.6));
+      padding: 24px 26px; margin-bottom: 12px;
+      transition: border-color .2s;
+    }
+    .card:hover { border-color: var(--border-h); }
+    .card.done  { border-color: rgba(0,191,255,.18); background: linear-gradient(160deg, rgba(0,191,255,.04), rgba(7,17,24,.7)); }
+    .card.cool  { border-color: rgba(180,100,255,.2); background: linear-gradient(160deg, rgba(180,100,255,.05), rgba(7,17,24,.7)); }
+    .card.next  { border-color: rgba(0,255,157,.18); background: linear-gradient(160deg, rgba(0,255,157,.03), rgba(7,17,24,.7)); }
+    .card.future{ border-color: rgba(255,255,255,.07); background: linear-gradient(160deg, rgba(255,255,255,.02), rgba(7,17,24,.6)); }
 
     /* ── CARD HEADER ── */
-    .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .card-title{font-family:var(--display);letter-spacing:2px;font-size:clamp(1.4rem,3vw,1.9rem);line-height:1}
-    .card-desc{margin-top:4px;color:rgba(255,255,255,.5);font-size:.83rem}
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+    .card-title { font-family: var(--display); letter-spacing: 2px; font-size: clamp(1.3rem, 3vw, 1.75rem); line-height: 1; }
+    .card-desc  { margin-top: 5px; color: rgba(255,255,255,.4); font-size: var(--text-sm); }
 
-    /* ── STATUS BADGES ── */
-    .badge{
-      font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
-      padding:5px 10px;border-radius:999px;white-space:nowrap;flex-shrink:0;
+    /* ── BADGES ── */
+    .badge {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 999px; white-space: nowrap; flex-shrink: 0;
+      display: inline-flex; align-items: center; gap: 6px;
     }
-    .badge.listo{background:rgba(232,200,74,.15);border:1px solid rgba(232,200,74,.3);color:var(--accent)}
-    .badge.proximo{background:rgba(100,180,255,.1);border:1px solid rgba(100,180,255,.25);color:rgba(140,200,255,.9)}
-    .badge.pendiente{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4)}
+    .badge.listo   { background: rgba(0,191,255,.12); border: 1px solid rgba(0,191,255,.3); color: var(--accent); }
+    .badge.cool    { background: rgba(180,100,255,.12); border: 1px solid rgba(180,100,255,.35); color: rgba(210,160,255,.95); }
+    .badge.proximo { background: rgba(0,255,157,.1); border: 1px solid rgba(0,255,157,.3); color: var(--live); }
+    .badge.futuro  { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.35); }
 
-    /* ── ITEMS LIST ── */
-    .items{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:0;padding:0;list-style:none}
-    @media(max-width:600px){.items{grid-template-columns:1fr}}
-    .items li{
-      display:flex;align-items:flex-start;gap:10px;
-      font-size:.875rem;color:rgba(255,255,255,.75);line-height:1.4;padding:6px 0;
+    /* ── ITEMS ── */
+    .items { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; margin: 0; padding: 0; list-style: none; }
+    @media(max-width:620px) { .items { grid-template-columns: 1fr; } }
+    .items li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: var(--text-sm); color: rgba(255,255,255,.72); line-height: 1.45; padding: 5px 0;
     }
-    .items li .ico{
-      font-size:.75rem;margin-top:2px;flex-shrink:0;
-      color:var(--accent);width:14px;text-align:center;
+    .items li .ico { font-size: .7rem; margin-top: 3px; flex-shrink: 0; width: 14px; text-align: center; }
+    .ico-done   { color: var(--accent); }
+    .ico-cool   { color: rgba(180,100,255,.85); }
+    .ico-next   { color: var(--live); }
+    .ico-future { color: rgba(255,255,255,.2); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+      font-family: var(--mono); letter-spacing: 1.5px; text-transform: uppercase;
+      font-size: var(--text-xs); padding: 9px 16px; border-radius: 8px;
+      border: 1px solid var(--border); background: transparent;
+      color: rgba(255,255,255,.6); transition: .15s; white-space: nowrap; text-decoration: none;
     }
-    .items li .ico.muted{color:rgba(255,255,255,.2)}
-    .items li .ico.blue{color:rgba(140,200,255,.7)}
+    .btn:hover { border-color: var(--border-h); color: var(--white); }
+    .btn.primary { background: var(--accent); color: var(--ink); border-color: transparent; font-weight: 700; }
+    .btn.primary:hover { opacity: .88; }
 
-    /* divider */
-    .divider{border:none;border-top:1px solid var(--border);margin:28px 0}
+    /* ── FOOTER ── */
+    .site-footer { border-top: 1px solid var(--border); padding: 28px 32px; margin-top: 8px; }
+    .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .foot-left  { display: flex; align-items: center; gap: 12px; }
+    .foot-brand svg { height: 28px; width: auto; opacity: .6; }
+    .foot-info  { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,.22); text-transform: uppercase; line-height: 1.7; }
+    .foot-links { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--muted); flex-wrap: wrap; }
+    .foot-links a { color: var(--muted); transition: .15s; }
+    .foot-links a:hover { color: var(--accent); }
+    .foot-sep { color: rgba(255,255,255,.12); }
 
-    .card.chuleria{border-color:rgba(180,100,255,.25);background:linear-gradient(to bottom,rgba(180,100,255,.05),rgba(12,12,16,.45))}
-    .badge.chuleria{background:rgba(180,100,255,.12);border:1px solid rgba(180,100,255,.35);color:rgba(210,160,255,.95)}
-    .items li .ico.purple{color:rgba(180,100,255,.85)}
-
-    [data-theme="light"] .card{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.1)}
-    [data-theme="light"] .card.done{background:rgba(232,200,74,.07);border-color:rgba(180,130,0,.25)}
-    [data-theme="light"] .card.next{background:rgba(100,180,255,.05);border-color:rgba(100,180,255,.2)}
-    [data-theme="light"] .card.chuleria{background:rgba(180,100,255,.05);border-color:rgba(180,100,255,.2)}
-    [data-theme="light"] .sub{color:rgba(0,0,0,.5)}
-    [data-theme="light"] .items li{color:rgba(0,0,0,.7)}
-    .site-footer{border-top:1px solid var(--border);padding:28px 32px;margin-top:16px}
-    .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-    .foot-left{display:flex;align-items:center;gap:12px}
-    .foot-brand svg{height:28px;width:auto;opacity:.7}
-    .foot-info{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;color:rgba(255,255,255,.25);text-transform:uppercase;line-height:1.7}
-    .foot-links{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.5px;color:var(--muted);flex-wrap:wrap}
-    .foot-links a{color:var(--muted);transition:.15s}
-    .foot-links a:hover{color:var(--accent)}
-    .foot-sep{color:var(--dim)}
+    /* ── LIGHT MODE ── */
+    [data-theme="light"] body { background: var(--ink); color: var(--white); }
+    [data-theme="light"] .card { background: rgba(255,255,255,.65); border-color: rgba(0,0,0,.1); }
+    [data-theme="light"] .card.done  { background: rgba(0,191,255,.05); border-color: rgba(0,191,255,.2); }
+    [data-theme="light"] .card.cool  { background: rgba(180,100,255,.05); border-color: rgba(180,100,255,.2); }
+    [data-theme="light"] .card.next  { background: rgba(0,255,157,.04); border-color: rgba(0,180,100,.2); }
+    [data-theme="light"] .hero-sub   { color: rgba(0,0,0,.5); }
+    [data-theme="light"] .items li   { color: rgba(0,0,0,.65); }
+    [data-theme="light"] .card-desc  { color: rgba(0,0,0,.4); }
   </style>
 </head>
 <body>
+
+<!-- NAV -->
+<div class="nav-strip">
+  <a href="/" style="display:flex;align-items:center;text-decoration:none">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:32px;width:auto">
+      <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+      <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
+      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+    </svg>
+  </a>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-logo">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:80px;width:auto">
+      <defs><radialGradient id="hg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.25"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+      <circle cx="72" cy="42" r="36" fill="url(#hg)"/>
+      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+    </svg>
+  </div>
+  <div class="hero-eyebrow">Plataforma independiente · Puerto Rico</div>
+  <div class="hero-title">ROADMAP</div>
+  <p class="hero-sub">Hacia dónde va el corillo. Lo que ya funciona, lo que viene, y las chulerías que nos hacen diferentes.</p>
+  <div class="hero-actions">
+    <a class="btn primary" href="/join/"><i class="fa-solid fa-arrow-right"></i> Únete</a>
+    <a class="btn" href="/streamers/"><i class="fa-solid fa-users"></i> Streamers</a>
+  </div>
+</div>
+<div class="hero-divider"></div>
+
 <div class="container">
 
-  <!-- TOP -->
-  <div class="top">
-    <div>
-      <a href="/" class="nav-logo" style="display:flex;align-items:center;text-decoration:none">
-        <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
-          <defs>
-            <radialGradient id="ng" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
-              <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
-          <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
-          <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
-          <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-          <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-          <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
-        </svg>
-      </a>
-      <div class="title">ROADMAP</div>
-      <div class="sub">Hacia dónde va el corillo. Lo que ya funciona y lo que viene. Sin drama, con visión. 🇵🇷</div>
-    </div>
-    <div class="row">
-      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
-      <a class="btn" href="/"><i class="fa-solid fa-house"></i> Inicio</a>
-      <a class="btn primary" href="/join/"><i class="fa-solid fa-arrow-right"></i> Únete</a>
-    </div>
-  </div>
+  <!-- LISTO -->
+  <div class="section-label">Listo</div>
 
-  <!-- YA ESTÁ LISTO -->
   <div class="card done">
     <div class="card-head">
       <div>
-        <div class="card-title">Ya está listo</div>
-        <div class="card-desc">Lo que funciona hoy en corillo.live</div>
+        <div class="card-title">Plataforma base</div>
+        <div class="card-desc">Todo lo que funciona hoy en corillo.live</div>
       </div>
-      <span class="badge listo"><i class="fa-solid fa-check"></i>&nbsp; Listo</span>
+      <span class="badge listo"><i class="fa-solid fa-check"></i> Listo</span>
     </div>
     <ul class="items">
-      <li><i class="fa-solid fa-check ico"></i> Streaming HLS multi-canal en vivo</li>
-      <li><i class="fa-solid fa-check ico"></i> Chat en vivo por canal</li>
-      <li><i class="fa-solid fa-check ico"></i> @bot con inteligencia artificial</li>
-      <li><i class="fa-solid fa-check ico"></i> Historial de chat persistente — sobrevive reinicios del servidor</li>
-      <li><i class="fa-solid fa-check ico"></i> Deploy automático con GitHub Actions</li>
-      <li><i class="fa-solid fa-check ico"></i> SEO — OG tags por canal para redes sociales</li>
-      <li><i class="fa-solid fa-check ico"></i> Anti-spam en el chat</li>
-      <li><i class="fa-solid fa-check ico"></i> Vista multiplayer — todos los canales en vivo</li>
-      <li><i class="fa-solid fa-check ico"></i> Diseño responsive dark/light mode</li>
-      <li><i class="fa-solid fa-check ico"></i> Guía de configuración OBS & Meld Studio</li>
-      <li><i class="fa-solid fa-check ico"></i> Template único de player — agregar streamers sin tocar HTML</li>
-      <li><i class="fa-solid fa-check ico"></i> Menú mobile responsive — hamburger con panel deslizante</li>
-      <li><i class="fa-solid fa-check ico"></i> Thumbnails de canales — última foto visible aunque el canal esté offline</li>
-      <li><i class="fa-solid fa-check ico"></i> Player mobile optimizado — sin zoom en chat, autoplay en todos los dispositivos</li>
-      <li><i class="fa-solid fa-check ico"></i> Username persistente en el chat entre sesiones y canales</li>
-      <li><i class="fa-solid fa-check ico"></i> Compresión zstd/gzip + Cache-Control — carga más rápida</li>
-      <li><i class="fa-solid fa-check ico"></i> Bot saluda al streamer automáticamente cuando va en vivo</li>
-      <li><i class="fa-solid fa-check ico"></i> Bot comenta espontáneamente viendo el stream en vivo</li>
-      <li><i class="fa-solid fa-check ico"></i> Sistema de perfiles — stream key, avatar, bio, redes sociales, paneles</li>
-      <li><i class="fa-solid fa-check ico"></i> Dashboard de streamer — editar perfil, ver stream key</li>
-      <li><i class="fa-solid fa-check ico"></i> Página de streamers — directorio con cards, estado en vivo, bio</li>
-      <li><i class="fa-solid fa-check ico"></i> Monitor de bitrate — auto-kick si se excede el límite</li>
-      <li><i class="fa-solid fa-check ico"></i> Notificaciones Telegram al admin — streamer en vivo, bitrate alto, nuevas solicitudes</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Streaming HLS multi-canal en vivo</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Chat en vivo por canal</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> @bot con inteligencia artificial</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Bot comenta el stream en tiempo real con visión</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Vista multiplayer — todos los canales en vivo</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Diseño responsive dark / light mode</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> SEO — OG tags por canal para redes sociales</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Anti-spam y rate limit en el chat</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Historial de chat persistente</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Username persistente entre sesiones</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Player universal — un template para todos los canales</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Perfil de streamer — avatar, bio, redes, paneles</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Dashboard — stream key, editar perfil, VOD settings</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Onboarding via formulario + aprobación por Telegram</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Stream keys protegidas y regenerables</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Monitor de bitrate con auto-kick</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Thumbnails auto-generados cada 60s por canal en vivo</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Fondo con último screenshot cuando el canal está offline</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Directorio de streamers con status en vivo</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Guía de configuración OBS y Meld Studio</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Notificaciones Telegram al admin — streamer en vivo, bitrate alto</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Deploy automático con GitHub Actions</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> WebRTC WHEP — latencia ultra-baja ~200ms</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Monitoreo del servidor — status.corillo.live</li>
     </ul>
   </div>
 
-  <hr class="divider">
-
-  <!-- CHULERÍAS -->
-  <div class="card chuleria">
+  <div class="card done">
     <div class="card-head">
       <div>
-        <div class="card-title">Chulerías</div>
-        <div class="card-desc">Las cosas cool que hacen a CORILLO diferente</div>
+        <div class="card-title">VODs</div>
+        <div class="card-desc">Grabación automática y reproducción de transmisiones pasadas</div>
       </div>
-      <span class="badge chuleria"><i class="fa-solid fa-star"></i>&nbsp; Cool</span>
+      <span class="badge listo"><i class="fa-solid fa-check"></i> Listo</span>
     </div>
     <ul class="items">
-      <li><i class="fa-solid fa-check ico"></i> Bot con visión — ve el stream y comenta como viewer</li>
-      <li><i class="fa-solid fa-check ico"></i> Fondo con último screenshot en player offline</li>
-      <li><i class="fa-solid fa-check ico"></i> Thumbnails auto-generados cada 60s por canal en vivo</li>
-      <li><i class="fa-solid fa-check ico"></i> Compartir canal con imagen del stream via Web Share API</li>
-      <li><i class="fa-regular fa-clock ico purple"></i> GIFs animados del stream en las cards del homepage</li>
-      <li><i class="fa-regular fa-clock ico purple"></i> VODs automáticos — grabación para ver después del live</li>
-      <li><i class="fa-regular fa-clock ico purple"></i> Clips compartibles — los mejores momentos del stream</li>
-      <li><i class="fa-regular fa-clock ico purple"></i> Reacciones emoji en el chat en tiempo real</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Grabación automática al iniciar stream</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Thumbnail del VOD auto-generado</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Preview de 4s en hover sin reproducir</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Player individual de VOD con autoplay</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Últimas 5 transmisiones en el player del canal</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Browser de VODs con filtro por canal</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Plan free (5 VODs) y pro (ilimitado)</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Clips de 30s desde el live o un VOD</li>
     </ul>
   </div>
 
-  <hr class="divider">
+  <div class="card done">
+    <div class="card-head">
+      <div>
+        <div class="card-title">PWA y notificaciones push</div>
+        <div class="card-desc">Instala corillo como app y recibe avisos cuando tu streamer va en vivo</div>
+      </div>
+      <span class="badge listo"><i class="fa-solid fa-check"></i> Listo</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-solid fa-check ico ico-done"></i> PWA instalable en móvil y desktop</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Notificaciones push por canal — sin cuenta</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Contador de viewers en tiempo real</li>
+      <li><i class="fa-solid fa-check ico ico-done"></i> Botón compartir — Web Share API + clipboard</li>
+    </ul>
+  </div>
 
-  <!-- FASE 2 -->
+  <!-- CHULERÍAS -->
+  <div class="section-label">Chulerías</div>
+
+  <div class="card cool">
+    <div class="card-head">
+      <div>
+        <div class="card-title">Lo que nos hace diferentes</div>
+        <div class="card-desc">Features que no encuentras en otras plataformas</div>
+      </div>
+      <span class="badge cool"><i class="fa-solid fa-star"></i> Único</span>
+    </div>
+    <ul class="items">
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Bot con visión — ve el stream y comenta como viewer</li>
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Pre-check offline antes de intentar HLS — carga instantánea</li>
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Auto-switch VOD → live cuando el streamer vuelve</li>
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Preview de VODs en hover sin reproducirlos</li>
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Notificaciones push por canal individual — sin app</li>
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Clips del live en segundos sin salir del player</li>
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Layout KATANA — dos canales simultáneos fijo</li>
+      <li><i class="fa-solid fa-star ico ico-cool"></i> Monitor de bitrate con auto-kick automático</li>
+    </ul>
+  </div>
+
+  <!-- PRÓXIMO -->
+  <div class="section-label">Próximo</div>
+
   <div class="card next">
     <div class="card-head">
       <div>
-        <div class="card-title">Fase 2 — Registro de streamers</div>
-        <div class="card-desc">El flujo completo de onboarding está operativo</div>
+        <div class="card-title">Comunidad</div>
+        <div class="card-desc">Más interacción entre el chat y los streamers</div>
       </div>
-      <span class="badge listo"><i class="fa-solid fa-check"></i>&nbsp; Listo</span>
+      <span class="badge proximo"><i class="fa-solid fa-bolt"></i> En camino</span>
     </div>
     <ul class="items">
-      <li><i class="fa-solid fa-check ico"></i> Formulario para solicitar canal</li>
-      <li><i class="fa-solid fa-check ico"></i> Aprobación del admin vía Telegram</li>
-      <li><i class="fa-solid fa-check ico"></i> Generación automática de página por canal</li>
-      <li><i class="fa-solid fa-check ico"></i> Stream keys protegidas por contraseña</li>
-      <li><i class="fa-solid fa-check ico"></i> Guía de configuración OBS y Meld Studio</li>
-      <li><i class="fa-regular fa-clock ico muted"></i> Clave de moderación por canal</li>
+      <li><i class="fa-solid fa-circle-dot ico ico-next"></i> Reacciones emoji en el chat en tiempo real</li>
+      <li><i class="fa-solid fa-circle-dot ico ico-next"></i> GIFs animados del stream en cards del homepage</li>
+      <li><i class="fa-solid fa-circle-dot ico ico-next"></i> Dashboard de stats — viewers pico, duración, frecuencia</li>
+      <li><i class="fa-solid fa-circle-dot ico ico-next"></i> Moderación — ban temporal, lista negra de palabras</li>
     </ul>
   </div>
 
-  <!-- FASE 3 -->
-  <div class="card">
-    <div class="card-head">
-      <div>
-        <div class="card-title">Fase 3 — Moderación</div>
-        <div class="card-desc">Herramientas para que cada streamer gestione su canal</div>
-      </div>
-      <span class="badge pendiente"><i class="fa-regular fa-clock"></i>&nbsp; Pendiente</span>
-    </div>
-    <ul class="items">
-      <li><i class="fa-regular fa-clock ico muted"></i> Panel de moderación por canal</li>
-      <li><i class="fa-regular fa-clock ico muted"></i> Ban temporal por sesión o IP</li>
-      <li><i class="fa-regular fa-clock ico muted"></i> Lista negra de palabras automática</li>
-      <li><i class="fa-regular fa-clock ico muted"></i> Reportar mensajes</li>
-    </ul>
-  </div>
+  <!-- FUTURO -->
+  <div class="section-label">Futuro</div>
 
-  <!-- FASE 4 -->
-  <div class="card">
+  <div class="card future">
     <div class="card-head">
       <div>
-        <div class="card-title">Fase 4 — Producto maduro</div>
-        <div class="card-desc">El largo plazo — cuando el corillo sea grande de verdad</div>
+        <div class="card-title">Cuando el corillo sea grande de verdad</div>
+        <div class="card-desc">El largo plazo — ideas que ya están en la lista</div>
       </div>
-      <span class="badge pendiente"><i class="fa-regular fa-clock"></i>&nbsp; Pendiente</span>
+      <span class="badge futuro"><i class="fa-regular fa-clock"></i> Pendiente</span>
     </div>
     <ul class="items">
-      <li><i class="fa-regular fa-clock ico muted"></i> Estadísticas para streamers</li>
-      <li><i class="fa-solid fa-check ico"></i> Perfil editable por canal</li>
-      <li><i class="fa-solid fa-check ico"></i> Términos de uso y privacidad</li>
-      <li><i class="fa-solid fa-check ico"></i> Monitoreo del servidor — uptime.corillo.live + bitrate monitor</li>
-      <li><i class="fa-regular fa-clock ico muted"></i> Modelo de sostenibilidad</li>
-      <li><i class="fa-regular fa-clock ico muted"></i> Sistema de registro abierto al público</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> Raid — redirigir tu audiencia a otro canal al terminar</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> Co-streaming — cualquier combinación de canales en pantalla dividida</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> Notificaciones por Telegram — /sub katatonia desde el bot</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> Clips compartibles — URL única tipo /clips/{id}</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> Registro abierto al público — sin aprobación manual</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> Modelo de sostenibilidad — corillo pro</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> Categorías y tags por stream</li>
+      <li><i class="fa-regular fa-clock ico ico-future"></i> App móvil nativa</li>
     </ul>
   </div>
 
 </div>
 
-<script>
-(function(){
-  const root = document.documentElement;
-  const btn  = document.getElementById('themeBtn');
-  const saved = localStorage.getItem('corillo-theme') || 'dark';
-  root.setAttribute('data-theme', saved);
-  if (btn) btn.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    localStorage.setItem('corillo-theme', next);
-  });
-})();
-</script>
-
 <footer class="site-footer">
   <div class="foot-inner">
     <div class="foot-left">
-      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
+      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.6">
         <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
         <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
@@ -287,15 +354,29 @@
       <span class="foot-sep">·</span>
       <a href="/join/">Crear Canal</a>
       <span class="foot-sep">·</span>
-      <a href="/configuracion/">Config OBS</a>
+      <a href="/vods/">VODs</a>
       <span class="foot-sep">·</span>
       <a href="/legal/">Términos</a>
-      <span class="foot-sep">·</span>
-      <a href="/dmca/">DMCA</a>
       <span class="foot-sep">·</span>
       <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
     </div>
   </div>
 </footer>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  if (btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+</script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
+
 </body>
 </html>
