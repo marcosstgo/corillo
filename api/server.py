@@ -213,7 +213,8 @@ async def internal_notify(request: Request):
         stale = []
         for item in items:
             try:
-                sub = json.loads(item["subscription"])
+                raw = item["subscription"]
+                sub = raw if isinstance(raw, dict) else json.loads(raw)
                 webpush(
                     subscription_info=sub,
                     data=payload,
