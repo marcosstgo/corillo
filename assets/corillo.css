@@ -161,7 +161,7 @@ button { font: inherit; cursor: pointer; }
 
 
 /* ── 6. BADGES ──────────────────────────────────────────── */
-.badge {
+.crl-badge, .badge {
   display: inline-flex; align-items: center; gap: 5px;
   font-family: var(--crl-mono); font-size: 10px;
   letter-spacing: 2px; text-transform: uppercase;
@@ -171,56 +171,56 @@ button { font: inherit; cursor: pointer; }
   white-space: nowrap; flex-shrink: 0;
 }
 
-.badge-live    { background: rgba(232,200,74,.12);  border-color: rgba(232,200,74,.3);  color: var(--crl-live);    }
-.badge-accent  { background: rgba(0,191,255,.1);    border-color: rgba(0,191,255,.25);  color: var(--crl-accent);  }
-.badge-confirm { background: rgba(0,255,157,.1);    border-color: rgba(0,255,157,.25);  color: var(--crl-confirm); }
-.badge-hot     { background: rgba(206,17,38,.1);    border-color: rgba(206,17,38,.3);   color: var(--crl-hot);     }
-.badge-dim     { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.35); }
+.crl-badge-live,    .badge-live    { background: rgba(232,200,74,.12);  border-color: rgba(232,200,74,.3);  color: var(--crl-live);    }
+.crl-badge-accent,  .badge-accent  { background: rgba(0,191,255,.1);    border-color: rgba(0,191,255,.25);  color: var(--crl-accent);  }
+.crl-badge-confirm, .badge-confirm { background: rgba(0,255,157,.1);    border-color: rgba(0,255,157,.25);  color: var(--crl-confirm); }
+.crl-badge-hot,     .badge-hot     { background: rgba(206,17,38,.1);    border-color: rgba(206,17,38,.3);   color: var(--crl-hot);     }
+.crl-badge-dim,     .badge-dim     { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.35); }
 
 
 /* ── 7. CARDS ───────────────────────────────────────────── */
-.card {
+.crl-card, .card {
   border: 1px solid var(--crl-border);
   border-radius: var(--crl-r-lg);
   background: linear-gradient(160deg, rgba(13,28,40,.8), rgba(7,17,24,.6));
   padding: 20px 22px;
   transition: border-color .2s;
 }
-.card:hover { border-color: var(--crl-border-h); }
+.crl-card:hover, .card:hover { border-color: var(--crl-border-h); }
 
-.card-accent { border-color: rgba(0,191,255,.18);   background: linear-gradient(160deg, rgba(0,191,255,.04),   rgba(7,17,24,.7)); }
-.card-live   { border-color: rgba(232,200,74,.2);   background: linear-gradient(160deg, rgba(232,200,74,.04),  rgba(7,17,24,.7)); }
-.card-confirm{ border-color: rgba(0,255,157,.15);   background: linear-gradient(160deg, rgba(0,255,157,.03),   rgba(7,17,24,.7)); }
-.card-hot    { border-color: rgba(206,17,38,.2);    background: linear-gradient(160deg, rgba(206,17,38,.05),   rgba(7,17,24,.7)); }
-.card-dim    { border-color: rgba(255,255,255,.07); background: linear-gradient(160deg, rgba(255,255,255,.02), rgba(7,17,24,.6)); }
+.crl-card-accent, .card-accent { border-color: rgba(0,191,255,.18);   background: linear-gradient(160deg, rgba(0,191,255,.04),   rgba(7,17,24,.7)); }
+.crl-card-live,   .card-live   { border-color: rgba(232,200,74,.2);   background: linear-gradient(160deg, rgba(232,200,74,.04),  rgba(7,17,24,.7)); }
+.crl-card-confirm,.card-confirm { border-color: rgba(0,255,157,.15);  background: linear-gradient(160deg, rgba(0,255,157,.03),   rgba(7,17,24,.7)); }
+.crl-card-hot,    .card-hot    { border-color: rgba(206,17,38,.2);    background: linear-gradient(160deg, rgba(206,17,38,.05),   rgba(7,17,24,.7)); }
+.crl-card-dim,    .card-dim    { border-color: rgba(255,255,255,.07); background: linear-gradient(160deg, rgba(255,255,255,.02), rgba(7,17,24,.6)); }
 
-[data-theme="light"] .card        { background: rgba(255,255,255,.7);   border-color: rgba(0,0,0,.1); }
-[data-theme="light"] .card-accent { background: rgba(0,191,255,.05);    border-color: rgba(0,191,255,.2); }
-[data-theme="light"] .card-live   { background: rgba(232,200,74,.06);   border-color: rgba(200,150,0,.2); }
-[data-theme="light"] .card-hot    { background: rgba(206,17,38,.04);    border-color: rgba(206,17,38,.2); }
+[data-theme="light"] .crl-card,        [data-theme="light"] .card        { background: rgba(255,255,255,.7);  border-color: rgba(0,0,0,.1); }
+[data-theme="light"] .crl-card-accent, [data-theme="light"] .card-accent { background: rgba(0,191,255,.05);   border-color: rgba(0,191,255,.2); }
+[data-theme="light"] .crl-card-live,   [data-theme="light"] .card-live   { background: rgba(232,200,74,.06);  border-color: rgba(200,150,0,.2); }
+[data-theme="light"] .crl-card-hot,    [data-theme="light"] .card-hot    { background: rgba(206,17,38,.04);   border-color: rgba(206,17,38,.2); }
 
 
 /* ── 8. DOTS ────────────────────────────────────────────── */
-.dot {
+.crl-dot, .dot {
   display: inline-block;
   width: 7px; height: 7px;
   border-radius: 50%;
   background: var(--crl-muted);
   flex-shrink: 0;
 }
-.dot.on {
+.crl-dot.crl-on, .dot.on {
   background: var(--crl-live);
   box-shadow: 0 0 0 3px rgba(232,200,74,.2);
   animation: crl-blink 1.4s ease-in-out infinite;
 }
-.dot-sm  { width: 5px;  height: 5px; }
-.dot-lg  { width: 10px; height: 10px; }
-.dot-accent { background: var(--crl-accent); box-shadow: 0 0 6px rgba(0,191,255,.5); }
-.dot-hot    { background: var(--crl-hot);    box-shadow: 0 0 6px rgba(206,17,38,.5); }
+.crl-dot-sm,     .dot-sm     { width: 5px;  height: 5px; }
+.crl-dot-lg,     .dot-lg     { width: 10px; height: 10px; }
+.crl-dot-accent, .dot-accent { background: var(--crl-accent); box-shadow: 0 0 6px rgba(0,191,255,.5); }
+.crl-dot-hot,    .dot-hot    { background: var(--crl-hot);    box-shadow: 0 0 6px rgba(206,17,38,.5); }
 
 
 /* ── 9. PILLS ───────────────────────────────────────────── */
-.pill {
+.crl-pill, .pill {
   display: inline-flex; align-items: center; gap: 5px;
   font-family: var(--crl-mono); font-size: var(--crl-2xs);
   letter-spacing: 1.5px; text-transform: uppercase;
@@ -228,52 +228,52 @@ button { font: inherit; cursor: pointer; }
   border: 1px solid var(--crl-border);
   background: rgba(255,255,255,.03); color: var(--crl-muted);
 }
-.pill-live {
+.crl-pill-live, .pill-live {
   background: rgba(232,200,74,.07); border-color: rgba(232,200,74,.25);
   color: var(--crl-live);
 }
-.pill-accent {
+.crl-pill-accent, .pill-accent {
   background: rgba(0,191,255,.07); border-color: rgba(0,191,255,.2);
   color: var(--crl-accent);
 }
-.pill-hot {
+.crl-pill-hot, .pill-hot {
   background: rgba(206,17,38,.08); border-color: rgba(206,17,38,.25);
   color: var(--crl-hot);
 }
 
 
 /* ── 10. AVATARS ────────────────────────────────────────── */
-.ava {
+.crl-ava, .ava {
   width: 36px; height: 36px;
   border-radius: 50%; flex-shrink: 0;
   display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--crl-display); font-size: 16px; color: #000;
   overflow: hidden;
 }
-.ava img { width: 100%; height: 100%; object-fit: cover; }
-.ava-xs  { width: 24px; height: 24px; font-size: 10px; }
-.ava-sm  { width: 30px; height: 30px; font-size: 13px; }
-.ava-lg  { width: 52px; height: 52px; font-size: 24px; }
-.ava-xl  { width: 72px; height: 72px; font-size: 32px; }
+.crl-ava img, .ava img { width: 100%; height: 100%; object-fit: cover; }
+.crl-ava-xs, .ava-xs   { width: 24px; height: 24px; font-size: 10px; }
+.crl-ava-sm, .ava-sm   { width: 30px; height: 30px; font-size: 13px; }
+.crl-ava-lg, .ava-lg   { width: 52px; height: 52px; font-size: 24px; }
+.crl-ava-xl, .ava-xl   { width: 72px; height: 72px; font-size: 32px; }
 
-.ava-live    { box-shadow: 0 0 0 2px var(--crl-live),    0 0 12px rgba(232,200,74,.25); }
-.ava-accent  { box-shadow: 0 0 0 2px var(--crl-accent),  0 0 12px rgba(0,191,255,.2);  }
-.ava-hot     { box-shadow: 0 0 0 2px var(--crl-hot),     0 0 12px rgba(206,17,38,.2);  }
+.crl-ava-live,   .ava-live   { box-shadow: 0 0 0 2px var(--crl-live),   0 0 12px rgba(232,200,74,.25); }
+.crl-ava-accent, .ava-accent { box-shadow: 0 0 0 2px var(--crl-accent), 0 0 12px rgba(0,191,255,.2);  }
+.crl-ava-hot,    .ava-hot    { box-shadow: 0 0 0 2px var(--crl-hot),    0 0 12px rgba(206,17,38,.2);  }
 
 
 /* ── 11. INPUTS ─────────────────────────────────────────── */
-.input {
+.crl-input, .input {
   width: 100%;
   background: var(--crl-surface); color: var(--crl-white);
   border: 1px solid var(--crl-border); border-radius: var(--crl-r-sm);
   padding: 9px 14px; font-family: var(--crl-body); font-size: var(--crl-sm);
   transition: border-color .15s; outline: none;
 }
-.input::placeholder { color: var(--crl-muted); }
-.input:focus { border-color: rgba(0,191,255,.4); box-shadow: 0 0 0 3px rgba(0,191,255,.08); }
+.crl-input::placeholder, .input::placeholder { color: var(--crl-muted); }
+.crl-input:focus, .input:focus { border-color: rgba(0,191,255,.4); box-shadow: 0 0 0 3px rgba(0,191,255,.08); }
 
-.input-mono { font-family: var(--crl-mono); font-size: var(--crl-xs); letter-spacing: .5px; }
-.input-sm   { padding: 6px 10px; font-size: var(--crl-xs); }
+.crl-input-mono, .input-mono { font-family: var(--crl-mono); font-size: var(--crl-xs); letter-spacing: .5px; }
+.crl-input-sm,   .input-sm   { padding: 6px 10px; font-size: var(--crl-xs); }
 
 
 /* ── 12. DIVIDERS ───────────────────────────────────────── */
