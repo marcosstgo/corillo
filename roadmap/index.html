@@ -24,8 +24,8 @@
       padding: 64px 24px 48px;
       position: relative;
     }
-    .hero-logo { display: flex; justify-content: center; margin-bottom: 28px; }
-    .hero-logo svg { height: 72px; width: auto; }
+    .hero-logo { margin: 0 auto 28px; text-align: center; }
+    .hero-logo svg { height: 72px; width: auto; display: inline-block; }
     .hero-eyebrow {
       font-family: var(--mono); font-size: var(--text-xs); letter-spacing: 4px;
       text-transform: uppercase; color: var(--accent); margin-bottom: 10px;
@@ -167,7 +167,7 @@
 
 <div class="hero">
   <div class="hero-logo">
-    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:80px;width:auto">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:80px;width:auto;display:block;margin:0 auto">
       <defs><radialGradient id="hg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.25"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
       <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
       <circle cx="72" cy="42" r="36" fill="url(#hg)"/>
