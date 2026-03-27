@@ -17,7 +17,7 @@ nav{
   width:26px;height:26px;border-radius:50%;flex-shrink:0;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--display);font-size:13px;color:#000;
-  box-shadow:0 0 0 2px var(--live),0 0 8px rgba(0,255,157,.25);
+  box-shadow:0 0 0 2px var(--live),0 0 8px rgba(232,200,74,.25);
 }
 .nav-channel-name{
   font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;
@@ -26,8 +26,8 @@ nav{
 .nav-live-pill{
   display:none;align-items:center;gap:5px;flex-shrink:0;
   font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--live);background:rgba(0,255,157,.07);
-  border:1px solid rgba(0,255,157,.16);padding:3px 8px 3px 6px;border-radius:999px;
+  color:var(--live);background:rgba(232,200,74,.07);
+  border:1px solid rgba(232,200,74,.25);padding:3px 8px 3px 6px;border-radius:999px;
 }
 .nav-live-pill.live{display:flex}
 .nav-live-pill .dot{width:6px;height:6px}
@@ -69,7 +69,7 @@ body{display:flex;flex-direction:column}
   width:52px;height:52px;border-radius:50%;flex-shrink:0;overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--display);font-size:24px;color:#000;
-  box-shadow:0 0 0 2px var(--live),0 0 16px rgba(0,255,157,.15);
+  box-shadow:0 0 0 2px var(--live),0 0 16px rgba(232,200,74,.15);
 }
 .ch-details{flex:1;min-width:0}
 .ch-name-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -323,7 +323,7 @@ body::after{display:none} /* no grain on player pages */
   color:rgba(255,255,255,.7);background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.1);
 }
 .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
-.dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.2);animation:blink 1.4s infinite}
+.dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(232,200,74,.2);animation:blink 1.4s infinite}
 
 .chat-msg{font-size: var(--text-base);line-height:1.45;word-break:break-word}
 .msg-user{font-size: var(--text-base);font-weight:700;margin-right:2px}

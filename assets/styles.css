@@ -5,7 +5,7 @@
 :root{
   --ink:#030a0e; --surface:#071118; --panel:#0d1c28;
   --border:rgba(0,191,255,.08); --border-h:rgba(0,191,255,.2);
-  --white:#e8f6ff; --muted:#3a6070; --accent:#00bfff; --live:#00ff9d;
+  --white:#e8f6ff; --muted:#3a6070; --accent:#00bfff; --live:#e8c84a; --confirm:#00ff9d; --hot:#CE1126;
   --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
 
   /* ── Type scale ── */
@@ -20,7 +20,7 @@
 [data-theme="light"]{
   --ink:#eef7fb; --surface:#dceef5; --panel:#cce4ef;
   --border:rgba(0,0,0,.1); --border-h:rgba(0,0,0,.2);
-  --white:#051015; --muted:#3a6070; --accent:#0088bb; --live:#00aa6e;
+  --white:#051015; --muted:#3a6070; --accent:#0088bb; --live:#c9920a; --confirm:#00aa6e; --hot:#CE1126;
 }
 [data-theme="light"] body{background:var(--ink);color:var(--white)}
 [data-theme="light"] body::after{opacity:.3}
