@@ -278,7 +278,7 @@ paths:
     runOnDemandCloseAfter: 10s
 
   "~^live/":
-    runOnReady: ""
+    runOnReady: /usr/local/bin/corillo-notify.sh
     runOnReadyRestart: no
     record: yes
     runOnRecordSegmentComplete: /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
