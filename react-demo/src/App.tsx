@@ -1,13 +1,16 @@
 import { useLive } from './useLive';
+import { useVods } from './useVods';
 import { STREAMERS } from './streamers';
 import CorrilloLogo from './components/CorrilloLogo';
 import Sidebar from './components/Sidebar';
 import FeaturedPlayer from './components/FeaturedPlayer';
 import StreamCard from './components/StreamCard';
+import VodCard from './components/VodCard';
 import './app.css';
 
 export default function App() {
   const live = useLive();
+  const vods = useVods(6);
   const liveCount = STREAMERS.filter(s => s.key && live[s.key]?.ready).length;
   const liveStreamers = STREAMERS.filter(s => s.key && live[s.key]?.ready);
 
@@ -60,6 +63,20 @@ export default function App() {
               }
             </div>
           </div>
+
+          {/* Últimas transmisiones */}
+          {vods.length > 0 && (
+            <div className="content-section">
+              <div className="live-grid">
+                <div className="vods-row-header">
+                  <span>Últimas transmisiones</span>
+                  <div className="section-line" />
+                  <a href="https://corillo.live/vods/" target="_blank" rel="noopener">Ver todas →</a>
+                </div>
+                {vods.map(v => <VodCard key={v.id} vod={v} />)}
+              </div>
+            </div>
+          )}
 
           {/* Footer */}
           <footer className="site-footer">
