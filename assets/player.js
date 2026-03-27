@@ -221,15 +221,6 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     DOM.btnThemeTw.classList.toggle('active', name === 'twitch');
   }
 
-  function toggleGrain() {
-    const nowOff = document.body.classList.toggle('no-grain');
-    localStorage.setItem('corillo_grain', nowOff ? 'off' : 'on');
-    const btn = $('#grainBtn');
-    if (btn) {
-      btn.style.opacity = nowOff ? '.35' : '';
-      btn.title = nowOff ? 'Activar efecto de grano' : 'Desactivar efecto de grano';
-    }
-  }
 
   function toggleWebRTC() {
     App.useWebRTC = !App.useWebRTC;
@@ -867,18 +858,6 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     // Theme
     setTheme(localStorage.getItem('corillo_theme') || 'original');
 
-    // Grain toggle button
-    const grainOff = localStorage.getItem('corillo_grain') === 'off';
-    if (grainOff) document.body.classList.add('no-grain');
-    const grainBtn = document.createElement('button');
-    grainBtn.id = 'grainBtn';
-    grainBtn.className = 'theme-btn';
-    grainBtn.title = grainOff ? 'Activar efecto de grano' : 'Desactivar efecto de grano';
-    grainBtn.innerHTML = '&#9641;';
-    grainBtn.style.fontSize = '.65rem';
-    if (grainOff) grainBtn.style.opacity = '.35';
-    DOM.themeBtn.parentNode.insertBefore(grainBtn, DOM.themeBtn.nextSibling);
-    grainBtn.addEventListener('click', toggleGrain);
 
     // WebRTC toggle button
     const pill   = DOM.hlsTxt.closest('.pill') || DOM.hlsTxt.parentElement;
