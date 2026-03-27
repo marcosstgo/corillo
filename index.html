@@ -216,7 +216,8 @@
     .rdot::before{content:'';display:block;width:7px;height:7px;border-radius:50%;background:var(--crl-accent);animation:crl-blink 1.8s ease-in-out infinite}
 
     /* ── FOOTER ── */
-    .site-footer{border-top:1px solid var(--crl-border);padding:48px 32px 28px;margin-top:16px}
+    .site-footer{border-top:1px solid var(--crl-border);padding:48px 32px 28px;margin-top:16px;background:var(--crl-panel);position:relative;overflow:hidden}
+    .site-footer::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(0,191,255,.06),transparent);pointer-events:none}
     .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
     @media(max-width:900px){.foot-top{grid-template-columns:1fr 1fr;gap:32px}}
     @media(max-width:520px){.foot-top{grid-template-columns:1fr}}
