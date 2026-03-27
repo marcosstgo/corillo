@@ -725,17 +725,17 @@ button { font: inherit; cursor: pointer; }
 .crl-hero-eyebrow {
   font-family: var(--crl-mono); font-size: var(--crl-xs);
   letter-spacing: 3px; text-transform: uppercase;
-  color: var(--crl-accent); margin-bottom: 16px;
+  color: var(--crl-accent); margin-bottom: 16px; text-align: center;
 }
 .crl-hero-title {
   font-family: var(--crl-display);
   font-size: clamp(3rem, 8vw, 7rem);
   letter-spacing: 4px; line-height: 1;
-  color: var(--crl-white); margin-bottom: 16px;
+  color: var(--crl-white); margin-bottom: 16px; text-align: center;
 }
 .crl-hero-sub {
   font-size: var(--crl-base); color: var(--crl-muted);
-  max-width: 46ch; margin: 0 auto 32px; line-height: 1.6;
+  max-width: 46ch; margin: 0 auto 32px; line-height: 1.6; text-align: center;
 }
 .crl-hero-actions {
   display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
