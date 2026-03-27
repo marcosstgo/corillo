@@ -2,7 +2,7 @@
 corillo-api — API pública de streamers: perfiles y regeneración de stream key.
 Puerto 3004. Sin dependencias del chat ni de Telegram.
 """
-import os, time, secrets, json, glob, asyncio, threading
+import os, re, time, secrets, json, glob, asyncio, threading
 import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
@@ -269,6 +269,51 @@ async def get_clip(channel: str):
         except: pass
     threading.Thread(target=_cleanup, daemon=True).start()
     return FileResponse(out, media_type="video/mp4", filename=f"clip_{channel}.mp4")
+
+
+@app.get("/clip/vod/{vod_id}")
+async def get_vod_clip(vod_id: str, t: float = 0):
+    if not vod_id or not re.match(r'^[a-zA-Z0-9]+$', vod_id):
+        raise HTTPException(status_code=400)
+    t = max(0.0, t)
+    token = await _admin_token()
+    r = await _http.get(
+        f"{PB_URL}/api/collections/vods/records/{vod_id}",
+        headers={"Authorization": token},
+        params={"fields": "channel,filename"},
+    )
+    if r.status_code != 200:
+        raise HTTPException(status_code=404)
+    vod = r.json()
+    channel  = vod.get("channel", "")
+    filename = vod.get("filename", "")
+    if not channel or '/' in channel or '..' in channel:
+        raise HTTPException(status_code=400)
+    if not filename or '/' in filename or '..' in filename:
+        raise HTTPException(status_code=400)
+    filepath = f"/var/vods/live/{channel}/{filename}"
+    if not os.path.exists(filepath):
+        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+    out = f"/tmp/vod_clip_{vod_id}_{int(t)}_{int(time.time())}.mp4"
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-ss", str(int(t)), "-i", filepath,
+        "-t", "30", "-c", "copy", "-movflags", "+faststart", out,
+        stdout=asyncio.subprocess.DEVNULL,
+        stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(proc.communicate(), timeout=25)
+    except asyncio.TimeoutError:
+        proc.kill()
+        raise HTTPException(status_code=504)
+    if proc.returncode != 0 or not os.path.exists(out):
+        raise HTTPException(status_code=500)
+    def _cleanup():
+        time.sleep(120)
+        try: os.unlink(out)
+        except: pass
+    threading.Thread(target=_cleanup, daemon=True).start()
+    return FileResponse(out, media_type="video/mp4", filename=f"clip_{channel}_{int(t)}s.mp4")
 
 
 @app.get("/health")
