@@ -2,36 +2,52 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import Hls from 'hls.js';
 import { STREAMERS, Streamer } from '../streamers';
 import { LiveState } from '../useLive';
+import { useVods, Vod } from '../useVods';
+import { extractColor, hexToRgba, fmtDuration, relativeTime } from '../utils';
 
 const ROTATE_MS = 8000;
+const canHover = window.matchMedia('(hover: hover)').matches;
 
-interface Props { live: LiveState }
-
-function extractColor(gradient: string): string {
-  const m = gradient.match(/#[0-9a-fA-F]{6}/);
-  return m ? m[0] : '#00bfff';
+interface Props {
+  live: LiveState;
+  forcedKey?: string | null;
+  onFeaturedChange?: (key: string | null) => void;
 }
 
-export default function FeaturedPlayer({ live }: Props) {
-  const videoRef   = useRef<HTMLVideoElement>(null);
-  const hlsRef     = useRef<Hls | null>(null);
-  const rafRef     = useRef<number>(0);
-  const startRef   = useRef<number>(0);
-  const barRef     = useRef<HTMLDivElement>(null);
+export default function FeaturedPlayer({ live, forcedKey, onFeaturedChange }: Props) {
+  const videoRef      = useRef<HTMLVideoElement>(null);
+  const hlsRef        = useRef<Hls | null>(null);
+  const rafRef        = useRef<number>(0);
+  const startRef      = useRef<number>(0);
+  const barRef        = useRef<HTMLDivElement>(null);
+  const glowColorRef  = useRef('#00bfff');
+  const lastForcedRef = useRef<string | null>(null);
 
-  const [featured, setFeatured]   = useState<Streamer | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [viewers, setViewers]     = useState(0);
+  const [featuredStreamer, setFeaturedStreamer] = useState<Streamer | null>(null);
+  const [featuredVod, setFeaturedVod]           = useState<Vod | null>(null);
+  const [isPlaying, setIsPlaying]               = useState(false);
+  const [viewers, setViewers]                   = useState(0);
+  const [muted, setMuted]                       = useState(true);
+  const [fadeOut, setFadeOut]                   = useState(false);
+  const [rotateIdx, setRotateIdx]               = useState(0);
+  const [vodIdx, setVodIdx]                     = useState(0);
+
   const [glowColor, setGlowColor] = useState('#00bfff');
   const [prevColor, setPrevColor] = useState('#00bfff');
-  const [fadeGlow, setFadeGlow]   = useState(false); // true = prev fading out, next fading in
-  const [muted, setMuted]         = useState(true);
-  const [rotateIdx, setRotateIdx] = useState(0);
+  const [fadeGlow, setFadeGlow]   = useState(false);
 
-  // Derive live list
+  const vods     = useVods(6);
   const liveList = STREAMERS.filter(s => s.key && live[s.key]?.ready);
 
-  // Rotation bar animation
+  const applyGlow = useCallback((colorStr: string) => {
+    const c = extractColor(colorStr);
+    setPrevColor(glowColorRef.current);
+    glowColorRef.current = c;
+    setGlowColor(c);
+    setFadeGlow(true);
+    setTimeout(() => setFadeGlow(false), 1100);
+  }, []);
+
   const animateBar = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
     startRef.current = performance.now();
@@ -43,63 +59,114 @@ export default function FeaturedPlayer({ live }: Props) {
     rafRef.current = requestAnimationFrame(frame);
   }, []);
 
-  // Load HLS
   const loadStream = useCallback((key: string) => {
     const video = videoRef.current;
     if (!video) return;
     hlsRef.current?.destroy();
     hlsRef.current = null;
-
     const src = `https://corillo.live/live/${encodeURIComponent(key)}/index.m3u8`;
-
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = src;
-      video.load();
-      video.play().catch(() => {});
+      video.src = src; video.load(); video.play().catch(() => {});
     } else if (Hls.isSupported()) {
       const hls = new Hls({ lowLatencyMode: false, maxBufferLength: 12 });
       hls.loadSource(src);
       hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play().catch(() => {}); });
+      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
       hls.on(Hls.Events.ERROR, (_e, d) => { if (d.fatal) setIsPlaying(false); });
       hlsRef.current = hls;
     }
   }, []);
 
-  // Set featured channel with glow crossfade
-  const setChannel = useCallback((s: Streamer) => {
-    const color = extractColor(s.color);
-    setPrevColor(glowColor);
-    setGlowColor(color);
-    setFadeGlow(true);
-    setTimeout(() => setFadeGlow(false), 1100);
-    setFeatured(s);
-    setIsPlaying(!!s.key && (live[s.key!]?.ready ?? false));
-    setViewers(s.key ? live[s.key]?.viewers ?? 0 : 0);
-    if (s.key && live[s.key]?.ready) loadStream(s.key);
-    else { hlsRef.current?.destroy(); if (videoRef.current) videoRef.current.src = ''; }
-    animateBar();
-  }, [glowColor, live, loadStream, animateBar]);
+  const withFade = useCallback((fn: () => void, animate: boolean) => {
+    if (!animate) { fn(); return; }
+    setFadeOut(true);
+    setTimeout(() => { fn(); setFadeOut(false); }, 380);
+  }, []);
 
-  // Initial + rotation
+  const applyLiveChannel = useCallback((s: Streamer, animate: boolean) => {
+    withFade(() => {
+      setFeaturedStreamer(s);
+      setFeaturedVod(null);
+      const isLive = !!(s.key && live[s.key]?.ready);
+      setIsPlaying(isLive);
+      setViewers(s.key ? live[s.key]?.viewers ?? 0 : 0);
+      applyGlow(s.color || '');
+      if (isLive && s.key) loadStream(s.key);
+      else { hlsRef.current?.destroy(); if (videoRef.current) videoRef.current.src = ''; }
+      onFeaturedChange?.(s.key ?? null);
+    }, animate);
+    animateBar();
+  }, [live, loadStream, applyGlow, withFade, onFeaturedChange, animateBar]);
+
+  const applyVodChannel = useCallback((vod: Vod, animate: boolean) => {
+    const s = STREAMERS.find(x => x.key === vod.channel);
+    withFade(() => {
+      setFeaturedVod(vod);
+      setFeaturedStreamer(null);
+      setIsPlaying(false);
+      setViewers(0);
+      applyGlow(s?.color || '');
+      const video = videoRef.current;
+      if (video) {
+        hlsRef.current?.destroy();
+        hlsRef.current = null;
+        if (canHover && vod.preview) {
+          video.src = vod.preview; video.loop = true; video.muted = true;
+          video.play().catch(() => {});
+        } else {
+          video.src = '';
+        }
+      }
+      onFeaturedChange?.(null);
+    }, animate);
+    animateBar();
+  }, [applyGlow, withFade, onFeaturedChange, animateBar]);
+
+  // Live rotation
   useEffect(() => {
     if (liveList.length === 0) {
-      const fallback = STREAMERS.find(s => !s.soon) ?? null;
-      if (fallback && fallback.key !== featured?.key) setChannel(fallback);
+      hlsRef.current?.destroy();
+      if (videoRef.current) videoRef.current.src = '';
+      setIsPlaying(false);
       return;
     }
-    const idx = rotateIdx % liveList.length;
+    const idx  = rotateIdx % liveList.length;
     const next = liveList[idx];
-    if (next.key !== featured?.key) setChannel(next);
-
+    if (next.key !== featuredStreamer?.key) {
+      applyLiveChannel(next, !!featuredStreamer && liveList.length > 1);
+    }
     const id = setTimeout(() => setRotateIdx(i => i + 1), ROTATE_MS);
     return () => clearTimeout(id);
   }, [rotateIdx, liveList.length, live]);
 
+  // VOD rotation (when nobody is live)
+  useEffect(() => {
+    if (liveList.length > 0 || vods.length === 0) return;
+    const vod = vods[vodIdx % vods.length];
+    if (vod.id !== featuredVod?.id) {
+      applyVodChannel(vod, vodIdx > 0);
+    }
+    const id = setTimeout(() => setVodIdx(i => i + 1), ROTATE_MS);
+    return () => clearTimeout(id);
+  }, [vodIdx, vods.length, liveList.length]);
+
+  // Reset VOD index when entering VOD mode
+  useEffect(() => {
+    if (liveList.length === 0 && vods.length > 0) setVodIdx(0);
+  }, [liveList.length]);
+
+  // Forced key from sidebar click
+  useEffect(() => {
+    if (!forcedKey || forcedKey === lastForcedRef.current) return;
+    lastForcedRef.current = forcedKey;
+    const newIdx = liveList.findIndex(l => l.key === forcedKey);
+    if (newIdx >= 0) setRotateIdx(newIdx);
+  }, [forcedKey, liveList.length]);
+
   // Sync viewer count
   useEffect(() => {
-    if (featured?.key) setViewers(live[featured.key]?.viewers ?? 0);
-  }, [live, featured?.key]);
+    if (featuredStreamer?.key) setViewers(live[featuredStreamer.key]?.viewers ?? 0);
+  }, [live, featuredStreamer?.key]);
 
   // Cleanup
   useEffect(() => () => {
@@ -107,85 +174,106 @@ export default function FeaturedPlayer({ live }: Props) {
     cancelAnimationFrame(rafRef.current);
   }, []);
 
-  const color1 = extractColor(featured?.color ?? 'linear-gradient(#00bfff,#00bfff)');
+  const vodPreviewMode  = !!(featuredVod && canHover && featuredVod.preview);
+  const displayStreamer = featuredStreamer ?? (featuredVod ? STREAMERS.find(s => s.key === featuredVod.channel) : null);
+  const accentColor     = extractColor(displayStreamer?.color || '');
+  const showBar         = liveList.length > 1 || (liveList.length === 0 && vods.length > 1);
 
   return (
-    <div className={`featured-wrap${isPlaying ? ' playing' : ''}`}>
-      {/* Background grid */}
+    <div className={`featured-wrap${isPlaying ? ' playing' : ''}${vodPreviewMode ? ' vod-preview-mode' : ''}`}>
       <div className="featured-bg" />
 
-      {/* Glow layers */}
-      <div className="glow-layer" style={{
-        background: `radial-gradient(ellipse 70% 80% at 60% 50%, ${prevColor}22 0%, transparent 70%)`,
+      {/* Glow */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `radial-gradient(ellipse 70% 90% at 25% 55%, ${hexToRgba(prevColor, .18)}, transparent 65%)`,
         opacity: fadeGlow ? 0 : 1, transition: 'opacity 1.1s ease',
-        position: 'absolute', inset: 0, pointerEvents: 'none',
       }} />
-      <div className="glow-layer" style={{
-        background: `radial-gradient(ellipse 70% 80% at 60% 50%, ${glowColor}22 0%, transparent 70%)`,
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `radial-gradient(ellipse 70% 90% at 25% 55%, ${hexToRgba(glowColor, .18)}, transparent 65%)`,
         opacity: fadeGlow ? 1 : 0, transition: 'opacity 1.1s ease',
-        position: 'absolute', inset: 0, pointerEvents: 'none',
       }} />
 
-      {/* Watermark letter */}
-      <div className="featured-letter">{featured?.ava ?? ''}</div>
+      {/* VOD thumbnail background */}
+      {featuredVod?.thumb && (
+        <div className="featured-vod-thumb show" style={{ backgroundImage: `url('${featuredVod.thumb}')` }} />
+      )}
 
-      {/* Video */}
-      <video
-        ref={videoRef}
-        className="featured-video"
-        autoPlay muted={muted} playsInline
-      />
+      <div className="featured-letter">{displayStreamer?.ava ?? ''}</div>
 
-      {/* Offline state */}
-      {!isPlaying && (
+      <video ref={videoRef} className="featured-video" autoPlay muted={muted} playsInline />
+
+      {!isPlaying && !vodPreviewMode && !featuredVod && (
         <div className="featured-offline">
           <div className="featured-offline-icon">📡</div>
           <p>Sin stream activo</p>
         </div>
       )}
 
-      {/* Viewers badge */}
       <div className="featured-viewers" style={{ display: isPlaying ? 'flex' : 'none' }}>
         <span style={{ fontSize: 10, color: 'var(--accent)' }}>👁</span>
         <span>{viewers}</span>
       </div>
 
-      {/* Overlay */}
       <div className="featured-overlay">
-        <div id="featuredContent">
-          {featured && (
+        <div className={`featured-content-anim${fadeOut ? ' out' : ''}`}>
+          {featuredStreamer && (
             <div>
-              {isPlaying
-                ? <div className="featured-live-tag"><span className="live-dot" />EN VIVO</div>
-                : <div className="featured-vod-tag">OFFLINE</div>
-              }
+              <div className="featured-live-tag"><span className="live-dot" />EN VIVO</div>
               <div className="featured-name">
-                {featured.name.split('').map((ch, i) =>
-                  <span key={i} style={i === 0 ? { color: 'var(--accent)', textShadow: `0 0 30px ${color1}66` } : {}}>
-                    {ch}
-                  </span>
-                )}
+                {featuredStreamer.name.split('').map((ch, i) => (
+                  <span key={i} style={i === 0 ? { color: 'var(--accent)', textShadow: `0 0 30px ${accentColor}66` } : {}}>{ch}</span>
+                ))}
               </div>
-              <div className="featured-sub">{featured.sub}</div>
+              <div className="featured-sub">{featuredStreamer.sub}</div>
             </div>
           )}
+          {featuredVod && (() => {
+            const s    = STREAMERS.find(x => x.key === featuredVod.channel);
+            const name = s?.name ?? featuredVod.channel.toUpperCase();
+            const c    = extractColor(s?.color ?? '');
+            return (
+              <div>
+                <div className="featured-vod-tag">🎬 Última transmisión</div>
+                <div className="featured-name">
+                  {name.split('').map((ch, i) => (
+                    <span key={i} style={i === 0 ? { color: 'var(--accent)', textShadow: `0 0 30px ${c}66` } : {}}>{ch}</span>
+                  ))}
+                </div>
+                <div className="featured-sub">
+                  {relativeTime(featuredVod.date)}{featuredVod.duration ? ` · ${fmtDuration(featuredVod.duration)}` : ''}
+                </div>
+              </div>
+            );
+          })()}
         </div>
-        <div className="featured-actions">
-          {featured?.key && (
-            <a href={`https://corillo.live/${featured.key}/`} target="_blank" rel="noopener" className="nav-btn solid">
-              Ver canal →
+
+        <div className={`featured-actions${fadeOut ? ' out' : ''}`}>
+          {featuredStreamer?.key && (
+            <a href={`https://corillo.live/${featuredStreamer.key}/`} target="_blank" rel="noopener" className="nav-btn solid">
+              Ver stream →
             </a>
           )}
-          <button className="nav-btn" onClick={() => setMuted(m => !m)}>
-            {muted ? '🔇' : '🔊'}
-          </button>
+          {featuredVod && (
+            <>
+              <a href={`https://corillo.live/vods/v/?id=${featuredVod.id}`} target="_blank" rel="noopener" className="nav-btn solid">
+                ▶ Ver VOD
+              </a>
+              <a href="https://corillo.live/vods/" target="_blank" rel="noopener" className="nav-btn">
+                🎬 Todos
+              </a>
+            </>
+          )}
+          {!featuredVod && (
+            <button className="nav-btn" onClick={() => setMuted(m => !m)}>
+              {muted ? '🔇' : '🔊'}
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Rotation bar */}
-      {liveList.length > 1 && (
-        <div className="rotate-bar" ref={barRef} />
-      )}
+      {showBar && <div className="rotate-bar" ref={barRef} />}
     </div>
   );
 }

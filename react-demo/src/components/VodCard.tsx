@@ -1,33 +1,13 @@
 import { useRef } from 'react';
 import { Vod } from '../useVods';
 import { STREAMERS } from '../streamers';
-
-function fmtDuration(s: number): string {
-  if (!s) return '';
-  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
-  return h > 0
-    ? `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
-    : `${m}:${String(sec).padStart(2, '0')}`;
-}
-
-function relativeTime(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 2)  return 'Hace un momento';
-  if (mins < 60) return `Hace ${mins}m`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24)  return `Hace ${hrs}h`;
-  const days = Math.floor(hrs / 24);
-  if (days === 1) return 'Ayer';
-  if (days < 7)  return `Hace ${days} días`;
-  return `Hace ${Math.floor(days / 7)} sem`;
-}
+import { fmtDuration, relativeTime } from '../utils';
 
 const canHover = window.matchMedia('(hover: hover)').matches;
 
 export default function VodCard({ vod }: { vod: Vod }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const s = STREAMERS.find(x => x.key === vod.channel) ?? { name: vod.channel.toUpperCase(), color: '', ava: vod.channel[0].toUpperCase(), key: vod.channel, sub: '' };
+  const s   = STREAMERS.find(x => x.key === vod.channel) ?? { name: vod.channel.toUpperCase(), color: '', ava: vod.channel[0]?.toUpperCase() ?? '?', key: vod.channel, sub: '' };
   const dur = fmtDuration(vod.duration);
 
   return (
