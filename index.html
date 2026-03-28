@@ -230,6 +230,18 @@
     .foot-col-links a:hover{color:var(--crl-white)}
     [data-theme="light"] .foot-col-links a{color:rgba(0,0,0,.4)}
     [data-theme="light"] .foot-col-links a:hover{color:rgba(0,0,0,.85)}
+    .foot-chev{margin-left:auto;font-size:10px;color:var(--crl-muted);transition:transform .25s;display:none}
+    @media(max-width:520px){
+      .foot-chev{display:block}
+      .foot-col-title{cursor:pointer;user-select:none;margin-bottom:0;padding:12px 0;border-bottom:1px solid var(--crl-border)}
+      .foot-col-title[aria-expanded="true"]{color:var(--crl-accent);border-color:transparent}
+      .foot-col-title[aria-expanded="true"] .foot-chev{transform:rotate(180deg);color:var(--crl-accent)}
+      .foot-top > div:not(:first-child){border-top:1px solid var(--crl-border)}
+      .foot-col-links{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;overflow:hidden;gap:0}
+      .foot-col-links.open{grid-template-rows:1fr}
+      .foot-col-links > div{overflow:hidden;display:flex;flex-direction:column;gap:9px}
+      .foot-col-links.open > div{padding:14px 0}
+    }
     .foot-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:24px;border-top:1px solid var(--crl-border)}
     .foot-copy{font-family:var(--crl-mono);font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.18);text-transform:uppercase}
     .foot-socials{display:flex;align-items:center;gap:4px}
@@ -385,39 +397,45 @@
 
         <!-- Plataforma -->
         <div>
-          <div class="foot-col-title"><span class="rdot"></span>Plataforma</div>
+          <div class="foot-col-title" data-foot-toggle><span class="rdot"></span>Plataforma<i class="fa-solid fa-chevron-down foot-chev"></i></div>
           <div class="foot-col-links">
-            <a href="/">Inicio</a>
-            <a href="/multiplayer/">Multiplayer</a>
-            <a href="/vods/">VODs</a>
-            <a href="/streamers/">Streamers</a>
-            <a href="/join/">Crear Canal</a>
-            <a href="/configuracion/">Configuración</a>
+            <div>
+              <a href="/">Inicio</a>
+              <a href="/multiplayer/">Multiplayer</a>
+              <a href="/vods/">VODs</a>
+              <a href="/streamers/">Streamers</a>
+              <a href="/join/">Crear Canal</a>
+              <a href="/configuracion/">Configuración</a>
+            </div>
           </div>
         </div>
 
         <!-- Software -->
         <div>
-          <div class="foot-col-title"><span class="rdot"></span>Software</div>
+          <div class="foot-col-title" data-foot-toggle><span class="rdot"></span>Software<i class="fa-solid fa-chevron-down foot-chev"></i></div>
           <div class="foot-col-links">
-            <a href="/software/">Todo el software</a>
-            <a href="/streamer-pro/">Streamer Pro</a>
-            <a href="/antibufferbloat-pro/">Anti-BufferBloat Pro</a>
-            <a href="/natcheck/">NATCheck</a>
-            <a href="https://github.com/marcosstgo/PingGuard" target="_blank" rel="noopener">Ping Guard</a>
+            <div>
+              <a href="/software/">Todo el software</a>
+              <a href="/streamer-pro/">Streamer Pro</a>
+              <a href="/antibufferbloat-pro/">Anti-BufferBloat Pro</a>
+              <a href="/natcheck/">NATCheck</a>
+              <a href="https://github.com/marcosstgo/PingGuard" target="_blank" rel="noopener">Ping Guard</a>
+            </div>
           </div>
         </div>
 
         <!-- Info & Legal -->
         <div>
-          <div class="foot-col-title"><span class="rdot"></span>Info</div>
+          <div class="foot-col-title" data-foot-toggle><span class="rdot"></span>Info<i class="fa-solid fa-chevron-down foot-chev"></i></div>
           <div class="foot-col-links">
-            <a href="/roadmap/">Roadmap</a>
-            <a href="/corillo-css/">Corillo CSS</a>
-            <a href="/faq/">FAQ</a>
-            <a href="/legal/">Términos</a>
-            <a href="/dmca/">DMCA</a>
-            <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
+            <div>
+              <a href="/roadmap/">Roadmap</a>
+              <a href="/corillo-css/">Corillo CSS</a>
+              <a href="/faq/">FAQ</a>
+              <a href="/legal/">Términos</a>
+              <a href="/dmca/">DMCA</a>
+              <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
+            </div>
           </div>
         </div>
 
@@ -1173,6 +1191,18 @@
     const el = document.getElementById('footVersion');
     if (el && d.version) el.textContent = 'v' + d.version;
   }).catch(() => {});
+
+  /* ── Footer accordion — mobile only ── */
+  if (matchMedia('(max-width:520px)').matches) {
+    document.querySelectorAll('[data-foot-toggle]').forEach(title => {
+      const links = title.nextElementSibling;
+      title.setAttribute('aria-expanded', 'false');
+      title.addEventListener('click', () => {
+        const open = links.classList.toggle('open');
+        title.setAttribute('aria-expanded', String(open));
+      });
+    });
+  }
 })();
 </script>
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
