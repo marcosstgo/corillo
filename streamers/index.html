@@ -100,6 +100,7 @@
     .s-name { font-family: var(--crl-display); font-size: 1.7rem; letter-spacing: .04em; color: var(--crl-white); line-height: 1; margin: 0; }
     .s-sub { font-family: var(--crl-mono); font-size: .92rem; letter-spacing: .08em; color: var(--crl-accent); margin: 0; }
     .s-bio { font-size: .85rem; color: var(--crl-muted); line-height: 1.55; margin: 4px 0 0; flex: 1; }
+    .s-stream-title { font-family: var(--crl-mono); font-size: .75rem; color: var(--crl-accent); margin: 4px 0 0; }
 
     .s-card-footer { padding: 0 24px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .s-socials { display: flex; gap: 8px; }
@@ -248,6 +249,7 @@
       <div class="s-card-body">
         <h2 class="s-name">${s.name}</h2>
         <p class="s-sub">${s.sub}</p>
+        <p class="s-stream-title" id="stitle-${s.key}" style="display:none"></p>
         <p class="s-bio crl-clamp-3" id="bio-${s.key}"></p>
       </div>
       <div class="s-card-footer">
@@ -276,6 +278,12 @@
 
       const bio = document.getElementById('bio-' + s.key);
       if (bio && d.bio) bio.textContent = d.bio;
+
+      const stitle = document.getElementById('stitle-' + s.key);
+      if (stitle && d.stream_title) {
+        stitle.textContent = '▶ ' + d.stream_title;
+        stitle.style.display = '';
+      }
 
       const soc = document.getElementById('soc-' + s.key);
       if (soc) {

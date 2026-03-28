@@ -63,6 +63,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     chName:           $('#chName'),
     chHostTag:        $('#chHostTag'),
     chSub:            $('#chSub'),
+    chStreamTitle:    $('#chStreamTitle'),
     chBio:            $('#chBio'),
     chLinks:          $('#chLinks'),
     otherLiveSection: $('#otherLiveSection'),
@@ -759,6 +760,11 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
           });
         }
         if (data.sub && data.sub.trim() && DOM.chSub) DOM.chSub.textContent = data.sub.trim();
+        if (DOM.chStreamTitle) {
+          const title = (data.stream_title || '').trim();
+          DOM.chStreamTitle.textContent = title;
+          DOM.chStreamTitle.style.display = title ? '' : 'none';
+        }
         if (data.bio && data.bio.trim() && DOM.chBio) {
           DOM.chBio.textContent = data.bio.trim();
           DOM.chBio.style.display = '';

@@ -83,6 +83,8 @@ body{display:flex;flex-direction:column}
   font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
   color:var(--crl-muted);margin-top:5px;
 }
+.ch-stream-title{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:var(--crl-xs);color:var(--crl-accent);font-family:var(--crl-mono)}
+.ch-stream-title::before{content:'\25B6';font-size:8px;opacity:.7}
 .ch-bio{font-size:13px;color:rgba(232,246,255,.5);margin-top:6px;line-height:1.5;display:none}
 .ch-links{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .ch-link{

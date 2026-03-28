@@ -536,6 +536,11 @@
         </div>
 
         <div class="field">
+          <label>Juego / Título <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">— qué estás jugando o haciendo ahora</span></label>
+          <input type="text" id="fStreamTitle" placeholder="Minecraft, Just Chatting, GTA V…" maxlength="80">
+        </div>
+
+        <div class="field">
           <label>Bio</label>
           <textarea id="fBio" placeholder="Cuéntale algo a tu audiencia…" maxlength="280"></textarea>
         </div>
@@ -694,9 +699,10 @@ const avatarPreview= document.getElementById('avatarPreview');
 const avatarInitial= document.getElementById('avatarInitial');
 const avatarBtn    = document.getElementById('avatarBtn');
 const avatarFile   = document.getElementById('avatarFile');
-const fDisplayName = document.getElementById('fDisplayName');
-const fBio         = document.getElementById('fBio');
-const fTwitch      = document.getElementById('fTwitch');
+const fDisplayName   = document.getElementById('fDisplayName');
+const fStreamTitle   = document.getElementById('fStreamTitle');
+const fBio           = document.getElementById('fBio');
+const fTwitch        = document.getElementById('fTwitch');
 const fInstagram   = document.getElementById('fInstagram');
 const fTiktok      = document.getElementById('fTiktok');
 const saveBtn      = document.getElementById('saveBtn');
@@ -761,6 +767,7 @@ function populateDashboard(r) {
   // Perfil
   fDisplayName.value = r.display_name || '';
   document.getElementById('fSub').value = r.sub || '';
+  fStreamTitle.value = r.stream_title || '';
   fBio.value = r.bio || '';
   fTwitch.value = r.twitch || '';
   fInstagram.value = r.instagram || '';
@@ -968,9 +975,10 @@ saveBtn.addEventListener('click', async () => {
 
   try {
     currentRecord = await pb.collection('streamers').update(currentRecord.id, {
-      display_name: fDisplayName.value.trim(),
-      sub:          document.getElementById('fSub').value.trim(),
-      bio:          fBio.value.trim(),
+      display_name:  fDisplayName.value.trim(),
+      sub:           document.getElementById('fSub').value.trim(),
+      stream_title:  fStreamTitle.value.trim(),
+      bio:           fBio.value.trim(),
       twitch:       fTwitch.value.trim(),
       instagram:    fInstagram.value.trim(),
       tiktok:       fTiktok.value.trim(),
