@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Corillo CSS — Framework Docs v1.1</title>
+<title>Corillo CSS — Framework Docs v1.2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -122,7 +122,7 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
 <nav class="topbar">
   <div class="topbar-logo">CORILLO<span>.</span>CSS</div>
   <div class="topbar-right">
-    <span class="version">v1.1.0</span>
+    <span class="version">v1.2.0</span>
     <button class="theme-btn" id="themeBtn" title="Toggle theme">
       <i class="fa-solid fa-circle-half-stroke"></i>
     </button>
@@ -154,8 +154,9 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
   <div class="hero-badges">
     <span class="badge badge-accent"><i class="fa-solid fa-droplet"></i> Sin dependencias</span>
     <span class="badge badge-live"><i class="fa-solid fa-bolt"></i> Dark-first</span>
-    <span class="badge badge-confirm"><i class="fa-solid fa-weight-hanging"></i> 32 KB · 6.5 KB gz</span>
+    <span class="badge badge-confirm"><i class="fa-solid fa-weight-hanging"></i> 40 KB · ~9 KB gz</span>
     <span class="badge badge-dim"><i class="fa-brands fa-css3"></i> CSS puro</span>
+    <span class="badge badge-dim"><i class="fa-solid fa-layer-group"></i> 37 componentes</span>
   </div>
 
   <div class="hero-actions">
@@ -190,6 +191,12 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
     <a href="#dots">Dots</a>
     <a href="#avatars">Avatares</a>
     <a href="#inputs">Inputs</a>
+    <a href="#formgroup">Form Group</a>
+    <a href="#table">Tabla</a>
+    <a href="#tabs">Tabs</a>
+    <a href="#accordion">Accordion</a>
+    <a href="#select">Select</a>
+    <a href="#kpi">KPI Card</a>
     <div class="sidenav-divider"></div>
     <p class="sidenav-label">Utilidades</p>
     <a href="#animations">Animaciones</a>
@@ -696,6 +703,305 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
       </div>
     </section>
 
+    <!-- ── FORM GROUP ── -->
+    <section class="doc-section" id="formgroup">
+      <p class="crl-section-label">15 — Form Group</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Form Group</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Campos con label, hint y estados de validación. Añade <code class="crl-mono crl-text-accent">has-error · has-success · has-warning</code> al <code class="crl-mono crl-text-accent">.crl-form-group</code>.</p>
+
+      <div class="preview preview-col">
+        <div class="crl-form-group">
+          <label class="crl-label">Nombre de usuario</label>
+          <div class="crl-input-wrap">
+            <input class="crl-input" type="text" placeholder="tu_handle">
+          </div>
+          <span class="crl-hint">Solo letras, números y guión bajo.</span>
+        </div>
+        <div class="crl-form-group has-error">
+          <label class="crl-label">Stream key</label>
+          <div class="crl-input-wrap">
+            <input class="crl-input crl-input-mono" type="text" value="key-invalida!">
+            <button class="crl-input-action"><i class="fa-solid fa-eye"></i></button>
+          </div>
+          <span class="crl-hint crl-error"><i class="fa-solid fa-circle-exclamation"></i> Formato inválido</span>
+        </div>
+        <div class="crl-form-group has-success">
+          <label class="crl-label">Email</label>
+          <div class="crl-input-wrap">
+            <input class="crl-input" type="email" value="streamer@corillo.live">
+          </div>
+          <span class="crl-hint crl-success"><i class="fa-solid fa-check"></i> Email verificado</span>
+        </div>
+        <div class="crl-form-group has-warning">
+          <label class="crl-label">Bitrate objetivo</label>
+          <div class="crl-input-wrap">
+            <input class="crl-input" type="text" value="7500">
+          </div>
+          <span class="crl-hint crl-warning"><i class="fa-solid fa-triangle-exclamation"></i> Puede causar drops en conexiones lentas</span>
+        </div>
+      </div>
+      <pre class="crl-code"><span class="tok-com">/* Estado de error */</span>
+<span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-form-group has-error"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;label</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-label"</span><span class="tok-tag">&gt;</span>Stream key<span class="tok-tag">&lt;/label&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-input-wrap"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;input</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-input crl-input-mono"</span> <span class="tok-attr">type</span>=<span class="tok-str">"text"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;button</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-input-action"</span><span class="tok-tag">&gt;&lt;i</span> <span class="tok-attr">class</span>=<span class="tok-str">"fa-solid fa-eye"</span><span class="tok-tag">&gt;&lt;/i&gt;&lt;/button&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;span</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-hint crl-error"</span><span class="tok-tag">&gt;</span>Formato inválido<span class="tok-tag">&lt;/span&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span>
+
+<span class="tok-com">/* Otros estados: has-success · has-warning */</span>
+<span class="tok-com">/* Hints:        .crl-success · .crl-warning */</span></pre>
+    </section>
+
+    <!-- ── TABLE ── -->
+    <section class="doc-section" id="table">
+      <p class="crl-section-label">16 — Table</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Tablas</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Contenedor scrolleable para datos tabulares. Base: <code class="crl-mono crl-text-accent">.crl-table-wrap > .crl-table</code></p>
+
+      <div class="preview" style="padding:0;overflow:hidden">
+        <div class="crl-table-wrap">
+          <table class="crl-table">
+            <thead>
+              <tr>
+                <th>Canal</th>
+                <th>Estado</th>
+                <th class="crl-table-num">Viewers</th>
+                <th class="crl-table-num">Kbps</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="crl-flex crl-items-center crl-gap-sm">
+                    <span class="crl-ava crl-ava-xs" style="background:linear-gradient(135deg,#e8c84a,#c09020)">K</span>
+                    KATATONIA
+                  </div>
+                </td>
+                <td><span class="crl-pill crl-pill-live"><span class="crl-dot crl-dot-sm crl-on"></span> En Vivo</span></td>
+                <td class="crl-table-num">24</td>
+                <td class="crl-table-num">4,200</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="crl-flex crl-items-center crl-gap-sm">
+                    <span class="crl-ava crl-ava-xs" style="background:linear-gradient(135deg,#00bfff,#0088bb)">M</span>
+                    MARCOS
+                  </div>
+                </td>
+                <td><span class="crl-pill crl-pill-accent"><i class="fa-solid fa-satellite-dish"></i> Streaming</span></td>
+                <td class="crl-table-num">8</td>
+                <td class="crl-table-num">3,500</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="crl-flex crl-items-center crl-gap-sm">
+                    <span class="crl-ava crl-ava-xs" style="background:linear-gradient(135deg,#3a6070,#1a3040)">T</span>
+                    TEA
+                  </div>
+                </td>
+                <td><span class="crl-pill">Offline</span></td>
+                <td class="crl-table-num crl-text-muted">—</td>
+                <td class="crl-table-num crl-text-muted">—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <pre class="crl-code"><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-table-wrap"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;table</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-table"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;thead&gt;&lt;tr&gt;</span>
+      <span class="tok-tag">&lt;th&gt;</span>Canal<span class="tok-tag">&lt;/th&gt;</span>
+      <span class="tok-tag">&lt;th</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-table-num"</span><span class="tok-tag">&gt;</span>Viewers<span class="tok-tag">&lt;/th&gt;</span>  <span class="tok-com">// alinea derecha</span>
+    <span class="tok-tag">&lt;/tr&gt;&lt;/thead&gt;</span>
+    <span class="tok-tag">&lt;tbody&gt;</span>
+      <span class="tok-tag">&lt;tr&gt;&lt;td&gt;</span>KATATONIA<span class="tok-tag">&lt;/td&gt;&lt;td</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-table-num"</span><span class="tok-tag">&gt;</span>24<span class="tok-tag">&lt;/td&gt;&lt;/tr&gt;</span>
+    <span class="tok-tag">&lt;/tbody&gt;</span>
+  <span class="tok-tag">&lt;/table&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></pre>
+    </section>
+
+    <!-- ── TABS ── -->
+    <section class="doc-section" id="tabs">
+      <p class="crl-section-label">17 — Tabs</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Tabs</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Navegación por pestañas. Base: <code class="crl-mono crl-text-accent">.crl-tabs > .crl-tab[data-tab]</code></p>
+
+      <div class="preview preview-col">
+        <div class="crl-tabs" id="demoTabs">
+          <button class="crl-tab active" data-tab="perfil">Perfil</button>
+          <button class="crl-tab" data-tab="vods">VODs</button>
+          <button class="crl-tab" data-tab="stats">Stats</button>
+        </div>
+        <div class="crl-tab-panels">
+          <div class="crl-tab-panel active" data-panel="perfil">
+            <p class="crl-sm" style="color:var(--crl-muted)">Bio, avatar, links externos y paneles del canal.</p>
+          </div>
+          <div class="crl-tab-panel" data-panel="vods">
+            <p class="crl-sm" style="color:var(--crl-muted)">Lista de últimas transmisiones con thumbnail y duración.</p>
+          </div>
+          <div class="crl-tab-panel" data-panel="stats">
+            <p class="crl-sm" style="color:var(--crl-muted)">Métricas: viewers promedio, bitrate, horas en vivo este mes.</p>
+          </div>
+        </div>
+      </div>
+      <pre class="crl-code"><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-tabs"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;button</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-tab active"</span> <span class="tok-attr">data-tab</span>=<span class="tok-str">"perfil"</span><span class="tok-tag">&gt;</span>Perfil<span class="tok-tag">&lt;/button&gt;</span>
+  <span class="tok-tag">&lt;button</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-tab"</span> <span class="tok-attr">data-tab</span>=<span class="tok-str">"vods"</span><span class="tok-tag">&gt;</span>VODs<span class="tok-tag">&lt;/button&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-tab-panels"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-tab-panel active"</span> <span class="tok-attr">data-panel</span>=<span class="tok-str">"perfil"</span><span class="tok-tag">&gt;</span>...<span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-tab-panel"</span> <span class="tok-attr">data-panel</span>=<span class="tok-str">"vods"</span><span class="tok-tag">&gt;</span>...<span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span>
+
+<span class="tok-com">// JS — activar tab</span>
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.classList.remove('active'));
+  panels.forEach(p => p.classList.remove('active'));
+  t.classList.add('active');
+  container.querySelector(`[data-panel="${t.dataset.tab}"]`).classList.add('active');
+}));</pre>
+    </section>
+
+    <!-- ── ACCORDION ── -->
+    <section class="doc-section" id="accordion">
+      <p class="crl-section-label">18 — Accordion</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Accordion</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Collapse animado vía <code class="crl-mono crl-text-accent">grid-template-rows: 0fr → 1fr</code>. Requiere <code class="crl-mono crl-text-accent">&lt;div&gt;</code> wrapper dentro del content.</p>
+
+      <div class="preview preview-col">
+        <div class="crl-accordion" id="demoAccordion">
+          <div class="crl-accordion-item open">
+            <button class="crl-accordion-trigger">
+              <span>¿Cómo empiezo a transmitir?</span>
+              <i class="fa-solid fa-chevron-down crl-accordion-icon"></i>
+            </button>
+            <div class="crl-accordion-content">
+              <div>
+                <p class="crl-sm" style="padding:4px 0 16px;color:var(--crl-muted)">Regístrate en Corillo, configura OBS con tu stream key y conecta via RTMP. Revisa la guía en <span class="crl-text-accent">/configuracion/</span>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="crl-accordion-item">
+            <button class="crl-accordion-trigger">
+              <span>¿Qué formatos de video acepta?</span>
+              <i class="fa-solid fa-chevron-down crl-accordion-icon"></i>
+            </button>
+            <div class="crl-accordion-content">
+              <div>
+                <p class="crl-sm" style="padding:4px 0 16px;color:var(--crl-muted)">RTMP con H.264 y AAC. Resolución hasta 1080p60, bitrate recomendado 3,000–5,000 Kbps.</p>
+              </div>
+            </div>
+          </div>
+          <div class="crl-accordion-item">
+            <button class="crl-accordion-trigger">
+              <span>¿Los VODs se guardan automáticamente?</span>
+              <i class="fa-solid fa-chevron-down crl-accordion-icon"></i>
+            </button>
+            <div class="crl-accordion-content">
+              <div>
+                <p class="crl-sm" style="padding:4px 0 16px;color:var(--crl-muted)">Sí, si tienes VODs habilitado en tu perfil. Plan free conserva los últimos 5, plan pro es ilimitado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <pre class="crl-code"><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-accordion"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-accordion-item open"</span><span class="tok-tag">&gt;</span>  <span class="tok-com">// .open = abierto</span>
+    <span class="tok-tag">&lt;button</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-accordion-trigger"</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;span&gt;</span>Pregunta<span class="tok-tag">&lt;/span&gt;</span>
+      <span class="tok-tag">&lt;i</span> <span class="tok-attr">class</span>=<span class="tok-str">"fa-solid fa-chevron-down crl-accordion-icon"</span><span class="tok-tag">&gt;&lt;/i&gt;</span>
+    <span class="tok-tag">&lt;/button&gt;</span>
+    <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-accordion-content"</span><span class="tok-tag">&gt;</span>
+      <span class="tok-tag">&lt;div&gt;</span>Respuesta aquí<span class="tok-tag">&lt;/div&gt;</span>  <span class="tok-com">// wrapper requerido</span>
+    <span class="tok-tag">&lt;/div&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span></pre>
+    </section>
+
+    <!-- ── SELECT ── -->
+    <section class="doc-section" id="select">
+      <p class="crl-section-label">19 — Select</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Select</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Dropdown nativo estilizado. Flecha SVG inline — no depende de Font Awesome. Tamaño <code class="crl-mono crl-text-accent">.crl-select-sm</code> disponible.</p>
+
+      <div class="preview">
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <div class="crl-select-wrap">
+            <select class="crl-select">
+              <option>Todos los canales</option>
+              <option>KATATONIA</option>
+              <option>TEA</option>
+              <option>MIRA_SANGANOOO</option>
+              <option>MARCOS</option>
+            </select>
+          </div>
+          <div class="crl-select-wrap">
+            <select class="crl-select crl-select-sm">
+              <option>Plan: Free</option>
+              <option>Plan: Pro</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <pre class="crl-code"><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-select-wrap"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;select</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-select"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;option&gt;</span>Opción A<span class="tok-tag">&lt;/option&gt;</span>
+    <span class="tok-tag">&lt;option&gt;</span>Opción B<span class="tok-tag">&lt;/option&gt;</span>
+  <span class="tok-tag">&lt;/select&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span>
+
+<span class="tok-com">// Tamaño compacto</span>
+<span class="tok-tag">&lt;select</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-select crl-select-sm"</span><span class="tok-tag">&gt;</span>...<span class="tok-tag">&lt;/select&gt;</span></pre>
+    </section>
+
+    <!-- ── KPI ── -->
+    <section class="doc-section" id="kpi">
+      <p class="crl-section-label">20 — KPI Card</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">KPI Cards</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Cards de métricas con delta de tendencia. <code class="crl-mono crl-text-accent">.crl-kpi-delta.up</code> verde · <code class="crl-mono crl-text-accent">.down</code> rojo · <code class="crl-mono crl-text-accent">.flat</code> muted.</p>
+
+      <div class="preview">
+        <div class="crl-kpi-grid">
+          <div class="crl-kpi">
+            <p class="crl-kpi-label">Viewers promedio</p>
+            <p class="crl-kpi-value">18</p>
+            <p class="crl-kpi-delta up"><i class="fa-solid fa-arrow-up"></i> +33%</p>
+            <p class="crl-kpi-sub">vs semana pasada</p>
+          </div>
+          <div class="crl-kpi">
+            <p class="crl-kpi-label">Horas en vivo</p>
+            <p class="crl-kpi-value">24.5h</p>
+            <p class="crl-kpi-delta up"><i class="fa-solid fa-arrow-up"></i> +2h</p>
+            <p class="crl-kpi-sub">este mes</p>
+          </div>
+          <div class="crl-kpi">
+            <p class="crl-kpi-label">Bitrate medio</p>
+            <p class="crl-kpi-value">4.1k</p>
+            <p class="crl-kpi-delta flat"><i class="fa-solid fa-minus"></i> sin cambio</p>
+            <p class="crl-kpi-sub">Kbps promedio</p>
+          </div>
+          <div class="crl-kpi">
+            <p class="crl-kpi-label">Drops detectados</p>
+            <p class="crl-kpi-value">2</p>
+            <p class="crl-kpi-delta down"><i class="fa-solid fa-arrow-down"></i> peor que ayer</p>
+            <p class="crl-kpi-sub">último stream</p>
+          </div>
+        </div>
+      </div>
+      <pre class="crl-code"><span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-kpi-grid"</span><span class="tok-tag">&gt;</span>
+  <span class="tok-tag">&lt;div</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-kpi"</span><span class="tok-tag">&gt;</span>
+    <span class="tok-tag">&lt;p</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-kpi-label"</span><span class="tok-tag">&gt;</span>Viewers promedio<span class="tok-tag">&lt;/p&gt;</span>
+    <span class="tok-tag">&lt;p</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-kpi-value"</span><span class="tok-tag">&gt;</span>18<span class="tok-tag">&lt;/p&gt;</span>
+    <span class="tok-tag">&lt;p</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-kpi-delta up"</span><span class="tok-tag">&gt;</span>+33%<span class="tok-tag">&lt;/p&gt;</span>
+    <span class="tok-tag">&lt;p</span> <span class="tok-attr">class</span>=<span class="tok-str">"crl-kpi-sub"</span><span class="tok-tag">&gt;</span>vs semana pasada<span class="tok-tag">&lt;/p&gt;</span>
+  <span class="tok-tag">&lt;/div&gt;</span>
+<span class="tok-tag">&lt;/div&gt;</span>
+
+<span class="tok-com">// Delta: .up (verde) · .down (rojo) · .flat (muted)</span></pre>
+    </section>
+
     <!-- ── ROADMAP ── -->
     <section class="doc-section" id="roadmap">
       <p class="crl-section-label">Roadmap</p>
@@ -744,10 +1050,27 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
         </div>
       </div>
 
-      <!-- v1.1 — PRÓXIMO -->
+      <!-- v1.2 — LISTO -->
       <div style="margin-bottom:32px">
         <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
-          <span class="badge badge-accent"><i class="fa-solid fa-clock"></i> v1.1 — Próximo</span>
+          <span class="badge badge-confirm"><i class="fa-solid fa-check"></i> v1.2 — Listo</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-table"></i><span class="crl-xs">Table component</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-circle-exclamation"></i><span class="crl-xs">Form validation states</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-folder-tree"></i><span class="crl-xs">Accordion / Collapse</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-folder-open"></i><span class="crl-xs">Tabs</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-magnifying-glass"></i><span class="crl-xs">Select / Combobox</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-chart-bar"></i><span class="crl-xs">Stat / KPI card</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-tag"></i><span class="crl-xs">Prefijo crl-* en todos los componentes</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-rocket"></i><span class="crl-xs">Desplegado en Corillo.live — 9 páginas</span></div>
+        </div>
+      </div>
+
+      <!-- v1.3 — PRÓXIMO -->
+      <div style="margin-bottom:32px">
+        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
+          <span class="badge badge-accent"><i class="fa-solid fa-clock"></i> v1.3 — Próximo</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-bell"></i><span class="crl-xs">Toast / Notificación</span></div>
@@ -755,21 +1078,6 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-toggle-on"></i><span class="crl-xs">Toggle / Switch</span></div>
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-bars-progress"></i><span class="crl-xs">Progress bar</span></div>
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-spinner"></i><span class="crl-xs">Skeleton loader</span></div>
-        </div>
-      </div>
-
-      <!-- v1.2 — SIGUIENTE -->
-      <div style="margin-bottom:32px">
-        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
-          <span class="badge badge-live"><i class="fa-solid fa-hourglass-half"></i> v1.2 — Siguiente</span>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
-          <div class="rdot-item rdot-live"><i class="fa-solid fa-table"></i><span class="crl-xs">Table component</span></div>
-          <div class="rdot-item rdot-live"><i class="fa-solid fa-circle-exclamation"></i><span class="crl-xs">Form validation states</span></div>
-          <div class="rdot-item rdot-live"><i class="fa-solid fa-folder-tree"></i><span class="crl-xs">Accordion / Collapse</span></div>
-          <div class="rdot-item rdot-live"><i class="fa-solid fa-folder-open"></i><span class="crl-xs">Tabs</span></div>
-          <div class="rdot-item rdot-live"><i class="fa-solid fa-magnifying-glass"></i><span class="crl-xs">Combobox / Select</span></div>
-          <div class="rdot-item rdot-live"><i class="fa-solid fa-chart-bar"></i><span class="crl-xs">Stat / KPI card</span></div>
         </div>
       </div>
 
@@ -798,7 +1106,7 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
   <p class="crl-display docs-footer-logo" style="color:var(--crl-white)">CORILLO CSS</p>
   <p>Dark-first · Sin dependencias · Hecho en Puerto Rico 🇵🇷</p>
   <div style="margin-top:16px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
-    <span class="badge badge-accent">v1.1.0</span>
+    <span class="badge badge-accent">v1.2.0</span>
     <span class="badge badge-dim">MIT License</span>
     <a href="../assets/corillo.css" download class="badge badge-live" style="cursor:pointer"><i class="fa-solid fa-download"></i> corillo.css</a>
   </div>
@@ -816,6 +1124,33 @@ btn.addEventListener('click', () => {
   localStorage.setItem('corillo-theme', isLight ? 'dark' : 'light');
   if (isLight) html.removeAttribute('data-theme');
 });
+
+// Tabs demo
+const demoTabs = document.getElementById('demoTabs');
+if (demoTabs) {
+  const tabs = demoTabs.querySelectorAll('.crl-tab');
+  const panels = demoTabs.closest('.preview-col').querySelectorAll('.crl-tab-panel');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    t.classList.add('active');
+    const target = demoTabs.closest('.preview-col').querySelector(`[data-panel="${t.dataset.tab}"]`);
+    if (target) target.classList.add('active');
+  }));
+}
+
+// Accordion demo
+const demoAcc = document.getElementById('demoAccordion');
+if (demoAcc) {
+  demoAcc.querySelectorAll('.crl-accordion-trigger').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      const item = trigger.closest('.crl-accordion-item');
+      const isOpen = item.classList.contains('open');
+      demoAcc.querySelectorAll('.crl-accordion-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+}
 
 // Active nav on scroll
 const sections = document.querySelectorAll('.doc-section[id]');
