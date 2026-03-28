@@ -3,7 +3,7 @@ corillo-bot — Chat en vivo, IA, WebSocket.
 Puerto 3001. Solo responsabilidad: chat.
 """
 import os, time, json, asyncio, random, base64
-import httpx, anthropic, aiosqlite
+import httpx, aiosqlite
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,7 +19,42 @@ DB_PATH       = os.environ.get("DB_PATH", "/home/corillo-adm/corillo-bot/chat.db
 DISCORD_URL   = os.environ.get("DISCORD_URL",   "")
 INSTAGRAM_URL = os.environ.get("INSTAGRAM_URL", "")
 
-ac = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+GROQ_API_KEY        = os.environ.get("GROQ_API_KEY",   "")
+GROQ_MODEL          = os.environ.get("GROQ_MODEL",    "llama-3.3-70b-versatile")
+GEMINI_API_KEY      = os.environ.get("GEMINI_API_KEY", "")
+GEMINI_VISION_MODEL = os.environ.get("GEMINI_VISION_MODEL", "gemini-2.5-flash")
+
+
+async def groq(system: str, prompt: str, max_tokens: int = 150) -> str:
+    payload = {
+        "model": GROQ_MODEL,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user",   "content": prompt},
+        ],
+        "max_tokens": max_tokens,
+    }
+    r = await _http.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        json=payload,
+        headers={"Authorization": f"Bearer {GROQ_API_KEY}"},
+        timeout=30,
+    )
+    return r.json()["choices"][0]["message"]["content"].strip()
+
+
+async def gemini_vision(system: str, prompt: str, b64: str, max_tokens: int = 60) -> str:
+    payload = {
+        "systemInstruction": {"parts": [{"text": system}]},
+        "contents": [{"parts": [
+            {"inline_data": {"mime_type": "image/jpeg", "data": b64}},
+            {"text": prompt},
+        ]}],
+        "generationConfig": {"maxOutputTokens": max_tokens, "thinkingConfig": {"thinkingBudget": 0}},
+    }
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_VISION_MODEL}:generateContent?key={GEMINI_API_KEY}"
+    r = await _http.post(url, json=payload, timeout=30)
+    return r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
 
 app = FastAPI()
 app.add_middleware(
@@ -126,13 +161,8 @@ async def chat(body: Msg):
     status = ("En vivo ahora:\n" + "\n".join(
         f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live
     )) if live else "Sin streams en vivo."
-    res = ac.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=512,
-        system=SYSTEM + f"\n\n{status}",
-        messages=[{"role": "user", "content": body.message}],
-    )
-    return {"reply": res.content[0].text}
+    reply = await groq(SYSTEM + f"\n\n{status}", body.message, max_tokens=512)
+    return {"reply": reply}
 
 
 _digest = {"text": "", "ts": 0}
@@ -157,13 +187,7 @@ async def digest():
             "Escribe UNA sola frase corta y casual al estilo boricua para invitar a la gente a conectarse más tarde. "
             "Sin saludos, sin hashtags, sin emojis. Solo la frase."
         )
-    res = ac.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=80,
-        system=SYSTEM,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    _digest["text"] = res.content[0].text.strip()
+    _digest["text"] = await groq(SYSTEM, prompt, max_tokens=80)
     _digest["ts"] = time.time()
     return {"digest": _digest["text"]}
 
@@ -236,9 +260,8 @@ async def ws_chat(ws: WebSocket, channel: str):
     requested = ws.query_params.get("user", "").strip()[:40]
     username = await room.join(ws, requested)
 
-    # VISION DISABLED — uncomment to re-enable periodic screen comments
-    # if room._vision_task is None or room._vision_task.done():
-    #     room._vision_task = asyncio.create_task(vision_loop(room, channel))
+    if room._vision_task is None or room._vision_task.done():
+        room._vision_task = asyncio.create_task(vision_loop(room, channel))
 
     await ws.send_json({"type": "welcome", "user": username})
     for msg in room.history:
@@ -280,13 +303,7 @@ async def bot_reply(room: Room, query: str, channel: str = ""):
     #     user_content.append({"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}})
     user_content.append({"type": "text", "text": query})
     try:
-        res = await asyncio.to_thread(
-            ac.messages.create,
-            model="claude-haiku-4-5-20251001", max_tokens=150,
-            system=SYSTEM + f"\n\n{status}",
-            messages=[{"role": "user", "content": user_content}],
-        )
-        reply = res.content[0].text.strip()
+        reply = await groq(SYSTEM + f"\n\n{status}", query, max_tokens=150)
     except:
         reply = "No pude responder ahora mismo."
     room._last_bot_reply = time.time()
@@ -309,16 +326,7 @@ async def bot_vision_comment(room: Room, channel: str):
     if not b64:
         return
     try:
-        res = await asyncio.to_thread(
-            ac.messages.create,
-            model="claude-haiku-4-5-20251001", max_tokens=60,
-            system=VISION_SYSTEM,
-            messages=[{"role": "user", "content": [
-                {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg", "data": b64}},
-                {"type": "text", "text": "¿Qué está pasando en el stream?"},
-            ]}],
-        )
-        comment = res.content[0].text.strip()
+        comment = await gemini_vision(VISION_SYSTEM, "¿Qué está pasando en el stream?", b64, max_tokens=60)
         if comment:
             await room.broadcast({"type": "message", "user": "CORILLO BOT", "text": comment, "ts": time.time(), "bot": True})
     except:
@@ -387,18 +395,12 @@ async def greet_streamer(room: Room, channel: str):
         return
     name = STREAMER_NAMES.get(channel, channel.upper())
     try:
-        res = await asyncio.to_thread(
-            ac.messages.create,
-            model="claude-haiku-4-5-20251001", max_tokens=60,
-            system=SYSTEM,
-            messages=[{"role": "user", "content": (
-                f"{name} acaba de empezar su stream en CORILLO. "
-                "Escríbele un saludo corto y entusiasta en español boricua, "
-                "como parte del crew dándole la bienvenida. "
-                "1 frase máximo. Sin hashtags, sin emojis (máx 1)."
-            )}],
-        )
-        greeting = res.content[0].text.strip()
+        greeting = await groq(SYSTEM, (
+            f"{name} acaba de empezar su stream en CORILLO. "
+            "Escríbele un saludo corto y entusiasta en español boricua, "
+            "como parte del crew dándole la bienvenida. "
+            "1 frase máximo. Sin hashtags, sin emojis (máx 1)."
+        ), max_tokens=60)
     except:
         greeting = f"¡Wepa {name}, arriba el stream! 🔥"
     room._last_bot_reply = time.time()
