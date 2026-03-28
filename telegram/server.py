@@ -49,6 +49,7 @@ STREAMER_NAMES = {
     "kamikazepr":     "KamikazePR",
     "bambua": "AntonioLopez",
     "superman": "Superman",
+    "stinkyfeets": "Rob",
     # AUTO_STREAMER_NAMES_END
 }
 
