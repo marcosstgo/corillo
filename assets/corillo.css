@@ -827,18 +827,26 @@ button { font: inherit; cursor: pointer; }
 }
 .crl-accordion-trigger[aria-expanded="true"] .crl-accordion-icon { transform: rotate(180deg); }
 .crl-accordion-content {
-  display: none; padding: 0 20px 18px;
-  font-size: var(--crl-sm); color: rgba(255,255,255,.55); line-height: 1.7;
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .25s ease;
 }
-.crl-accordion-content.open { display: block; }
-[data-theme="light"] .crl-accordion-content { color: rgba(0,0,0,.55); }
+.crl-accordion-content.open { grid-template-rows: 1fr; }
+.crl-accordion-content > div {
+  overflow: hidden; padding: 0 20px;
+  font-size: var(--crl-sm); color: rgba(255,255,255,.55); line-height: 1.7;
+  transition: padding .25s ease;
+}
+.crl-accordion-content.open > div { padding: 0 20px 18px; }
+[data-theme="light"] .crl-accordion-content > div { color: rgba(0,0,0,.55); }
 
 
 /* ── 36. SELECT ─────────────────────────────────────────── */
 .crl-select-wrap { position: relative; display: inline-flex; width: 100%; }
 .crl-select-wrap::after {
-  content: '\f078'; font-family: 'Font Awesome 6 Free'; font-weight: 900;
-  font-size: .65rem; color: var(--crl-muted);
+  content: '';
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%233a6070' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center;
+  width: 16px; height: 16px;
   position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
   pointer-events: none;
 }
