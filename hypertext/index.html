@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>CORILLO TV — Guía de Canales</title>
+  <meta name="description" content="Guía de canales en vivo desde Puerto Rico — CORILLO TV">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="/assets/streamers.js"></script>
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+
+    /* ── Base ── */
+    body {
+      background: #030606;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Space Mono', monospace;
+      color: #9effd4;
+    }
+
+    /* ════════════════════════════════════
+       TV BEZEL
+    ════════════════════════════════════ */
+    .television {
+      position: relative;
+      width: min(1020px, 100vw);
+      height: min(700px, 100vh);
+      background: #0b0f0b;
+      border-radius: 28px 28px 22px 22px;
+      border: 3px solid #181c18;
+      box-shadow:
+        0 0 0 1px #0e120e,
+        0 0 0 10px #0c0f0c,
+        0 0 0 11px #161a16,
+        0 0 80px rgba(0, 0, 0, .9),
+        inset 0 2px 0 rgba(255,255,255,.035);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ════════════════════════════════════
+       SCREEN
+    ════════════════════════════════════ */
+    .screen {
+      flex: 1;
+      position: relative;
+      background: #000a04;
+      margin: 14px 14px 0;
+      border-radius: 14px;
+      border: 2px solid #0a1a0c;
+      overflow: hidden;
+      box-shadow:
+        inset 0 0 100px rgba(0, 255, 120, .04),
+        inset 0 0 40px rgba(0, 0, 0, .7);
+    }
+
+    /* Subtle CRT curve via box-shadow on edges */
+    .screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      box-shadow: inset 0 0 60px rgba(0, 0, 0, .5);
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* Scanlines */
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, .14) 3px,
+        rgba(0, 0, 0, .14) 4px
+      );
+      pointer-events: none;
+      z-index: 90;
+    }
+
+    /* Vignette */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,.75) 100%);
+      pointer-events: none;
+      z-index: 91;
+    }
+
+    /* Screen flicker */
+    @keyframes flicker {
+      0%, 92%, 94%, 96%, 100% { opacity: 1 }
+      93% { opacity: .96 }
+      95% { opacity: .98 }
+    }
+    .screen { animation: flicker 14s ease-in-out infinite; }
+
+    /* ════════════════════════════════════
+       STATIC NOISE CANVAS (power-on)
+    ════════════════════════════════════ */
+    #staticCanvas {
+      position: absolute;
+      inset: 0;
+      z-index: 200;
+      pointer-events: none;
+      border-radius: 12px;
+    }
+    @keyframes noise-out {
+      0%   { opacity: 1 }
+      80%  { opacity: 1 }
+      100% { opacity: 0 }
+    }
+    #staticCanvas { animation: noise-out .9s ease-out forwards; }
+
+    /* ════════════════════════════════════
+       SCREEN CONTENT
+    ════════════════════════════════════ */
+    .screen-content {
+      position: relative;
+      z-index: 10;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 14px 18px 12px;
+    }
+
+    /* ── Header ── */
+    .tv-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 210, 100, .12);
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .tv-logo {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 20px;
+      letter-spacing: 5px;
+      color: #00ff88;
+      text-shadow: 0 0 24px rgba(0, 255, 136, .55), 0 0 60px rgba(0, 255, 136, .18);
+      white-space: nowrap;
+    }
+
+    .tv-tagline {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: rgba(0, 210, 100, .28);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .header-spacer { flex: 1; }
+
+    .live-badge {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: #e8c84a;
+      border: 1px solid rgba(232,200,74,.3);
+      background: rgba(232,200,74,.07);
+      padding: 3px 10px 3px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+    .live-badge.visible { display: flex; }
+    .live-badge .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #e8c84a;
+      box-shadow: 0 0 6px rgba(232, 200, 74, .8);
+      animation: blink-gold 1.4s infinite;
+      flex-shrink: 0;
+    }
+    @keyframes blink-gold {
+      0%, 100% { opacity: 1; box-shadow: 0 0 6px rgba(232,200,74,.8); }
+      50% { opacity: .3; box-shadow: none; }
+    }
+
+    #clock {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: rgba(0, 210, 100, .45);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    /* ── Guide ── */
+    .guide {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,200,90,.18) transparent;
+    }
+    .guide::-webkit-scrollbar { width: 3px; }
+    .guide::-webkit-scrollbar-track { background: transparent; }
+    .guide::-webkit-scrollbar-thumb { background: rgba(0,200,90,.18); border-radius: 2px; }
+
+    .guide-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .guide-table thead th {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: rgba(0, 200, 90, .25);
+      text-transform: uppercase;
+      padding: 4px 8px 6px;
+      border-bottom: 1px solid rgba(0,200,90,.1);
+      text-align: left;
+      position: sticky;
+      top: 0;
+      background: #000a04;
+      z-index: 5;
+    }
+    .guide-table thead th.th-num { text-align: right; padding-right: 16px; }
+
+    /* Rows */
+    .guide-table tbody tr {
+      cursor: pointer;
+      transition: background .12s;
+      border-bottom: 1px solid rgba(0, 200, 90, .05);
+    }
+    .guide-table tbody tr:hover { background: rgba(0, 210, 100, .05); }
+    .guide-table tbody tr.is-live { background: rgba(0, 255, 136, .025); }
+    .guide-table tbody tr.is-live:hover { background: rgba(0, 255, 136, .06); }
+    .guide-table tbody tr.is-soon { cursor: default; opacity: .28; }
+
+    td { padding: 9px 8px; vertical-align: middle; }
+
+    /* CH number */
+    .td-num {
+      width: 48px;
+      font-size: 10px;
+      color: rgba(0, 200, 90, .25);
+      letter-spacing: 1px;
+      text-align: right;
+      padding-right: 16px;
+      white-space: nowrap;
+    }
+    .is-live .td-num { color: rgba(0, 255, 136, .55); }
+
+    /* Avatar */
+    .td-ava { width: 36px; }
+    .ava {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+      color: rgba(0,0,0,.65);
+      flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,.25);
+      position: relative;
+    }
+    .is-live .ava::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,255,136,.35);
+      animation: ring-pulse 2s ease-out infinite;
+    }
+    @keyframes ring-pulse {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.5); }
+    }
+
+    /* Channel name */
+    .td-name { width: 190px; min-width: 120px; }
+    .ch-name {
+      font-size: 11px;
+      letter-spacing: 2px;
+      font-weight: 700;
+      color: rgba(158, 255, 212, .75);
+    }
+    .is-live .ch-name {
+      color: #00ff88;
+      text-shadow: 0 0 14px rgba(0, 255, 136, .5);
+    }
+    .ch-sub {
+      font-size: 8px;
+      color: rgba(0, 200, 90, .25);
+      letter-spacing: 1px;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 185px;
+    }
+
+    /* Status */
+    .td-status { /* fills remaining */ }
+    .status-wrap { display: flex; align-items: center; gap: 10px; }
+
+    .pill-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: #00ff88;
+      border: 1px solid rgba(0,255,136,.38);
+      background: rgba(0,255,136,.07);
+      padding: 3px 10px 3px 6px;
+      border-radius: 2px;
+      text-shadow: 0 0 8px rgba(0,255,136,.7);
+      box-shadow: 0 0 14px rgba(0,255,136,.08), inset 0 0 12px rgba(0,255,136,.04);
+      white-space: nowrap;
+    }
+    .pill-live .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #00ff88;
+      box-shadow: 0 0 6px rgba(0,255,136,.9);
+      animation: blink-green 1s infinite;
+    }
+    @keyframes blink-green {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .25; }
+    }
+
+    .pill-offline {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: rgba(0, 200, 90, .18);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .pill-offline::before {
+      content: '';
+      display: inline-block;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(0, 200, 90, .12);
+    }
+
+    .viewer-count {
+      font-size: 8px;
+      color: rgba(0, 200, 90, .38);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    /* Watch button */
+    .td-action { width: 56px; text-align: right; }
+    .watch-btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 7px;
+      letter-spacing: 1.5px;
+      color: rgba(0,200,90,.3);
+      border: 1px solid rgba(0,200,90,.12);
+      background: transparent;
+      padding: 4px 8px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: .15s;
+      white-space: nowrap;
+    }
+    tr:hover .watch-btn,
+    .is-live .watch-btn {
+      color: #00ff88;
+      border-color: rgba(0,255,136,.35);
+    }
+
+    /* ── Footer ── */
+    .tv-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 200, 90, .1);
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 8px;
+      letter-spacing: 2px;
+      color: rgba(0, 200, 90, .28);
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: #00ff88; }
+
+    /* Signal bars */
+    .signal-bars {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+    }
+    .signal-bar {
+      width: 3px;
+      background: rgba(0,200,90,.2);
+      border-radius: 1px;
+      transition: background .3s;
+    }
+    .signal-bar.active { background: rgba(0,255,136,.55); }
+
+    /* ════════════════════════════════════
+       TV CONTROLS BAR
+    ════════════════════════════════════ */
+    .tv-controls {
+      height: 52px;
+      background: #080c08;
+      border-top: 1px solid #121612;
+      margin: 0 14px 14px;
+      border-radius: 0 0 14px 14px;
+      border: 1px solid #131713;
+      border-top-color: #0e110e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 0 24px;
+    }
+
+    .ctrl-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ctrl-btn {
+      border: none;
+      cursor: pointer;
+      transition: .18s;
+      flex-shrink: 0;
+    }
+    .ctrl-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+    }
+    .ctrl-dot.power {
+      background: radial-gradient(circle at 40% 35%, #1f2e1f, #0d150d);
+      box-shadow: inset 0 1px rgba(255,255,255,.06), 0 1px rgba(0,0,0,.5);
+      border: 1px solid #1a221a;
+    }
+    .ctrl-dot.power:hover {
+      background: radial-gradient(circle at 40% 35%, #00ff88, #00cc66);
+      box-shadow: 0 0 10px rgba(0,255,136,.55);
+      border-color: transparent;
+    }
+    .ctrl-dot.red {
+      background: radial-gradient(circle at 40% 35%, #1e1010, #120a0a);
+      box-shadow: inset 0 1px rgba(255,255,255,.04);
+      border: 1px solid #1a1010;
+    }
+    .ctrl-dot.red:hover {
+      background: radial-gradient(circle at 40% 35%, #ff4444, #cc1126);
+      box-shadow: 0 0 10px rgba(206,17,38,.55);
+      border-color: transparent;
+    }
+    .ctrl-dot.yellow {
+      background: radial-gradient(circle at 40% 35%, #1e1a10, #12110a);
+      border: 1px solid #1a1810;
+    }
+    .ctrl-dot.yellow:hover {
+      background: radial-gradient(circle at 40% 35%, #e8c84a, #c09020);
+      box-shadow: 0 0 10px rgba(232,200,74,.55);
+      border-color: transparent;
+    }
+
+    .ctrl-divider {
+      width: 1px;
+      height: 20px;
+      background: #1a1e1a;
+      margin: 0 10px;
+    }
+
+    .ctrl-brand {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: #1a221a;
+      flex: 1;
+      text-align: center;
+      user-select: none;
+    }
+
+    .ctrl-knob {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #1c221c, #0e120e);
+      border: 1px solid #1e241e;
+      box-shadow:
+        inset 0 1px rgba(255,255,255,.06),
+        0 2px 4px rgba(0,0,0,.5),
+        0 0 0 2px #0b0e0b;
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .ctrl-knob::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 5px;
+      background: rgba(0,200,90,.25);
+      border-radius: 1px;
+    }
+    .ctrl-knob:hover::after { background: rgba(0,255,136,.5); }
+
+    .ctrl-btn-rect {
+      width: 16px; height: 10px;
+      background: radial-gradient(circle at 50% 30%, #1c221c, #0d120d);
+      border: 1px solid #1a201a;
+      border-radius: 2px;
+      box-shadow: inset 0 1px rgba(255,255,255,.05);
+      cursor: pointer;
+      transition: .15s;
+    }
+    .ctrl-btn-rect:hover { background: radial-gradient(circle at 50% 30%, #223022, #122012); }
+    .ctrl-btn-rect#menuBtnRect:hover { border-color: rgba(0,255,136,.3); }
+
+    /* ════════════════════════════════════
+       MENU OVERLAY
+    ════════════════════════════════════ */
+    .menu-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 150;
+      pointer-events: none;
+      border-radius: 12px;
+    }
+    .menu-overlay[data-open="true"] { pointer-events: all; }
+
+    .menu-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,8,3,.4);
+      opacity: 0;
+      transition: opacity .2s;
+      border-radius: 12px;
+    }
+    .menu-overlay[data-open="true"] .menu-backdrop { opacity: 1; }
+
+    .menu-panel {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(0, 10, 5, .97);
+      border: 1px solid rgba(0, 220, 100, .2);
+      border-radius: 4px;
+      width: 220px;
+      overflow: hidden;
+      transform: translateX(240px);
+      transition: transform .22s cubic-bezier(.16,1,.3,1);
+    }
+    .menu-overlay[data-open="true"] .menu-panel { transform: translateX(0); }
+
+    .menu-header {
+      padding: 10px 14px;
+      font-size: 8px;
+      letter-spacing: 3px;
+      color: rgba(0,220,100,.35);
+      border-bottom: 1px solid rgba(0,220,100,.1);
+      text-transform: uppercase;
+    }
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 14px;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      color: rgba(0,210,100,.55);
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0,220,100,.05);
+      transition: .1s;
+      user-select: none;
+    }
+    .menu-item:hover { background: rgba(0,220,100,.05); color: #00ff88; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-val {
+      font-size: 8px;
+      color: rgba(0,220,100,.28);
+      letter-spacing: 1px;
+    }
+    .menu-item[data-on="true"] .menu-val { color: #00ff88; }
+    .menu-sep { height: 1px; background: rgba(0,220,100,.08); margin: 4px 0; }
+
+    /* ════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════ */
+    @media (max-width: 640px) {
+      .television {
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        width: 100vw;
+        height: 100vh;
+      }
+      .screen {
+        margin: 0;
+        border-radius: 0;
+        border: none;
+      }
+      .tv-controls { margin: 0; border-radius: 0; height: 44px; }
+      .td-ava { display: none; }
+      .td-action { display: none; }
+      .td-name { width: 140px; }
+      .footer-links a:not(:first-child):not(:nth-child(2)) { display: none; }
+    }
+
+    @media (max-width: 380px) {
+      .tv-tagline { display: none; }
+      .ch-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="television">
+  <!-- ── SCREEN ── -->
+  <div class="screen">
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+    <canvas id="staticCanvas"></canvas>
+
+    <!-- Menu overlay -->
+    <div class="menu-overlay" id="menuOverlay" data-open="false">
+      <div class="menu-backdrop" id="menuBackdrop"></div>
+      <div class="menu-panel">
+        <div class="menu-header">CONFIGURACION TV</div>
+        <div class="menu-item" id="scanItem" data-on="true">
+          ESCANLINES <span class="menu-val" id="scanVal">ON</span>
+        </div>
+        <div class="menu-item" id="flickerItem" data-on="true">
+          PARPADEO <span class="menu-val" id="flickerVal">ON</span>
+        </div>
+        <div class="menu-sep"></div>
+        <div class="menu-item" onclick="window.location='/'">
+          ← INICIO <span class="menu-val">CORILLO.LIVE</span>
+        </div>
+        <div class="menu-item" onclick="window.location='/streamers/'">
+          CANALES <span class="menu-val">→</span>
+        </div>
+        <div class="menu-item" onclick="window.location='/multiplayer/'">
+          MULTIPANTALLA <span class="menu-val">→</span>
+        </div>
+        <div class="menu-sep"></div>
+        <div class="menu-item" id="menuClose">
+          SALIR DEL MENÚ <span class="menu-val">ESC</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen content -->
+    <div class="screen-content">
+
+      <!-- Header -->
+      <div class="tv-header">
+        <span class="tv-logo">CORILLO TV</span>
+        <span class="tv-tagline">Puerto Rico · En vivo</span>
+        <span class="header-spacer"></span>
+        <div class="live-badge" id="liveBadge">
+          <span class="dot"></span>
+          <span id="liveCount">0</span>&nbsp;EN VIVO
+        </div>
+        <time id="clock" datetime="">00:00:00</time>
+      </div>
+
+      <!-- Guide table -->
+      <div class="guide">
+        <table class="guide-table">
+          <thead>
+            <tr>
+              <th class="th-num">CH</th>
+              <th></th>
+              <th>CANAL</th>
+              <th>EN PANTALLA AHORA</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="guideBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div class="tv-footer">
+        <nav class="footer-links">
+          <a href="/">← INICIO</a>
+          <a href="/multiplayer/">MULTIPANTALLA</a>
+          <a href="/streamers/">CANALES</a>
+          <a href="/vods/">VODS</a>
+          <a href="/join/">UNIRTE</a>
+        </nav>
+        <div class="signal-bars" id="signalBars">
+          <div class="signal-bar" style="height:3px"></div>
+          <div class="signal-bar" style="height:5px"></div>
+          <div class="signal-bar" style="height:8px"></div>
+          <div class="signal-bar" style="height:11px"></div>
+          <div class="signal-bar" style="height:15px"></div>
+        </div>
+      </div>
+
+    </div><!-- /screen-content -->
+  </div><!-- /screen -->
+
+  <!-- ── TV CONTROLS ── -->
+  <div class="tv-controls">
+    <div class="ctrl-group">
+      <button class="ctrl-btn ctrl-dot red" title="Apagar" onclick="window.location='/'"></button>
+      <button class="ctrl-btn ctrl-dot yellow" title="Ajustes" id="menuBtnDot"></button>
+      <button class="ctrl-btn ctrl-dot power" title="Inicio" onclick="window.location='/'"></button>
+    </div>
+    <div class="ctrl-divider"></div>
+    <div class="ctrl-brand">CORILLO</div>
+    <div class="ctrl-divider"></div>
+    <div class="ctrl-group">
+      <button class="ctrl-btn ctrl-btn-rect" id="menuBtnRect" title="Menú (M)"></button>
+      <div class="ctrl-knob" title="Volumen"></div>
+      <div class="ctrl-knob" title="Canal"></div>
+    </div>
+  </div>
+
+</div><!-- /television -->
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Clock ── */
+  function updateClock() {
+    const now = new Date();
+    const p = n => String(n).padStart(2, '0');
+    const t = `${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}`;
+    const el = document.getElementById('clock');
+    el.textContent = t;
+    el.dateTime = now.toISOString();
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ── Power-on static noise ── */
+  (function () {
+    const canvas = document.getElementById('staticCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let running = true;
+    let frameCount = 0;
+    const MAX_FRAMES = 22;
+
+    function resize() {
+      canvas.width = canvas.offsetWidth || 800;
+      canvas.height = canvas.offsetHeight || 600;
+    }
+    resize();
+
+    function draw() {
+      if (!running) return;
+      const w = canvas.width, h = canvas.height;
+      const img = ctx.createImageData(w, h);
+      const d = img.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const v = (Math.random() * 255) | 0;
+        d[i]     = (v * 0.3) | 0;
+        d[i + 1] = (v * 0.9) | 0;
+        d[i + 2] = (v * 0.45) | 0;
+        d[i + 3] = 200;
+      }
+      ctx.putImageData(img, 0, 0);
+      frameCount++;
+      if (frameCount < MAX_FRAMES) {
+        requestAnimationFrame(draw);
+      } else {
+        running = false;
+        canvas.style.display = 'none';
+      }
+    }
+    requestAnimationFrame(draw);
+  })();
+
+  /* ── API polling ── */
+  const POLL_MS = 15000;
+  const CACHE_MS = 8000;
+  let cache = { t: 0, data: null };
+
+  async function fetchLive() {
+    const now = Date.now();
+    if (now - cache.t < CACHE_MS && cache.data) return cache.data;
+    try {
+      const ac = new AbortController();
+      const tid = setTimeout(() => ac.abort(), 5000);
+      const res = await fetch('/mediamtx-api/v3/paths/list', { signal: ac.signal });
+      clearTimeout(tid);
+      if (!res.ok) return cache.data || {};
+      const json = await res.json();
+      const map = {};
+      (json.items || []).forEach(p => {
+        if (p.ready && p.name) {
+          const key = p.name.replace(/^live\//, '');
+          map[key] = { readers: (p.readers || []).length };
+        }
+      });
+      cache = { t: now, data: map };
+      return map;
+    } catch {
+      return cache.data || {};
+    }
+  }
+
+  /* ── Render guide ── */
+  function renderGuide(liveMap) {
+    const tbody = document.getElementById('guideBody');
+    let liveCount = 0;
+
+    tbody.innerHTML = '';
+
+    (window.STREAMERS || []).forEach((s, i) => {
+      const num = String(i + 1).padStart(2, '0');
+      const live = !s.soon && liveMap[s.key];
+      if (live) liveCount++;
+
+      const tr = document.createElement('tr');
+      if (s.soon) {
+        tr.className = 'is-soon';
+      } else {
+        if (live) tr.className = 'is-live';
+        tr.addEventListener('click', () => { window.location.href = `/${s.key}/`; });
+      }
+
+      const avaStyle = s.color
+        ? `background:${s.color}`
+        : 'background:linear-gradient(135deg,#1a2a1a,#0d180d)';
+
+      const viewers = live ? live.readers : 0;
+
+      tr.innerHTML = `
+        <td class="td-num">${num}</td>
+        <td class="td-ava"><div class="ava" style="${avaStyle}">${s.ava || '?'}</div></td>
+        <td class="td-name">
+          <div class="ch-name">${s.name}</div>
+          ${s.sub ? `<div class="ch-sub">${s.sub}</div>` : ''}
+        </td>
+        <td class="td-status">
+          <div class="status-wrap">
+            ${live
+              ? `<span class="pill-live"><span class="dot"></span>EN VIVO</span>
+                 <span class="viewer-count">${viewers} viewer${viewers !== 1 ? 's' : ''}</span>`
+              : s.soon
+                ? `<span class="pill-offline">PRÓXIMAMENTE</span>`
+                : `<span class="pill-offline">SIN SEÑAL</span>`
+            }
+          </div>
+        </td>
+        <td class="td-action">
+          ${!s.soon ? `<button class="watch-btn">VER →</button>` : ''}
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+
+    /* Live badge */
+    const badge = document.getElementById('liveBadge');
+    document.getElementById('liveCount').textContent = liveCount;
+    badge.classList.toggle('visible', liveCount > 0);
+
+    /* Signal bars — light up based on live count */
+    const bars = document.querySelectorAll('.signal-bar');
+    const lit = Math.min(bars.length, Math.ceil((liveCount / (window.STREAMERS || []).length) * bars.length));
+    bars.forEach((b, i) => b.classList.toggle('active', i < lit || liveCount > 0));
+  }
+
+  async function poll() {
+    const liveMap = await fetchLive();
+    renderGuide(liveMap);
+  }
+
+  renderGuide({});
+  poll();
+  const pollTimer = setInterval(poll, POLL_MS);
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) { cache.t = 0; poll(); }
+  });
+
+  /* ── Menu ── */
+  const overlay = document.getElementById('menuOverlay');
+  const backdrop = document.getElementById('menuBackdrop');
+
+  function toggleMenu() {
+    const open = overlay.dataset.open !== 'true';
+    overlay.dataset.open = open;
+  }
+  function closeMenu() { overlay.dataset.open = 'false'; }
+
+  document.getElementById('menuBtnDot').addEventListener('click', toggleMenu);
+  document.getElementById('menuBtnRect').addEventListener('click', toggleMenu);
+  document.getElementById('menuClose').addEventListener('click', closeMenu);
+  backdrop.addEventListener('click', closeMenu);
+
+  /* Scanlines toggle */
+  const scanlines = document.querySelector('.scanlines');
+  document.getElementById('scanItem').addEventListener('click', function () {
+    const on = this.dataset.on !== 'true';
+    this.dataset.on = on;
+    document.getElementById('scanVal').textContent = on ? 'ON' : 'OFF';
+    scanlines.style.display = on ? '' : 'none';
+  });
+
+  /* Flicker toggle */
+  const screen = document.querySelector('.screen');
+  document.getElementById('flickerItem').addEventListener('click', function () {
+    const on = this.dataset.on !== 'true';
+    this.dataset.on = on;
+    document.getElementById('flickerVal').textContent = on ? 'ON' : 'OFF';
+    screen.style.animation = on ? '' : 'none';
+  });
+
+  /* Keyboard */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'm' || e.key === 'M') toggleMenu();
+    if (e.key === 'Escape') closeMenu();
+  });
+
+})();
+</script>
+</body>
+</html>
