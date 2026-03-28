@@ -249,7 +249,13 @@
 
       <div class="field">
         <span class="field-label">Encoder de vídeo</span>
-        <div class="code no-copy">x264 &nbsp;·&nbsp; (o NVENC / AMF si tienes GPU dedicada)</div>
+        <div class="code no-copy">NVIDIA NVENC H.264 &nbsp;·&nbsp; (si no tienes GPU NVIDIA usa x264)</div>
+        <div class="field-note">NVENC usa la GPU — libera el CPU y produce mejor calidad al mismo bitrate.</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Rate Control</span>
+        <div class="code no-copy">CBR — Constant Bitrate</div>
       </div>
 
       <div class="field">
@@ -258,19 +264,19 @@
           <div>
             <div class="field-note" style="margin:0 0 4px">1080p <span style="color:rgba(232,200,74,.7);font-size:9px;">· Recomendado</span></div>
             <div class="code-wrap">
-              <div class="code" id="bitrate1080">4500 Kbps</div>
+              <div class="code" id="bitrate1080">6000 Kbps</div>
               <button class="copy-btn" data-target="bitrate1080">Copiar</button>
             </div>
           </div>
           <div>
             <div class="field-note" style="margin:0 0 4px">720p</div>
             <div class="code-wrap">
-              <div class="code" id="bitrate720">2500 Kbps</div>
+              <div class="code" id="bitrate720">3000 Kbps</div>
               <button class="copy-btn" data-target="bitrate720">Copiar</button>
             </div>
           </div>
         </div>
-        <div class="field-note" style="margin-top:8px">4500 Kbps es el valor por defecto de Streamer Pro — buena calidad sin saturar la conexión de los viewers.</div>
+        <div class="field-note" style="margin-top:8px">Si tienes lag o drops, baja a 4500 Kbps.</div>
       </div>
 
       <div class="field">
@@ -279,17 +285,39 @@
           <div class="code" id="keyframe">2 s</div>
           <button class="copy-btn" data-target="keyframe">Copiar</button>
         </div>
+        <div class="field-note">Obligatorio — no dejar en 0 (auto).</div>
       </div>
 
       <div class="field">
-        <span class="field-label">Preset CPU (solo x264)</span>
-        <div class="code no-copy">veryfast</div>
-        <div class="field-note">Si tienes drops usa <code>ultrafast</code>. Si tienes CPU sobrante prueba <code>fast</code>.</div>
+        <span class="field-label">Preset (NVENC)</span>
+        <div class="code no-copy">P4: Medium</div>
+        <div class="field-note">Para x264 usar <code>veryfast</code>.</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Tuning (NVENC)</span>
+        <div class="code no-copy">Low Latency</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Multipass Mode (NVENC)</span>
+        <div class="code no-copy">Single Pass</div>
       </div>
 
       <div class="field">
         <span class="field-label">Perfil</span>
-        <div class="code no-copy">high</div>
+        <div class="code no-copy">Main</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">B-Frames</span>
+        <div class="code no-copy">0</div>
+        <div class="field-note">Importante — evita freezes en el player.</div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Look-ahead</span>
+        <div class="code no-copy">Desmarcado</div>
       </div>
     </div>
 
@@ -391,7 +419,7 @@
           </li>
           <li>
             <i class="fa-solid fa-circle-dot"></i>
-            <span><strong>Drops / lag / frames caídos</strong> — baja el bitrate 500 Kbps. Cambia preset de <code>veryfast</code> a <code>ultrafast</code>. Si usas GPU encoder (NVENC/AMF) puede ayudar.</span>
+            <span><strong>Drops / lag / frames caídos</strong> — baja el bitrate a 4500 Kbps. Si usas x264 cambia preset a <code>ultrafast</code>. Si tienes GPU NVIDIA cambia a NVENC.</span>
           </li>
           <li>
             <i class="fa-solid fa-circle-dot"></i>
