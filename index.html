@@ -56,6 +56,20 @@
     .nav-btn.solid:hover{opacity:.88;box-shadow:0 0 28px rgba(0,191,255,.45)}
     .nav-menu-btn{display:none;width:32px;height:32px;border-radius:6px;border:1px solid var(--crl-border);background:transparent;color:var(--crl-muted);cursor:pointer;align-items:center;justify-content:center;font-size:.85rem;transition:.15s}
     .nav-menu-btn:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
+    .nav-theme-btn{width:32px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;letter-spacing:0}
+    .drawer-tools{display:flex;align-items:center;gap:8px}
+    [data-theme="light"] nav{background:rgba(240,239,233,.96)}
+    [data-theme="light"] .drawer{background:#f0efe9}
+    [data-theme="light"] .site-footer{background:#e8edf0}
+    [data-theme="light"] .foot-brand svg .crl-brand-word{fill:#0c1a20}
+    [data-theme="light"] .foot-brand svg .crl-brand-ring-outer{stroke:#0c1a20}
+    [data-theme="light"] .foot-tagline{color:rgba(0,0,0,.34)}
+    [data-theme="light"] .foot-col-title{color:#0c1a20}
+    [data-theme="light"] .foot-chev{color:rgba(0,0,0,.35)}
+    [data-theme="light"] .foot-copy{color:rgba(0,0,0,.34)}
+    [data-theme="light"] .foot-version{color:rgba(0,0,0,.28)}
+    [data-theme="light"] .foot-social{color:rgba(0,0,0,.42)}
+    [data-theme="light"] .foot-social:hover{color:#0c1a20}
 
     /* ── LAYOUT ── */
     .layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 52px)}
@@ -263,18 +277,21 @@
 <div class="drawer" id="drawer">
   <div class="drawer-header">
     <a href="/" style="display:flex;align-items:center">
-      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto">
+      <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto">
         <defs><radialGradient id="dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#dg)"/>
-        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
         <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
         <circle cx="72" cy="42" r="8" fill="#00bfff"/>
         <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
       </svg>
     </a>
-    <button class="drawer-close" id="drawerClose"><i class="fa-solid fa-xmark"></i></button>
+    <div class="drawer-tools">
+      <button class="theme-btn" id="themeBtnDrawer" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button class="drawer-close" id="drawerClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
   </div>
   <div class="drawer-body">
     <div class="aside-label">Navegar</div>
@@ -299,17 +316,18 @@
 <nav>
   <button class="nav-menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
   <a href="/" class="nav-logo">
-    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-      <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+      <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
       <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
-      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+      <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
       <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
       <circle cx="72" cy="42" r="8" fill="#00bfff"/>
       <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-      <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+      <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
     </svg>
   </a>
+  <button class="theme-btn nav-theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
   <div class="nav-spacer"></div>
   <div class="nav-live" id="navLive">
     <span class="live-dot"></span>
@@ -384,15 +402,15 @@
         <!-- Marca -->
         <div>
           <div class="foot-brand">
-            <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-              <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+              <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
               <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
-              <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+              <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
               <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
               <circle cx="72" cy="42" r="8" fill="#00bfff"/>
               <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-              <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+              <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
             </svg>
           </div>
           <div class="foot-tagline">Plataforma independiente<br>Puerto Rico</div>
@@ -1190,6 +1208,24 @@
   update();
   startPoll();
 
+  /* ── Theme toggle ── */
+  (function(){
+    const root = document.documentElement;
+    const buttons = [document.getElementById("themeBtn"), document.getElementById("themeBtnDrawer")].filter(Boolean);
+    const metaTheme = document.querySelector("meta[name=\"theme-color\"]");
+    const applyTheme = (theme) => {
+      root.setAttribute("data-theme", theme);
+      if (metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#f0efe9" : "#030a0e");
+    };
+    const saved = localStorage.getItem("corillo-theme") || "dark";
+    applyTheme(saved);
+    buttons.forEach(btn => btn.addEventListener("click", () => {
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      applyTheme(next);
+      localStorage.setItem("corillo-theme", next);
+    }));
+  })();
+
   /* ── Footer version ── */
   fetch('/version.json').then(r => r.json()).then(d => {
     const el = document.getElementById('footVersion');
@@ -1212,5 +1248,6 @@
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>
+
 
 
