@@ -414,6 +414,26 @@ body::after{display:none} /* no grain on player pages */
 [data-theme="light"] .profile-section{background:linear-gradient(135deg,rgba(18,18,15,.04) 0%,rgba(18,18,15,.01) 100%)}
 [data-theme="light"] .profile-bio{color:rgba(18,18,15,.65)}
 
+[data-theme="light"] nav{background:rgba(238,247,251,.96)}
+[data-theme="light"] .ch-bio{color:rgba(5,16,21,.62)}
+[data-theme="light"] .chat-you{color:rgba(5,16,21,.46)}
+[data-theme="light"] .chat-input,
+[data-theme="light"] #chatInput{background:rgba(0,0,0,.03);color:var(--crl-white)}
+[data-theme="light"] .chat-input:focus,
+[data-theme="light"] #chatInput:focus{background:rgba(255,255,255,.72);border-color:rgba(0,136,187,.28)}
+[data-theme="light"] .chat-input::placeholder,
+[data-theme="light"] #chatInput::placeholder{color:rgba(5,16,21,.38)}
+[data-theme="light"] .drop-item{color:rgba(5,16,21,.74)}
+[data-theme="light"] .drop-item:hover{background:rgba(0,0,0,.05);color:var(--crl-white)}
+[data-theme="light"] .drop-item i{color:rgba(5,16,21,.42)}
+[data-theme="light"] .drop-panel::before{background:rgba(0,0,0,.15)}
+[data-theme="light"] .chat-msg.is-system{color:rgba(5,16,21,.35)}
+[data-theme="light"] .profile-name,
+[data-theme="light"] .panel-title{color:var(--crl-white)}
+[data-theme="light"] .panel-text{color:rgba(5,16,21,.62)}
+[data-theme="light"] .profile-links a{color:var(--crl-white);background:rgba(0,0,0,.03)}
+[data-theme="light"] .profile-links a:hover{background:rgba(0,0,0,.06)}
+
 /* Panels */
 .panels-grid{
   display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
@@ -470,3 +490,4 @@ body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,2
 @media(max-width:600px){
   #chatInput{font-size:16px}
 }
+
