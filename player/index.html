@@ -39,7 +39,7 @@
 </head>
 <body class="crl-body">
 
-<nav>
+<nav class="crl-player-nav">
   <a href="/" class="nav-logo">
     <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -99,16 +99,16 @@
   <a class="drop-item" href="/streamers/"><i class="fa-solid fa-users"></i> Ver streamers</a>
 </div>
 
-<div class="app" id="content">
+<div class="app crl-player-app" id="content">
 
   <!-- PLAYER SIDE -->
-  <div class="player-side">
+  <div class="player-side crl-player-main">
 
-    <div class="playerWrap video-wrap">
+    <div class="playerWrap video-wrap crl-player-video-shell">
       <video id="video" class="horizontal" playsinline muted></video>
 
-      <div class="overlay" id="overlay">
-        <div class="panel">
+      <div class="overlay crl-player-overlay" id="overlay">
+        <div class="panel crl-player-panel">
           <h3 id="ovTitle">Cargando</h3>
           <p id="ovMsg">Iniciando stream…</p>
           <div class="row">
@@ -134,7 +134,7 @@
     </div>
 
     <!-- Channel info / profile card -->
-    <div class="ch-info-bar">
+    <div class="ch-info-bar crl-player-info">
       <div class="ch-ava" id="chAva"></div>
       <div class="ch-details">
         <div class="ch-name-row">
@@ -149,7 +149,7 @@
     </div>
 
     <!-- Stream stats -->
-    <div class="stats-row" id="statsRow">
+    <div class="stats-row crl-player-stats" id="statsRow">
       <div class="stat"><div class="stat-val" id="sBitrate">—</div><div class="stat-lbl">Bitrate</div></div>
       <div class="stat"><div class="stat-val" id="sBuffer">—</div><div class="stat-lbl">Buffer</div></div>
       <div class="stat"><div class="stat-val" id="sLatency">—</div><div class="stat-lbl">Latencia</div></div>
@@ -174,8 +174,8 @@
   </div>
 
   <!-- CHAT SIDE -->
-  <div class="chat-side" id="chatCol">
-    <div class="chat-header">
+  <div class="chat-side crl-chat-panel" id="chatCol">
+    <div class="chat-header crl-chat-panel-header">
       <div class="chat-title">
         <span class="dot on" style="width:6px;height:6px"></span>
         <span id="chatChannelLabel">CHAT</span>
@@ -187,8 +187,8 @@
         </button>
       </div>
     </div>
-    <div class="chat-msgs" id="chatMsgs"></div>
-    <div class="chat-input-wrap">
+    <div class="chat-msgs crl-chat-panel-body" id="chatMsgs"></div>
+    <div class="chat-input-wrap crl-chat-panel-input">
       <input type="text" id="chatInput" class="chat-input" placeholder="Mensaje… (@bot para el bot)" maxlength="280" autocomplete="off">
       <button id="chatSend" class="chat-send" title="Enviar"><i class="fa-solid fa-paper-plane"></i></button>
     </div>
@@ -305,4 +305,5 @@
 <script src="/assets/chat.js"></script>
 </body>
 </html>
+
 
