@@ -1247,3 +1247,49 @@ button { font: inherit; cursor: pointer; }
 }
 
 [data-theme="light"] .crl-player-nav { background: rgba(238,247,251,.96); }
+
+/* ── 46. PLAYER DROPDOWN HELPERS ────────────────────────── */
+.crl-player-drop-backdrop {
+  display: none; position: fixed; inset: 0; z-index: 199;
+  background: rgba(0,0,0,.55);
+}
+
+.crl-player-drop-backdrop.show { display: block; }
+
+.crl-player-drop-panel {
+  display: none; position: fixed; top: 52px; right: 8px;
+  width: 220px; z-index: 200;
+  background: var(--crl-panel); border: 1px solid var(--crl-border); border-radius: 10px;
+  padding: 8px; box-shadow: 0 8px 32px rgba(0,0,0,.55);
+}
+
+.crl-player-drop-panel.open { display: block; }
+
+.crl-player-drop-row { display: flex; gap: 6px; padding: 0 4px 6px; }
+
+.crl-player-drop-btn {
+  flex: 1; padding: 7px 8px; border-radius: 6px;
+  border: 1px solid var(--crl-border); background: transparent;
+  color: var(--crl-muted); font-family: var(--crl-mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer; transition: .15s; display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+
+.crl-player-drop-btn:hover { border-color: var(--crl-border-h); color: var(--crl-white); }
+.crl-player-drop-btn.active { border-color: rgba(0,191,255,.3); color: var(--crl-accent); background: rgba(0,191,255,.06); }
+
+@media(max-width:820px) {
+  .crl-player-drop-panel {
+    top: auto; bottom: 0; left: 0; right: 0; width: 100%;
+    border-radius: 14px 14px 0 0; padding: 12px 16px 24px;
+    max-height: 80vh; overflow-y: auto;
+  }
+  .crl-player-drop-panel::before {
+    content: ''; display: block; width: 36px; height: 4px;
+    background: rgba(255,255,255,.15); border-radius: 2px;
+    margin: 0 auto 12px;
+  }
+  .crl-player-drop-backdrop { display: none; }
+  .crl-player-drop-backdrop.show { display: block; }
+}
+
+[data-theme="light"] .crl-player-drop-panel::before { background: rgba(0,0,0,.15); }
