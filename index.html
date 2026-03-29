@@ -916,7 +916,7 @@
       <a href="/${s.key}/" class="channel-row">
         <div class="ch-ava" style="${avaStyle(s)};opacity:.45">${initial(s.name)}</div>
         <div class="ch-info">
-          <div class="ch-name" style="color:rgba(232,246,255,.35)">${s.name}</div>
+          <div class="ch-name">${s.name}</div>
           <div class="ch-status">Offline</div>
         </div>
       </a>`).join('');
@@ -973,7 +973,7 @@
       <a href="/${s.key}/" class="channel-row" onclick="closeDrawer()">
         <div class="ch-ava" style="${avaStyle(s)};opacity:.45">${initial(s.name)}</div>
         <div class="ch-info">
-          <div class="ch-name" style="color:rgba(232,246,255,.35)">${s.name}</div>
+          <div class="ch-name">${s.name}</div>
           <div class="ch-status">Offline</div>
         </div>
       </a>`).join('');
@@ -1268,6 +1268,7 @@
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>
+
 
 
 
