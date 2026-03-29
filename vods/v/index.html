@@ -208,7 +208,7 @@ async function init() {
       <a href="/${vod.channel}/" class="action-btn"><i class="fa-solid fa-tower-broadcast"></i> Canal de ${s.name}</a>
       <a href="/vods/?ch=${vod.channel}" class="action-btn"><i class="fa-solid fa-film"></i> Más VODs de ${s.name}</a>
       <button class="action-btn" onclick="copyLink()"><i class="fa-solid fa-link"></i> Copiar enlace</button>
-      <button class="action-btn" id="clipVodBtn"><i class="fa-solid fa-scissors"></i> Guardar clip</button>
+      <button class="action-btn" id="clipVodBtn"><i class="fa-solid fa-scissors"></i> Descargar clip</button>
     </div>`;
 
   const video = document.getElementById('vodVideo');
@@ -260,3 +260,4 @@ init();
 <script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>
+
