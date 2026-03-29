@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   CORILLO CSS — v1.2.0
+   CORILLO CSS — v1.3.0
    Dark-first design framework · No dependencies
    Made in Puerto Rico 🇵🇷
    ═══════════════════════════════════════════════════════════ */
@@ -1060,4 +1060,5 @@ button { font: inherit; cursor: pointer; }
 }
 [data-theme="light"] .crl-stream-card-title { color: var(--crl-white); }
 [data-theme="light"] .crl-stream-card-mark { color: rgba(0,136,187,.1); }
+
 
