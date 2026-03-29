@@ -73,8 +73,15 @@
       align-items: center;
       justify-content: center;
       min-height: calc(100vh - 52px);
-      gap: 32px;
+      gap: 24px;
     }
+    .login-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: .96;
+    }
+    .login-brand svg { height: 44px; width: auto; }
     .login-card {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -403,6 +410,18 @@
 
 <!-- ── LOGIN ── -->
 <div id="loginScreen">
+  <a href="/" class="login-brand" aria-label="CORILLO">
+    <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:44px;width:auto">
+      <defs><radialGradient id="perfil-lg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+      <circle cx="72" cy="42" r="36" fill="url(#perfil-lg)"/>
+      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+    </svg>
+  </a>
   <div class="login-card">
     <h2>MI PERFIL</h2>
     <p>Entra con tu cuenta de CORILLO para ver tu stream key y editar tu perfil.</p>
@@ -1261,3 +1280,4 @@ init();
 </script>
 </body>
 </html>
+
