@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /perfil/
+Disallow: /perfil/reset/
+
+Sitemap: https://corillo.live/sitemap.xml
