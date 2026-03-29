@@ -625,7 +625,9 @@ button { font: inherit; cursor: pointer; }
 .crl-grid-4    { grid-template-columns: repeat(4, 1fr); }
 
 @media(max-width:820px) {
-  .crl-grid-3, .crl-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .crl-player-app { grid-template-columns: 1fr; height: auto; flex: 1; align-content: start; overflow-y: auto; overflow-x: hidden; }
+  .crl-player-main { overflow: visible; }
+  .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
 }
 @media(max-width:560px) {
   .crl-grid-2, .crl-grid-3, .crl-grid-4 { grid-template-columns: 1fr; }
@@ -1430,4 +1432,6 @@ button { font: inherit; cursor: pointer; }
   .crl-player-links { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; }
   .crl-player-link { font-size: 7px; padding: 5px 4px; justify-content: center; letter-spacing: .5px; }
 }
+
+
 
