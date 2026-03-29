@@ -82,6 +82,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     rtcPc:    null,
     retries:  0,
     retryTimer:      null,
+    rtcDisconnectTimer: null,
     watchTimer:      null,
     statsTimer:      null,
     viewersTimer:    null,
@@ -433,6 +434,7 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     stopWatch();
     stopStatsPolling();
     if (App.retryTimer)      { clearTimeout(App.retryTimer);      App.retryTimer      = null; }
+    if (App.rtcDisconnectTimer) { clearTimeout(App.rtcDisconnectTimer); App.rtcDisconnectTimer = null; }
     if (App.kickBannerTimer) { clearTimeout(App.kickBannerTimer); App.kickBannerTimer = null; }
     // NOTE: othersTimer is intentionally NOT cleared here — it runs independently of stream state
 
@@ -564,7 +566,29 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
     };
     pc.onconnectionstatechange = () => {
       const s = pc.connectionState;
-      if (s === 'failed' || s === 'disconnected') scheduleRetry('WebRTC disconnected');
+      if (s === 'connected') {
+        if (App.rtcDisconnectTimer) {
+          clearTimeout(App.rtcDisconnectTimer);
+          App.rtcDisconnectTimer = null;
+        }
+        return;
+      }
+      if (s === 'disconnected') {
+        if (App.rtcDisconnectTimer) clearTimeout(App.rtcDisconnectTimer);
+        App.rtcDisconnectTimer = setTimeout(() => {
+          if (App.rtcPc === pc && (pc.connectionState === 'disconnected' || pc.connectionState === 'failed')) {
+            scheduleRetry('WebRTC disconnected');
+          }
+        }, 5000);
+        return;
+      }
+      if (s === 'failed' || s === 'closed') {
+        if (App.rtcDisconnectTimer) {
+          clearTimeout(App.rtcDisconnectTimer);
+          App.rtcDisconnectTimer = null;
+        }
+        scheduleRetry('WebRTC disconnected');
+      }
     };
 
     try {
