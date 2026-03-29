@@ -154,9 +154,9 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
   <div class="hero-badges">
     <span class="badge badge-accent"><i class="fa-solid fa-droplet"></i> Sin dependencias</span>
     <span class="badge badge-live"><i class="fa-solid fa-bolt"></i> Dark-first</span>
-    <span class="badge badge-confirm"><i class="fa-solid fa-weight-hanging"></i> 46.84 KB · 8.95 KB gz</span>
+    <span class="badge badge-confirm"><i class="fa-solid fa-weight-hanging"></i> 52.03 KB · 9.66 KB gz</span>
     <span class="badge badge-dim"><i class="fa-brands fa-css3"></i> CSS puro</span>
-    <span class="badge badge-dim"><i class="fa-solid fa-layer-group"></i> 39 componentes</span>
+    <span class="badge badge-dim"><i class="fa-solid fa-layer-group"></i> 44 componentes</span>
   </div>
 
   <div class="hero-actions">
@@ -189,6 +189,11 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
     <a href="#pills">Pills</a>
     <a href="#cards">Cards</a>
     <a href="#streamcard">Stream Card</a>
+    <a href="#pageheader">Page Header</a>
+    <a href="#filterpanel">Filter Panel</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#emptyhero">Empty Hero</a>
+    <a href="#statgrid">Stat Grid</a>
     <a href="#dots">Dots</a>
     <a href="#avatars">Avatares</a>
     <a href="#inputs">Inputs</a>
@@ -722,6 +727,83 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
 <span class="tok-com">// opcional: .is-featured para destacar la card</span></pre>
     </section>
 
+    <section class="doc-section" id="pageheader">
+      <p class="crl-section-label">Componente</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Page Header</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Header sticky reutilizable para páginas internas con título, tag y acciones.</p>
+      <div class="preview" style="padding:0;overflow:hidden">
+        <div class="crl-page-header">
+          <div class="crl-page-header-main">
+            <div class="crl-page-header-title">FAQ</div>
+            <div class="crl-page-header-tag">Soporte</div>
+          </div>
+          <div class="crl-page-header-actions">
+            <button class="theme-btn"><i class="fa-solid fa-circle-half-stroke"></i></button>
+            <a href="#" class="btn btn-sm"><i class="fa-solid fa-house"></i> Inicio</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="filterpanel">
+      <p class="crl-section-label">Componente</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Filter Panel</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Panel para filtros activos, chips y contadores. Pensado para multiplayer, listings y dashboards.</p>
+      <div class="preview">
+        <div class="crl-filter-panel" style="margin-bottom:0">
+          <span class="crl-filter-label">Ver</span>
+          <button class="crl-filter-pill active">Todos</button>
+          <span class="crl-filter-sep"></span>
+          <div class="crl-filter-group">
+            <button class="crl-filter-chip active"><span class="ava ava-xs" style="background:#e8c84a">K</span>KATATONIA</button>
+            <button class="crl-filter-chip"><span class="ava ava-xs" style="background:#00bfff">T</span>TEA</button>
+            <button class="crl-filter-chip"><span class="ava ava-xs" style="background:#CE1126">M</span>MARCOS</button>
+          </div>
+          <span class="crl-filter-count">3 activos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="gallery">
+      <p class="crl-section-label">Layout</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Gallery Layouts</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Grid adaptable para colecciones de streams, cards o media. Soporta modos equal, focus y col.</p>
+      <div class="preview preview-col">
+        <div class="crl-gallery count-3 layout-focus">
+          <div class="card card-accent"><p class="crl-sm">Item 1</p></div>
+          <div class="card"><p class="crl-sm">Item 2</p></div>
+          <div class="card"><p class="crl-sm">Item 3</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="emptyhero">
+      <p class="crl-section-label">Estado</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Empty Hero</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Versión más expresiva del empty state para páginas principales.</p>
+      <div class="preview">
+        <div class="crl-empty-hero">
+          <div class="crl-empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
+          <div class="crl-empty-title">NADIE EN VIVO</div>
+          <div class="crl-empty-sub">Cuando alguien inicie stream aparecerá aquí.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="statgrid">
+      <p class="crl-section-label">Componente</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Stat Grid</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Grid compacto para métricas rápidas en dashboards, player panels o paneles internos.</p>
+      <div class="preview">
+        <div class="crl-stat-grid">
+          <div class="crl-stat-card"><div class="crl-stat-card-label">Bitrate</div><div class="crl-stat-card-value">4.1 Mbps</div></div>
+          <div class="crl-stat-card"><div class="crl-stat-card-label">Buffer</div><div class="crl-stat-card-value">2.6s</div></div>
+          <div class="crl-stat-card"><div class="crl-stat-card-label">Latencia</div><div class="crl-stat-card-value">860ms</div></div>
+          <div class="crl-stat-card"><div class="crl-stat-card-label">Retries</div><div class="crl-stat-card-value">1</div></div>
+        </div>
+      </div>
+    </section>
+
     <!-- ── FORM GROUP ── -->
     <section class="doc-section" id="formgroup">
       <p class="crl-section-label">15 — Form Group</p>
@@ -1087,32 +1169,32 @@ tabs.forEach(t => t.addEventListener('click', () => {
         </div>
       </div>
 
-      <!-- v1.3 — PRÓXIMO -->
+      <!-- v1.3 — LISTO -->
       <div style="margin-bottom:32px">
         <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
-          <span class="badge badge-accent"><i class="fa-solid fa-clock"></i> v1.3 — Próximo</span>
+          <span class="badge badge-confirm"><i class="fa-solid fa-check"></i> v1.3 — Listo</span>
         </div>
-        <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:16px">La prioridad ahora no es sumar componentes sueltos por sumar. Es convertir patrones reales de Corillo en piezas reutilizables del framework para que nuevas páginas salgan más rápido y con menos CSS local.</p>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-bottom:18px">
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-tv"></i><span class="crl-xs">crl-stream-card</span></div>
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-filter"></i><span class="crl-xs">crl-filter-panel</span></div>
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-table-cells-large"></i><span class="crl-xs">crl-gallery layouts</span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-tv"></i><span class="crl-xs">crl-stream-card</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-filter"></i><span class="crl-xs">crl-filter-panel</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-table-cells-large"></i><span class="crl-xs">crl-gallery layouts</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-window-maximize"></i><span class="crl-xs">crl-page-header</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-inbox"></i><span class="crl-xs">crl-empty-hero</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-chart-simple"></i><span class="crl-xs">crl-stat-grid</span></div>
+          <div class="rdot-item rdot-confirm"><i class="fa-solid fa-rocket"></i><span class="crl-xs">Base lista para migrar multiplayer</span></div>
+        </div>
+      </div>
+
+      <!-- v1.4 — PRÓXIMO -->
+      <div style="margin-bottom:32px">
+        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
+          <span class="badge badge-accent"><i class="fa-solid fa-clock"></i> v1.4 — Próximo</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-window-maximize"></i><span class="crl-xs">crl-player-shell</span></div>
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-comments"></i><span class="crl-xs">crl-chat-panel</span></div>
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-bars"></i><span class="crl-xs">crl-page-header</span></div>
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-grip-lines"></i><span class="crl-xs">crl-site-footer v2</span></div>
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-inbox"></i><span class="crl-xs">crl-empty-hero</span></div>
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-chart-simple"></i><span class="crl-xs">crl-stat-grid</span></div>
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-gears"></i><span class="crl-xs">corillo-ui.js opcional</span></div>
-        </div>
-        <div class="card card-dim" style="padding:16px 18px">
-          <p class="crl-mono crl-xs crl-upper" style="color:var(--crl-accent);margin-bottom:10px">Prioridades de migración</p>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
-            <div class="rdot-item rdot-dim"><i class="fa-solid fa-1"></i><span class="crl-xs crl-text-muted">Multiplayer → stream card, filter panel, gallery</span></div>
-            <div class="rdot-item rdot-dim"><i class="fa-solid fa-2"></i><span class="crl-xs crl-text-muted">FAQ / Legal / DMCA → page header y footer</span></div>
-            <div class="rdot-item rdot-dim"><i class="fa-solid fa-3"></i><span class="crl-xs crl-text-muted">Home / VODs → cards y grids compartidos</span></div>
-            <div class="rdot-item rdot-dim"><i class="fa-solid fa-4"></i><span class="crl-xs crl-text-muted">Player → shell, chat panel y controles</span></div>
-          </div>
         </div>
       </div>
 
@@ -1203,6 +1285,9 @@ sections.forEach(s => observer.observe(s));
 </script>
 </body>
 </html>
+
+
+
 
 
 

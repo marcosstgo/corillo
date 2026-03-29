@@ -1061,4 +1061,112 @@ button { font: inherit; cursor: pointer; }
 [data-theme="light"] .crl-stream-card-title { color: var(--crl-white); }
 [data-theme="light"] .crl-stream-card-mark { color: rgba(0,136,187,.1); }
 
+/* ── 40. PAGE HEADER ────────────────────────────────────── */
+.crl-page-header {
+  position: sticky; top: 0; z-index: 160;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--crl-border);
+  background: rgba(3,10,14,.92);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+.crl-page-header-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.crl-page-header-title {
+  font-family: var(--crl-display); font-size: clamp(1.25rem, 3vw, 1.8rem);
+  letter-spacing: 2px; line-height: 1;
+}
+.crl-page-header-tag {
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  letter-spacing: 2px; text-transform: uppercase; color: var(--crl-muted);
+  border-left: 1px solid var(--crl-border); padding-left: 10px;
+}
+.crl-page-header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+[data-theme="light"] .crl-page-header { background: rgba(238,247,251,.94); }
+
+/* ── 41. FILTER PANEL ───────────────────────────────────── */
+.crl-filter-panel {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 14px; margin-bottom: 20px;
+  border: 1px solid var(--crl-border); border-radius: var(--crl-r-md);
+  background: rgba(255,255,255,.025);
+}
+.crl-filter-label,
+.crl-filter-count {
+  font-family: var(--crl-mono); font-size: var(--crl-xs);
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--crl-muted);
+}
+.crl-filter-count { margin-left: auto; }
+.crl-filter-sep { width: 1px; height: 18px; background: var(--crl-border); flex-shrink: 0; }
+.crl-filter-group {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex: 1; min-width: 0;
+}
+.crl-filter-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 5px; border-radius: var(--crl-r-full);
+  border: 1px solid transparent; background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.28);
+  font-family: var(--crl-mono); font-size: var(--crl-2xs); letter-spacing: 1px; text-transform: uppercase;
+  transition: .15s; cursor: pointer; white-space: nowrap;
+}
+.crl-filter-chip:hover { border-color: var(--crl-border-h); color: var(--crl-white); }
+.crl-filter-chip.active {
+  background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14); color: var(--crl-white);
+}
+[data-theme="light"] .crl-filter-panel { background: rgba(255,255,255,.62); }
+[data-theme="light"] .crl-filter-chip { background: rgba(0,0,0,.03); color: rgba(5,16,21,.42); }
+[data-theme="light"] .crl-filter-chip.active { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.12); color: rgba(5,16,21,.88); }
+
+/* ── 42. GALLERY LAYOUTS ────────────────────────────────── */
+.crl-gallery { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
+.crl-gallery.layout-col { grid-template-columns: 1fr !important; }
+.crl-gallery.layout-focus > :first-child { grid-column: 1 / -1; }
+.crl-gallery.count-1 { grid-template-columns: 1fr; }
+.crl-gallery.count-2 { grid-template-columns: repeat(2, 1fr); }
+.crl-gallery.count-3 { grid-template-columns: repeat(3, 1fr); }
+.crl-gallery.count-4 { grid-template-columns: repeat(2, 1fr); }
+.crl-gallery.count-5,
+.crl-gallery.count-6,
+.crl-gallery.count-7 { grid-template-columns: repeat(3, 1fr); }
+.crl-gallery.count-8 { grid-template-columns: repeat(4, 1fr); }
+@media(max-width:768px) {
+  .crl-gallery,
+  .crl-gallery.count-1,
+  .crl-gallery.count-2,
+  .crl-gallery.count-3,
+  .crl-gallery.count-4,
+  .crl-gallery.count-5,
+  .crl-gallery.count-6,
+  .crl-gallery.count-7,
+  .crl-gallery.count-8 { grid-template-columns: 1fr; }
+}
+
+/* ── 43. EMPTY HERO ─────────────────────────────────────── */
+.crl-empty-hero {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 44vh; gap: 16px; text-align: center; padding: 28px 20px;
+}
+.crl-empty-hero .crl-empty-title {
+  font-family: var(--crl-display); font-size: clamp(2rem, 6vw, 3rem); letter-spacing: 3px;
+}
+.crl-empty-hero .crl-empty-sub {
+  max-width: 38ch; text-transform: uppercase; letter-spacing: 2px;
+}
+[data-theme="light"] .crl-empty-hero .crl-empty-title { color: rgba(5,16,21,.3); }
+
+/* ── 44. STAT GRID ──────────────────────────────────────── */
+.crl-stat-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;
+}
+.crl-stat-card {
+  border: 1px solid var(--crl-border); border-radius: var(--crl-r-md);
+  background: var(--crl-surface); padding: 12px 14px;
+}
+.crl-stat-card-label {
+  font-family: var(--crl-mono); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--crl-muted);
+}
+.crl-stat-card-value {
+  margin-top: 6px; font-family: var(--crl-mono); font-size: var(--crl-base); font-weight: 700; color: var(--crl-accent);
+}
+[data-theme="light"] .crl-stat-card { background: rgba(255,255,255,.74); border-color: rgba(0,0,0,.1); }
 
