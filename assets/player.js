@@ -795,9 +795,9 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
         }
         if (DOM.chLinks) {
           let html = '';
-          if (data.twitch)    html += `<a href="https://twitch.tv/${data.twitch}" target="_blank" rel="noopener" class="ch-link twitch"><i class="fa-brands fa-twitch"></i> Twitch</a>`;
-          if (data.instagram) html += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener" class="ch-link"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
-          if (data.tiktok)    html += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener" class="ch-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>`;
+          if (data.twitch)    html += `<a href="https://twitch.tv/${data.twitch}" target="_blank" rel="noopener" class="ch-link crl-player-link is-twitch twitch"><i class="fa-brands fa-twitch"></i> Twitch</a>`;
+          if (data.instagram) html += `<a href="https://instagram.com/${data.instagram}" target="_blank" rel="noopener" class="ch-link crl-player-link"><i class="fa-brands fa-instagram"></i> Instagram</a>`;
+          if (data.tiktok)    html += `<a href="https://tiktok.com/@${data.tiktok}" target="_blank" rel="noopener" class="ch-link crl-player-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>`;
           DOM.chLinks.innerHTML = html;
         }
         const panels = Array.isArray(data.panels) ? data.panels.filter(p => p && p.title) : [];
@@ -841,13 +841,13 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
           const v = liveMap[s.key] || 0;
           const c = s.color || 'var(--panel)';
           const i = (s.name || s.key)[0].toUpperCase();
-          return `<a href="/${s.key}/" class="other-row">
-            <div class="other-ava" style="background:${c};color:#000">${i}</div>
-            <div class="other-info">
-              <div class="other-name">${s.name || s.key.toUpperCase()}</div>
-              <div class="other-status">En vivo</div>
+          return `<a href="/${s.key}/" class="other-row crl-player-rail-row">
+            <div class="other-ava crl-player-rail-avatar" style="background:${c};color:#000">${i}</div>
+            <div class="other-info crl-player-rail-meta">
+              <div class="other-name crl-player-rail-name">${s.name || s.key.toUpperCase()}</div>
+              <div class="other-status crl-player-rail-status">En vivo</div>
             </div>
-            <div class="other-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>
+            <div class="other-viewers crl-player-rail-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>
           </a>`;
         }).join('');
       })
