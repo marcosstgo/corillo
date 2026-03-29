@@ -15,6 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
   <script src="/assets/streamers.js"></script>
   <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/corillo.css">
 
   <style>
     :root{ --border-h:rgba(255,255,255,.18); }
@@ -357,8 +358,8 @@
 </head>
 <body>
 
-<header>
-  <div class="nav">
+<header class="crl-page-header">
+  <div class="nav crl-page-header-main">
     <div class="nav-left">
       <a href="/" class="nav-logo brand-link">
         <svg class="brand-svg crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
@@ -377,9 +378,9 @@
           <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
         </svg>
       </a>
-      <div class="page-tag">Multiplayer</div>
+      <div class="page-tag crl-page-header-tag">Multiplayer</div>
     </div>
-    <div class="nav-right">
+    <div class="nav-right crl-page-header-actions">
       <div class="live-pill">
         <span class="dot on" id="navDot"></span>
         <span id="navCount">0</span>&nbsp;en vivo
@@ -397,19 +398,19 @@
 <main class="page">
 
   <!-- Filter panel — visible only when ≥2 streamers are live -->
-  <div class="filter-panel" id="filterPanel">
-    <span class="filter-panel-label">Ver</span>
-    <button class="filter-all active" id="filterAll">Todos</button>
-    <div class="filter-sep"></div>
-    <div class="filter-chips" id="filterChips"></div>
-    <span class="filter-count" id="filterCount"></span>
-    <div class="filter-sep"></div>
+  <div class="filter-panel crl-filter-panel" id="filterPanel">
+    <span class="filter-panel-label crl-filter-label">Ver</span>
+    <button class="filter-all crl-filter-pill active" id="filterAll">Todos</button>
+    <div class="filter-sep crl-filter-sep"></div>
+    <div class="filter-chips crl-filter-group" id="filterChips"></div>
+    <span class="filter-count crl-filter-count" id="filterCount"></span>
+    <div class="filter-sep crl-filter-sep"></div>
     <div class="layout-btns">
       <button class="layout-btn" id="btnLayoutEq" title="Cuadrícula igual"><i class="fa-solid fa-table-cells"></i></button>
       <button class="layout-btn" id="btnLayoutFc" title="Destacado"><i class="fa-solid fa-table-cells-large"></i></button>
       <button class="layout-btn" id="btnLayoutCl" title="Columna"><i class="fa-solid fa-bars"></i></button>
     </div>
-    <div class="filter-sep"></div>
+    <div class="filter-sep crl-filter-sep"></div>
     <button class="arc-btn" id="btnArcRaider" title="Modo Arc Raider — audio simultáneo para todo el squad">
       <span class="arc-btn-stripes">
         <span style="background:#D00000"></span>
@@ -433,14 +434,14 @@
   </div>
 
   <!-- Empty state -->
-  <div class="empty show" id="emptyState">
-    <div class="empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
-    <h2 id="emptyTitle">NADIE EN VIVO</h2>
-    <p id="emptyMsg">Cuando alguien inicie stream aparecerá aquí</p>
+  <div class="empty crl-empty-hero show" id="emptyState">
+    <div class="empty-icon crl-empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
+    <h2 class="crl-empty-title" id="emptyTitle">NADIE EN VIVO</h2>
+    <p class="crl-empty-sub" id="emptyMsg">Cuando alguien inicie stream aparecerá aquí</p>
   </div>
 
   <!-- Gallery -->
-  <div class="gallery" id="gallery"></div>
+  <div class="gallery crl-gallery" id="gallery"></div>
 
 </main>
 
@@ -618,24 +619,24 @@ function buildCard(streamer, viewers) {
   const isAudioActive = arcRaiderMode ? arcAudioKeys.has(streamer.key) : (activeAudioKey === streamer.key);
   const a = document.createElement('a');
   a.href  = `/${encodeURIComponent(streamer.key)}/`;
-  a.className   = 'stream-card is-live' + (streamer.host ? ' is-featured' : '');
+  a.className   = 'stream-card crl-stream-card is-live' + (streamer.host ? ' is-featured' : '');
   a.dataset.key = streamer.key;
   a.innerHTML = `
-    <div class="thumb">
+    <div class="thumb crl-stream-card-media">
       <video playsinline muted autoplay loop></video>
       <div class="tag-live"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
-      ${streamer.host ? '<div class="tag-host">HOST</div>' : ''}
-      <div class="tag-viewers"><i class="fa-solid fa-eye"></i>&nbsp;${viewers}</div>
+      ${streamer.host ? '<div class="tag-host badge badge-accent">HOST</div>' : ''}
+      <div class="tag-viewers badge badge-dim"><i class="fa-solid fa-eye"></i>&nbsp;${viewers}</div>
       <button class="vol-btn${isAudioActive ? ' active' : ''}" title="Activar/silenciar sonido">
         <i class="fa-solid ${isAudioActive ? 'fa-volume-high' : 'fa-volume-xmark'}"></i>
       </button>
       <div class="play-icon"><i class="fa-solid fa-play"></i></div>
     </div>
-    <div class="card-foot">
-      <div class="ava" style="background:${streamer.color}">${streamer.ava}</div>
-      <div class="foot-info">
-        <div class="ch-name">${streamer.name}</div>
-        <div class="ch-sub">${streamer.sub}</div>
+    <div class="card-foot crl-stream-card-body">
+      <div class="ava crl-stream-card-avatar" style="background:${streamer.color}">${streamer.ava}</div>
+      <div class="foot-info crl-stream-card-text">
+        <div class="ch-name crl-stream-card-title">${streamer.name}</div>
+        <div class="ch-sub crl-stream-card-sub">${streamer.sub}</div>
       </div>
       <i class="fa-solid fa-arrow-up-right-from-square expand-icon"></i>
     </div>`;
@@ -702,7 +703,7 @@ function updateUI() {
   // Gallery class + empty state — preserve arc-active and layout classes
   const arcCls    = arcRaiderMode ? ' arc-active' : '';
   const layoutCls = currentLayout === 'focus' ? ' layout-focus' : currentLayout === 'col' ? ' layout-col' : '';
-  gallery.className = `gallery count-${Math.min(visible, 8)}${arcCls}${layoutCls}`;
+  gallery.className = `gallery crl-gallery count-${Math.min(visible, 8)}${arcCls}${layoutCls}`;
   if (visible === 0) {
     $('emptyState').classList.add('show');
     if (totalLive > 0) {
@@ -719,7 +720,7 @@ function updateUI() {
 
 function addChip(streamer) {
   const chip = document.createElement('button');
-  chip.className   = 'filter-chip';
+  chip.className   = 'filter-chip crl-filter-chip';
   chip.dataset.key = streamer.key;
   chip.title       = streamer.name;
   chip.innerHTML   = `<span class="chip-ava" style="background:${streamer.color}">${streamer.ava}</span>${streamer.name}`;
@@ -878,9 +879,9 @@ document.addEventListener('visibilitychange', () => {
 refresh();
 </script>
 
-<footer class="site-footer">
-  <div class="foot-inner">
-    <div class="foot-left">
+<footer class="site-footer crl-site-footer">
+  <div class="foot-inner crl-foot-inner">
+    <div class="foot-left crl-foot-left">
       <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
         <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
         <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
@@ -891,26 +892,29 @@ refresh();
         <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
         <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
       </svg>
-      <div class="foot-info">Puerto Rico<br>Plataforma independiente</div>
+      <div class="foot-info crl-foot-info">Puerto Rico<br>Plataforma independiente</div>
     </div>
-    <div class="foot-links">
+    <div class="foot-links crl-foot-links">
       <a href="/multiplayer/">Multiplayer</a>
-      <span class="foot-sep">·</span>
+      <span class="foot-sep crl-foot-sep">·</span>
       <a href="/streamers/">Streamers</a>
-      <span class="foot-sep">·</span>
+      <span class="foot-sep crl-foot-sep">·</span>
       <a href="/join/">Crear Canal</a>
-      <span class="foot-sep">·</span>
+      <span class="foot-sep crl-foot-sep">·</span>
       <a href="/roadmap/">Roadmap</a>
-      <span class="foot-sep">·</span>
+      <span class="foot-sep crl-foot-sep">·</span>
       <a href="/legal/">Términos</a>
-      <span class="foot-sep">·</span>
+      <span class="foot-sep crl-foot-sep">·</span>
       <a href="/dmca/">DMCA</a>
-      <span class="foot-sep">·</span>
+      <span class="foot-sep crl-foot-sep">·</span>
       <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
     </div>
   </div>
 </footer>
 </body>
 </html>
+
+
+
 
 
