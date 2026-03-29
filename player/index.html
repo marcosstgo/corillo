@@ -265,11 +265,13 @@
 
   async function refreshBtn() {
     const sub = await reg.pushManager.getSubscription();
-    btn.innerHTML = sub
+    const active = !!sub;
+    btn.innerHTML = active
       ? '<i class="fa-solid fa-bell"></i>'
       : '<i class="fa-regular fa-bell"></i>';
-    btn.title = sub ? 'Desactivar notificaciones' : 'Notificarme cuando esté en vivo';
-    btn.classList.toggle('active', !!sub);
+    btn.title = active ? 'Desactivar notificaciones' : 'Notificarme cuando esté en vivo';
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
   }
   await refreshBtn();
 

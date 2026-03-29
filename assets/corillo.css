@@ -1229,6 +1229,9 @@ button { font: inherit; cursor: pointer; }
   border-left: 1px solid var(--crl-border); min-height: 0; overflow: hidden;
 }
 
+.crl-player-app.chat-hidden { grid-template-columns: 1fr; }
+.crl-player-app.chat-hidden .crl-chat-panel { display: none; }
+
 .crl-chat-panel-header {
   height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
   padding: 0 14px; background: var(--crl-panel); border-bottom: 1px solid var(--crl-border);
