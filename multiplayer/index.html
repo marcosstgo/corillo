@@ -327,6 +327,28 @@
     .foot-links a{color:var(--muted);transition:.15s}
     .foot-links a:hover{color:var(--accent)}
     .foot-sep{color:var(--dim)}
+
+    [data-theme="light"] .viewers-pill{color:rgba(5,16,21,.5);background:rgba(0,0,0,.02)}
+    [data-theme="light"] .btn{color:rgba(5,16,21,.72);background:rgba(0,0,0,.02)}
+    [data-theme="light"] .btn:hover{background:rgba(0,0,0,.05);color:var(--white)}
+    [data-theme="light"] .filter-panel{background:rgba(255,255,255,.58)}
+    [data-theme="light"] .filter-panel-label,
+    [data-theme="light"] .filter-count{color:rgba(5,16,21,.38)}
+    [data-theme="light"] .filter-all{color:rgba(5,16,21,.45);background:rgba(0,0,0,.02)}
+    [data-theme="light"] .filter-all:hover:not(.active){color:rgba(5,16,21,.78)}
+    [data-theme="light"] .filter-chip{background:rgba(0,0,0,.03);color:rgba(5,16,21,.38)}
+    [data-theme="light"] .filter-chip.active{border-color:rgba(0,0,0,.12);background:rgba(0,0,0,.05);color:rgba(5,16,21,.88)}
+    [data-theme="light"] .filter-chip:hover{color:var(--white)}
+    [data-theme="light"] .layout-btn{color:rgba(5,16,21,.36)}
+    [data-theme="light"] .layout-btn:hover:not(.active){color:rgba(5,16,21,.72)}
+    [data-theme="light"] .arc-btn{color:rgba(5,16,21,.55)}
+    [data-theme="light"] .arc-btn:hover:not(.active){color:rgba(5,16,21,.86)}
+    [data-theme="light"] .empty h2{color:rgba(5,16,21,.3)}
+    [data-theme="light"] .stream-card{background:#f7fbfd}
+    [data-theme="light"] .card-foot{background:linear-gradient(to bottom,rgba(255,255,255,.9),rgba(220,238,245,.96))}
+    [data-theme="light"] .expand-icon{color:rgba(5,16,21,.25)}
+    [data-theme="light"] .site-footer .foot-info{color:rgba(5,16,21,.34)}
+    [data-theme="light"] .foot-sep{color:rgba(5,16,21,.18)}
   </style>
 </head>
 <body>
@@ -335,20 +357,20 @@
   <div class="nav">
     <div class="nav-left">
       <a href="/" class="nav-logo brand-link">
-        <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
+        <svg class="brand-svg crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
           <defs>
             <radialGradient id="ng" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
               <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
             </radialGradient>
           </defs>
-          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
           <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
-          <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+          <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
           <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
           <circle cx="72" cy="42" r="8" fill="#00bfff"/>
           <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
         </svg>
       </a>
       <div class="page-tag">Multiplayer</div>
@@ -855,15 +877,15 @@ refresh();
 <footer class="site-footer">
   <div class="foot-inner">
     <div class="foot-left">
-      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
+      <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
         <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
-        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
         <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
         <circle cx="72" cy="42" r="8" fill="#00bfff"/>
         <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
       </svg>
       <div class="foot-info">Puerto Rico<br>Plataforma independiente</div>
     </div>
@@ -886,3 +908,4 @@ refresh();
 </footer>
 </body>
 </html>
+
