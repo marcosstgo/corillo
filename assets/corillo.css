@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   CORILLO CSS — v1.3.0
+   CORILLO CSS — v1.4.0
    Dark-first design framework · No dependencies
    Made in Puerto Rico 🇵🇷
    ═══════════════════════════════════════════════════════════ */
@@ -1425,3 +1425,4 @@ button { font: inherit; cursor: pointer; }
   .crl-player-links { display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; }
   .crl-player-link { font-size: 7px; padding: 5px 4px; justify-content: center; letter-spacing: .5px; }
 }
+

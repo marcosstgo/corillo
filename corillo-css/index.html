@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Corillo CSS — Framework Docs v1.3</title>
+<title>Corillo CSS — Framework Docs v1.4</title>
 <meta name="description" content="Documentación oficial de Corillo CSS, el framework dark-first de CORILLO hecho en Puerto Rico." />
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://corillo.live/corillo-css/">
-<meta property="og:title" content="Corillo CSS — Framework Docs v1.3">
+<meta property="og:title" content="Corillo CSS — Framework Docs v1.4">
 <meta property="og:description" content="Documentación oficial de Corillo CSS, el framework dark-first de CORILLO hecho en Puerto Rico.">
 <meta property="og:image" content="https://corillo.live/assets/og-image.png">
 <meta property="og:locale" content="es_PR">
 <meta property="og:site_name" content="CORILLO">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Corillo CSS — Framework Docs v1.3">
+<meta name="twitter:title" content="Corillo CSS — Framework Docs v1.4">
 <meta name="twitter:description" content="Documentación oficial de Corillo CSS, el framework dark-first de CORILLO hecho en Puerto Rico.">
 <meta name="twitter:image" content="https://corillo.live/assets/og-image.png">
 <link rel="canonical" href="https://corillo.live/corillo-css/">
@@ -135,7 +135,7 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
 <nav class="topbar">
   <div class="topbar-logo">CORILLO<span>.</span>CSS</div>
   <div class="topbar-right">
-    <span class="version">v1.3.0</span>
+    <span class="version">v1.4.0</span>
     <button class="theme-btn" id="themeBtn" title="Toggle theme">
       <i class="fa-solid fa-circle-half-stroke"></i>
     </button>
@@ -167,9 +167,9 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
   <div class="hero-badges">
     <span class="badge badge-accent"><i class="fa-solid fa-droplet"></i> Sin dependencias</span>
     <span class="badge badge-live"><i class="fa-solid fa-bolt"></i> Dark-first</span>
-    <span class="badge badge-confirm"><i class="fa-solid fa-weight-hanging"></i> 52.03 KB · 9.66 KB gz</span>
+    <span class="badge badge-confirm"><i class="fa-solid fa-weight-hanging"></i> 61.06 KB · 10.97 KB gz</span>
     <span class="badge badge-dim"><i class="fa-brands fa-css3"></i> CSS puro</span>
-    <span class="badge badge-dim"><i class="fa-solid fa-layer-group"></i> 44 componentes</span>
+    <span class="badge badge-dim"><i class="fa-solid fa-layer-group"></i> 48 componentes</span>
   </div>
 
   <div class="hero-actions">
@@ -207,6 +207,9 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
     <a href="#gallery">Gallery</a>
     <a href="#emptyhero">Empty Hero</a>
     <a href="#statgrid">Stat Grid</a>
+    <a href="#playershell">Player Shell</a>
+    <a href="#playerrail">Player Rail</a>
+    <a href="#playervods">Player VODs</a>
     <a href="#dots">Dots</a>
     <a href="#avatars">Avatares</a>
     <a href="#inputs">Inputs</a>
@@ -817,6 +820,108 @@ body{background:var(--crl-ink);color:var(--crl-white);font-family:var(--crl-body
       </div>
     </section>
 
+    <section class="doc-section" id="playershell">
+      <p class="crl-section-label">Componente</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Player Shell</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Base estructural del player: nav sticky, layout principal, video shell, panel overlay, stats y chat panel.</p>
+      <div class="preview preview-dark" style="padding:0;overflow:hidden">
+        <div class="crl-player-nav" style="position:static">
+          <div class="crl-flex crl-items-center crl-gap-sm">
+            <span class="ava ava-xs ava-live" style="background:#00bfff">C</span>
+            <span class="crl-mono crl-xs">CANAL</span>
+          </div>
+          <div class="crl-flex crl-items-center crl-gap-sm crl-ml-auto">
+            <button class="nav-btn"><i class="fa-solid fa-message"></i></button>
+            <button class="nav-btn active"><i class="fa-solid fa-ellipsis"></i></button>
+          </div>
+        </div>
+        <div class="crl-player-app" style="min-height:520px">
+          <div class="crl-player-main">
+            <div class="crl-player-video-shell" style="aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;color:var(--crl-muted);font-family:var(--crl-mono)">VIDEO SHELL</div>
+            <div class="crl-player-info">
+              <span class="ava ava-md ava-live" style="background:#e8c84a;color:#000">K</span>
+              <div>
+                <div class="crl-display crl-lg">KATATONIA</div>
+                <div class="crl-mono crl-xs crl-text-muted">Gaming · Aibonito</div>
+              </div>
+            </div>
+            <div class="crl-player-stats">
+              <div class="stat"><div class="crl-stat-card-value">4.1 Mbps</div><div class="crl-stat-card-label">Bitrate</div></div>
+              <div class="stat"><div class="crl-stat-card-value">2.3s</div><div class="crl-stat-card-label">Buffer</div></div>
+              <div class="stat"><div class="crl-stat-card-value">840ms</div><div class="crl-stat-card-label">Latencia</div></div>
+            </div>
+          </div>
+          <div class="crl-chat-panel" style="min-height:0">
+            <div class="crl-chat-panel-header"><span class="crl-mono crl-xs">CHAT</span><button class="nav-btn"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="crl-chat-panel-body">
+              <div class="crl-sm"><strong style="color:var(--crl-accent)">@bot</strong> Dale play.</div>
+              <div class="crl-sm"><strong>KATATONIA</strong> Estamos activos.</div>
+            </div>
+            <div class="crl-chat-panel-input">
+              <input class="crl-input" placeholder="Mensaje...">
+              <button class="btn btn-primary btn-icon btn-sm"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="playerrail">
+      <p class="crl-section-label">Componente</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Player Rail</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Lista lateral o inferior para enlaces del canal y bloques compactos como "Otros en vivo".</p>
+      <div class="preview preview-col">
+        <div class="crl-player-links">
+          <a href="#" class="crl-player-link is-twitch"><i class="fa-brands fa-twitch"></i> Twitch</a>
+          <a href="#" class="crl-player-link"><i class="fa-brands fa-instagram"></i> Instagram</a>
+          <a href="#" class="crl-player-link"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+        </div>
+        <div class="crl-player-rail" style="border-top:1px solid var(--crl-border)">
+          <div class="crl-player-rail-title">Otros en vivo</div>
+          <div class="crl-player-rail-list">
+            <a href="#" class="crl-player-rail-row">
+              <div class="crl-player-rail-avatar" style="background:#e8c84a;color:#000">K</div>
+              <div class="crl-player-rail-meta">
+                <div class="crl-player-rail-name">KATATONIA</div>
+                <div class="crl-player-rail-status">En vivo</div>
+              </div>
+              <div class="crl-player-rail-viewers"><i class="fa-solid fa-eye"></i> 12</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="doc-section" id="playervods">
+      <p class="crl-section-label">Componente</p>
+      <h2 class="crl-display crl-2xl" style="margin-bottom:8px">Player VODs</h2>
+      <p class="crl-sm" style="color:var(--crl-muted);margin-bottom:24px">Carrusel horizontal para las últimas transmisiones del canal, con soporte para hover preview y versión responsive en grid.</p>
+      <div class="preview preview-col">
+        <div class="crl-player-vods" style="border-top:none;padding-top:0">
+          <div class="crl-player-vods-head">
+            <span>Últimas transmisiones</span>
+            <a href="#" class="crl-player-vods-link">Ver todas</a>
+          </div>
+          <div class="crl-player-vods-list">
+            <a href="#" class="crl-player-vod-card">
+              <div class="crl-player-vod-thumb">
+                <i class="fa-solid fa-play" style="position:relative;z-index:1"></i>
+                <span class="crl-player-vod-duration">1h 24m</span>
+              </div>
+              <div class="crl-player-vod-date">mar 29</div>
+            </a>
+            <a href="#" class="crl-player-vod-card">
+              <div class="crl-player-vod-thumb">
+                <i class="fa-solid fa-play" style="position:relative;z-index:1"></i>
+                <span class="crl-player-vod-duration">52m</span>
+              </div>
+              <div class="crl-player-vod-date">mar 27</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ── FORM GROUP ── -->
     <section class="doc-section" id="formgroup">
       <p class="crl-section-label">15 — Form Group</p>
@@ -1198,16 +1303,29 @@ tabs.forEach(t => t.addEventListener('click', () => {
         </div>
       </div>
 
-      <!-- v1.4 — PRÓXIMO -->
+      <!-- v1.4 — EN PROGRESO -->
       <div style="margin-bottom:32px">
         <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
-          <span class="badge badge-accent"><i class="fa-solid fa-clock"></i> v1.4 — Próximo</span>
+          <span class="badge badge-accent"><i class="fa-solid fa-hammer"></i> v1.4 — En progreso</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-window-maximize"></i><span class="crl-xs">crl-player-shell</span></div>
           <div class="rdot-item rdot-accent"><i class="fa-solid fa-comments"></i><span class="crl-xs">crl-chat-panel</span></div>
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-grip-lines"></i><span class="crl-xs">crl-site-footer v2</span></div>
-          <div class="rdot-item rdot-accent"><i class="fa-solid fa-gears"></i><span class="crl-xs">corillo-ui.js opcional</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-ellipsis"></i><span class="crl-xs">crl-player-dropdown</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-list"></i><span class="crl-xs">crl-player-rail</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-photo-film"></i><span class="crl-xs">crl-player-vods</span></div>
+          <div class="rdot-item rdot-accent"><i class="fa-solid fa-rocket"></i><span class="crl-xs">Migración parcial del player en producción</span></div>
+        </div>
+      </div>
+
+      <!-- v1.5 — PRÓXIMO -->
+      <div style="margin-bottom:32px">
+        <div class="crl-flex crl-items-center crl-gap-sm" style="margin-bottom:16px">
+          <span class="badge badge-live"><i class="fa-solid fa-clock"></i> v1.5 — Próximo</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px">
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-grip-lines"></i><span class="crl-xs">crl-site-footer v2</span></div>
+          <div class="rdot-item rdot-live"><i class="fa-solid fa-gears"></i><span class="crl-xs">corillo-ui.js opcional</span></div>
         </div>
       </div>
 
@@ -1236,7 +1354,7 @@ tabs.forEach(t => t.addEventListener('click', () => {
   <p class="crl-display docs-footer-logo" style="color:var(--crl-white)">CORILLO CSS</p>
   <p>Dark-first · Sin dependencias · Hecho en Puerto Rico</p>
   <div style="margin-top:16px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap">
-    <span class="badge badge-accent">v1.3.0</span>
+    <span class="badge badge-accent">v1.4.0</span>
     <span class="badge badge-dim">MIT License</span>
     <a href="../assets/corillo.css" download class="badge badge-live" style="cursor:pointer"><i class="fa-solid fa-download"></i> corillo.css</a>
   </div>
@@ -1298,6 +1416,7 @@ sections.forEach(s => observer.observe(s));
 </script>
 </body>
 </html>
+
 
 
 
