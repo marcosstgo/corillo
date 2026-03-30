@@ -33,9 +33,14 @@
     .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
     @media(max-width:600px) { .wrap { padding: 0 14px; } }
 
+    /* Nav */
+    .join-nav { position: sticky; top: 0; z-index: 60; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.6)); border-bottom: 1px solid var(--crl-border); }
+    .join-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; }
+    [data-theme="light"] .join-nav { background: linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8)); }
+
     /* Nav tag */
     .nav-tag { font-family: var(--crl-mono); font-size: .75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--crl-muted); border-left: 1px solid var(--crl-border); padding-left: 10px; }
-    [data-theme="light"] nav { background: linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8)); }
+
 
     /* Hero */
     .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--crl-border); }
@@ -95,18 +100,18 @@
 </head>
 <body class="crl-body">
 
-<nav style="position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.6));border-bottom:1px solid var(--crl-border)">
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px">
+<nav class="join-nav">
+  <div class="join-nav-inner">
     <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
+      <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
         <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
-        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
         <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
         <circle cx="72" cy="42" r="8" fill="#00bfff"/>
         <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
       </svg>
       <span class="nav-tag">Únete</span>
     </a>
@@ -234,13 +239,13 @@
     <div class="foot-left">
       <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
         <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
-        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
         <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
         <circle cx="72" cy="42" r="8" fill="#00bfff"/>
         <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
       </svg>
       <div class="foot-info">Puerto Rico<br>Plataforma independiente</div>
     </div>
@@ -370,5 +375,7 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
 </script>
 </body>
 </html>
+
+
 
 
