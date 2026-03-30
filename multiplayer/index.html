@@ -39,19 +39,12 @@
     }
 
     /* ── NAV ── */
-    header{
-      position:sticky;top:0;z-index:60;
-      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-      background:linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.7));
-      border-bottom:1px solid var(--border);
-    }
-    [data-theme="light"] header{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
 
 
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;gap:12px;flex-wrap:wrap}
-    .nav-left{display:flex;align-items:center;gap:10px}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:0;gap:10px;flex-wrap:wrap;width:100%}
+    .nav-left{display:flex;align-items:center;gap:10px;min-width:0}
     .brand-link{display:flex;align-items:center;gap:10px;text-decoration:none}
-    .brand-svg{width:110px;height:30px}
+    .brand-svg{width:auto;height:28px}
     .crl-brand-logo .crl-brand-word{fill:#e8f6ff}
     .crl-brand-logo .crl-brand-ring-outer{stroke:#e8f6ff}
     [data-theme="light"] .crl-brand-logo .crl-brand-word{fill:#0c1a20}
