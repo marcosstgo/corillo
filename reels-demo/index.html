@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORILLO · Reels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="/assets/corillo.css">
+<style>
+  body {
+    background: var(--crl-ink);
+    color: var(--crl-white);
+    font-family: var(--crl-body);
+    overflow: hidden;
+    height: 100dvh;
+  }
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--crl-gap-md);
+    background: linear-gradient(to bottom, rgba(3,10,14,.95), transparent);
+    z-index: 100;
+  }
+  .nav-logo {
+    font-family: var(--crl-display);
+    font-size: var(--crl-xl);
+    letter-spacing: 3px;
+    color: var(--crl-white);
+  }
+  .nav-logo span { color: var(--crl-accent); }
+  .nav-tabs {
+    display: flex;
+    gap: var(--crl-gap-lg);
+    font-family: var(--crl-mono);
+    font-size: var(--crl-2xs);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .nav-tab { color: var(--crl-muted); cursor: pointer; transition: color .2s; }
+  .nav-tab.active { color: var(--crl-white); border-bottom: 2px solid var(--crl-accent); padding-bottom: 2px; }
+
+  .scroll-hint {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--crl-mono);
+    font-size: var(--crl-2xs);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--crl-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--crl-gap-xs);
+    animation: fadeHint 3s ease forwards;
+    z-index: 200;
+  }
+  @keyframes fadeHint {
+    0%,70% { opacity: .6; }
+    100% { opacity: 0; pointer-events: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">C<span>O</span>RILLO</a>
+  <div class="nav-tabs">
+    <a href="/" class="nav-tab">Inicio</a>
+    <span class="nav-tab active">Reels</span>
+    <a href="/vods/" class="nav-tab">VODs</a>
+  </div>
+</nav>
+
+<div class="scroll-hint">
+  <i class="fa-solid fa-chevron-up"></i>
+  Desliza
+</div>
+
+<!-- Dots indicadores -->
+<div class="crl-reel-dots" id="reelDots"></div>
+
+<!-- Reels container -->
+<div class="crl-reels" id="reelsContainer">
+
+  <!-- REEL 1 -->
+  <div class="crl-reel" data-idx="0">
+    <div class="crl-reel-bg" style="background-image:url('/assets/thumbs/katatonia.jpg')"></div>
+    <div class="crl-reel-placeholder">
+      <i class="fa-solid fa-play"></i>
+      <span>0:42</span>
+    </div>
+    <div class="crl-reel-overlay">
+      <div class="crl-reel-info">
+        <div class="crl-reel-streamer">
+          <div class="crl-reel-ava" style="background:linear-gradient(135deg,#e8c84a,#c09020)">K</div>
+          <span class="crl-reel-name">KATATONIA</span>
+          <span class="crl-reel-follow"><i class="fa-solid fa-plus"></i> Seguir</span>
+        </div>
+        <div class="crl-reel-desc">Clutch de 4 kills seguidos en Warzone, el lobby callao 🔥</div>
+        <div class="crl-reel-meta">Hace 2 horas · 42s</div>
+      </div>
+      <div class="crl-reel-actions">
+        <button class="crl-reel-btn" onclick="toggleLike(this)">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-heart"></i></div>
+          <span>1.2k</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-comment"></i></div>
+          <span>48</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-share-nodes"></i></div>
+          <span>Share</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-download"></i></div>
+          <span>Bajar</span>
+        </button>
+      </div>
+    </div>
+    <div class="crl-reel-progress" style="width:65%"></div>
+  </div>
+
+  <!-- REEL 2 -->
+  <div class="crl-reel" data-idx="1">
+    <div class="crl-reel-bg" style="background-image:url('/assets/thumbs/streamerpro.jpg')"></div>
+    <div class="crl-reel-placeholder">
+      <i class="fa-solid fa-play"></i>
+      <span>0:31</span>
+    </div>
+    <div class="crl-reel-overlay">
+      <div class="crl-reel-info">
+        <div class="crl-reel-streamer">
+          <div class="crl-reel-ava" style="background:linear-gradient(135deg,#00bfff,#0080aa)">S</div>
+          <span class="crl-reel-name">STREAMERPRO</span>
+          <span class="crl-reel-follow"><i class="fa-solid fa-plus"></i> Seguir</span>
+        </div>
+        <div class="crl-reel-desc">Primer win del día después de 6 intentos, la reacción lo dice todo 😂</div>
+        <div class="crl-reel-meta">Hace 5 horas · 31s</div>
+      </div>
+      <div class="crl-reel-actions">
+        <button class="crl-reel-btn" onclick="toggleLike(this)">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-heart"></i></div>
+          <span>847</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-comment"></i></div>
+          <span>23</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-share-nodes"></i></div>
+          <span>Share</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-download"></i></div>
+          <span>Bajar</span>
+        </button>
+      </div>
+    </div>
+    <div class="crl-reel-progress" style="width:30%"></div>
+  </div>
+
+  <!-- REEL 3 -->
+  <div class="crl-reel" data-idx="2">
+    <div class="crl-reel-bg" style="background:linear-gradient(135deg,#1a0a2e,#0d1c28)"></div>
+    <div class="crl-reel-placeholder">
+      <i class="fa-solid fa-play"></i>
+      <span>0:58</span>
+    </div>
+    <div class="crl-reel-overlay">
+      <div class="crl-reel-info">
+        <div class="crl-reel-streamer">
+          <div class="crl-reel-ava" style="background:linear-gradient(135deg,#ff6b6b,#cc0000)">E</div>
+          <span class="crl-reel-name">ELBALA</span>
+          <span class="crl-reel-follow"><i class="fa-solid fa-plus"></i> Seguir</span>
+        </div>
+        <div class="crl-reel-desc">La discusión más épica del stream, el chat se fue al garete 💀</div>
+        <div class="crl-reel-meta">Ayer · 58s</div>
+      </div>
+      <div class="crl-reel-actions">
+        <button class="crl-reel-btn" onclick="toggleLike(this)">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-heart"></i></div>
+          <span>2.4k</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-comment"></i></div>
+          <span>156</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-share-nodes"></i></div>
+          <span>Share</span>
+        </button>
+        <button class="crl-reel-btn">
+          <div class="crl-reel-btn-icon"><i class="fa-solid fa-download"></i></div>
+          <span>Bajar</span>
+        </button>
+      </div>
+    </div>
+    <div class="crl-reel-progress" style="width:85%"></div>
+  </div>
+
+</div>
+
+<script>
+  const reels = document.querySelectorAll('.crl-reel');
+  const dotsEl = document.getElementById('reelDots');
+
+  reels.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'crl-reel-dot' + (i === 0 ? ' active' : '');
+    dotsEl.appendChild(d);
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = parseInt(e.target.dataset.idx);
+        document.querySelectorAll('.crl-reel-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === idx);
+        });
+      }
+    });
+  }, { threshold: 0.6 });
+
+  reels.forEach(r => observer.observe(r));
+
+  function toggleLike(btn) {
+    btn.classList.toggle('liked');
+  }
+</script>
+</body>
+</html>
