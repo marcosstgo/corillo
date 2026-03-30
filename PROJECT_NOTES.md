@@ -113,3 +113,30 @@
 
 
   - /noticias/la-fiebre-puerto-rico/.
+
+## Validacion de keys del player y rutas falsas indexadas
+
+Se añadió una defensa para evitar que URLs raras se conviertan en canales ficticios dentro del player.
+
+Cambios hechos:
+- ssets/player.js ahora valida el channel key antes de iniciar el player.
+- El key debe cumplir el formato ^[a-z0-9_]{1,32}$.
+- El key no puede ser una ruta reservada como live, webrtc, chat-api, ods, 
+oticias, etc.
+- El key además debe existir en window.STREAMERS (ssets/streamers.js).
+- Si no pasa esa validación, redirige a /_404/.
+- 
+ginx.conf rechaza rutas cuyo primer segmento parece archivo (por ejemplo index.m3u8) para que no entren al template del canal.
+- obots.txt bloquea rutas técnicas como /live/, /webrtc/ y APIs para reducir indexación basura.
+
+Por qué se hizo:
+- Google llegó a indexar URLs falsas tipo index.m3u8 como si fueran páginas de canal.
+- El problema venía de tratar cualquier primer segmento válido como key de canal.
+
+Impacto esperado:
+- Los streamers actuales no deben afectarse porque sus keys ya viven en ssets/streamers.js y usan el formato permitido.
+- Las futuras keys tampoco deberían tener problema si siguen la convención actual: minúsculas, números y _, y se añaden al roster antes de usarse públicamente.
+
+Riesgo principal a recordar:
+- Si en el futuro se crea un streamer nuevo y su key no se añade a ssets/streamers.js, la ruta del canal caerá en /_404/ aunque el backend o Twitch ya exista.
+- Si en algún momento quieren permitir otro formato de key (por ejemplo guion -), habrá que actualizar esta validación primero.

@@ -2,8 +2,21 @@
 
 // Globals needed by chat.js (which runs synchronously after this file)
 window.$ = (s, el = document) => el.querySelector(s);
-window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
-  || new URLSearchParams(location.search).get('ch') || 'katatonia').trim();
+const __rawChannel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
+  || new URLSearchParams(location.search).get('ch') || 'katatonia').trim().toLowerCase();
+const __validChannelRe = /^[a-z0-9_]{1,32}$/;
+const __reservedChannels = new Set([
+  'assets','chat-api','mediamtx-api','twitch-api','webrtc','live','player','vods','join','faq','legal','dmca',
+  'roadmap','streamers','multiplayer','perfil','configuracion','software','noticias','corillo-css','que-es-corillo'
+]);
+const __knownChannels = new Set((window.STREAMERS || []).map(s => s && s.key).filter(Boolean));
+const __isValidChannel = __validChannelRe.test(__rawChannel)
+  && !__reservedChannels.has(__rawChannel)
+  && __knownChannels.has(__rawChannel);
+window.channel = __isValidChannel ? __rawChannel : '';
+if (!__isValidChannel) {
+  location.replace('/_404/');
+}
 
 (function () {
   "use strict";
@@ -1112,3 +1125,6 @@ window.channel = (location.pathname.replace(/^\/|\/$/g, '').split('/')[0]
   else init();
 
 })();
+
+
+
