@@ -169,6 +169,20 @@
   <span style="font-size:.65rem;opacity:.6">Los streamers crearán clips desde sus VODs</span>
 </div>
 
+<!-- Unmute button -->
+<button id="unmuteBtn" style="
+  display:none;
+  position:fixed;top:64px;left:50%;transform:translateX(-50%);
+  z-index:150;
+  background:rgba(3,10,14,.82);backdrop-filter:blur(10px);
+  border:1px solid rgba(0,191,255,.35);border-radius:999px;
+  color:var(--crl-white);font-family:var(--crl-mono);font-size:.7rem;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:7px 18px;cursor:pointer;gap:8px;align-items:center;
+" onclick="unmute()">
+  <i class="fa-solid fa-volume-xmark"></i> Activar sonido
+</button>
+
 <!-- Scroll hint -->
 <div class="scroll-hint" id="scrollHint" style="display:none">
   <i class="fa-solid fa-chevron-up"></i>
@@ -184,9 +198,10 @@
 <script>
 const PB_URL = 'https://pb.corillo.live';
 
-let allReels    = [];
+let allReels      = [];
 let activeChannel = '';
 let observer;
+let globalMuted   = true;
 
 // ── Fetch ──────────────────────────────────────────────────────────
 async function loadReels(channel = '') {
@@ -318,9 +333,12 @@ function playReel(el) {
   const vid = el.querySelector('video');
   const pl  = el.querySelector('.crl-reel-placeholder');
   if (!vid) return;
+  vid.muted = globalMuted;
   vid.style.opacity = '1';
   if (pl) pl.style.display = 'none';
   vid.play().catch(() => {});
+  const btn = document.getElementById('unmuteBtn');
+  if (btn) btn.style.display = globalMuted ? 'inline-flex' : 'none';
 }
 
 function pauseReel(el) {
@@ -330,6 +348,13 @@ function pauseReel(el) {
   vid.pause();
   vid.style.opacity = '0';
   if (pl) pl.style.display = '';
+}
+
+function unmute() {
+  globalMuted = false;
+  document.querySelectorAll('.crl-reel video').forEach(v => { v.muted = false; });
+  const btn = document.getElementById('unmuteBtn');
+  if (btn) btn.style.display = 'none';
 }
 
 // ── Share ──────────────────────────────────────────────────────────
