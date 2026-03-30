@@ -3,6 +3,8 @@ corillo-api — API pública de streamers: perfiles y regeneración de stream ke
 Puerto 3004. Sin dependencias del chat ni de Telegram.
 """
 import os, re, time, secrets, json, glob, asyncio, threading
+from datetime import datetime, timezone
+from pathlib import Path
 import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
@@ -314,6 +316,195 @@ async def get_vod_clip(vod_id: str, t: float = 0):
         except: pass
     threading.Thread(target=_cleanup, daemon=True).start()
     return FileResponse(out, media_type="video/mp4", filename=f"clip_{channel}_{int(t)}s.mp4")
+
+
+@app.post("/reel")
+async def create_reel(request: Request):
+    """Genera un reel 9:16 desde un VOD. Requiere auth del streamer propietario."""
+    auth = request.headers.get("Authorization", "")
+    if not auth:
+        raise HTTPException(status_code=401)
+
+    data = await request.json()
+    vod_id    = data.get("vod_id", "")
+    record_id = data.get("record_id", "")
+    start     = float(data.get("start", 0))
+    end       = float(data.get("end", 60))
+    public    = bool(data.get("public", False))
+    title     = str(data.get("title", ""))[:80]
+
+    if not vod_id or not record_id:
+        raise HTTPException(status_code=400, detail="Faltan parámetros")
+
+    duration = end - start
+    if duration < 5 or duration > 60:
+        raise HTTPException(status_code=400, detail="Duración debe ser entre 5 y 60 segundos")
+    if start < 0:
+        raise HTTPException(status_code=400, detail="Inicio inválido")
+
+    # Verificar que el token pertenece al streamer
+    r = await _http.get(
+        f"{PB_URL}/api/collections/streamers/records/{record_id}",
+        headers={"Authorization": auth},
+    )
+    if r.status_code != 200:
+        raise HTTPException(status_code=401, detail="No autorizado")
+    channel = r.json().get("key", "")
+    if not channel:
+        raise HTTPException(status_code=400)
+
+    # Obtener info del VOD con token admin
+    token = await _admin_token()
+    rv = await _http.get(
+        f"{PB_URL}/api/collections/vods/records/{vod_id}",
+        headers={"Authorization": token},
+        params={"fields": "channel,filename,filepath,duration"},
+    )
+    if rv.status_code != 200:
+        raise HTTPException(status_code=404, detail="VOD no encontrado")
+    vod = rv.json()
+
+    if vod.get("channel") != channel:
+        raise HTTPException(status_code=403, detail="Este VOD no te pertenece")
+
+    vod_filepath = vod.get("filepath", "")
+    if not vod_filepath or not os.path.exists(vod_filepath):
+        raise HTTPException(status_code=404, detail="Archivo VOD no encontrado en el servidor")
+
+    vod_duration = float(vod.get("duration") or 0)
+    if vod_duration > 0 and end > vod_duration:
+        raise HTTPException(status_code=400, detail=f"El fin ({end}s) supera la duración del VOD ({vod_duration}s)")
+
+    # Preparar rutas de salida
+    reel_dir = Path(f"/var/vods/reels/{channel}")
+    reel_dir.mkdir(parents=True, exist_ok=True)
+    ts  = int(time.time())
+    out = str(reel_dir / f"{ts}.mp4")
+    thumb_out = str(reel_dir / f"{ts}.jpg")
+
+    # ffmpeg: 9:16 con blur de fondo
+    # bg: escala para llenar 1080x1920 → blur
+    # fg: escala para encajar en 1080x1920 (letterbox)
+    # overlay: fg centrado sobre bg
+    filter_complex = (
+        "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,"
+        "crop=1080:1920,boxblur=40:4[bg];"
+        "[0:v]scale=1080:1920:force_original_aspect_ratio=decrease[fg];"
+        "[bg][fg]overlay=(W-w)/2:(H-h)/2[out]"
+    )
+
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y",
+        "-ss", str(int(start)), "-i", vod_filepath,
+        "-t", str(int(duration) + 1),
+        "-filter_complex", filter_complex,
+        "-map", "[out]", "-map", "0:a?",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+        "-c:a", "aac", "-b:a", "128k",
+        "-movflags", "+faststart",
+        out,
+        stdout=asyncio.subprocess.DEVNULL,
+        stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(proc.communicate(), timeout=180)
+    except asyncio.TimeoutError:
+        proc.kill()
+        raise HTTPException(status_code=504, detail="Timeout generando reel")
+
+    if proc.returncode != 0 or not os.path.exists(out):
+        raise HTTPException(status_code=500, detail="Error generando reel con ffmpeg")
+
+    # Thumbnail del reel
+    thumb_url = ""
+    tp = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-ss", "1", "-i", out,
+        "-vframes", "1", "-vf", "scale=540:960", "-q:v", "3",
+        thumb_out,
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(tp.communicate(), timeout=20)
+        if os.path.exists(thumb_out):
+            thumb_url = f"/vods/reels/{channel}/{ts}.jpg"
+    except Exception:
+        pass
+
+    size = os.path.getsize(out) if os.path.exists(out) else 0
+
+    # Guardar en PocketBase
+    rr = await _http.post(
+        f"{PB_URL}/api/collections/reels/records",
+        headers={"Authorization": token},
+        json={
+            "channel":   channel,
+            "vod_id":    vod_id,
+            "filename":  f"{ts}.mp4",
+            "filepath":  out,
+            "duration":  int(duration),
+            "start_sec": int(start),
+            "end_sec":   int(end),
+            "thumb":     thumb_url,
+            "public":    public,
+            "title":     title,
+            "size":      size,
+            "date":      datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S.000Z'),
+        },
+        timeout=15,
+    )
+    if rr.status_code not in (200, 201):
+        raise HTTPException(status_code=500, detail="Error guardando reel en base de datos")
+
+    rec = rr.json()
+    return {
+        "id":           rec["id"],
+        "filename":     f"{ts}.mp4",
+        "thumb":        thumb_url,
+        "duration":     int(duration),
+        "public":       public,
+        "download_url": f"/vods/reels/{channel}/{ts}.mp4",
+    }
+
+
+@app.delete("/reel/{reel_id}")
+async def delete_reel(reel_id: str, request: Request):
+    """Elimina un reel. Solo el streamer propietario puede borrarlo."""
+    auth = request.headers.get("Authorization", "")
+    if not auth:
+        raise HTTPException(status_code=401)
+
+    token = await _admin_token()
+    r = await _http.get(
+        f"{PB_URL}/api/collections/reels/records/{reel_id}",
+        headers={"Authorization": token},
+        params={"fields": "channel,filepath,filename"},
+    )
+    if r.status_code != 200:
+        raise HTTPException(status_code=404)
+    rec = r.json()
+
+    # Verificar propiedad — el auth token debe pertenecer a ese canal
+    sr = await _http.get(
+        f"{PB_URL}/api/collections/streamers/records",
+        headers={"Authorization": auth},
+        params={"filter": f'key="{rec["channel"]}"', "fields": "id", "perPage": 1},
+    )
+    if sr.status_code != 200 or not sr.json().get("items"):
+        raise HTTPException(status_code=403)
+
+    # Borrar archivo físico
+    fp = Path(rec.get("filepath", ""))
+    if fp.exists():
+        fp.unlink(missing_ok=True)
+    thumb = fp.with_suffix(".jpg")
+    thumb.unlink(missing_ok=True)
+
+    # Borrar registro
+    await _http.delete(
+        f"{PB_URL}/api/collections/reels/records/{reel_id}",
+        headers={"Authorization": token},
+    )
+    return {"ok": True}
 
 
 @app.get("/health")

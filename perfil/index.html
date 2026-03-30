@@ -360,6 +360,41 @@
     .vod-row-del.loading { opacity:.5; pointer-events:none; }
     .vod-row-link { text-decoration:none; color:inherit; flex:1; min-width:0; }
     .vod-row-link:hover .vod-row-date { color:var(--accent); }
+    .vod-row-reel { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; }
+    .vod-row-reel:hover { border-color:var(--accent); color:var(--accent); }
+    .vod-row-reel.active { border-color:var(--accent); color:var(--accent); background:rgba(0,191,255,.08); }
+
+    /* ── Reel panel ── */
+    .reel-panel { display:none; background:var(--panel); border:1px solid rgba(0,191,255,.2); border-radius:10px; padding:18px 16px; margin-top:6px; }
+    .reel-panel.open { display:block; }
+    .reel-panel-title { font-family:var(--mono); font-size:.72rem; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+    .reel-time-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+    .reel-dur-hint { font-family:var(--mono); font-size:.72rem; color:var(--muted); margin-bottom:12px; }
+    .reel-dur-hint.ok { color:#00b894; }
+    .reel-dur-hint.err { color:var(--live); }
+    .reel-public-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; font-size:.85rem; }
+    .reel-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .reel-result { margin-top:12px; padding:12px 14px; background:rgba(0,184,148,.08); border:1px solid rgba(0,184,148,.25); border-radius:8px; font-size:.85rem; display:none; }
+    .reel-result.show { display:block; }
+    .reel-result a { color:var(--accent); text-decoration:none; }
+    .reel-result a:hover { text-decoration:underline; }
+
+    /* ── Reel list ── */
+    .reel-row { display:flex; align-items:center; gap:12px; padding:10px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+    .reel-row-thumb { width:48px; height:86px; border-radius:5px; background:rgba(0,191,255,.07); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:.8rem; color:rgba(0,191,255,.3); position:relative; }
+    .reel-row-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+    .reel-row-info { flex:1; min-width:0; }
+    .reel-row-date { font-family:var(--mono); font-size:.72rem; color:var(--muted); }
+    .reel-row-meta { font-family:var(--mono); font-size:.68rem; color:rgba(232,246,255,.3); margin-top:2px; }
+    .reel-row-pub { display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:.65rem; letter-spacing:1px; text-transform:uppercase; padding:2px 6px; border-radius:4px; margin-top:4px; }
+    .reel-row-pub.pub { background:rgba(0,191,255,.1); color:var(--accent); }
+    .reel-row-pub.priv { background:rgba(255,255,255,.06); color:var(--muted); }
+    .reel-row-actions { display:flex; gap:6px; flex-shrink:0; }
+    .reel-row-dl { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; text-decoration:none; }
+    .reel-row-dl:hover { border-color:var(--accent); color:var(--accent); }
+    .reel-row-del { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; }
+    .reel-row-del:hover { border-color:#e17055; color:#e17055; }
+    .reel-row-del.loading { opacity:.5; pointer-events:none; }
 
     /* ── Avatar section ── */
     .avatar-row {
@@ -666,6 +701,17 @@
       <p id="vodsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono)">No tienes transmisiones guardadas aún.</p>
     </div>
 
+    <!-- Mis Reels -->
+    <div class="card" id="reelsCard" style="display:none">
+      <div class="card-title"><i class="fa-solid fa-scissors" style="color:var(--accent);font-size:.9em"></i> Mis Reels</div>
+      <p style="font-size:.85rem;color:var(--muted);margin:0 0 16px">Clips 9:16 generados desde tus transmisiones. Descárgalos para compartir en TikTok, Instagram o YouTube Shorts.</p>
+      <div id="reelsList" style="display:flex;flex-direction:column;gap:10px"></div>
+      <p id="reelsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono)">No tienes reels aún. Crea uno desde tus transmisiones.</p>
+      <div style="margin-top:14px">
+        <a href="/reels/" class="btn" target="_blank" rel="noopener"><i class="fa-solid fa-film"></i> Ver página pública de Reels</a>
+      </div>
+    </div>
+
     <!-- Cambiar email -->
     <div class="card">
       <div class="card-title">Cambiar email</div>
@@ -870,6 +916,9 @@ function populateDashboard(r) {
   // Mis transmisiones
   if (r.vod_enabled) loadMyVods(r.key);
 
+  // Mis Reels
+  loadMyReels(r.key);
+
   // Nav — link al canal
   navRight.innerHTML = getThemeButtonMarkup();
   if (r.key) {
@@ -923,20 +972,164 @@ async function loadMyVods(channel) {
     card.style.display = '';
     if (!items.length) { empty.style.display = ''; return; }
     list.innerHTML = items.map(v => `
-      <div class="vod-row" id="vrow-${v.id}">
-        <a class="vod-row-thumb" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener" title="Ver VOD">
-          ${v.thumb ? `<img src="${v.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
-        </a>
-        <a class="vod-row-link" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener">
-          <div class="vod-row-date">${fmtVodDate(v.date)}</div>
-          <div class="vod-row-meta">${[fmtDur(v.duration), fmtMB(v.size)].filter(Boolean).join(' · ')}</div>
-        </a>
-        <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD">
-          <i class="fa-solid fa-trash"></i>
-        </button>
+      <div>
+        <div class="vod-row" id="vrow-${v.id}">
+          <a class="vod-row-thumb" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener" title="Ver VOD">
+            ${v.thumb ? `<img src="${v.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
+          </a>
+          <a class="vod-row-link" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener">
+            <div class="vod-row-date">${fmtVodDate(v.date)}</div>
+            <div class="vod-row-meta">${[fmtDur(v.duration), fmtMB(v.size)].filter(Boolean).join(' · ')}</div>
+          </a>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}', ${v.duration || 0})" title="Crear Reel">
+              <i class="fa-solid fa-scissors"></i>
+            </button>
+            <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div class="reel-panel" id="rpanel-${v.id}">
+          <div class="reel-panel-title"><i class="fa-solid fa-scissors"></i> Crear Reel desde esta transmisión</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-bottom:12px">Duración total: ${fmtDur(v.duration) || '?'}${v.duration ? ' (' + v.duration + 's)' : ''}</div>
+          <div class="reel-time-row">
+            <div class="field" style="margin:0">
+              <label>Inicio <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">(mm:ss)</span></label>
+              <input type="text" id="rstart-${v.id}" placeholder="00:00" maxlength="8" style="font-family:var(--mono);font-size:.92rem" oninput="updateReelDur('${v.id}', ${v.duration || 99999})">
+            </div>
+            <div class="field" style="margin:0">
+              <label>Fin <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">(mm:ss)</span></label>
+              <input type="text" id="rend-${v.id}" placeholder="00:30" maxlength="8" style="font-family:var(--mono);font-size:.92rem" oninput="updateReelDur('${v.id}', ${v.duration || 99999})">
+            </div>
+          </div>
+          <div class="reel-dur-hint" id="rdur-${v.id}">Duración: — (entre 5 y 60 segundos)</div>
+          <div class="reel-public-row">
+            <label class="vod-toggle">
+              <input type="checkbox" id="rpub-${v.id}">
+              <span class="vod-slider"></span>
+            </label>
+            <span>Publicar en <a href="/reels/" target="_blank" style="color:var(--accent);text-decoration:none">corillo.live/reels/</a></span>
+          </div>
+          <div class="reel-actions">
+            <button class="btn primary" id="rgen-${v.id}" onclick="generateReel('${v.id}')">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Generar Reel
+            </button>
+            <button class="btn" onclick="toggleReelPanel('${v.id}', 0)">Cancelar</button>
+          </div>
+          <div class="reel-result" id="rresult-${v.id}"></div>
+        </div>
       </div>`).join('');
   } catch(e) {
     console.error('loadMyVods:', e);
+  }
+}
+
+// ── Reel creation helpers ──
+function parseTime(str) {
+  if (!str) return NaN;
+  const parts = str.trim().split(':').map(Number);
+  if (parts.some(isNaN)) return NaN;
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  return NaN;
+}
+
+function updateReelDur(vodId, vodDuration) {
+  const start = parseTime(document.getElementById(`rstart-${vodId}`)?.value);
+  const end   = parseTime(document.getElementById(`rend-${vodId}`)?.value);
+  const hint  = document.getElementById(`rdur-${vodId}`);
+  if (!hint) return;
+  if (isNaN(start) || isNaN(end)) {
+    hint.textContent = 'Duración: — (entre 5 y 60 segundos)';
+    hint.className = 'reel-dur-hint';
+    return;
+  }
+  const dur = end - start;
+  if (dur <= 0) {
+    hint.textContent = 'El fin debe ser mayor que el inicio';
+    hint.className = 'reel-dur-hint err';
+  } else if (dur < 5) {
+    hint.textContent = `Duración: ${dur}s — mínimo 5 segundos`;
+    hint.className = 'reel-dur-hint err';
+  } else if (dur > 60) {
+    hint.textContent = `Duración: ${dur}s — máximo 60 segundos`;
+    hint.className = 'reel-dur-hint err';
+  } else if (vodDuration > 0 && end > vodDuration) {
+    hint.textContent = `El fin (${end}s) supera la duración del VOD (${vodDuration}s)`;
+    hint.className = 'reel-dur-hint err';
+  } else {
+    hint.textContent = `Duración: ${dur}s ✓`;
+    hint.className = 'reel-dur-hint ok';
+  }
+}
+
+function toggleReelPanel(vodId, vodDuration) {
+  const panel = document.getElementById(`rpanel-${vodId}`);
+  const btn   = document.getElementById(`rbtn-${vodId}`);
+  if (!panel) return;
+  const opening = !panel.classList.contains('open');
+  panel.classList.toggle('open');
+  btn?.classList.toggle('active', opening);
+  if (opening) {
+    // Auto-set end to start+30 when user sets start
+    const startEl = document.getElementById(`rstart-${vodId}`);
+    const endEl   = document.getElementById(`rend-${vodId}`);
+    if (startEl && !startEl.value) {
+      startEl.value = '00:00';
+      if (endEl && !endEl.value) {
+        endEl.value = '00:30';
+        updateReelDur(vodId, vodDuration);
+      }
+    }
+  }
+}
+
+async function generateReel(vodId) {
+  const start = parseTime(document.getElementById(`rstart-${vodId}`)?.value);
+  const end   = parseTime(document.getElementById(`rend-${vodId}`)?.value);
+  const pub   = document.getElementById(`rpub-${vodId}`)?.checked || false;
+  const dur   = end - start;
+  const btn   = document.getElementById(`rgen-${vodId}`);
+  const result= document.getElementById(`rresult-${vodId}`);
+
+  if (isNaN(start) || isNaN(end) || dur < 5 || dur > 60) {
+    showToast('Revisa el tiempo — entre 5 y 60 segundos', 'err');
+    return;
+  }
+  if (dur <= 0) { showToast('El fin debe ser mayor que el inicio', 'err'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Generando…';
+  result.className = 'reel-result';
+  result.innerHTML = '';
+
+  try {
+    const res = await fetch('/chat-api/reel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
+      body: JSON.stringify({ vod_id: vodId, record_id: currentRecord.id, start, end, public: pub }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Error desconocido');
+
+    result.innerHTML = `
+      <div style="margin-bottom:8px"><strong style="color:#00b894">¡Reel creado!</strong> ${dur}s · 9:16</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="${data.download_url}" download class="btn" style="font-size:.78rem"><i class="fa-solid fa-download"></i> Descargar MP4</a>
+        ${pub ? `<a href="/reels/" target="_blank" class="btn" style="font-size:.78rem"><i class="fa-solid fa-film"></i> Ver en /reels/</a>` : ''}
+      </div>`;
+    result.className = 'reel-result show';
+    showToast('¡Reel generado!');
+    loadMyReels(currentRecord.key);
+  } catch(e) {
+    result.innerHTML = `<span style="color:var(--live)"><i class="fa-solid fa-circle-exclamation"></i> ${e.message}</span>`;
+    result.className = 'reel-result show';
+    showToast('Error generando el reel', 'err');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generar Reel';
   }
 }
 
@@ -953,6 +1146,68 @@ async function deleteVod(id) {
   } catch(e) {
     if (btn) btn.classList.remove('loading');
     alert('No se pudo borrar el VOD. Intenta de nuevo.');
+  }
+}
+
+// ── Mis Reels ──
+async function loadMyReels(channel) {
+  try {
+    const res = await pb.collection('reels').getList(1, 50, {
+      filter: `channel = "${channel}"`,
+      sort: '-date',
+    });
+    const items = res.items || [];
+    const card  = document.getElementById('reelsCard');
+    const list  = document.getElementById('reelsList');
+    const empty = document.getElementById('reelsEmpty');
+    card.style.display = '';
+    list.innerHTML = '';
+    if (!items.length) { empty.style.display = ''; return; }
+    empty.style.display = 'none';
+    list.innerHTML = items.map(r => `
+      <div class="reel-row" id="rrow-${r.id}">
+        <div class="reel-row-thumb">
+          ${r.thumb ? `<img src="${r.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : '<i class="fa-solid fa-film"></i>'}
+        </div>
+        <div class="reel-row-info">
+          <div class="reel-row-date">${fmtVodDate(r.date)}${r.title ? ' · ' + esc(r.title) : ''}</div>
+          <div class="reel-row-meta">${r.duration ? r.duration + 's' : ''}${r.size ? ' · ' + fmtMB(r.size) : ''}</div>
+          <div class="reel-row-pub ${r.public ? 'pub' : 'priv'}">
+            <i class="fa-solid fa-${r.public ? 'globe' : 'lock'}"></i> ${r.public ? 'Público' : 'Privado'}
+          </div>
+        </div>
+        <div class="reel-row-actions">
+          <a class="reel-row-dl" href="/vods/reels/${channel}/${r.filename}" download title="Descargar">
+            <i class="fa-solid fa-download"></i>
+          </a>
+          <button class="reel-row-del" onclick="deleteReel('${r.id}', '${channel}')" title="Borrar Reel">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>`).join('');
+  } catch(e) {
+    console.error('loadMyReels:', e);
+  }
+}
+
+async function deleteReel(id, channel) {
+  if (!confirm('¿Borrar este reel? No se puede deshacer.')) return;
+  const btn = document.querySelector(`#rrow-${id} .reel-row-del`);
+  if (btn) btn.classList.add('loading');
+  try {
+    const res = await fetch(`/chat-api/reel/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': pb.authStore.token },
+    });
+    if (!res.ok) throw new Error();
+    document.getElementById(`rrow-${id}`)?.remove();
+    if (!document.querySelector('.reel-row')) {
+      document.getElementById('reelsEmpty').style.display = '';
+    }
+    showToast('Reel eliminado');
+  } catch(e) {
+    if (btn) btn.classList.remove('loading');
+    showToast('Error al borrar. Intenta de nuevo.', 'err');
   }
 }
 
