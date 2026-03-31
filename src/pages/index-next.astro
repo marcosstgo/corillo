@@ -42,7 +42,7 @@
       if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
-  <style>
+  <style is:global>
     :root { --dim: #1a3040; }
     html,body{overflow-x:hidden}
     body{font-size:15px;line-height:1.6;min-height:100vh}
