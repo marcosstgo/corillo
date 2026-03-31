@@ -296,12 +296,13 @@
     @media(max-width:820px){
       .layout{grid-template-columns:44px 1fr}
       aside{width:44px;padding:8px 0;overflow:hidden}
-      .aside-nav,.aside-label,.aside-footer,.ch-info,.ch-viewers,.live-pip,.sidebar-show-all{display:none}
+      .aside-nav,.aside-label,.aside-footer,.sidebar-show-all{display:none}
+      aside .ch-info,aside .ch-viewers,aside .live-pip{display:none}
       #sidebarDivider{display:none!important}
       .aside-divider{margin:4px 0}
-      .channel-row{padding:5px;justify-content:center}
-      .ch-ava{width:32px;height:32px;font-size:13px;flex-shrink:0}
-      .channel-row:not(.is-live) .ch-ava{opacity:.28}
+      aside .channel-row{padding:5px;justify-content:center}
+      aside .ch-ava{width:32px;height:32px;font-size:13px;flex-shrink:0}
+      aside .channel-row:not(.is-live) .ch-ava{opacity:.28}
       .nav-menu-btn{display:flex}
       .featured-wrap{aspect-ratio:16/9}
     }
