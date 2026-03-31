@@ -1,0 +1,180 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const footerLinks = [
+  { href: '/', label: 'Inicio' },
+  { href: '/roadmap/', label: 'Roadmap' },
+  { href: '/join/', label: 'Crear Canal' },
+  { href: '/corillo-css/', label: 'Corillo CSS' },
+];
+---
+<BaseLayout
+  title="CORILLO — Software para streamers"
+  description="Descarga el software de CORILLO para streamers y gamers, incluyendo Streamer Pro, Streamer Lite, Anti-BufferBloat Pro y NATCheck."
+  canonical="https://corillo.live/software/"
+  ogTitle="CORILLO — Software para streamers"
+  ogDescription="Descarga el software de CORILLO para streamers y gamers, incluyendo Streamer Pro, Streamer Lite, Anti-BufferBloat Pro y NATCheck."
+  navLabel="Software"
+  footerLinks={footerLinks}
+>
+  <fragment slot="head">
+    <style>
+      .container{max-width:960px;margin:0 auto;padding:0 20px 72px}
+      @media(max-width:600px){.container{padding:0 14px 56px}}
+
+      .app-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+      @media(max-width:700px){.app-grid{grid-template-columns:1fr}}
+
+      .app-card{
+        background:var(--crl-surface);border:1px solid var(--crl-border);border-radius:16px;
+        padding:28px;display:flex;flex-direction:column;gap:18px;
+        transition:border-color .2s,box-shadow .2s;
+      }
+      .app-card:hover{border-color:var(--crl-border-h);box-shadow:0 8px 32px rgba(0,0,0,.25)}
+
+      .app-head{display:flex;align-items:flex-start;gap:14px}
+      .app-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+      .app-icon-amber{background:rgba(232,200,74,.12);color:#e8c84a;border:1px solid rgba(232,200,74,.2)}
+      .app-icon-cyan{background:rgba(0,191,255,.10);color:var(--crl-accent);border:1px solid rgba(0,191,255,.18)}
+      .app-icon-green{background:rgba(0,255,157,.10);color:var(--crl-confirm);border:1px solid rgba(0,255,157,.18)}
+
+      .app-meta{flex:1;min-width:0}
+      .app-name{font-family:var(--crl-display);letter-spacing:2px;font-size:1.35rem;line-height:1;margin-bottom:5px}
+      .app-tag{font-size:var(--crl-text-xs);color:var(--crl-muted);font-family:var(--crl-mono)}
+
+      .app-desc{font-size:var(--crl-text-sm);color:rgba(255,255,255,.6);line-height:1.6;margin:0}
+      [data-theme="light"] .app-desc{color:rgba(0,0,0,.55)}
+
+      .app-feats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+      .app-feats li{display:flex;align-items:center;gap:10px;font-size:var(--crl-text-xs);color:rgba(255,255,255,.55);font-family:var(--crl-mono)}
+      [data-theme="light"] .app-feats li{color:rgba(0,0,0,.5)}
+      .app-feats li i{font-size:.65rem;width:12px;text-align:center;flex-shrink:0}
+
+      .app-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+
+      .plat-tag{
+        display:inline-flex;align-items:center;gap:5px;
+        font-family:var(--crl-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+        padding:3px 8px;border-radius:20px;
+        background:rgba(255,255,255,.06);border:1px solid var(--crl-border);
+        color:var(--crl-muted);white-space:nowrap;
+      }
+
+      .section-label{font-family:var(--crl-mono);font-size:var(--crl-text-xs);letter-spacing:3px;text-transform:uppercase;color:var(--crl-muted);margin-bottom:20px}
+    </style>
+  </fragment>
+
+<div class="crl-hero">
+  <p class="crl-hero-eyebrow">Windows · Free · Open Source</p>
+  <h1 class="crl-hero-title">SOFTWARE</h1>
+  <p class="crl-hero-sub">Apps para streamers y gamers. Sin suscripciones, sin cuentas, sin bloatware.</p>
+</div>
+
+<div class="container">
+  <p class="section-label">4 apps · Windows</p>
+
+  <div class="app-grid">
+
+    <!-- Streamer Pro -->
+    <div class="app-card">
+      <div class="app-head">
+        <div class="app-icon app-icon-amber"><i class="fa-solid fa-broadcast-tower"></i></div>
+        <div class="app-meta">
+          <div class="app-name">Streamer Pro</div>
+          <div class="app-tag">RTMP Broadcasting Engine</div>
+        </div>
+        <span class="plat-tag"><i class="fa-brands fa-windows"></i> Windows</span>
+      </div>
+      <p class="app-desc">Motor de streaming RTMP con FFmpeg integrado. Transmite a Twitch, Kick, YouTube, Corillo o cualquier endpoint RTMP.</p>
+      <ul class="app-feats">
+        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Streaming de archivo, carpeta y playlist</li>
+        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Modo Highlights — clips en tiempo real</li>
+        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Overlay de logo configurable</li>
+        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Perfiles 720p / 1080p / 1080p60</li>
+        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Auto-reconexión con watchdog</li>
+      </ul>
+      <div class="app-actions">
+        <a class="btn btn-primary" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe"><i class="fa-solid fa-download"></i> Descargar</a>
+        <a class="btn" href="/streamer-pro/">Ver más</a>
+        <a class="btn" href="https://github.com/marcosstgo/Streamer" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+
+    <!-- Ping Guard -->
+    <div class="app-card">
+      <div class="app-head">
+        <div class="app-icon" style="background:rgba(74,222,128,.1);color:#4ade80;border:1px solid rgba(74,222,128,.2)"><i class="fa-solid fa-signal"></i></div>
+        <div class="app-meta">
+          <div class="app-name">Ping Guard</div>
+          <div class="app-tag">Ping Monitor · System Tray</div>
+        </div>
+        <span class="plat-tag"><i class="fa-brands fa-windows"></i> Windows</span>
+      </div>
+      <p class="app-desc">Monitor de ping en tiempo real que vive en la bandeja del sistema. Monitorea hasta 3 hosts — router, ISP y servidor de juego simultáneamente.</p>
+      <ul class="app-feats">
+        <li><i class="fa-solid fa-check" style="color:#4ade80"></i> Hasta 3 hosts en paralelo</li>
+        <li><i class="fa-solid fa-check" style="color:#4ade80"></i> Stats: AVG, P95, Jitter, Loss, Uptime</li>
+        <li><i class="fa-solid fa-check" style="color:#4ade80"></i> Sparkline de los últimos 2 minutos</li>
+        <li><i class="fa-solid fa-check" style="color:#4ade80"></i> Alerta de sonido en spikes</li>
+        <li><i class="fa-solid fa-check" style="color:#4ade80"></i> Auto-update — un solo .exe</li>
+      </ul>
+      <div class="app-actions">
+        <a class="btn btn-primary" href="https://github.com/marcosstgo/PingGuard/releases/latest/download/Ping.Guard.exe" style="background:#4ade80;color:#060608;border-color:transparent"><i class="fa-solid fa-download"></i> Descargar</a>
+        <a class="btn" href="https://github.com/marcosstgo/PingGuard" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+
+    <!-- Anti-BufferBloat Pro -->
+    <div class="app-card">
+      <div class="app-head">
+        <div class="app-icon app-icon-cyan"><i class="fa-solid fa-network-wired"></i></div>
+        <div class="app-meta">
+          <div class="app-name">Anti-BufferBloat Pro</div>
+          <div class="app-tag">Network Optimizer</div>
+        </div>
+        <span class="plat-tag"><i class="fa-brands fa-windows"></i> Windows</span>
+      </div>
+      <p class="app-desc">Optimizador de red para Windows. Reduce latencia, jitter y bufferbloat con un click. Ideal para gaming competitivo y streaming.</p>
+      <ul class="app-feats">
+        <li><i class="fa-solid fa-check" style="color:var(--crl-accent)"></i> Test bufferbloat 3 fases (grade A–F)</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-accent)"></i> Perfil GAMING con un click</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-accent)"></i> Monitor de ping en tiempo real</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-accent)"></i> Ajustes TCP / Auto-Tuning / RSS</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-accent)"></i> PC Gaming Boost — Ultimate Performance</li>
+      </ul>
+      <div class="app-actions">
+        <a class="btn btn-primary" href="https://github.com/marcosstgo/AntiBufferBloatPro/releases/latest/download/Anti.BufferBloat.Pro.exe"><i class="fa-solid fa-download"></i> Descargar</a>
+        <a class="btn" href="/antibufferbloat-pro/">Ver más</a>
+        <a class="btn" href="https://github.com/marcosstgo/AntiBufferBloatPro" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+
+    <!-- NATCheck -->
+    <div class="app-card">
+      <div class="app-head">
+        <div class="app-icon app-icon-green"><i class="fa-solid fa-terminal"></i></div>
+        <div class="app-meta">
+          <div class="app-name">NATCheck</div>
+          <div class="app-tag">Network Diagnostics</div>
+        </div>
+        <span class="plat-tag"><i class="fa-brands fa-windows"></i> Windows</span>
+      </div>
+      <p class="app-desc">Diagnóstico de NAT type, puertos y MTU para gamers. Detecta y corrige problemas de conectividad automáticamente vía UPnP.</p>
+      <ul class="app-feats">
+        <li><i class="fa-solid fa-check" style="color:var(--crl-confirm)"></i> NAT type via STUN (Full Cone → Symmetric)</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-confirm)"></i> 10 perfiles de juego — BF6, COD, CS2…</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-confirm)"></i> Fix automático de puertos via UPnP</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-confirm)"></i> MTU detection por búsqueda binaria</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-confirm)"></i> Auto-detect del juego activo</li>
+      </ul>
+      <div class="app-actions">
+        <a class="btn btn-primary" href="https://github.com/marcosstgo/NATCheck/releases/latest/download/NATCheck.exe"><i class="fa-solid fa-download"></i> Descargar</a>
+        <a class="btn" href="/natcheck/">Ver más</a>
+        <a class="btn" href="https://github.com/marcosstgo/NATCheck" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</BaseLayout>
