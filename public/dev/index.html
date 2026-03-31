@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Corillo Dev — Software para Streamers | CORILLO</title>
+  <meta name="description" content="Corillo Dev — software gratuito y open source para streamers y gamers. Streamer Pro, Anti-BufferBloat Pro y Ping Guard, hechos en Puerto Rico." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/dev/">
+  <meta property="og:title" content="Corillo Dev — Software para Streamers">
+  <meta property="og:description" content="Software gratuito y open source para streamers y gamers. Hecho en Puerto Rico.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:site_name" content="CORILLO">
+
+  <!-- Favicon -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
+  <link rel="canonical" href="https://corillo.live/dev/">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/styles.css">
+
+  <style>
+    :root{ --radius:14px; }
+    body{background:var(--ink);color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+    .container{max-width:1100px;margin:0 auto;padding:22px 18px}
+    @media(max-width:600px){.container{padding:16px 12px}}
+
+    /* ── LIGHT MODE ── */
+    [data-theme="light"] .app-card{background:rgba(255,255,255,.75);border-color:rgba(0,0,0,.1)}
+    [data-theme="light"] .app-card:hover{border-color:rgba(0,0,0,.2);box-shadow:0 12px 40px rgba(0,0,0,.1)}
+    [data-theme="light"] .app-desc{color:rgba(0,0,0,.6)}
+    [data-theme="light"] .feat-item{color:rgba(0,0,0,.55)}
+    [data-theme="light"] .soon-card{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08)}
+    [data-theme="light"] .soon-label{color:rgba(0,0,0,.3)}
+    [data-theme="light"] footer{border-color:rgba(0,0,0,.08)}
+    [data-theme="light"] .hero-tag{color:rgba(0,0,0,.4)}
+    [data-theme="light"] .hero-sub{color:rgba(0,0,0,.55)}
+    [data-theme="light"] .stat-val{color:var(--ink)}
+    [data-theme="light"] .stat-lbl{color:rgba(0,0,0,.4)}
+
+    /* ── NAV ── */
+    header{position:sticky;top:0;z-index:100;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:linear-gradient(to bottom,rgba(6,6,8,.95),rgba(6,6,8,.6));border-bottom:1px solid var(--border)}
+    [data-theme="light"] header{background:linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8))}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px}
+    .brand{font-family:var(--display);letter-spacing:3px;font-size:22px;line-height:1;text-decoration:none;color:var(--white);display:flex;align-items:center;gap:10px}
+    .brand span{color:var(--accent)}
+    .brand-sub{font-family:var(--mono);font-size: .75rem;letter-spacing:2px;color:var(--muted);border-left:1px solid var(--border);padding-left:10px;text-transform:uppercase}
+    nav{display:flex;gap:6px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:transparent;color:rgba(255,255,255,.7);font-family:var(--mono);font-size: .78rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:.18s ease;white-space:nowrap;text-decoration:none}
+    .btn:hover{border-color:rgba(255,255,255,.25);color:var(--white);background:rgba(255,255,255,.04)}
+    .btn.primary{background:var(--accent);color:var(--ink);border-color:transparent;font-weight:700}
+    .btn.primary:hover{background:#d4b43c}
+    [data-theme="light"] .btn{color:rgba(0,0,0,.6);border-color:rgba(0,0,0,.15)}
+    [data-theme="light"] .btn:hover{color:var(--ink);border-color:rgba(0,0,0,.3);background:rgba(0,0,0,.04)}
+    @media(max-width:640px){nav .btn:not(.primary){display:none}}
+
+    /* ── HERO ── */
+    .hero{padding:64px 0 48px;text-align:center}
+    .hero-tag{font-family:var(--mono);font-size: .78rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:16px}
+    .hero-title{font-family:var(--display);font-size:clamp(3rem,8vw,6rem);letter-spacing:4px;line-height:1;margin-bottom:16px}
+    .hero-title span{color:var(--accent)}
+    .hero-sub{font-size:1rem;color:rgba(255,255,255,.5);max-width:520px;margin:0 auto 32px;line-height:1.6}
+    .stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+    .stat{text-align:center}
+    .stat-val{font-family:var(--display);font-size:2rem;letter-spacing:2px;color:var(--white)}
+    .stat-lbl{font-family:var(--mono);font-size: .72rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+
+    /* ── APP CARDS ── */
+    .apps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:20px;padding:48px 0 32px}
+    @media(max-width:640px){.apps-grid{grid-template-columns:1fr}}
+
+    .app-card{border:1px solid var(--border);border-radius:var(--radius);background:rgba(255,255,255,.02);overflow:hidden;transition:.22s ease;display:flex;flex-direction:column}
+    .app-card:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.3)}
+
+    .app-card-accent{height:3px;width:100%}
+    .accent-cyan{background:linear-gradient(90deg,#00f0ff,#0080ff)}
+    .accent-amber{background:linear-gradient(90deg,#e8c84a,#ff8c00)}
+    .accent-natcheck{background:linear-gradient(90deg,#00FF88,#00DCFF)}
+
+    .app-card-body{padding:28px;flex:1;display:flex;flex-direction:column}
+    .app-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
+    .app-icon{font-size:2.2rem;line-height:1;flex-shrink:0}
+    .app-meta{flex:1}
+    .app-name{font-family:var(--display);font-size:1.8rem;letter-spacing:2px;line-height:1;margin-bottom:4px}
+    .app-tagline{font-family:var(--mono);font-size: .78rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+    .app-badge{font-family:var(--mono);font-size: .72rem;letter-spacing:1px;padding:3px 8px;border-radius:4px;background:rgba(255,255,255,.06);border:1px solid var(--border);color:rgba(255,255,255,.4);white-space:nowrap;align-self:flex-start;margin-top:2px}
+
+    .app-desc{font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.65;margin-bottom:20px}
+
+    .feat-list{display:flex;flex-direction:column;gap:6px;margin-bottom:24px;flex:1}
+    .feat-item{display:flex;align-items:baseline;gap:8px;font-size: .92rem;color:rgba(255,255,255,.6)}
+    .feat-item::before{content:'▸';font-size: .92rem;flex-shrink:0;opacity:.5}
+
+    .app-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+    .btn-app{display:inline-flex;align-items:center;gap:7px;padding:9px 16px;border-radius:8px;font-family:var(--mono);font-size: .92rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none;transition:.18s;border:1px solid;font-weight:600;white-space:nowrap}
+    .btn-app.primary-cyan{background:#00f0ff;color:#060608;border-color:transparent}
+    .btn-app.primary-cyan:hover{background:#33f4ff}
+    .btn-app.primary-amber{background:var(--accent);color:var(--ink);border-color:transparent}
+    .btn-app.primary-amber:hover{background:#d4b43c}
+    .btn-app.ghost{background:transparent;color:rgba(255,255,255,.6);border-color:var(--border)}
+    .btn-app.ghost:hover{color:var(--white);border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.04)}
+
+    /* ── SOON CARD ── */
+    .soon-card{border:1px dashed rgba(255,255,255,.1);border-radius:var(--radius);padding:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:220px;background:rgba(255,255,255,.01)}
+    .soon-icon{font-size:2rem;margin-bottom:12px;opacity:.3}
+    .soon-label{font-family:var(--mono);font-size: .78rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:8px}
+    .soon-title{font-family:var(--display);font-size:1.4rem;letter-spacing:2px;color:rgba(255,255,255,.2)}
+
+    /* ── SECTION ── */
+    .section-label{font-family:var(--mono);font-size: .75rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .divider{border:none;border-top:1px solid var(--border);margin:0}
+
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--border);padding:24px 0;margin-top:48px}
+    .foot-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    .foot-brand{font-family:var(--display);letter-spacing:3px;font-size:18px}
+    .foot-brand span{color:var(--accent)}
+    .foot-copy{font-family:var(--mono);font-size: .75rem;letter-spacing:1.5px;color:rgba(255,255,255,.25)}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="topbar">
+      <a href="/" class="brand">
+        <svg width="26" height="26" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="72" height="72" rx="16" fill="#0c0c10"/>
+          <circle cx="36" cy="36" r="26" stroke="rgba(255,255,255,0.35)" stroke-width="7" fill="none"/>
+          <circle cx="36" cy="36" r="15" stroke="#e8c84a" stroke-width="5" fill="none" opacity=".6"/>
+          <circle cx="36" cy="36" r="6" fill="#e8c84a" opacity=".6"/>
+          <circle cx="36" cy="36" r="2.5" fill="#df3030" opacity=".6"/>
+        </svg>
+        <span><span>C</span>ORILLO</span>
+        <span class="brand-sub">Dev</span>
+      </a>
+      <nav>
+        <a href="/" class="btn"><i class="fa-solid fa-satellite-dish"></i> Streaming</a>
+        <a href="/software/" class="btn"><i class="fa-solid fa-laptop-code"></i> Software</a>
+        <a href="https://github.com/marcosstgo" target="_blank" rel="noopener" class="btn"><i class="fa-brands fa-github"></i> GitHub</a>
+        <a href="/join/" class="btn primary"><i class="fa-solid fa-plus"></i> Crear Canal</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <p class="hero-tag">Corillo · Software</p>
+      <h1 class="hero-title"><span>C</span>ORILLO<br>DEV</h1>
+      <p class="hero-sub">Software gratuito y open source para streamers y gamers. Hecho en Puerto Rico.</p>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-val">4</div>
+          <div class="stat-lbl">Apps publicadas</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">100%</div>
+          <div class="stat-lbl">Gratis</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">OSS</div>
+          <div class="stat-lbl">Open Source</div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- APPS GRID -->
+    <section>
+      <div class="apps-grid">
+
+        <!-- Streamer Pro -->
+        <article class="app-card">
+          <div class="app-card-accent accent-amber"></div>
+          <div class="app-card-body">
+            <div class="app-header">
+              <div class="app-icon">🎬</div>
+              <div class="app-meta">
+                <div class="app-name" style="color:var(--accent)">Streamer Pro</div>
+                <div class="app-tagline">Grabación · Live · Highlights</div>
+                <div class="app-badge">v2.2.3 · Windows</div>
+              </div>
+            </div>
+            <p class="app-desc">
+              Todo lo que necesitas para grabar y transmitir desde tu PC en un solo ejecutable. Sin OBS, sin configuraciones complicadas.
+            </p>
+            <ul class="feat-list">
+              <li class="feat-item">Modo Highlights — stream continuo de tus clips más recientes</li>
+              <li class="feat-item">Stream en vivo a RTMP con un click</li>
+              <li class="feat-item">Modo Captura de pantalla con GPU (NVIDIA, AMD, Intel)</li>
+              <li class="feat-item">Overlay y logo sobre el video</li>
+              <li class="feat-item">Auto-update integrado desde GitHub Releases</li>
+              <li class="feat-item">Interfaz en español e inglés</li>
+            </ul>
+            <div class="app-actions">
+              <a href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe" class="btn-app primary-amber">
+                <i class="fa-solid fa-download"></i> Descargar
+              </a>
+              <a href="/streamer-pro/" class="btn-app ghost">
+                <i class="fa-solid fa-circle-info"></i> Más info
+              </a>
+              <a href="https://github.com/marcosstgo/Streamer" target="_blank" rel="noopener" class="btn-app ghost">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Anti-BufferBloat Pro -->
+        <article class="app-card">
+          <div class="app-card-accent accent-cyan"></div>
+          <div class="app-card-body">
+            <div class="app-header">
+              <div class="app-icon">📡</div>
+              <div class="app-meta">
+                <div class="app-name" style="color:#00f0ff">Anti-BufferBloat Pro</div>
+                <div class="app-tagline">Red · Latencia · Gaming</div>
+                <div class="app-badge">v1.2.0 · Windows</div>
+              </div>
+            </div>
+            <p class="app-desc">
+              Optimizador de red para gamers y streamers. Detecta y corrige el bufferbloat que arruina tu ping bajo carga.
+            </p>
+            <ul class="feat-list">
+              <li class="feat-item">Test A–F de bufferbloat en 3 fases bajo carga real</li>
+              <li class="feat-item">6 streams paralelos — satura conexiones gigabit</li>
+              <li class="feat-item">Selección automática del servidor más cercano</li>
+              <li class="feat-item">Perfil Gaming TCP con un click</li>
+              <li class="feat-item">Monitor de latencia en tiempo real</li>
+              <li class="feat-item">Historial de resultados exportable</li>
+            </ul>
+            <div class="app-actions">
+              <a href="https://github.com/marcosstgo/AntiBufferBloatPro/releases/latest/download/Anti.BufferBloat.Pro.exe" class="btn-app primary-cyan">
+                <i class="fa-solid fa-download"></i> Descargar
+              </a>
+              <a href="/antibufferbloat-pro/" class="btn-app ghost">
+                <i class="fa-solid fa-circle-info"></i> Más info
+              </a>
+              <a href="https://github.com/marcosstgo/AntiBufferBloatPro" target="_blank" rel="noopener" class="btn-app ghost">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Ping Guard -->
+        <article class="app-card">
+          <div class="app-card-accent" style="background:linear-gradient(90deg,#4ade80,#00c050)"></div>
+          <div class="app-card-body">
+            <div class="app-header">
+              <div class="app-icon">📶</div>
+              <div class="app-meta">
+                <div class="app-name" style="color:#4ade80">Ping Guard</div>
+                <div class="app-tagline">Ping · Latencia · Bandeja del sistema</div>
+                <div class="app-badge">v1.2.0 · Windows</div>
+              </div>
+            </div>
+            <p class="app-desc">
+              Monitor de ping en tiempo real que vive en la bandeja del sistema. Monitorea hasta 3 hosts simultáneamente — identifica si el problema es tu router, tu ISP o el servidor del juego.
+            </p>
+            <ul class="feat-list">
+              <li class="feat-item">Hasta 3 hosts en paralelo — gateway, ISP y servidor de juego a la vez</li>
+              <li class="feat-item">Auto-detecta tu gateway al primer arranque</li>
+              <li class="feat-item">Sparkline de los últimos 2 minutos con línea de umbral</li>
+              <li class="feat-item">Estadísticas: AVG, P95, Jitter, Loss, Uptime</li>
+              <li class="feat-item">Alerta de sonido configurable en spikes de latencia</li>
+              <li class="feat-item">Auto-update · Sin instalación — un solo exe</li>
+            </ul>
+            <div class="app-actions">
+              <a href="https://github.com/marcosstgo/PingGuard/releases/latest/download/Ping.Guard.exe" class="btn-app primary-green" style="background:#4ade80;color:#060608;border-color:transparent">
+                <i class="fa-solid fa-download"></i> Descargar
+              </a>
+              <a href="https://github.com/marcosstgo/PingGuard" target="_blank" rel="noopener" class="btn-app ghost">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- NATCheck -->
+        <article class="app-card">
+          <div class="app-card-accent accent-natcheck"></div>
+          <div class="app-card-body">
+            <div class="app-header">
+              <div class="app-icon">🌐</div>
+              <div class="app-meta">
+                <div class="app-name" style="color:#00FF88">NATCheck</div>
+                <div class="app-tagline">NAT · UPnP · MTU · Gaming</div>
+                <div class="app-badge">v1.0.0 · Windows</div>
+              </div>
+            </div>
+            <p class="app-desc">
+              Diagnóstico de red orientado a gaming. Detecta tu tipo de NAT, verifica puertos por juego, mide el MTU óptimo y abre puertos vía UPnP automáticamente.
+            </p>
+            <ul class="feat-list">
+              <li class="feat-item">Detección de NAT type via STUN — Full Cone, Restricted, Symmetric</li>
+              <li class="feat-item">Verificación de puertos por juego — BF6, Valorant, CoD, más</li>
+              <li class="feat-item">Detección automática de MTU óptimo por búsqueda binaria</li>
+              <li class="feat-item">Apertura de puertos vía UPnP con un click (Fix Ports)</li>
+              <li class="feat-item">Diagnóstico inteligente en lenguaje natural</li>
+              <li class="feat-item">Auto-detecta el juego activo y carga su perfil</li>
+            </ul>
+            <div class="app-actions">
+              <a href="https://github.com/marcosstgo/NATCheck/releases/latest/download/NATCheck.exe" class="btn-app" style="background:#00FF88;color:#060608;border-color:transparent;font-weight:700">
+                <i class="fa-solid fa-download"></i> Descargar
+              </a>
+              <a href="/natcheck/" class="btn-app ghost">
+                <i class="fa-solid fa-circle-info"></i> Más info
+              </a>
+              <a href="https://github.com/marcosstgo/NATCheck" target="_blank" rel="noopener" class="btn-app ghost">
+                <i class="fa-brands fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Coming soon -->
+        <div class="soon-card">
+          <div class="soon-icon">⚗️</div>
+          <div class="soon-label">Próximamente</div>
+          <div class="soon-title">¿Qué sigue?</div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-inner">
+      <div class="foot-brand"><span>C</span>ORILLO · Dev</div>
+      <div class="foot-copy">Puerto Rico · Software libre para la comunidad · <a href="https://github.com/marcosstgo" target="_blank" rel="noopener" style="color:rgba(255,255,255,.3)">github.com/marcosstgo</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Theme toggle (persists corillo-theme)
+  const html = document.documentElement;
+  const saved = localStorage.getItem('corillo-theme');
+  if (saved === 'light') html.setAttribute('data-theme', 'light');
+</script>
+
+</body>
+</html>

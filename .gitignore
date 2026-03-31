@@ -2,3 +2,7 @@
 StreamerPro-src/
 .claude/
 assets/thumbs/
+public/assets/thumbs/
+node_modules/
+dist/
+.astro/

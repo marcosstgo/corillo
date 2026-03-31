@@ -1,0 +1,91 @@
+---
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogType?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  // Nav
+  navRightHref?: string;
+  navRightIcon?: string;
+  // Footer overrides
+  footerInfo?: string;
+  footerLinks?: Array<{ href: string; label: string }>;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogType = 'website',
+  ogTitle,
+  ogDescription,
+  navRightHref,
+  navRightIcon,
+  footerInfo,
+  footerLinks,
+} = Astro.props;
+
+const resolvedOgTitle = ogTitle ?? title;
+const resolvedOgDesc  = ogDescription ?? description;
+const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:title" content={resolvedOgTitle} />
+  <meta property="og:description" content={resolvedOgDesc} />
+  <meta property="og:image" content={OG_IMAGE} />
+  <meta property="og:locale" content="es_PR" />
+  <meta property="og:site_name" content="CORILLO" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={resolvedOgTitle} />
+  <meta name="twitter:description" content={resolvedOgDesc} />
+  <meta name="twitter:image" content={OG_IMAGE} />
+  <link rel="canonical" href={canonical} />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/corillo.css" />
+  <slot name="head" />
+</head>
+<body class="crl-body">
+
+<Nav rightHref={navRightHref} rightIcon={navRightIcon} />
+
+<slot />
+
+<Footer info={footerInfo} links={footerLinks} />
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  if (btn) btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+</script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
+
+</body>
+</html>

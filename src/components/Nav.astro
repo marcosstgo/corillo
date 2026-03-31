@@ -1,0 +1,25 @@
+---
+import Logo from './Logo.astro';
+
+interface Props {
+  rightHref?: string;
+  rightIcon?: string;  // Font Awesome class, e.g. "fa-solid fa-house"
+}
+const {
+  rightHref = '/',
+  rightIcon = 'fa-solid fa-house',
+} = Astro.props;
+---
+<div class="crl-nav-strip">
+  <a class="crl-brand-link" href="/">
+    <Logo gid="nav-grad" cls="crl-logo-nav" />
+  </a>
+  <div class="crl-flex crl-items-center crl-gap-sm">
+    <button class="theme-btn" id="themeBtn" title="Cambiar tema">
+      <i class="fa-solid fa-circle-half-stroke"></i>
+    </button>
+    <a class="btn btn-icon" href={rightHref}>
+      <i class={rightIcon}></i>
+    </a>
+  </div>
+</div>

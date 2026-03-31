@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Multiplayer</title>
+  <meta name="description" content="Mira varios streams a la vez en CORILLO con una vista multiplayer pensada para seguir al corillo en tiempo real." />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/multiplayer/">
+  <meta property="og:title" content="CORILLO — Multiplayer">
+  <meta property="og:description" content="Mira varios streams a la vez en CORILLO con una vista multiplayer pensada para seguir al corillo en tiempo real.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:locale" content="es_PR">
+  <meta property="og:site_name" content="CORILLO">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CORILLO — Multiplayer">
+  <meta name="twitter:description" content="Mira varios streams a la vez en CORILLO con una vista multiplayer pensada para seguir al corillo en tiempo real.">
+  <meta name="twitter:image" content="https://corillo.live/assets/og-image.png">
+  <link rel="canonical" href="https://corillo.live/multiplayer/">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
+  <script src="/assets/streamers.js"></script>
+  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/corillo.css">
+
+  <style>
+    :root{ --border-h:rgba(255,255,255,.18); }
+    html{scroll-behavior:smooth}
+    body{
+      background:radial-gradient(700px 280px at 50% 0%, rgba(223,48,48,.055), transparent 60%), var(--ink);
+      color:var(--white);font-family:var(--body);min-height:100vh;overflow-x:hidden;
+    }
+
+    /* ── NAV ── */
+
+
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:0;gap:10px;flex-wrap:wrap;width:100%}
+    .nav-left{display:flex;align-items:center;gap:10px;min-width:0}
+    .brand-link{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .brand-svg{width:auto;height:28px}
+    .crl-brand-logo .crl-brand-word{fill:#e8f6ff}
+    .crl-brand-logo .crl-brand-ring-outer{stroke:#e8f6ff}
+    [data-theme="light"] .crl-brand-logo .crl-brand-word{fill:#0c1a20}
+    [data-theme="light"] .crl-brand-logo .crl-brand-ring-outer{stroke:#0c1a20}
+    .page-tag{
+      font-family:var(--mono);font-size: .78rem;letter-spacing:2px;text-transform:uppercase;
+      color:var(--muted);border-left:1px solid var(--border);padding-left:10px;
+    }
+    .nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .live-pill{
+      display:flex;align-items:center;gap:6px;
+      font-family:var(--mono);font-size: .75rem;letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--live);background:rgba(223,48,48,.08);
+      border:1px solid rgba(223,48,48,.2);
+      padding:5px 10px 5px 8px;border-radius:999px;
+    }
+    .viewers-pill{
+      display:flex;align-items:center;gap:5px;
+      font-family:var(--mono);font-size: .75rem;letter-spacing:1px;
+      color:rgba(255,255,255,.4);border:1px solid var(--border);
+      padding:5px 10px;border-radius:999px;
+    }
+    .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+    .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.18);animation:blink 1.4s infinite}
+    .btn{
+      display:inline-flex;align-items:center;gap:6px;cursor:pointer;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size: .78rem;
+      padding:6px 12px;border-radius:6px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.6);transition:.18s;text-decoration:none;white-space:nowrap;
+    }
+    .btn:hover{border-color:var(--border-h);color:var(--white)}
+
+    /* ── MAIN ── */
+    .page{padding:20px 24px 32px}
+    @media(max-width:600px){.page{padding:14px 14px 24px}}
+
+    /* ── FILTER PANEL ── */
+    .filter-panel{
+      display:none;align-items:center;gap:10px;
+      background:rgba(255,255,255,.025);border:1px solid var(--border);
+      border-radius:12px;padding:10px 14px;margin-bottom:20px;
+      flex-wrap:wrap;
+    }
+    .filter-panel-label{
+      font-family:var(--mono);font-size: .85rem;letter-spacing:2px;text-transform:uppercase;
+      color:rgba(255,255,255,.2);flex-shrink:0;white-space:nowrap;
+    }
+    .filter-sep{width:1px;height:18px;background:var(--border);flex-shrink:0}
+    .filter-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+    .filter-chip{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:4px 10px 4px 5px;border-radius:999px;
+      border:1px solid transparent;background:rgba(255,255,255,.04);
+      color:rgba(255,255,255,.25);
+      font-family:var(--mono);font-size: .72rem;letter-spacing:1px;text-transform:uppercase;
+      cursor:pointer;transition:border-color .15s,color .15s,background .15s,opacity .2s;
+      white-space:nowrap;
+    }
+    .filter-chip .chip-ava{
+      width:18px;height:18px;border-radius:50%;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--display);font-size: .78rem;color:#111;
+    }
+    .filter-chip.active{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
+    .filter-chip:not(.active){opacity:.4}
+    .filter-chip:hover{opacity:1 !important;border-color:rgba(255,255,255,.2);color:var(--white)}
+    .filter-count{
+      margin-left:auto;flex-shrink:0;
+      font-family:var(--mono);font-size: .85rem;letter-spacing:1px;
+      color:rgba(255,255,255,.2);white-space:nowrap;
+    }
+
+    @media(max-width:600px){
+      .filter-panel{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 12px}
+      .filter-panel::-webkit-scrollbar{display:none}
+      .filter-chips{flex-wrap:nowrap}
+      .filter-count{display:none}
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty{
+      display:none;flex-direction:column;align-items:center;justify-content:center;
+      min-height:55vh;gap:16px;text-align:center;
+    }
+    .empty.show{display:flex}
+    .empty-icon{
+      width:72px;height:72px;border-radius:50%;
+      border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.8rem;color:var(--muted);
+    }
+    .empty h2{font-family:var(--display);font-size:2rem;letter-spacing:3px;color:rgba(255,255,255,.25);margin:0}
+    .empty p{font-family:var(--mono);font-size: .78rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:0}
+
+    /* ── GRID — layout: equal (default) ── */
+    .gallery{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+    .gallery.count-1{grid-template-columns:1fr}
+    .gallery.count-2{grid-template-columns:repeat(2,1fr)}
+    .gallery.count-3{grid-template-columns:repeat(3,1fr)}
+    .gallery.count-4{grid-template-columns:repeat(2,1fr)}
+    .gallery.count-5{grid-template-columns:repeat(3,1fr)}
+    .gallery.count-6{grid-template-columns:repeat(3,1fr)}
+    .gallery.count-7{grid-template-columns:repeat(3,1fr)}
+    .gallery.count-8{grid-template-columns:repeat(4,1fr)}
+
+    /* layout: focus — primer card ocupa fila completa */
+    .gallery.layout-focus.count-3{grid-template-columns:repeat(2,1fr)}
+    .gallery.layout-focus .stream-card:first-child{grid-column:1/-1}
+
+    /* layout: col — una sola columna */
+    .gallery.layout-col{grid-template-columns:1fr !important}
+
+    @media(max-width:768px){
+      .gallery,.gallery.count-1,.gallery.count-2,.gallery.count-3,
+      .gallery.count-4,.gallery.count-5,.gallery.count-6,.gallery.count-7,.gallery.count-8{
+        grid-template-columns:1fr;
+      }
+    }
+
+    /* ── LAYOUT BUTTONS ── */
+    .layout-btns{display:flex;gap:3px;flex-shrink:0}
+    .layout-btn{
+      width:26px;height:26px;border-radius:5px;border:1px solid var(--border);
+      background:transparent;color:rgba(255,255,255,.3);cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size: .78rem;transition:.15s;flex-shrink:0;
+    }
+    .layout-btn.active{border-color:rgba(232,200,74,.4);color:var(--accent);background:rgba(232,200,74,.06)}
+    .layout-btn:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
+    @media(max-width:600px){.layout-btns{display:none}}
+
+    /* ── ARC RAIDERS MODE ── */
+    /* Colores oficiales de los 4 stripes: #D00000 #FFEA00 #05FF74 #5FFFFF */
+    .arc-btn{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:5px 11px;border-radius:999px;flex-shrink:0;
+      border:1px solid transparent;
+      background:transparent padding-box,
+                 linear-gradient(to right,#D00000,#FFEA00,#05FF74,#5FFFFF) border-box;
+      color:rgba(255,255,255,.4);
+      font-family:var(--mono);font-size: .72rem;letter-spacing:1.5px;text-transform:uppercase;
+      cursor:pointer;transition:color .15s,box-shadow .15s,background .15s;
+      white-space:nowrap;
+    }
+    .arc-btn:hover:not(.active){color:rgba(255,255,255,.8)}
+    .arc-btn.active{
+      background:rgba(30,13,29,.85) padding-box,
+                 linear-gradient(to right,#D00000,#FFEA00,#05FF74,#5FFFFF) border-box;
+      color:#fff;
+      box-shadow:0 0 18px rgba(208,0,0,.25),0 0 18px rgba(95,255,255,.1);
+    }
+    /* 4 mini stripes en el botón — igual que el logo */
+    .arc-btn-stripes{display:flex;gap:2px;align-items:center}
+    .arc-btn-stripes span{width:3px;height:11px;border-radius:1px;display:block}
+
+    .arc-badge{
+      display:none;align-items:center;gap:10px;
+      font-family:var(--mono);font-size:.56rem;letter-spacing:2.5px;text-transform:uppercase;
+      color:rgba(255,255,255,.7);margin-bottom:14px;
+      padding:7px 14px 7px 10px;border-radius:4px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(30,13,29,.7);
+      width:fit-content;
+    }
+    .arc-badge.show{display:flex}
+    /* 4 stripes verticales en el badge */
+    .arc-badge-stripes{display:flex;gap:2px;align-items:center;flex-shrink:0}
+    .arc-badge-stripes span{width:3px;height:14px;border-radius:1px;display:block}
+
+    /* Layout 2+1 exclusivo para Arc Raider mode con 3 streams */
+    .gallery.arc-active.count-3{
+      grid-template-columns:repeat(6,1fr);
+      grid-template-rows:auto auto;
+    }
+    .gallery.arc-active.count-3 .stream-card:nth-child(1){grid-column:1/4}
+    .gallery.arc-active.count-3 .stream-card:nth-child(2){grid-column:4/7}
+    .gallery.arc-active.count-3 .stream-card:nth-child(3){grid-column:2/6}
+    @media(max-width:768px){
+      .gallery.arc-active.count-3,
+      .gallery.arc-active.count-3 .stream-card:nth-child(1),
+      .gallery.arc-active.count-3 .stream-card:nth-child(2),
+      .gallery.arc-active.count-3 .stream-card:nth-child(3){
+        grid-template-columns:1fr;grid-column:auto;
+      }
+    }
+
+    /* Barra de 4 colores en la parte superior de cada card en arc mode */
+    .gallery.arc-active .stream-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:5;
+      background:linear-gradient(to right,#D00000 25%,#FFEA00 25% 50%,#05FF74 50% 75%,#5FFFFF 75%);
+    }
+    .gallery.arc-active .stream-card{border-color:rgba(255,255,255,.12)}
+    .gallery.arc-active .vol-btn.active{
+      color:#5FFFFF;
+      background:rgba(30,13,29,.8);
+      border:1px solid rgba(95,255,255,.5);
+      box-shadow:0 0 8px rgba(95,255,255,.3);
+    }
+
+    /* ── STREAM CARD ── */
+    .stream-card{
+      position:relative;border-radius:12px;overflow:hidden;
+      border:1px solid var(--border);background:#000;
+      cursor:pointer;
+      transition:border-color .2s,transform .2s,box-shadow .2s;
+      text-decoration:none;color:inherit;display:block;
+    }
+    .stream-card:hover{border-color:var(--border-h);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.6)}
+    .stream-card.is-featured{border-color:rgba(232,200,74,.2)}
+    .stream-card.is-live{animation:pulse-border 3s infinite}
+    @keyframes pulse-border{
+      0%,100%{box-shadow:0 0 0 0 rgba(223,48,48,0)}
+      50%{box-shadow:0 0 0 3px rgba(223,48,48,.1)}
+    }
+
+    .thumb{aspect-ratio:16/9;position:relative;overflow:hidden;background:#000}
+    .thumb video{width:100%;height:100%;object-fit:cover;display:block}
+
+    .tag-live{
+      position:absolute;top:10px;left:10px;z-index:3;
+      display:flex;align-items:center;gap:5px;
+      background:var(--live);color:#fff;
+      font-family:var(--mono);font-size: .72rem;letter-spacing:1.5px;padding:3px 8px;border-radius:2px;
+    }
+    .tag-host{
+      position:absolute;top:10px;right:10px;z-index:3;
+      font-family:var(--mono);font-size: .72rem;letter-spacing:1.5px;color:var(--accent);
+      border:1px solid rgba(232,200,74,.3);padding:3px 8px;border-radius:2px;
+      background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
+    }
+    .tag-viewers{
+      position:absolute;bottom:10px;right:10px;z-index:3;
+      display:flex;align-items:center;gap:5px;
+      background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
+      font-family:var(--mono);font-size: .72rem;letter-spacing:1px;padding:3px 8px;border-radius:2px;
+      color:rgba(255,255,255,.8);
+    }
+    .play-icon{
+      position:absolute;inset:0;z-index:2;
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;transition:opacity .2s;background:rgba(0,0,0,.3);
+    }
+    .stream-card:hover .play-icon{opacity:1}
+    .play-icon i{font-size:2.5rem;color:rgba(255,255,255,.9);filter:drop-shadow(0 2px 8px rgba(0,0,0,.6))}
+
+    .vol-btn{
+      position:absolute;bottom:10px;left:10px;z-index:4;
+      display:flex;align-items:center;justify-content:center;
+      width:28px;height:28px;border-radius:50%;border:none;
+      background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+      color:rgba(255,255,255,.45);font-size: .92rem;
+      cursor:pointer;transition:color .15s,background .15s,transform .1s;
+    }
+    .vol-btn:hover{background:rgba(0,0,0,.8);color:var(--white);transform:scale(1.1)}
+    .vol-btn.active{color:var(--accent);background:rgba(232,200,74,.18);border:1px solid rgba(232,200,74,.3)}
+
+    .card-foot{
+      display:flex;align-items:center;gap:10px;padding:10px 12px;
+      border-top:1px solid var(--border);
+      background:linear-gradient(to bottom,rgba(12,12,16,.85),rgba(6,6,8,.95));
+    }
+    .ava{
+      width:28px;height:28px;border-radius:50%;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-family:var(--display);font-size: .92rem;color:var(--ink);
+    }
+    .foot-info{flex:1;min-width:0}
+    .ch-name{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .ch-sub{font-size:.72rem;color:var(--muted);margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .expand-icon{color:rgba(255,255,255,.25);font-size: .85rem;flex-shrink:0;transition:.2s}
+    .stream-card:hover .expand-icon{color:var(--accent)}
+
+    /* ── POLL BAR ── */
+    .poll-bar{position:fixed;bottom:0;left:0;right:0;height:2px;background:var(--border);z-index:55;overflow:hidden}
+    .poll-progress{height:100%;background:var(--accent);width:100%;transform-origin:left;transition:transform linear}
+
+    [data-theme="light"] .viewers-pill{color:rgba(5,16,21,.5);background:rgba(0,0,0,.02)}
+    [data-theme="light"] .btn{color:rgba(5,16,21,.72);background:rgba(0,0,0,.02)}
+    [data-theme="light"] .btn:hover{background:rgba(0,0,0,.05);color:var(--white)}
+    [data-theme="light"] .filter-panel{background:rgba(255,255,255,.58)}
+    [data-theme="light"] .filter-panel-label,
+    [data-theme="light"] .filter-count{color:rgba(5,16,21,.38)}
+    [data-theme="light"] .filter-chip{background:rgba(0,0,0,.03);color:rgba(5,16,21,.38)}
+    [data-theme="light"] .filter-chip.active{border-color:rgba(0,0,0,.12);background:rgba(0,0,0,.05);color:rgba(5,16,21,.88)}
+    [data-theme="light"] .filter-chip:hover{color:var(--white)}
+    [data-theme="light"] .layout-btn{color:rgba(5,16,21,.36)}
+    [data-theme="light"] .layout-btn:hover:not(.active){color:rgba(5,16,21,.72)}
+    [data-theme="light"] .arc-btn{color:rgba(5,16,21,.55)}
+    [data-theme="light"] .arc-btn:hover:not(.active){color:rgba(5,16,21,.86)}
+    [data-theme="light"] .empty h2{color:rgba(5,16,21,.3)}
+    [data-theme="light"] .stream-card{background:#f7fbfd}
+    [data-theme="light"] .card-foot{background:linear-gradient(to bottom,rgba(255,255,255,.9),rgba(220,238,245,.96))}
+    [data-theme="light"] .expand-icon{color:rgba(5,16,21,.25)}
+  </style>
+</head>
+<body>
+
+<header class="crl-page-header">
+  <div class="nav crl-page-header-main">
+    <div class="nav-left">
+      <a href="/" class="nav-logo brand-link">
+        <svg class="brand-svg crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
+          <defs>
+            <radialGradient id="ng" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
+          <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
+          <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
+          <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+          <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+          <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
+        </svg>
+      </a>
+      <div class="page-tag crl-page-header-tag">Multiplayer</div>
+    </div>
+    <div class="nav-right crl-page-header-actions">
+      <div class="live-pill">
+        <span class="dot on" id="navDot"></span>
+        <span id="navCount">0</span>&nbsp;en vivo
+      </div>
+      <div class="viewers-pill" id="viewersPill" style="display:none">
+        <i class="fa-solid fa-eye" style="font-size: .75rem"></i>
+        <span id="navViewers">0</span>
+      </div>
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <!-- Filter panel — visible only when ≥2 streamers are live -->
+  <div class="filter-panel crl-filter-panel" id="filterPanel">
+    <span class="filter-panel-label crl-filter-label">Ver</span>
+    <button class="filter-all crl-filter-pill active" id="filterAll">Todos</button>
+    <div class="filter-sep crl-filter-sep"></div>
+    <div class="filter-chips crl-filter-group" id="filterChips"></div>
+    <span class="filter-count crl-filter-count" id="filterCount"></span>
+    <div class="filter-sep crl-filter-sep"></div>
+    <div class="layout-btns">
+      <button class="layout-btn" id="btnLayoutEq" title="Cuadrícula igual"><i class="fa-solid fa-table-cells"></i></button>
+      <button class="layout-btn" id="btnLayoutFc" title="Destacado"><i class="fa-solid fa-table-cells-large"></i></button>
+      <button class="layout-btn" id="btnLayoutCl" title="Columna"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div class="filter-sep crl-filter-sep"></div>
+    <button class="arc-btn" id="btnArcRaider" title="Modo Arc Raider — audio simultáneo para todo el squad">
+      <span class="arc-btn-stripes">
+        <span style="background:#D00000"></span>
+        <span style="background:#FFEA00"></span>
+        <span style="background:#05FF74"></span>
+        <span style="background:#5FFFFF"></span>
+      </span>
+      ARC RAIDER
+    </button>
+  </div>
+
+  <!-- Arc Raider badge -->
+  <div class="arc-badge" id="arcBadge">
+    <span class="arc-badge-stripes">
+      <span style="background:#D00000"></span>
+      <span style="background:#FFEA00"></span>
+      <span style="background:#05FF74"></span>
+      <span style="background:#5FFFFF"></span>
+    </span>
+    ARC RAIDER MODE — audio simultáneo activo
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty crl-empty-hero show" id="emptyState">
+    <div class="empty-icon crl-empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
+    <h2 class="crl-empty-title" id="emptyTitle">NADIE EN VIVO</h2>
+    <p class="crl-empty-sub" id="emptyMsg">Cuando alguien inicie stream aparecerá aquí</p>
+  </div>
+
+  <!-- Gallery -->
+  <div class="gallery crl-gallery" id="gallery"></div>
+
+</main>
+
+<div class="poll-bar"><div class="poll-progress" id="pollBar"></div></div>
+
+<script>
+const API            = '/mediamtx-api/v3/paths/list';
+const POLL_MS        = 15000;
+const CACHE_MS       = 8000;
+const API_TIMEOUT_MS = 5000;
+const MAX_SELECTIONS = 4;
+const $              = id => document.getElementById(id);
+
+let cache          = { t:0, data:null };
+let hlsMap         = {};  // key → Hls instance (fallback)
+let pcMap          = {};  // key → RTCPeerConnection (WebRTC)
+let liveMap        = {};  // key → { streamer, viewers }
+const useWebRTC    = !!window.RTCPeerConnection;
+let selectedKeys   = new Set();
+let pollTimer      = null;
+let activeAudioKey = null;   // normal mode: exclusive (one at a time)
+let arcRaiderMode  = false;
+let arcAudioKeys   = new Set(); // arc mode: independent per-stream
+
+// ── API ──
+async function fetchPaths() {
+  const now = Date.now();
+  if (cache.data && (now - cache.t) < CACHE_MS) return cache.data;
+  const ctrl = new AbortController();
+  const to   = setTimeout(() => ctrl.abort(), API_TIMEOUT_MS);
+  try {
+    const res  = await fetch(API, { signal:ctrl.signal, cache:'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    cache = { t:now, data };
+    return data;
+  } finally { clearTimeout(to); }
+}
+
+function getLive(data) {
+  return (Array.isArray(data?.items) ? data.items : []).filter(p => p.ready);
+}
+
+// ── STREAM (WebRTC + HLS fallback) ──
+function destroyHls(key) {
+  if (hlsMap[key]) { try { hlsMap[key].destroy(); } catch {} delete hlsMap[key]; }
+  if (pcMap[key])  { try { pcMap[key].close();    } catch {} delete pcMap[key];  }
+}
+
+function playVideoHLS(video, key) {
+  const url = `/live/${encodeURIComponent(key)}/index.m3u8`;
+  if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = url; video.play().catch(() => {}); return;
+  }
+  if (window.Hls && Hls.isSupported()) {
+    const h = new Hls({ lowLatencyMode:true, backBufferLength:20, maxBufferLength:6 });
+    h.loadSource(url);
+    h.attachMedia(video);
+    h.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+    h.on(Hls.Events.ERROR, (_, d) => { if (d?.fatal) { try{h.destroy()}catch{} delete hlsMap[key]; } });
+    hlsMap[key] = h;
+    const io = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) { try{video.pause()}catch{} }
+      else { video.play().catch(()=>{}); }
+    }, { threshold:0.1 });
+    io.observe(video);
+  }
+}
+
+async function playVideoWebRTC(video, key) {
+  const whepUrl = `/webrtc/live/${encodeURIComponent(key)}_rtc/whep`;
+  const pc = new RTCPeerConnection({ iceServers:[{ urls:'stun:stun.l.google.com:19302' }] });
+  pcMap[key] = pc;
+  pc.addTransceiver('video', { direction:'recvonly' });
+  pc.addTransceiver('audio', { direction:'recvonly' });
+  pc.ontrack = e => {
+    if (!video.srcObject) video.srcObject = new MediaStream();
+    video.srcObject.addTrack(e.track);
+  };
+  pc.onconnectionstatechange = () => {
+    const s = pc.connectionState;
+    if (s === 'failed' || s === 'disconnected') {
+      try { pc.close(); } catch {}
+      delete pcMap[key];
+      playVideoHLS(video, key);
+    }
+  };
+  try {
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    await Promise.race([
+      new Promise(resolve => {
+        if (pc.iceGatheringState === 'complete') { resolve(); return; }
+        pc.addEventListener('icegatheringstatechange', function fn() {
+          if (pc.iceGatheringState === 'complete') { pc.removeEventListener('icegatheringstatechange', fn); resolve(); }
+        });
+      }),
+      new Promise(resolve => setTimeout(resolve, 4000)),
+    ]);
+    const resp = await fetch(whepUrl, { method:'POST', headers:{ 'Content-Type':'application/sdp' }, body:pc.localDescription.sdp });
+    if (!resp.ok) throw new Error('WHEP ' + resp.status);
+    await pc.setRemoteDescription({ type:'answer', sdp: await resp.text() });
+    video.play().catch(() => {});
+  } catch {
+    try { pc.close(); } catch {}
+    delete pcMap[key];
+    playVideoHLS(video, key);
+  }
+}
+
+function playVideo(video, key) {
+  if (useWebRTC) playVideoWebRTC(video, key);
+  else           playVideoHLS(video, key);
+}
+
+// ── AUDIO CONTROL ──
+function setAudioState(key, unmute) {
+  const card  = $('gallery').querySelector(`[data-key="${key}"]`);
+  const video = card?.querySelector('video');
+  const btn   = card?.querySelector('.vol-btn');
+  if (!video || !btn) return;
+  video.muted = !unmute;
+  if (unmute && video.paused) video.play().catch(() => {});
+  btn.classList.toggle('active', unmute);
+  btn.querySelector('i').className = unmute ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+}
+
+function toggleAudio(key) {
+  if (arcRaiderMode) {
+    // Independent toggle — each stream controls its own audio
+    if (arcAudioKeys.has(key)) {
+      arcAudioKeys.delete(key);
+      setAudioState(key, false);
+    } else {
+      arcAudioKeys.add(key);
+      setAudioState(key, true);
+    }
+  } else {
+    // Exclusive toggle — only one stream at a time
+    if (activeAudioKey === key) {
+      setAudioState(key, false);
+      activeAudioKey = null;
+    } else {
+      if (activeAudioKey) setAudioState(activeAudioKey, false);
+      setAudioState(key, true);
+      activeAudioKey = key;
+    }
+  }
+}
+
+function toggleArcRaider() {
+  arcRaiderMode = !arcRaiderMode;
+  $('btnArcRaider').classList.toggle('active', arcRaiderMode);
+  $('arcBadge').classList.toggle('show', arcRaiderMode);
+  $('gallery').classList.toggle('arc-active', arcRaiderMode);
+
+  if (arcRaiderMode) {
+    // Exit exclusive mode first
+    if (activeAudioKey) { setAudioState(activeAudioKey, false); activeAudioKey = null; }
+    // Unmute all visible streams
+    $('gallery').querySelectorAll('.stream-card').forEach(card => {
+      const key = card.dataset.key;
+      arcAudioKeys.add(key);
+      setAudioState(key, true);
+    });
+  } else {
+    // Mute all arc streams and reset
+    arcAudioKeys.forEach(key => setAudioState(key, false));
+    arcAudioKeys.clear();
+  }
+}
+
+// ── BUILD CARD ──
+function buildCard(streamer, viewers) {
+  const isAudioActive = arcRaiderMode ? arcAudioKeys.has(streamer.key) : (activeAudioKey === streamer.key);
+  const a = document.createElement('a');
+  a.href  = `/${encodeURIComponent(streamer.key)}/`;
+  a.className   = 'stream-card crl-stream-card is-live' + (streamer.host ? ' is-featured' : '');
+  a.dataset.key = streamer.key;
+  a.innerHTML = `
+    <div class="thumb crl-stream-card-media">
+      <video playsinline muted autoplay loop></video>
+      <div class="tag-live"><span class="dot on" style="width:5px;height:5px"></span>&nbsp;LIVE</div>
+      ${streamer.host ? '<div class="tag-host badge badge-accent">HOST</div>' : ''}
+      <div class="tag-viewers badge badge-dim"><i class="fa-solid fa-eye"></i>&nbsp;${viewers}</div>
+      <button class="vol-btn${isAudioActive ? ' active' : ''}" title="Activar/silenciar sonido">
+        <i class="fa-solid ${isAudioActive ? 'fa-volume-high' : 'fa-volume-xmark'}"></i>
+      </button>
+      <div class="play-icon"><i class="fa-solid fa-play"></i></div>
+    </div>
+    <div class="card-foot crl-stream-card-body">
+      <div class="ava crl-stream-card-avatar" style="background:${streamer.color}">${streamer.ava}</div>
+      <div class="foot-info crl-stream-card-text">
+        <div class="ch-name crl-stream-card-title">${streamer.name}</div>
+        <div class="ch-sub crl-stream-card-sub">${streamer.sub}</div>
+      </div>
+      <i class="fa-solid fa-arrow-up-right-from-square expand-icon"></i>
+    </div>`;
+
+  const video = a.querySelector('video');
+  playVideo(video, streamer.key);
+  if (isAudioActive) video.muted = false;
+
+  a.querySelector('.vol-btn').addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleAudio(streamer.key);
+  });
+
+  return a;
+}
+
+// ── FILTER HELPERS ──
+function streamerOrder(key) {
+  return STREAMERS.findIndex(s => s.key === key);
+}
+
+function insertInOrder(parent, el, key, selector) {
+  const siblings = parent.querySelectorAll(selector);
+  for (const sib of siblings) {
+    if (streamerOrder(sib.dataset.key) > streamerOrder(key)) {
+      parent.insertBefore(el, sib); return;
+    }
+  }
+  parent.appendChild(el);
+}
+
+function updateUI() {
+  const gallery    = $('gallery');
+  const liveKeys   = Object.keys(liveMap);
+  const totalLive  = liveKeys.length;
+  const visible    = gallery.querySelectorAll('.stream-card').length;
+  const totalView  = liveKeys.reduce((s, k) => s + (liveMap[k]?.viewers || 0), 0);
+
+  // Nav counts
+  $('navCount').textContent = totalLive;
+  $('navDot').className = totalLive > 0 ? 'dot on' : 'dot';
+  $('navViewers').textContent = totalView;
+  $('viewersPill').style.display = totalLive > 0 ? 'flex' : 'none';
+
+  // Filter panel visibility — show whenever there's ≥1 live streamer
+  $('filterPanel').style.display = totalLive > 0 ? 'flex' : 'none';
+
+  // Filter count label
+  if (totalLive > 0) {
+    const atMax = selectedKeys.size >= MAX_SELECTIONS;
+    $('filterCount').textContent = visible > 0
+      ? `${visible}/${MAX_SELECTIONS}${atMax ? ' — máx' : ''}`
+      : '';
+  }
+
+  // All button state — disabled if more live streams than max
+  const allSel = totalLive > 0 && liveKeys.every(k => selectedKeys.has(k));
+  const allDisabled = totalLive > MAX_SELECTIONS && !allSel;
+  $('filterAll').classList.toggle('active', allSel);
+  $('filterAll').style.opacity = allDisabled ? '.3' : '';
+  $('filterAll').style.pointerEvents = allDisabled ? 'none' : '';
+
+  // Gallery class + empty state — preserve arc-active and layout classes
+  const arcCls    = arcRaiderMode ? ' arc-active' : '';
+  const layoutCls = currentLayout === 'focus' ? ' layout-focus' : currentLayout === 'col' ? ' layout-col' : '';
+  gallery.className = `gallery crl-gallery count-${Math.min(visible, 8)}${arcCls}${layoutCls}`;
+  if (visible === 0) {
+    $('emptyState').classList.add('show');
+    if (totalLive > 0) {
+      $('emptyTitle').textContent = 'ELIGE A QUIÉN VER';
+      $('emptyMsg').textContent   = 'Selecciona uno o varios streamers arriba';
+    } else {
+      $('emptyTitle').textContent = 'NADIE EN VIVO';
+      $('emptyMsg').textContent   = 'Cuando alguien inicie stream aparecerá aquí';
+    }
+  } else {
+    $('emptyState').classList.remove('show');
+  }
+}
+
+function addChip(streamer) {
+  const chip = document.createElement('button');
+  chip.className   = 'filter-chip crl-filter-chip';
+  chip.dataset.key = streamer.key;
+  chip.title       = streamer.name;
+  chip.innerHTML   = `<span class="chip-ava" style="background:${streamer.color}">${streamer.ava}</span>${streamer.name}`;
+  chip.addEventListener('click', () => toggleChip(streamer.key));
+  insertInOrder($('filterChips'), chip, streamer.key, '.filter-chip');
+}
+
+function toggleChip(key) {
+  if (selectedKeys.has(key)) {
+    selectedKeys.delete(key);
+    $('filterChips').querySelector(`[data-key="${key}"]`)?.classList.remove('active');
+    destroyHls(key);
+    $('gallery').querySelector(`[data-key="${key}"]`)?.remove();
+  } else {
+    if (selectedKeys.size >= MAX_SELECTIONS) return;
+    selectedKeys.add(key);
+    $('filterChips').querySelector(`[data-key="${key}"]`)?.classList.add('active');
+    const entry = liveMap[key];
+    if (entry) insertInOrder($('gallery'), buildCard(entry.streamer, entry.viewers), key, '.stream-card');
+  }
+  // Dim unselected chips when at max
+  const atMax = selectedKeys.size >= MAX_SELECTIONS;
+  $('filterChips').querySelectorAll('.filter-chip:not(.active)').forEach(c => {
+    c.style.opacity = atMax ? '.2' : '';
+    c.style.pointerEvents = atMax ? 'none' : '';
+  });
+  updateUI();
+}
+
+// ── LAYOUT ──
+let currentLayout = localStorage.getItem('corillo_multi_layout') || 'equal';
+
+function applyLayout(layout) {
+  currentLayout = layout;
+  localStorage.setItem('corillo_multi_layout', layout);
+  const g = $('gallery');
+  g.classList.remove('layout-focus','layout-col');
+  if (layout === 'focus') g.classList.add('layout-focus');
+  else if (layout === 'col')   g.classList.add('layout-col');
+  $('btnLayoutEq').classList.toggle('active', layout === 'equal');
+  $('btnLayoutFc').classList.toggle('active', layout === 'focus');
+  $('btnLayoutCl').classList.toggle('active', layout === 'col');
+}
+
+$('btnLayoutEq').addEventListener('click', () => applyLayout('equal'));
+$('btnLayoutFc').addEventListener('click', () => applyLayout('focus'));
+$('btnLayoutCl').addEventListener('click', () => applyLayout('col'));
+applyLayout(currentLayout);
+
+$('btnArcRaider').addEventListener('click', toggleArcRaider);
+
+$('filterAll').addEventListener('click', () => {
+  Object.entries(liveMap).forEach(([key, entry]) => {
+    if (!selectedKeys.has(key)) {
+      selectedKeys.add(key);
+      $('filterChips').querySelector(`[data-key="${key}"]`)?.classList.add('active');
+      insertInOrder($('gallery'), buildCard(entry.streamer, entry.viewers), key, '.stream-card');
+    }
+  });
+  updateUI();
+});
+
+// ── MAIN STATE UPDATE ──
+function updateLiveState(apiStreamers) {
+  const newKeys = new Set(apiStreamers.map(s => s.key));
+  const oldKeys = new Set(Object.keys(liveMap));
+
+  // Remove offline streamers
+  for (const key of oldKeys) {
+    if (!newKeys.has(key)) {
+      delete liveMap[key];
+      selectedKeys.delete(key);
+      destroyHls(key);
+      $('gallery').querySelector(`[data-key="${key}"]`)?.remove();
+      $('filterChips').querySelector(`[data-key="${key}"]`)?.remove();
+      if (activeAudioKey === key) activeAudioKey = null;
+      arcAudioKeys.delete(key);
+    }
+  }
+
+  // Add newly live streamers — not auto-selected, user picks
+  for (const s of apiStreamers) {
+    if (!oldKeys.has(s.key)) {
+      liveMap[s.key] = { streamer:s, viewers:s.viewers };
+      addChip(s);
+      // In arc raider mode: auto-select and auto-unmute new streamers
+      if (arcRaiderMode) {
+        selectedKeys.add(s.key);
+        $('filterChips').querySelector(`[data-key="${s.key}"]`)?.classList.add('active');
+        arcAudioKeys.add(s.key);
+        insertInOrder($('gallery'), buildCard(s, s.viewers), s.key, '.stream-card');
+      }
+    }
+  }
+
+  // Update viewer counts in visible cards (no rebuild)
+  for (const s of apiStreamers) {
+    if (oldKeys.has(s.key)) {
+      liveMap[s.key].viewers = s.viewers;
+      if (selectedKeys.has(s.key)) {
+        const vt = $('gallery').querySelector(`[data-key="${s.key}"] .tag-viewers`);
+        if (vt) vt.innerHTML = `<i class="fa-solid fa-eye"></i>&nbsp;${s.viewers}`;
+      }
+    }
+  }
+
+  updateUI();
+}
+
+// ── POLL ──
+function animatePollBar() {
+  const bar = $('pollBar');
+  bar.style.transition = 'none';
+  bar.style.transform  = 'scaleX(1)';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    bar.style.transition = `transform ${POLL_MS}ms linear`;
+    bar.style.transform  = 'scaleX(0)';
+  }));
+}
+
+async function refresh() {
+  try {
+    const data      = await fetchPaths();
+    const livePaths = getLive(data);
+    const apiStreamers = STREAMERS
+      .filter(s => s.key && livePaths.find(p => p.name === 'live/' + s.key))
+      .map(s => {
+        const pd = livePaths.find(p => p.name === 'live/' + s.key);
+        return { ...s, viewers: pd ? (pd.readers || []).length : 0 };
+      });
+    updateLiveState(apiStreamers);
+  } catch(e) {}
+  animatePollBar();
+  pollTimer = setTimeout(refresh, POLL_MS);
+}
+
+// ── THEME ──
+(function(){
+  const root  = document.documentElement;
+  const btn   = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  btn?.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+
+// ── VISIBILITY ──
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; } }
+  else { cache.t = 0; refresh(); }
+});
+
+refresh();
+</script>
+
+<footer class="site-footer crl-site-footer">
+  <div class="foot-inner crl-foot-inner">
+    <div class="foot-left crl-foot-left">
+      <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
+        <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
+      </svg>
+      <div class="foot-info crl-foot-info">Puerto Rico<br>Plataforma independiente</div>
+    </div>
+    <div class="foot-links crl-foot-links">
+      <a href="/multiplayer/">Multiplayer</a>
+      <span class="foot-sep crl-foot-sep">·</span>
+      <a href="/streamers/">Streamers</a>
+      <span class="foot-sep crl-foot-sep">·</span>
+      <a href="/join/">Crear Canal</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="/que-es-corillo/">Sobre Corillo</a>
+      <span class="foot-sep crl-foot-sep">·</span>
+      <a href="/roadmap/">Roadmap</a>
+      <span class="foot-sep crl-foot-sep">·</span>
+      <a href="/legal/">Términos</a>
+      <span class="foot-sep crl-foot-sep">·</span>
+      <a href="/dmca/">DMCA</a>
+      <span class="foot-sep crl-foot-sep">·</span>
+      <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
+
+
+
+
+
+
+
+

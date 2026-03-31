@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>CORILLO — Únete por invitación</title>
+  <meta name="description" content="CORILLO es una plataforma de streaming independiente creada en Puerto Rico. Por ahora, entrar es por invitación y aprobación manual." />
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://corillo.live/join/">
+  <meta property="og:title" content="CORILLO — Únete por invitación">
+  <meta property="og:description" content="CORILLO es una plataforma de streaming independiente creada en Puerto Rico. Por ahora, entrar es por invitación y aprobación manual.">
+  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
+  <meta property="og:locale" content="es_PR">
+  <meta property="og:site_name" content="CORILLO">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CORILLO — Únete por invitación">
+  <meta name="twitter:description" content="CORILLO es una plataforma de streaming independiente creada en Puerto Rico. Por ahora, entrar es por invitación y aprobación manual.">
+  <meta name="twitter:image" content="https://corillo.live/assets/og-image.png">
+  <link rel="canonical" href="https://corillo.live/join/">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#060608">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/corillo.css">
+
+  <style>
+    /* ── Page-specific ── */
+    .wrap { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+    @media(max-width:600px) { .wrap { padding: 0 14px; } }
+
+    /* Nav */
+    .join-nav { position: sticky; top: 0; z-index: 60; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: linear-gradient(to bottom,rgba(6,6,8,.96),rgba(6,6,8,.6)); border-bottom: 1px solid var(--crl-border); }
+    .join-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; }
+    [data-theme="light"] .join-nav { background: linear-gradient(to bottom,rgba(240,239,233,.97),rgba(240,239,233,.8)); }
+
+    /* Nav tag */
+    .nav-tag { font-family: var(--crl-mono); font-size: .75rem; letter-spacing: 2px; text-transform: uppercase; color: var(--crl-muted); border-left: 1px solid var(--crl-border); padding-left: 10px; }
+
+
+    /* Hero */
+    .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--crl-border); }
+    .hero-title { font-family: var(--crl-display); font-size: clamp(2.4rem,6vw,4rem); letter-spacing: 3px; line-height: 1; margin-bottom: 18px; }
+    .hero-desc { font-size: 1rem; line-height: 1.7; color: rgba(242,239,233,.6); max-width: 52ch; margin-bottom: 32px; }
+    [data-theme="light"] .hero-desc { color: rgba(18,18,15,.6); }
+
+    /* Process section */
+    .section { padding: 48px 0; border-bottom: 1px solid var(--crl-border); }
+    .section-label { font-family: var(--crl-mono); font-size: .72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--crl-accent); margin-bottom: 10px; }
+    .section-title { font-family: var(--crl-display); font-size: clamp(1.4rem,3vw,2rem); letter-spacing: 2px; margin-bottom: 32px; }
+    .steps { display: flex; flex-direction: column; }
+    .step { display: flex; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--crl-border); }
+    .step:last-child { border-bottom: none; }
+    .step-num { font-family: var(--crl-display); font-size: 2rem; letter-spacing: 2px; color: rgba(232,200,74,.2); flex-shrink: 0; width: 40px; line-height: 1; padding-top: 2px; }
+    .step-body { flex: 1; }
+    .step-title { font-family: var(--crl-mono); font-size: .92rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--crl-white); margin-bottom: 6px; }
+    .step-desc { font-size: .9rem; line-height: 1.6; color: rgba(242,239,233,.55); }
+    .step-desc a { color: var(--crl-accent); }
+    .step-desc a:hover { text-decoration: underline; }
+    [data-theme="light"] .step-desc { color: rgba(18,18,15,.6); }
+
+    /* CTA / form box */
+    .contact-box { background: linear-gradient(135deg,rgba(232,200,74,.06),rgba(232,200,74,.02)); border: 1px solid rgba(232,200,74,.2); border-radius: 14px; padding: 36px 32px; text-align: center; }
+    @media(max-width:600px) { .contact-box { padding: 24px 18px; } }
+    .contact-title { font-family: var(--crl-display); font-size: clamp(1.4rem,3vw,2rem); letter-spacing: 2px; margin-bottom: 10px; }
+    .contact-sub { font-size: .9rem; color: rgba(242,239,233,.55); margin-bottom: 24px; line-height: 1.6; }
+    [data-theme="light"] .contact-sub { color: rgba(18,18,15,.55); }
+    [data-theme="light"] .contact-box { background: rgba(255,255,255,.6); border-color: rgba(180,130,0,.25); }
+
+    /* Form grid */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:600px) { .form-grid { grid-template-columns: 1fr; } }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field textarea { padding: 10px 12px; border-radius: 7px; border: 1px solid var(--crl-border); background: var(--crl-surface); color: var(--crl-white); outline: none; font-family: var(--crl-body); font-size: .9rem; transition: border-color .18s; resize: none; }
+    .field textarea:focus { border-color: rgba(232,200,74,.35); box-shadow: 0 0 0 3px rgba(232,200,74,.08); }
+    .field .input:focus { border-color: rgba(232,200,74,.35); box-shadow: 0 0 0 3px rgba(232,200,74,.08); }
+    .field-full { grid-column: 1/-1; }
+    .form-err { padding: 8px 12px; border-radius: 7px; border: 1px dashed rgba(206,17,38,.3); background: rgba(206,17,38,.05); color: var(--crl-hot); font-family: var(--crl-mono); font-size: .75rem; display: none; margin-top: 8px; }
+    [data-theme="light"] .field textarea { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.12); color: #12120f; }
+
+    /* Success state */
+    .form-success { display: none; text-align: center; padding: 32px 0; animation: crl-fade-up .4s ease; }
+    .form-success .check { width: 56px; height: 56px; border-radius: 50%; background: rgba(0,255,157,.1); border: 1px solid rgba(0,255,157,.25); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.6rem; color: var(--crl-confirm); }
+    .success-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,255,157,.06); border: 1px solid rgba(0,255,157,.2); border-radius: 10px; padding: 10px 18px; font-family: var(--crl-mono); font-size: .78rem; letter-spacing: 1px; color: rgba(0,255,157,.8); }
+
+  </style>
+</head>
+<body class="crl-body">
+
+<nav class="join-nav">
+  <div class="join-nav-inner">
+    <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+      <svg class="crl-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
+        <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
+      </svg>
+      <span class="nav-tag">Únete</span>
+    </a>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+      <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="section-label">Plataforma independiente · Puerto Rico</div>
+    <h1 class="hero-title">CREAR CANAL</h1>
+    <p class="hero-desc">
+      CORILLO es una plataforma pequeña e independiente desde Puerto Rico.
+      Los canales son <strong>por invitación y aprobación manual</strong> — no hay registro automático.
+      Katatonia revisa cada solicitud personalmente antes de abrir un canal.
+    </p>
+    <a class="btn btn-primary" href="#aplicar"><i class="fa-solid fa-arrow-down"></i> Aplica ahora</a>
+  </div>
+</section>
+
+<!-- PROCESO -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-label">El proceso</div>
+    <h2 class="section-title">CÓMO FUNCIONA</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Completa el formulario</div>
+          <p class="step-desc">Llena el formulario más abajo: elige tu handle de canal, cuéntanos qué tipo de contenido haces y por qué quieres unirte. Es todo lo que necesitas para aplicar.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Revisión manual — no es automático</div>
+          <p class="step-desc">Katatonia revisa cada solicitud personalmente. No existe aprobación automática. Respondemos a todas las solicitudes — aprobadas o no — en menos de 24 horas.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Aprobación o rechazo</div>
+          <p class="step-desc">Si tu solicitud es aprobada, te notificamos por email. Si no encaja en este momento, también te avisamos — no dejamos solicitudes sin respuesta.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">Tu canal queda listo al instante</div>
+          <p class="step-desc">Al aprobar, el sistema crea tu página automáticamente en <strong>corillo.live/{tu-handle}</strong> y te enviamos tu stream key. Configuras OBS o Meld Studio con esa key y ya puedes transmitir. El tiempo total desde aprobación hasta primer stream es de minutos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="crl-divider" style="margin:0">
+
+<!-- FORMULARIO -->
+<section class="section" id="aplicar" style="border-bottom:none">
+  <div class="wrap">
+    <div class="contact-box" id="formWrap">
+      <div class="contact-title">APLICA AHORA</div>
+      <p class="contact-sub">Respondemos a todas las solicitudes en menos de 24 horas.</p>
+
+      <form id="joinForm" style="text-align:left;margin-top:20px" autocomplete="off">
+        <input id="f-hp" type="text" name="website" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
+        <div class="form-grid">
+          <div class="field">
+            <label class="crl-label" for="f-handle">Handle del canal *</label>
+            <input id="f-handle" class="input" type="text" placeholder="ej: kamikazepr" maxlength="24" required autocomplete="off" spellcheck="false" />
+            <span class="crl-hint">Solo: a-z, 0-9, _ · 3–24 caracteres</span>
+          </div>
+          <div class="field">
+            <label class="crl-label" for="f-nombre">Tu nombre *</label>
+            <input id="f-nombre" class="input" type="text" placeholder="Como quieres que te llamen" maxlength="60" required />
+          </div>
+          <div class="field field-full">
+            <label class="crl-label" for="f-email">Email *</label>
+            <input id="f-email" class="input" type="email" placeholder="tu@email.com" maxlength="120" required />
+            <span class="crl-hint">Solo para contactarte — no se muestra públicamente</span>
+          </div>
+          <div class="field field-full">
+            <label class="crl-label" for="f-contenido">Tipo de contenido *</label>
+            <input id="f-contenido" class="input" type="text" placeholder="ej: Gaming FPS, Just chatting, Música en vivo..." maxlength="120" required />
+          </div>
+          <div class="field">
+            <label class="crl-label" for="f-plataforma">¿Dónde transmites ahora? <span style="opacity:.45">(opcional)</span></label>
+            <input id="f-plataforma" class="input" type="text" placeholder="ej: Twitch, YouTube, ninguno" maxlength="60" />
+          </div>
+          <div class="field">
+            <label class="crl-label" for="f-mensaje">Algo más <span style="opacity:.45">(opcional)</span></label>
+            <textarea id="f-mensaje" rows="3" placeholder="Por qué quieres unirte, qué transmites, etc." maxlength="300"></textarea>
+          </div>
+        </div>
+        <div class="form-err" id="formErr"></div>
+        <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;margin-top:16px;padding:12px 20px">
+          <i class="fa-solid fa-paper-plane"></i> Enviar solicitud
+        </button>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="check">✓</div>
+        <div class="contact-title" style="font-size:clamp(1.2rem,3vw,1.8rem)">¡SOLICITUD ENVIADA!</div>
+        <p class="contact-sub" style="max-width:360px;margin:0 auto 20px">
+          Recibimos tu solicitud. Te vamos a contactar al email que pusiste en menos de 24 horas.
+        </p>
+        <div class="success-pill">
+          <i class="fa-solid fa-envelope" style="font-size:.85rem"></i>
+          Revisa tu bandeja de entrada
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="crl-site-footer">
+  <div class="crl-foot-inner">
+    <div class="crl-foot-left">
+      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;opacity:.7">
+        <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
+      </svg>
+      <div class="crl-foot-info">Puerto Rico<br>Plataforma independiente</div>
+    </div>
+    <div class="crl-foot-links">
+      <a href="/multiplayer/">Multiplayer</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="/streamers/">Streamers</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="/join/">Crear Canal</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="/que-es-corillo/">Sobre Corillo</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="/configuracion/">Config OBS</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="/legal/">Términos</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="/dmca/">DMCA</a>
+      <span class="crl-foot-sep">·</span>
+      <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const saved = localStorage.getItem('corillo-theme') || 'dark';
+  root.setAttribute('data-theme', saved);
+  btn?.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('corillo-theme', next);
+  });
+})();
+
+// ── JOIN FORM ──
+const JOIN_URL = '/chat-api/join';
+const RESERVED_H = new Set([
+  'join','assets','mediamtx-api','live','api','static','admin','robots',
+  'sitemap','favicon','index','stream','dual','multiplayer','configuracion',
+  'roadmap','dmca','legal','streamer-pro','player','katatonia','tea',
+  'mira_sanganooo','404','elbala','marcos','pataecabra','streamerpro',
+  'radblaster','elhermanoquiles','xxdur3xx','kamikazepr',
+]);
+
+function sanitizeH(v){ return (v||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,''); }
+function validateH(h){
+  if (!h)            return 'Escribe un handle.';
+  if (h.length < 3)  return 'Mínimo 3 caracteres.';
+  if (h.length > 24) return 'Máximo 24 caracteres.';
+  if (/__/.test(h))  return 'Evita guiones bajos dobles.';
+  if (RESERVED_H.has(h)) return 'Este handle está reservado.';
+  return '';
+}
+
+const fHandle    = document.getElementById('f-handle');
+const fNombre    = document.getElementById('f-nombre');
+const fContenido = document.getElementById('f-contenido');
+const fPlat      = document.getElementById('f-plataforma');
+const fMensaje   = document.getElementById('f-mensaje');
+const formErr    = document.getElementById('formErr');
+const submitBtn  = document.getElementById('submitBtn');
+const joinForm   = document.getElementById('joinForm');
+const formSuccess = document.getElementById('formSuccess');
+
+fHandle?.addEventListener('input', e => {
+  const s = sanitizeH(e.target.value);
+  if (s !== e.target.value) e.target.value = s;
+});
+
+function showErr(msg){ formErr.textContent = msg; formErr.style.display = msg ? 'block' : 'none'; }
+
+joinForm?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const handle = sanitizeH(fHandle.value);
+  fHandle.value = handle;
+  const hErr = validateH(handle);
+  if (hErr) { showErr(hErr); fHandle.focus(); return; }
+  if (!fNombre.value.trim()) { showErr('Escribe tu nombre.'); fNombre.focus(); return; }
+  const fEmail = document.getElementById('f-email');
+  if (!fEmail.value.trim()) { showErr('Escribe tu email.'); fEmail.focus(); return; }
+  if (!fContenido.value.trim()) { showErr('Describe tu tipo de contenido.'); fContenido.focus(); return; }
+  showErr('');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+  try {
+    const res = await fetch(JOIN_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        handle,
+        nombre:    fNombre.value.trim(),
+        email:     document.getElementById('f-email').value.trim(),
+        contenido: fContenido.value.trim(),
+        plataforma: fPlat.value.trim(),
+        mensaje:   fMensaje.value.trim(),
+        hp:        document.getElementById('f-hp').value,
+      }),
+    });
+    if (!res.ok) {
+      const d = await res.json().catch(()=>({}));
+      throw new Error(d.detail || 'Error al enviar.');
+    }
+    joinForm.style.display = 'none';
+    formSuccess.style.display = 'block';
+    formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } catch(err) {
+    showErr(err.message || 'No se pudo enviar. Intenta de nuevo.');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar solicitud';
+  }
+});
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const text = document.getElementById(btn.dataset.target)?.textContent?.trim();
+    if (!text || text === '—') return;
+    try {
+      await navigator.clipboard.writeText(text);
+      const orig = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(() => btn.textContent = orig, 1200);
+    } catch { alert('Copia manualmente: ' + text); }
+  });
+});
+</script>
+</body>
+</html>
+
+
+
+

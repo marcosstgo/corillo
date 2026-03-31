@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 90">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00FF88" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#00FF88" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- BG -->
+  <rect width="320" height="90" rx="8" fill="#05050A"/>
+
+  <!-- Icon mark: terminal box -->
+  <rect x="10" y="10" width="70" height="70" rx="6" fill="#0A0A12" stroke="#00FF88" stroke-width="1" stroke-opacity="0.3"/>
+  <!-- glow -->
+  <circle cx="45" cy="45" r="35" fill="url(#glow)"/>
+
+  <!-- ">_" terminal prompt -->
+  <text x="14" y="53" font-family="Consolas, monospace" font-size="32" font-weight="bold" fill="#00FF88">&#62;</text>
+  <text x="40" y="53" font-family="Consolas, monospace" font-size="32" font-weight="bold" fill="#00DCFF">_</text>
+
+  <!-- Divider -->
+  <line x1="92" y1="15" x2="92" y2="75" stroke="#1A2A1A" stroke-width="1"/>
+
+  <!-- // prefix -->
+  <text x="104" y="28" font-family="Consolas, monospace" font-size="11" fill="#00FF88" opacity="0.7">//</text>
+
+  <!-- NAT CHECK -->
+  <text x="122" y="29" font-family="Consolas, monospace" font-size="11" fill="#444" letter-spacing="1">NAT CHECK</text>
+  <text x="104" y="56" font-family="Consolas, monospace" font-size="28" font-weight="bold" fill="#E8E8E8" letter-spacing="2">NAT CHECK</text>
+
+  <!-- Subtitle -->
+  <text x="104" y="74" font-family="Consolas, monospace" font-size="11" fill="#00DCFF" letter-spacing="3">NETWORK DIAGNOSTICS</text>
+</svg>

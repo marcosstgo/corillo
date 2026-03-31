@@ -1,0 +1,100 @@
+/* CORILLO — shared design tokens and base styles
+   Loaded on every page before the page-specific <style> block. */
+
+/* ── Dark-mode design tokens (defaults) ── */
+:root{
+  --ink:#030a0e; --surface:#071118; --panel:#0d1c28;
+  --border:rgba(0,191,255,.08); --border-h:rgba(0,191,255,.2);
+  --white:#e8f6ff; --muted:#3a6070; --accent:#00bfff; --live:#e8c84a; --confirm:#00ff9d; --hot:#CE1126;
+  --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
+
+  /* ── Type scale ── */
+  --text-2xs: .7rem;   /* badges mínimos, stat labels */
+  --text-xs:  .75rem;  /* tags, mono labels, captions */
+  --text-sm:  .85rem;  /* meta, descripciones secundarias */
+  --text-base: 1rem;   /* body */
+  --text-lg:  1.1rem;  /* subtítulos, énfasis */
+}
+
+/* ── Light-mode token overrides ── */
+[data-theme="light"]{
+  --ink:#eef7fb; --surface:#dceef5; --panel:#cce4ef;
+  --border:rgba(0,0,0,.1); --border-h:rgba(0,0,0,.2);
+  --white:#051015; --muted:#3a6070; --accent:#0088bb; --live:#c9920a; --confirm:#00aa6e; --hot:#CE1126;
+}
+[data-theme="light"] body{background:var(--ink);color:var(--white)}
+[data-theme="light"] body::after{opacity:.3}
+[data-theme="light"] .btn{color:var(--white);border-color:rgba(0,0,0,.12)}
+[data-theme="light"] .btn:hover{border-color:rgba(0,0,0,.25);background:rgba(0,0,0,.05)}
+[data-theme="light"] .btn.primary{background:var(--accent);color:#eef7fb;border-color:transparent}
+
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid rgba(0,191,255,.7);outline-offset:3px;border-radius:6px}
+
+
+/* ── Logo animations ── */
+/* Yellow ring: small gap orbiting clockwise (radar sweep) */
+#navLogo circle:nth-of-type(3){
+  stroke-dasharray:113 13;
+  animation:logo-ring-orbit 6s linear infinite;
+}
+@keyframes logo-ring-orbit{to{stroke-dashoffset:-126}}
+
+/* Red dot: sonar ping — expands and fades */
+#navLogo circle:nth-of-type(5){
+  transform-box:fill-box;transform-origin:center;
+  animation:logo-dot-ping 3s ease-out infinite;
+}
+@keyframes logo-dot-ping{
+  0%  {transform:scale(1);opacity:1}
+  55% {transform:scale(2.6);opacity:0}
+  56% {transform:scale(1);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+@media(prefers-reduced-motion:reduce){
+  #navLogo circle:nth-of-type(3){animation:none;stroke-dasharray:none}
+  #navLogo circle:nth-of-type(5){animation:none}
+}
+
+/* ── Live indicator pulse ── */
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ── Dark/light theme toggle button ── */
+.theme-btn{
+  width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+  background:transparent;color:var(--white);cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.75rem;transition:.2s;flex-shrink:0;
+}
+.theme-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,.06)}
+
+/* ── Software nav dropdown ── */
+.nav-dropdown{position:relative}
+.nav-dropdown .dropdown-menu{
+  position:absolute;top:100%;left:50%;
+  transform:translateX(-50%);
+  padding-top:8px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .15s,visibility .15s;
+  z-index:300;
+}
+.nav-dropdown .dropdown-menu-inner{
+  background:#0d0d14;border:1px solid var(--border);border-radius:10px;
+  padding:6px;min-width:210px;
+}
+.nav-dropdown:hover .dropdown-menu{
+  opacity:1;visibility:visible;pointer-events:auto;
+}
+.dropdown-menu a{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 14px;border-radius:7px;
+  font-family:var(--mono);font-size: var(--text-xs);letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.65);transition:.15s;white-space:nowrap;
+}
+.dropdown-menu a:hover{background:rgba(255,255,255,.07);color:var(--white)}
+.dropdown-menu a i{width:14px;text-align:center;font-size: var(--text-base);flex-shrink:0}
+[data-theme="light"] .nav-dropdown .dropdown-menu{background:#e8e6df;border-color:rgba(0,0,0,.12)}
+[data-theme="light"] .dropdown-menu a:hover{background:rgba(0,0,0,.07)}

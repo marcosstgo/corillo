@@ -1,0 +1,37 @@
+---
+import Logo from './Logo.astro';
+
+interface Props {
+  info?: string;   // two lines of text under the logo
+  links?: Array<{ href: string; label: string }>;
+}
+
+const {
+  info = 'Puerto Rico<br>Plataforma independiente',
+  links = [
+    { href: '/roadmap/', label: 'Roadmap' },
+    { href: '/streamers/', label: 'Streamers' },
+    { href: '/join/', label: 'Crear Canal' },
+    { href: '/que-es-corillo/', label: 'Sobre Corillo' },
+    { href: '/faq/', label: 'FAQ' },
+    { href: '/legal/', label: 'Términos' },
+    { href: '/dmca/', label: 'DMCA' },
+  ],
+} = Astro.props;
+---
+<footer class="crl-site-footer">
+  <div class="crl-foot-inner">
+    <div class="crl-foot-left">
+      <Logo gid="foot-grad" cls="crl-logo-foot" />
+      <div class="crl-foot-info" set:html={info}></div>
+    </div>
+    <div class="crl-foot-links">
+      {links.map((link, i) => (
+        <>
+          {i > 0 && <span class="crl-foot-sep">·</span>}
+          <a href={link.href}>{link.label}</a>
+        </>
+      ))}
+    </div>
+  </div>
+</footer>
