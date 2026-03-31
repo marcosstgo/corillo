@@ -39,11 +39,7 @@
     .news-pr-flag svg{width:68px;height:auto;border-radius:8px;box-shadow:0 10px 24px rgba(0,0,0,.16)}
     .news-pr-flag span{font-size:var(--crl-sm);color:var(--crl-muted);max-width:30ch;text-align:left;line-height:1.5}
     [data-theme="light"] .news-pr-flag{background:rgba(0,0,0,.025)}
-    .news-feature{position:relative;overflow:hidden;padding:28px;border-radius:28px;border:1px solid rgba(0,191,255,.18);background:
-      radial-gradient(circle at top left, rgba(0,191,255,.18), transparent 34%),
-      linear-gradient(160deg, rgba(12,27,38,.96), rgba(7,17,24,.88));
-      box-shadow:0 24px 60px rgba(0,0,0,.24)}
-    .news-feature::after{content:"";position:absolute;inset:auto -80px -90px auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle, rgba(0,255,157,.12), transparent 70%);pointer-events:none}
+    .news-feature{padding:28px;border-radius:28px}
     .news-feature-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
     .news-date{font-family:var(--crl-mono);font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:var(--crl-muted)}
     .news-feature-title{font-family:var(--crl-display);font-size:clamp(2.5rem,5vw,4.7rem);line-height:.92;letter-spacing:2px;margin:0 0 14px;max-width:12ch}
@@ -76,7 +72,6 @@
     @media(max-width:920px){.news-mini{grid-template-columns:1fr}}
     .news-mini-card{padding:20px;border-radius:22px}
     .news-mini-card p{margin:10px 0 0;color:var(--crl-muted);line-height:1.7}
-    [data-theme="light"] .news-feature{background:radial-gradient(circle at top left, rgba(0,191,255,.12), transparent 34%), linear-gradient(160deg, rgba(255,255,255,.96), rgba(245,250,252,.96));box-shadow:0 20px 44px rgba(7,17,24,.08)}
     [data-theme="light"] .news-feature-copy,[data-theme="light"] .news-feature-note{color:rgba(0,0,0,.62)}
     [data-theme="light"] .news-pulse{background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(244,248,250,.96))}
     [data-theme="light"] .news-pulse-item{background:rgba(0,0,0,.025);border-color:rgba(7,17,24,.08)}
@@ -115,7 +110,7 @@
 
 <div class="news-shell">
   <section class="news-hero-grid">
-    <article class="news-feature">
+    <article class="news-feature card-glass">
       <div class="news-feature-top">
         <span class="badge badge-accent"><i class="fa-solid fa-bolt"></i> Nuevo</span>
         <span class="news-date">30 marzo 2026</span>

@@ -198,6 +198,32 @@ button { font: inherit; cursor: pointer; }
 .crl-card-hot,    .card-hot    { border-color: rgba(206,17,38,.2);    background: linear-gradient(160deg, rgba(206,17,38,.05),   rgba(7,17,24,.7)); }
 .crl-card-dim,    .card-dim    { border-color: rgba(255,255,255,.07); background: linear-gradient(160deg, rgba(255,255,255,.02), rgba(7,17,24,.6)); }
 
+/* Glass card — cyan glow top-left, green glow bottom-right */
+.crl-card-glass, .card-glass {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(0,191,255,.18);
+  background:
+    radial-gradient(circle at top left, rgba(0,191,255,.18), transparent 34%),
+    linear-gradient(160deg, rgba(12,27,38,.96), rgba(7,17,24,.88));
+  box-shadow: 0 24px 60px rgba(0,0,0,.24);
+}
+.crl-card-glass::after, .card-glass::after {
+  content: "";
+  position: absolute;
+  inset: auto -80px -90px auto;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,255,157,.12), transparent 70%);
+  pointer-events: none;
+}
+[data-theme="light"] .crl-card-glass, [data-theme="light"] .card-glass {
+  background:
+    radial-gradient(circle at top left, rgba(0,191,255,.12), transparent 34%),
+    linear-gradient(160deg, rgba(255,255,255,.96), rgba(245,250,252,.96));
+  box-shadow: 0 20px 44px rgba(7,17,24,.08);
+}
+
 [data-theme="light"] .crl-card,        [data-theme="light"] .card        { background: rgba(255,255,255,.7);  border-color: rgba(0,0,0,.1); }
 [data-theme="light"] .crl-card-accent, [data-theme="light"] .card-accent { background: rgba(0,191,255,.05);   border-color: rgba(0,191,255,.2); }
 [data-theme="light"] .crl-card-live,   [data-theme="light"] .card-live   { background: rgba(232,200,74,.06);  border-color: rgba(200,150,0,.2); }
