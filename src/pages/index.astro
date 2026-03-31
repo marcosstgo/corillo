@@ -121,6 +121,7 @@
     .live-pip{width:6px;height:6px;border-radius:50%;background:var(--crl-live);flex-shrink:0;box-shadow:0 0 8px rgba(232,200,74,.7)}
     .aside-divider{border:none;border-top:1px solid var(--crl-border);margin:12px 0}
     .aside-footer{margin-top:auto;padding:16px 20px;font-family:var(--crl-mono);font-size:9px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;line-height:1.8}
+    .aside-mobile-icons,.aside-mobile-sep{display:none}
 
     /* ── FEATURED ── */
     main{padding:0;overflow:hidden}
@@ -299,10 +300,14 @@
       .aside-nav,.aside-label,.aside-footer,.sidebar-show-all{display:none}
       aside .ch-info,aside .ch-viewers,aside .live-pip{display:none}
       #sidebarDivider{display:none!important}
-      .aside-divider{margin:4px 0}
+      .aside-divider{display:none}
       aside .channel-row{padding:5px;justify-content:center}
       aside .ch-ava{width:32px;height:32px;font-size:13px;flex-shrink:0}
       aside .channel-row:not(.is-live) .ch-ava{opacity:.28}
+      .aside-mobile-icons{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0}
+      .aside-mobile-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:rgba(255,255,255,.38);font-size:1.05rem;transition:.15s;text-decoration:none}
+      .aside-mobile-icon:hover{color:var(--crl-white)}
+      .aside-mobile-sep{border:none;border-top:1px solid var(--crl-border);margin:6px 8px}
       .nav-menu-btn{display:flex}
       .featured-wrap{aspect-ratio:16/9}
     }
@@ -379,6 +384,13 @@
 
 <div class="layout">
   <aside>
+    <div class="aside-mobile-icons">
+      <a href="/reels/" class="aside-mobile-icon" title="Reels"><i class="fa-solid fa-scissors"></i></a>
+      <a href="/vods/" class="aside-mobile-icon" title="VODs"><i class="fa-solid fa-play"></i></a>
+      <a href="/noticias/" class="aside-mobile-icon" title="Noticias"><i class="fa-solid fa-newspaper"></i></a>
+      <a href="/perfil/" class="aside-mobile-icon" title="Mi Perfil"><i class="fa-solid fa-user"></i></a>
+    </div>
+    <hr class="aside-mobile-sep">
     <div class="aside-nav">
       <a href="/reels/" class="sidebar-nav-link"><i class="fa-solid fa-scissors"></i> Reels</a>
       <a href="/multiplayer/" class="sidebar-nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
