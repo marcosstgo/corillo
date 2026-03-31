@@ -1119,7 +1119,7 @@ function attachPreviewListeners(container: Element) {
   container.querySelectorAll('.stream-card').forEach(card => {
     const vid = card.querySelector('.stream-thumb-preview') as HTMLVideoElement | null;
     if (!vid) return;
-    card.addEventListener('mouseenter', () => { vid.play().catch(()=>{}); });
+    card.addEventListener('mouseenter', () => { vid.play().catch(() => { vid.style.display = 'none'; }); });
     card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
   });
 }
@@ -1151,9 +1151,28 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
     return;
   }
 
+  const liveKeys2 = live.map((s: any) => s.key).sort().join(',');
+  if (_gridState === 'live' && liveKeys2 === (grid.dataset.liveKeys || '')) {
+    // Same live channels — only update viewer counts, skip full re-render
+    live.forEach((s: any) => {
+      const v = getViewers(paths, s.key);
+      const card = grid.querySelector(`[data-channel="${s.key}"]`);
+      if (card) {
+        const vEl = card.querySelector('.stream-viewers');
+        if (v > 0) {
+          if (vEl) vEl.textContent = `${v}`;
+          else card.querySelector('.stream-thumb')?.insertAdjacentHTML('beforeend',
+            `<div class="stream-viewers" data-v><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>`);
+        } else if (vEl) vEl.remove();
+      }
+    });
+    _gridState = newState;
+    return;
+  }
+
   const liveHtml = live.map((s: any) => {
     const v = getViewers(paths, s.key);
-    return `<a href="/${s.key}/" class="stream-card">
+    return `<a href="/${s.key}/" class="stream-card" data-channel="${s.key}">
       <div class="stream-thumb">
         <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
         <img src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" alt="" class="stream-thumb-img" onerror="this.style.display='none'">
@@ -1171,6 +1190,7 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
   const liveKeys = new Set(live.map((s: any) => s.key));
   const offlineVods = _recentVods.filter(v => !liveKeys.has(v.channel));
 
+  grid.dataset.liveKeys = liveKeys2;
   grid.innerHTML = liveHtml + (offlineVods.length ? `
     <div class="vods-row-header">
       <span>Últimas transmisiones</span>
