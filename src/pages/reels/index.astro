@@ -11,25 +11,25 @@ import FullscreenLayout from '../../layouts/FullscreenLayout.astro';
       /* ── Nav ── */
       .reel-nav{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--crl-gap-md);background:linear-gradient(to bottom,rgba(3,10,14,.95),transparent);z-index:100}
       .reel-nav-logo{display:flex;align-items:center;text-decoration:none}
-      .reel-nav-tabs{display:flex;gap:var(--crl-gap-lg);font-family:var(--crl-mono);font-size:var(--crl-text-2xs);letter-spacing:1.5px;text-transform:uppercase}
+      .reel-nav-tabs{display:flex;gap:var(--crl-gap-lg);font-family:var(--crl-mono);font-size:var(--crl-2xs);letter-spacing:1.5px;text-transform:uppercase}
       .reel-nav-tab{color:rgba(255,255,255,.5);cursor:pointer;transition:color .2s;text-decoration:none}
       .reel-nav-tab.active{color:var(--crl-white);border-bottom:2px solid var(--crl-accent);padding-bottom:2px}
 
       /* ── Filter bar ── */
       .filter-bar{position:fixed;top:52px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:8px 16px;z-index:90;overflow-x:auto;scrollbar-width:none;max-width:400px;width:100%}
       .filter-bar::-webkit-scrollbar{display:none}
-      .filter-chip{flex-shrink:0;font-family:var(--crl-mono);font-size:var(--crl-text-2xs);letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:var(--crl-radius-full);border:1px solid rgba(255,255,255,.15);background:rgba(3,10,14,.7);backdrop-filter:blur(8px);color:var(--crl-muted);cursor:pointer;transition:.15s}
+      .filter-chip{flex-shrink:0;font-family:var(--crl-mono);font-size:var(--crl-2xs);letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:var(--crl-r-full);border:1px solid rgba(255,255,255,.15);background:rgba(3,10,14,.7);backdrop-filter:blur(8px);color:var(--crl-muted);cursor:pointer;transition:.15s}
       .filter-chip.active{background:var(--crl-accent);color:#000;border-color:var(--crl-accent)}
       .filter-chip:hover:not(.active){color:var(--crl-white);border-color:rgba(255,255,255,.3)}
 
       /* ── States ── */
-      .state-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--crl-muted);font-family:var(--crl-mono);font-size:var(--crl-text-xs);letter-spacing:1px;text-transform:uppercase;z-index:50}
+      .state-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--crl-muted);font-family:var(--crl-mono);font-size:var(--crl-xs);letter-spacing:1px;text-transform:uppercase;z-index:50}
       .state-screen i{font-size:2rem;opacity:.3}
       .spinner-ring{width:28px;height:28px;border:3px solid rgba(0,191,255,.2);border-top-color:var(--crl-accent);border-radius:50%;animation:spin .7s linear infinite}
       @keyframes spin{to{transform:rotate(360deg)}}
 
       /* ── Scroll hint ── */
-      .scroll-hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);font-family:var(--crl-mono);font-size:var(--crl-text-2xs);letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted);display:flex;flex-direction:column;align-items:center;gap:var(--crl-gap-xs);animation:fadeHint 3s ease forwards;z-index:200;pointer-events:none}
+      .scroll-hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);font-family:var(--crl-mono);font-size:var(--crl-2xs);letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted);display:flex;flex-direction:column;align-items:center;gap:var(--crl-gap-xs);animation:fadeHint 3s ease forwards;z-index:200;pointer-events:none}
       @keyframes fadeHint{0%,70%{opacity:.6}100%{opacity:0}}
 
       /* ── Unmute btn ── */
