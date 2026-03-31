@@ -12,6 +12,7 @@ interface Props {
   // Nav
   navRightHref?: string;
   navRightIcon?: string;
+  navLabel?: string;
   // Footer overrides
   footerInfo?: string;
   footerLinks?: Array<{ href: string; label: string }>;
@@ -26,6 +27,7 @@ const {
   ogDescription,
   navRightHref,
   navRightIcon,
+  navLabel,
   footerInfo,
   footerLinks,
 } = Astro.props;
@@ -66,7 +68,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
 </head>
 <body class="crl-body">
 
-<Nav rightHref={navRightHref} rightIcon={navRightIcon} />
+<Nav rightHref={navRightHref} rightIcon={navRightIcon} label={navLabel} />
 
 <slot />
 

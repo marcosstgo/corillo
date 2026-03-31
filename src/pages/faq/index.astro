@@ -1,0 +1,253 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const footerLinks = [
+  { href: '/multiplayer/', label: 'Multiplayer' },
+  { href: '/streamers/', label: 'Streamers' },
+  { href: '/join/', label: 'Crear Canal' },
+  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
+  { href: '/configuracion/', label: 'Config OBS' },
+  { href: '/legal/', label: 'Términos' },
+  { href: '/dmca/', label: 'DMCA' },
+  { href: 'https://status.corillo.live', label: 'Status' },
+];
+---
+<BaseLayout
+  title="CORILLO — Preguntas Frecuentes"
+  description="Respuestas a las preguntas más comunes sobre hacer stream en CORILLO — configuración, problemas de conexión, bitrate y más."
+  canonical="https://corillo.live/faq/"
+  navLabel="FAQ"
+  footerLinks={footerLinks}
+>
+  <fragment slot="head">
+    <style>
+      .wrap{max-width:780px;margin:0 auto;padding:0 20px}
+      @media(max-width:600px){.wrap{padding:0 14px}}
+      .hero{padding:56px 0 40px;border-bottom:1px solid var(--crl-border)}
+      .eyebrow{font-family:var(--crl-mono);font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--crl-accent);margin-bottom:12px}
+      .hero-title{font-family:var(--crl-display);font-size:clamp(2.4rem,6vw,3.6rem);letter-spacing:3px;line-height:1;margin-bottom:14px}
+      .hero-desc{font-size:.95rem;line-height:1.7;color:rgba(242,239,233,.55);max-width:54ch}
+      [data-theme="light"] .hero-desc{color:rgba(18,18,15,.55)}
+      .cat{padding:40px 0;border-bottom:1px solid var(--crl-border)}
+      .cat:last-of-type{border-bottom:none}
+      .cat-label{font-family:var(--crl-mono);font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--crl-accent);margin-bottom:8px}
+      .cat-title{font-family:var(--crl-display);font-size:clamp(1.2rem,3vw,1.6rem);letter-spacing:2px;margin-bottom:24px}
+      .faq-list{display:flex;flex-direction:column;gap:0}
+      details{border-bottom:1px solid var(--crl-border)}
+      details:first-child{border-top:1px solid var(--crl-border)}
+      summary{
+        list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;
+        padding:18px 0;cursor:pointer;
+        font-family:var(--crl-mono);font-size:.92rem;letter-spacing:1px;text-transform:uppercase;
+        color:rgba(242,239,233,.85);transition:color .18s;user-select:none;
+      }
+      summary::-webkit-details-marker{display:none}
+      summary:hover{color:var(--crl-white)}
+      [data-theme="light"] summary{color:rgba(18,18,15,.82)}
+      [data-theme="light"] summary:hover{color:#12120f}
+      [data-theme="light"] details[open] summary{color:#12120f}
+      summary .icon{
+        flex-shrink:0;width:22px;height:22px;border-radius:50%;
+        border:1px solid var(--crl-border);display:flex;align-items:center;justify-content:center;
+        font-size:.78rem;color:var(--crl-muted);transition:.2s;
+      }
+      details[open] summary .icon{border-color:var(--crl-accent);color:var(--crl-accent);transform:rotate(45deg)}
+      details[open] summary{color:var(--crl-white)}
+      .answer{padding:0 0 20px;font-size:.9rem;line-height:1.75;color:rgba(242,239,233,.6)}
+      .answer strong{color:var(--crl-white)}
+      .answer code{
+        font-family:var(--crl-mono);font-size:.75rem;
+        background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+        border-radius:4px;padding:2px 6px;color:rgba(255,255,255,.8);
+      }
+      [data-theme="light"] .answer code{background:rgba(0,0,0,.05);border-color:rgba(0,0,0,.08);color:rgba(18,18,15,.82)}
+      .answer a{color:var(--crl-accent);text-decoration:none}
+      .answer a:hover{text-decoration:underline}
+      .answer ul{margin:10px 0 0 18px;display:flex;flex-direction:column;gap:6px}
+      .answer .tip{
+        margin-top:12px;padding:10px 14px;border-radius:8px;
+        border:1px solid rgba(232,200,74,.15);background:rgba(232,200,74,.04);
+        font-size:.92rem;color:rgba(232,200,74,.8);
+      }
+      .answer .warn{
+        margin-top:12px;padding:10px 14px;border-radius:8px;
+        border:1px dashed rgba(223,48,48,.25);background:rgba(223,48,48,.04);
+        font-size:.92rem;color:rgba(255,120,120,.8);
+      }
+      [data-theme="light"] .answer{color:rgba(18,18,15,.6)}
+      [data-theme="light"] .answer strong{color:#12120f}
+    </style>
+  </fragment>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Soporte · Documentación</div>
+    <h1 class="hero-title">PREGUNTAS FRECUENTES</h1>
+    <p class="hero-desc">Respuestas a los problemas más comunes al transmitir en CORILLO.</p>
+  </div>
+</section>
+
+<section class="cat">
+  <div class="wrap">
+    <div class="cat-label">Primeros pasos</div>
+    <h2 class="cat-title">CONFIGURACIÓN BÁSICA</h2>
+    <div class="faq-list">
+
+      <details>
+        <summary>¿Cuál es el servidor RTMP? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          <strong>Servidor:</strong> <code>rtmp://corillo.live/live</code><br><br>
+          <strong>Stream Key:</strong> tu handle de canal (ej: <code>katatonia</code>, <code>kamikazepr</code>)<br><br>
+          En OBS: <strong>Configuración → Emisión → Tipo: Stream personalizado</strong><br>
+          En Meld Studio: <strong>Settings → Stream Settings</strong>
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Qué bitrate debo usar? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Depende de tu conexión de subida:<br><br>
+          <ul>
+            <li><strong>Puerto Rico / conexión rápida:</strong> 4000–5000 kbps</li>
+            <li><strong>Fuera de Puerto Rico:</strong> 2500–3500 kbps</li>
+            <li><strong>Conexión lenta o inestable:</strong> 2000–2500 kbps</li>
+          </ul>
+          <div class="tip"><i class="fa-solid fa-lightbulb"></i> Regla general: no uses más del 70% de tu velocidad de subida.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Qué configuración de keyframe debo usar? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Siempre usa <strong>Keyframe Interval = 2</strong> (fijo, no automático).<br><br>
+          Esto es crítico para que el HLS funcione correctamente. Un keyframe interval variable causa segmentos irregulares y cortes en el stream.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Desde qué apps puedo transmitir? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Cualquier encoder que soporte RTMP:<br><br>
+          <ul>
+            <li><strong>Meld Studio</strong> — recomendado</li>
+            <li><strong>OBS Studio</strong> — gratis, más opciones avanzadas</li>
+            <li><strong>Streamlabs</strong></li>
+            <li><strong>XSplit</strong></li>
+            <li>Cualquier encoder con salida RTMP personalizada</li>
+          </ul>
+          <a href="/configuracion/">Ver guía completa de OBS y Meld Studio →</a>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<section class="cat">
+  <div class="wrap">
+    <div class="cat-label">Problemas comunes</div>
+    <h2 class="cat-title">EL STREAM SE CORTA</h2>
+    <div class="faq-list">
+
+      <details>
+        <summary>El stream se corta cada pocos minutos <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          El servidor recibe frames con timestamps desordenados y reinicia el muxer HLS. Causas más comunes:<br><br>
+          <ul>
+            <li>El encoder de GPU (Hardware Encoder) genera timestamps inconsistentes</li>
+            <li>Bitrate muy alto para la velocidad de subida disponible</li>
+            <li>Frames perdidos por CPU/GPU saturada</li>
+          </ul>
+          <strong>Solución:</strong>
+          <ul>
+            <li>Desactivar <strong>Hardware Encoder</strong> → usar x264 (software)</li>
+            <li>Bajar el bitrate a 3000 kbps</li>
+            <li>Keyframe interval → 2 fijo</li>
+            <li>Bajar a 30fps si transmites desde lejos del servidor</li>
+          </ul>
+        </div>
+      </details>
+
+      <details>
+        <summary>Transmito desde fuera de Puerto Rico y el stream es inestable <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          El servidor está en Puerto Rico. Más distancia = más latencia = más probabilidad de que los paquetes lleguen desordenados.<br><br>
+          <strong>Configuración recomendada para conexiones lejanas:</strong>
+          <ul>
+            <li>Desactivar <strong>Hardware Encoder</strong></li>
+            <li>Bitrate: <strong>2500–3000 kbps</strong></li>
+            <li>Frame rate: <strong>30fps</strong></li>
+            <li>Keyframe interval: <strong>2</strong></li>
+          </ul>
+          <div class="tip"><i class="fa-solid fa-lightbulb"></i> x264 (software encoder) maneja mejor las conexiones con alta latencia que los encoders de GPU.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Cómo desactivo el Hardware Encoder en Meld Studio <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          En Meld Studio ve a <strong>Settings → Stream Settings</strong> y desactiva el toggle <strong>"Hardware Encoder"</strong>.<br><br>
+          Al desactivarlo, Meld usa x264 (software) automáticamente — más estable para conexiones con latencia alta.
+          <div class="warn"><i class="fa-solid fa-triangle-exclamation"></i> El Hardware Encoder puede causar el error "DTS not monotonically increasing" que corta el stream cada pocos minutos.</div>
+        </div>
+      </details>
+
+      <details>
+        <summary>El stream se ve con retraso o buffering para los viewers <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          CORILLO usa HLS con low-latency mode. El retraso normal es de 3–8 segundos.<br><br>
+          Si hay buffering excesivo:
+          <ul>
+            <li>Bajar el bitrate — puede ser muy alto para la conexión del viewer</li>
+            <li>Verificar que el keyframe interval sea exactamente 2</li>
+            <li>Asegurarse de que el stream llegue estable al servidor (sin cortes)</li>
+          </ul>
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<section class="cat">
+  <div class="wrap">
+    <div class="cat-label">General</div>
+    <h2 class="cat-title">PREGUNTAS GENERALES</h2>
+    <div class="faq-list">
+
+      <details>
+        <summary>¿Cómo me uno a CORILLO? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Los canales son por invitación y aprobación manual. Llena el formulario en <a href="/join/">corillo.live/join</a> y el host revisa tu solicitud.<br><br>
+          El proceso toma menos de 24 horas.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Es gratis transmitir en CORILLO? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Sí, completamente gratis. CORILLO es una plataforma independiente sin costo para los streamers.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Puedo transmitir en CORILLO y Twitch al mismo tiempo? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          Sí. Puedes usar <strong>multistream</strong> en OBS o Meld Studio para transmitir a ambas plataformas simultáneamente.<br><br>
+          En OBS: instala el plugin <strong>obs-multi-rtmp</strong>.<br>
+          En Meld Studio: <strong>Settings → Outputs → Add Output</strong>.
+        </div>
+      </details>
+
+      <details>
+        <summary>¿Dónde puedo ver el guía completo de configuración? <span class="icon"><i class="fa-solid fa-plus"></i></span></summary>
+        <div class="answer">
+          <a href="/configuracion/">corillo.live/configuracion</a> — guía paso a paso para OBS Studio y Meld Studio.
+        </div>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+</BaseLayout>

@@ -939,6 +939,11 @@ button { font: inherit; cursor: pointer; }
 @media(max-width:600px) {
   .crl-nav-strip { padding: 12px 16px; }
 }
+.crl-nav-label {
+  font-family: var(--crl-mono); font-size: .75rem; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--crl-muted);
+  border-left: 1px solid var(--crl-border); padding-left: 10px;
+}
 
 .crl-container-narrow {
   max-width: 900px; margin: 0 auto; padding: 0 20px 60px;

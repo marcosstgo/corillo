@@ -4,15 +4,18 @@ import Logo from './Logo.astro';
 interface Props {
   rightHref?: string;
   rightIcon?: string;  // Font Awesome class, e.g. "fa-solid fa-house"
+  label?: string;      // optional tag shown next to the logo
 }
 const {
   rightHref = '/',
   rightIcon = 'fa-solid fa-house',
+  label,
 } = Astro.props;
 ---
 <div class="crl-nav-strip">
   <a class="crl-brand-link" href="/">
     <Logo gid="nav-grad" cls="crl-logo-nav" />
+    {label && <span class="crl-nav-label">{label}</span>}
   </a>
   <div class="crl-flex crl-items-center crl-gap-sm">
     <button class="theme-btn" id="themeBtn" title="Cambiar tema">
