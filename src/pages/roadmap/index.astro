@@ -1,61 +1,29 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>CORILLO — Roadmap del proyecto</title>
-  <meta name="description" content="Mira hacia dónde va CORILLO, qué ya funciona hoy y qué sigue en el roadmap del proyecto." />
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://corillo.live/roadmap/">
-  <meta property="og:title" content="CORILLO — Roadmap del proyecto">
-  <meta property="og:description" content="Mira hacia dónde va CORILLO, qué ya funciona hoy y qué sigue en el roadmap del proyecto.">
-  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
-  <meta property="og:locale" content="es_PR">
-  <meta property="og:site_name" content="CORILLO">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="CORILLO — Roadmap del proyecto">
-  <meta name="twitter:description" content="Mira hacia dónde va CORILLO, qué ya funciona hoy y qué sigue en el roadmap del proyecto.">
-  <meta name="twitter:image" content="https://corillo.live/assets/og-image.png">
-  <link rel="canonical" href="https://corillo.live/roadmap/">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/corillo.css">
-</head>
-<body class="crl-body">
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
-<!-- NAV -->
-<div class="crl-nav-strip">
-  <a class="crl-brand-link" href="/">
-    <svg class="crl-brand-logo crl-logo-nav" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><radialGradient id="ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-      <text class="crl-brand-word" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
-      <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
-      <circle class="crl-brand-ring-outer" cx="72" cy="42" r="34" stroke-width="9" fill="none"/>
-      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-      <text class="crl-brand-word" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
-    </svg>
-  </a>
-  <div class="crl-flex crl-items-center crl-gap-sm">
-    <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
-    <a class="btn btn-icon" href="/"><i class="fa-solid fa-house"></i></a>
-  </div>
-</div>
+const footerLinks = [
+  { href: '/multiplayer/', label: 'Multiplayer' },
+  { href: '/streamers/', label: 'Streamers' },
+  { href: '/join/', label: 'Crear Canal' },
+  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
+  { href: '/vods/', label: 'VODs' },
+  { href: '/legal/', label: 'Términos' },
+  { href: 'https://status.corillo.live', label: 'Status' },
+];
+---
+<BaseLayout
+  title="CORILLO — Roadmap del proyecto"
+  description="Mira hacia dónde va CORILLO, qué ya funciona hoy y qué sigue en el roadmap del proyecto."
+  canonical="https://corillo.live/roadmap/"
+  footerLinks={footerLinks}
+>
 
-<!-- HERO -->
 <div class="crl-hero">
   <div class="crl-hero-mark">
     <svg class="crl-brand-logo crl-logo-hero" viewBox="0 0 250 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><radialGradient id="hg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.25"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <defs><radialGradient id="rm-hg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.25"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
       <text class="crl-brand-word" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
-      <circle cx="72" cy="42" r="36" fill="url(#hg)"/>
+      <circle cx="72" cy="42" r="36" fill="url(#rm-hg)"/>
       <circle class="crl-brand-ring-outer" cx="72" cy="42" r="34" stroke-width="9" fill="none"/>
       <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
       <circle cx="72" cy="42" r="8" fill="#00bfff"/>
@@ -75,7 +43,6 @@
 
 <div class="crl-container-narrow">
 
-  <!-- LISTO -->
   <p class="crl-section-label">Listo</p>
 
   <div class="card crl-card-stack card-accent">
@@ -169,7 +136,6 @@
     </ul>
   </div>
 
-  <!-- CHULERÍAS -->
   <p class="crl-section-label">Diferenciadores</p>
 
   <div class="card crl-card-stack crl-card-cool">
@@ -192,7 +158,6 @@
     </ul>
   </div>
 
-  <!-- PRÓXIMO -->
   <p class="crl-section-label">Próximo</p>
 
   <div class="card crl-card-stack card-confirm">
@@ -211,7 +176,6 @@
     </ul>
   </div>
 
-  <!-- FUTURO -->
   <p class="crl-section-label">Futuro</p>
 
   <div class="card crl-card-stack card-dim">
@@ -226,7 +190,7 @@
       <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Raid — redirigir tu audiencia a otro canal al terminar</li>
       <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Co-streaming — cualquier combinación de canales en pantalla dividida</li>
       <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Notificaciones por Telegram — /sub katatonia desde el bot</li>
-      <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Clips compartibles — URL única tipo /clips/{id}</li>
+      <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Clips compartibles — URL única tipo /clips/&#123;id&#125;</li>
       <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Registro abierto al público — sin aprobación manual</li>
       <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Modelo de sostenibilidad — corillo pro</li>
       <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Categorías y tags por stream</li>
@@ -236,56 +200,4 @@
 
 </div>
 
-<footer class="crl-site-footer">
-  <div class="crl-foot-inner">
-    <div class="crl-foot-left">
-      <svg class="crl-brand-logo crl-logo-foot" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-        <text class="crl-brand-word" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
-        <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
-        <circle class="crl-brand-ring-outer" cx="72" cy="42" r="34" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-        <text class="crl-brand-word" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
-      </svg>
-      <div class="crl-foot-info">Puerto Rico<br>Plataforma independiente</div>
-    </div>
-    <div class="crl-foot-links">
-      <a href="/multiplayer/">Multiplayer</a>
-      <span class="crl-foot-sep">·</span>
-      <a href="/streamers/">Streamers</a>
-      <span class="crl-foot-sep">·</span>
-      <a href="/join/">Crear Canal</a>
-      <span class="crl-foot-sep">·</span>
-      <a href="/que-es-corillo/">Sobre Corillo</a>
-      <span class="crl-foot-sep">·</span>
-      <a href="/vods/">VODs</a>
-      <span class="crl-foot-sep">·</span>
-      <a href="/legal/">Términos</a>
-      <span class="crl-foot-sep">·</span>
-      <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
-    </div>
-  </div>
-</footer>
-
-<script>
-(function(){
-  const root = document.documentElement;
-  const btn  = document.getElementById('themeBtn');
-  const saved = localStorage.getItem('corillo-theme') || 'dark';
-  root.setAttribute('data-theme', saved);
-  if (btn) btn.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    localStorage.setItem('corillo-theme', next);
-  });
-})();
-</script>
-<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
-
-</body>
-</html>
-
-
-
+</BaseLayout>
