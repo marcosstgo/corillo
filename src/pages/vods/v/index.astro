@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const footerLinks = [
+  { href: '/multiplayer/', label: 'Multiplayer' },
+  { href: '/streamers/', label: 'Streamers' },
+  { href: '/join/', label: 'Crear Canal' },
+  { href: '/legal/', label: 'Términos' },
+  { href: 'https://status.corillo.live', label: 'Status' },
+];
+---
+<BaseLayout
+  title="VOD — CORILLO"
+  description="Transmisión grabada en CORILLO — plataforma independiente desde Puerto Rico."
+  canonical="https://corillo.live/vods/v/"
+  navLabel="VOD"
+  navRightHref="/vods/"
+  navRightIcon="fa-solid fa-film"
+  footerLinks={footerLinks}
+>
+  <fragment slot="head">
+    <meta name="theme-color" content="#030a0e" />
+    <script src="/assets/streamers.js"></script>
+    <style>
+      .player-wrap{background:#000;width:100%;aspect-ratio:16/9;max-height:70vh;display:flex;align-items:center;justify-content:center;position:relative}
+      .player-wrap video{width:100%;height:100%;display:block}
+
+      .meta-bar{max-width:900px;margin:0 auto;padding:20px 24px 0}
+      .meta-channel{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+      .meta-ava{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:16px;color:#030a0e}
+      .meta-name{font-family:var(--crl-display);font-size:1.5rem;letter-spacing:3px}
+      .meta-stats{display:flex;align-items:center;gap:20px;font-family:var(--crl-mono);font-size:11px;color:var(--crl-muted);letter-spacing:.5px;flex-wrap:wrap}
+      .meta-stats i{color:var(--crl-accent);font-size:.65rem}
+      .meta-divider{border:none;border-top:1px solid var(--crl-border);margin:16px 0}
+
+      .actions{max-width:900px;margin:0 auto;padding:0 24px 16px;display:flex;gap:10px;flex-wrap:wrap}
+      .action-btn{font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;border-radius:6px;border:1px solid var(--crl-border);background:transparent;color:var(--crl-muted);cursor:pointer;transition:.15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+      .action-btn:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
+      .action-btn.primary{border-color:rgba(0,191,255,.4);color:var(--crl-accent)}
+      .action-btn.primary:hover{background:rgba(0,191,255,.08)}
+
+      .unmute-btn{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--crl-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;border-radius:8px;border:1px solid rgba(0,191,255,.5);background:rgba(3,10,14,.85);color:var(--crl-accent);cursor:pointer;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);transition:.15s;white-space:nowrap}
+      .unmute-btn:hover{background:rgba(0,191,255,.1);border-color:var(--crl-accent)}
+      .unmute-btn.hidden{display:none}
+
+      .not-found{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px;text-align:center;padding:40px}
+      .not-found-icon{font-size:3rem;color:var(--crl-muted);margin-bottom:8px}
+      .not-found h2{font-family:var(--crl-display);font-size:2.5rem;letter-spacing:4px;color:rgba(232,246,255,.2)}
+      .not-found p{font-family:var(--crl-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--crl-muted)}
+    </style>
+  </fragment>
+
+<div id="content"></div>
+
+<script>
+const PB = 'https://pb.corillo.live';
+
+function fmtDuration(s: number) {
+  if (!s) return '—';
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = Math.floor(s % 60);
+  if (h > 0) return `${h}h ${m.toString().padStart(2,'0')}m`;
+  return `${m}:${ss.toString().padStart(2,'0')}`;
+}
+
+function fmtSize(bytes: number) {
+  if (!bytes) return '—';
+  if (bytes > 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
+  return (bytes / 1048576).toFixed(0) + ' MB';
+}
+
+function fmtDate(iso: string) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('es-PR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function streamerInfo(channel: string) {
+  const s = ((window as any).STREAMERS || []).find((x: any) => x.key === channel);
+  return s || { key: channel, name: channel.toUpperCase(), color: '#00bfff' };
+}
+
+function showNotFound() {
+  document.getElementById('content')!.innerHTML = `
+    <div class="not-found">
+      <div class="not-found-icon"><i class="fa-solid fa-film"></i></div>
+      <h2>VOD NO ENCONTRADO</h2>
+      <p>Este VOD no existe o fue eliminado</p>
+      <a href="/vods/" class="action-btn primary" style="margin-top:8px"><i class="fa-solid fa-arrow-left"></i> Ver todos los VODs</a>
+    </div>`;
+}
+
+async function init() {
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) { showNotFound(); return; }
+
+  let vod: any;
+  try {
+    const r = await fetch(`${PB}/api/collections/vods/records/${id}`);
+    if (!r.ok) { showNotFound(); return; }
+    vod = await r.json();
+  } catch { showNotFound(); return; }
+
+  const s = streamerInfo(vod.channel);
+  const colorStyle = s.color ? `background:${s.color}` : 'background:var(--crl-accent)';
+  const videoUrl   = `/vods/${vod.channel}/${vod.filename}`;
+  const posterAttr = vod.thumb ? `poster="${vod.thumb}"` : '';
+
+  document.title = `${s.name} — VOD — CORILLO`;
+
+  document.getElementById('content')!.innerHTML = `
+    <div class="player-wrap">
+      <video id="vodVideo" controls autoplay muted playsinline preload="metadata" src="${videoUrl}" ${posterAttr}></video>
+      <button class="unmute-btn" id="unmuteBtn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
+    </div>
+    <div class="meta-bar">
+      <div class="meta-channel">
+        <div class="meta-ava" style="${colorStyle}">${(s.name||'?')[0].toUpperCase()}</div>
+        <a href="/${vod.channel}/" class="meta-name" style="color:${s.color||'var(--crl-white)'};text-decoration:none">${s.name}</a>
+      </div>
+      <div class="meta-stats">
+        <span><i class="fa-regular fa-calendar"></i> ${fmtDate(vod.date)}</span>
+        <span><i class="fa-solid fa-clock"></i> ${fmtDuration(vod.duration)}</span>
+        <span><i class="fa-solid fa-weight-hanging"></i> ${fmtSize(vod.size)}</span>
+      </div>
+      <hr class="meta-divider">
+    </div>
+    <div class="actions">
+      <a href="/${vod.channel}/" class="action-btn"><i class="fa-solid fa-tower-broadcast"></i> Canal de ${s.name}</a>
+      <a href="/vods/?ch=${vod.channel}" class="action-btn"><i class="fa-solid fa-film"></i> Más VODs de ${s.name}</a>
+      <button class="action-btn" id="copyLinkBtn"><i class="fa-solid fa-link"></i> Copiar enlace</button>
+      <button class="action-btn" id="clipVodBtn"><i class="fa-solid fa-scissors"></i> Descargar clip</button>
+    </div>`;
+
+  const video = document.getElementById('vodVideo') as HTMLVideoElement;
+  const unmuteBtn = document.getElementById('unmuteBtn')!;
+  unmuteBtn.addEventListener('click', () => { video.muted = false; unmuteBtn.classList.add('hidden'); });
+  video.addEventListener('volumechange', () => { if (!video.muted) unmuteBtn.classList.add('hidden'); });
+
+  document.getElementById('copyLinkBtn')!.addEventListener('click', () => {
+    navigator.clipboard.writeText(location.href).then(() => {
+      const btn = document.getElementById('copyLinkBtn')!;
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
+      setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-link"></i> Copiar enlace'; }, 2000);
+    });
+  });
+
+  const clipVodBtn = document.getElementById('clipVodBtn') as HTMLButtonElement;
+  clipVodBtn.addEventListener('click', async () => {
+    const t = Math.floor(video.currentTime || 0);
+    const orig = clipVodBtn.innerHTML;
+    clipVodBtn.disabled = true;
+    clipVodBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando…';
+    try {
+      const r = await fetch(`/chat-api/clip/vod/${vod.id}?t=${t}`, { signal: AbortSignal.timeout(30000) });
+      if (!r.ok) throw new Error();
+      const blob = await r.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `clip_${vod.channel}_${t}s.mp4`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      clipVodBtn.innerHTML = '<i class="fa-solid fa-check"></i> Guardado';
+      setTimeout(() => { clipVodBtn.innerHTML = orig; clipVodBtn.disabled = false; }, 2000);
+    } catch {
+      clipVodBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Error';
+      setTimeout(() => { clipVodBtn.innerHTML = orig; clipVodBtn.disabled = false; }, 2500);
+    }
+  });
+}
+
+init();
+</script>
+
+</BaseLayout>
