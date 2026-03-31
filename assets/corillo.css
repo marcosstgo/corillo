@@ -1011,7 +1011,31 @@ button { font: inherit; cursor: pointer; }
 }
 [data-theme="light"] .crl-ico-cool { color: #7a3fc4; }
 
-.crl-site-footer { border-top: 1px solid var(--crl-border); padding: 28px 32px; margin-top: 8px; }
+.crl-site-footer {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(0,191,255,.12);
+  padding: 28px 32px;
+  margin-top: 8px;
+  background:
+    radial-gradient(ellipse at top left, rgba(0,191,255,.07), transparent 50%),
+    linear-gradient(180deg, rgba(12,27,38,.6), rgba(3,10,14,.9));
+}
+.crl-site-footer::after {
+  content: "";
+  position: absolute;
+  inset: auto -60px -60px auto;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,255,157,.06), transparent 70%);
+  pointer-events: none;
+}
+[data-theme="light"] .crl-site-footer {
+  background:
+    radial-gradient(ellipse at top left, rgba(0,191,255,.05), transparent 50%),
+    linear-gradient(180deg, rgba(255,255,255,.8), rgba(240,248,252,.95));
+  border-top-color: rgba(0,191,255,.15);
+}
 .crl-foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .crl-foot-left { display: flex; align-items: center; gap: 12px; }
 .crl-foot-info {
