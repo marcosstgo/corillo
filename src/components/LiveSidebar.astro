@@ -1,0 +1,75 @@
+---
+// Live sidebar with collapsed mobile view.
+// Requires window.STREAMERS (loaded via BaseLayout → /assets/streamers.js).
+---
+<style is:global>
+  /* ── LIVE SIDEBAR ── */
+  .with-sidebar{display:grid;grid-template-columns:180px 1fr;align-items:start}
+  .live-aside{border-right:1px solid var(--crl-border);position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column;padding:12px 0}
+  .live-aside::-webkit-scrollbar{display:none}
+  .cs-row{display:flex;align-items:center;gap:10px;padding:8px 16px;text-decoration:none;color:inherit;transition:background .15s}
+  .cs-row:hover{background:rgba(0,191,255,.04)}
+  .cs-ava{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:14px;color:#000}
+  .cs-row.is-live .cs-ava{box-shadow:0 0 0 2px var(--crl-live),0 0 8px rgba(232,200,74,.25)}
+  .cs-row:not(.is-live) .cs-ava{opacity:.28}
+  .cs-info{flex:1;min-width:0}
+  .cs-name{font-family:var(--crl-mono);font-size:10px;font-weight:700;letter-spacing:.5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .cs-status{font-size:10px;color:var(--crl-muted);margin-top:1px}
+  .cs-status.live{color:var(--crl-live)}
+  .aside-mobile-icons{display:none}
+  .aside-mobile-sep{display:none}
+  @media(max-width:820px){
+    .with-sidebar{grid-template-columns:44px 1fr}
+    .live-aside{width:44px;padding:6px 0;overflow:hidden}
+    .cs-row{padding:4px;justify-content:center}
+    .cs-info{display:none}
+    .aside-mobile-icons{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 0}
+    .aside-mobile-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;color:rgba(255,255,255,.38);font-size:1rem;transition:.15s;text-decoration:none}
+    .aside-mobile-icon:hover{color:var(--crl-white)}
+    .aside-mobile-sep{display:block;border:none;border-top:1px solid var(--crl-border);margin:4px 6px}
+  }
+  [data-theme="light"] .aside-mobile-icon{color:rgba(5,16,21,.42)}
+  [data-theme="light"] .aside-mobile-icon:hover{color:#0c1a20}
+  [data-theme="light"] .aside-mobile-sep{border-color:rgba(0,0,0,.1)}
+</style>
+
+<div class="with-sidebar">
+  <aside class="live-aside">
+    <div class="aside-mobile-icons">
+      <a href="/reels/" class="aside-mobile-icon" title="Reels"><i class="fa-solid fa-scissors"></i></a>
+      <a href="/vods/" class="aside-mobile-icon" title="VODs"><i class="fa-solid fa-play"></i></a>
+      <a href="/noticias/" class="aside-mobile-icon" title="Noticias"><i class="fa-solid fa-newspaper"></i></a>
+      <a href="/perfil/" class="aside-mobile-icon" title="Mi Perfil"><i class="fa-solid fa-user"></i></a>
+    </div>
+    <hr class="aside-mobile-sep">
+    <div id="sidebarRows"></div>
+  </aside>
+  <div class="sidebar-content">
+    <slot />
+  </div>
+</div>
+
+<script>
+(async () => {
+  const rows = document.getElementById('sidebarRows');
+  if (!rows) return;
+  const STREAMERS = (window as any).STREAMERS || [];
+  try {
+    const r = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
+    const data = await r.json();
+    const live = new Set(
+      (data.items || []).filter((p: any) => p.ready).map((p: any) => (p.name as string).replace('live/', ''))
+    );
+    rows.innerHTML = STREAMERS.filter((s: any) => !s.soon).map((s: any) => {
+      const isLive = live.has(s.key);
+      return `<a href="/${s.key}/" class="cs-row${isLive ? ' is-live' : ''}" title="${s.name}">
+        <div class="cs-ava" style="background:${s.color}">${s.ava}</div>
+        <div class="cs-info">
+          <div class="cs-name">${s.name}</div>
+          <div class="cs-status${isLive ? ' live' : ''}">${isLive ? 'En vivo' : 'Offline'}</div>
+        </div>
+      </a>`;
+    }).join('');
+  } catch {}
+})();
+</script>
