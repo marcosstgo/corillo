@@ -1,3 +1,5 @@
+---
+---
 <!doctype html>
 <html lang="es">
 <head>
@@ -20,17 +22,23 @@
   <link rel="canonical" href="https://corillo.live/multiplayer/">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="theme-color" content="#030a0e">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18"></script>
-  <script src="/assets/streamers.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js" is:inline></script>
+  <script src="/assets/streamers.js" is:inline></script>
   <link rel="stylesheet" href="/assets/styles.css">
   <link rel="stylesheet" href="/assets/corillo.css">
-
-  <style>
+  <script>
+    (function(){
+      const t = localStorage.getItem('corillo-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <style is:global>
     :root{ --border-h:rgba(255,255,255,.18); }
     html{scroll-behavior:smooth}
     body{
@@ -39,8 +47,6 @@
     }
 
     /* ── NAV ── */
-
-
     .nav{display:flex;align-items:center;justify-content:space-between;padding:0;gap:10px;flex-wrap:wrap;width:100%}
     .nav-left{display:flex;align-items:center;gap:10px;min-width:0}
     .brand-link{display:flex;align-items:center;gap:10px;text-decoration:none}
@@ -50,20 +56,20 @@
     [data-theme="light"] .crl-brand-logo .crl-brand-word{fill:#0c1a20}
     [data-theme="light"] .crl-brand-logo .crl-brand-ring-outer{stroke:#0c1a20}
     .page-tag{
-      font-family:var(--mono);font-size: .78rem;letter-spacing:2px;text-transform:uppercase;
+      font-family:var(--mono);font-size:.78rem;letter-spacing:2px;text-transform:uppercase;
       color:var(--muted);border-left:1px solid var(--border);padding-left:10px;
     }
     .nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
     .live-pill{
       display:flex;align-items:center;gap:6px;
-      font-family:var(--mono);font-size: .75rem;letter-spacing:1.5px;text-transform:uppercase;
+      font-family:var(--mono);font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;
       color:var(--live);background:rgba(223,48,48,.08);
       border:1px solid rgba(223,48,48,.2);
       padding:5px 10px 5px 8px;border-radius:999px;
     }
     .viewers-pill{
       display:flex;align-items:center;gap:5px;
-      font-family:var(--mono);font-size: .75rem;letter-spacing:1px;
+      font-family:var(--mono);font-size:.75rem;letter-spacing:1px;
       color:rgba(255,255,255,.4);border:1px solid var(--border);
       padding:5px 10px;border-radius:999px;
     }
@@ -71,7 +77,7 @@
     .dot.on{background:var(--live);box-shadow:0 0 0 3px rgba(223,48,48,.18);animation:blink 1.4s infinite}
     .btn{
       display:inline-flex;align-items:center;gap:6px;cursor:pointer;
-      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size: .78rem;
+      font-family:var(--mono);letter-spacing:1.5px;text-transform:uppercase;font-size:.78rem;
       padding:6px 12px;border-radius:6px;border:1px solid var(--border);
       background:transparent;color:rgba(255,255,255,.6);transition:.18s;text-decoration:none;white-space:nowrap;
     }
@@ -89,7 +95,7 @@
       flex-wrap:wrap;
     }
     .filter-panel-label{
-      font-family:var(--mono);font-size: .85rem;letter-spacing:2px;text-transform:uppercase;
+      font-family:var(--mono);font-size:.85rem;letter-spacing:2px;text-transform:uppercase;
       color:rgba(255,255,255,.2);flex-shrink:0;white-space:nowrap;
     }
     .filter-sep{width:1px;height:18px;background:var(--border);flex-shrink:0}
@@ -99,24 +105,23 @@
       padding:4px 10px 4px 5px;border-radius:999px;
       border:1px solid transparent;background:rgba(255,255,255,.04);
       color:rgba(255,255,255,.25);
-      font-family:var(--mono);font-size: .72rem;letter-spacing:1px;text-transform:uppercase;
+      font-family:var(--mono);font-size:.72rem;letter-spacing:1px;text-transform:uppercase;
       cursor:pointer;transition:border-color .15s,color .15s,background .15s,opacity .2s;
       white-space:nowrap;
     }
     .filter-chip .chip-ava{
       width:18px;height:18px;border-radius:50%;flex-shrink:0;
       display:flex;align-items:center;justify-content:center;
-      font-family:var(--display);font-size: .78rem;color:#111;
+      font-family:var(--display);font-size:.78rem;color:#111;
     }
     .filter-chip.active{border-color:rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
     .filter-chip:not(.active){opacity:.4}
     .filter-chip:hover{opacity:1 !important;border-color:rgba(255,255,255,.2);color:var(--white)}
     .filter-count{
       margin-left:auto;flex-shrink:0;
-      font-family:var(--mono);font-size: .85rem;letter-spacing:1px;
+      font-family:var(--mono);font-size:.85rem;letter-spacing:1px;
       color:rgba(255,255,255,.2);white-space:nowrap;
     }
-
     @media(max-width:600px){
       .filter-panel{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 12px}
       .filter-panel::-webkit-scrollbar{display:none}
@@ -137,9 +142,9 @@
       font-size:1.8rem;color:var(--muted);
     }
     .empty h2{font-family:var(--display);font-size:2rem;letter-spacing:3px;color:rgba(255,255,255,.25);margin:0}
-    .empty p{font-family:var(--mono);font-size: .78rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:0}
+    .empty p{font-family:var(--mono);font-size:.78rem;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin:0}
 
-    /* ── GRID — layout: equal (default) ── */
+    /* ── GRID ── */
     .gallery{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
     .gallery.count-1{grid-template-columns:1fr}
     .gallery.count-2{grid-template-columns:repeat(2,1fr)}
@@ -149,14 +154,9 @@
     .gallery.count-6{grid-template-columns:repeat(3,1fr)}
     .gallery.count-7{grid-template-columns:repeat(3,1fr)}
     .gallery.count-8{grid-template-columns:repeat(4,1fr)}
-
-    /* layout: focus — primer card ocupa fila completa */
     .gallery.layout-focus.count-3{grid-template-columns:repeat(2,1fr)}
     .gallery.layout-focus .stream-card:first-child{grid-column:1/-1}
-
-    /* layout: col — una sola columna */
     .gallery.layout-col{grid-template-columns:1fr !important}
-
     @media(max-width:768px){
       .gallery,.gallery.count-1,.gallery.count-2,.gallery.count-3,
       .gallery.count-4,.gallery.count-5,.gallery.count-6,.gallery.count-7,.gallery.count-8{
@@ -170,14 +170,13 @@
       width:26px;height:26px;border-radius:5px;border:1px solid var(--border);
       background:transparent;color:rgba(255,255,255,.3);cursor:pointer;
       display:flex;align-items:center;justify-content:center;
-      font-size: .78rem;transition:.15s;flex-shrink:0;
+      font-size:.78rem;transition:.15s;flex-shrink:0;
     }
-    .layout-btn.active{border-color:rgba(232,200,74,.4);color:var(--accent);background:rgba(232,200,74,.06)}
+    .layout-btn.active{border-color:rgba(232,200,74,.4);color:#e8c84a;background:rgba(232,200,74,.06)}
     .layout-btn:hover:not(.active){border-color:var(--border-h);color:rgba(255,255,255,.7)}
     @media(max-width:600px){.layout-btns{display:none}}
 
     /* ── ARC RAIDERS MODE ── */
-    /* Colores oficiales de los 4 stripes: #D00000 #FFEA00 #05FF74 #5FFFFF */
     .arc-btn{
       display:inline-flex;align-items:center;gap:6px;
       padding:5px 11px;border-radius:999px;flex-shrink:0;
@@ -185,7 +184,7 @@
       background:transparent padding-box,
                  linear-gradient(to right,#D00000,#FFEA00,#05FF74,#5FFFFF) border-box;
       color:rgba(255,255,255,.4);
-      font-family:var(--mono);font-size: .72rem;letter-spacing:1.5px;text-transform:uppercase;
+      font-family:var(--mono);font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;
       cursor:pointer;transition:color .15s,box-shadow .15s,background .15s;
       white-space:nowrap;
     }
@@ -196,10 +195,8 @@
       color:#fff;
       box-shadow:0 0 18px rgba(208,0,0,.25),0 0 18px rgba(95,255,255,.1);
     }
-    /* 4 mini stripes en el botón — igual que el logo */
     .arc-btn-stripes{display:flex;gap:2px;align-items:center}
     .arc-btn-stripes span{width:3px;height:11px;border-radius:1px;display:block}
-
     .arc-badge{
       display:none;align-items:center;gap:10px;
       font-family:var(--mono);font-size:.56rem;letter-spacing:2.5px;text-transform:uppercase;
@@ -210,11 +207,8 @@
       width:fit-content;
     }
     .arc-badge.show{display:flex}
-    /* 4 stripes verticales en el badge */
     .arc-badge-stripes{display:flex;gap:2px;align-items:center;flex-shrink:0}
     .arc-badge-stripes span{width:3px;height:14px;border-radius:1px;display:block}
-
-    /* Layout 2+1 exclusivo para Arc Raider mode con 3 streams */
     .gallery.arc-active.count-3{
       grid-template-columns:repeat(6,1fr);
       grid-template-rows:auto auto;
@@ -230,8 +224,6 @@
         grid-template-columns:1fr;grid-column:auto;
       }
     }
-
-    /* Barra de 4 colores en la parte superior de cada card en arc mode */
     .gallery.arc-active .stream-card::before{
       content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:5;
       background:linear-gradient(to right,#D00000 25%,#FFEA00 25% 50%,#05FF74 50% 75%,#5FFFFF 75%);
@@ -259,19 +251,17 @@
       0%,100%{box-shadow:0 0 0 0 rgba(223,48,48,0)}
       50%{box-shadow:0 0 0 3px rgba(223,48,48,.1)}
     }
-
     .thumb{aspect-ratio:16/9;position:relative;overflow:hidden;background:#000}
     .thumb video{width:100%;height:100%;object-fit:cover;display:block}
-
     .tag-live{
       position:absolute;top:10px;left:10px;z-index:3;
       display:flex;align-items:center;gap:5px;
       background:var(--live);color:#fff;
-      font-family:var(--mono);font-size: .72rem;letter-spacing:1.5px;padding:3px 8px;border-radius:2px;
+      font-family:var(--mono);font-size:.72rem;letter-spacing:1.5px;padding:3px 8px;border-radius:2px;
     }
     .tag-host{
       position:absolute;top:10px;right:10px;z-index:3;
-      font-family:var(--mono);font-size: .72rem;letter-spacing:1.5px;color:var(--accent);
+      font-family:var(--mono);font-size:.72rem;letter-spacing:1.5px;color:#e8c84a;
       border:1px solid rgba(232,200,74,.3);padding:3px 8px;border-radius:2px;
       background:rgba(0,0,0,.5);backdrop-filter:blur(4px);
     }
@@ -279,7 +269,7 @@
       position:absolute;bottom:10px;right:10px;z-index:3;
       display:flex;align-items:center;gap:5px;
       background:rgba(0,0,0,.6);backdrop-filter:blur(4px);
-      font-family:var(--mono);font-size: .72rem;letter-spacing:1px;padding:3px 8px;border-radius:2px;
+      font-family:var(--mono);font-size:.72rem;letter-spacing:1px;padding:3px 8px;border-radius:2px;
       color:rgba(255,255,255,.8);
     }
     .play-icon{
@@ -289,18 +279,16 @@
     }
     .stream-card:hover .play-icon{opacity:1}
     .play-icon i{font-size:2.5rem;color:rgba(255,255,255,.9);filter:drop-shadow(0 2px 8px rgba(0,0,0,.6))}
-
     .vol-btn{
       position:absolute;bottom:10px;left:10px;z-index:4;
       display:flex;align-items:center;justify-content:center;
       width:28px;height:28px;border-radius:50%;border:none;
       background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
-      color:rgba(255,255,255,.45);font-size: .92rem;
+      color:rgba(255,255,255,.45);font-size:.92rem;
       cursor:pointer;transition:color .15s,background .15s,transform .1s;
     }
     .vol-btn:hover{background:rgba(0,0,0,.8);color:var(--white);transform:scale(1.1)}
-    .vol-btn.active{color:var(--accent);background:rgba(232,200,74,.18);border:1px solid rgba(232,200,74,.3)}
-
+    .vol-btn.active{color:#e8c84a;background:rgba(232,200,74,.18);border:1px solid rgba(232,200,74,.3)}
     .card-foot{
       display:flex;align-items:center;gap:10px;padding:10px 12px;
       border-top:1px solid var(--border);
@@ -309,17 +297,17 @@
     .ava{
       width:28px;height:28px;border-radius:50%;flex-shrink:0;
       display:flex;align-items:center;justify-content:center;
-      font-family:var(--display);font-size: .92rem;color:var(--ink);
+      font-family:var(--display);font-size:.92rem;color:var(--ink);
     }
     .foot-info{flex:1;min-width:0}
     .ch-name{font-family:var(--mono);font-size:.62rem;letter-spacing:1px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
     .ch-sub{font-size:.72rem;color:var(--muted);margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-    .expand-icon{color:rgba(255,255,255,.25);font-size: .85rem;flex-shrink:0;transition:.2s}
-    .stream-card:hover .expand-icon{color:var(--accent)}
+    .expand-icon{color:rgba(255,255,255,.25);font-size:.85rem;flex-shrink:0;transition:.2s}
+    .stream-card:hover .expand-icon{color:#e8c84a}
 
     /* ── POLL BAR ── */
     .poll-bar{position:fixed;bottom:0;left:0;right:0;height:2px;background:var(--border);z-index:55;overflow:hidden}
-    .poll-progress{height:100%;background:var(--accent);width:100%;transform-origin:left;transition:transform linear}
+    .poll-progress{height:100%;background:#e8c84a;width:100%;transform-origin:left;transition:transform linear}
 
     [data-theme="light"] .viewers-pill{color:rgba(5,16,21,.5);background:rgba(0,0,0,.02)}
     [data-theme="light"] .btn{color:rgba(5,16,21,.72);background:rgba(0,0,0,.02)}
@@ -370,10 +358,10 @@
         <span id="navCount">0</span>&nbsp;en vivo
       </div>
       <div class="viewers-pill" id="viewersPill" style="display:none">
-        <i class="fa-solid fa-eye" style="font-size: .75rem"></i>
+        <i class="fa-solid fa-eye" style="font-size:.75rem"></i>
         <span id="navViewers">0</span>
       </div>
-      <button class="theme-btn" id="themeBtn" title="Cambiar tema">☀</button>
+      <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
       <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
     </div>
   </div>
@@ -381,7 +369,6 @@
 
 <main class="page">
 
-  <!-- Filter panel — visible only when ≥2 streamers are live -->
   <div class="filter-panel crl-filter-panel" id="filterPanel">
     <span class="filter-panel-label crl-filter-label">Ver</span>
     <button class="filter-all crl-filter-pill active" id="filterAll">Todos</button>
@@ -406,7 +393,6 @@
     </button>
   </div>
 
-  <!-- Arc Raider badge -->
   <div class="arc-badge" id="arcBadge">
     <span class="arc-badge-stripes">
       <span style="background:#D00000"></span>
@@ -417,14 +403,12 @@
     ARC RAIDER MODE — audio simultáneo activo
   </div>
 
-  <!-- Empty state -->
   <div class="empty crl-empty-hero show" id="emptyState">
     <div class="empty-icon crl-empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
     <h2 class="crl-empty-title" id="emptyTitle">NADIE EN VIVO</h2>
     <p class="crl-empty-sub" id="emptyMsg">Cuando alguien inicie stream aparecerá aquí</p>
   </div>
 
-  <!-- Gallery -->
   <div class="gallery crl-gallery" id="gallery"></div>
 
 </main>
@@ -437,73 +421,72 @@ const POLL_MS        = 15000;
 const CACHE_MS       = 8000;
 const API_TIMEOUT_MS = 5000;
 const MAX_SELECTIONS = 4;
-const $              = id => document.getElementById(id);
+const $              = (id: string) => document.getElementById(id)!;
 
-let cache          = { t:0, data:null };
-let hlsMap         = {};  // key → Hls instance (fallback)
-let pcMap          = {};  // key → RTCPeerConnection (WebRTC)
-let liveMap        = {};  // key → { streamer, viewers }
+let cache: { t: number; data: any } = { t: 0, data: null };
+let hlsMap: Record<string, any>     = {};
+let pcMap: Record<string, any>      = {};
+let liveMap: Record<string, any>    = {};
 const useWebRTC    = !!window.RTCPeerConnection;
-let selectedKeys   = new Set();
-let pollTimer      = null;
-let activeAudioKey = null;   // normal mode: exclusive (one at a time)
+let selectedKeys   = new Set<string>();
+let pollTimer: ReturnType<typeof setTimeout> | null = null;
+let activeAudioKey: string | null = null;
 let arcRaiderMode  = false;
-let arcAudioKeys   = new Set(); // arc mode: independent per-stream
+let arcAudioKeys   = new Set<string>();
 
-// ── API ──
 async function fetchPaths() {
   const now = Date.now();
   if (cache.data && (now - cache.t) < CACHE_MS) return cache.data;
   const ctrl = new AbortController();
   const to   = setTimeout(() => ctrl.abort(), API_TIMEOUT_MS);
   try {
-    const res  = await fetch(API, { signal:ctrl.signal, cache:'no-store' });
+    const res  = await fetch(API, { signal: ctrl.signal, cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    cache = { t:now, data };
+    cache = { t: now, data };
     return data;
   } finally { clearTimeout(to); }
 }
 
-function getLive(data) {
-  return (Array.isArray(data?.items) ? data.items : []).filter(p => p.ready);
+function getLive(data: any) {
+  return (Array.isArray(data?.items) ? data.items : []).filter((p: any) => p.ready);
 }
 
-// ── STREAM (WebRTC + HLS fallback) ──
-function destroyHls(key) {
+function destroyHls(key: string) {
   if (hlsMap[key]) { try { hlsMap[key].destroy(); } catch {} delete hlsMap[key]; }
   if (pcMap[key])  { try { pcMap[key].close();    } catch {} delete pcMap[key];  }
 }
 
-function playVideoHLS(video, key) {
+function playVideoHLS(video: HTMLVideoElement, key: string) {
   const url = `/live/${encodeURIComponent(key)}/index.m3u8`;
   if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = url; video.play().catch(() => {}); return;
   }
-  if (window.Hls && Hls.isSupported()) {
-    const h = new Hls({ lowLatencyMode:true, backBufferLength:20, maxBufferLength:6 });
+  const Hls = (window as any).Hls;
+  if (Hls && Hls.isSupported()) {
+    const h = new Hls({ lowLatencyMode: true, backBufferLength: 20, maxBufferLength: 6 });
     h.loadSource(url);
     h.attachMedia(video);
     h.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-    h.on(Hls.Events.ERROR, (_, d) => { if (d?.fatal) { try{h.destroy()}catch{} delete hlsMap[key]; } });
+    h.on(Hls.Events.ERROR, (_: any, d: any) => { if (d?.fatal) { try { h.destroy(); } catch {} delete hlsMap[key]; } });
     hlsMap[key] = h;
     const io = new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) { try{video.pause()}catch{} }
-      else { video.play().catch(()=>{}); }
-    }, { threshold:0.1 });
+      if (!entries[0].isIntersecting) { try { video.pause(); } catch {} }
+      else { video.play().catch(() => {}); }
+    }, { threshold: 0.1 });
     io.observe(video);
   }
 }
 
-async function playVideoWebRTC(video, key) {
+async function playVideoWebRTC(video: HTMLVideoElement, key: string) {
   const whepUrl = `/webrtc/live/${encodeURIComponent(key)}_rtc/whep`;
-  const pc = new RTCPeerConnection({ iceServers:[{ urls:'stun:stun.l.google.com:19302' }] });
+  const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
   pcMap[key] = pc;
-  pc.addTransceiver('video', { direction:'recvonly' });
-  pc.addTransceiver('audio', { direction:'recvonly' });
-  pc.ontrack = e => {
+  pc.addTransceiver('video', { direction: 'recvonly' });
+  pc.addTransceiver('audio', { direction: 'recvonly' });
+  pc.ontrack = (e: RTCTrackEvent) => {
     if (!video.srcObject) video.srcObject = new MediaStream();
-    video.srcObject.addTrack(e.track);
+    (video.srcObject as MediaStream).addTrack(e.track);
   };
   pc.onconnectionstatechange = () => {
     const s = pc.connectionState;
@@ -517,17 +500,17 @@ async function playVideoWebRTC(video, key) {
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
     await Promise.race([
-      new Promise(resolve => {
+      new Promise<void>(resolve => {
         if (pc.iceGatheringState === 'complete') { resolve(); return; }
         pc.addEventListener('icegatheringstatechange', function fn() {
           if (pc.iceGatheringState === 'complete') { pc.removeEventListener('icegatheringstatechange', fn); resolve(); }
         });
       }),
-      new Promise(resolve => setTimeout(resolve, 4000)),
+      new Promise<void>(resolve => setTimeout(resolve, 4000)),
     ]);
-    const resp = await fetch(whepUrl, { method:'POST', headers:{ 'Content-Type':'application/sdp' }, body:pc.localDescription.sdp });
+    const resp = await fetch(whepUrl, { method: 'POST', headers: { 'Content-Type': 'application/sdp' }, body: pc.localDescription!.sdp });
     if (!resp.ok) throw new Error('WHEP ' + resp.status);
-    await pc.setRemoteDescription({ type:'answer', sdp: await resp.text() });
+    await pc.setRemoteDescription({ type: 'answer', sdp: await resp.text() });
     video.play().catch(() => {});
   } catch {
     try { pc.close(); } catch {}
@@ -536,26 +519,24 @@ async function playVideoWebRTC(video, key) {
   }
 }
 
-function playVideo(video, key) {
+function playVideo(video: HTMLVideoElement, key: string) {
   if (useWebRTC) playVideoWebRTC(video, key);
   else           playVideoHLS(video, key);
 }
 
-// ── AUDIO CONTROL ──
-function setAudioState(key, unmute) {
+function setAudioState(key: string, unmute: boolean) {
   const card  = $('gallery').querySelector(`[data-key="${key}"]`);
-  const video = card?.querySelector('video');
+  const video = card?.querySelector('video') as HTMLVideoElement | null;
   const btn   = card?.querySelector('.vol-btn');
   if (!video || !btn) return;
   video.muted = !unmute;
   if (unmute && video.paused) video.play().catch(() => {});
   btn.classList.toggle('active', unmute);
-  btn.querySelector('i').className = unmute ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+  btn.querySelector('i')!.className = unmute ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
 }
 
-function toggleAudio(key) {
+function toggleAudio(key: string) {
   if (arcRaiderMode) {
-    // Independent toggle — each stream controls its own audio
     if (arcAudioKeys.has(key)) {
       arcAudioKeys.delete(key);
       setAudioState(key, false);
@@ -564,7 +545,6 @@ function toggleAudio(key) {
       setAudioState(key, true);
     }
   } else {
-    // Exclusive toggle — only one stream at a time
     if (activeAudioKey === key) {
       setAudioState(key, false);
       activeAudioKey = null;
@@ -581,28 +561,23 @@ function toggleArcRaider() {
   $('btnArcRaider').classList.toggle('active', arcRaiderMode);
   $('arcBadge').classList.toggle('show', arcRaiderMode);
   $('gallery').classList.toggle('arc-active', arcRaiderMode);
-
   if (arcRaiderMode) {
-    // Exit exclusive mode first
     if (activeAudioKey) { setAudioState(activeAudioKey, false); activeAudioKey = null; }
-    // Unmute all visible streams
     $('gallery').querySelectorAll('.stream-card').forEach(card => {
-      const key = card.dataset.key;
+      const key = (card as HTMLElement).dataset.key!;
       arcAudioKeys.add(key);
       setAudioState(key, true);
     });
   } else {
-    // Mute all arc streams and reset
     arcAudioKeys.forEach(key => setAudioState(key, false));
     arcAudioKeys.clear();
   }
 }
 
-// ── BUILD CARD ──
-function buildCard(streamer, viewers) {
+function buildCard(streamer: any, viewers: number) {
   const isAudioActive = arcRaiderMode ? arcAudioKeys.has(streamer.key) : (activeAudioKey === streamer.key);
   const a = document.createElement('a');
-  a.href  = `/${encodeURIComponent(streamer.key)}/`;
+  a.href        = `/${encodeURIComponent(streamer.key)}/`;
   a.className   = 'stream-card crl-stream-card is-live' + (streamer.host ? ' is-featured' : '');
   a.dataset.key = streamer.key;
   a.innerHTML = `
@@ -625,11 +600,11 @@ function buildCard(streamer, viewers) {
       <i class="fa-solid fa-arrow-up-right-from-square expand-icon"></i>
     </div>`;
 
-  const video = a.querySelector('video');
+  const video = a.querySelector('video') as HTMLVideoElement;
   playVideo(video, streamer.key);
   if (isAudioActive) video.muted = false;
 
-  a.querySelector('.vol-btn').addEventListener('click', e => {
+  a.querySelector('.vol-btn')!.addEventListener('click', (e: Event) => {
     e.preventDefault();
     e.stopPropagation();
     toggleAudio(streamer.key);
@@ -638,15 +613,14 @@ function buildCard(streamer, viewers) {
   return a;
 }
 
-// ── FILTER HELPERS ──
-function streamerOrder(key) {
-  return STREAMERS.findIndex(s => s.key === key);
+function streamerOrder(key: string) {
+  return ((window as any).STREAMERS || []).findIndex((s: any) => s.key === key);
 }
 
-function insertInOrder(parent, el, key, selector) {
+function insertInOrder(parent: Element, el: Element, key: string, selector: string) {
   const siblings = parent.querySelectorAll(selector);
   for (const sib of siblings) {
-    if (streamerOrder(sib.dataset.key) > streamerOrder(key)) {
+    if (streamerOrder((sib as HTMLElement).dataset.key!) > streamerOrder(key)) {
       parent.insertBefore(el, sib); return;
     }
   }
@@ -654,22 +628,18 @@ function insertInOrder(parent, el, key, selector) {
 }
 
 function updateUI() {
-  const gallery    = $('gallery');
-  const liveKeys   = Object.keys(liveMap);
-  const totalLive  = liveKeys.length;
-  const visible    = gallery.querySelectorAll('.stream-card').length;
-  const totalView  = liveKeys.reduce((s, k) => s + (liveMap[k]?.viewers || 0), 0);
+  const gallery   = $('gallery');
+  const liveKeys  = Object.keys(liveMap);
+  const totalLive = liveKeys.length;
+  const visible   = gallery.querySelectorAll('.stream-card').length;
+  const totalView = liveKeys.reduce((s, k) => s + (liveMap[k]?.viewers || 0), 0);
 
-  // Nav counts
-  $('navCount').textContent = totalLive;
+  $('navCount').textContent = String(totalLive);
   $('navDot').className = totalLive > 0 ? 'dot on' : 'dot';
-  $('navViewers').textContent = totalView;
+  $('navViewers').textContent = String(totalView);
   $('viewersPill').style.display = totalLive > 0 ? 'flex' : 'none';
-
-  // Filter panel visibility — show whenever there's ≥1 live streamer
   $('filterPanel').style.display = totalLive > 0 ? 'flex' : 'none';
 
-  // Filter count label
   if (totalLive > 0) {
     const atMax = selectedKeys.size >= MAX_SELECTIONS;
     $('filterCount').textContent = visible > 0
@@ -677,17 +647,16 @@ function updateUI() {
       : '';
   }
 
-  // All button state — disabled if more live streams than max
-  const allSel = totalLive > 0 && liveKeys.every(k => selectedKeys.has(k));
+  const allSel      = totalLive > 0 && liveKeys.every(k => selectedKeys.has(k));
   const allDisabled = totalLive > MAX_SELECTIONS && !allSel;
   $('filterAll').classList.toggle('active', allSel);
-  $('filterAll').style.opacity = allDisabled ? '.3' : '';
-  $('filterAll').style.pointerEvents = allDisabled ? 'none' : '';
+  ($('filterAll') as HTMLButtonElement).style.opacity      = allDisabled ? '.3' : '';
+  ($('filterAll') as HTMLButtonElement).style.pointerEvents = allDisabled ? 'none' : '';
 
-  // Gallery class + empty state — preserve arc-active and layout classes
   const arcCls    = arcRaiderMode ? ' arc-active' : '';
   const layoutCls = currentLayout === 'focus' ? ' layout-focus' : currentLayout === 'col' ? ' layout-col' : '';
   gallery.className = `gallery crl-gallery count-${Math.min(visible, 8)}${arcCls}${layoutCls}`;
+
   if (visible === 0) {
     $('emptyState').classList.add('show');
     if (totalLive > 0) {
@@ -702,7 +671,7 @@ function updateUI() {
   }
 }
 
-function addChip(streamer) {
+function addChip(streamer: any) {
   const chip = document.createElement('button');
   chip.className   = 'filter-chip crl-filter-chip';
   chip.dataset.key = streamer.key;
@@ -712,7 +681,7 @@ function addChip(streamer) {
   insertInOrder($('filterChips'), chip, streamer.key, '.filter-chip');
 }
 
-function toggleChip(key) {
+function toggleChip(key: string) {
   if (selectedKeys.has(key)) {
     selectedKeys.delete(key);
     $('filterChips').querySelector(`[data-key="${key}"]`)?.classList.remove('active');
@@ -725,25 +694,23 @@ function toggleChip(key) {
     const entry = liveMap[key];
     if (entry) insertInOrder($('gallery'), buildCard(entry.streamer, entry.viewers), key, '.stream-card');
   }
-  // Dim unselected chips when at max
   const atMax = selectedKeys.size >= MAX_SELECTIONS;
   $('filterChips').querySelectorAll('.filter-chip:not(.active)').forEach(c => {
-    c.style.opacity = atMax ? '.2' : '';
-    c.style.pointerEvents = atMax ? 'none' : '';
+    (c as HTMLElement).style.opacity      = atMax ? '.2' : '';
+    (c as HTMLElement).style.pointerEvents = atMax ? 'none' : '';
   });
   updateUI();
 }
 
-// ── LAYOUT ──
 let currentLayout = localStorage.getItem('corillo_multi_layout') || 'equal';
 
-function applyLayout(layout) {
+function applyLayout(layout: string) {
   currentLayout = layout;
   localStorage.setItem('corillo_multi_layout', layout);
   const g = $('gallery');
-  g.classList.remove('layout-focus','layout-col');
+  g.classList.remove('layout-focus', 'layout-col');
   if (layout === 'focus') g.classList.add('layout-focus');
-  else if (layout === 'col')   g.classList.add('layout-col');
+  else if (layout === 'col') g.classList.add('layout-col');
   $('btnLayoutEq').classList.toggle('active', layout === 'equal');
   $('btnLayoutFc').classList.toggle('active', layout === 'focus');
   $('btnLayoutCl').classList.toggle('active', layout === 'col');
@@ -757,7 +724,7 @@ applyLayout(currentLayout);
 $('btnArcRaider').addEventListener('click', toggleArcRaider);
 
 $('filterAll').addEventListener('click', () => {
-  Object.entries(liveMap).forEach(([key, entry]) => {
+  Object.entries(liveMap).forEach(([key, entry]: [string, any]) => {
     if (!selectedKeys.has(key)) {
       selectedKeys.add(key);
       $('filterChips').querySelector(`[data-key="${key}"]`)?.classList.add('active');
@@ -767,12 +734,10 @@ $('filterAll').addEventListener('click', () => {
   updateUI();
 });
 
-// ── MAIN STATE UPDATE ──
-function updateLiveState(apiStreamers) {
+function updateLiveState(apiStreamers: any[]) {
   const newKeys = new Set(apiStreamers.map(s => s.key));
   const oldKeys = new Set(Object.keys(liveMap));
 
-  // Remove offline streamers
   for (const key of oldKeys) {
     if (!newKeys.has(key)) {
       delete liveMap[key];
@@ -785,12 +750,10 @@ function updateLiveState(apiStreamers) {
     }
   }
 
-  // Add newly live streamers — not auto-selected, user picks
   for (const s of apiStreamers) {
     if (!oldKeys.has(s.key)) {
-      liveMap[s.key] = { streamer:s, viewers:s.viewers };
+      liveMap[s.key] = { streamer: s, viewers: s.viewers };
       addChip(s);
-      // In arc raider mode: auto-select and auto-unmute new streamers
       if (arcRaiderMode) {
         selectedKeys.add(s.key);
         $('filterChips').querySelector(`[data-key="${s.key}"]`)?.classList.add('active');
@@ -800,7 +763,6 @@ function updateLiveState(apiStreamers) {
     }
   }
 
-  // Update viewer counts in visible cards (no rebuild)
   for (const s of apiStreamers) {
     if (oldKeys.has(s.key)) {
       liveMap[s.key].viewers = s.viewers;
@@ -814,7 +776,6 @@ function updateLiveState(apiStreamers) {
   updateUI();
 }
 
-// ── POLL ──
 function animatePollBar() {
   const bar = $('pollBar');
   bar.style.transition = 'none';
@@ -827,34 +788,30 @@ function animatePollBar() {
 
 async function refresh() {
   try {
-    const data      = await fetchPaths();
-    const livePaths = getLive(data);
-    const apiStreamers = STREAMERS
-      .filter(s => s.key && livePaths.find(p => p.name === 'live/' + s.key))
-      .map(s => {
-        const pd = livePaths.find(p => p.name === 'live/' + s.key);
+    const data         = await fetchPaths();
+    const livePaths    = getLive(data);
+    const apiStreamers = ((window as any).STREAMERS || [])
+      .filter((s: any) => s.key && livePaths.find((p: any) => p.name === 'live/' + s.key))
+      .map((s: any) => {
+        const pd = livePaths.find((p: any) => p.name === 'live/' + s.key);
         return { ...s, viewers: pd ? (pd.readers || []).length : 0 };
       });
     updateLiveState(apiStreamers);
-  } catch(e) {}
+  } catch {}
   animatePollBar();
   pollTimer = setTimeout(refresh, POLL_MS);
 }
 
-// ── THEME ──
-(function(){
-  const root  = document.documentElement;
-  const btn   = document.getElementById('themeBtn');
-  const saved = localStorage.getItem('corillo-theme') || 'dark';
-  root.setAttribute('data-theme', saved);
-  btn?.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    localStorage.setItem('corillo-theme', next);
-  });
-})();
+// Theme toggle
+const root = document.documentElement;
+const metaTheme = document.querySelector('meta[name="theme-color"]');
+document.getElementById('themeBtn')!.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  if (metaTheme) metaTheme.setAttribute('content', next === 'light' ? '#f0efe9' : '#030a0e');
+  localStorage.setItem('corillo-theme', next);
+});
 
-// ── VISIBILITY ──
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) { if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; } }
   else { cache.t = 0; refresh(); }
@@ -897,13 +854,7 @@ refresh();
     </div>
   </div>
 </footer>
+
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
