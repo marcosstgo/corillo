@@ -1,0 +1,284 @@
+---
+import FullscreenLayout from '../../layouts/FullscreenLayout.astro';
+---
+<FullscreenLayout
+  title="CORILLO · Reels"
+  description="Los mejores momentos de CORILLO — clips 9:16 de los streamers de Puerto Rico."
+  canonical="https://corillo.live/reels/"
+>
+  <fragment slot="head">
+    <style>
+      /* ── Nav ── */
+      .reel-nav{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--crl-gap-md);background:linear-gradient(to bottom,rgba(3,10,14,.95),transparent);z-index:100}
+      .reel-nav-logo{display:flex;align-items:center;text-decoration:none}
+      .reel-nav-tabs{display:flex;gap:var(--crl-gap-lg);font-family:var(--crl-mono);font-size:var(--crl-text-2xs);letter-spacing:1.5px;text-transform:uppercase}
+      .reel-nav-tab{color:rgba(255,255,255,.5);cursor:pointer;transition:color .2s;text-decoration:none}
+      .reel-nav-tab.active{color:var(--crl-white);border-bottom:2px solid var(--crl-accent);padding-bottom:2px}
+
+      /* ── Filter bar ── */
+      .filter-bar{position:fixed;top:52px;left:50%;transform:translateX(-50%);display:flex;gap:8px;padding:8px 16px;z-index:90;overflow-x:auto;scrollbar-width:none;max-width:400px;width:100%}
+      .filter-bar::-webkit-scrollbar{display:none}
+      .filter-chip{flex-shrink:0;font-family:var(--crl-mono);font-size:var(--crl-text-2xs);letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:var(--crl-radius-full);border:1px solid rgba(255,255,255,.15);background:rgba(3,10,14,.7);backdrop-filter:blur(8px);color:var(--crl-muted);cursor:pointer;transition:.15s}
+      .filter-chip.active{background:var(--crl-accent);color:#000;border-color:var(--crl-accent)}
+      .filter-chip:hover:not(.active){color:var(--crl-white);border-color:rgba(255,255,255,.3)}
+
+      /* ── States ── */
+      .state-screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:var(--crl-muted);font-family:var(--crl-mono);font-size:var(--crl-text-xs);letter-spacing:1px;text-transform:uppercase;z-index:50}
+      .state-screen i{font-size:2rem;opacity:.3}
+      .spinner-ring{width:28px;height:28px;border:3px solid rgba(0,191,255,.2);border-top-color:var(--crl-accent);border-radius:50%;animation:spin .7s linear infinite}
+      @keyframes spin{to{transform:rotate(360deg)}}
+
+      /* ── Scroll hint ── */
+      .scroll-hint{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);font-family:var(--crl-mono);font-size:var(--crl-text-2xs);letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted);display:flex;flex-direction:column;align-items:center;gap:var(--crl-gap-xs);animation:fadeHint 3s ease forwards;z-index:200;pointer-events:none}
+      @keyframes fadeHint{0%,70%{opacity:.6}100%{opacity:0}}
+
+      /* ── Unmute btn ── */
+      #unmuteBtn{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:150;background:rgba(3,10,14,.82);backdrop-filter:blur(10px);border:1px solid rgba(0,191,255,.35);border-radius:999px;color:var(--crl-white);font-family:var(--crl-mono);font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase;padding:7px 18px;cursor:pointer;gap:8px;align-items:center;display:none}
+    </style>
+  </fragment>
+
+<!-- Nav -->
+<nav class="reel-nav">
+  <a href="/" class="reel-nav-logo">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;display:block">
+      <defs><radialGradient id="rn-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <text fill="#e8f6ff" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
+      <circle cx="72" cy="42" r="36" fill="url(#rn-ng)"/>
+      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none" stroke-opacity=".85"/>
+      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <text fill="#e8f6ff" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
+    </svg>
+  </a>
+  <div class="reel-nav-tabs">
+    <a href="/" class="reel-nav-tab">Inicio</a>
+    <span class="reel-nav-tab active">Reels</span>
+    <a href="/vods/" class="reel-nav-tab">VODs</a>
+  </div>
+</nav>
+
+<div class="filter-bar" id="filterBar">
+  <button class="filter-chip active" data-channel="">Todos</button>
+</div>
+
+<div class="state-screen" id="loadingState">
+  <div class="spinner-ring"></div>
+  <span>Cargando reels</span>
+</div>
+
+<div class="state-screen" id="emptyState" style="display:none">
+  <i class="fa-solid fa-film"></i>
+  <span>No hay reels aún</span>
+  <span style="font-size:.65rem;opacity:.6">Los streamers crearán clips desde sus VODs</span>
+</div>
+
+<button id="unmuteBtn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
+
+<div class="scroll-hint" id="scrollHint" style="display:none">
+  <i class="fa-solid fa-chevron-up"></i>
+  Desliza
+</div>
+
+<div class="crl-reel-dots" id="reelDots"></div>
+<div class="crl-reels" id="reelsContainer" style="display:none"></div>
+
+<script>
+const PB_URL = 'https://pb.corillo.live';
+
+let allReels: any[]   = [];
+let activeChannel     = '';
+let observer: IntersectionObserver | null = null;
+let globalMuted       = true;
+
+async function loadReels(channel = '') {
+  const loading   = document.getElementById('loadingState')!;
+  const empty     = document.getElementById('emptyState')!;
+  const container = document.getElementById('reelsContainer')!;
+
+  container.style.display = 'none';
+  container.innerHTML = '';
+  empty.style.display = 'none';
+  loading.style.display = 'flex';
+
+  try {
+    let filter = 'public=true';
+    if (channel) filter += ` && channel="${channel}"`;
+    const res  = await fetch(`${PB_URL}/api/collections/reels/records?filter=${encodeURIComponent(filter)}&sort=-date&perPage=20`);
+    const data = await res.json();
+    allReels = data.items || [];
+  } catch { allReels = []; }
+
+  loading.style.display = 'none';
+  if (!allReels.length) { empty.style.display = 'flex'; return; }
+  renderReels(allReels);
+}
+
+function renderReels(reels: any[]) {
+  const container = document.getElementById('reelsContainer')!;
+  const dots      = document.getElementById('reelDots')!;
+  const hint      = document.getElementById('scrollHint')!;
+
+  container.innerHTML = '';
+  dots.innerHTML = '';
+  if (observer) observer.disconnect();
+
+  reels.forEach((r, i) => {
+    const videoUrl = `/vods/reels/${r.channel}/${r.filename}`;
+    const thumbBg  = r.thumb
+      ? `background-image:url('${r.thumb}')`
+      : `background:linear-gradient(135deg,var(--crl-surface),var(--crl-panel))`;
+
+    const colors   = ['#e8c84a','#00bfff','#ff6b6b','#00ff9d','#ff9f43','#a29bfe','#fd79a8','#6c5ce7'];
+    const avaColor = colors[r.channel.charCodeAt(0) % colors.length];
+    const avaLetter = (r.channel[0] || '?').toUpperCase();
+
+    const el = document.createElement('div');
+    el.className = 'crl-reel';
+    el.dataset.idx = String(i);
+    el.innerHTML = `
+      <div class="crl-reel-bg" style="${thumbBg}"></div>
+      <video class="crl-reel-video" src="${videoUrl}"
+        playsinline muted loop preload="none"
+        style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .3s">
+      </video>
+      <div class="crl-reel-placeholder" id="rpl-${i}">
+        <i class="fa-solid fa-play"></i>
+        <span>${r.duration ? r.duration + 's' : ''}</span>
+      </div>
+      <div class="crl-reel-overlay">
+        <div class="crl-reel-info">
+          <div class="crl-reel-streamer">
+            <div class="crl-reel-ava" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaLetter}</div>
+            <span class="crl-reel-name">${r.channel.toUpperCase()}</span>
+          </div>
+          ${r.title ? `<div class="crl-reel-desc">${esc(r.title)}</div>` : ''}
+          <div class="crl-reel-meta">${fmtDate(r.date)}${r.duration ? ' · ' + r.duration + 's' : ''}</div>
+        </div>
+        <div class="crl-reel-actions">
+          <a class="crl-reel-btn" href="${videoUrl}" download title="Descargar">
+            <div class="crl-reel-btn-icon"><i class="fa-solid fa-download"></i></div>
+            <span>Bajar</span>
+          </a>
+          <button class="crl-reel-btn" data-share-channel="${r.channel}" data-share-filename="${r.filename}">
+            <div class="crl-reel-btn-icon"><i class="fa-solid fa-share-nodes"></i></div>
+            <span>Share</span>
+          </button>
+        </div>
+      </div>`;
+
+    el.addEventListener('click', (e: Event) => {
+      if ((e.target as Element).closest('a,button')) return;
+      const vid = el.querySelector('video') as HTMLVideoElement | null;
+      if (!vid) return;
+      if (vid.paused) playReel(el); else pauseReel(el);
+    });
+
+    el.querySelector('[data-share-channel]')?.addEventListener('click', (e: Event) => {
+      const btn = e.currentTarget as HTMLElement;
+      shareReel(btn.dataset.shareChannel!, btn.dataset.shareFilename!);
+    });
+
+    container.appendChild(el);
+
+    const dot = document.createElement('div');
+    dot.className = 'crl-reel-dot' + (i === 0 ? ' active' : '');
+    dots.appendChild(dot);
+  });
+
+  container.style.display = '';
+  hint.style.display = reels.length > 1 ? 'flex' : 'none';
+
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      const idx = parseInt((e.target as HTMLElement).dataset.idx || '0');
+      if (e.isIntersecting) {
+        document.querySelectorAll('.crl-reel-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+        playReel(e.target as HTMLElement);
+      } else {
+        pauseReel(e.target as HTMLElement);
+      }
+    });
+  }, { threshold: 0.6 });
+
+  container.querySelectorAll('.crl-reel').forEach(r => observer!.observe(r));
+}
+
+function playReel(el: Element) {
+  const vid = el.querySelector('video') as HTMLVideoElement | null;
+  const pl  = el.querySelector('.crl-reel-placeholder') as HTMLElement | null;
+  if (!vid) return;
+  vid.muted = globalMuted;
+  vid.style.opacity = '1';
+  if (pl) pl.style.display = 'none';
+  vid.play().catch(() => {});
+  document.getElementById('unmuteBtn')!.style.display = globalMuted ? 'inline-flex' : 'none';
+}
+
+function pauseReel(el: Element) {
+  const vid = el.querySelector('video') as HTMLVideoElement | null;
+  const pl  = el.querySelector('.crl-reel-placeholder') as HTMLElement | null;
+  if (!vid) return;
+  vid.pause();
+  vid.style.opacity = '0';
+  if (pl) pl.style.display = '';
+}
+
+document.getElementById('unmuteBtn')!.addEventListener('click', () => {
+  globalMuted = false;
+  document.querySelectorAll('.crl-reel video').forEach(v => { (v as HTMLVideoElement).muted = false; });
+  document.getElementById('unmuteBtn')!.style.display = 'none';
+});
+
+async function shareReel(channel: string, filename: string) {
+  const url = `${location.origin}/vods/reels/${channel}/${filename}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: `Reel de ${channel.toUpperCase()} en CORILLO`, url }); return; } catch {}
+  }
+  try { await navigator.clipboard.writeText(url); alert('¡Link copiado!'); } catch {}
+}
+
+async function loadStreamers() {
+  try {
+    const res  = await fetch(`${PB_URL}/api/collections/reels/records?filter=public=true&fields=channel&perPage=500`);
+    const data = await res.json();
+    const channels = [...new Set((data.items || []).map((r: any) => r.channel))].sort() as string[];
+    const bar = document.getElementById('filterBar')!;
+    channels.forEach(ch => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip';
+      btn.dataset.channel = ch;
+      btn.textContent = ch.toUpperCase();
+      bar.appendChild(btn);
+    });
+  } catch {}
+}
+
+document.getElementById('filterBar')!.addEventListener('click', (e: Event) => {
+  const chip = (e.target as Element).closest('.filter-chip') as HTMLElement | null;
+  if (!chip) return;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeChannel = chip.dataset.channel || '';
+  loadReels(activeChannel);
+});
+
+function fmtDate(iso: string) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 3600)   return `Hace ${Math.floor(diff/60)}m`;
+  if (diff < 86400)  return `Hace ${Math.floor(diff/3600)}h`;
+  if (diff < 604800) return `Hace ${Math.floor(diff/86400)}d`;
+  return d.toLocaleDateString('es-PR', { day: 'numeric', month: 'short' });
+}
+
+function esc(s: string) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+loadStreamers();
+loadReels();
+</script>
+
+</FullscreenLayout>
