@@ -7,7 +7,7 @@ import FullscreenLayout from '../../layouts/FullscreenLayout.astro';
   canonical="https://corillo.live/reels/"
 >
   <fragment slot="head">
-    <style>
+    <style is:global>
       /* ── Nav ── */
       .reel-nav{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--crl-gap-md);background:linear-gradient(to bottom,rgba(3,10,14,.95),transparent);z-index:100}
       .reel-nav-logo{display:flex;align-items:center;text-decoration:none}
