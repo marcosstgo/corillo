@@ -38,13 +38,10 @@
     z-index: 100;
   }
   .nav-logo {
-    font-family: var(--crl-display);
-    font-size: var(--crl-xl);
-    letter-spacing: 3px;
-    color: var(--crl-white);
+    display: flex;
+    align-items: center;
     text-decoration: none;
   }
-  .nav-logo span { color: var(--crl-accent); }
   .nav-tabs {
     display: flex;
     gap: var(--crl-gap-lg);
@@ -53,7 +50,7 @@
     letter-spacing: 1.5px;
     text-transform: uppercase;
   }
-  .nav-tab { color: var(--crl-muted); cursor: pointer; transition: color .2s; text-decoration: none; }
+  .nav-tab { color: rgba(255,255,255,.5); cursor: pointer; transition: color .2s; text-decoration: none; }
   .nav-tab.active { color: var(--crl-white); border-bottom: 2px solid var(--crl-accent); padding-bottom: 2px; }
 
   /* ── Filter bar ── */
@@ -143,7 +140,18 @@
 <body>
 
 <nav class="nav">
-  <a href="/" class="nav-logo">C<span>O</span>RILLO</a>
+  <a href="/" class="nav-logo">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;display:block">
+      <defs><radialGradient id="rn-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <text fill="#e8f6ff" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
+      <circle cx="72" cy="42" r="36" fill="url(#rn-ng)"/>
+      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none" stroke-opacity=".85"/>
+      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <text fill="#e8f6ff" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
+    </svg>
+  </a>
   <div class="nav-tabs">
     <a href="/" class="nav-tab">Inicio</a>
     <span class="nav-tab active">Reels</span>

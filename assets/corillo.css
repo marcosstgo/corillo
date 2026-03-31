@@ -1686,6 +1686,7 @@ button { font: inherit; cursor: pointer; }
   }
   .crl-reel {
     width: 400px;
+    flex-shrink: 0;
     border-radius: var(--crl-r-lg);
     margin: 0 auto;
     box-shadow: 0 8px 40px rgba(0,0,0,.6);

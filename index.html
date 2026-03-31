@@ -231,6 +231,24 @@
     .offline-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18);border:none;padding:0;cursor:pointer;transition:background .2s,transform .2s;flex-shrink:0}
     .offline-dot.active{background:var(--crl-accent);transform:scale(1.4)}
 
+    /* ── REELS STRIP ── */
+    .reels-strip{padding:0 32px 40px}
+    .reels-strip-hd{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .reels-strip-hd span{font-family:var(--crl-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--crl-muted)}
+    .reels-strip-hd .section-line{flex:1}
+    .reels-strip-hd a{font-family:var(--crl-mono);font-size:10px;color:var(--crl-accent);white-space:nowrap;transition:.15s}
+    .reels-strip-hd a:hover{opacity:.75}
+    .reels-strip-track{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:4px}
+    .reels-strip-track::-webkit-scrollbar{display:none}
+    .reel-card{flex-shrink:0;width:110px;border-radius:8px;overflow:hidden;background:var(--crl-surface);border:1px solid var(--crl-border);text-decoration:none;color:inherit;transition:transform .18s,border-color .18s}
+    .reel-card:hover{transform:translateY(-3px);border-color:rgba(0,191,255,.3)}
+    .reel-card-thumb{aspect-ratio:9/16;position:relative;background:linear-gradient(135deg,var(--crl-surface),var(--crl-panel));background-size:cover;background-position:center}
+    .reel-card-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35)}
+    .reel-card-play i{font-size:1.4rem;color:rgba(255,255,255,.7)}
+    .reel-card-dur{position:absolute;bottom:6px;right:6px;font-family:var(--crl-mono);font-size:9px;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);color:rgba(232,246,255,.8);padding:2px 6px;border-radius:3px}
+    .reel-card-info{padding:7px 8px}
+    .reel-card-ch{font-family:var(--crl-mono);font-size:10px;font-weight:700;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
     /* ── DRAWER ── */
     .drawer-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(4px)}
     .drawer-overlay.open{display:block}
@@ -293,7 +311,7 @@
     /* ── RESPONSIVE ── */
     @media(max-width:1100px){.live-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:820px){.layout{grid-template-columns:1fr}aside{display:none}.nav-menu-btn{display:flex}.featured-wrap{aspect-ratio:16/9}}
-    @media(max-width:600px){nav{padding:0 12px;gap:8px}.nav-live{font-size:9px;padding:3px 7px 3px 6px;letter-spacing:1px;white-space:nowrap}.nav-btn{font-size:9px;padding:5px 10px;letter-spacing:1px;white-space:nowrap}.live-grid{grid-template-columns:repeat(2,1fr)}.content-section{padding:20px 16px}.featured-overlay{padding:24px 16px 16px}}
+    @media(max-width:600px){nav{padding:0 12px;gap:8px}.nav-live{font-size:9px;padding:3px 7px 3px 6px;letter-spacing:1px;white-space:nowrap}.nav-btn{font-size:9px;padding:5px 10px;letter-spacing:1px;white-space:nowrap}.live-grid{grid-template-columns:repeat(2,1fr)}.content-section{padding:20px 16px}.featured-overlay{padding:24px 16px 16px}.reels-strip{padding:0 16px 32px}}
   </style>
 </head>
 <body class="crl-body">
@@ -422,6 +440,16 @@
         <div class="section-line"></div>
       </div>
       <div class="live-grid" id="liveGrid"></div>
+    </div>
+
+    <!-- Reels strip -->
+    <div class="reels-strip" id="reelsStrip" style="display:none">
+      <div class="reels-strip-hd">
+        <span><i class="fa-solid fa-scissors" style="margin-right:6px"></i>Últimos reels</span>
+        <div class="section-line"></div>
+        <a href="/reels/">Ver todos <i class="fa-solid fa-arrow-right" style="font-size:9px"></i></a>
+      </div>
+      <div class="reels-strip-track" id="reelsTrack"></div>
     </div>
 
     <footer class="site-footer">
@@ -1256,6 +1284,39 @@
       applyTheme(next);
       localStorage.setItem("corillo-theme", next);
     }));
+  })();
+
+  /* ── Reels strip ── */
+  (async function() {
+    const PB = 'https://pb.corillo.live';
+    try {
+      const res = await fetch(`${PB}/api/collections/reels/records?filter=${encodeURIComponent('public=true')}&sort=-date&perPage=6`);
+      const data = await res.json();
+      const items = data.items || [];
+      if (!items.length) return;
+
+      const strip  = document.getElementById('reelsStrip');
+      const track  = document.getElementById('reelsTrack');
+
+      items.forEach(r => {
+        const dur = r.duration ? `${r.duration}s` : '';
+        const thumb = r.thumb ? `background-image:url('${r.thumb}')` : '';
+        const a = document.createElement('a');
+        a.className = 'reel-card';
+        a.href = '/reels/';
+        a.innerHTML = `
+          <div class="reel-card-thumb" style="${thumb}">
+            <div class="reel-card-play"><i class="fa-solid fa-play"></i></div>
+            ${dur ? `<div class="reel-card-dur">${dur}</div>` : ''}
+          </div>
+          <div class="reel-card-info">
+            <div class="reel-card-ch">${r.channel.toUpperCase()}</div>
+          </div>`;
+        track.appendChild(a);
+      });
+
+      strip.style.display = '';
+    } catch(e) {}
   })();
 
   /* ── Footer version ── */
