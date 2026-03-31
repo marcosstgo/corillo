@@ -202,7 +202,8 @@ button { font: inherit; cursor: pointer; }
 .crl-card-glass, .card-glass {
   position: relative;
   overflow: hidden;
-  border-color: rgba(0,191,255,.18);
+  border: 1px solid rgba(0,191,255,.18);
+  border-radius: var(--crl-r-lg);
   background:
     radial-gradient(circle at top left, rgba(0,191,255,.18), transparent 34%),
     linear-gradient(160deg, rgba(12,27,38,.96), rgba(7,17,24,.88));
