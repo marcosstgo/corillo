@@ -41,12 +41,11 @@ const footerLinks = [
       .step-desc a{color:var(--crl-accent)}
       .step-desc a:hover{text-decoration:underline}
       [data-theme="light"] .step-desc{color:rgba(18,18,15,.6)}
-      .contact-box{background:linear-gradient(135deg,rgba(232,200,74,.06),rgba(232,200,74,.02));border:1px solid rgba(232,200,74,.2);border-radius:14px;padding:36px 32px;text-align:center}
+      .contact-box{padding:36px 32px;text-align:center}
       @media(max-width:600px){.contact-box{padding:24px 18px}}
       .contact-title{font-family:var(--crl-display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:10px}
       .contact-sub{font-size:.9rem;color:rgba(242,239,233,.55);margin-bottom:24px;line-height:1.6}
       [data-theme="light"] .contact-sub{color:rgba(18,18,15,.55)}
-      [data-theme="light"] .contact-box{background:rgba(255,255,255,.6);border-color:rgba(180,130,0,.25)}
       .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
       @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
       .field{display:flex;flex-direction:column;gap:4px}
@@ -116,7 +115,7 @@ const footerLinks = [
 
 <section class="section" id="aplicar" style="border-bottom:none">
   <div class="wrap">
-    <div class="contact-box" id="formWrap">
+    <div class="contact-box card-glass" id="formWrap">
       <div class="contact-title">APLICA AHORA</div>
       <p class="contact-sub">Respondemos a todas las solicitudes en menos de 24 horas.</p>
 
