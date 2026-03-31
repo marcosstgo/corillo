@@ -1,0 +1,274 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const footerLinks = [
+  { href: '/multiplayer/', label: 'Multiplayer' },
+  { href: '/streamers/', label: 'Streamers' },
+  { href: '/join/', label: 'Crear Canal' },
+  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
+  { href: '/legal/', label: 'Términos' },
+  { href: 'https://status.corillo.live', label: 'Status' },
+];
+---
+<BaseLayout
+  title="CORILLO — VODs y transmisiones pasadas"
+  description="Explora transmisiones pasadas y VODs de los streamers de CORILLO, una plataforma independiente desde Puerto Rico."
+  canonical="https://corillo.live/vods/"
+  ogTitle="CORILLO — VODs y transmisiones pasadas"
+  ogDescription="Explora transmisiones pasadas y VODs de los streamers de CORILLO, una plataforma independiente desde Puerto Rico."
+  navLabel="VODs"
+  footerLinks={footerLinks}
+>
+  <fragment slot="head">
+    <meta name="theme-color" content="#030a0e" />
+    <script src="/assets/streamers.js"></script>
+    <style>
+      .hero{padding:56px 32px 40px;max-width:1200px;margin:0 auto}
+      .hero-label{font-family:var(--crl-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--crl-accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+      .hero-label::before{content:'';display:block;width:24px;height:1px;background:var(--crl-accent)}
+      .hero h1{font-family:var(--crl-display);font-size:clamp(3rem,7vw,6rem);letter-spacing:4px;line-height:.9;color:var(--crl-white);margin-bottom:16px}
+      .hero h1 span{color:var(--crl-accent)}
+      .hero-sub{font-family:var(--crl-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted)}
+      @media(max-width:600px){.hero{padding:40px 16px 28px}}
+
+      .filters{padding:0 32px 28px;max-width:1200px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+      @media(max-width:600px){.filters{padding:0 16px 20px}}
+
+      .section{padding:0 32px 64px;max-width:1200px;margin:0 auto}
+      .vod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+      @media(max-width:1000px){.vod-grid{grid-template-columns:repeat(2,1fr)}}
+      @media(max-width:600px){.section{padding:0 16px 48px}.vod-grid{grid-template-columns:1fr;gap:12px}}
+
+      .vod-card{border-radius:10px;overflow:hidden;border:1px solid var(--crl-border);background:var(--crl-surface);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
+      .vod-card:hover{transform:translateY(-3px);border-color:rgba(0,191,255,.25);box-shadow:0 16px 48px rgba(0,0,0,.5),0 0 0 1px rgba(0,191,255,.06)}
+      .vod-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+      .vod-thumb-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+      .vod-thumb-letter{font-family:var(--crl-display);font-size:5rem;letter-spacing:4px;opacity:.12}
+      .vod-thumb-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,191,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,191,255,.03) 1px,transparent 1px);background-size:32px 32px}
+      .vod-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;background:rgba(3,10,14,.4)}
+      .vod-card:hover .vod-play-btn{opacity:1}
+      .vod-play-icon{width:52px;height:52px;border-radius:50%;background:rgba(0,191,255,.15);border:1px solid rgba(0,191,255,.4);display:flex;align-items:center;justify-content:center;color:var(--crl-white);font-size:1.1rem;backdrop-filter:blur(8px);transition:transform .15s}
+      .vod-card:hover .vod-play-icon{transform:scale(1.08)}
+      .vod-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s;pointer-events:none}
+      .vod-card:hover .vod-preview{opacity:1}
+      .vod-duration{position:absolute;bottom:8px;right:8px;font-family:var(--crl-mono);font-size:10px;letter-spacing:.5px;background:rgba(3,10,14,.85);backdrop-filter:blur(6px);color:rgba(232,246,255,.85);padding:3px 8px;border-radius:4px}
+      .vod-body{padding:12px 14px 14px}
+      .vod-channel-row{display:flex;align-items:center;gap:9px;margin-bottom:7px}
+      .vod-ava{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:12px;color:#030a0e}
+      .vod-name{font-family:var(--crl-mono);font-size:11px;font-weight:700;letter-spacing:.5px}
+      .vod-meta{display:flex;align-items:center;gap:10px;font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:.5px}
+      .vod-meta i{font-size:.65rem}
+      .vod-empty-wrap{grid-column:1/-1}
+
+      .crl-modal{max-width:860px}
+      .modal-ava{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:13px;color:#030a0e}
+      .modal-name{font-family:var(--crl-mono);font-size:12px;font-weight:700;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .modal-date{font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:.5px;flex-shrink:0;margin-left:auto}
+      .modal-close{width:32px;height:32px;border-radius:6px;border:1px solid var(--crl-border);background:transparent;color:var(--crl-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:.15s;flex-shrink:0}
+      .modal-close:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
+      .modal-video{background:#000;aspect-ratio:16/9;width:100%}
+      .modal-video video{width:100%;height:100%;display:block}
+      .modal-stat{font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:.5px;display:flex;align-items:center;gap:6px}
+      .modal-stat i{color:var(--crl-accent);font-size:.65rem}
+      @media(max-width:600px){.crl-modal{border-radius:12px 12px 0 0}.crl-modal-backdrop{align-items:flex-end;padding:0}}
+    </style>
+  </fragment>
+
+<div class="hero">
+  <div class="hero-label">Archivo</div>
+  <h1>TRANS<span>MISIONES</span></h1>
+  <div class="hero-sub" id="heroSub">Cargando…</div>
+</div>
+
+<div class="filters" id="filters">
+  <button class="crl-filter-pill active" data-channel="all">Todos</button>
+</div>
+
+<div class="section">
+  <div class="vod-grid" id="vodGrid"></div>
+</div>
+
+<div class="crl-modal-backdrop" id="modalBackdrop">
+  <div class="crl-modal" id="modal">
+    <div class="crl-modal-header">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1">
+        <div class="modal-ava" id="modalAva"></div>
+        <div class="modal-name" id="modalName"></div>
+      </div>
+      <div class="modal-date" id="modalDate"></div>
+      <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-video">
+      <video id="modalVideo" controls preload="metadata"></video>
+    </div>
+    <div class="crl-modal-footer">
+      <div class="modal-stat"><i class="fa-solid fa-clock"></i> <span id="modalDuration">—</span></div>
+      <div class="modal-stat"><i class="fa-solid fa-weight-hanging"></i> <span id="modalSize">—</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PB = 'https://pb.corillo.live';
+
+function fmtDuration(s: number) {
+  if (!s) return '—';
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = Math.floor(s % 60);
+  if (h > 0) return `${h}h ${m.toString().padStart(2,'0')}m`;
+  return `${m}:${ss.toString().padStart(2,'0')}`;
+}
+
+function fmtSize(bytes: number) {
+  if (!bytes) return '—';
+  if (bytes > 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
+  return (bytes / 1048576).toFixed(0) + ' MB';
+}
+
+function fmtDate(iso: string) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function streamerInfo(channel: string) {
+  const s = ((window as any).STREAMERS || []).find((x: any) => x.key === channel);
+  return s || { key: channel, name: channel.toUpperCase(), color: '#00bfff' };
+}
+
+function avaStyle(s: any) {
+  return s.color ? `background:${s.color}` : 'background:var(--crl-accent)';
+}
+
+function initial(name: string) {
+  return (name || '?')[0].toUpperCase();
+}
+
+let allVods: any[] = [];
+let activeFilter = 'all';
+
+async function loadVods() {
+  try {
+    const r = await fetch(`${PB}/api/collections/vods/records?sort=-date&perPage=200`);
+    const data = await r.json();
+    allVods = data.items || [];
+  } catch { allVods = []; }
+
+  buildFilters();
+
+  const initCh = new URLSearchParams(location.search).get('ch');
+  if (initCh && initCh !== 'all') setFilter(initCh);
+  else renderGrid();
+
+  const heroSub = document.getElementById('heroSub')!;
+  if (allVods.length === 0) {
+    heroSub.textContent = 'Aún no hay transmisiones grabadas';
+  } else {
+    const channels = new Set(allVods.map(v => v.channel)).size;
+    heroSub.textContent = `${allVods.length} transmisión${allVods.length !== 1 ? 'es' : ''} · ${channels} canal${channels !== 1 ? 'es' : ''}`;
+  }
+}
+
+function buildFilters() {
+  const channels = [...new Set(allVods.map(v => v.channel))] as string[];
+  const container = document.getElementById('filters')!;
+  channels.forEach(ch => {
+    const s = streamerInfo(ch);
+    const btn = document.createElement('button');
+    btn.className = 'crl-filter-pill';
+    btn.dataset.channel = ch;
+    btn.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.color || 'var(--crl-accent)'};margin-right:6px"></span>${s.name}`;
+    container.appendChild(btn);
+  });
+  container.addEventListener('click', (e: Event) => {
+    const pill = (e.target as Element).closest('.crl-filter-pill') as HTMLElement | null;
+    if (pill) setFilter(pill.dataset.channel!);
+  });
+}
+
+function setFilter(channel: string) {
+  activeFilter = channel;
+  document.querySelectorAll('.crl-filter-pill').forEach(b => {
+    b.classList.toggle('active', (b as HTMLElement).dataset.channel === channel);
+  });
+  renderGrid();
+}
+
+function renderGrid() {
+  const grid = document.getElementById('vodGrid')!;
+  const list = activeFilter === 'all' ? allVods : allVods.filter(v => v.channel === activeFilter);
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="vod-empty-wrap">
+        <div class="crl-empty">
+          <div class="crl-empty-icon"><i class="fa-solid fa-film"></i></div>
+          <div class="crl-empty-title">SIN VODS</div>
+          <div class="crl-empty-sub">Aún no hay transmisiones grabadas${activeFilter !== 'all' ? ' para este canal' : ''}</div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(vod => {
+    const s = streamerInfo(vod.channel);
+    const colorBg = s.color ? `${s.color}18` : 'rgba(0,191,255,.07)';
+    return `
+    <div class="vod-card" data-id="${vod.id}">
+      <div class="vod-thumb" style="background:${colorBg}">
+        <div class="vod-thumb-bg">
+          <div class="vod-thumb-letter" style="color:${s.color || 'var(--crl-accent)'}">${initial(s.name)}</div>
+        </div>
+        <div class="vod-thumb-grid"></div>
+        ${vod.thumb ? `<img src="${vod.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" loading="lazy">` : ''}
+        ${vod.preview && window.matchMedia('(hover: hover)').matches ? `<video class="vod-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
+        <div class="vod-play-btn">
+          <div class="vod-play-icon"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
+        </div>
+        <div class="vod-duration">${fmtDuration(vod.duration)}</div>
+      </div>
+      <div class="vod-body">
+        <div class="vod-channel-row">
+          <div class="vod-ava" style="${avaStyle(s)}">${initial(s.name)}</div>
+          <div class="vod-name" style="color:${s.color || 'var(--crl-white)'}">${s.name}</div>
+        </div>
+        <div class="vod-meta">
+          <span><i class="fa-regular fa-calendar"></i> ${fmtDate(vod.date)}</span>
+          <span><i class="fa-solid fa-weight-hanging"></i> ${fmtSize(vod.size)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.vod-card').forEach(card => {
+    card.addEventListener('click', () => {
+      location.href = `/vods/v/?id=${(card as HTMLElement).dataset.id}`;
+    });
+    if (window.matchMedia('(hover: hover)').matches) {
+      const vid = card.querySelector('.vod-preview') as HTMLVideoElement | null;
+      if (vid) {
+        card.addEventListener('mouseenter', () => { vid.play().catch(() => {}); });
+        card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+      }
+    }
+  });
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop')!.classList.remove('open');
+  const video = document.getElementById('modalVideo') as HTMLVideoElement;
+  video.pause();
+  video.src = '';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose')!.addEventListener('click', closeModal);
+document.getElementById('modalBackdrop')!.addEventListener('click', (e: Event) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+document.addEventListener('keydown', (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); });
+
+loadVods();
+</script>
+
+</BaseLayout>
