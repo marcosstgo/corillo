@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Nueva contraseña — CORILLO"
+  description="Restablece tu contraseña de CORILLO."
+  canonical="https://corillo.live/perfil/reset/"
+>
+  <fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+    <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.js"></script>
+    <style>
+      .page {
+        display:flex;align-items:center;justify-content:center;
+        min-height:calc(100vh - 52px);padding:40px 20px;
+      }
+      .card {
+        width:100%;max-width:400px;
+        padding:36px 40px;
+      }
+      @media(max-width:480px){.card{padding:28px 24px}}
+      .card h2 {
+        font-family:var(--crl-display);font-size:1.8rem;
+        margin-bottom:6px;letter-spacing:1px;
+      }
+      .card p{color:var(--crl-muted);font-size:.85rem;margin-bottom:28px}
+
+      .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+      .field label{
+        font-size:.72rem;font-family:var(--crl-mono);
+        letter-spacing:2px;text-transform:uppercase;color:var(--crl-muted);
+      }
+      .field input{
+        background:var(--crl-surface);border:1px solid var(--crl-border);
+        border-radius:8px;padding:10px 14px;
+        color:var(--crl-white);font-family:var(--crl-body);font-size:.95rem;
+        transition:.15s;width:100%;
+      }
+      .field input:focus{outline:none;border-color:var(--crl-accent);box-shadow:0 0 0 3px rgba(232,200,74,.08)}
+
+      .msg{font-size:.88rem;font-family:var(--crl-mono);margin-bottom:12px;display:none;padding:8px 12px;border-radius:7px}
+      .msg.err{color:var(--crl-hot);border:1px dashed rgba(206,17,38,.3);background:rgba(206,17,38,.05)}
+      .msg.ok {color:var(--crl-confirm);border:1px solid rgba(0,255,157,.2);background:rgba(0,255,157,.05)}
+
+      .spinner{
+        display:inline-block;width:14px;height:14px;
+        border:2px solid rgba(255,255,255,.2);border-top-color:var(--crl-white);
+        border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;
+      }
+      @keyframes spin{to{transform:rotate(360deg)}}
+
+      #invalidState{display:none;text-align:center}
+      #invalidState i{font-size:2rem;color:var(--crl-hot);margin-bottom:16px;display:block}
+      #invalidState p{margin-bottom:20px}
+
+      #successState{display:none;text-align:center}
+      #successState i{font-size:2rem;color:var(--crl-confirm);margin-bottom:16px;display:block}
+      #successState p{margin-bottom:20px}
+    </style>
+  </fragment>
+
+<div class="page">
+  <div class="card card-glass">
+
+    <div id="resetForm">
+      <h2>NUEVA CONTRASEÑA</h2>
+      <p>Crea una nueva contraseña para tu cuenta de CORILLO.</p>
+      <div class="field">
+        <label>Nueva contraseña</label>
+        <input type="password" id="newPass" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="field">
+        <label>Confirmar contraseña</label>
+        <input type="password" id="newPassConfirm" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="msg err" id="errMsg"></div>
+      <button class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;padding:10px;margin-top:8px">
+        <i class="fa-solid fa-lock"></i> Guardar contraseña
+      </button>
+    </div>
+
+    <div id="invalidState">
+      <i class="fa-solid fa-circle-xmark"></i>
+      <h2 style="font-family:var(--crl-display);font-size:1.6rem;margin-bottom:8px">LINK INVÁLIDO</h2>
+      <p>Este link ya expiró o no es válido. Solicita uno nuevo desde el login.</p>
+      <a href="/perfil/" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px">Volver al login</a>
+    </div>
+
+    <div id="successState">
+      <i class="fa-solid fa-circle-check"></i>
+      <h2 style="font-family:var(--crl-display);font-size:1.6rem;margin-bottom:8px">¡LISTO!</h2>
+      <p>Tu contraseña fue actualizada. Ya puedes entrar con tu nueva contraseña.</p>
+      <a href="/perfil/" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Ir al login
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const PB_URL = 'https://pb.corillo.live';
+const pb = new (window as any).PocketBase(PB_URL);
+
+const resetForm      = document.getElementById('resetForm')!;
+const invalidState   = document.getElementById('invalidState')!;
+const successState   = document.getElementById('successState')!;
+const newPass        = document.getElementById('newPass') as HTMLInputElement;
+const newPassConfirm = document.getElementById('newPassConfirm') as HTMLInputElement;
+const errMsg         = document.getElementById('errMsg')!;
+const submitBtn      = document.getElementById('submitBtn') as HTMLButtonElement;
+
+const params = new URLSearchParams(window.location.search);
+const token  = params.get('token');
+
+if (!token) {
+  resetForm.style.display = 'none';
+  invalidState.style.display = 'block';
+}
+
+submitBtn.addEventListener('click', async () => {
+  const pass    = newPass.value;
+  const confirm = newPassConfirm.value;
+
+  errMsg.style.display = 'none';
+
+  if (!pass || !confirm) {
+    errMsg.textContent = 'Completa ambos campos.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  if (pass.length < 8) {
+    errMsg.textContent = 'Mínimo 8 caracteres.';
+    errMsg.style.display = 'block';
+    return;
+  }
+  if (pass !== confirm) {
+    errMsg.textContent = 'Las contraseñas no coinciden.';
+    errMsg.style.display = 'block';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner"></span> Guardando…';
+
+  try {
+    await pb.collection('streamers').confirmPasswordReset(token, pass, confirm);
+    resetForm.style.display = 'none';
+    successState.style.display = 'block';
+  } catch (e: any) {
+    if (e?.response?.code === 400) {
+      resetForm.style.display = 'none';
+      invalidState.style.display = 'block';
+    } else {
+      errMsg.textContent = 'Error al guardar. Intenta de nuevo.';
+      errMsg.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Guardar contraseña';
+    }
+  }
+});
+
+newPass.addEventListener('keydown', (e: KeyboardEvent) => { if (e.key === 'Enter') newPassConfirm.focus(); });
+newPassConfirm.addEventListener('keydown', (e: KeyboardEvent) => { if (e.key === 'Enter') submitBtn.click(); });
+</script>
+
+</BaseLayout>
