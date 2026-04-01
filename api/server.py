@@ -507,6 +507,47 @@ async def delete_reel(reel_id: str, request: Request):
     return {"ok": True}
 
 
+@app.patch("/reel/{reel_id}/visibility")
+async def reel_visibility(reel_id: str, request: Request):
+    """Cambia la visibilidad pública de un reel. Solo el propietario puede hacerlo."""
+    auth = request.headers.get("Authorization", "")
+    if not auth:
+        raise HTTPException(status_code=401)
+
+    body = await request.json()
+    public = bool(body.get("public", False))
+
+    token = await _admin_token()
+    r = await _http.get(
+        f"{PB_URL}/api/collections/reels/records/{reel_id}",
+        headers={"Authorization": token},
+        params={"fields": "channel"},
+    )
+    if r.status_code != 200:
+        raise HTTPException(status_code=404)
+    rec = r.json()
+
+    # Verificar propiedad
+    sr = await _http.get(
+        f"{PB_URL}/api/collections/streamers/records",
+        headers={"Authorization": auth},
+        params={"filter": f'key="{rec["channel"]}"', "fields": "id", "perPage": 1},
+    )
+    if sr.status_code != 200 or not sr.json().get("items"):
+        raise HTTPException(status_code=403)
+
+    # Actualizar visibilidad
+    pr = await _http.patch(
+        f"{PB_URL}/api/collections/reels/records/{reel_id}",
+        headers={"Authorization": token},
+        json={"public": public},
+    )
+    if pr.status_code != 200:
+        raise HTTPException(status_code=500, detail="Error actualizando visibilidad")
+
+    return {"ok": True, "public": public}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
