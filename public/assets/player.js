@@ -796,6 +796,11 @@ if (!__isValidChannel) {
             el.appendChild(img);
           });
         }
+        if (data.display_name && data.display_name.trim()) {
+          const dn = data.display_name.trim().toUpperCase();
+          if (DOM.chName)    DOM.chName.textContent = dn;
+          if (DOM.navChName) DOM.navChName.textContent = dn;
+        }
         if (data.sub && data.sub.trim() && DOM.chSub) DOM.chSub.textContent = data.sub.trim();
         if (DOM.chStreamTitle) {
           const title = (data.stream_title || '').trim();
