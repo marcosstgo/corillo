@@ -668,6 +668,7 @@ function applyVodContent(vod: any) {
     vid.play().catch(() => {});
     wrap.classList.add('vod-preview-mode');
   } else {
+    vid.pause();
     vid.src = '';
     wrap.classList.remove('vod-preview-mode');
   }
@@ -815,6 +816,8 @@ function setFeatured(key: string | null, paths: any[], animate: boolean) {
     featuredKey = key;
     applyFeaturedContent(key, paths);
 
+    vid.pause();
+    vid.src = '';
     if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
     const url = `/live/${encodeURIComponent(key)}/index.m3u8`;
     if (vid.canPlayType('application/vnd.apple.mpegurl')) {
