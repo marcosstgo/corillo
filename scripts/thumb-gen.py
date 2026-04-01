@@ -102,20 +102,8 @@ def capture_preview(key: str) -> bool:
 def run():
     THUMB_DIR.mkdir(parents=True, exist_ok=True)
     log.info(f"Starting thumb-gen — interval={INTERVAL}s dir={THUMB_DIR}")
-    prev_keys: set[str] = set()
     while True:
         keys = get_live_keys()
-        current_keys = set(keys)
-        new_keys = current_keys - prev_keys
-        if new_keys:
-            log.info(f"New streams detected: {sorted(new_keys)} — capturing in 10s")
-            time.sleep(10)
-            for key in sorted(new_keys):
-                if capture_thumb(key):
-                    log.info(f"Thumb OK (new): {key}")
-                if capture_preview(key):
-                    log.info(f"Preview OK (new): {key}")
-        prev_keys = current_keys
         if keys:
             log.info(f"Live: {keys}")
         for key in keys:
