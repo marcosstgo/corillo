@@ -36,6 +36,42 @@ _pb_token: dict = {"token": "", "ts": 0.0}
 PB_TOKEN_TTL = 86400
 
 
+async def _streamer_from_token(auth: str) -> str:
+    """Verifica el token del streamer via auth-refresh y retorna su channel key."""
+    me = await _http.post(
+        f"{PB_URL}/api/collections/streamers/auth-refresh",
+        headers={"Authorization": auth},
+    )
+    if me.status_code != 200:
+        raise HTTPException(status_code=401, detail="Token inválido")
+    key = me.json().get("record", {}).get("key", "")
+    if not key:
+        raise HTTPException(status_code=403)
+    return key
+
+
+async def _get_reel(reel_id: str, token: str) -> dict:
+    """Obtiene un reel por ID con token admin. Lanza 404 si no existe."""
+    r = await _http.get(
+        f"{PB_URL}/api/collections/reels/records/{reel_id}",
+        headers={"Authorization": token},
+        params={"fields": "channel,filepath,filename,public"},
+    )
+    if r.status_code != 200:
+        raise HTTPException(status_code=404, detail="Reel no encontrado")
+    return r.json()
+
+
+async def _verify_reel_owner(reel_id: str, auth: str, token: str) -> tuple:
+    """Verifica que el token autenticado sea el dueño del reel.
+    Retorna (reel_record, channel_key)."""
+    rec     = await _get_reel(reel_id, token)
+    channel = await _streamer_from_token(auth)
+    if channel != rec["channel"]:
+        raise HTTPException(status_code=403, detail="Este reel no te pertenece")
+    return rec, channel
+
+
 async def _admin_token() -> str:
     now = time.time()
     if _pb_token["token"] and now - _pb_token["ts"] < PB_TOKEN_TTL:
@@ -325,16 +361,15 @@ async def create_reel(request: Request):
     if not auth:
         raise HTTPException(status_code=401)
 
-    data = await request.json()
-    vod_id    = data.get("vod_id", "")
-    record_id = data.get("record_id", "")
-    start     = float(data.get("start", 0))
-    end       = float(data.get("end", 60))
-    public    = bool(data.get("public", False))
-    title     = str(data.get("title", ""))[:80]
+    data   = await request.json()
+    vod_id = data.get("vod_id", "")
+    start  = float(data.get("start", 0))
+    end    = float(data.get("end", 60))
+    public = bool(data.get("public", False))
+    title  = str(data.get("title", ""))[:80]
 
-    if not vod_id or not record_id:
-        raise HTTPException(status_code=400, detail="Faltan parámetros")
+    if not vod_id:
+        raise HTTPException(status_code=400, detail="Falta vod_id")
 
     duration = end - start
     if duration < 5 or duration > 60:
@@ -342,16 +377,8 @@ async def create_reel(request: Request):
     if start < 0:
         raise HTTPException(status_code=400, detail="Inicio inválido")
 
-    # Verificar que el token pertenece al streamer
-    r = await _http.get(
-        f"{PB_URL}/api/collections/streamers/records/{record_id}",
-        headers={"Authorization": auth},
-    )
-    if r.status_code != 200:
-        raise HTTPException(status_code=401, detail="No autorizado")
-    channel = r.json().get("key", "")
-    if not channel:
-        raise HTTPException(status_code=400)
+    # Verificar identidad del streamer
+    channel = await _streamer_from_token(auth)
 
     # Obtener info del VOD con token admin
     token = await _admin_token()
@@ -469,19 +496,11 @@ async def upload_reel(
 ):
     """Sube un video propio como reel. Solo streamers autenticados."""
     auth = request.headers.get("Authorization", "")
-    if not auth or not record_id:
+    if not auth:
         raise HTTPException(status_code=401)
 
-    # Verificar identidad del streamer con su token
-    sr = await _http.get(
-        f"{PB_URL}/api/collections/streamers/records/{record_id}",
-        headers={"Authorization": auth},
-    )
-    if sr.status_code != 200:
-        raise HTTPException(status_code=403)
-    channel = sr.json().get("key", "")
-    if not channel:
-        raise HTTPException(status_code=403)
+    # Verificar identidad del streamer
+    channel = await _streamer_from_token(auth)
 
     # Validar tipo MIME
     ct = file.content_type or ""
@@ -623,32 +642,15 @@ async def delete_reel(reel_id: str, request: Request):
     if not auth:
         raise HTTPException(status_code=401)
 
-    token = await _admin_token()
-    r = await _http.get(
-        f"{PB_URL}/api/collections/reels/records/{reel_id}",
-        headers={"Authorization": token},
-        params={"fields": "channel,filepath,filename"},
-    )
-    if r.status_code != 200:
-        raise HTTPException(status_code=404)
-    rec = r.json()
+    token       = await _admin_token()
+    rec, _      = await _verify_reel_owner(reel_id, auth, token)
 
-    # Verificar propiedad — auth-refresh devuelve el record del token autenticado
-    me = await _http.post(
-        f"{PB_URL}/api/collections/streamers/auth-refresh",
-        headers={"Authorization": auth},
-    )
-    if me.status_code != 200 or me.json().get("record", {}).get("key") != rec["channel"]:
-        raise HTTPException(status_code=403)
-
-    # Borrar archivo físico
+    # Borrar archivos físicos
     fp = Path(rec.get("filepath", ""))
-    if fp.exists():
-        fp.unlink(missing_ok=True)
-    thumb = fp.with_suffix(".jpg")
-    thumb.unlink(missing_ok=True)
+    fp.unlink(missing_ok=True)
+    fp.with_suffix(".jpg").unlink(missing_ok=True)
 
-    # Borrar registro
+    # Borrar registro en PocketBase
     await _http.delete(
         f"{PB_URL}/api/collections/reels/records/{reel_id}",
         headers={"Authorization": token},
@@ -663,31 +665,12 @@ async def reel_visibility(reel_id: str, request: Request):
     if not auth:
         raise HTTPException(status_code=401)
 
-    body = await request.json()
+    body   = await request.json()
     public = bool(body.get("public", False))
-    record_id = body.get("record_id", "")
 
-    token = await _admin_token()
-    r = await _http.get(
-        f"{PB_URL}/api/collections/reels/records/{reel_id}",
-        headers={"Authorization": token},
-        params={"fields": "channel"},
-    )
-    if r.status_code != 200:
-        raise HTTPException(status_code=404)
-    rec = r.json()
+    token      = await _admin_token()
+    _, _channel = await _verify_reel_owner(reel_id, auth, token)
 
-    # Verificar propiedad — fetch record del streamer por ID con token del usuario
-    if not record_id:
-        raise HTTPException(status_code=403)
-    sr = await _http.get(
-        f"{PB_URL}/api/collections/streamers/records/{record_id}",
-        headers={"Authorization": auth},
-    )
-    if sr.status_code != 200 or sr.json().get("key") != rec["channel"]:
-        raise HTTPException(status_code=403)
-
-    # Actualizar visibilidad
     pr = await _http.patch(
         f"{PB_URL}/api/collections/reels/records/{reel_id}",
         headers={"Authorization": token},

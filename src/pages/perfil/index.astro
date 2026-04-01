@@ -1623,7 +1623,7 @@ async function toggleReelPublic(id, channel) {
     const res = await fetch(`/chat-api/reel/${id}/visibility`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
-      body: JSON.stringify({ public: !isPublic, record_id: currentRecord?.id || '' }),
+      body: JSON.stringify({ public: !isPublic }),
     });
     if (!res.ok) throw new Error();
     btn.classList.toggle('is-pub', !isPublic);
