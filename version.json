@@ -1,6 +1,6 @@
 {
-  "version": "2.2.503",
-  "date": "2026-03-31",
+  "version": "2.2.504",
+  "date": "2026-04-01",
   "changes": [
     "Port katatonia player layout to all player pages (sticky header, full-width video, EMA bitrate)",
     "Shared assets: streamers.js (single source of truth), styles.css (design tokens)",
