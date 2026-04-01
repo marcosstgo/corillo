@@ -633,13 +633,12 @@ async def delete_reel(reel_id: str, request: Request):
         raise HTTPException(status_code=404)
     rec = r.json()
 
-    # Verificar propiedad — el auth token debe pertenecer a ese canal
-    sr = await _http.get(
-        f"{PB_URL}/api/collections/streamers/records",
+    # Verificar propiedad — auth-refresh devuelve el record del token autenticado
+    me = await _http.post(
+        f"{PB_URL}/api/collections/streamers/auth-refresh",
         headers={"Authorization": auth},
-        params={"filter": f'key="{rec["channel"]}"', "fields": "id", "perPage": 1},
     )
-    if sr.status_code != 200 or not sr.json().get("items"):
+    if me.status_code != 200 or me.json().get("record", {}).get("key") != rec["channel"]:
         raise HTTPException(status_code=403)
 
     # Borrar archivo físico
