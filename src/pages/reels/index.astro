@@ -90,6 +90,7 @@ let allReels: any[]   = [];
 let activeChannel     = '';
 let observer: IntersectionObserver | null = null;
 let globalMuted       = true;
+const streamerAvatars: Record<string, string> = {};
 
 async function loadReels(channel = '') {
   const loading   = document.getElementById('loadingState')!;
@@ -132,6 +133,10 @@ function renderReels(reels: any[]) {
     const colors   = ['#e8c84a','#00bfff','#ff6b6b','#00ff9d','#ff9f43','#a29bfe','#fd79a8','#6c5ce7'];
     const avaColor = colors[r.channel.charCodeAt(0) % colors.length];
     const avaLetter = (r.channel[0] || '?').toUpperCase();
+    const avaUrl   = streamerAvatars[r.channel] || '';
+    const avaHtml  = avaUrl
+      ? `<img src="${avaUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+      : avaLetter;
 
     const el = document.createElement('div');
     el.className = 'crl-reel';
@@ -151,7 +156,7 @@ function renderReels(reels: any[]) {
       <div class="crl-reel-overlay">
         <div class="crl-reel-info">
           <div class="crl-reel-streamer">
-            <div class="crl-reel-ava" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaLetter}</div>
+            <div class="crl-reel-ava" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaHtml}</div>
             <span class="crl-reel-name">${r.channel.toUpperCase()}</span>
           </div>
           ${r.title ? `<div class="crl-reel-desc">${esc(r.title)}</div>` : ''}
@@ -250,9 +255,18 @@ async function shareReel(channel: string, filename: string) {
 
 async function loadStreamers() {
   try {
-    const res  = await fetch(`${PB_URL}/api/collections/reels/records?filter=public=true&fields=channel&perPage=500`);
-    const data = await res.json();
-    const channels = [...new Set((data.items || []).map((r: any) => r.channel))].sort() as string[];
+    const [reelsRes, profilesRes] = await Promise.all([
+      fetch(`${PB_URL}/api/collections/reels/records?filter=public=true&fields=channel&perPage=500`),
+      fetch(`${PB_URL}/api/collections/streamers/records?fields=key,id,avatar&perPage=200`),
+    ]);
+    const reelsData    = await reelsRes.json();
+    const profilesData = await profilesRes.json();
+
+    (profilesData.items || []).forEach((s: any) => {
+      if (s.avatar) streamerAvatars[s.key] = `${PB_URL}/api/files/streamers/${s.id}/${s.avatar}`;
+    });
+
+    const channels = [...new Set((reelsData.items || []).map((r: any) => r.channel))].sort() as string[];
     const bar = document.getElementById('filterBar')!;
     channels.forEach(ch => {
       const btn = document.createElement('button');
@@ -287,8 +301,7 @@ function esc(s: string) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-loadStreamers();
-loadReels();
+loadStreamers().then(() => loadReels());
 </script>
 
 </FullscreenLayout>
