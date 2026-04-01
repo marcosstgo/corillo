@@ -1766,8 +1766,8 @@ button { font: inherit; cursor: pointer; }
   .crl-reel-media {
     position: relative;
     flex-shrink: 0;
-    height: min(86dvh, 56vw);
-    width: calc(min(86dvh, 56vw) * 9 / 16);
+    height: min(90dvh, 72vw);
+    width: calc(min(90dvh, 72vw) * 9 / 16);
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 8px 48px rgba(0,0,0,.7);
