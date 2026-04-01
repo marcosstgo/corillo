@@ -223,11 +223,23 @@ Keep these keys stable — they're spread across every replicated page and chang
 
 ## Notas operacionales
 
-### Sincronizar vod-process.py al servidor
+### Sincronizar scripts al servidor
 
-El script vivo en `/home/corillo-adm/corillo-vod/vod-process.py` es **independiente del repo**. Cada vez que se haga deploy y se modifique `scripts/vod-process.py`, hay que copiarlo manualmente:
+Hay **dos servicios** con archivos fuera del repo que deben sincronizarse manualmente después de cada edición:
+
+| Repo | Producción | Servicio |
+|------|-----------|---------|
+| `api/server.py` | `/home/corillo-adm/corillo-api/server.py` | `corillo-api.service` |
+| `scripts/vod-process.py` | `/home/corillo-adm/corillo-vod/vod-process.py` | (llamado por MediaMTX) |
+
+**CRÍTICO:** Editar siempre el archivo de producción directamente. Después sincronizar al repo:
 
 ```bash
+# Después de editar corillo-api:
+cp /home/corillo-adm/corillo-api/server.py /var/www/stream/api/server.py
+sudo systemctl restart corillo-api
+
+# Después de editar vod-process.py:
 sudo cp /var/www/stream/scripts/vod-process.py /home/corillo-adm/corillo-vod/vod-process.py
 ```
 

@@ -1511,6 +1511,12 @@ button { font: inherit; cursor: pointer; }
   overflow: hidden;
 }
 
+/* Media wrapper — clips bg blur and video */
+.crl-reel-media {
+  position: absolute;
+  inset: 0;
+}
+
 /* Blurred background (16:9 → fills 9:16) */
 .crl-reel-bg {
   position: absolute;
@@ -1728,20 +1734,86 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 0 6px rgba(0,191,255,.5);
 }
 
-/* Desktop: center narrow column */
+/* Desktop: YouTube Shorts style */
 @media (min-width: 600px) {
   .crl-reels {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 28px 0;
+    gap: 40px;
+    scroll-snap-type: y mandatory;
+    background: var(--crl-ink);
   }
+
+  /* Reel card: flex row — video left, side panel right */
   .crl-reel {
-    width: 400px;
+    height: auto;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 20px;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    scroll-snap-align: center;
     flex-shrink: 0;
-    border-radius: var(--crl-r-lg);
-    margin: 0 auto;
-    box-shadow: 0 8px 40px rgba(0,0,0,.6);
   }
+
+  /* Video box: clips bg blur + video to 9:16 */
+  .crl-reel-media {
+    position: relative;
+    flex-shrink: 0;
+    height: min(86dvh, 56vw);
+    width: calc(min(86dvh, 56vw) * 9 / 16);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 48px rgba(0,0,0,.7);
+  }
+
+  /* Overlay becomes side panel */
+  .crl-reel-overlay {
+    position: static;
+    background: transparent;
+    padding: 0 0 6px 0;
+    width: 200px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  .crl-reel-info { flex: none; }
+
+  .crl-reel-ava { width: 46px; height: 46px; font-size: 1.3rem; }
+
+  .crl-reel-name { color: var(--crl-white); }
+
+  .crl-reel-desc {
+    color: rgba(232,246,255,.75);
+    -webkit-line-clamp: 4;
+  }
+
+  .crl-reel-meta { color: var(--crl-muted); }
+
+  .crl-reel-actions {
+    flex-direction: column;
+    padding-bottom: 0;
+    gap: 20px;
+  }
+
+  .crl-reel-btn-icon {
+    width: 52px; height: 52px;
+    font-size: 1.2rem;
+    background: rgba(255,255,255,.07);
+    border-color: rgba(255,255,255,.1);
+  }
+
+  .crl-reel-btn span { color: var(--crl-muted); }
+
+  /* Dots: hide on desktop, too cluttered */
+  .crl-reel-dots { display: none; }
 }
 
 

@@ -527,6 +527,46 @@
     .reel-row-pub-btn.is-pub:hover { border-color: #e17055; color: #e17055; }
     .reel-row-del.loading, .reel-row-pub-btn.loading { opacity: .4; pointer-events: none; }
 
+    /* ── Upload Reel ── */
+    .reel-upload-drop {
+      border: 2px dashed var(--border-h);
+      border-radius: var(--r-lg);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: .15s;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: .78rem;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .reel-upload-drop:hover, .reel-upload-drop.drag { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.04); }
+    .reel-upload-drop i { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+    .reel-upload-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .reel-upload-preview {
+      display: none;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      background: #000;
+      aspect-ratio: 9/16;
+      max-height: 320px;
+      margin: 0 auto 14px;
+      position: relative;
+    }
+    .reel-upload-preview video { width: 100%; height: 100%; object-fit: contain; }
+    .reel-upload-meta { font-family: var(--mono); font-size: .7rem; color: var(--muted); margin-bottom: 14px; }
+    .reel-upload-progress {
+      display: none;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .reel-upload-progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width .3s; border-radius: 2px; }
+
     /* ── Paneles ── */
     .panel-row {
       background: var(--surface); border: 1px solid var(--border);
@@ -872,11 +912,55 @@
       </div>
 
       <div class="ct-panel" id="ct-reels">
-        <div style="margin-bottom:14px">
-          <a href="/reels/" class="btn" target="_blank" rel="noopener" style="font-size:.7rem"><i class="fa-solid fa-film"></i> Ver página pública de Reels</a>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+          <a href="/reels/" class="btn" target="_blank" rel="noopener" style="font-size:.7rem"><i class="fa-solid fa-film"></i> Ver página de Reels</a>
+          <button class="btn btn-primary" id="btnOpenUpload" style="font-size:.7rem"><i class="fa-solid fa-upload"></i> Subir Reel</button>
         </div>
+
+        <!-- Upload panel -->
+        <div id="reelUploadPanel" style="display:none;margin-bottom:20px">
+          <div class="pf-s-label" style="margin-bottom:12px"><i class="fa-solid fa-upload"></i> Subir video</div>
+
+          <div class="reel-upload-drop" id="reelDropZone">
+            <input type="file" id="reelFileInput" accept="video/*">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <div>Arrastra tu video aquí o toca para seleccionar</div>
+            <div style="font-size:.65rem;margin-top:6px;opacity:.6">MP4, MOV, cualquier formato · Máx 500 MB · Máx 60 seg</div>
+          </div>
+
+          <div class="reel-upload-preview" id="reelUploadPreview">
+            <video id="reelUploadVideo" playsinline muted></video>
+          </div>
+          <div class="reel-upload-meta" id="reelUploadMeta"></div>
+
+          <div class="field" style="margin-bottom:12px">
+            <label class="field-label">Título <span style="opacity:.5">(opcional)</span></label>
+            <input type="text" id="reelUploadTitle" class="field-input" placeholder="Describe el momento..." maxlength="120">
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <label class="vod-toggle">
+              <input type="checkbox" id="reelUploadPublic">
+              <span class="vod-slider"></span>
+            </label>
+            <span style="font-size:.82rem;font-family:var(--mono)">Publicar en /reels/</span>
+          </div>
+
+          <div class="reel-upload-progress" id="reelUploadProgress">
+            <div class="reel-upload-progress-bar" id="reelUploadBar"></div>
+          </div>
+          <div class="msg err" id="reelUploadErr" style="display:none;margin-bottom:10px"></div>
+
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary" id="reelUploadSubmit" style="flex:1;justify-content:center" disabled>
+              <i class="fa-solid fa-upload"></i> Subir
+            </button>
+            <button class="btn" id="reelUploadCancel" style="font-size:.78rem">Cancelar</button>
+          </div>
+        </div>
+
         <div class="reel-rows" id="reelsList"></div>
-        <p id="reelsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes reels aún. Crea uno desde tus transmisiones.</p>
+        <p id="reelsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes reels aún. Sube uno o créalo desde tus transmisiones.</p>
       </div>
     </div>
 
@@ -1539,7 +1623,7 @@ async function toggleReelPublic(id, channel) {
     const res = await fetch(`/chat-api/reel/${id}/visibility`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
-      body: JSON.stringify({ public: !isPublic }),
+      body: JSON.stringify({ public: !isPublic, record_id: currentRecord?.id || '' }),
     });
     if (!res.ok) throw new Error();
     btn.classList.toggle('is-pub', !isPublic);
@@ -1825,6 +1909,127 @@ resetBtn.addEventListener('click', async () => {
     resetBtn.disabled = false; resetBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar link';
   }
 });
+
+// ── Upload Reel ──
+(function() {
+  const btnOpen    = document.getElementById('btnOpenUpload');
+  const panel      = document.getElementById('reelUploadPanel');
+  const dropZone   = document.getElementById('reelDropZone');
+  const fileInput  = document.getElementById('reelFileInput');
+  const preview    = document.getElementById('reelUploadPreview');
+  const previewVid = document.getElementById('reelUploadVideo');
+  const meta       = document.getElementById('reelUploadMeta');
+  const titleInp   = document.getElementById('reelUploadTitle');
+  const publicChk  = document.getElementById('reelUploadPublic');
+  const progress   = document.getElementById('reelUploadProgress');
+  const bar        = document.getElementById('reelUploadBar');
+  const errEl      = document.getElementById('reelUploadErr');
+  const submitBtn  = document.getElementById('reelUploadSubmit');
+  const cancelBtn  = document.getElementById('reelUploadCancel');
+  if (!btnOpen) return;
+
+  let selectedFile = null;
+
+  btnOpen.addEventListener('click', () => {
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    if (panel.style.display === 'block') btnOpen.innerHTML = '<i class="fa-solid fa-xmark"></i> Cerrar';
+    else resetUpload();
+  });
+
+  cancelBtn.addEventListener('click', () => { panel.style.display = 'none'; btnOpen.innerHTML = '<i class="fa-solid fa-upload"></i> Subir Reel'; resetUpload(); });
+
+  dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault(); dropZone.classList.remove('drag');
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f && f.type.startsWith('video/')) handleFile(f);
+  });
+  fileInput.addEventListener('change', () => { if (fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+  function handleFile(f) {
+    selectedFile = f;
+    const url = URL.createObjectURL(f);
+    previewVid.src = url;
+    previewVid.onloadedmetadata = () => {
+      const dur = Math.round(previewVid.duration);
+      const mb  = (f.size / 1024 / 1024).toFixed(1);
+      meta.textContent = `${dur}s · ${mb} MB · ${f.name}`;
+      if (dur > 60) {
+        errEl.textContent = 'El video supera los 60 segundos.';
+        errEl.style.display = 'block';
+        submitBtn.disabled = true;
+      } else {
+        errEl.style.display = 'none';
+        submitBtn.disabled = false;
+      }
+    };
+    preview.style.display = 'block';
+    dropZone.style.display = 'none';
+  }
+
+  function resetUpload() {
+    selectedFile = null;
+    fileInput.value = '';
+    previewVid.src = '';
+    preview.style.display = 'none';
+    dropZone.style.display = 'block';
+    meta.textContent = '';
+    titleInp.value = '';
+    publicChk.checked = false;
+    progress.style.display = 'none';
+    bar.style.width = '0%';
+    errEl.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Subir';
+  }
+
+  submitBtn.addEventListener('click', async () => {
+    if (!selectedFile || !currentRecord) return;
+    errEl.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Subiendo…';
+    progress.style.display = 'block';
+    bar.style.width = '5%';
+
+    const fd = new FormData();
+    fd.append('file', selectedFile);
+    fd.append('title', titleInp.value.trim());
+    fd.append('public', publicChk.checked ? 'true' : 'false');
+    fd.append('record_id', currentRecord.id);
+
+    try {
+      const result = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/chat-api/reel/upload');
+        xhr.setRequestHeader('Authorization', pb.authStore.token);
+        xhr.upload.addEventListener('progress', (e) => {
+          if (e.lengthComputable) bar.style.width = Math.round((e.loaded / e.total) * 80) + '%';
+        });
+        xhr.onload = () => {
+          bar.style.width = '100%';
+          if (xhr.status >= 200 && xhr.status < 300) resolve(JSON.parse(xhr.responseText));
+          else reject(new Error((JSON.parse(xhr.responseText) || {}).detail || 'Error subiendo'));
+        };
+        xhr.onerror = () => reject(new Error('Error de red'));
+        xhr.send(fd);
+      });
+
+      showToast('¡Reel subido!');
+      panel.style.display = 'none';
+      btnOpen.innerHTML = '<i class="fa-solid fa-upload"></i> Subir Reel';
+      resetUpload();
+      loadMyReels(currentRecord.key);
+    } catch(e) {
+      errEl.textContent = (e && e.message) || 'Error al subir. Intenta de nuevo.';
+      errEl.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Subir';
+      bar.style.width = '0%';
+      progress.style.display = 'none';
+    }
+  });
+})();
 
 // ── Logout ──
 function doLogout() {

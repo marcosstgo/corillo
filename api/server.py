@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pywebpush import webpush, WebPushException
@@ -26,7 +26,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://corillo.live", "http://localhost:8080"],
-    allow_methods=["GET", "POST", "DELETE"],
+    allow_methods=["GET", "POST", "PATCH", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -466,6 +466,150 @@ async def create_reel(request: Request):
     }
 
 
+@app.post("/reel/upload")
+async def upload_reel(
+    request: Request,
+    file: UploadFile = File(...),
+    title: str = Form(""),
+    public: str = Form("false"),
+    record_id: str = Form(""),
+):
+    """Sube un video propio como reel. Solo streamers autenticados."""
+    auth = request.headers.get("Authorization", "")
+    if not auth or not record_id:
+        raise HTTPException(status_code=401)
+
+    # Verificar identidad del streamer con su token
+    sr = await _http.get(
+        f"{PB_URL}/api/collections/streamers/records/{record_id}",
+        headers={"Authorization": auth},
+    )
+    if sr.status_code != 200:
+        raise HTTPException(status_code=403)
+    channel = sr.json().get("key", "")
+    if not channel:
+        raise HTTPException(status_code=403)
+
+    # Validar tipo MIME
+    ct = file.content_type or ""
+    if not ct.startswith("video/"):
+        raise HTTPException(status_code=400, detail="Solo se aceptan archivos de video")
+
+    # Leer archivo en memoria (límite 500 MB)
+    MAX_SIZE = 500 * 1024 * 1024
+    data = await file.read(MAX_SIZE + 1)
+    if len(data) > MAX_SIZE:
+        raise HTTPException(status_code=413, detail="El archivo supera los 500 MB")
+
+    # Guardar temporal
+    reel_dir = Path(f"/var/vods/reels/{channel}")
+    reel_dir.mkdir(parents=True, exist_ok=True)
+    ts  = int(time.time())
+    tmp = str(reel_dir / f"{ts}_upload_tmp{Path(file.filename or '.mp4').suffix}")
+    out = str(reel_dir / f"{ts}.mp4")
+    thumb_out = str(reel_dir / f"{ts}.jpg")
+
+    with open(tmp, "wb") as f_:
+        f_.write(data)
+
+    # Obtener duración con ffprobe
+    pp = await asyncio.create_subprocess_exec(
+        "ffprobe", "-v", "error", "-select_streams", "v:0",
+        "-show_entries", "format=duration", "-of", "csv=p=0", tmp,
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL,
+    )
+    stdout, _ = await pp.communicate()
+    try:
+        duration = float(stdout.decode().strip())
+    except Exception:
+        os.unlink(tmp)
+        raise HTTPException(status_code=400, detail="No se pudo leer la duración del video")
+
+    if duration > 60:
+        os.unlink(tmp)
+        raise HTTPException(status_code=400, detail="El video no puede superar los 60 segundos")
+
+    # Remuxear/convertir a MP4 faststart con filtro 9:16
+    filter_complex = (
+        "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,"
+        "crop=1080:1920,boxblur=40:4[bg];"
+        "[0:v]scale=1080:1920:force_original_aspect_ratio=decrease[fg];"
+        "[bg][fg]overlay=(W-w)/2:(H-h)/2[out]"
+    )
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-i", tmp,
+        "-filter_complex", filter_complex,
+        "-map", "[out]", "-map", "0:a?",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+        "-c:a", "aac", "-b:a", "128k",
+        "-movflags", "+faststart",
+        out,
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(proc.communicate(), timeout=300)
+    except asyncio.TimeoutError:
+        proc.kill()
+        os.unlink(tmp)
+        raise HTTPException(status_code=504, detail="Timeout procesando video")
+
+    os.unlink(tmp)
+
+    if proc.returncode != 0 or not os.path.exists(out):
+        raise HTTPException(status_code=500, detail="Error procesando el video")
+
+    # Thumbnail
+    thumb_url = ""
+    tp = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-ss", "1", "-i", out,
+        "-vframes", "1", "-vf", "scale=540:960", "-q:v", "3",
+        thumb_out,
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(tp.communicate(), timeout=20)
+        if os.path.exists(thumb_out):
+            thumb_url = f"/vods/reels/{channel}/{ts}.jpg"
+    except Exception:
+        pass
+
+    size = os.path.getsize(out) if os.path.exists(out) else 0
+    is_public = public.lower() in ("true", "1", "yes")
+    token = await _admin_token()
+
+    rr = await _http.post(
+        f"{PB_URL}/api/collections/reels/records",
+        headers={"Authorization": token},
+        json={
+            "channel":   channel,
+            "vod_id":    "",
+            "filename":  f"{ts}.mp4",
+            "filepath":  out,
+            "duration":  int(duration),
+            "start_sec": 0,
+            "end_sec":   int(duration),
+            "thumb":     thumb_url,
+            "public":    is_public,
+            "title":     title.strip()[:120],
+            "size":      size,
+            "date":      datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S.000Z'),
+        },
+        timeout=15,
+    )
+    if rr.status_code not in (200, 201):
+        raise HTTPException(status_code=500, detail="Error guardando reel en base de datos")
+
+    rec = rr.json()
+    return {
+        "id":           rec["id"],
+        "filename":     f"{ts}.mp4",
+        "thumb":        thumb_url,
+        "duration":     int(duration),
+        "public":       is_public,
+        "download_url": f"/vods/reels/{channel}/{ts}.mp4",
+    }
+
+
 @app.delete("/reel/{reel_id}")
 async def delete_reel(reel_id: str, request: Request):
     """Elimina un reel. Solo el streamer propietario puede borrarlo."""
@@ -516,6 +660,7 @@ async def reel_visibility(reel_id: str, request: Request):
 
     body = await request.json()
     public = bool(body.get("public", False))
+    record_id = body.get("record_id", "")
 
     token = await _admin_token()
     r = await _http.get(
@@ -527,13 +672,14 @@ async def reel_visibility(reel_id: str, request: Request):
         raise HTTPException(status_code=404)
     rec = r.json()
 
-    # Verificar propiedad
+    # Verificar propiedad — fetch record del streamer por ID con token del usuario
+    if not record_id:
+        raise HTTPException(status_code=403)
     sr = await _http.get(
-        f"{PB_URL}/api/collections/streamers/records",
+        f"{PB_URL}/api/collections/streamers/records/{record_id}",
         headers={"Authorization": auth},
-        params={"filter": f'key="{rec["channel"]}"', "fields": "id", "perPage": 1},
     )
-    if sr.status_code != 200 or not sr.json().get("items"):
+    if sr.status_code != 200 or sr.json().get("key") != rec["channel"]:
         raise HTTPException(status_code=403)
 
     # Actualizar visibilidad
