@@ -377,34 +377,54 @@
     /* ── Reel Timeline ── */
     .rtl { padding: 4px 0 12px; user-select: none; touch-action: none; }
     .rtl-track {
-      position: relative; height: 6px;
-      background: rgba(255,255,255,.1); border-radius: 3px;
-      margin: 22px 10px 10px;
+      position: relative; height: 8px;
+      background: rgba(255,255,255,.1); border-radius: 4px;
+      margin: 32px 14px 14px;
+      cursor: pointer;
     }
     [data-theme="light"] .rtl-track { background: rgba(0,0,0,.12); }
     .rtl-fill {
       position: absolute; height: 100%;
-      background: var(--accent); border-radius: 3px;
-      opacity: .6; pointer-events: none; transition: none;
+      background: var(--accent); border-radius: 4px;
+      opacity: .55; pointer-events: none; transition: none;
     }
     .rtl-handle {
       position: absolute; top: 50%;
       transform: translate(-50%,-50%);
-      width: 22px; height: 22px; border-radius: 50%;
+      width: 20px; height: 20px; border-radius: 50%;
       background: var(--white); border: 2.5px solid var(--accent);
-      cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,.35);
-      transition: box-shadow .1s, transform .1s; z-index: 2;
+      cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,.45);
+      transition: box-shadow .1s, transform .1s; z-index: 3;
+      /* Invisible hit area — makes it much easier to grab on mobile */
+      -webkit-tap-highlight-color: transparent;
     }
-    .rtl-handle:hover { box-shadow: 0 2px 14px rgba(0,191,255,.4); }
+    /* Large invisible hit area via ::before */
+    .rtl-handle::before {
+      content: ''; position: absolute;
+      inset: -14px; border-radius: 50%;
+    }
+    .rtl-handle:hover { box-shadow: 0 2px 14px rgba(0,191,255,.5); }
     .rtl-handle:active, .rtl-handle.dragging {
       cursor: grabbing;
-      transform: translate(-50%,-50%) scale(1.18);
-      box-shadow: 0 4px 16px rgba(0,191,255,.35);
+      transform: translate(-50%,-50%) scale(1.22);
+      box-shadow: 0 4px 18px rgba(0,191,255,.45);
     }
+    /* Time tooltip above handle while dragging */
+    .rtl-handle .rtl-tip {
+      display: none;
+      position: absolute; bottom: calc(100% + 10px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--panel); border: 1px solid var(--border-h);
+      color: var(--white); font-family: var(--mono); font-size: 10px;
+      padding: 3px 7px; border-radius: 5px; white-space: nowrap;
+      pointer-events: none; z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,.4);
+    }
+    .rtl-handle.dragging .rtl-tip { display: block; }
     .rtl-times {
       display: flex; justify-content: space-between; align-items: center;
       font-family: var(--mono); font-size: 10px; color: var(--muted);
-      padding: 0 10px; margin-top: 6px;
+      padding: 0 14px; margin-top: 4px;
     }
     .rtl-t-dur {
       font-size: 11px; font-weight: 700; letter-spacing: 1px;
@@ -1167,8 +1187,8 @@ async function loadMyVods(channel) {
           <div class="rtl" id="rtl-${v.id}" data-duration="${v.duration||0}">
             <div class="rtl-track">
               <div class="rtl-fill" id="rtl-fill-${v.id}"></div>
-              <div class="rtl-handle" id="rtl-hs-${v.id}"></div>
-              <div class="rtl-handle" id="rtl-he-${v.id}"></div>
+              <div class="rtl-handle" id="rtl-hs-${v.id}"><span class="rtl-tip" id="rtl-tip-hs-${v.id}"></span></div>
+              <div class="rtl-handle" id="rtl-he-${v.id}"><span class="rtl-tip" id="rtl-tip-he-${v.id}"></span></div>
             </div>
             <div class="rtl-times">
               <span id="rtl-ts-${v.id}">0:00</span>
@@ -1199,20 +1219,29 @@ function initReelTimeline(vodId, duration) {
   if (!tlEl || tlEl.dataset.init === '1') return;
   tlEl.dataset.init = '1';
 
-  const fill  = document.getElementById(`rtl-fill-${vodId}`);
-  const hs    = document.getElementById(`rtl-hs-${vodId}`);
-  const he    = document.getElementById(`rtl-he-${vodId}`);
-  const ts    = document.getElementById(`rtl-ts-${vodId}`);
-  const td    = document.getElementById(`rtl-td-${vodId}`);
-  const te    = document.getElementById(`rtl-te-${vodId}`);
-  const track = tlEl.querySelector('.rtl-track');
+  const fill   = document.getElementById(`rtl-fill-${vodId}`);
+  const hs     = document.getElementById(`rtl-hs-${vodId}`);
+  const he     = document.getElementById(`rtl-he-${vodId}`);
+  const tipHs  = document.getElementById(`rtl-tip-hs-${vodId}`);
+  const tipHe  = document.getElementById(`rtl-tip-he-${vodId}`);
+  const ts     = document.getElementById(`rtl-ts-${vodId}`);
+  const td     = document.getElementById(`rtl-td-${vodId}`);
+  const te     = document.getElementById(`rtl-te-${vodId}`);
+  const track  = tlEl.querySelector('.rtl-track');
 
   const MIN = 5, MAX = 60;
   let s0 = 0, e0 = Math.min(30, duration);
 
   function fmt(sec) {
-    const m = Math.floor(sec/60), s = Math.floor(sec%60);
-    return `${m}:${String(s).padStart(2,'0')}`;
+    const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
+    return `${m}:${String(s).padStart(2, '0')}`;
+  }
+
+  function clampToTrack(clientX) {
+    // Always recalculate — avoids stale rect if page scrolled during drag
+    const rect = track.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    return Math.round((x / rect.width) * duration);
   }
 
   function render() {
@@ -1224,6 +1253,8 @@ function initReelTimeline(vodId, duration) {
     he.style.left = ep + '%';
     ts.textContent = fmt(s0);
     te.textContent = fmt(e0);
+    if (tipHs) tipHs.textContent = fmt(s0);
+    if (tipHe) tipHe.textContent = fmt(e0);
     const dur = e0 - s0;
     td.textContent = dur + 's';
     td.className = 'rtl-t-dur' + (dur >= MIN && dur <= MAX ? ' ok' : ' err');
@@ -1233,14 +1264,15 @@ function initReelTimeline(vodId, duration) {
 
   function drag(handle, isStart) {
     handle.addEventListener('pointerdown', e => {
+      // Only main button or touch
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.preventDefault();
+      e.stopPropagation(); // don't bubble to track click handler
       handle.setPointerCapture(e.pointerId);
       handle.classList.add('dragging');
-      const rect = track.getBoundingClientRect();
 
-      function onMove(e) {
-        const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-        let sec = Math.round((x / rect.width) * duration);
+      function onMove(ev) {
+        const sec = clampToTrack(ev.clientX);
         if (isStart) {
           s0 = Math.max(0, Math.min(sec, e0 - MIN));
         } else {
@@ -1256,10 +1288,25 @@ function initReelTimeline(vodId, duration) {
       }
 
       handle.addEventListener('pointermove', onMove);
-      handle.addEventListener('pointerup', onUp, { once: true });
+      handle.addEventListener('pointerup',     onUp, { once: true });
       handle.addEventListener('pointercancel', onUp, { once: true });
     });
   }
+
+  // Click anywhere on the track → snap nearest handle to that position
+  track.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    const sec = clampToTrack(e.clientX);
+    const distStart = Math.abs(sec - s0);
+    const distEnd   = Math.abs(sec - e0);
+    if (distStart <= distEnd) {
+      s0 = Math.max(0, Math.min(sec, e0 - MIN));
+    } else {
+      e0 = Math.min(duration, Math.max(sec, s0 + MIN));
+      if (e0 - s0 > MAX) e0 = s0 + MAX;
+    }
+    render();
+  });
 
   drag(hs, true);
   drag(he, false);
