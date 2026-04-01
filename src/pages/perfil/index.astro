@@ -25,40 +25,32 @@
     }
   </script>
   <style is:global>
+    *, *::before, *::after { box-sizing: border-box; }
     body {
       background: var(--ink);
       color: var(--white);
       font-family: var(--body);
       min-height: 100vh;
+      margin: 0;
     }
 
-    /* ── Topbar ── */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(6,6,8,.85);
+    /* ── Header ── */
+    .pf-header {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; height: 52px;
+      background: rgba(6,6,8,.88);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      height: 52px;
-    }
-    .brand-link a {
-      display: flex;
-      align-items: center;
-    }
-    .brand-svg { height: 28px; width: auto; }
-    .brand-svg .crl-brand-word { fill: #e8f6ff; }
-    .brand-svg .crl-brand-ring-outer { stroke: #e8f6ff; }
-    .nav-right { display: flex; align-items: center; gap: 10px; }
-    [data-theme="light"] header { background: rgba(238,247,251,.92); }
-    [data-theme="light"] .brand-svg .crl-brand-word { fill: #0c1a20; }
-    [data-theme="light"] .brand-svg .crl-brand-ring-outer { stroke: #0c1a20; }
+    .pf-header-brand { display: flex; align-items: center; }
+    .pf-header-brand svg { height: 30px; width: auto; }
+    .pf-header-brand .crl-brand-word { fill: #e8f6ff; }
+    .pf-header-brand .crl-brand-ring-outer { stroke: #e8f6ff; }
+    .pf-header-right { display: flex; align-items: center; gap: 8px; }
+    [data-theme="light"] .pf-header { background: rgba(238,247,251,.92); }
+    [data-theme="light"] .pf-header-brand .crl-brand-word { fill: #0c1a20; }
+    [data-theme="light"] .pf-header-brand .crl-brand-ring-outer { stroke: #0c1a20; }
 
     /* ── Buttons ── */
     .btn {
@@ -66,444 +58,537 @@
       padding: 6px 12px; border-radius: 7px; font-size: .75rem;
       font-family: var(--mono); letter-spacing: 1px; text-transform: uppercase;
       border: 1px solid var(--border); background: transparent;
-      color: var(--white); cursor: pointer; transition: .15s;
-      text-decoration: none;
+      color: var(--white); cursor: pointer; transition: .15s; text-decoration: none;
     }
     .btn:hover { border-color: var(--border-h); background: rgba(255,255,255,.05); }
     .btn.primary { background: var(--accent); color: #000; border-color: transparent; font-weight: 700; }
     .btn.primary:hover { opacity: .88; }
-    .btn.danger { border-color: rgba(223,48,48,.4); color: var(--live); }
-    .btn.danger:hover { background: rgba(223,48,48,.1); }
-
-    /* ── Page layout ── */
-    .page {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    /* ── Login screen ── */
-    #loginScreen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 52px);
-      gap: 24px;
-    }
-
-    .login-brand-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 18px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: linear-gradient(160deg, rgba(13,28,40,.82), rgba(7,17,24,.64));
-      box-shadow: 0 12px 38px rgba(0,0,0,.22);
-    }
-    [data-theme="light"] .login-brand-wrap {
-      background: rgba(255,255,255,.72);
-      border-color: rgba(0,0,0,.1);
-      box-shadow: 0 12px 30px rgba(12,26,32,.08);
-    }
-    .login-brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: .96;
-    }
-    .login-brand svg { height: 56px; width: auto; }
-    [data-theme="light"] .login-card p,
-    [data-theme="light"] .welcome p,
-    [data-theme="light"] .field-hint { color: rgba(5,16,21,.56); }
-    [data-theme="light"] .forgot-link { color: rgba(5,16,21,.56); }
-    [data-theme="light"] .forgot-link:hover { color: #0c1a20; }
-    [data-theme="light"] .obs-hint,
-    [data-theme="light"] .key-value-wrap,
-    [data-theme="light"] .vod-row { background: rgba(255,255,255,.64); }
-    [data-theme="light"] .key-warning { color: rgba(5,16,21,.7); }
-    [data-theme="light"] .vod-row-meta { color: rgba(5,16,21,.42); }
-
-    .login-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 36px 40px;
-      width: 100%;
-      max-width: 380px;
-    }
-    .login-card h2 {
-      font-family: var(--display);
-      font-size: 1.8rem;
-      margin-bottom: 6px;
-      letter-spacing: 1px;
-    }
-    .login-card p {
-      color: var(--muted);
-      font-size: .85rem;
-      margin-bottom: 28px;
-    }
-    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-    .field label { font-size: .72rem; font-family: var(--mono); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-    .field input {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: var(--white);
-      font-family: var(--body);
-      font-size: .95rem;
-      transition: .15s;
-      width: 100%;
-    }
-    .field input:focus { outline: none; border-color: var(--accent); }
-    .error-msg {
-      color: var(--live);
-      font-size: .92rem;
-      font-family: var(--mono);
-      margin-bottom: 12px;
-      display: none;
-    }
-    .login-submit { width: 100%; justify-content: center; padding: 10px; font-size: .92rem; margin-top: 8px; }
-    .forgot-link {
-      display: block; width: 100%; margin-top: 12px;
-      background: none; border: none; color: var(--muted);
-      font-size: .78rem; font-family: var(--mono); cursor: pointer;
-      text-align: center; transition: color .15s;
-    }
-    .forgot-link:hover { color: var(--white); }
-    .success-msg {
-      color: #00b894; font-size: .92rem;
-      font-family: var(--mono); margin-bottom: 12px;
-    }
-
-    /* ── Dashboard ── */
-    #dashboard { display: none; }
-
-    .welcome {
-      margin-bottom: 36px;
-    }
-    .welcome h1 {
-      font-family: var(--display);
-      font-size: 2.4rem;
-      letter-spacing: 2px;
-      line-height: 1;
-    }
-    .welcome p { color: var(--muted); font-size: .85rem; margin-top: 6px; }
-
-    /* ── Section cards ── */
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
-      margin-bottom: 20px;
-    }
-    .card-title {
-      font-family: var(--mono);
-      font-size: .92rem;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* ── Stream key ── */
-    .key-row {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .key-info {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .key-label {
-      font-size: .85rem;
-      font-family: var(--mono);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .key-value-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-    }
-    .key-value {
-      flex: 1;
-      font-family: var(--mono);
-      font-size: .85rem;
-      color: var(--white);
-      word-break: break-all;
-      letter-spacing: 1px;
-    }
-    .key-value.hidden-key { filter: blur(6px); user-select: none; }
-    .key-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .icon-btn {
-      width: 32px; height: 32px;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--white);
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .92rem;
-      transition: .15s;
-      flex-shrink: 0;
-    }
-    .icon-btn:hover { border-color: var(--border-h); background: rgba(255,255,255,.07); }
-    .icon-btn.copied { border-color: #00b894; color: #00b894; }
-
-    .obs-hint {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      font-size: .78rem;
-      line-height: 1.7;
-    }
-    .obs-hint strong {
-      font-family: var(--mono);
-      font-size: .85rem;
-      letter-spacing: 1px;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-    .obs-hint code {
-      font-family: var(--mono);
-      color: var(--accent);
-      font-size: .92rem;
-    }
-    .obs-hint .copy-server {
-      display: inline-flex; align-items: center; gap: 4px;
-      cursor: pointer; transition: .15s;
-    }
-    .obs-hint .copy-server:hover { color: var(--accent); }
-
-    /* ── Warning ── */
-    .key-warning {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 14px;
-      background: rgba(223,48,48,.08);
-      border: 1px solid rgba(223,48,48,.2);
-      border-radius: 8px;
-      font-size: .92rem;
-      color: rgba(242,239,233,.7);
-    }
-    .key-warning i { color: var(--live); margin-top: 2px; flex-shrink: 0; }
-
-    /* ── Profile form ── */
-    .form-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .field textarea {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: var(--white);
-      font-family: var(--body);
-      font-size: .95rem;
-      resize: vertical;
-      min-height: 80px;
-      width: 100%;
-      transition: .15s;
-    }
-    .field textarea:focus { outline: none; border-color: var(--accent); }
-
-    .social-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 480px) { .social-grid { grid-template-columns: 1fr; } }
-
-    .field-hint { font-size: .72rem; color: var(--muted); line-height: 1.5; margin-top: -4px; }
-    .vod-toggle { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
-    .vod-toggle input { opacity: 0; width: 0; height: 0; }
-    .vod-slider { position: absolute; inset: 0; background: rgba(255,255,255,.1); border-radius: 22px; cursor: pointer; transition: .2s; border: 1px solid rgba(255,255,255,.1); }
-    .vod-slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background: rgba(255,255,255,.4); border-radius: 50%; transition: .2s; }
-    .vod-toggle input:checked + .vod-slider { background: var(--accent); border-color: var(--accent); }
-    .vod-toggle input:checked + .vod-slider::before { transform: translateX(18px); background: #030a0e; }
-    .form-actions {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 8px;
-    }
-    .save-status {
-      font-size: .78rem;
-      font-family: var(--mono);
-      color: var(--muted);
-    }
-    .save-status.ok { color: #00b894; }
-    .save-status.err { color: var(--live); }
-
-    /* ── VOD list ── */
-    .vod-row { display:flex; align-items:center; gap:12px; padding:10px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
-    .vod-row-thumb { width:96px; height:54px; border-radius:5px; background:rgba(0,191,255,.07); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:1.2rem; color:rgba(0,191,255,.2); position:relative; }
-    .vod-row-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-    .vod-row-info { flex:1; min-width:0; }
-    .vod-row-date { font-family:var(--mono); font-size:.72rem; color:var(--muted); }
-    .vod-row-meta { font-family:var(--mono); font-size:.68rem; color:rgba(232,246,255,.3); margin-top:2px; }
-    .vod-row-del { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; }
-    .vod-row-del:hover { border-color:#e17055; color:#e17055; }
-    .vod-row-del.loading { opacity:.5; pointer-events:none; }
-    .vod-row-link { text-decoration:none; color:inherit; flex:1; min-width:0; }
-    .vod-row-link:hover .vod-row-date { color:var(--accent); }
-    .vod-row-reel { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; }
-    .vod-row-reel:hover { border-color:var(--accent); color:var(--accent); }
-    .vod-row-reel.active { border-color:var(--accent); color:var(--accent); background:rgba(0,191,255,.08); }
-
-    /* ── Reel panel ── */
-    .reel-panel { display:none; background:var(--panel); border:1px solid rgba(0,191,255,.2); border-radius:10px; padding:18px 16px; margin-top:6px; }
-    .reel-panel.open { display:block; }
-    .reel-panel-title { font-family:var(--mono); font-size:.72rem; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
-    .reel-time-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
-    .reel-dur-hint { font-family:var(--mono); font-size:.72rem; color:var(--muted); margin-bottom:12px; }
-    .reel-dur-hint.ok { color:#00b894; }
-    .reel-dur-hint.err { color:var(--live); }
-    .reel-public-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; font-size:.85rem; }
-    .reel-actions { display:flex; gap:8px; flex-wrap:wrap; }
-    .reel-result { margin-top:12px; padding:12px 14px; background:rgba(0,184,148,.08); border:1px solid rgba(0,184,148,.25); border-radius:8px; font-size:.85rem; display:none; }
-    .reel-result.show { display:block; }
-    .reel-result a { color:var(--accent); text-decoration:none; }
-    .reel-result a:hover { text-decoration:underline; }
-
-    /* ── Reel list ── */
-    .reel-row { display:flex; align-items:center; gap:12px; padding:10px 12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
-    .reel-row-thumb { width:48px; height:86px; border-radius:5px; background:rgba(0,191,255,.07); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:.8rem; color:rgba(0,191,255,.3); position:relative; }
-    .reel-row-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-    .reel-row-info { flex:1; min-width:0; }
-    .reel-row-date { font-family:var(--mono); font-size:.72rem; color:var(--muted); }
-    .reel-row-meta { font-family:var(--mono); font-size:.68rem; color:rgba(232,246,255,.3); margin-top:2px; }
-    .reel-row-pub { display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:.65rem; letter-spacing:1px; text-transform:uppercase; padding:2px 6px; border-radius:4px; margin-top:4px; }
-    .reel-row-pub.pub { background:rgba(0,191,255,.1); color:var(--accent); }
-    .reel-row-pub.priv { background:rgba(255,255,255,.06); color:var(--muted); }
-    .reel-row-actions { display:flex; gap:6px; flex-shrink:0; }
-    .reel-row-dl { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; text-decoration:none; }
-    .reel-row-dl:hover { border-color:var(--accent); color:var(--accent); }
-    .reel-row-del { flex-shrink:0; width:32px; height:32px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.8rem; transition:.15s; }
-    .reel-row-del:hover { border-color:#e17055; color:#e17055; }
-    .reel-row-del.loading { opacity:.5; pointer-events:none; }
-
-    /* ── Avatar section ── */
-    .avatar-row {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .avatar-preview {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      object-fit: cover;
-      background: var(--surface);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--display);
-      font-size: 1.8rem;
-      color: var(--muted);
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
-    .file-input { display: none; }
-    .avatar-actions { display: flex; flex-direction: column; gap: 8px; }
+    .btn.danger { border-color: rgba(223,48,48,.35); color: #e17055; }
+    .btn.danger:hover { background: rgba(223,48,48,.08); }
+    .btn.sm { padding: 4px 10px; font-size: .7rem; }
 
     /* ── Spinner ── */
     .spinner {
-      display: inline-block;
-      width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,.2);
-      border-top-color: var(--white);
-      border-radius: 50%;
-      animation: spin .6s linear infinite;
-      vertical-align: middle;
+      display: inline-block; width: 13px; height: 13px;
+      border: 2px solid rgba(255,255,255,.2); border-top-color: var(--white);
+      border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── Toast ── */
     #toast {
-      position: fixed;
-      bottom: 24px; left: 50%;
+      position: fixed; bottom: 24px; left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 20px;
-      font-size: .92rem;
-      font-family: var(--mono);
-      letter-spacing: 1px;
-      z-index: 200;
-      transition: transform .25s ease;
-      pointer-events: none;
-      white-space: nowrap;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 20px;
+      font-size: .88rem; font-family: var(--mono); letter-spacing: 1px;
+      z-index: 300; transition: transform .25s ease;
+      pointer-events: none; white-space: nowrap;
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
-    #toast.ok { border-color: rgba(0,184,148,.4); color: #00b894; }
-    #toast.err { border-color: rgba(223,48,48,.4); color: var(--live); }
+    #toast.ok  { border-color: rgba(0,184,148,.4); color: #00b894; }
+    #toast.err { border-color: rgba(223,48,48,.4); color: #e17055; }
+
+    /* ════════════════════════════════
+       LOGIN SCREEN
+    ════════════════════════════════ */
+    #loginScreen {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: calc(100vh - 52px); gap: 24px; padding: 40px 20px;
+    }
+    .login-brand-wrap {
+      padding: 14px 18px; border-radius: 16px;
+      border: 1px solid var(--border);
+      background: linear-gradient(160deg,rgba(13,28,40,.82),rgba(7,17,24,.64));
+      box-shadow: 0 12px 38px rgba(0,0,0,.22);
+    }
+    .login-brand svg { height: 52px; width: auto; display: block; }
+    .login-brand .crl-brand-word { fill: #e8f6ff; }
+    .login-brand .crl-brand-ring-outer { stroke: #e8f6ff; }
+    [data-theme="light"] .login-brand-wrap { background: rgba(255,255,255,.72); border-color: rgba(0,0,0,.1); }
+    .login-card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 32px 36px; width: 100%; max-width: 380px;
+    }
+    .login-card h2 {
+      font-family: var(--display); font-size: 1.8rem; margin-bottom: 6px; letter-spacing: 1px;
+    }
+    .login-card > p { color: var(--muted); font-size: .85rem; margin-bottom: 24px; }
+    [data-theme="light"] .login-card > p { color: rgba(5,16,21,.56); }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field label {
+      font-size: .7rem; font-family: var(--mono); letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .field input, .field textarea, .field select {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 14px; color: var(--white); font-family: var(--body); font-size: .92rem;
+      transition: .15s; width: 100%;
+    }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,191,255,.07); }
+    [data-theme="light"] .field input,
+    [data-theme="light"] .field textarea { color: #0c1a20; }
+
+    .error-msg { color: #e17055; font-size: .85rem; font-family: var(--mono); margin-bottom: 10px; display: none; }
+    .success-msg { color: #00b894; font-size: .85rem; font-family: var(--mono); margin-bottom: 10px; }
+    .forgot-link {
+      display: block; width: 100%; margin-top: 10px;
+      background: none; border: none; color: var(--muted);
+      font-size: .75rem; font-family: var(--mono); cursor: pointer;
+      text-align: center; transition: color .15s;
+    }
+    .forgot-link:hover { color: var(--white); }
+    [data-theme="light"] .forgot-link { color: rgba(5,16,21,.46); }
+    [data-theme="light"] .forgot-link:hover { color: #0c1a20; }
+
+    /* ════════════════════════════════
+       DASHBOARD LAYOUT
+    ════════════════════════════════ */
+    #dashboard { display: none; }
+
+    .pf-wrap {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      align-items: start;
+      min-height: calc(100vh - 52px);
+    }
+
+    /* ── Sidebar ── */
+    .pf-sidebar {
+      position: sticky; top: 52px;
+      height: calc(100vh - 52px);
+      overflow-y: auto; scrollbar-width: none;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+    }
+    .pf-sidebar::-webkit-scrollbar { display: none; }
+
+    .pf-profile {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .pf-ava {
+      width: 60px; height: 60px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-size: 1.6rem; color: #000;
+      overflow: hidden; flex-shrink: 0;
+    }
+    .pf-ava img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-display-name {
+      font-family: var(--display); font-size: 1.3rem;
+      letter-spacing: 1px; line-height: 1; color: var(--white);
+    }
+    .pf-channel-link {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
+      color: var(--accent); text-decoration: none; opacity: .7; transition: opacity .15s;
+    }
+    .pf-channel-link:hover { opacity: 1; }
+
+    .pf-nav { padding: 10px 0; flex: 1; }
+    .pf-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 20px; color: var(--muted); text-decoration: none;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
+      text-transform: uppercase; transition: .15s;
+      border-left: 2px solid transparent;
+    }
+    .pf-nav-item:hover { color: var(--white); background: rgba(255,255,255,.03); }
+    .pf-nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,191,255,.04); }
+    .pf-nav-item i { width: 14px; text-align: center; font-size: 11px; }
+
+    .pf-sidebar-footer {
+      padding: 14px 20px; border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    #sessionEmail {
+      font-size: 10px; font-family: var(--mono); color: var(--muted);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ── Main ── */
+    .pf-main { padding: 40px 48px 100px; }
+
+    .pf-section { max-width: 620px; margin-bottom: 64px; }
+
+    .pf-section-title {
+      font-family: var(--display); font-size: 1.5rem; letter-spacing: 2px;
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-bottom: 14px;
+    }
+    .card-title {
+      font-family: var(--mono); font-size: .78rem; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
+    }
+    .form-grid { display: flex; flex-direction: column; gap: 14px; }
+    .form-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+    .save-status { font-size: .75rem; font-family: var(--mono); color: var(--muted); }
+    .save-status.ok  { color: #00b894; }
+    .save-status.err { color: #e17055; }
+    .field-hint { font-size: .7rem; color: var(--muted); line-height: 1.5; margin-top: -4px; }
+
+    /* ── Stream key ── */
+    .key-hero {
+      background: linear-gradient(135deg,rgba(0,191,255,.06),rgba(0,191,255,.02));
+      border: 1px solid rgba(0,191,255,.15); border-radius: 12px;
+      padding: 20px; margin-bottom: 14px;
+    }
+    .key-label {
+      font-family: var(--mono); font-size: .65rem; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+    }
+    .key-value-wrap {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(0,0,0,.25); border: 1px solid rgba(0,191,255,.1);
+      border-radius: 8px; padding: 10px 14px;
+    }
+    .key-value {
+      flex: 1; font-family: var(--mono); font-size: .82rem;
+      color: var(--white); word-break: break-all; letter-spacing: .5px;
+    }
+    .key-value.hidden-key { filter: blur(5px); user-select: none; }
+    .key-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .icon-btn {
+      width: 30px; height: 30px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .82rem; transition: .15s; flex-shrink: 0;
+    }
+    .icon-btn:hover { border-color: var(--border-h); color: var(--white); background: rgba(255,255,255,.06); }
+    .icon-btn.copied { border-color: #00b894; color: #00b894; }
+    .key-warning {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 14px; border-radius: 8px; font-size: .85rem;
+      background: rgba(223,48,48,.07); border: 1px solid rgba(223,48,48,.18);
+      color: rgba(242,239,233,.7); margin-bottom: 14px;
+    }
+    .key-warning i { color: #e17055; margin-top: 2px; flex-shrink: 0; }
+    .key-warning.neutral { background: rgba(255,255,255,.03); border-color: var(--border); }
+    .key-warning.neutral i { color: var(--muted); }
+    .obs-hint {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px; font-size: .78rem; line-height: 1.7;
+    }
+    .obs-hint strong { font-family: var(--mono); font-size: .8rem; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
+    .obs-hint code { font-family: var(--mono); color: var(--accent); font-size: .85rem; }
+    [data-theme="light"] .key-warning { color: rgba(5,16,21,.7); }
+    [data-theme="light"] .obs-hint { background: rgba(255,255,255,.64); }
+    [data-theme="light"] .key-value-wrap { background: rgba(255,255,255,.64); }
+
+    /* ─�� Avatar ── */
+    .avatar-row { display: flex; align-items: center; gap: 18px; }
+    .avatar-preview {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 2px solid var(--border); background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-size: 1.8rem; color: var(--muted);
+      flex-shrink: 0; overflow: hidden;
+    }
+    .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .file-input { display: none; }
+    .avatar-actions { display: flex; flex-direction: column; gap: 8px; }
+
+    /* ── Social grid ── */
+    .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ── VOD toggle ── */
+    .vod-toggle { position: relative; display: inline-block; width: 38px; height: 21px; flex-shrink: 0; }
+    .vod-toggle input { opacity: 0; width: 0; height: 0; }
+    .vod-slider { position: absolute; inset: 0; background: rgba(255,255,255,.1); border-radius: 21px; cursor: pointer; transition: .2s; border: 1px solid rgba(255,255,255,.1); }
+    .vod-slider::before { content: ''; position: absolute; width: 15px; height: 15px; left: 2px; top: 2px; background: rgba(255,255,255,.4); border-radius: 50%; transition: .2s; }
+    .vod-toggle input:checked + .vod-slider { background: var(--accent); border-color: var(--accent); }
+    .vod-toggle input:checked + .vod-slider::before { transform: translateX(17px); background: #030a0e; }
+
+    /* ── Tabs ── */
+    .pf-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+    .pf-tab {
+      display: flex; align-items: center; gap: 7px;
+      padding: 10px 16px; background: none; border: none;
+      font-family: var(--mono); font-size: .72rem; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); cursor: pointer;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      transition: .15s;
+    }
+    .pf-tab:hover { color: var(--white); }
+    .pf-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .pf-tab-panel { display: none; }
+    .pf-tab-panel.active { display: block; }
+
+    /* ── VOD list ── */
+    .vod-rows { display: flex; flex-direction: column; gap: 8px; }
+    .vod-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+      transition: border-color .15s;
+    }
+    .vod-row:hover { border-color: rgba(0,191,255,.15); }
+    .vod-row-thumb {
+      width: 88px; height: 50px; border-radius: 6px;
+      background: rgba(0,191,255,.06); flex-shrink: 0;
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+      font-family: var(--display); font-size: 1rem; color: rgba(0,191,255,.2);
+      position: relative;
+    }
+    .vod-row-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .vod-row-info { flex: 1; min-width: 0; }
+    .vod-row-date { font-family: var(--mono); font-size: .72rem; color: var(--white); }
+    .vod-row-meta { font-family: var(--mono); font-size: .65rem; color: var(--muted); margin-top: 2px; }
+    .vod-row-link { text-decoration: none; color: inherit; flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
+    .vod-row-link:hover .vod-row-date { color: var(--accent); }
+    .vod-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .vod-row-del, .vod-row-reel {
+      width: 30px; height: 30px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; transition: .15s; flex-shrink: 0;
+    }
+    .vod-row-del:hover  { border-color: #e17055; color: #e17055; }
+    .vod-row-reel:hover { border-color: var(--accent); color: var(--accent); }
+    .vod-row-reel.active { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.08); }
+    .vod-row-del.loading { opacity: .4; pointer-events: none; }
+    [data-theme="light"] .vod-row-meta { color: rgba(5,16,21,.42); }
+
+    /* ── Reel panel ── */
+    .reel-panel {
+      display: none; margin-top: 6px;
+      background: var(--panel); border: 1px solid rgba(0,191,255,.18);
+      border-radius: 10px; padding: 20px;
+    }
+    .reel-panel.open { display: block; }
+    .reel-panel-title {
+      font-family: var(--mono); font-size: .68rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+    }
+
+    /* ── Reel Timeline ── */
+    .rtl { padding: 4px 0 12px; user-select: none; touch-action: none; }
+    .rtl-track {
+      position: relative; height: 6px;
+      background: rgba(255,255,255,.1); border-radius: 3px;
+      margin: 22px 10px 10px;
+    }
+    [data-theme="light"] .rtl-track { background: rgba(0,0,0,.12); }
+    .rtl-fill {
+      position: absolute; height: 100%;
+      background: var(--accent); border-radius: 3px;
+      opacity: .6; pointer-events: none; transition: none;
+    }
+    .rtl-handle {
+      position: absolute; top: 50%;
+      transform: translate(-50%,-50%);
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--white); border: 2.5px solid var(--accent);
+      cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,.35);
+      transition: box-shadow .1s, transform .1s; z-index: 2;
+    }
+    .rtl-handle:hover { box-shadow: 0 2px 14px rgba(0,191,255,.4); }
+    .rtl-handle:active, .rtl-handle.dragging {
+      cursor: grabbing;
+      transform: translate(-50%,-50%) scale(1.18);
+      box-shadow: 0 4px 16px rgba(0,191,255,.35);
+    }
+    .rtl-times {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
+      padding: 0 10px; margin-top: 6px;
+    }
+    .rtl-t-dur {
+      font-size: 11px; font-weight: 700; letter-spacing: 1px;
+      padding: 2px 8px; border-radius: 4px;
+      background: rgba(255,255,255,.05);
+    }
+    .rtl-t-dur.ok  { color: #00b894; background: rgba(0,184,148,.08); }
+    .rtl-t-dur.err { color: #e17055; background: rgba(223,48,48,.08); }
+
+    .reel-public-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: .85rem; }
+    .reel-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .reel-result {
+      margin-top: 12px; padding: 12px 14px;
+      background: rgba(0,184,148,.07); border: 1px solid rgba(0,184,148,.2);
+      border-radius: 8px; font-size: .85rem; display: none;
+    }
+    .reel-result.show { display: block; }
+    .reel-result a { color: var(--accent); text-decoration: none; }
+
+    /* ── Reel list ── */
+    .reel-rows { display: flex; flex-direction: column; gap: 8px; }
+    .reel-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+    }
+    .reel-row-thumb {
+      width: 40px; height: 72px; border-radius: 5px;
+      background: rgba(0,191,255,.06); flex-shrink: 0;
+      overflow: hidden; display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; color: rgba(0,191,255,.3); position: relative;
+    }
+    .reel-row-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .reel-row-info { flex: 1; min-width: 0; }
+    .reel-row-date { font-family: var(--mono); font-size: .72rem; color: var(--white); }
+    .reel-row-meta { font-family: var(--mono); font-size: .65rem; color: var(--muted); margin-top: 2px; }
+    .reel-row-pub {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: var(--mono); font-size: .62rem; letter-spacing: 1px;
+      text-transform: uppercase; padding: 2px 6px; border-radius: 3px; margin-top: 4px;
+    }
+    .reel-row-pub.pub  { background: rgba(0,191,255,.1); color: var(--accent); }
+    .reel-row-pub.priv { background: rgba(255,255,255,.05); color: var(--muted); }
+    .reel-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .reel-row-dl, .reel-row-del {
+      width: 30px; height: 30px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem; transition: .15s; text-decoration: none;
+    }
+    .reel-row-dl:hover  { border-color: var(--accent); color: var(--accent); }
+    .reel-row-del:hover { border-color: #e17055; color: #e17055; }
+    .reel-row-del.loading { opacity: .4; pointer-events: none; }
+
+    /* ── Paneles ── */
+    .panel-row {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px 16px;
+      display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;
+    }
+    .panel-row-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    }
+    .panel-row-label { font-family: var(--mono); font-size: .7rem; letter-spacing: 2px; color: var(--muted); }
+
+    /* ── Details accordion ── */
+    .pf-details {
+      border: 1px solid var(--border); border-radius: 10px;
+      margin-bottom: 10px; overflow: hidden;
+    }
+    .pf-details summary {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; cursor: pointer; list-style: none;
+      font-family: var(--mono); font-size: .72rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted); transition: .15s;
+      background: var(--panel);
+    }
+    .pf-details summary::-webkit-details-marker { display: none; }
+    .pf-details summary::after { content: '\002B'; font-size: 1rem; opacity: .5; }
+    .pf-details[open] summary::after { content: '\2212'; }
+    .pf-details summary:hover { color: var(--white); }
+    .pf-details-body { padding: 18px; background: var(--panel); border-top: 1px solid var(--border); }
+
+    /* ── Session card ── */
+    .session-card {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      padding: 16px 18px; background: var(--panel);
+      border: 1px solid var(--border); border-radius: 10px;
+      margin-top: 10px;
+    }
+
+    /* ════════════════════════════════
+       MOBILE
+    ════════════════════════════════ */
+    @media (max-width: 860px) {
+      .pf-wrap { grid-template-columns: 1fr; }
+      .pf-sidebar {
+        position: sticky; top: 52px; height: auto;
+        flex-direction: row; overflow-x: auto; overflow-y: hidden;
+        border-right: none; border-bottom: 1px solid var(--border);
+        background: rgba(3,10,14,.9); backdrop-filter: blur(12px);
+        z-index: 50; scrollbar-width: none;
+      }
+      .pf-sidebar::-webkit-scrollbar { display: none; }
+      .pf-profile { display: none; }
+      .pf-nav { display: flex; flex-direction: row; padding: 0; flex: 1; flex-shrink: 0; }
+      .pf-nav-item {
+        padding: 13px 16px; border-left: none;
+        border-bottom: 2px solid transparent; white-space: nowrap;
+        font-size: 9px; letter-spacing: 1px;
+        flex-direction: column; gap: 4px; align-items: center;
+      }
+      .pf-nav-item i { width: auto; font-size: 13px; }
+      .pf-nav-item.active { border-left-color: transparent; border-bottom-color: var(--accent); }
+      .pf-sidebar-footer { display: none; }
+      .pf-main { padding: 24px 16px 80px; }
+      .pf-section { margin-bottom: 48px; }
+      .social-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .login-card { padding: 24px 20px; }
+      .key-hero { padding: 14px; }
+      .card { padding: 16px; }
+    }
+
+    [data-theme="light"] .pf-sidebar { background: rgba(238,247,251,.95); }
+    [data-theme="light"] .pf-details summary { background: rgba(255,255,255,.7); }
+    [data-theme="light"] .pf-details-body { background: rgba(255,255,255,.7); }
+    [data-theme="light"] .session-card { background: rgba(255,255,255,.7); }
+    [data-theme="light"] .panel-row { background: rgba(255,255,255,.64); }
+    [data-theme="light"] .card { background: rgba(255,255,255,.7); }
   </style>
 </head>
 <body class="crl-body">
 
-<header>
-  <div class="topbar">
-    <div class="brand-link">
-      <a href="/" class="nav-logo">
-        <svg class="brand-svg" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
-          <defs>
-            <radialGradient id="ng" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
-              <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
-          <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
-          <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
-          <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-          <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-          <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
-        </svg>
-      </a>
-    </div>
-    <div class="nav-right" id="navRight">
-      <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
-      <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
-    </div>
-  </div>
-</header>
-
-<!-- ── LOGIN ── -->
-<div id="loginScreen">
-  <div class="login-brand-wrap"><a href="/" class="login-brand" aria-label="CORILLO">
-    <svg class="brand-svg" viewBox="0 0 250 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><radialGradient id="perfil-lg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+<!-- ── HEADER ── -->
+<header class="pf-header">
+  <a href="/" class="pf-header-brand" aria-label="CORILLO">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="pf-ng" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
       <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
-      <circle cx="72" cy="42" r="36" fill="url(#perfil-lg)"/>
+      <circle cx="72" cy="42" r="36" fill="url(#pf-ng)"/>
       <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
       <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
       <circle cx="72" cy="42" r="8" fill="#00bfff"/>
       <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
       <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
     </svg>
-  </a></div>
-  <div class="login-card">
+  </a>
+  <div class="pf-header-right" id="navRight">
+    <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    <a class="btn" href="/"><i class="fa-solid fa-house"></i></a>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════
+     LOGIN
+══════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-brand-wrap">
+    <a href="/" class="login-brand" aria-label="CORILLO">
+      <svg viewBox="0 0 250 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="pf-lg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#pf-lg2)"/>
+        <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
+      </svg>
+    </a>
+  </div>
+  <div class="login-card" id="loginCard">
     <h2>MI PERFIL</h2>
-    <p>Entra con tu cuenta de CORILLO para ver tu stream key y editar tu perfil.</p>
+    <p>Entra con tu cuenta de CORILLO para gestionar tu canal.</p>
     <div class="field">
       <label>Email</label>
       <input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email">
@@ -513,16 +598,14 @@
       <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
     </div>
     <div class="error-msg" id="loginErr"></div>
-    <button class="btn primary login-submit" id="loginBtn">
+    <button class="btn primary" id="loginBtn" style="width:100%;justify-content:center;padding:10px;margin-top:4px">
       <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrar
     </button>
     <button class="forgot-link" id="forgotBtn">¿Olvidaste tu contraseña?</button>
-    <p style="margin-top:16px;font-size:.78rem;color:var(--muted);text-align:center">
+    <p style="margin-top:14px;font-size:.75rem;color:var(--muted);text-align:center">
       ¿No tienes cuenta? <a href="/join/" style="color:var(--accent);text-decoration:none">Solicita acceso →</a>
     </p>
   </div>
-
-  <!-- Reset password form -->
   <div class="login-card" id="resetCard" style="display:none">
     <h2>RESET</h2>
     <p>Ingresa tu email y te enviaremos un link para crear una nueva contraseña.</p>
@@ -532,260 +615,289 @@
     </div>
     <div class="error-msg" id="resetErr"></div>
     <div class="success-msg" id="resetOk" style="display:none"></div>
-    <button class="btn primary login-submit" id="resetBtn">
+    <button class="btn primary" id="resetBtn" style="width:100%;justify-content:center;padding:10px;margin-top:4px">
       <i class="fa-solid fa-paper-plane"></i> Enviar link
     </button>
     <button class="forgot-link" id="backToLogin">← Volver al login</button>
   </div>
 </div>
 
-<!-- ── DASHBOARD ── -->
+<!-- ══════════════════════════════════
+     DASHBOARD
+══════════════════════════════════ -->
 <div id="dashboard">
-  <div class="page">
+  <div class="pf-wrap">
 
-    <div class="welcome">
-      <h1 id="welcomeName">BIENVENIDO</h1>
-      <p>Gestiona tu stream key y tu perfil público en CORILLO.</p>
-    </div>
+    <!-- ── Sidebar ── -->
+    <aside class="pf-sidebar">
+      <div class="pf-profile">
+        <div class="pf-ava" id="pfSideAva">?</div>
+        <div>
+          <div class="pf-display-name" id="pfSideName">—</div>
+          <a class="pf-channel-link" id="pfSideChannel" href="#" style="display:none">
+            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px"></i> Ver mi canal
+          </a>
+        </div>
+      </div>
+      <nav class="pf-nav">
+        <a href="#s-stream"   class="pf-nav-item active"><i class="fa-solid fa-tower-broadcast"></i> Stream</a>
+        <a href="#s-perfil"   class="pf-nav-item"><i class="fa-solid fa-user"></i> Perfil</a>
+        <a href="#s-contenido" class="pf-nav-item"><i class="fa-solid fa-film"></i> Contenido</a>
+        <a href="#s-cuenta"   class="pf-nav-item"><i class="fa-solid fa-gear"></i> Cuenta</a>
+      </nav>
+      <div class="pf-sidebar-footer">
+        <span id="sessionEmail"></span>
+        <button class="btn danger sm" id="logoutBtn" style="width:100%;justify-content:center">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
+        </button>
+      </div>
+    </aside>
 
-    <!-- Stream key -->
-    <div class="card">
-      <div class="card-title">Stream Key</div>
-      <div class="key-row">
+    <!-- ── Main ── -->
+    <main class="pf-main" id="pfMain">
+
+      <!-- ── STREAM ── -->
+      <section id="s-stream" class="pf-section">
+        <h2 class="pf-section-title">Stream</h2>
 
         <div class="key-warning">
           <i class="fa-solid fa-triangle-exclamation"></i>
           <span>No compartas tu stream key con nadie. Quien la tenga puede transmitir en tu canal.</span>
         </div>
 
-        <div class="key-info">
+        <div class="key-hero">
           <div class="key-label">Servidor RTMP</div>
-          <div class="key-value-wrap">
-            <span class="key-value" id="rtmpServer">rtmp://corillo.live/live</span>
+          <div class="key-value-wrap" style="margin-bottom:14px">
+            <span class="key-value">rtmp://corillo.live/live</span>
             <div class="key-actions">
-              <button class="icon-btn" id="copyServer" title="Copiar servidor">
-                <i class="fa-regular fa-copy"></i>
-              </button>
+              <button class="icon-btn" id="copyServer" title="Copiar"><i class="fa-regular fa-copy"></i></button>
             </div>
           </div>
-        </div>
-
-        <div class="key-info">
           <div class="key-label">Stream Key</div>
           <div class="key-value-wrap">
             <span class="key-value hidden-key" id="streamKeyVal">cargando...</span>
             <div class="key-actions">
-              <button class="icon-btn" id="toggleKey" title="Mostrar / ocultar">
-                <i class="fa-regular fa-eye"></i>
-              </button>
-              <button class="icon-btn" id="copyKey" title="Copiar stream key">
-                <i class="fa-regular fa-copy"></i>
-              </button>
+              <button class="icon-btn" id="toggleKey" title="Mostrar / ocultar"><i class="fa-regular fa-eye"></i></button>
+              <button class="icon-btn" id="copyKey" title="Copiar"><i class="fa-regular fa-copy"></i></button>
             </div>
           </div>
         </div>
 
-        <div class="key-warning" style="background:rgba(255,255,255,.03);border-color:var(--border)">
-          <i class="fa-solid fa-rotate" style="color:var(--muted)"></i>
-          <div style="flex:1">
-            <span style="font-size: .92rem">¿Tu stream key fue comprometida? Genera una nueva. Los streams activos se cortarán.</span>
-          </div>
-          <button class="btn danger" id="regenKeyBtn" style="flex-shrink:0;font-size: .85rem">
-            <i class="fa-solid fa-rotate"></i> Regenerar
-          </button>
+        <div class="key-warning neutral" style="margin-bottom:14px">
+          <i class="fa-solid fa-rotate"></i>
+          <div style="flex:1;font-size:.85rem">¿Tu stream key fue comprometida? Genera una nueva — los streams activos se cortarán.</div>
+          <button class="btn danger sm" id="regenKeyBtn" style="flex-shrink:0"><i class="fa-solid fa-rotate"></i> Regenerar</button>
         </div>
 
         <div class="obs-hint">
           <strong>En OBS / Meld Studio</strong><br>
           Configuración → Stream → Servicio: <code>Personalizado</code><br>
           Servidor: <code>rtmp://corillo.live/live</code><br>
-          Clave de retransmisión: <code id="obsKeyHint">••••••••</code><br>
-          <span style="color:rgba(242,239,233,.4);font-size:.75rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.4)">&#123;canal&#125;?secret=••••••••</code></span>
+          Clave: <code id="obsKeyHint">••••••••</code><br>
+          <span style="color:rgba(242,239,233,.35);font-size:.72rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.35)">&#123;canal&#125;?secret=••••••••</code></span>
         </div>
+      </section>
 
-      </div>
-    </div>
+      <!-- ── PERFIL ── -->
+      <section id="s-perfil" class="pf-section">
+        <h2 class="pf-section-title">Tu perfil</h2>
 
-    <!-- Perfil -->
-    <div class="card">
-      <div class="card-title">Tu perfil</div>
-      <div class="form-grid">
-
-        <!-- Avatar -->
-        <div class="avatar-row">
-          <div class="avatar-preview" id="avatarPreview">
-            <span id="avatarInitial">?</span>
-          </div>
-          <div class="avatar-actions">
-            <button class="btn" id="avatarBtn"><i class="fa-solid fa-image"></i> Cambiar foto</button>
-            <input type="file" id="avatarFile" class="file-input" accept="image/jpeg,image/png,image/webp">
-            <span style="font-size:.75rem;color:var(--muted)">JPG, PNG o WebP · máx 5MB</span>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Nombre visible</label>
-          <input type="text" id="fDisplayName" placeholder="KATATONIA" maxlength="40">
-        </div>
-
-        <div class="field">
-          <label>Estado <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">— aparece debajo de tu nombre en el player</span></label>
-          <input type="text" id="fSub" placeholder="Just chatting · vibes" maxlength="60">
-        </div>
-
-        <div class="field">
-          <label>Juego / Título <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">— qué estás jugando o haciendo ahora</span></label>
-          <input type="text" id="fStreamTitle" placeholder="Minecraft, Just Chatting, GTA V…" maxlength="80">
-        </div>
-
-        <div class="field">
-          <label>Bio</label>
-          <textarea id="fBio" placeholder="Cuéntale algo a tu audiencia…" maxlength="280"></textarea>
-        </div>
-
-        <div class="social-grid">
-          <div class="field">
-            <label><i class="fa-brands fa-twitch" style="color:#9146ff"></i> Twitch</label>
-            <input type="text" id="fTwitch" placeholder="tu_usuario">
-          </div>
-          <div class="field">
-            <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram</label>
-            <input type="text" id="fInstagram" placeholder="tu_usuario">
-          </div>
-          <div class="field">
-            <label><i class="fa-brands fa-tiktok"></i> TikTok</label>
-            <input type="text" id="fTiktok" placeholder="tu_usuario">
+        <div class="card">
+          <div class="card-title">Foto y nombre</div>
+          <div class="form-grid">
+            <div class="avatar-row">
+              <div class="avatar-preview" id="avatarPreview">
+                <span id="avatarInitial">?</span>
+              </div>
+              <div class="avatar-actions">
+                <button class="btn" id="avatarBtn"><i class="fa-solid fa-image"></i> Cambiar foto</button>
+                <input type="file" id="avatarFile" class="file-input" accept="image/jpeg,image/png,image/webp">
+                <span style="font-size:.72rem;color:var(--muted)">JPG, PNG o WebP · máx 5MB</span>
+              </div>
+            </div>
+            <div class="field" style="margin:0">
+              <label>Nombre visible</label>
+              <input type="text" id="fDisplayName" placeholder="KATATONIA" maxlength="40">
+            </div>
+            <div class="field" style="margin:0">
+              <label>Estado <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:.82rem">— debajo de tu nombre en el player</span></label>
+              <input type="text" id="fSub" placeholder="Just chatting · vibes" maxlength="60">
+            </div>
           </div>
         </div>
 
-        <div class="field" style="margin-top:8px">
-          <label style="display:flex;align-items:center;justify-content:space-between;cursor:default">
-            <span><i class="fa-solid fa-film" style="color:var(--accent,#00bfff)"></i> Guardar transmisiones (VOD)</span>
-            <label class="vod-toggle">
-              <input type="checkbox" id="fVodEnabled">
-              <span class="vod-slider"></span>
+        <div class="card">
+          <div class="card-title">Stream</div>
+          <div class="form-grid">
+            <div class="field" style="margin:0">
+              <label>Juego / Título <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:.82rem">— qué estás haciendo ahora</span></label>
+              <input type="text" id="fStreamTitle" placeholder="Minecraft, Just Chatting…" maxlength="80">
+            </div>
+            <div class="field" style="margin:0">
+              <label>Bio</label>
+              <textarea id="fBio" placeholder="Cuéntale algo a tu audiencia…" maxlength="280"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Redes sociales</div>
+          <div class="form-grid">
+            <div class="social-grid">
+              <div class="field" style="margin:0">
+                <label><i class="fa-brands fa-twitch" style="color:#9146ff"></i> Twitch</label>
+                <input type="text" id="fTwitch" placeholder="tu_usuario">
+              </div>
+              <div class="field" style="margin:0">
+                <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram</label>
+                <input type="text" id="fInstagram" placeholder="tu_usuario">
+              </div>
+              <div class="field" style="margin:0">
+                <label><i class="fa-brands fa-tiktok"></i> TikTok</label>
+                <input type="text" id="fTiktok" placeholder="tu_usuario">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">VODs</div>
+          <div class="form-grid">
+            <label style="display:flex;align-items:center;justify-content:space-between;cursor:default;gap:16px">
+              <div>
+                <div style="font-size:.9rem;margin-bottom:4px"><i class="fa-solid fa-film" style="color:var(--accent)"></i> Guardar transmisiones</div>
+                <div class="field-hint" style="margin:0">Tus streams se guardan y quedan disponibles para ver después.</div>
+              </div>
+              <label class="vod-toggle">
+                <input type="checkbox" id="fVodEnabled">
+                <span class="vod-slider"></span>
+              </label>
             </label>
-          </label>
-          <div class="field-hint">Cuando está activo, tus streams se guardan y quedan disponibles para ver después.</div>
+          </div>
         </div>
 
-        <div class="form-actions">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
           <span class="save-status" id="saveStatus"></span>
-          <button class="btn primary" id="saveBtn">
-            <i class="fa-solid fa-floppy-disk"></i> Guardar cambios
+          <button class="btn primary" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
+        </div>
+      </section>
+
+      <!-- ── PANELES ── -->
+      <section id="s-paneles" class="pf-section" style="margin-bottom:64px">
+        <h2 class="pf-section-title">Paneles</h2>
+        <p style="font-size:.85rem;color:var(--muted);margin:0 0 16px">Aparecen debajo de tu perfil en tu canal. Máximo 4 paneles.</p>
+        <div id="panelsList"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:10px">
+          <button class="btn" id="addPanelBtn"><i class="fa-solid fa-plus"></i> Agregar panel</button>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="save-status" id="panelsStatus"></span>
+            <button class="btn primary" id="savePanelsBtn"><i class="fa-solid fa-floppy-disk"></i> Guardar paneles</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CONTENIDO ── -->
+      <section id="s-contenido" class="pf-section">
+        <h2 class="pf-section-title">Contenido</h2>
+
+        <div class="pf-tabs" id="contentTabs">
+          <button class="pf-tab active" data-panel="tab-vods">
+            <i class="fa-solid fa-film"></i> Transmisiones
+          </button>
+          <button class="pf-tab" data-panel="tab-reels">
+            <i class="fa-solid fa-scissors"></i> Reels
           </button>
         </div>
 
-      </div>
-    </div>
+        <div class="pf-tab-panel active" id="tab-vods">
+          <div id="vodsCard" style="display:none">
+            <div class="vod-rows" id="vodsList"></div>
+            <p id="vodsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes transmisiones guardadas aún.</p>
+          </div>
+          <p id="vodsDisabled" style="font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">Activa la opción de guardar transmisiones en la sección Perfil para ver tus VODs aquí.</p>
+        </div>
 
-    <!-- Paneles -->
-    <div class="card">
-      <div class="card-title">Paneles</div>
-      <p style="font-size: .92rem;color:var(--muted);margin:0 0 16px">Aparecen debajo de tu perfil en tu canal. Máximo 4 paneles.</p>
-      <div id="panelsList" style="display:flex;flex-direction:column;gap:12px"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:14px">
-        <button class="btn" id="addPanelBtn">
-          <i class="fa-solid fa-plus"></i> Agregar panel
-        </button>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span class="save-status" id="panelsStatus"></span>
-          <button class="btn primary" id="savePanelsBtn">
-            <i class="fa-solid fa-floppy-disk"></i> Guardar paneles
+        <div class="pf-tab-panel" id="tab-reels">
+          <div id="reelsCard">
+            <div style="margin-bottom:12px">
+              <a href="/reels/" class="btn" target="_blank" rel="noopener" style="font-size:.7rem"><i class="fa-solid fa-film"></i> Ver página pública de Reels</a>
+            </div>
+            <div class="reel-rows" id="reelsList"></div>
+            <p id="reelsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes reels aún. Crea uno desde tus transmisiones.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CUENTA ── -->
+      <section id="s-cuenta" class="pf-section">
+        <h2 class="pf-section-title">Cuenta</h2>
+
+        <details class="pf-details">
+          <summary>Cambiar email</summary>
+          <div class="pf-details-body">
+            <div class="form-grid">
+              <div class="field" style="margin:0">
+                <label>Nuevo email</label>
+                <input type="email" id="fNewEmail" placeholder="nuevo@email.com" autocomplete="email">
+              </div>
+              <div class="field" style="margin:0">
+                <label>Contraseña actual</label>
+                <input type="password" id="fEmailPass" placeholder="••••••••" autocomplete="current-password">
+              </div>
+              <div class="form-actions" style="margin:0">
+                <span class="save-status" id="emailStatus"></span>
+                <button class="btn primary" id="changeEmailBtn"><i class="fa-solid fa-envelope"></i> Cambiar email</button>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="pf-details">
+          <summary>Cambiar contraseña</summary>
+          <div class="pf-details-body">
+            <div class="form-grid">
+              <div class="field" style="margin:0">
+                <label>Contraseña actual</label>
+                <input type="password" id="fOldPass" placeholder="••••••••" autocomplete="current-password">
+              </div>
+              <div class="field" style="margin:0">
+                <label>Nueva contraseña</label>
+                <input type="password" id="fNewPass" placeholder="••••••••" autocomplete="new-password">
+              </div>
+              <div class="field" style="margin:0">
+                <label>Confirmar nueva contraseña</label>
+                <input type="password" id="fNewPassConfirm" placeholder="••••••••" autocomplete="new-password">
+              </div>
+              <div class="form-actions" style="margin:0">
+                <span class="save-status" id="passStatus"></span>
+                <button class="btn primary" id="changePassBtn"><i class="fa-solid fa-lock"></i> Cambiar contraseña</button>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div class="session-card">
+          <span style="font-size:.82rem;color:var(--muted)" id="sessionEmailMobile"></span>
+          <button class="btn danger" id="logoutBtnMobile" style="display:none">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
           </button>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <!-- Mis transmisiones -->
-    <div class="card" id="vodsCard" style="display:none">
-      <div class="card-title"><i class="fa-solid fa-film" style="color:var(--accent);font-size:.9em"></i> Mis transmisiones</div>
-      <p style="font-size:.85rem;color:var(--muted);margin:0 0 16px">Haz clic en el ícono de borrar para eliminar un VOD de tu canal.</p>
-      <div id="vodsList" style="display:flex;flex-direction:column;gap:10px"></div>
-      <p id="vodsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono)">No tienes transmisiones guardadas aún.</p>
-    </div>
-
-    <!-- Mis Reels -->
-    <div class="card" id="reelsCard" style="display:none">
-      <div class="card-title"><i class="fa-solid fa-scissors" style="color:var(--accent);font-size:.9em"></i> Mis Reels</div>
-      <p style="font-size:.85rem;color:var(--muted);margin:0 0 16px">Clips 9:16 generados desde tus transmisiones. Descárgalos para compartir en TikTok, Instagram o YouTube Shorts.</p>
-      <div id="reelsList" style="display:flex;flex-direction:column;gap:10px"></div>
-      <p id="reelsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono)">No tienes reels aún. Crea uno desde tus transmisiones.</p>
-      <div style="margin-top:14px">
-        <a href="/reels/" class="btn" target="_blank" rel="noopener"><i class="fa-solid fa-film"></i> Ver página pública de Reels</a>
-      </div>
-    </div>
-
-    <!-- Cambiar email -->
-    <div class="card">
-      <div class="card-title">Cambiar email</div>
-      <div class="form-grid">
-        <div class="field">
-          <label>Nuevo email</label>
-          <input type="email" id="fNewEmail" placeholder="nuevo@email.com" autocomplete="email">
-        </div>
-        <div class="field">
-          <label>Contraseña actual (para confirmar)</label>
-          <input type="password" id="fEmailPass" placeholder="••••••••" autocomplete="current-password">
-        </div>
-        <div class="form-actions">
-          <span class="save-status" id="emailStatus"></span>
-          <button class="btn primary" id="changeEmailBtn">
-            <i class="fa-solid fa-envelope"></i> Cambiar email
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Cambiar contraseña -->
-    <div class="card">
-      <div class="card-title">Cambiar contraseña</div>
-      <div class="form-grid">
-        <div class="field">
-          <label>Contraseña actual</label>
-          <input type="password" id="fOldPass" placeholder="••••••••" autocomplete="current-password">
-        </div>
-        <div class="field">
-          <label>Nueva contraseña</label>
-          <input type="password" id="fNewPass" placeholder="••••••••" autocomplete="new-password">
-        </div>
-        <div class="field">
-          <label>Confirmar nueva contraseña</label>
-          <input type="password" id="fNewPassConfirm" placeholder="••••••••" autocomplete="new-password">
-        </div>
-        <div class="form-actions">
-          <span class="save-status" id="passStatus"></span>
-          <button class="btn primary" id="changePassBtn">
-            <i class="fa-solid fa-lock"></i> Cambiar contraseña
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sesión -->
-    <div class="card">
-      <div class="card-title">Sesión</div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-        <span style="font-size:.85rem;color:var(--muted)" id="sessionEmail"></span>
-        <button class="btn danger" id="logoutBtn">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
-        </button>
-      </div>
-    </div>
-
+    </main>
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
 <script is:inline>
 const PB_URL = 'https://pb.corillo.live';
 const pb = new PocketBase(PB_URL);
 
-// ── Elementos ──
+// ── DOM refs ──
 const loginScreen  = document.getElementById('loginScreen');
 const resetCard    = document.getElementById('resetCard');
+const loginCard    = document.getElementById('loginCard');
 const resetEmail   = document.getElementById('resetEmail');
 const resetBtn     = document.getElementById('resetBtn');
 const resetErr     = document.getElementById('resetErr');
@@ -797,7 +909,6 @@ const loginEmail   = document.getElementById('loginEmail');
 const loginPass    = document.getElementById('loginPass');
 const loginBtn     = document.getElementById('loginBtn');
 const loginErr     = document.getElementById('loginErr');
-const welcomeName  = document.getElementById('welcomeName');
 const sessionEmail = document.getElementById('sessionEmail');
 const streamKeyVal = document.getElementById('streamKeyVal');
 const obsKeyHint   = document.getElementById('obsKeyHint');
@@ -808,15 +919,14 @@ const avatarPreview= document.getElementById('avatarPreview');
 const avatarInitial= document.getElementById('avatarInitial');
 const avatarBtn    = document.getElementById('avatarBtn');
 const avatarFile   = document.getElementById('avatarFile');
-const fDisplayName   = document.getElementById('fDisplayName');
-const fStreamTitle   = document.getElementById('fStreamTitle');
-const fBio           = document.getElementById('fBio');
-const fTwitch        = document.getElementById('fTwitch');
+const fDisplayName = document.getElementById('fDisplayName');
+const fStreamTitle = document.getElementById('fStreamTitle');
+const fBio         = document.getElementById('fBio');
+const fTwitch      = document.getElementById('fTwitch');
 const fInstagram   = document.getElementById('fInstagram');
 const fTiktok      = document.getElementById('fTiktok');
 const saveBtn      = document.getElementById('saveBtn');
 const saveStatus   = document.getElementById('saveStatus');
-const logoutBtn    = document.getElementById('logoutBtn');
 const navRight     = document.getElementById('navRight');
 const toast        = document.getElementById('toast');
 
@@ -824,31 +934,24 @@ let keyVisible = false;
 let currentRecord = null;
 let toastTimer = null;
 
+// ── Theme ──
 const root = document.documentElement;
-function getThemeButtonMarkup(){
-  return '<button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>';
-}
-function syncThemeUi(){
+function syncThemeUi() {
   const mode = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
   const meta = document.querySelector('meta[name="theme-color"]');
-  const themeBtn = document.getElementById('themeBtn');
+  const btn  = document.getElementById('themeBtn');
   if (meta) meta.setAttribute('content', mode === 'light' ? '#eef7fb' : '#060608');
-  if (themeBtn) {
-    themeBtn.innerHTML = mode === 'light'
-      ? '<i class="fa-solid fa-moon"></i>'
-      : '<i class="fa-solid fa-circle-half-stroke"></i>';
-  }
+  if (btn) btn.innerHTML = mode === 'light'
+    ? '<i class="fa-solid fa-moon"></i>'
+    : '<i class="fa-solid fa-circle-half-stroke"></i>';
 }
-
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('#themeBtn');
-  if (!btn) return;
+document.addEventListener('click', e => {
+  if (!e.target.closest('#themeBtn')) return;
   const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   root.setAttribute('data-theme', next);
   localStorage.setItem('corillo-theme', next);
   syncThemeUi();
 });
-
 syncThemeUi();
 
 // ── Toast ──
@@ -859,48 +962,51 @@ function showToast(msg, type = 'ok') {
   toastTimer = setTimeout(() => toast.className = '', 2800);
 }
 
-// ── Inicializar ──
+// ── Init ──
 function init() {
-  if (pb.authStore.isValid) {
-    showDashboard();
-  } else {
-    showLogin();
-  }
+  if (pb.authStore.isValid) showDashboard();
+  else showLogin();
 }
-
 function showLogin() {
   loginScreen.style.display = 'flex';
   dashboard.style.display = 'none';
 }
-
 async function showDashboard() {
   loginScreen.style.display = 'none';
   dashboard.style.display = 'block';
-
   try {
-    // Refrescar datos del streamer
-    const record = await pb.collection('streamers').authRefresh();
+    await pb.collection('streamers').authRefresh();
     currentRecord = pb.authStore.record;
     populateDashboard(currentRecord);
-  } catch (e) {
+  } catch(e) {
     pb.authStore.clear();
     showLogin();
   }
 }
 
 function populateDashboard(r) {
-  welcomeName.textContent = `BIENVENIDO, ${(r.display_name || r.key || '').toUpperCase()}`;
-  sessionEmail.textContent = r.email;
+  // Sidebar
+  const pfSideAva = document.getElementById('pfSideAva');
+  const pfSideName = document.getElementById('pfSideName');
+  const pfSideCh   = document.getElementById('pfSideChannel');
+  if (pfSideName) pfSideName.textContent = r.display_name || r.key || '';
+  if (sessionEmail) sessionEmail.textContent = r.email || '';
+  const seMob = document.getElementById('sessionEmailMobile');
+  if (seMob) seMob.textContent = r.email || '';
+  if (pfSideCh && r.key) { pfSideCh.href = `/${r.key}/`; pfSideCh.style.display = ''; }
+  if (pfSideAva) updateSidebarAva(r, pfSideAva);
 
-  // Stream key — oculta por defecto
-  streamKeyVal.textContent = r.stream_key ? `${r.key}?secret=${r.stream_key}` : '(sin stream key — contacta al admin)';
+  // Stream key
+  streamKeyVal.textContent = r.stream_key
+    ? `${r.key}?secret=${r.stream_key}`
+    : '(sin stream key — contacta al admin)';
   streamKeyVal.classList.add('hidden-key');
   keyVisible = false;
   toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
   obsKeyHint.textContent = `${r.key}?secret=••••••••`;
   document.getElementById('obsKeyFormat').textContent = `${r.key}?secret=••••••••`;
 
-  // Perfil
+  // Perfil fields
   fDisplayName.value = r.display_name || '';
   document.getElementById('fSub').value = r.sub || '';
   fStreamTitle.value = r.stream_title || '';
@@ -910,26 +1016,45 @@ function populateDashboard(r) {
   fTiktok.value = r.tiktok || '';
   document.getElementById('fVodEnabled').checked = !!r.vod_enabled;
 
-  // Avatar
+  // Avatar form
   updateAvatarPreview(r);
 
   // Paneles
-  panels = (r.panels || []).map(p => ({title:p.title||'',text:p.text||'',url:p.url||''}));
+  panels = (r.panels || []).map(p => ({ title: p.title||'', text: p.text||'', url: p.url||'' }));
   renderPanels();
 
-  // Mis transmisiones
-  if (r.vod_enabled) loadMyVods(r.key);
-
-  // Mis Reels
+  // Contenido
+  if (r.vod_enabled) {
+    document.getElementById('vodsDisabled').style.display = 'none';
+    document.getElementById('vodsCard').style.display = '';
+    loadMyVods(r.key);
+  }
   loadMyReels(r.key);
 
-  // Nav — link al canal
-  navRight.innerHTML = getThemeButtonMarkup();
-  if (r.key) {
-    navRight.innerHTML += `<a class="btn" href="/${r.key}/"><i class="fa-solid fa-tv"></i> Mi canal</a>`;
-  }
+  // Header nav
+  navRight.innerHTML = `<button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>`;
+  if (r.key) navRight.innerHTML += `<a class="btn" href="/${r.key}/"><i class="fa-solid fa-tv"></i> Mi canal</a>`;
   navRight.innerHTML += `<a class="btn" href="/"><i class="fa-solid fa-house"></i></a>`;
   syncThemeUi();
+
+  // Mobile logout
+  const logMob = document.getElementById('logoutBtnMobile');
+  if (logMob) logMob.style.display = '';
+
+  // UI init
+  initTabs();
+  initScrollSpy();
+}
+
+function updateSidebarAva(r, el) {
+  if (r.avatar) {
+    const url = pb.files.getURL(r, r.avatar, { thumb: '100x100' });
+    el.innerHTML = `<img src="${url}" alt="">`;
+    el.style.background = r.color || '';
+  } else {
+    el.textContent = (r.display_name || r.key || '?')[0].toUpperCase();
+    el.style.background = r.color || '';
+  }
 }
 
 function updateAvatarPreview(r) {
@@ -940,133 +1065,205 @@ function updateAvatarPreview(r) {
     img.src = url;
     if (!img.parentNode) avatarPreview.appendChild(img);
   } else {
-    const letter = (r.display_name || r.key || '?')[0].toUpperCase();
-    avatarInitial.textContent = letter;
+    avatarInitial.textContent = (r.display_name || r.key || '?')[0].toUpperCase();
     avatarInitial.style.display = '';
     const img = avatarPreview.querySelector('img');
     if (img) img.remove();
   }
+  // also update sidebar
+  const pfSideAva = document.getElementById('pfSideAva');
+  if (pfSideAva) updateSidebarAva(r, pfSideAva);
 }
 
-// ── Mis transmisiones ──
+// ── Tabs ──
+function initTabs() {
+  document.querySelectorAll('#contentTabs .pf-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('#contentTabs .pf-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('#s-contenido .pf-tab-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel)?.classList.add('active');
+    });
+  });
+}
+
+// ── Scroll spy ──
+function initScrollSpy() {
+  const navItems = document.querySelectorAll('.pf-nav-item');
+  const sections = ['s-stream','s-perfil','s-paneles','s-contenido','s-cuenta']
+    .map(id => document.getElementById(id)).filter(Boolean);
+
+  function update() {
+    const scroll = window.scrollY + 120;
+    let active = sections[0];
+    sections.forEach(s => { if (s.offsetTop <= scroll) active = s; });
+    navItems.forEach(item => {
+      const href = item.getAttribute('href').slice(1);
+      // map paneles to perfil in nav (no nav item for paneles)
+      const match = href === 's-paneles' ? false : active?.id === href;
+      item.classList.toggle('active', match);
+    });
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      const id = item.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        const offset = el.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: offset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+}
+
+// ── Helpers ──
 function fmtDur(s) {
   if (!s) return '';
-  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), ss = Math.floor(s % 60);
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = Math.floor(s%60);
   return h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}:${String(ss).padStart(2,'0')}`;
 }
 function fmtMB(b) {
   if (!b) return '';
   return b > 1073741824 ? (b/1073741824).toFixed(1)+' GB' : Math.round(b/1048576)+' MB';
 }
-function fmtVodDate(iso) {
+function fmtDate(iso) {
   if (!iso) return '—';
   return new Date(iso).toLocaleDateString('es-PR', { day:'numeric', month:'short', year:'numeric' });
 }
+function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
+// ── VODs ──
 async function loadMyVods(channel) {
   try {
-    const res = await pb.collection('vods').getList(1, 50, {
-      filter: `channel = "${channel}"`,
-      sort: '-date',
-    });
+    const res = await pb.collection('vods').getList(1, 50, { filter:`channel="${channel}"`, sort:'-date' });
     const items = res.items || [];
-    const card = document.getElementById('vodsCard');
-    const list = document.getElementById('vodsList');
+    const list  = document.getElementById('vodsList');
     const empty = document.getElementById('vodsEmpty');
-    card.style.display = '';
     if (!items.length) { empty.style.display = ''; return; }
     list.innerHTML = items.map(v => `
       <div>
         <div class="vod-row" id="vrow-${v.id}">
-          <a class="vod-row-thumb" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener" title="Ver VOD">
-            ${v.thumb ? `<img src="${v.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
-          </a>
           <a class="vod-row-link" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener">
-            <div class="vod-row-date">${fmtVodDate(v.date)}</div>
-            <div class="vod-row-meta">${[fmtDur(v.duration), fmtMB(v.size)].filter(Boolean).join(' · ')}</div>
+            <div class="vod-row-thumb">
+              ${v.thumb ? `<img src="${v.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
+            </div>
+            <div class="vod-row-info">
+              <div class="vod-row-date">${fmtDate(v.date)}</div>
+              <div class="vod-row-meta">${[fmtDur(v.duration), fmtMB(v.size)].filter(Boolean).join(' · ')}</div>
+            </div>
           </a>
-          <div style="display:flex;gap:6px;flex-shrink:0">
-            <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}', ${v.duration || 0})" title="Crear Reel">
-              <i class="fa-solid fa-scissors"></i>
-            </button>
-            <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD">
-              <i class="fa-solid fa-trash"></i>
-            </button>
+          <div class="vod-row-actions">
+            <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}', ${v.duration||0})" title="Crear Reel"><i class="fa-solid fa-scissors"></i></button>
+            <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>
         <div class="reel-panel" id="rpanel-${v.id}">
-          <div class="reel-panel-title"><i class="fa-solid fa-scissors"></i> Crear Reel desde esta transmisión</div>
-          <div style="font-size:.78rem;color:var(--muted);margin-bottom:12px">Duración total: ${fmtDur(v.duration) || '?'}${v.duration ? ' (' + v.duration + 's)' : ''}</div>
-          <div class="reel-time-row">
-            <div class="field" style="margin:0">
-              <label>Inicio <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">(mm:ss)</span></label>
-              <input type="text" id="rstart-${v.id}" placeholder="00:00" maxlength="8" style="font-family:var(--mono);font-size:.92rem" oninput="updateReelDur('${v.id}', ${v.duration || 99999})">
+          <div class="reel-panel-title"><i class="fa-solid fa-scissors"></i> Crear Reel — ${fmtDur(v.duration)||'?'}</div>
+          <div class="rtl" id="rtl-${v.id}" data-duration="${v.duration||0}">
+            <div class="rtl-track">
+              <div class="rtl-fill" id="rtl-fill-${v.id}"></div>
+              <div class="rtl-handle" id="rtl-hs-${v.id}"></div>
+              <div class="rtl-handle" id="rtl-he-${v.id}"></div>
             </div>
-            <div class="field" style="margin:0">
-              <label>Fin <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body)">(mm:ss)</span></label>
-              <input type="text" id="rend-${v.id}" placeholder="00:30" maxlength="8" style="font-family:var(--mono);font-size:.92rem" oninput="updateReelDur('${v.id}', ${v.duration || 99999})">
+            <div class="rtl-times">
+              <span id="rtl-ts-${v.id}">0:00</span>
+              <span class="rtl-t-dur" id="rtl-td-${v.id}">—</span>
+              <span id="rtl-te-${v.id}">0:30</span>
             </div>
           </div>
-          <div class="reel-dur-hint" id="rdur-${v.id}">Duración: — (entre 5 y 60 segundos)</div>
+          <input type="hidden" id="rstart-${v.id}" value="0:00">
+          <input type="hidden" id="rend-${v.id}" value="0:30">
           <div class="reel-public-row">
-            <label class="vod-toggle">
-              <input type="checkbox" id="rpub-${v.id}">
-              <span class="vod-slider"></span>
-            </label>
-            <span>Publicar en <a href="/reels/" target="_blank" style="color:var(--accent);text-decoration:none">corillo.live/reels/</a></span>
+            <label class="vod-toggle"><input type="checkbox" id="rpub-${v.id}"><span class="vod-slider"></span></label>
+            <span style="font-size:.85rem">Publicar en <a href="/reels/" target="_blank" style="color:var(--accent);text-decoration:none">corillo.live/reels/</a></span>
           </div>
           <div class="reel-actions">
-            <button class="btn primary" id="rgen-${v.id}" onclick="generateReel('${v.id}')">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Generar Reel
-            </button>
+            <button class="btn primary" id="rgen-${v.id}" onclick="generateReel('${v.id}')"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar Reel</button>
             <button class="btn" onclick="toggleReelPanel('${v.id}', 0)">Cancelar</button>
           </div>
           <div class="reel-result" id="rresult-${v.id}"></div>
         </div>
       </div>`).join('');
-  } catch(e) {
-    console.error('loadMyVods:', e);
-  }
+  } catch(e) { console.error('loadMyVods:', e); }
 }
 
-// ── Reel creation helpers ──
-function parseTime(str) {
-  if (!str) return NaN;
-  const parts = str.trim().split(':').map(Number);
-  if (parts.some(isNaN)) return NaN;
-  if (parts.length === 1) return parts[0];
-  if (parts.length === 2) return parts[0] * 60 + parts[1];
-  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  return NaN;
-}
+// ── Reel timeline ──
+function initReelTimeline(vodId, duration) {
+  if (!duration || duration <= 0) return;
+  const tlEl = document.getElementById(`rtl-${vodId}`);
+  if (!tlEl || tlEl.dataset.init === '1') return;
+  tlEl.dataset.init = '1';
 
-function updateReelDur(vodId, vodDuration) {
-  const start = parseTime(document.getElementById(`rstart-${vodId}`)?.value);
-  const end   = parseTime(document.getElementById(`rend-${vodId}`)?.value);
-  const hint  = document.getElementById(`rdur-${vodId}`);
-  if (!hint) return;
-  if (isNaN(start) || isNaN(end)) {
-    hint.textContent = 'Duración: — (entre 5 y 60 segundos)';
-    hint.className = 'reel-dur-hint';
-    return;
+  const fill  = document.getElementById(`rtl-fill-${vodId}`);
+  const hs    = document.getElementById(`rtl-hs-${vodId}`);
+  const he    = document.getElementById(`rtl-he-${vodId}`);
+  const ts    = document.getElementById(`rtl-ts-${vodId}`);
+  const td    = document.getElementById(`rtl-td-${vodId}`);
+  const te    = document.getElementById(`rtl-te-${vodId}`);
+  const track = tlEl.querySelector('.rtl-track');
+
+  const MIN = 5, MAX = 60;
+  let s0 = 0, e0 = Math.min(30, duration);
+
+  function fmt(sec) {
+    const m = Math.floor(sec/60), s = Math.floor(sec%60);
+    return `${m}:${String(s).padStart(2,'0')}`;
   }
-  const dur = end - start;
-  if (dur <= 0) {
-    hint.textContent = 'El fin debe ser mayor que el inicio';
-    hint.className = 'reel-dur-hint err';
-  } else if (dur < 5) {
-    hint.textContent = `Duración: ${dur}s — mínimo 5 segundos`;
-    hint.className = 'reel-dur-hint err';
-  } else if (dur > 60) {
-    hint.textContent = `Duración: ${dur}s — máximo 60 segundos`;
-    hint.className = 'reel-dur-hint err';
-  } else if (vodDuration > 0 && end > vodDuration) {
-    hint.textContent = `El fin (${end}s) supera la duración del VOD (${vodDuration}s)`;
-    hint.className = 'reel-dur-hint err';
-  } else {
-    hint.textContent = `Duración: ${dur}s ✓`;
-    hint.className = 'reel-dur-hint ok';
+
+  function render() {
+    const sp = (s0 / duration) * 100;
+    const ep = (e0 / duration) * 100;
+    fill.style.left  = sp + '%';
+    fill.style.width = (ep - sp) + '%';
+    hs.style.left = sp + '%';
+    he.style.left = ep + '%';
+    ts.textContent = fmt(s0);
+    te.textContent = fmt(e0);
+    const dur = e0 - s0;
+    td.textContent = dur + 's';
+    td.className = 'rtl-t-dur' + (dur >= MIN && dur <= MAX ? ' ok' : ' err');
+    document.getElementById(`rstart-${vodId}`).value = fmt(s0);
+    document.getElementById(`rend-${vodId}`).value   = fmt(e0);
   }
+
+  function drag(handle, isStart) {
+    handle.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      handle.setPointerCapture(e.pointerId);
+      handle.classList.add('dragging');
+      const rect = track.getBoundingClientRect();
+
+      function onMove(e) {
+        const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+        let sec = Math.round((x / rect.width) * duration);
+        if (isStart) {
+          s0 = Math.max(0, Math.min(sec, e0 - MIN));
+        } else {
+          e0 = Math.min(duration, Math.max(sec, s0 + MIN));
+          if (e0 - s0 > MAX) e0 = s0 + MAX;
+        }
+        render();
+      }
+
+      function onUp() {
+        handle.classList.remove('dragging');
+        handle.removeEventListener('pointermove', onMove);
+      }
+
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp, { once: true });
+      handle.addEventListener('pointercancel', onUp, { once: true });
+    });
+  }
+
+  drag(hs, true);
+  drag(he, false);
+  render();
 }
 
 function toggleReelPanel(vodId, vodDuration) {
@@ -1076,17 +1273,17 @@ function toggleReelPanel(vodId, vodDuration) {
   const opening = !panel.classList.contains('open');
   panel.classList.toggle('open');
   btn?.classList.toggle('active', opening);
-  if (opening) {
-    const startEl = document.getElementById(`rstart-${vodId}`);
-    const endEl   = document.getElementById(`rend-${vodId}`);
-    if (startEl && !startEl.value) {
-      startEl.value = '00:00';
-      if (endEl && !endEl.value) {
-        endEl.value = '00:30';
-        updateReelDur(vodId, vodDuration);
-      }
-    }
-  }
+  if (opening) initReelTimeline(vodId, vodDuration);
+}
+
+function parseTime(str) {
+  if (!str) return NaN;
+  const parts = str.trim().split(':').map(Number);
+  if (parts.some(isNaN)) return NaN;
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  return NaN;
 }
 
 async function generateReel(vodId) {
@@ -1098,10 +1295,8 @@ async function generateReel(vodId) {
   const result= document.getElementById(`rresult-${vodId}`);
 
   if (isNaN(start) || isNaN(end) || dur < 5 || dur > 60) {
-    showToast('Revisa el tiempo — entre 5 y 60 segundos', 'err');
-    return;
+    showToast('Revisa el tiempo — entre 5 y 60 segundos', 'err'); return;
   }
-  if (dur <= 0) { showToast('El fin debe ser mayor que el inicio', 'err'); return; }
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Generando…';
@@ -1116,18 +1311,17 @@ async function generateReel(vodId) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Error desconocido');
-
     result.innerHTML = `
       <div style="margin-bottom:8px"><strong style="color:#00b894">¡Reel creado!</strong> ${dur}s · 9:16</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <a href="${data.download_url}" download class="btn" style="font-size:.78rem"><i class="fa-solid fa-download"></i> Descargar MP4</a>
-        ${pub ? `<a href="/reels/" target="_blank" class="btn" style="font-size:.78rem"><i class="fa-solid fa-film"></i> Ver en /reels/</a>` : ''}
+        <a href="${data.download_url}" download class="btn" style="font-size:.72rem"><i class="fa-solid fa-download"></i> Descargar MP4</a>
+        ${pub ? `<a href="/reels/" target="_blank" class="btn" style="font-size:.72rem"><i class="fa-solid fa-film"></i> Ver en /reels/</a>` : ''}
       </div>`;
     result.className = 'reel-result show';
     showToast('¡Reel generado!');
     loadMyReels(currentRecord.key);
   } catch(e) {
-    result.innerHTML = `<span style="color:var(--live)"><i class="fa-solid fa-circle-exclamation"></i> ${e.message}</span>`;
+    result.innerHTML = `<span style="color:#e17055"><i class="fa-solid fa-circle-exclamation"></i> ${e.message}</span>`;
     result.className = 'reel-result show';
     showToast('Error generando el reel', 'err');
   } finally {
@@ -1142,28 +1336,21 @@ async function deleteVod(id) {
   if (btn) btn.classList.add('loading');
   try {
     await pb.collection('vods').delete(id);
-    document.getElementById(`vrow-${id}`)?.remove();
-    if (!document.querySelector('.vod-row')) {
-      document.getElementById('vodsEmpty').style.display = '';
-    }
+    document.getElementById(`vrow-${id}`)?.closest('div')?.remove();
+    if (!document.querySelector('.vod-row')) document.getElementById('vodsEmpty').style.display = '';
   } catch(e) {
     if (btn) btn.classList.remove('loading');
-    alert('No se pudo borrar el VOD. Intenta de nuevo.');
+    alert('No se pudo borrar el VOD.');
   }
 }
 
-// ── Mis Reels ──
+// ── Reels ──
 async function loadMyReels(channel) {
   try {
-    const res = await pb.collection('reels').getList(1, 50, {
-      filter: `channel = "${channel}"`,
-      sort: '-date',
-    });
+    const res = await pb.collection('reels').getList(1, 50, { filter:`channel="${channel}"`, sort:'-date' });
     const items = res.items || [];
-    const card  = document.getElementById('reelsCard');
     const list  = document.getElementById('reelsList');
     const empty = document.getElementById('reelsEmpty');
-    card.style.display = '';
     list.innerHTML = '';
     if (!items.length) { empty.style.display = ''; return; }
     empty.style.display = 'none';
@@ -1173,24 +1360,18 @@ async function loadMyReels(channel) {
           ${r.thumb ? `<img src="${r.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : '<i class="fa-solid fa-film"></i>'}
         </div>
         <div class="reel-row-info">
-          <div class="reel-row-date">${fmtVodDate(r.date)}${r.title ? ' · ' + esc(r.title) : ''}</div>
-          <div class="reel-row-meta">${r.duration ? r.duration + 's' : ''}${r.size ? ' · ' + fmtMB(r.size) : ''}</div>
-          <div class="reel-row-pub ${r.public ? 'pub' : 'priv'}">
-            <i class="fa-solid fa-${r.public ? 'globe' : 'lock'}"></i> ${r.public ? 'Público' : 'Privado'}
+          <div class="reel-row-date">${fmtDate(r.date)}</div>
+          <div class="reel-row-meta">${r.duration ? r.duration+'s' : ''}${r.size ? ' · '+fmtMB(r.size) : ''}</div>
+          <div class="reel-row-pub ${r.public?'pub':'priv'}">
+            <i class="fa-solid fa-${r.public?'globe':'lock'}"></i> ${r.public?'Público':'Privado'}
           </div>
         </div>
         <div class="reel-row-actions">
-          <a class="reel-row-dl" href="/vods/reels/${channel}/${r.filename}" download title="Descargar">
-            <i class="fa-solid fa-download"></i>
-          </a>
-          <button class="reel-row-del" onclick="deleteReel('${r.id}', '${channel}')" title="Borrar Reel">
-            <i class="fa-solid fa-trash"></i>
-          </button>
+          <a class="reel-row-dl" href="/vods/reels/${channel}/${r.filename}" download title="Descargar"><i class="fa-solid fa-download"></i></a>
+          <button class="reel-row-del" onclick="deleteReel('${r.id}','${channel}')" title="Borrar"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>`).join('');
-  } catch(e) {
-    console.error('loadMyReels:', e);
-  }
+  } catch(e) { console.error('loadMyReels:', e); }
 }
 
 async function deleteReel(id, channel) {
@@ -1199,40 +1380,35 @@ async function deleteReel(id, channel) {
   if (btn) btn.classList.add('loading');
   try {
     const res = await fetch(`/chat-api/reel/${id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': pb.authStore.token },
+      method: 'DELETE', headers: { 'Authorization': pb.authStore.token }
     });
     if (!res.ok) throw new Error();
     document.getElementById(`rrow-${id}`)?.remove();
-    if (!document.querySelector('.reel-row')) {
-      document.getElementById('reelsEmpty').style.display = '';
-    }
+    if (!document.querySelector('.reel-row')) document.getElementById('reelsEmpty').style.display = '';
     showToast('Reel eliminado');
   } catch(e) {
     if (btn) btn.classList.remove('loading');
-    showToast('Error al borrar. Intenta de nuevo.', 'err');
+    showToast('Error al borrar.', 'err');
   }
 }
 
 // ── Login ──
 loginBtn.addEventListener('click', doLogin);
-loginEmail.addEventListener('keydown', e => { if (e.key === 'Enter') loginPass.focus(); });
-loginPass.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+loginEmail.addEventListener('keydown', e => { if (e.key==='Enter') loginPass.focus(); });
+loginPass.addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
 
 async function doLogin() {
   const email = loginEmail.value.trim();
-  const pass = loginPass.value;
+  const pass  = loginPass.value;
   if (!email || !pass) return;
-
   loginBtn.disabled = true;
   loginBtn.innerHTML = '<span class="spinner"></span> Entrando…';
   loginErr.style.display = 'none';
-
   try {
     await pb.collection('streamers').authWithPassword(email, pass);
     currentRecord = pb.authStore.record;
     showDashboard();
-  } catch (e) {
+  } catch(e) {
     loginErr.textContent = 'Email o contraseña incorrectos.';
     loginErr.style.display = 'block';
   } finally {
@@ -1241,28 +1417,19 @@ async function doLogin() {
   }
 }
 
-// ── Stream key toggle ──
+// ── Stream key ──
 toggleKey.addEventListener('click', () => {
   keyVisible = !keyVisible;
-  if (keyVisible) {
-    streamKeyVal.classList.remove('hidden-key');
-    toggleKey.innerHTML = '<i class="fa-regular fa-eye-slash"></i>';
-    const fullKey = `${currentRecord?.key}?secret=${currentRecord?.stream_key}`;
-    obsKeyHint.textContent = fullKey;
-    document.getElementById('obsKeyFormat').textContent = fullKey;
-  } else {
-    streamKeyVal.classList.add('hidden-key');
-    toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
-    obsKeyHint.textContent = `${currentRecord?.key}?secret=••••••••`;
-    document.getElementById('obsKeyFormat').textContent = `${currentRecord?.key}?secret=••••••••`;
-  }
+  streamKeyVal.classList.toggle('hidden-key', !keyVisible);
+  toggleKey.innerHTML = keyVisible
+    ? '<i class="fa-regular fa-eye-slash"></i>'
+    : '<i class="fa-regular fa-eye"></i>';
+  const full = `${currentRecord?.key}?secret=${currentRecord?.stream_key}`;
+  obsKeyHint.textContent = keyVisible ? full : `${currentRecord?.key}?secret=••••••••`;
+  document.getElementById('obsKeyFormat').textContent = keyVisible ? full : `${currentRecord?.key}?secret=••••••••`;
 });
 
-// ── Copy buttons ──
-copyKey.addEventListener('click', () => {
-  const fullKey = `${currentRecord?.key}?secret=${currentRecord?.stream_key}`;
-  copyText(fullKey, copyKey);
-});
+copyKey.addEventListener('click', () => copyText(`${currentRecord?.key}?secret=${currentRecord?.stream_key}`, copyKey));
 copyServer.addEventListener('click', () => copyText('rtmp://corillo.live/live', copyServer));
 
 async function copyText(text, btn) {
@@ -1274,18 +1441,15 @@ async function copyText(text, btn) {
     btn.classList.add('copied');
     setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 1800);
     showToast('Copiado al portapapeles');
-  } catch (e) {
-    showToast('No se pudo copiar', 'err');
-  }
+  } catch(e) { showToast('No se pudo copiar', 'err'); }
 }
 
-// ── Avatar upload ──
+// ── Avatar ──
 avatarBtn.addEventListener('click', () => avatarFile.click());
 avatarFile.addEventListener('change', async () => {
   const file = avatarFile.files[0];
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { showToast('La imagen es demasiado grande (máx 5MB)', 'err'); return; }
-
+  if (file.size > 5*1024*1024) { showToast('La imagen es demasiado grande (máx 5MB)', 'err'); return; }
   avatarBtn.disabled = true;
   avatarBtn.innerHTML = '<span class="spinner"></span> Subiendo…';
   try {
@@ -1294,9 +1458,8 @@ avatarFile.addEventListener('change', async () => {
     currentRecord = await pb.collection('streamers').update(currentRecord.id, fd);
     updateAvatarPreview(currentRecord);
     showToast('Foto actualizada');
-  } catch (e) {
-    showToast('Error subiendo la foto', 'err');
-  } finally {
+  } catch(e) { showToast('Error subiendo la foto', 'err'); }
+  finally {
     avatarBtn.disabled = false;
     avatarBtn.innerHTML = '<i class="fa-solid fa-image"></i> Cambiar foto';
     avatarFile.value = '';
@@ -1307,15 +1470,13 @@ avatarFile.addEventListener('change', async () => {
 saveBtn.addEventListener('click', async () => {
   saveBtn.disabled = true;
   saveBtn.innerHTML = '<span class="spinner"></span> Guardando…';
-  saveStatus.textContent = '';
-  saveStatus.className = 'save-status';
-
+  saveStatus.textContent = ''; saveStatus.className = 'save-status';
   try {
     currentRecord = await pb.collection('streamers').update(currentRecord.id, {
-      display_name:  fDisplayName.value.trim(),
-      sub:           document.getElementById('fSub').value.trim(),
-      stream_title:  fStreamTitle.value.trim(),
-      bio:           fBio.value.trim(),
+      display_name: fDisplayName.value.trim(),
+      sub:          document.getElementById('fSub').value.trim(),
+      stream_title: fStreamTitle.value.trim(),
+      bio:          fBio.value.trim(),
       twitch:       fTwitch.value.trim(),
       instagram:    fInstagram.value.trim(),
       tiktok:       fTiktok.value.trim(),
@@ -1324,8 +1485,9 @@ saveBtn.addEventListener('click', async () => {
     saveStatus.textContent = 'Cambios guardados';
     saveStatus.className = 'save-status ok';
     showToast('Perfil actualizado');
-    welcomeName.textContent = `BIENVENIDO, ${(currentRecord.display_name || currentRecord.key || '').toUpperCase()}`;
-  } catch (e) {
+    const pfSideName = document.getElementById('pfSideName');
+    if (pfSideName) pfSideName.textContent = currentRecord.display_name || currentRecord.key || '';
+  } catch(e) {
     saveStatus.textContent = 'Error al guardar';
     saveStatus.className = 'save-status err';
     showToast('Error al guardar los cambios', 'err');
@@ -1336,22 +1498,21 @@ saveBtn.addEventListener('click', async () => {
 });
 
 // ── Paneles ──
-const panelsList   = document.getElementById('panelsList');
-const addPanelBtn  = document.getElementById('addPanelBtn');
-const savePanelsBtn= document.getElementById('savePanelsBtn');
-const panelsStatus = document.getElementById('panelsStatus');
-
+const panelsList    = document.getElementById('panelsList');
+const addPanelBtn   = document.getElementById('addPanelBtn');
+const savePanelsBtn = document.getElementById('savePanelsBtn');
+const panelsStatus  = document.getElementById('panelsStatus');
 let panels = [];
 
 function renderPanels() {
   panelsList.innerHTML = '';
   panels.forEach((p, i) => {
     const row = document.createElement('div');
-    row.style.cssText = 'background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px';
+    row.className = 'panel-row';
     row.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <span style="font-family:var(--mono);font-size: .92rem;letter-spacing:2px;color:var(--muted)">PANEL ${i+1}</span>
-        <button class="btn danger" style="font-size: .85rem;padding:4px 10px" data-del="${i}"><i class="fa-solid fa-trash"></i></button>
+      <div class="panel-row-header">
+        <span class="panel-row-label">Panel ${i+1}</span>
+        <button class="btn danger sm" data-del="${i}"><i class="fa-solid fa-trash"></i></button>
       </div>
       <div class="field" style="margin:0"><label>Título</label>
         <input type="text" value="${esc(p.title)}" placeholder="Mi Discord" maxlength="40" data-field="title" data-idx="${i}">
@@ -1360,50 +1521,38 @@ function renderPanels() {
         <input type="text" value="${esc(p.text)}" placeholder="Únete al servidor" maxlength="100" data-field="text" data-idx="${i}">
       </div>
       <div class="field" style="margin:0"><label>Link (opcional)</label>
-        <input type="url" value="${esc(p.url)}" placeholder="https://discord.gg/..." maxlength="200" data-field="url" data-idx="${i}">
+        <input type="url" value="${esc(p.url)}" placeholder="https://..." maxlength="200" data-field="url" data-idx="${i}">
       </div>`;
-    row.querySelector('[data-del]').addEventListener('click', () => {
-      panels.splice(i, 1);
-      renderPanels();
-    });
+    row.querySelector('[data-del]').addEventListener('click', () => { panels.splice(i,1); renderPanels(); });
     row.querySelectorAll('input').forEach(inp => {
-      inp.addEventListener('input', () => {
-        panels[inp.dataset.idx][inp.dataset.field] = inp.value;
-      });
+      inp.addEventListener('input', () => { panels[inp.dataset.idx][inp.dataset.field] = inp.value; });
     });
     panelsList.appendChild(row);
   });
   addPanelBtn.disabled = panels.length >= 4;
 }
 
-function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-
 addPanelBtn.addEventListener('click', () => {
   if (panels.length >= 4) return;
-  panels.push({title:'',text:'',url:''});
+  panels.push({ title:'', text:'', url:'' });
   renderPanels();
 });
 
 savePanelsBtn.addEventListener('click', async () => {
   savePanelsBtn.disabled = true;
   savePanelsBtn.innerHTML = '<span class="spinner"></span> Guardando…';
-  panelsStatus.textContent = '';
-  panelsStatus.className = 'save-status';
+  panelsStatus.textContent = ''; panelsStatus.className = 'save-status';
   try {
     const clean = panels.filter(p => p.title.trim()).map(p => ({
-      title: p.title.trim(),
-      text:  p.text.trim(),
-      url:   p.url.trim(),
+      title: p.title.trim(), text: p.text.trim(), url: p.url.trim()
     }));
     currentRecord = await pb.collection('streamers').update(currentRecord.id, { panels: clean });
-    panels = (currentRecord.panels || []).map(p => ({...p}));
+    panels = (currentRecord.panels||[]).map(p => ({...p}));
     renderPanels();
-    panelsStatus.textContent = 'Paneles guardados';
-    panelsStatus.className = 'save-status ok';
+    panelsStatus.textContent = 'Paneles guardados'; panelsStatus.className = 'save-status ok';
     showToast('Paneles actualizados');
   } catch(e) {
-    panelsStatus.textContent = 'Error al guardar';
-    panelsStatus.className = 'save-status err';
+    panelsStatus.textContent = 'Error al guardar'; panelsStatus.className = 'save-status err';
     showToast('Error al guardar los paneles', 'err');
   } finally {
     savePanelsBtn.disabled = false;
@@ -1411,114 +1560,11 @@ savePanelsBtn.addEventListener('click', async () => {
   }
 });
 
-// ── Cambiar contraseña ──
-const fOldPass       = document.getElementById('fOldPass');
-const fNewPass       = document.getElementById('fNewPass');
-const fNewPassConfirm= document.getElementById('fNewPassConfirm');
-const changePassBtn  = document.getElementById('changePassBtn');
-const passStatus     = document.getElementById('passStatus');
-
-changePassBtn.addEventListener('click', async () => {
-  const oldPass = fOldPass.value;
-  const newPass = fNewPass.value;
-  const confirm = fNewPassConfirm.value;
-
-  passStatus.className = 'save-status';
-  passStatus.textContent = '';
-
-  if (!oldPass || !newPass || !confirm) {
-    passStatus.textContent = 'Completa todos los campos';
-    passStatus.className = 'save-status err';
-    return;
-  }
-  if (newPass.length < 8) {
-    passStatus.textContent = 'Mínimo 8 caracteres';
-    passStatus.className = 'save-status err';
-    return;
-  }
-  if (newPass !== confirm) {
-    passStatus.textContent = 'Las contraseñas no coinciden';
-    passStatus.className = 'save-status err';
-    return;
-  }
-
-  changePassBtn.disabled = true;
-  changePassBtn.innerHTML = '<span class="spinner"></span> Guardando…';
-
-  try {
-    await pb.collection('streamers').update(currentRecord.id, {
-      oldPassword:     oldPass,
-      password:        newPass,
-      passwordConfirm: confirm,
-    });
-    fOldPass.value = '';
-    fNewPass.value = '';
-    fNewPassConfirm.value = '';
-    passStatus.textContent = 'Contraseña actualizada';
-    passStatus.className = 'save-status ok';
-    showToast('Contraseña actualizada');
-  } catch (e) {
-    passStatus.textContent = 'Contraseña actual incorrecta';
-    passStatus.className = 'save-status err';
-    showToast('Error al cambiar la contraseña', 'err');
-  } finally {
-    changePassBtn.disabled = false;
-    changePassBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Cambiar contraseña';
-  }
-});
-
-// ── Forgot password ──
-forgotBtn.addEventListener('click', () => {
-  document.querySelector('.login-card').style.display = 'none';
-  resetCard.style.display = 'block';
-  resetEmail.value = loginEmail.value;
-  resetErr.style.display = 'none';
-  resetOk.style.display = 'none';
-});
-
-backToLogin.addEventListener('click', () => {
-  resetCard.style.display = 'none';
-  document.querySelector('.login-card').style.display = 'block';
-});
-
-resetBtn.addEventListener('click', async () => {
-  const email = resetEmail.value.trim();
-  resetErr.style.display = 'none';
-  resetOk.style.display = 'none';
-
-  if (!email) {
-    resetErr.textContent = 'Ingresa tu email.';
-    resetErr.style.display = 'block';
-    return;
-  }
-
-  resetBtn.disabled = true;
-  resetBtn.innerHTML = '<span class="spinner"></span> Enviando…';
-
-  try {
-    await pb.collection('streamers').requestPasswordReset(email);
-    resetOk.textContent = 'Si ese email existe, recibirás el link en unos momentos.';
-    resetOk.style.display = 'block';
-    resetBtn.style.display = 'none';
-  } catch (e) {
-    // Siempre mostrar éxito para no revelar si el email existe
-    resetOk.textContent = 'Si ese email existe, recibirás el link en unos momentos.';
-    resetOk.style.display = 'block';
-    resetBtn.style.display = 'none';
-  } finally {
-    resetBtn.disabled = false;
-    resetBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar link';
-  }
-});
-
-// ── Regenerar stream key ──
+// ── Regenerar key ──
 document.getElementById('regenKeyBtn').addEventListener('click', async () => {
   if (!confirm('¿Seguro? Esto invalidará tu stream key actual. Si estás en vivo, el stream se cortará.')) return;
-
   const btn = document.getElementById('regenKeyBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>';
-
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   try {
     const res = await fetch('/chat-api/regen-stream-key', {
       method: 'POST',
@@ -1528,70 +1574,100 @@ document.getElementById('regenKeyBtn').addEventListener('click', async () => {
     if (!res.ok) throw new Error();
     const data = await res.json();
     currentRecord.stream_key = data.stream_key;
-
     streamKeyVal.textContent = `${currentRecord.key}?secret=${data.stream_key}`;
     if (keyVisible) {
-      const fullKey = `${currentRecord.key}?secret=${data.stream_key}`;
-      obsKeyHint.textContent = fullKey;
-      document.getElementById('obsKeyFormat').textContent = fullKey;
+      const full = `${currentRecord.key}?secret=${data.stream_key}`;
+      obsKeyHint.textContent = full;
+      document.getElementById('obsKeyFormat').textContent = full;
     }
     showToast('Stream key regenerada');
-  } catch (e) {
-    showToast('Error al regenerar. Intenta de nuevo.', 'err');
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Regenerar';
-  }
+  } catch(e) { showToast('Error al regenerar. Intenta de nuevo.', 'err'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Regenerar'; }
+});
+
+// ── Cambiar contraseña ──
+document.getElementById('changePassBtn').addEventListener('click', async () => {
+  const oldPass = document.getElementById('fOldPass').value;
+  const newPass = document.getElementById('fNewPass').value;
+  const confirm = document.getElementById('fNewPassConfirm').value;
+  const status  = document.getElementById('passStatus');
+  status.className = 'save-status'; status.textContent = '';
+  if (!oldPass||!newPass||!confirm) { status.textContent='Completa todos los campos'; status.className='save-status err'; return; }
+  if (newPass.length < 8) { status.textContent='Mínimo 8 caracteres'; status.className='save-status err'; return; }
+  if (newPass !== confirm) { status.textContent='Las contraseñas no coinciden'; status.className='save-status err'; return; }
+  const btn = document.getElementById('changePassBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Guardando…';
+  try {
+    await pb.collection('streamers').update(currentRecord.id, {
+      oldPassword: oldPass, password: newPass, passwordConfirm: confirm
+    });
+    document.getElementById('fOldPass').value = '';
+    document.getElementById('fNewPass').value = '';
+    document.getElementById('fNewPassConfirm').value = '';
+    status.textContent = 'Contraseña actualizada'; status.className = 'save-status ok';
+    showToast('Contraseña actualizada');
+  } catch(e) {
+    status.textContent = 'Contraseña actual incorrecta'; status.className = 'save-status err';
+    showToast('Error al cambiar la contraseña', 'err');
+  } finally { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-lock"></i> Cambiar contraseña'; }
 });
 
 // ── Cambiar email ──
-const fNewEmail    = document.getElementById('fNewEmail');
-const fEmailPass   = document.getElementById('fEmailPass');
-const changeEmailBtn = document.getElementById('changeEmailBtn');
-const emailStatus  = document.getElementById('emailStatus');
-
-changeEmailBtn.addEventListener('click', async () => {
-  const newEmail = fNewEmail.value.trim();
-  const pass     = fEmailPass.value;
-
-  emailStatus.textContent = '';
-  emailStatus.className = 'save-status';
-
-  if (!newEmail || !pass) {
-    emailStatus.textContent = 'Completa ambos campos.';
-    emailStatus.className = 'save-status err';
-    return;
-  }
-
-  changeEmailBtn.disabled = true;
-  changeEmailBtn.innerHTML = '<span class="spinner"></span> Enviando…';
-
+document.getElementById('changeEmailBtn').addEventListener('click', async () => {
+  const newEmail = document.getElementById('fNewEmail').value.trim();
+  const status   = document.getElementById('emailStatus');
+  status.textContent = ''; status.className = 'save-status';
+  if (!newEmail) { status.textContent='Ingresa el nuevo email.'; status.className='save-status err'; return; }
+  const btn = document.getElementById('changeEmailBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Enviando…';
   try {
     await pb.collection('streamers').requestEmailChange(newEmail);
-    emailStatus.textContent = 'Revisa tu nuevo email para confirmar el cambio.';
-    emailStatus.className = 'save-status ok';
-    fNewEmail.value = '';
-    fEmailPass.value = '';
+    status.textContent = 'Revisa tu nuevo email para confirmar el cambio.';
+    status.className = 'save-status ok';
+    document.getElementById('fNewEmail').value = '';
+    document.getElementById('fEmailPass').value = '';
     showToast('Email de confirmación enviado');
-  } catch (e) {
-    emailStatus.textContent = 'Error. Verifica tu contraseña o el email.';
-    emailStatus.className = 'save-status err';
+  } catch(e) {
+    status.textContent = 'Error. Verifica el email.'; status.className = 'save-status err';
     showToast('Error al cambiar el email', 'err');
-  } finally {
-    changeEmailBtn.disabled = false;
-    changeEmailBtn.innerHTML = '<i class="fa-solid fa-envelope"></i> Cambiar email';
+  } finally { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-envelope"></i> Cambiar email'; }
+});
+
+// ── Forgot password ─��
+forgotBtn.addEventListener('click', () => {
+  loginCard.style.display = 'none';
+  resetCard.style.display = 'block';
+  resetEmail.value = loginEmail.value;
+  resetErr.style.display = 'none';
+  resetOk.style.display = 'none';
+});
+backToLogin.addEventListener('click', () => {
+  resetCard.style.display = 'none';
+  loginCard.style.display = 'block';
+});
+resetBtn.addEventListener('click', async () => {
+  const email = resetEmail.value.trim();
+  resetErr.style.display = 'none'; resetOk.style.display = 'none';
+  if (!email) { resetErr.textContent='Ingresa tu email.'; resetErr.style.display='block'; return; }
+  resetBtn.disabled = true; resetBtn.innerHTML = '<span class="spinner"></span> Enviando…';
+  try { await pb.collection('streamers').requestPasswordReset(email); } catch(e) {}
+  finally {
+    resetOk.textContent = 'Si ese email existe, recibirás el link en unos momentos.';
+    resetOk.style.display = 'block'; resetBtn.style.display = 'none';
+    resetBtn.disabled = false; resetBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar link';
   }
 });
 
 // ── Logout ──
-logoutBtn.addEventListener('click', () => {
+function doLogout() {
   pb.authStore.clear();
   showLogin();
-  loginEmail.value = '';
-  loginPass.value = '';
-});
+  loginEmail.value = ''; loginPass.value = '';
+}
+document.getElementById('logoutBtn').addEventListener('click', doLogout);
+document.getElementById('logoutBtnMobile').addEventListener('click', doLogout);
 
-// ── Inicio ──
+// ── Start ──
 init();
 </script>
 </body>
