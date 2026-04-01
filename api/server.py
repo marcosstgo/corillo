@@ -382,16 +382,9 @@ async def create_reel(request: Request):
     out = str(reel_dir / f"{ts}.mp4")
     thumb_out = str(reel_dir / f"{ts}.jpg")
 
-    # ffmpeg: 9:16 con blur de fondo
-    # bg: escala para llenar 1080x1920 → blur
-    # fg: escala para encajar en 1080x1920 (letterbox)
-    # overlay: fg centrado sobre bg
-    filter_complex = (
-        "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,"
-        "crop=1080:1920,boxblur=40:4[bg];"
-        "[0:v]scale=1080:1920:force_original_aspect_ratio=decrease[fg];"
-        "[bg][fg]overlay=(W-w)/2:(H-h)/2[out]"
-    )
+    # ffmpeg: center crop 16:9 → 9:16
+    # Escala para que el alto sea 1920, luego recorta el centro a 1080px de ancho
+    filter_complex = "[0:v]scale=-2:1920,crop=1080:1920[out]"
 
     proc = await asyncio.create_subprocess_exec(
         "ffmpeg", "-y",
@@ -529,17 +522,30 @@ async def upload_reel(
         os.unlink(tmp)
         raise HTTPException(status_code=400, detail="El video no puede superar los 60 segundos")
 
-    # Remuxear/convertir a MP4 faststart con filtro 9:16
-    filter_complex = (
-        "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,"
-        "crop=1080:1920,boxblur=40:4[bg];"
-        "[0:v]scale=1080:1920:force_original_aspect_ratio=decrease[fg];"
-        "[bg][fg]overlay=(W-w)/2:(H-h)/2[out]"
+    # Detectar dimensiones para saber si es 16:9 o ya está en 9:16
+    dp = await asyncio.create_subprocess_exec(
+        "ffprobe", "-v", "error", "-select_streams", "v:0",
+        "-show_entries", "stream=width,height", "-of", "csv=p=0", tmp,
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL,
     )
+    dim_out, _ = await dp.communicate()
+    try:
+        w, h = [int(x) for x in dim_out.decode().strip().split(",")]
+        is_landscape = w > h
+    except Exception:
+        is_landscape = False
+
+    if is_landscape:
+        # 16:9 → center crop al centro para 9:16
+        vf_args = ["-vf", "scale=-2:1920,crop=1080:1920"]
+    else:
+        # Ya es 9:16 o portrait — solo escalar a 1080×1920 sin cortar
+        vf_args = ["-vf", "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2"]
+
     proc = await asyncio.create_subprocess_exec(
         "ffmpeg", "-y", "-i", tmp,
-        "-filter_complex", filter_complex,
-        "-map", "[out]", "-map", "0:a?",
+        *vf_args,
+        "-map", "0:v:0", "-map", "0:a?",
         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
         "-c:a", "aac", "-b:a", "128k",
         "-movflags", "+faststart",
