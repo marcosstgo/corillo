@@ -1179,7 +1179,7 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
       <div class="stream-thumb">
         <div class="stream-thumb-inner"><span class="stream-thumb-letter">${s.name}</span></div>
         <img src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" alt="" class="stream-thumb-img" onerror="this.style.display='none'">
-        ${_hover ? `<video class="stream-thumb-preview" src="/assets/thumbs/${s.key}-preview.mp4" muted playsinline preload="none" loop></video>` : ''}
+        ${_hover ? `<video class="stream-thumb-preview" src="/assets/thumbs/${s.key}-preview.mp4?t=${Math.floor(Date.now()/60000)}" muted playsinline preload="none" loop></video>` : ''}
         <div class="stream-live-tag"><span class="live-dot" style="width:5px;height:5px;box-shadow:none;animation:none"></span> LIVE</div>
         ${v > 0 ? `<div class="stream-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>` : ''}
       </div>
