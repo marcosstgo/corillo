@@ -1,3 +1,7 @@
+---
+// Dashboard del streamer — auth, stream key, perfil, VODs, Reels
+// NO usa BaseLayout: tiene header propio y estilos propios
+---
 <!doctype html>
 <html lang="es" data-theme="dark">
 <head>
@@ -13,8 +17,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="/assets/styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.js"></script>
-  <script>
+  <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.21.3/dist/pocketbase.umd.js" is:inline></script>
+  <script is:inline>
     const savedTheme = localStorage.getItem('corillo-theme');
     if (savedTheme === 'light' || savedTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', savedTheme);
@@ -596,7 +600,7 @@
           Configuración → Stream → Servicio: <code>Personalizado</code><br>
           Servidor: <code>rtmp://corillo.live/live</code><br>
           Clave de retransmisión: <code id="obsKeyHint">••••••••</code><br>
-          <span style="color:rgba(242,239,233,.4);font-size:.75rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.4)">{canal}?secret=••••••••</code></span>
+          <span style="color:rgba(242,239,233,.4);font-size:.75rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.4)">&#123;canal&#125;?secret=••••••••</code></span>
         </div>
 
       </div>
@@ -775,7 +779,7 @@
 <!-- Toast -->
 <div id="toast"></div>
 
-<script>
+<script is:inline>
 const PB_URL = 'https://pb.corillo.live';
 const pb = new PocketBase(PB_URL);
 
@@ -1073,7 +1077,6 @@ function toggleReelPanel(vodId, vodDuration) {
   panel.classList.toggle('open');
   btn?.classList.toggle('active', opening);
   if (opening) {
-    // Auto-set end to start+30 when user sets start
     const startEl = document.getElementById(`rstart-${vodId}`);
     const endEl   = document.getElementById(`rend-${vodId}`);
     if (startEl && !startEl.value) {
@@ -1517,7 +1520,6 @@ document.getElementById('regenKeyBtn').addEventListener('click', async () => {
   btn.innerHTML = '<span class="spinner"></span>';
 
   try {
-    // Generar nueva key en el servidor via admin
     const res = await fetch('/chat-api/regen-stream-key', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
@@ -1527,7 +1529,6 @@ document.getElementById('regenKeyBtn').addEventListener('click', async () => {
     const data = await res.json();
     currentRecord.stream_key = data.stream_key;
 
-    // Actualizar UI
     streamKeyVal.textContent = `${currentRecord.key}?secret=${data.stream_key}`;
     if (keyVisible) {
       const fullKey = `${currentRecord.key}?secret=${data.stream_key}`;
@@ -1595,8 +1596,3 @@ init();
 </script>
 </body>
 </html>
-
-
-
-
-
