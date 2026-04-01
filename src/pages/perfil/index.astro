@@ -26,21 +26,14 @@
   </script>
   <style is:global>
     *, *::before, *::after { box-sizing: border-box; }
-    body {
-      background: var(--ink);
-      color: var(--white);
-      font-family: var(--body);
-      min-height: 100vh;
-      margin: 0;
-    }
+    body { background: var(--ink); color: var(--white); font-family: var(--body); min-height: 100vh; margin: 0; }
 
     /* ── Header ── */
     .pf-header {
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 20px; height: 52px;
-      background: rgba(6,6,8,.88);
-      backdrop-filter: blur(12px);
+      background: rgba(6,6,8,.88); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
     .pf-header-brand { display: flex; align-items: center; }
@@ -111,17 +104,12 @@
       background: var(--panel); border: 1px solid var(--border);
       border-radius: 14px; padding: 32px 36px; width: 100%; max-width: 380px;
     }
-    .login-card h2 {
-      font-family: var(--display); font-size: 1.8rem; margin-bottom: 6px; letter-spacing: 1px;
-    }
+    .login-card h2 { font-family: var(--display); font-size: 1.8rem; margin-bottom: 6px; letter-spacing: 1px; }
     .login-card > p { color: var(--muted); font-size: .85rem; margin-bottom: 24px; }
     [data-theme="light"] .login-card > p { color: rgba(5,16,21,.56); }
 
     .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-    .field label {
-      font-size: .7rem; font-family: var(--mono); letter-spacing: 2px;
-      text-transform: uppercase; color: var(--muted);
-    }
+    .field label { font-size: .7rem; font-family: var(--mono); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
     .field input, .field textarea, .field select {
       background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
       padding: 10px 14px; color: var(--white); font-family: var(--body); font-size: .92rem;
@@ -129,8 +117,7 @@
     }
     .field textarea { resize: vertical; min-height: 80px; }
     .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,191,255,.07); }
-    [data-theme="light"] .field input,
-    [data-theme="light"] .field textarea { color: #0c1a20; }
+    [data-theme="light"] .field input, [data-theme="light"] .field textarea { color: #0c1a20; }
 
     .error-msg { color: #e17055; font-size: .85rem; font-family: var(--mono); margin-bottom: 10px; display: none; }
     .success-msg { color: #00b894; font-size: .85rem; font-family: var(--mono); margin-bottom: 10px; }
@@ -141,98 +128,101 @@
       text-align: center; transition: color .15s;
     }
     .forgot-link:hover { color: var(--white); }
-    [data-theme="light"] .forgot-link { color: rgba(5,16,21,.46); }
-    [data-theme="light"] .forgot-link:hover { color: #0c1a20; }
 
     /* ════════════════════════════════
-       DASHBOARD LAYOUT
+       DASHBOARD
     ════════════════════════════════ */
     #dashboard { display: none; }
 
-    .pf-wrap {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      align-items: start;
-      min-height: calc(100vh - 52px);
-    }
-
-    /* ── Sidebar ── */
-    .pf-sidebar {
-      position: sticky; top: 52px;
-      height: calc(100vh - 52px);
-      overflow-y: auto; scrollbar-width: none;
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-    }
-    .pf-sidebar::-webkit-scrollbar { display: none; }
-
-    .pf-profile {
-      padding: 24px 20px 20px;
+    /* ── Hero ── */
+    .pf-hero {
+      position: relative; overflow: hidden;
+      padding: 28px 40px 24px;
       border-bottom: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 10px;
     }
-    .pf-ava {
-      width: 60px; height: 60px; border-radius: 50%;
-      border: 2px solid var(--border); background: var(--surface);
+    .pf-hero::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 70% 200% at -5% 50%, rgba(0,191,255,.07) 0%, transparent 60%);
+    }
+    .pf-hero-inner {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .pf-hero-ava {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.12); background: var(--surface);
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--display); font-size: 1.6rem; color: #000;
+      font-family: var(--display); font-size: 1.8rem; color: #000;
       overflow: hidden; flex-shrink: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
     }
-    .pf-ava img { width: 100%; height: 100%; object-fit: cover; }
-    .pf-display-name {
-      font-family: var(--display); font-size: 1.3rem;
-      letter-spacing: 1px; line-height: 1; color: var(--white);
-    }
-    .pf-channel-link {
+    .pf-hero-ava img { width: 100%; height: 100%; object-fit: cover; }
+    .pf-hero-text { flex: 1; min-width: 0; }
+    .pf-hero-name { font-family: var(--display); font-size: 2rem; letter-spacing: 2px; line-height: 1; margin-bottom: 4px; }
+    .pf-hero-sub { font-size: .82rem; color: var(--muted); margin-bottom: 8px; min-height: 1.2em; }
+    .pf-hero-link {
       font-family: var(--mono); font-size: 10px; letter-spacing: 1px;
       color: var(--accent); text-decoration: none; opacity: .7; transition: opacity .15s;
+      display: inline-flex; align-items: center; gap: 5px;
     }
-    .pf-channel-link:hover { opacity: 1; }
-
-    .pf-nav { padding: 10px 0; flex: 1; }
-    .pf-nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 20px; color: var(--muted); text-decoration: none;
-      font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px;
-      text-transform: uppercase; transition: .15s;
-      border-left: 2px solid transparent;
+    .pf-hero-link:hover { opacity: 1; }
+    .pf-hero-stats { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+    .pf-stat {
+      text-align: center; padding: 10px 18px;
+      background: rgba(255,255,255,.03); border: 1px solid var(--border);
+      border-radius: 10px; cursor: pointer; transition: border-color .15s;
     }
-    .pf-nav-item:hover { color: var(--white); background: rgba(255,255,255,.03); }
-    .pf-nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,191,255,.04); }
-    .pf-nav-item i { width: 14px; text-align: center; font-size: 11px; }
-
-    .pf-sidebar-footer {
-      padding: 14px 20px; border-top: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 10px;
+    .pf-stat:hover { border-color: rgba(0,191,255,.2); }
+    .pf-stat strong {
+      display: block; font-family: var(--display); font-size: 1.5rem;
+      letter-spacing: 1px; color: var(--white); line-height: 1; margin-bottom: 2px;
     }
-    #sessionEmail {
-      font-size: 10px; font-family: var(--mono); color: var(--muted);
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
+    .pf-stat span { font-family: var(--mono); font-size: .62rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
 
-    /* ── Main ── */
-    .pf-main { padding: 40px 48px 100px; }
-
-    .pf-section { max-width: 620px; margin-bottom: 64px; }
-
-    .pf-section-title {
-      font-family: var(--display); font-size: 1.5rem; letter-spacing: 2px;
-      margin-bottom: 20px; padding-bottom: 12px;
+    /* ── Tab bar ── */
+    .pf-tabbar {
+      position: sticky; top: 52px; z-index: 50;
+      display: flex;
+      background: rgba(3,10,14,.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
+      padding: 0 32px; overflow-x: auto; scrollbar-width: none;
     }
+    .pf-tabbar::-webkit-scrollbar { display: none; }
+    .pf-tb {
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 18px; height: 46px;
+      background: none; border: none; border-bottom: 2px solid transparent;
+      font-family: var(--mono); font-size: .7rem; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--muted); cursor: pointer;
+      transition: color .15s; white-space: nowrap; margin-bottom: -1px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pf-tb i { font-size: 11px; }
+    .pf-tb:hover { color: var(--white); }
+    .pf-tb.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── Tab panels ── */
+    .pf-panels { padding: 36px 40px 100px; }
+    .pf-panel { display: none; max-width: 680px; }
+    .pf-panel.active { display: block; }
+    .pf-panel.wide { max-width: 900px; }
+
+    /* ── Section label ── */
+    .pf-s-label {
+      font-family: var(--mono); font-size: .65rem; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px; margin-top: 36px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pf-s-label:first-child { margin-top: 0; }
+    .pf-s-label i { color: var(--accent); font-size: 10px; }
 
     /* ── Cards ── */
-    .card {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: 12px; padding: 24px; margin-bottom: 14px;
-    }
-    .card-title {
-      font-family: var(--mono); font-size: .78rem; letter-spacing: 3px;
-      text-transform: uppercase; color: var(--muted);
-      margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border);
-    }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 12px; }
+    .card-title { font-family: var(--mono); font-size: .72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
     .form-grid { display: flex; flex-direction: column; gap: 14px; }
-    .form-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+    .form-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; flex-wrap: wrap; gap: 10px; }
     .save-status { font-size: .75rem; font-family: var(--mono); color: var(--muted); }
     .save-status.ok  { color: #00b894; }
     .save-status.err { color: #e17055; }
@@ -244,19 +234,13 @@
       border: 1px solid rgba(0,191,255,.15); border-radius: 12px;
       padding: 20px; margin-bottom: 14px;
     }
-    .key-label {
-      font-family: var(--mono); font-size: .65rem; letter-spacing: 2.5px;
-      text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
-    }
+    .key-label { font-family: var(--mono); font-size: .65rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
     .key-value-wrap {
       display: flex; align-items: center; gap: 8px;
       background: rgba(0,0,0,.25); border: 1px solid rgba(0,191,255,.1);
       border-radius: 8px; padding: 10px 14px;
     }
-    .key-value {
-      flex: 1; font-family: var(--mono); font-size: .82rem;
-      color: var(--white); word-break: break-all; letter-spacing: .5px;
-    }
+    .key-value { flex: 1; font-family: var(--mono); font-size: .82rem; color: var(--white); word-break: break-all; letter-spacing: .5px; }
     .key-value.hidden-key { filter: blur(5px); user-select: none; }
     .key-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .icon-btn {
@@ -283,11 +267,10 @@
     }
     .obs-hint strong { font-family: var(--mono); font-size: .8rem; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
     .obs-hint code { font-family: var(--mono); color: var(--accent); font-size: .85rem; }
-    [data-theme="light"] .key-warning { color: rgba(5,16,21,.7); }
-    [data-theme="light"] .obs-hint { background: rgba(255,255,255,.64); }
     [data-theme="light"] .key-value-wrap { background: rgba(255,255,255,.64); }
+    [data-theme="light"] .obs-hint { background: rgba(255,255,255,.64); }
 
-    /* ─�� Avatar ── */
+    /* ── Avatar ── */
     .avatar-row { display: flex; align-items: center; gap: 18px; }
     .avatar-preview {
       width: 72px; height: 72px; border-radius: 50%;
@@ -311,36 +294,33 @@
     .vod-toggle input:checked + .vod-slider { background: var(--accent); border-color: var(--accent); }
     .vod-toggle input:checked + .vod-slider::before { transform: translateX(17px); background: #030a0e; }
 
-    /* ── Tabs ── */
-    .pf-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
-    .pf-tab {
+    /* ── Content inner tabs ── */
+    .ct-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+    .ct-tab {
       display: flex; align-items: center; gap: 7px;
       padding: 10px 16px; background: none; border: none;
-      font-family: var(--mono); font-size: .72rem; letter-spacing: 1.5px;
+      font-family: var(--mono); font-size: .7rem; letter-spacing: 1.5px;
       text-transform: uppercase; color: var(--muted); cursor: pointer;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-      transition: .15s;
+      border-bottom: 2px solid transparent; margin-bottom: -1px; transition: .15s;
     }
-    .pf-tab:hover { color: var(--white); }
-    .pf-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .pf-tab-panel { display: none; }
-    .pf-tab-panel.active { display: block; }
+    .ct-tab:hover { color: var(--white); }
+    .ct-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .ct-panel { display: none; }
+    .ct-panel.active { display: block; }
 
     /* ── VOD list ── */
     .vod-rows { display: flex; flex-direction: column; gap: 8px; }
     .vod-row {
       display: flex; align-items: center; gap: 12px;
       padding: 10px 12px; background: var(--surface);
-      border: 1px solid var(--border); border-radius: 10px;
-      transition: border-color .15s;
+      border: 1px solid var(--border); border-radius: 10px; transition: border-color .15s;
     }
     .vod-row:hover { border-color: rgba(0,191,255,.15); }
     .vod-row-thumb {
       width: 88px; height: 50px; border-radius: 6px;
       background: rgba(0,191,255,.06); flex-shrink: 0;
       overflow: hidden; display: flex; align-items: center; justify-content: center;
-      font-family: var(--display); font-size: 1rem; color: rgba(0,191,255,.2);
-      position: relative;
+      font-family: var(--display); font-size: 1rem; color: rgba(0,191,255,.2); position: relative;
     }
     .vod-row-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .vod-row-info { flex: 1; min-width: 0; }
@@ -360,33 +340,68 @@
     .vod-row-reel:hover { border-color: var(--accent); color: var(--accent); }
     .vod-row-reel.active { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.08); }
     .vod-row-del.loading { opacity: .4; pointer-events: none; }
-    [data-theme="light"] .vod-row-meta { color: rgba(5,16,21,.42); }
 
     /* ── Reel panel ── */
     .reel-panel {
-      display: none; margin-top: 6px;
+      display: none; margin-top: 6px; margin-bottom: 8px;
       background: var(--panel); border: 1px solid rgba(0,191,255,.18);
-      border-radius: 10px; padding: 20px;
+      border-radius: 12px; overflow: hidden;
     }
     .reel-panel.open { display: block; }
+    .reel-panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px 12px;
+      border-bottom: 1px solid rgba(0,191,255,.1);
+      background: rgba(0,191,255,.03);
+    }
     .reel-panel-title {
       font-family: var(--mono); font-size: .68rem; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .reel-panel-dur { font-family: var(--mono); font-size: .65rem; color: var(--muted); }
+    .reel-panel-body { padding: 18px 20px 20px; }
+
+    /* ── Reel video preview ── */
+    .reel-video-wrap {
+      position: relative; border-radius: 8px; overflow: hidden;
+      background: #000; margin-bottom: 18px;
+      aspect-ratio: 16/9;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .reel-video {
+      width: 100%; height: 100%; object-fit: contain;
+      display: block;
+    }
+    .reel-video-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.4);
+      font-family: var(--mono); font-size: .65rem; letter-spacing: 2px;
+      color: rgba(255,255,255,.4); text-transform: uppercase;
+      pointer-events: none; transition: opacity .2s;
+    }
+    .reel-video-wrap.loaded .reel-video-overlay { opacity: 0; }
+    /* Scrub position badge */
+    .reel-video-badge {
+      position: absolute; bottom: 8px; right: 10px;
+      background: rgba(0,0,0,.72); border-radius: 5px;
+      font-family: var(--mono); font-size: .72rem; letter-spacing: 1px;
+      color: rgba(255,255,255,.9); padding: 3px 8px;
+      pointer-events: none;
     }
 
     /* ── Reel Timeline ── */
-    .rtl { padding: 4px 0 12px; user-select: none; touch-action: none; }
+    .rtl { padding: 4px 0 8px; user-select: none; touch-action: none; }
     .rtl-track {
       position: relative; height: 8px;
       background: rgba(255,255,255,.1); border-radius: 4px;
-      margin: 32px 14px 14px;
-      cursor: pointer;
+      margin: 28px 14px 10px; cursor: pointer;
     }
     [data-theme="light"] .rtl-track { background: rgba(0,0,0,.12); }
     .rtl-fill {
       position: absolute; height: 100%;
       background: var(--accent); border-radius: 4px;
-      opacity: .55; pointer-events: none; transition: none;
+      opacity: .55; pointer-events: none;
     }
     .rtl-handle {
       position: absolute; top: 50%;
@@ -395,49 +410,59 @@
       background: var(--white); border: 2.5px solid var(--accent);
       cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,.45);
       transition: box-shadow .1s, transform .1s; z-index: 3;
-      /* Invisible hit area — makes it much easier to grab on mobile */
       -webkit-tap-highlight-color: transparent;
     }
-    /* Large invisible hit area via ::before */
-    .rtl-handle::before {
-      content: ''; position: absolute;
-      inset: -14px; border-radius: 50%;
-    }
+    .rtl-handle::before { content: ''; position: absolute; inset: -14px; border-radius: 50%; }
     .rtl-handle:hover { box-shadow: 0 2px 14px rgba(0,191,255,.5); }
     .rtl-handle:active, .rtl-handle.dragging {
-      cursor: grabbing;
-      transform: translate(-50%,-50%) scale(1.22);
+      cursor: grabbing; transform: translate(-50%,-50%) scale(1.22);
       box-shadow: 0 4px 18px rgba(0,191,255,.45);
     }
-    /* Time tooltip above handle while dragging */
     .rtl-handle .rtl-tip {
-      display: none;
-      position: absolute; bottom: calc(100% + 10px); left: 50%;
+      display: none; position: absolute; bottom: calc(100% + 10px); left: 50%;
       transform: translateX(-50%);
       background: var(--panel); border: 1px solid var(--border-h);
       color: var(--white); font-family: var(--mono); font-size: 10px;
       padding: 3px 7px; border-radius: 5px; white-space: nowrap;
       pointer-events: none; z-index: 10;
-      box-shadow: 0 2px 8px rgba(0,0,0,.4);
     }
     .rtl-handle.dragging .rtl-tip { display: block; }
-    .rtl-times {
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: var(--mono); font-size: 10px; color: var(--muted);
-      padding: 0 14px; margin-top: 4px;
+
+    /* ── Reel time inputs ── */
+    .reel-time-row {
+      display: flex; align-items: flex-end; gap: 12px; margin: 16px 0;
     }
+    .reel-time-field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .reel-time-field label {
+      font-family: var(--mono); font-size: .62rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .reel-time-input {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 12px;
+      color: var(--white); font-family: var(--mono); font-size: 1rem;
+      letter-spacing: 1px; text-align: center; width: 100%; transition: .15s;
+    }
+    .reel-time-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,191,255,.07); }
+    [data-theme="light"] .reel-time-input { color: #0c1a20; }
+    .reel-time-mid {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding-bottom: 10px; flex-shrink: 0;
+    }
+    .reel-time-mid i { color: var(--muted); font-size: .75rem; }
     .rtl-t-dur {
       font-size: 11px; font-weight: 700; letter-spacing: 1px;
-      padding: 2px 8px; border-radius: 4px;
-      background: rgba(255,255,255,.05);
+      padding: 3px 9px; border-radius: 5px; background: rgba(255,255,255,.05);
+      font-family: var(--mono); white-space: nowrap;
     }
     .rtl-t-dur.ok  { color: #00b894; background: rgba(0,184,148,.08); }
     .rtl-t-dur.err { color: #e17055; background: rgba(223,48,48,.08); }
 
     .reel-public-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: .85rem; }
+    .reel-public-row a { color: var(--accent); text-decoration: none; }
     .reel-actions { display: flex; gap: 8px; flex-wrap: wrap; }
     .reel-result {
-      margin-top: 12px; padding: 12px 14px;
+      margin-top: 14px; padding: 12px 14px;
       background: rgba(0,184,148,.07); border: 1px solid rgba(0,184,148,.2);
       border-radius: 8px; font-size: .85rem; display: none;
     }
@@ -453,8 +478,8 @@
     }
     .reel-row-thumb {
       width: 40px; height: 72px; border-radius: 5px;
-      background: rgba(0,191,255,.06); flex-shrink: 0;
-      overflow: hidden; display: flex; align-items: center; justify-content: center;
+      background: rgba(0,191,255,.06); flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
       font-size: .75rem; color: rgba(0,191,255,.3); position: relative;
     }
     .reel-row-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -471,9 +496,8 @@
     .reel-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .reel-row-dl, .reel-row-del {
       width: 30px; height: 30px; border-radius: 6px;
-      border: 1px solid var(--border); background: transparent;
-      color: var(--muted); cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--border); background: transparent; color: var(--muted);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
       font-size: .78rem; transition: .15s; text-decoration: none;
     }
     .reel-row-dl:hover  { border-color: var(--accent); color: var(--accent); }
@@ -486,16 +510,11 @@
       border-radius: 10px; padding: 14px 16px;
       display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;
     }
-    .panel-row-header {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-    }
+    .panel-row-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .panel-row-label { font-family: var(--mono); font-size: .7rem; letter-spacing: 2px; color: var(--muted); }
 
     /* ── Details accordion ── */
-    .pf-details {
-      border: 1px solid var(--border); border-radius: 10px;
-      margin-bottom: 10px; overflow: hidden;
-    }
+    .pf-details { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
     .pf-details summary {
       display: flex; align-items: center; justify-content: space-between;
       padding: 14px 18px; cursor: pointer; list-style: none;
@@ -514,51 +533,42 @@
       display: flex; align-items: center; justify-content: space-between;
       gap: 16px; flex-wrap: wrap;
       padding: 16px 18px; background: var(--panel);
-      border: 1px solid var(--border); border-radius: 10px;
-      margin-top: 10px;
+      border: 1px solid var(--border); border-radius: 10px; margin-top: 10px;
     }
 
     /* ════════════════════════════════
-       MOBILE
+       LIGHT MODE
     ════════════════════════════════ */
-    @media (max-width: 860px) {
-      .pf-wrap { grid-template-columns: 1fr; }
-      .pf-sidebar {
-        position: sticky; top: 52px; height: auto;
-        flex-direction: row; overflow-x: auto; overflow-y: hidden;
-        border-right: none; border-bottom: 1px solid var(--border);
-        background: rgba(3,10,14,.9); backdrop-filter: blur(12px);
-        z-index: 50; scrollbar-width: none;
-      }
-      .pf-sidebar::-webkit-scrollbar { display: none; }
-      .pf-profile { display: none; }
-      .pf-nav { display: flex; flex-direction: row; padding: 0; flex: 1; flex-shrink: 0; }
-      .pf-nav-item {
-        padding: 13px 16px; border-left: none;
-        border-bottom: 2px solid transparent; white-space: nowrap;
-        font-size: 9px; letter-spacing: 1px;
-        flex-direction: column; gap: 4px; align-items: center;
-      }
-      .pf-nav-item i { width: auto; font-size: 13px; }
-      .pf-nav-item.active { border-left-color: transparent; border-bottom-color: var(--accent); }
-      .pf-sidebar-footer { display: none; }
-      .pf-main { padding: 24px 16px 80px; }
-      .pf-section { margin-bottom: 48px; }
-      .social-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 480px) {
-      .login-card { padding: 24px 20px; }
-      .key-hero { padding: 14px; }
-      .card { padding: 16px; }
-    }
-
-    [data-theme="light"] .pf-sidebar { background: rgba(238,247,251,.95); }
+    [data-theme="light"] .pf-tabbar { background: rgba(238,247,251,.95); }
+    [data-theme="light"] .pf-hero::before { background: radial-gradient(ellipse 70% 200% at -5% 50%, rgba(0,136,187,.06) 0%, transparent 60%); }
+    [data-theme="light"] .pf-stat { background: rgba(0,0,0,.02); }
     [data-theme="light"] .pf-details summary { background: rgba(255,255,255,.7); }
     [data-theme="light"] .pf-details-body { background: rgba(255,255,255,.7); }
     [data-theme="light"] .session-card { background: rgba(255,255,255,.7); }
     [data-theme="light"] .panel-row { background: rgba(255,255,255,.64); }
     [data-theme="light"] .card { background: rgba(255,255,255,.7); }
+    [data-theme="light"] .vod-row { background: rgba(255,255,255,.64); }
+    [data-theme="light"] .reel-row { background: rgba(255,255,255,.64); }
+    [data-theme="light"] .reel-panel { background: rgba(255,255,255,.8); }
+    [data-theme="light"] .key-warning { color: rgba(5,16,21,.7); }
+
+    /* ════════════════════════════════
+       MOBILE
+    ════════════════════════════════ */
+    @media (max-width: 760px) {
+      .pf-hero { padding: 20px 16px 18px; }
+      .pf-hero-name { font-size: 1.6rem; }
+      .pf-hero-stats { display: none; }
+      .pf-tabbar { padding: 0 8px; }
+      .pf-panels { padding: 24px 16px 80px; }
+      .social-grid { grid-template-columns: 1fr; }
+      .reel-video-wrap { margin-bottom: 14px; }
+    }
+    @media (max-width: 480px) {
+      .login-card { padding: 24px 20px; }
+      .key-hero { padding: 14px; }
+      .card { padding: 16px; }
+    }
   </style>
 </head>
 <body class="crl-body">
@@ -567,12 +577,7 @@
 <header class="pf-header">
   <a href="/" class="pf-header-brand" aria-label="CORILLO">
     <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="pf-ng" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
-          <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
-        </radialGradient>
-      </defs>
+      <defs><radialGradient id="pf-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
       <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
       <circle cx="72" cy="42" r="36" fill="url(#pf-ng)"/>
       <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
@@ -646,267 +651,274 @@
      DASHBOARD
 ══════════════════════════════════ -->
 <div id="dashboard">
-  <div class="pf-wrap">
 
-    <!-- ── Sidebar ── -->
-    <aside class="pf-sidebar">
-      <div class="pf-profile">
-        <div class="pf-ava" id="pfSideAva">?</div>
-        <div>
-          <div class="pf-display-name" id="pfSideName">—</div>
-          <a class="pf-channel-link" id="pfSideChannel" href="#" style="display:none">
-            <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px"></i> Ver mi canal
-          </a>
+  <!-- ── Hero ── -->
+  <div class="pf-hero" id="pfHero">
+    <div class="pf-hero-inner">
+      <div class="pf-hero-ava" id="pfSideAva">?</div>
+      <div class="pf-hero-text">
+        <div class="pf-hero-name" id="pfSideName">—</div>
+        <div class="pf-hero-sub" id="pfHeroSub"></div>
+        <a class="pf-hero-link" id="pfSideChannel" href="#" style="display:none">
+          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:8px"></i> Ver mi canal
+        </a>
+      </div>
+      <div class="pf-hero-stats">
+        <div class="pf-stat" id="pfStatVodsBtn" style="cursor:pointer" title="Ir a transmisiones">
+          <strong id="pfStatVods">—</strong>
+          <span>VODs</span>
+        </div>
+        <div class="pf-stat" id="pfStatReelsBtn" style="cursor:pointer" title="Ir a reels">
+          <strong id="pfStatReels">—</strong>
+          <span>Reels</span>
         </div>
       </div>
-      <nav class="pf-nav">
-        <a href="#s-stream"   class="pf-nav-item active"><i class="fa-solid fa-tower-broadcast"></i> Stream</a>
-        <a href="#s-perfil"   class="pf-nav-item"><i class="fa-solid fa-user"></i> Perfil</a>
-        <a href="#s-contenido" class="pf-nav-item"><i class="fa-solid fa-film"></i> Contenido</a>
-        <a href="#s-cuenta"   class="pf-nav-item"><i class="fa-solid fa-gear"></i> Cuenta</a>
-      </nav>
-      <div class="pf-sidebar-footer">
-        <span id="sessionEmail"></span>
-        <button class="btn danger sm" id="logoutBtn" style="width:100%;justify-content:center">
+    </div>
+  </div>
+
+  <!-- ── Tab bar ── -->
+  <div class="pf-tabbar" role="tablist" id="pfTabbar">
+    <button class="pf-tb active" data-tab="t-stream" role="tab">
+      <i class="fa-solid fa-tower-broadcast"></i> Stream
+    </button>
+    <button class="pf-tb" data-tab="t-perfil" role="tab">
+      <i class="fa-solid fa-user"></i> Perfil
+    </button>
+    <button class="pf-tb" data-tab="t-contenido" role="tab">
+      <i class="fa-solid fa-film"></i> Contenido
+    </button>
+    <button class="pf-tb" data-tab="t-cuenta" role="tab">
+      <i class="fa-solid fa-gear"></i> Cuenta
+    </button>
+  </div>
+
+  <!-- ── Tab panels ── -->
+  <div class="pf-panels">
+
+    <!-- ════ STREAM ════ -->
+    <div class="pf-panel active" id="t-stream">
+
+      <div class="key-warning">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>No compartas tu stream key con nadie. Quien la tenga puede transmitir en tu canal.</span>
+      </div>
+
+      <div class="key-hero">
+        <div class="key-label">Servidor RTMP</div>
+        <div class="key-value-wrap" style="margin-bottom:14px">
+          <span class="key-value">rtmp://corillo.live/live</span>
+          <div class="key-actions">
+            <button class="icon-btn" id="copyServer" title="Copiar"><i class="fa-regular fa-copy"></i></button>
+          </div>
+        </div>
+        <div class="key-label">Stream Key</div>
+        <div class="key-value-wrap">
+          <span class="key-value hidden-key" id="streamKeyVal">cargando...</span>
+          <div class="key-actions">
+            <button class="icon-btn" id="toggleKey" title="Mostrar / ocultar"><i class="fa-regular fa-eye"></i></button>
+            <button class="icon-btn" id="copyKey" title="Copiar"><i class="fa-regular fa-copy"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="key-warning neutral" style="margin-bottom:14px">
+        <i class="fa-solid fa-rotate"></i>
+        <div style="flex:1;font-size:.85rem">¿Tu stream key fue comprometida? Genera una nueva — los streams activos se cortarán.</div>
+        <button class="btn danger sm" id="regenKeyBtn" style="flex-shrink:0"><i class="fa-solid fa-rotate"></i> Regenerar</button>
+      </div>
+
+      <div class="obs-hint">
+        <strong>En OBS / Meld Studio</strong><br>
+        Configuración → Stream → Servicio: <code>Personalizado</code><br>
+        Servidor: <code>rtmp://corillo.live/live</code><br>
+        Clave: <code id="obsKeyHint">••••••••</code><br>
+        <span style="color:rgba(242,239,233,.35);font-size:.72rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.35)">&#123;canal&#125;?secret=••••••••</code></span>
+      </div>
+    </div>
+
+    <!-- ════ PERFIL ════ -->
+    <div class="pf-panel" id="t-perfil">
+
+      <div class="pf-s-label"><i class="fa-solid fa-user"></i> Identidad</div>
+
+      <div class="card">
+        <div class="card-title">Foto y nombre</div>
+        <div class="form-grid">
+          <div class="avatar-row">
+            <div class="avatar-preview" id="avatarPreview">
+              <span id="avatarInitial">?</span>
+            </div>
+            <div class="avatar-actions">
+              <button class="btn" id="avatarBtn"><i class="fa-solid fa-image"></i> Cambiar foto</button>
+              <input type="file" id="avatarFile" class="file-input" accept="image/jpeg,image/png,image/webp">
+              <span style="font-size:.72rem;color:var(--muted)">JPG, PNG o WebP · máx 5MB</span>
+            </div>
+          </div>
+          <div class="field" style="margin:0">
+            <label>Nombre visible</label>
+            <input type="text" id="fDisplayName" placeholder="KATATONIA" maxlength="40">
+          </div>
+          <div class="field" style="margin:0">
+            <label>Estado <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:.82rem">— debajo de tu nombre en el player</span></label>
+            <input type="text" id="fSub" placeholder="Just chatting · vibes" maxlength="60">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Stream</div>
+        <div class="form-grid">
+          <div class="field" style="margin:0">
+            <label>Juego / Título <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:.82rem">— qué estás haciendo ahora</span></label>
+            <input type="text" id="fStreamTitle" placeholder="Minecraft, Just Chatting…" maxlength="80">
+          </div>
+          <div class="field" style="margin:0">
+            <label>Bio</label>
+            <textarea id="fBio" placeholder="Cuéntale algo a tu audiencia…" maxlength="280"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Redes sociales</div>
+        <div class="social-grid">
+          <div class="field" style="margin:0">
+            <label><i class="fa-brands fa-twitch" style="color:#9146ff"></i> Twitch</label>
+            <input type="text" id="fTwitch" placeholder="tu_usuario">
+          </div>
+          <div class="field" style="margin:0">
+            <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram</label>
+            <input type="text" id="fInstagram" placeholder="tu_usuario">
+          </div>
+          <div class="field" style="margin:0">
+            <label><i class="fa-brands fa-tiktok"></i> TikTok</label>
+            <input type="text" id="fTiktok" placeholder="tu_usuario">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">VODs</div>
+        <label style="display:flex;align-items:center;justify-content:space-between;cursor:default;gap:16px">
+          <div>
+            <div style="font-size:.9rem;margin-bottom:4px"><i class="fa-solid fa-film" style="color:var(--accent)"></i> Guardar transmisiones</div>
+            <div class="field-hint" style="margin:0">Tus streams se guardan y quedan disponibles para ver después.</div>
+          </div>
+          <label class="vod-toggle">
+            <input type="checkbox" id="fVodEnabled">
+            <span class="vod-slider"></span>
+          </label>
+        </label>
+      </div>
+
+      <div class="form-actions" style="margin-bottom:40px">
+        <span class="save-status" id="saveStatus"></span>
+        <button class="btn primary" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
+      </div>
+
+      <div class="pf-s-label"><i class="fa-solid fa-table-cells-large"></i> Paneles</div>
+      <p style="font-size:.85rem;color:var(--muted);margin:0 0 16px">Aparecen debajo de tu perfil en tu canal. Máximo 4 paneles.</p>
+      <div id="panelsList"></div>
+      <div class="form-actions">
+        <button class="btn" id="addPanelBtn"><i class="fa-solid fa-plus"></i> Agregar panel</button>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="save-status" id="panelsStatus"></span>
+          <button class="btn primary" id="savePanelsBtn"><i class="fa-solid fa-floppy-disk"></i> Guardar paneles</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ CONTENIDO ════ -->
+    <div class="pf-panel wide" id="t-contenido">
+
+      <div class="ct-tabs" id="ctTabs">
+        <button class="ct-tab active" data-ctpanel="ct-vods">
+          <i class="fa-solid fa-film"></i> Transmisiones
+        </button>
+        <button class="ct-tab" data-ctpanel="ct-reels">
+          <i class="fa-solid fa-scissors"></i> Reels
+        </button>
+      </div>
+
+      <div class="ct-panel active" id="ct-vods">
+        <div id="vodsCard" style="display:none">
+          <div class="vod-rows" id="vodsList"></div>
+          <p id="vodsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes transmisiones guardadas aún.</p>
+        </div>
+        <p id="vodsDisabled" style="font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">Activa la opción de guardar transmisiones en la sección Perfil para ver tus VODs aquí.</p>
+      </div>
+
+      <div class="ct-panel" id="ct-reels">
+        <div style="margin-bottom:14px">
+          <a href="/reels/" class="btn" target="_blank" rel="noopener" style="font-size:.7rem"><i class="fa-solid fa-film"></i> Ver página pública de Reels</a>
+        </div>
+        <div class="reel-rows" id="reelsList"></div>
+        <p id="reelsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes reels aún. Crea uno desde tus transmisiones.</p>
+      </div>
+    </div>
+
+    <!-- ════ CUENTA ════ -->
+    <div class="pf-panel" id="t-cuenta">
+
+      <div class="pf-s-label"><i class="fa-solid fa-shield-halved"></i> Seguridad</div>
+
+      <details class="pf-details">
+        <summary>Cambiar email</summary>
+        <div class="pf-details-body">
+          <div class="form-grid">
+            <div class="field" style="margin:0">
+              <label>Nuevo email</label>
+              <input type="email" id="fNewEmail" placeholder="nuevo@email.com" autocomplete="email">
+            </div>
+            <div class="field" style="margin:0">
+              <label>Contraseña actual</label>
+              <input type="password" id="fEmailPass" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <div class="form-actions" style="margin:0">
+              <span class="save-status" id="emailStatus"></span>
+              <button class="btn primary" id="changeEmailBtn"><i class="fa-solid fa-envelope"></i> Cambiar email</button>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="pf-details">
+        <summary>Cambiar contraseña</summary>
+        <div class="pf-details-body">
+          <div class="form-grid">
+            <div class="field" style="margin:0">
+              <label>Contraseña actual</label>
+              <input type="password" id="fOldPass" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <div class="field" style="margin:0">
+              <label>Nueva contraseña</label>
+              <input type="password" id="fNewPass" placeholder="••••••••" autocomplete="new-password">
+            </div>
+            <div class="field" style="margin:0">
+              <label>Confirmar nueva contraseña</label>
+              <input type="password" id="fNewPassConfirm" placeholder="••••••••" autocomplete="new-password">
+            </div>
+            <div class="form-actions" style="margin:0">
+              <span class="save-status" id="passStatus"></span>
+              <button class="btn primary" id="changePassBtn"><i class="fa-solid fa-lock"></i> Cambiar contraseña</button>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="session-card">
+        <div>
+          <div style="font-size:.72rem;font-family:var(--mono);letter-spacing:1px;color:var(--muted);margin-bottom:3px">SESIÓN ACTIVA</div>
+          <span style="font-size:.88rem" id="sessionEmail"></span>
+        </div>
+        <button class="btn danger" id="logoutBtn">
           <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
         </button>
       </div>
-    </aside>
+    </div>
 
-    <!-- ── Main ── -->
-    <main class="pf-main" id="pfMain">
-
-      <!-- ── STREAM ── -->
-      <section id="s-stream" class="pf-section">
-        <h2 class="pf-section-title">Stream</h2>
-
-        <div class="key-warning">
-          <i class="fa-solid fa-triangle-exclamation"></i>
-          <span>No compartas tu stream key con nadie. Quien la tenga puede transmitir en tu canal.</span>
-        </div>
-
-        <div class="key-hero">
-          <div class="key-label">Servidor RTMP</div>
-          <div class="key-value-wrap" style="margin-bottom:14px">
-            <span class="key-value">rtmp://corillo.live/live</span>
-            <div class="key-actions">
-              <button class="icon-btn" id="copyServer" title="Copiar"><i class="fa-regular fa-copy"></i></button>
-            </div>
-          </div>
-          <div class="key-label">Stream Key</div>
-          <div class="key-value-wrap">
-            <span class="key-value hidden-key" id="streamKeyVal">cargando...</span>
-            <div class="key-actions">
-              <button class="icon-btn" id="toggleKey" title="Mostrar / ocultar"><i class="fa-regular fa-eye"></i></button>
-              <button class="icon-btn" id="copyKey" title="Copiar"><i class="fa-regular fa-copy"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="key-warning neutral" style="margin-bottom:14px">
-          <i class="fa-solid fa-rotate"></i>
-          <div style="flex:1;font-size:.85rem">¿Tu stream key fue comprometida? Genera una nueva — los streams activos se cortarán.</div>
-          <button class="btn danger sm" id="regenKeyBtn" style="flex-shrink:0"><i class="fa-solid fa-rotate"></i> Regenerar</button>
-        </div>
-
-        <div class="obs-hint">
-          <strong>En OBS / Meld Studio</strong><br>
-          Configuración → Stream → Servicio: <code>Personalizado</code><br>
-          Servidor: <code>rtmp://corillo.live/live</code><br>
-          Clave: <code id="obsKeyHint">••••••••</code><br>
-          <span style="color:rgba(242,239,233,.35);font-size:.72rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.35)">&#123;canal&#125;?secret=••••••••</code></span>
-        </div>
-      </section>
-
-      <!-- ── PERFIL ── -->
-      <section id="s-perfil" class="pf-section">
-        <h2 class="pf-section-title">Tu perfil</h2>
-
-        <div class="card">
-          <div class="card-title">Foto y nombre</div>
-          <div class="form-grid">
-            <div class="avatar-row">
-              <div class="avatar-preview" id="avatarPreview">
-                <span id="avatarInitial">?</span>
-              </div>
-              <div class="avatar-actions">
-                <button class="btn" id="avatarBtn"><i class="fa-solid fa-image"></i> Cambiar foto</button>
-                <input type="file" id="avatarFile" class="file-input" accept="image/jpeg,image/png,image/webp">
-                <span style="font-size:.72rem;color:var(--muted)">JPG, PNG o WebP · máx 5MB</span>
-              </div>
-            </div>
-            <div class="field" style="margin:0">
-              <label>Nombre visible</label>
-              <input type="text" id="fDisplayName" placeholder="KATATONIA" maxlength="40">
-            </div>
-            <div class="field" style="margin:0">
-              <label>Estado <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:.82rem">— debajo de tu nombre en el player</span></label>
-              <input type="text" id="fSub" placeholder="Just chatting · vibes" maxlength="60">
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Stream</div>
-          <div class="form-grid">
-            <div class="field" style="margin:0">
-              <label>Juego / Título <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;font-family:var(--body);font-size:.82rem">— qué estás haciendo ahora</span></label>
-              <input type="text" id="fStreamTitle" placeholder="Minecraft, Just Chatting…" maxlength="80">
-            </div>
-            <div class="field" style="margin:0">
-              <label>Bio</label>
-              <textarea id="fBio" placeholder="Cuéntale algo a tu audiencia…" maxlength="280"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Redes sociales</div>
-          <div class="form-grid">
-            <div class="social-grid">
-              <div class="field" style="margin:0">
-                <label><i class="fa-brands fa-twitch" style="color:#9146ff"></i> Twitch</label>
-                <input type="text" id="fTwitch" placeholder="tu_usuario">
-              </div>
-              <div class="field" style="margin:0">
-                <label><i class="fa-brands fa-instagram" style="color:#e1306c"></i> Instagram</label>
-                <input type="text" id="fInstagram" placeholder="tu_usuario">
-              </div>
-              <div class="field" style="margin:0">
-                <label><i class="fa-brands fa-tiktok"></i> TikTok</label>
-                <input type="text" id="fTiktok" placeholder="tu_usuario">
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">VODs</div>
-          <div class="form-grid">
-            <label style="display:flex;align-items:center;justify-content:space-between;cursor:default;gap:16px">
-              <div>
-                <div style="font-size:.9rem;margin-bottom:4px"><i class="fa-solid fa-film" style="color:var(--accent)"></i> Guardar transmisiones</div>
-                <div class="field-hint" style="margin:0">Tus streams se guardan y quedan disponibles para ver después.</div>
-              </div>
-              <label class="vod-toggle">
-                <input type="checkbox" id="fVodEnabled">
-                <span class="vod-slider"></span>
-              </label>
-            </label>
-          </div>
-        </div>
-
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-          <span class="save-status" id="saveStatus"></span>
-          <button class="btn primary" id="saveBtn"><i class="fa-solid fa-floppy-disk"></i> Guardar cambios</button>
-        </div>
-      </section>
-
-      <!-- ── PANELES ── -->
-      <section id="s-paneles" class="pf-section" style="margin-bottom:64px">
-        <h2 class="pf-section-title">Paneles</h2>
-        <p style="font-size:.85rem;color:var(--muted);margin:0 0 16px">Aparecen debajo de tu perfil en tu canal. Máximo 4 paneles.</p>
-        <div id="panelsList"></div>
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:10px">
-          <button class="btn" id="addPanelBtn"><i class="fa-solid fa-plus"></i> Agregar panel</button>
-          <div style="display:flex;align-items:center;gap:12px">
-            <span class="save-status" id="panelsStatus"></span>
-            <button class="btn primary" id="savePanelsBtn"><i class="fa-solid fa-floppy-disk"></i> Guardar paneles</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── CONTENIDO ── -->
-      <section id="s-contenido" class="pf-section">
-        <h2 class="pf-section-title">Contenido</h2>
-
-        <div class="pf-tabs" id="contentTabs">
-          <button class="pf-tab active" data-panel="tab-vods">
-            <i class="fa-solid fa-film"></i> Transmisiones
-          </button>
-          <button class="pf-tab" data-panel="tab-reels">
-            <i class="fa-solid fa-scissors"></i> Reels
-          </button>
-        </div>
-
-        <div class="pf-tab-panel active" id="tab-vods">
-          <div id="vodsCard" style="display:none">
-            <div class="vod-rows" id="vodsList"></div>
-            <p id="vodsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes transmisiones guardadas aún.</p>
-          </div>
-          <p id="vodsDisabled" style="font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">Activa la opción de guardar transmisiones en la sección Perfil para ver tus VODs aquí.</p>
-        </div>
-
-        <div class="pf-tab-panel" id="tab-reels">
-          <div id="reelsCard">
-            <div style="margin-bottom:12px">
-              <a href="/reels/" class="btn" target="_blank" rel="noopener" style="font-size:.7rem"><i class="fa-solid fa-film"></i> Ver página pública de Reels</a>
-            </div>
-            <div class="reel-rows" id="reelsList"></div>
-            <p id="reelsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes reels aún. Crea uno desde tus transmisiones.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── CUENTA ── -->
-      <section id="s-cuenta" class="pf-section">
-        <h2 class="pf-section-title">Cuenta</h2>
-
-        <details class="pf-details">
-          <summary>Cambiar email</summary>
-          <div class="pf-details-body">
-            <div class="form-grid">
-              <div class="field" style="margin:0">
-                <label>Nuevo email</label>
-                <input type="email" id="fNewEmail" placeholder="nuevo@email.com" autocomplete="email">
-              </div>
-              <div class="field" style="margin:0">
-                <label>Contraseña actual</label>
-                <input type="password" id="fEmailPass" placeholder="••••••••" autocomplete="current-password">
-              </div>
-              <div class="form-actions" style="margin:0">
-                <span class="save-status" id="emailStatus"></span>
-                <button class="btn primary" id="changeEmailBtn"><i class="fa-solid fa-envelope"></i> Cambiar email</button>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <details class="pf-details">
-          <summary>Cambiar contraseña</summary>
-          <div class="pf-details-body">
-            <div class="form-grid">
-              <div class="field" style="margin:0">
-                <label>Contraseña actual</label>
-                <input type="password" id="fOldPass" placeholder="••••••••" autocomplete="current-password">
-              </div>
-              <div class="field" style="margin:0">
-                <label>Nueva contraseña</label>
-                <input type="password" id="fNewPass" placeholder="••••••••" autocomplete="new-password">
-              </div>
-              <div class="field" style="margin:0">
-                <label>Confirmar nueva contraseña</label>
-                <input type="password" id="fNewPassConfirm" placeholder="••••••••" autocomplete="new-password">
-              </div>
-              <div class="form-actions" style="margin:0">
-                <span class="save-status" id="passStatus"></span>
-                <button class="btn primary" id="changePassBtn"><i class="fa-solid fa-lock"></i> Cambiar contraseña</button>
-              </div>
-            </div>
-          </div>
-        </details>
-
-        <div class="session-card">
-          <span style="font-size:.82rem;color:var(--muted)" id="sessionEmailMobile"></span>
-          <button class="btn danger" id="logoutBtnMobile" style="display:none">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión
-          </button>
-        </div>
-      </section>
-
-    </main>
-  </div>
-</div>
+  </div><!-- /pf-panels -->
+</div><!-- /dashboard -->
 
 <div id="toast"></div>
 
@@ -1004,141 +1016,155 @@ async function showDashboard() {
   }
 }
 
-function populateDashboard(r) {
-  // Sidebar
-  const pfSideAva = document.getElementById('pfSideAva');
+function populateDashboard(rec) {
+  // Hero
+  const pfSideAva  = document.getElementById('pfSideAva');
   const pfSideName = document.getElementById('pfSideName');
   const pfSideCh   = document.getElementById('pfSideChannel');
-  if (pfSideName) pfSideName.textContent = r.display_name || r.key || '';
-  if (sessionEmail) sessionEmail.textContent = r.email || '';
-  const seMob = document.getElementById('sessionEmailMobile');
-  if (seMob) seMob.textContent = r.email || '';
-  if (pfSideCh && r.key) { pfSideCh.href = `/${r.key}/`; pfSideCh.style.display = ''; }
-  if (pfSideAva) updateSidebarAva(r, pfSideAva);
+  const pfHeroSub  = document.getElementById('pfHeroSub');
+  if (pfSideName) pfSideName.textContent = rec.display_name || rec.key || '';
+  if (pfHeroSub)  pfHeroSub.textContent  = rec.sub || '';
+  if (sessionEmail) sessionEmail.textContent = rec.email || '';
+  if (pfSideCh && rec.key) { pfSideCh.href = `/${rec.key}/`; pfSideCh.style.display = ''; }
+  if (pfSideAva) updateHeroAva(rec, pfSideAva);
+
+  // Hero color glow
+  if (rec.color) {
+    const m = rec.color.match(/#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})/);
+    if (m) {
+      const hex = m[0]; let r2, g, b;
+      if (hex.length === 4) {
+        r2 = parseInt(hex[1]+hex[1],16); g = parseInt(hex[2]+hex[2],16); b = parseInt(hex[3]+hex[3],16);
+      } else {
+        r2 = parseInt(hex.slice(1,3),16); g = parseInt(hex.slice(3,5),16); b = parseInt(hex.slice(5,7),16);
+      }
+      const hero = document.getElementById('pfHero');
+      if (hero) hero.style.setProperty('--hero-glow', `rgba(${r2},${g},${b},.09)`);
+    }
+  }
 
   // Stream key
-  streamKeyVal.textContent = r.stream_key
-    ? `${r.key}?secret=${r.stream_key}`
+  streamKeyVal.textContent = rec.stream_key
+    ? `${rec.key}?secret=${rec.stream_key}`
     : '(sin stream key — contacta al admin)';
   streamKeyVal.classList.add('hidden-key');
   keyVisible = false;
   toggleKey.innerHTML = '<i class="fa-regular fa-eye"></i>';
-  obsKeyHint.textContent = `${r.key}?secret=••••••••`;
-  document.getElementById('obsKeyFormat').textContent = `${r.key}?secret=••••••••`;
+  obsKeyHint.textContent = `${rec.key}?secret=••••••••`;
+  document.getElementById('obsKeyFormat').textContent = `${rec.key}?secret=••••••••`;
 
   // Perfil fields
-  fDisplayName.value = r.display_name || '';
-  document.getElementById('fSub').value = r.sub || '';
-  fStreamTitle.value = r.stream_title || '';
-  fBio.value = r.bio || '';
-  fTwitch.value = r.twitch || '';
-  fInstagram.value = r.instagram || '';
-  fTiktok.value = r.tiktok || '';
-  document.getElementById('fVodEnabled').checked = !!r.vod_enabled;
+  fDisplayName.value = rec.display_name || '';
+  document.getElementById('fSub').value = rec.sub || '';
+  fStreamTitle.value = rec.stream_title || '';
+  fBio.value = rec.bio || '';
+  fTwitch.value = rec.twitch || '';
+  fInstagram.value = rec.instagram || '';
+  fTiktok.value = rec.tiktok || '';
+  document.getElementById('fVodEnabled').checked = !!rec.vod_enabled;
 
-  // Avatar form
-  updateAvatarPreview(r);
+  // Avatar
+  updateAvatarPreview(rec);
 
   // Paneles
-  panels = (r.panels || []).map(p => ({ title: p.title||'', text: p.text||'', url: p.url||'' }));
+  panels = (rec.panels || []).map(p => ({ title: p.title||'', text: p.text||'', url: p.url||'' }));
   renderPanels();
 
   // Contenido
-  if (r.vod_enabled) {
+  if (rec.vod_enabled) {
     document.getElementById('vodsDisabled').style.display = 'none';
     document.getElementById('vodsCard').style.display = '';
-    loadMyVods(r.key);
+    loadMyVods(rec.key);
   }
-  loadMyReels(r.key);
+  loadMyReels(rec.key);
 
   // Header nav
   navRight.innerHTML = `<button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>`;
-  if (r.key) navRight.innerHTML += `<a class="btn" href="/${r.key}/"><i class="fa-solid fa-tv"></i> Mi canal</a>`;
+  if (rec.key) navRight.innerHTML += `<a class="btn" href="/${rec.key}/"><i class="fa-solid fa-tv"></i> Mi canal</a>`;
   navRight.innerHTML += `<a class="btn" href="/"><i class="fa-solid fa-house"></i></a>`;
   syncThemeUi();
 
-  // Mobile logout
-  const logMob = document.getElementById('logoutBtnMobile');
-  if (logMob) logMob.style.display = '';
-
-  // UI init
-  initTabs();
-  initScrollSpy();
+  initDashboardTabs();
+  initContentTabs();
 }
 
-function updateSidebarAva(r, el) {
-  if (r.avatar) {
-    const url = pb.files.getURL(r, r.avatar, { thumb: '100x100' });
+function updateHeroAva(rec, el) {
+  if (rec.avatar) {
+    const url = pb.files.getURL(rec, rec.avatar, { thumb: '100x100' });
     el.innerHTML = `<img src="${url}" alt="">`;
-    el.style.background = r.color || '';
+    el.style.background = rec.color || '';
   } else {
-    el.textContent = (r.display_name || r.key || '?')[0].toUpperCase();
-    el.style.background = r.color || '';
+    el.textContent = (rec.display_name || rec.key || '?')[0].toUpperCase();
+    el.style.background = rec.color || '';
   }
 }
 
-function updateAvatarPreview(r) {
-  if (r.avatar) {
-    const url = pb.files.getURL(r, r.avatar, { thumb: '100x100' });
+function updateAvatarPreview(rec) {
+  if (rec.avatar) {
+    const url = pb.files.getURL(rec, rec.avatar, { thumb: '100x100' });
     avatarInitial.style.display = 'none';
     const img = avatarPreview.querySelector('img') || document.createElement('img');
     img.src = url;
     if (!img.parentNode) avatarPreview.appendChild(img);
   } else {
-    avatarInitial.textContent = (r.display_name || r.key || '?')[0].toUpperCase();
+    avatarInitial.textContent = (rec.display_name || rec.key || '?')[0].toUpperCase();
     avatarInitial.style.display = '';
     const img = avatarPreview.querySelector('img');
     if (img) img.remove();
   }
-  // also update sidebar
   const pfSideAva = document.getElementById('pfSideAva');
-  if (pfSideAva) updateSidebarAva(r, pfSideAva);
+  if (pfSideAva) updateHeroAva(rec, pfSideAva);
 }
 
-// ── Tabs ──
-function initTabs() {
-  document.querySelectorAll('#contentTabs .pf-tab').forEach(tab => {
+// ── Dashboard tabs ──
+function initDashboardTabs() {
+  const tabs   = document.querySelectorAll('.pf-tb');
+  const panels = document.querySelectorAll('.pf-panel');
+
+  tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('#contentTabs .pf-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('#s-contenido .pf-tab-panel').forEach(p => p.classList.remove('active'));
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
-      document.getElementById(tab.dataset.panel)?.classList.add('active');
+      document.getElementById(tab.dataset.tab)?.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // Stats chips → jump to contenido
+  document.getElementById('pfStatVodsBtn')?.addEventListener('click', () => {
+    switchTab('t-contenido');
+    // switch inner tab to vods
+    switchCtTab('ct-vods');
+  });
+  document.getElementById('pfStatReelsBtn')?.addEventListener('click', () => {
+    switchTab('t-contenido');
+    switchCtTab('ct-reels');
+  });
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.pf-tb').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pf-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active');
+  document.getElementById(tabId)?.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Content inner tabs ──
+function initContentTabs() {
+  document.querySelectorAll('#ctTabs .ct-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      switchCtTab(tab.dataset.ctpanel);
     });
   });
 }
 
-// ── Scroll spy ──
-function initScrollSpy() {
-  const navItems = document.querySelectorAll('.pf-nav-item');
-  const sections = ['s-stream','s-perfil','s-paneles','s-contenido','s-cuenta']
-    .map(id => document.getElementById(id)).filter(Boolean);
-
-  function update() {
-    const scroll = window.scrollY + 120;
-    let active = sections[0];
-    sections.forEach(s => { if (s.offsetTop <= scroll) active = s; });
-    navItems.forEach(item => {
-      const href = item.getAttribute('href').slice(1);
-      // map paneles to perfil in nav (no nav item for paneles)
-      const match = href === 's-paneles' ? false : active?.id === href;
-      item.classList.toggle('active', match);
-    });
-  }
-
-  navItems.forEach(item => {
-    item.addEventListener('click', e => {
-      e.preventDefault();
-      const id = item.getAttribute('href').slice(1);
-      const el = document.getElementById(id);
-      if (el) {
-        const offset = el.getBoundingClientRect().top + window.scrollY - 100;
-        window.scrollTo({ top: offset, behavior: 'smooth' });
-      }
-    });
-  });
-
-  window.addEventListener('scroll', update, { passive: true });
-  update();
+function switchCtTab(panelId) {
+  document.querySelectorAll('#ctTabs .ct-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#t-contenido .ct-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`[data-ctpanel="${panelId}"]`)?.classList.add('active');
+  document.getElementById(panelId)?.classList.add('active');
 }
 
 // ── Helpers ──
@@ -1156,16 +1182,37 @@ function fmtDate(iso) {
   return new Date(iso).toLocaleDateString('es-PR', { day:'numeric', month:'short', year:'numeric' });
 }
 function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function fmtSec(sec) {
+  const m = Math.floor(sec/60), s = Math.floor(sec%60);
+  return `${m}:${String(s).padStart(2,'0')}`;
+}
+function parseSec(str) {
+  if (!str) return NaN;
+  const parts = str.trim().split(':').map(Number);
+  if (parts.some(isNaN)) return NaN;
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  return NaN;
+}
 
 // ── VODs ──
 async function loadMyVods(channel) {
   try {
-    const res = await pb.collection('vods').getList(1, 50, { filter:`channel="${channel}"`, sort:'-date' });
+    const res   = await pb.collection('vods').getList(1, 50, { filter:`channel="${channel}"`, sort:'-date' });
     const items = res.items || [];
     const list  = document.getElementById('vodsList');
     const empty = document.getElementById('vodsEmpty');
+
+    // Update hero stat
+    const pfStatVods = document.getElementById('pfStatVods');
+    if (pfStatVods) pfStatVods.textContent = items.length;
+
     if (!items.length) { empty.style.display = ''; return; }
-    list.innerHTML = items.map(v => `
+
+    list.innerHTML = items.map(v => {
+      const vidSrc = v.filename ? `/vods/${channel}/${v.filename}` : '';
+      return `
       <div>
         <div class="vod-row" id="vrow-${v.id}">
           <a class="vod-row-link" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener">
@@ -1178,37 +1225,63 @@ async function loadMyVods(channel) {
             </div>
           </a>
           <div class="vod-row-actions">
-            <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}', ${v.duration||0})" title="Crear Reel"><i class="fa-solid fa-scissors"></i></button>
+            <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}',${v.duration||0},'${esc(vidSrc)}','${esc(v.thumb||'')}')" title="Crear Reel"><i class="fa-solid fa-scissors"></i></button>
             <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>
+
         <div class="reel-panel" id="rpanel-${v.id}">
-          <div class="reel-panel-title"><i class="fa-solid fa-scissors"></i> Crear Reel — ${fmtDur(v.duration)||'?'}</div>
-          <div class="rtl" id="rtl-${v.id}" data-duration="${v.duration||0}">
-            <div class="rtl-track">
-              <div class="rtl-fill" id="rtl-fill-${v.id}"></div>
-              <div class="rtl-handle" id="rtl-hs-${v.id}"><span class="rtl-tip" id="rtl-tip-hs-${v.id}"></span></div>
-              <div class="rtl-handle" id="rtl-he-${v.id}"><span class="rtl-tip" id="rtl-tip-he-${v.id}"></span></div>
+          <div class="reel-panel-header">
+            <span class="reel-panel-title"><i class="fa-solid fa-scissors"></i> Crear Reel</span>
+            <span class="reel-panel-dur">${fmtDur(v.duration)||'?'} total</span>
+          </div>
+          <div class="reel-panel-body">
+            ${vidSrc ? `
+            <div class="reel-video-wrap" id="rvwrap-${v.id}">
+              <video class="reel-video" id="rvid-${v.id}" preload="metadata" muted playsinline
+                ${v.thumb ? `poster="${esc(v.thumb)}"` : ''}>
+                <source src="${esc(vidSrc)}" type="video/mp4">
+              </video>
+              <div class="reel-video-overlay" id="rvoverlay-${v.id}">Arrastra los puntos para elegir el segmento</div>
+              <div class="reel-video-badge" id="rvbadge-${v.id}">0:00</div>
+            </div>` : ''}
+
+            <div class="rtl" id="rtl-${v.id}" data-duration="${v.duration||0}">
+              <div class="rtl-track">
+                <div class="rtl-fill" id="rtl-fill-${v.id}"></div>
+                <div class="rtl-handle" id="rtl-hs-${v.id}"><span class="rtl-tip" id="rtl-tip-hs-${v.id}"></span></div>
+                <div class="rtl-handle" id="rtl-he-${v.id}"><span class="rtl-tip" id="rtl-tip-he-${v.id}"></span></div>
+              </div>
             </div>
-            <div class="rtl-times">
-              <span id="rtl-ts-${v.id}">0:00</span>
-              <span class="rtl-t-dur" id="rtl-td-${v.id}">—</span>
-              <span id="rtl-te-${v.id}">0:30</span>
+
+            <div class="reel-time-row">
+              <div class="reel-time-field">
+                <label>Inicio</label>
+                <input type="text" class="reel-time-input" id="rstart-${v.id}" value="0:00" placeholder="0:00">
+              </div>
+              <div class="reel-time-mid">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span class="rtl-t-dur" id="rtl-td-${v.id}">—</span>
+              </div>
+              <div class="reel-time-field">
+                <label>Fin</label>
+                <input type="text" class="reel-time-input" id="rend-${v.id}" value="0:30" placeholder="0:30">
+              </div>
             </div>
+
+            <div class="reel-public-row">
+              <label class="vod-toggle"><input type="checkbox" id="rpub-${v.id}"><span class="vod-slider"></span></label>
+              <span>Publicar en <a href="/reels/" target="_blank" rel="noopener">corillo.live/reels/</a></span>
+            </div>
+            <div class="reel-actions">
+              <button class="btn primary" id="rgen-${v.id}" onclick="generateReel('${v.id}')"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar Reel</button>
+              <button class="btn" onclick="toggleReelPanel('${v.id}',0,'','')">Cancelar</button>
+            </div>
+            <div class="reel-result" id="rresult-${v.id}"></div>
           </div>
-          <input type="hidden" id="rstart-${v.id}" value="0:00">
-          <input type="hidden" id="rend-${v.id}" value="0:30">
-          <div class="reel-public-row">
-            <label class="vod-toggle"><input type="checkbox" id="rpub-${v.id}"><span class="vod-slider"></span></label>
-            <span style="font-size:.85rem">Publicar en <a href="/reels/" target="_blank" style="color:var(--accent);text-decoration:none">corillo.live/reels/</a></span>
-          </div>
-          <div class="reel-actions">
-            <button class="btn primary" id="rgen-${v.id}" onclick="generateReel('${v.id}')"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar Reel</button>
-            <button class="btn" onclick="toggleReelPanel('${v.id}', 0)">Cancelar</button>
-          </div>
-          <div class="reel-result" id="rresult-${v.id}"></div>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   } catch(e) { console.error('loadMyVods:', e); }
 }
 
@@ -1219,55 +1292,71 @@ function initReelTimeline(vodId, duration) {
   if (!tlEl || tlEl.dataset.init === '1') return;
   tlEl.dataset.init = '1';
 
-  const fill   = document.getElementById(`rtl-fill-${vodId}`);
-  const hs     = document.getElementById(`rtl-hs-${vodId}`);
-  const he     = document.getElementById(`rtl-he-${vodId}`);
-  const tipHs  = document.getElementById(`rtl-tip-hs-${vodId}`);
-  const tipHe  = document.getElementById(`rtl-tip-he-${vodId}`);
-  const ts     = document.getElementById(`rtl-ts-${vodId}`);
-  const td     = document.getElementById(`rtl-td-${vodId}`);
-  const te     = document.getElementById(`rtl-te-${vodId}`);
-  const track  = tlEl.querySelector('.rtl-track');
+  const fill       = document.getElementById(`rtl-fill-${vodId}`);
+  const hs         = document.getElementById(`rtl-hs-${vodId}`);
+  const he         = document.getElementById(`rtl-he-${vodId}`);
+  const tipHs      = document.getElementById(`rtl-tip-hs-${vodId}`);
+  const tipHe      = document.getElementById(`rtl-tip-he-${vodId}`);
+  const td         = document.getElementById(`rtl-td-${vodId}`);
+  const startInput = document.getElementById(`rstart-${vodId}`);
+  const endInput   = document.getElementById(`rend-${vodId}`);
+  const video      = document.getElementById(`rvid-${vodId}`);
+  const vwrap      = document.getElementById(`rvwrap-${vodId}`);
+  const vbadge     = document.getElementById(`rvbadge-${vodId}`);
+  const track      = tlEl.querySelector('.rtl-track');
 
   const MIN = 5, MAX = 60;
   let s0 = 0, e0 = Math.min(30, duration);
 
-  function fmt(sec) {
-    const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
-    return `${m}:${String(s).padStart(2, '0')}`;
+  // Video events
+  if (video) {
+    video.addEventListener('loadedmetadata', () => {
+      if (vwrap) vwrap.classList.add('loaded');
+    });
+    video.addEventListener('seeked', () => {
+      if (vbadge) vbadge.textContent = fmtSec(video.currentTime);
+    });
   }
 
-  function clampToTrack(clientX) {
-    // Always recalculate — avoids stale rect if page scrolled during drag
-    const rect = track.getBoundingClientRect();
-    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    return Math.round((x / rect.width) * duration);
+  function seekVideo(sec) {
+    if (!video) return;
+    if (video.readyState >= 1) {
+      video.currentTime = Math.max(0, Math.min(sec, video.duration || duration));
+    } else {
+      video.addEventListener('loadedmetadata', () => {
+        video.currentTime = Math.max(0, Math.min(sec, video.duration || duration));
+      }, { once: true });
+    }
   }
 
-  function render() {
+  function render(seekTo) {
     const sp = (s0 / duration) * 100;
     const ep = (e0 / duration) * 100;
     fill.style.left  = sp + '%';
     fill.style.width = (ep - sp) + '%';
     hs.style.left = sp + '%';
     he.style.left = ep + '%';
-    ts.textContent = fmt(s0);
-    te.textContent = fmt(e0);
-    if (tipHs) tipHs.textContent = fmt(s0);
-    if (tipHe) tipHe.textContent = fmt(e0);
+    if (tipHs) tipHs.textContent = fmtSec(s0);
+    if (tipHe) tipHe.textContent = fmtSec(e0);
+    startInput.value = fmtSec(s0);
+    endInput.value   = fmtSec(e0);
     const dur = e0 - s0;
     td.textContent = dur + 's';
     td.className = 'rtl-t-dur' + (dur >= MIN && dur <= MAX ? ' ok' : ' err');
-    document.getElementById(`rstart-${vodId}`).value = fmt(s0);
-    document.getElementById(`rend-${vodId}`).value   = fmt(e0);
+    if (seekTo !== undefined) seekVideo(seekTo);
+  }
+
+  function clampToTrack(clientX) {
+    const rect = track.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    return Math.round((x / rect.width) * duration);
   }
 
   function drag(handle, isStart) {
     handle.addEventListener('pointerdown', e => {
-      // Only main button or touch
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.preventDefault();
-      e.stopPropagation(); // don't bubble to track click handler
+      e.stopPropagation();
       handle.setPointerCapture(e.pointerId);
       handle.classList.add('dragging');
 
@@ -1275,45 +1364,67 @@ function initReelTimeline(vodId, duration) {
         const sec = clampToTrack(ev.clientX);
         if (isStart) {
           s0 = Math.max(0, Math.min(sec, e0 - MIN));
+          render(s0);
         } else {
           e0 = Math.min(duration, Math.max(sec, s0 + MIN));
           if (e0 - s0 > MAX) e0 = s0 + MAX;
+          render(e0);
         }
-        render();
       }
-
       function onUp() {
         handle.classList.remove('dragging');
         handle.removeEventListener('pointermove', onMove);
       }
-
       handle.addEventListener('pointermove', onMove);
       handle.addEventListener('pointerup',     onUp, { once: true });
       handle.addEventListener('pointercancel', onUp, { once: true });
     });
   }
 
-  // Click anywhere on the track → snap nearest handle to that position
+  // Track click → nearest handle
   track.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     const sec = clampToTrack(e.clientX);
-    const distStart = Math.abs(sec - s0);
-    const distEnd   = Math.abs(sec - e0);
-    if (distStart <= distEnd) {
+    if (Math.abs(sec - s0) <= Math.abs(sec - e0)) {
       s0 = Math.max(0, Math.min(sec, e0 - MIN));
+      render(s0);
     } else {
       e0 = Math.min(duration, Math.max(sec, s0 + MIN));
       if (e0 - s0 > MAX) e0 = s0 + MAX;
+      render(e0);
     }
-    render();
   });
+
+  // Text input handlers
+  function applyStart() {
+    const parsed = parseSec(startInput.value);
+    if (isNaN(parsed) || parsed < 0 || parsed >= duration) { startInput.value = fmtSec(s0); return; }
+    const prevDur = e0 - s0;
+    s0 = Math.round(parsed);
+    e0 = Math.min(duration, s0 + prevDur);
+    if (e0 - s0 < MIN) e0 = Math.min(duration, s0 + MIN);
+    if (e0 - s0 > MAX) e0 = s0 + MAX;
+    render(s0);
+  }
+  function applyEnd() {
+    const parsed = parseSec(endInput.value);
+    if (isNaN(parsed)) { endInput.value = fmtSec(e0); return; }
+    e0 = Math.max(s0 + MIN, Math.min(duration, Math.round(parsed)));
+    if (e0 - s0 > MAX) e0 = s0 + MAX;
+    render(e0);
+  }
+
+  startInput.addEventListener('blur',  applyStart);
+  endInput.addEventListener('blur',    applyEnd);
+  startInput.addEventListener('keydown', ev => { if (ev.key === 'Enter') { applyStart(); endInput.focus(); } });
+  endInput.addEventListener('keydown',   ev => { if (ev.key === 'Enter') applyEnd(); });
 
   drag(hs, true);
   drag(he, false);
-  render();
+  render(s0);
 }
 
-function toggleReelPanel(vodId, vodDuration) {
+function toggleReelPanel(vodId, vodDuration, vidSrc, thumb) {
   const panel = document.getElementById(`rpanel-${vodId}`);
   const btn   = document.getElementById(`rbtn-${vodId}`);
   if (!panel) return;
@@ -1323,19 +1434,9 @@ function toggleReelPanel(vodId, vodDuration) {
   if (opening) initReelTimeline(vodId, vodDuration);
 }
 
-function parseTime(str) {
-  if (!str) return NaN;
-  const parts = str.trim().split(':').map(Number);
-  if (parts.some(isNaN)) return NaN;
-  if (parts.length === 1) return parts[0];
-  if (parts.length === 2) return parts[0]*60 + parts[1];
-  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
-  return NaN;
-}
-
 async function generateReel(vodId) {
-  const start = parseTime(document.getElementById(`rstart-${vodId}`)?.value);
-  const end   = parseTime(document.getElementById(`rend-${vodId}`)?.value);
+  const start = parseSec(document.getElementById(`rstart-${vodId}`)?.value);
+  const end   = parseSec(document.getElementById(`rend-${vodId}`)?.value);
   const pub   = document.getElementById(`rpub-${vodId}`)?.checked || false;
   const dur   = end - start;
   const btn   = document.getElementById(`rgen-${vodId}`);
@@ -1344,11 +1445,9 @@ async function generateReel(vodId) {
   if (isNaN(start) || isNaN(end) || dur < 5 || dur > 60) {
     showToast('Revisa el tiempo — entre 5 y 60 segundos', 'err'); return;
   }
-
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Generando…';
-  result.className = 'reel-result';
-  result.innerHTML = '';
+  result.className = 'reel-result'; result.innerHTML = '';
 
   try {
     const res = await fetch('/chat-api/reel', {
@@ -1394,10 +1493,15 @@ async function deleteVod(id) {
 // ── Reels ──
 async function loadMyReels(channel) {
   try {
-    const res = await pb.collection('reels').getList(1, 50, { filter:`channel="${channel}"`, sort:'-date' });
+    const res   = await pb.collection('reels').getList(1, 50, { filter:`channel="${channel}"`, sort:'-date' });
     const items = res.items || [];
     const list  = document.getElementById('reelsList');
     const empty = document.getElementById('reelsEmpty');
+
+    // Update hero stat
+    const pfStatReels = document.getElementById('pfStatReels');
+    if (pfStatReels) pfStatReels.textContent = items.length;
+
     list.innerHTML = '';
     if (!items.length) { empty.style.display = ''; return; }
     empty.style.display = 'none';
@@ -1426,9 +1530,7 @@ async function deleteReel(id, channel) {
   const btn = document.querySelector(`#rrow-${id} .reel-row-del`);
   if (btn) btn.classList.add('loading');
   try {
-    const res = await fetch(`/chat-api/reel/${id}`, {
-      method: 'DELETE', headers: { 'Authorization': pb.authStore.token }
-    });
+    const res = await fetch(`/chat-api/reel/${id}`, { method: 'DELETE', headers: { 'Authorization': pb.authStore.token } });
     if (!res.ok) throw new Error();
     document.getElementById(`rrow-${id}`)?.remove();
     if (!document.querySelector('.reel-row')) document.getElementById('reelsEmpty').style.display = '';
@@ -1442,7 +1544,7 @@ async function deleteReel(id, channel) {
 // ── Login ──
 loginBtn.addEventListener('click', doLogin);
 loginEmail.addEventListener('keydown', e => { if (e.key==='Enter') loginPass.focus(); });
-loginPass.addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+loginPass.addEventListener('keydown',  e => { if (e.key==='Enter') doLogin(); });
 
 async function doLogin() {
   const email = loginEmail.value.trim();
@@ -1468,15 +1570,12 @@ async function doLogin() {
 toggleKey.addEventListener('click', () => {
   keyVisible = !keyVisible;
   streamKeyVal.classList.toggle('hidden-key', !keyVisible);
-  toggleKey.innerHTML = keyVisible
-    ? '<i class="fa-regular fa-eye-slash"></i>'
-    : '<i class="fa-regular fa-eye"></i>';
+  toggleKey.innerHTML = keyVisible ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
   const full = `${currentRecord?.key}?secret=${currentRecord?.stream_key}`;
   obsKeyHint.textContent = keyVisible ? full : `${currentRecord?.key}?secret=••••••••`;
   document.getElementById('obsKeyFormat').textContent = keyVisible ? full : `${currentRecord?.key}?secret=••••••••`;
 });
-
-copyKey.addEventListener('click', () => copyText(`${currentRecord?.key}?secret=${currentRecord?.stream_key}`, copyKey));
+copyKey.addEventListener('click',    () => copyText(`${currentRecord?.key}?secret=${currentRecord?.stream_key}`, copyKey));
 copyServer.addEventListener('click', () => copyText('rtmp://corillo.live/live', copyServer));
 
 async function copyText(text, btn) {
@@ -1529,14 +1628,14 @@ saveBtn.addEventListener('click', async () => {
       tiktok:       fTiktok.value.trim(),
       vod_enabled:  document.getElementById('fVodEnabled').checked,
     });
-    saveStatus.textContent = 'Cambios guardados';
-    saveStatus.className = 'save-status ok';
+    saveStatus.textContent = 'Cambios guardados'; saveStatus.className = 'save-status ok';
     showToast('Perfil actualizado');
     const pfSideName = document.getElementById('pfSideName');
     if (pfSideName) pfSideName.textContent = currentRecord.display_name || currentRecord.key || '';
+    const pfHeroSub = document.getElementById('pfHeroSub');
+    if (pfHeroSub) pfHeroSub.textContent = currentRecord.sub || '';
   } catch(e) {
-    saveStatus.textContent = 'Error al guardar';
-    saveStatus.className = 'save-status err';
+    saveStatus.textContent = 'Error al guardar'; saveStatus.className = 'save-status err';
     showToast('Error al guardar los cambios', 'err');
   } finally {
     saveBtn.disabled = false;
@@ -1590,9 +1689,7 @@ savePanelsBtn.addEventListener('click', async () => {
   savePanelsBtn.innerHTML = '<span class="spinner"></span> Guardando…';
   panelsStatus.textContent = ''; panelsStatus.className = 'save-status';
   try {
-    const clean = panels.filter(p => p.title.trim()).map(p => ({
-      title: p.title.trim(), text: p.text.trim(), url: p.url.trim()
-    }));
+    const clean = panels.filter(p => p.title.trim()).map(p => ({ title: p.title.trim(), text: p.text.trim(), url: p.url.trim() }));
     currentRecord = await pb.collection('streamers').update(currentRecord.id, { panels: clean });
     panels = (currentRecord.panels||[]).map(p => ({...p}));
     renderPanels();
@@ -1645,9 +1742,7 @@ document.getElementById('changePassBtn').addEventListener('click', async () => {
   const btn = document.getElementById('changePassBtn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Guardando…';
   try {
-    await pb.collection('streamers').update(currentRecord.id, {
-      oldPassword: oldPass, password: newPass, passwordConfirm: confirm
-    });
+    await pb.collection('streamers').update(currentRecord.id, { oldPassword: oldPass, password: newPass, passwordConfirm: confirm });
     document.getElementById('fOldPass').value = '';
     document.getElementById('fNewPass').value = '';
     document.getElementById('fNewPassConfirm').value = '';
@@ -1669,8 +1764,7 @@ document.getElementById('changeEmailBtn').addEventListener('click', async () => 
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Enviando…';
   try {
     await pb.collection('streamers').requestEmailChange(newEmail);
-    status.textContent = 'Revisa tu nuevo email para confirmar el cambio.';
-    status.className = 'save-status ok';
+    status.textContent = 'Revisa tu nuevo email para confirmar el cambio.'; status.className = 'save-status ok';
     document.getElementById('fNewEmail').value = '';
     document.getElementById('fEmailPass').value = '';
     showToast('Email de confirmación enviado');
@@ -1680,18 +1774,13 @@ document.getElementById('changeEmailBtn').addEventListener('click', async () => 
   } finally { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-envelope"></i> Cambiar email'; }
 });
 
-// ── Forgot password ─��
+// ── Forgot password ──
 forgotBtn.addEventListener('click', () => {
-  loginCard.style.display = 'none';
-  resetCard.style.display = 'block';
+  loginCard.style.display = 'none'; resetCard.style.display = 'block';
   resetEmail.value = loginEmail.value;
-  resetErr.style.display = 'none';
-  resetOk.style.display = 'none';
+  resetErr.style.display = 'none'; resetOk.style.display = 'none';
 });
-backToLogin.addEventListener('click', () => {
-  resetCard.style.display = 'none';
-  loginCard.style.display = 'block';
-});
+backToLogin.addEventListener('click', () => { resetCard.style.display = 'none'; loginCard.style.display = 'block'; });
 resetBtn.addEventListener('click', async () => {
   const email = resetEmail.value.trim();
   resetErr.style.display = 'none'; resetOk.style.display = 'none';
@@ -1707,12 +1796,10 @@ resetBtn.addEventListener('click', async () => {
 
 // ── Logout ──
 function doLogout() {
-  pb.authStore.clear();
-  showLogin();
+  pb.authStore.clear(); showLogin();
   loginEmail.value = ''; loginPass.value = '';
 }
 document.getElementById('logoutBtn').addEventListener('click', doLogout);
-document.getElementById('logoutBtnMobile').addEventListener('click', doLogout);
 
 // ── Start ──
 init();
