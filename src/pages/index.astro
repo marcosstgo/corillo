@@ -1250,7 +1250,7 @@ setInterval(() => {
   });
   document.querySelectorAll('.stream-thumb-preview').forEach((vid: any) => {
     const src = vid.src.replace(/\?t=\d+/, `?t=${t}`);
-    if (vid.src !== src) { vid.src = src; }
+    if (vid.src !== src) { vid.src = src; vid.load(); }
   });
 }, 60000);
 document.addEventListener('visibilitychange', () => {
