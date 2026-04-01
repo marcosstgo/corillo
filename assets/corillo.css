@@ -1444,13 +1444,13 @@ button { font: inherit; cursor: pointer; }
 .crl-player-vods-list::-webkit-scrollbar { display: none; }
 
 .crl-player-vod-card {
-  flex-shrink: 0; width: 160px; text-decoration: none; color: inherit; transition: transform .15s;
+  flex-shrink: 0; width: 210px; text-decoration: none; color: inherit; transition: transform .15s;
 }
 
 .crl-player-vod-card:hover { transform: translateY(-2px); }
 
 .crl-player-vod-thumb {
-  position: relative; width: 160px; height: 90px; border-radius: 7px;
+  position: relative; width: 210px; height: 118px; border-radius: 7px;
   background: rgba(0,191,255,.08); border: 1px solid var(--crl-border);
   display: flex; align-items: center; justify-content: center; overflow: hidden;
   transition: border-color .15s;
