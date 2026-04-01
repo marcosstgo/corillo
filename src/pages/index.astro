@@ -1254,8 +1254,25 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
-update();
-startPoll();
+// Patch STREAMERS with display_name from PocketBase before first render
+(async () => {
+  const streamers = ((window as any).STREAMERS || []).filter((s: any) => !s.soon);
+  try {
+    const results = await Promise.allSettled(
+      streamers.map((s: any) =>
+        fetch('/chat-api/profile/' + s.key, { signal: AbortSignal.timeout(4000) })
+          .then(r => r.ok ? r.json() : null)
+      )
+    );
+    results.forEach((res, i) => {
+      if (res.status === 'fulfilled' && res.value?.display_name) {
+        streamers[i].name = res.value.display_name;
+      }
+    });
+  } catch {}
+  update();
+  startPoll();
+})();
 
 // Theme toggle
 const root = document.documentElement;
