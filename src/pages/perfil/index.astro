@@ -390,73 +390,89 @@
       pointer-events: none;
     }
 
-    /* ── Reel Timeline ── */
+    /* ── Reel Timeline — single handle ── */
     .rtl { padding: 4px 0 8px; user-select: none; touch-action: none; }
     .rtl-track {
-      position: relative; height: 8px;
-      background: rgba(255,255,255,.1); border-radius: 4px;
-      margin: 28px 14px 10px; cursor: pointer;
+      position: relative; height: 6px;
+      background: rgba(255,255,255,.1); border-radius: 3px;
+      margin: 30px 16px 14px; cursor: pointer;
     }
     [data-theme="light"] .rtl-track { background: rgba(0,0,0,.12); }
+    /* dim zone before the handle */
+    .rtl-before {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: rgba(255,255,255,.06); border-radius: 3px;
+      pointer-events: none;
+    }
+    /* selected segment */
     .rtl-fill {
       position: absolute; height: 100%;
-      background: var(--accent); border-radius: 4px;
-      opacity: .55; pointer-events: none;
+      background: var(--accent); border-radius: 3px;
+      opacity: .65; pointer-events: none;
     }
+    /* dim zone after the segment */
+    .rtl-after {
+      position: absolute; top: 0; right: 0; height: 100%;
+      background: rgba(255,255,255,.06); border-radius: 3px;
+      pointer-events: none;
+    }
+    /* single playhead handle */
     .rtl-handle {
       position: absolute; top: 50%;
-      transform: translate(-50%,-50%);
-      width: 20px; height: 20px; border-radius: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px; height: 22px; border-radius: 50%;
       background: var(--white); border: 2.5px solid var(--accent);
-      cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,.45);
-      transition: box-shadow .1s, transform .1s; z-index: 3;
+      cursor: grab; z-index: 4;
+      box-shadow: 0 2px 10px rgba(0,0,0,.5);
+      transition: box-shadow .1s, transform .1s;
       -webkit-tap-highlight-color: transparent;
     }
-    .rtl-handle::before { content: ''; position: absolute; inset: -14px; border-radius: 50%; }
-    .rtl-handle:hover { box-shadow: 0 2px 14px rgba(0,191,255,.5); }
-    .rtl-handle:active, .rtl-handle.dragging {
-      cursor: grabbing; transform: translate(-50%,-50%) scale(1.22);
-      box-shadow: 0 4px 18px rgba(0,191,255,.45);
+    /* big invisible hit area */
+    .rtl-handle::before { content: ''; position: absolute; inset: -16px; border-radius: 50%; }
+    .rtl-handle:hover { box-shadow: 0 0 0 6px rgba(0,191,255,.18), 0 2px 10px rgba(0,0,0,.5); }
+    .rtl-handle.dragging {
+      cursor: grabbing;
+      transform: translate(-50%, -50%) scale(1.2);
+      box-shadow: 0 0 0 8px rgba(0,191,255,.15), 0 4px 16px rgba(0,0,0,.5);
     }
+    /* time tooltip above handle */
     .rtl-handle .rtl-tip {
-      display: none; position: absolute; bottom: calc(100% + 10px); left: 50%;
+      position: absolute; bottom: calc(100% + 10px); left: 50%;
       transform: translateX(-50%);
-      background: var(--panel); border: 1px solid var(--border-h);
-      color: var(--white); font-family: var(--mono); font-size: 10px;
-      padding: 3px 7px; border-radius: 5px; white-space: nowrap;
-      pointer-events: none; z-index: 10;
+      background: var(--ink); border: 1px solid var(--accent);
+      color: var(--accent); font-family: var(--mono); font-size: 11px; font-weight: 700;
+      padding: 4px 9px; border-radius: 6px; white-space: nowrap;
+      pointer-events: none; z-index: 10; opacity: 0; transition: opacity .1s;
     }
-    .rtl-handle.dragging .rtl-tip { display: block; }
+    .rtl-handle.dragging .rtl-tip { opacity: 1; }
 
-    /* ── Reel time inputs ── */
-    .reel-time-row {
-      display: flex; align-items: flex-end; gap: 12px; margin: 16px 0;
+    /* ── Reel info row ── */
+    .reel-info-row {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin: 6px 0 16px; flex-wrap: wrap;
     }
-    .reel-time-field { display: flex; flex-direction: column; gap: 6px; flex: 1; }
-    .reel-time-field label {
-      font-family: var(--mono); font-size: .62rem; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--muted);
+    .reel-starttime {
+      font-family: var(--mono); font-size: .88rem; letter-spacing: 1px;
+      color: var(--white);
     }
-    .reel-time-input {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; padding: 10px 12px;
-      color: var(--white); font-family: var(--mono); font-size: 1rem;
-      letter-spacing: 1px; text-align: center; width: 100%; transition: .15s;
+    .reel-starttime span { color: var(--muted); font-size: .72rem; margin-right: 4px; }
+    .reel-endtime {
+      font-family: var(--mono); font-size: .78rem; color: var(--muted); letter-spacing: .5px;
     }
-    .reel-time-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,191,255,.07); }
-    [data-theme="light"] .reel-time-input { color: #0c1a20; }
-    .reel-time-mid {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      padding-bottom: 10px; flex-shrink: 0;
+    /* Duration preset pills */
+    .reel-dur-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .reel-dur-pill {
+      padding: 4px 12px; border-radius: 20px;
+      border: 1px solid var(--border); background: transparent;
+      font-family: var(--mono); font-size: .68rem; letter-spacing: 1px;
+      color: var(--muted); cursor: pointer; transition: .15s;
+      -webkit-tap-highlight-color: transparent;
     }
-    .reel-time-mid i { color: var(--muted); font-size: .75rem; }
-    .rtl-t-dur {
-      font-size: 11px; font-weight: 700; letter-spacing: 1px;
-      padding: 3px 9px; border-radius: 5px; background: rgba(255,255,255,.05);
-      font-family: var(--mono); white-space: nowrap;
+    .reel-dur-pill:hover { border-color: var(--accent); color: var(--accent); }
+    .reel-dur-pill.active {
+      background: var(--accent); border-color: var(--accent);
+      color: #000; font-weight: 700;
     }
-    .rtl-t-dur.ok  { color: #00b894; background: rgba(0,184,148,.08); }
-    .rtl-t-dur.err { color: #e17055; background: rgba(223,48,48,.08); }
 
     .reel-public-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; font-size: .85rem; }
     .reel-public-row a { color: var(--accent); text-decoration: none; }
@@ -1242,32 +1258,38 @@ async function loadMyVods(channel) {
                 ${v.thumb ? `poster="${esc(v.thumb)}"` : ''}>
                 <source src="${esc(vidSrc)}" type="video/mp4">
               </video>
-              <div class="reel-video-overlay" id="rvoverlay-${v.id}">Arrastra los puntos para elegir el segmento</div>
+              <div class="reel-video-overlay" id="rvoverlay-${v.id}">Arrastra para elegir el inicio del reel</div>
               <div class="reel-video-badge" id="rvbadge-${v.id}">0:00</div>
             </div>` : ''}
 
             <div class="rtl" id="rtl-${v.id}" data-duration="${v.duration||0}">
               <div class="rtl-track">
-                <div class="rtl-fill" id="rtl-fill-${v.id}"></div>
-                <div class="rtl-handle" id="rtl-hs-${v.id}"><span class="rtl-tip" id="rtl-tip-hs-${v.id}"></span></div>
-                <div class="rtl-handle" id="rtl-he-${v.id}"><span class="rtl-tip" id="rtl-tip-he-${v.id}"></span></div>
+                <div class="rtl-before" id="rtl-before-${v.id}"></div>
+                <div class="rtl-fill"   id="rtl-fill-${v.id}"></div>
+                <div class="rtl-after"  id="rtl-after-${v.id}"></div>
+                <div class="rtl-handle" id="rtl-hs-${v.id}">
+                  <span class="rtl-tip" id="rtl-tip-${v.id}"></span>
+                </div>
               </div>
             </div>
 
-            <div class="reel-time-row">
-              <div class="reel-time-field">
-                <label>Inicio</label>
-                <input type="text" class="reel-time-input" id="rstart-${v.id}" value="0:00" placeholder="0:00">
+            <div class="reel-info-row">
+              <div>
+                <div class="reel-starttime">
+                  <span>Inicio</span><span id="rstart-display-${v.id}">0:00</span>
+                  &nbsp;→&nbsp;
+                  <span id="rend-display-${v.id}" style="color:var(--muted)">0:30</span>
+                </div>
               </div>
-              <div class="reel-time-mid">
-                <i class="fa-solid fa-arrow-right"></i>
-                <span class="rtl-t-dur" id="rtl-td-${v.id}">—</span>
-              </div>
-              <div class="reel-time-field">
-                <label>Fin</label>
-                <input type="text" class="reel-time-input" id="rend-${v.id}" value="0:30" placeholder="0:30">
+              <div class="reel-dur-pills" id="rdur-pills-${v.id}">
+                <button class="reel-dur-pill" data-sec="15">15s</button>
+                <button class="reel-dur-pill active" data-sec="30">30s</button>
+                <button class="reel-dur-pill" data-sec="45">45s</button>
+                <button class="reel-dur-pill" data-sec="60">60s</button>
               </div>
             </div>
+            <input type="hidden" id="rstart-${v.id}" value="0">
+            <input type="hidden" id="rend-${v.id}" value="30">
 
             <div class="reel-public-row">
               <label class="vod-toggle"><input type="checkbox" id="rpub-${v.id}"><span class="vod-slider"></span></label>
@@ -1285,143 +1307,113 @@ async function loadMyVods(channel) {
   } catch(e) { console.error('loadMyVods:', e); }
 }
 
-// ── Reel timeline ──
+// ── Reel timeline — single handle ──
 function initReelTimeline(vodId, duration) {
   if (!duration || duration <= 0) return;
   const tlEl = document.getElementById(`rtl-${vodId}`);
   if (!tlEl || tlEl.dataset.init === '1') return;
   tlEl.dataset.init = '1';
 
-  const fill       = document.getElementById(`rtl-fill-${vodId}`);
-  const hs         = document.getElementById(`rtl-hs-${vodId}`);
-  const he         = document.getElementById(`rtl-he-${vodId}`);
-  const tipHs      = document.getElementById(`rtl-tip-hs-${vodId}`);
-  const tipHe      = document.getElementById(`rtl-tip-he-${vodId}`);
-  const td         = document.getElementById(`rtl-td-${vodId}`);
-  const startInput = document.getElementById(`rstart-${vodId}`);
-  const endInput   = document.getElementById(`rend-${vodId}`);
-  const video      = document.getElementById(`rvid-${vodId}`);
-  const vwrap      = document.getElementById(`rvwrap-${vodId}`);
-  const vbadge     = document.getElementById(`rvbadge-${vodId}`);
-  const track      = tlEl.querySelector('.rtl-track');
+  const fill         = document.getElementById(`rtl-fill-${vodId}`);
+  const before       = document.getElementById(`rtl-before-${vodId}`);
+  const after        = document.getElementById(`rtl-after-${vodId}`);
+  const handle       = document.getElementById(`rtl-hs-${vodId}`);
+  const tip          = document.getElementById(`rtl-tip-${vodId}`);
+  const startHidden  = document.getElementById(`rstart-${vodId}`);
+  const endHidden    = document.getElementById(`rend-${vodId}`);
+  const startDisplay = document.getElementById(`rstart-display-${vodId}`);
+  const endDisplay   = document.getElementById(`rend-display-${vodId}`);
+  const video        = document.getElementById(`rvid-${vodId}`);
+  const vwrap        = document.getElementById(`rvwrap-${vodId}`);
+  const vbadge       = document.getElementById(`rvbadge-${vodId}`);
+  const track        = tlEl.querySelector('.rtl-track');
+  const pills        = document.querySelectorAll(`#rdur-pills-${vodId} .reel-dur-pill`);
 
-  const MIN = 5, MAX = 60;
-  let s0 = 0, e0 = Math.min(30, duration);
+  let segDur = 30; // selected segment duration in seconds
+  let s0 = 0;      // start position in seconds
 
-  // Video events
+  // Video setup
   if (video) {
-    video.addEventListener('loadedmetadata', () => {
-      if (vwrap) vwrap.classList.add('loaded');
-    });
-    video.addEventListener('seeked', () => {
-      if (vbadge) vbadge.textContent = fmtSec(video.currentTime);
-    });
+    video.addEventListener('loadedmetadata', () => { if (vwrap) vwrap.classList.add('loaded'); });
+    video.addEventListener('seeked', () => { if (vbadge) vbadge.textContent = fmtSec(video.currentTime); });
   }
 
   function seekVideo(sec) {
     if (!video) return;
-    if (video.readyState >= 1) {
-      video.currentTime = Math.max(0, Math.min(sec, video.duration || duration));
-    } else {
-      video.addEventListener('loadedmetadata', () => {
-        video.currentTime = Math.max(0, Math.min(sec, video.duration || duration));
-      }, { once: true });
-    }
+    const doSeek = () => { video.currentTime = Math.max(0, Math.min(sec, video.duration || duration)); };
+    if (video.readyState >= 1) doSeek();
+    else video.addEventListener('loadedmetadata', doSeek, { once: true });
   }
 
-  function render(seekTo) {
+  function render(doSeek) {
+    // Clamp start so segment doesn't go past end
+    s0 = Math.max(0, Math.min(s0, duration - segDur));
+    const e0 = s0 + segDur;
+
     const sp = (s0 / duration) * 100;
     const ep = (e0 / duration) * 100;
+
+    if (before) { before.style.left = '0'; before.style.width = sp + '%'; }
     fill.style.left  = sp + '%';
     fill.style.width = (ep - sp) + '%';
-    hs.style.left = sp + '%';
-    he.style.left = ep + '%';
-    if (tipHs) tipHs.textContent = fmtSec(s0);
-    if (tipHe) tipHe.textContent = fmtSec(e0);
-    startInput.value = fmtSec(s0);
-    endInput.value   = fmtSec(e0);
-    const dur = e0 - s0;
-    td.textContent = dur + 's';
-    td.className = 'rtl-t-dur' + (dur >= MIN && dur <= MAX ? ' ok' : ' err');
-    if (seekTo !== undefined) seekVideo(seekTo);
+    if (after)  { after.style.left = ep + '%'; after.style.right = '0'; after.style.width = (100 - ep) + '%'; }
+    handle.style.left = sp + '%';
+
+    if (tip) tip.textContent = fmtSec(s0);
+    if (startDisplay) startDisplay.textContent = fmtSec(s0);
+    if (endDisplay)   endDisplay.textContent   = fmtSec(e0);
+
+    startHidden.value = String(Math.round(s0));
+    endHidden.value   = String(Math.round(e0));
+
+    if (doSeek) seekVideo(s0);
   }
 
   function clampToTrack(clientX) {
     const rect = track.getBoundingClientRect();
     const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
-    return Math.round((x / rect.width) * duration);
+    return (x / rect.width) * duration;
   }
 
-  function drag(handle, isStart) {
-    handle.addEventListener('pointerdown', e => {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      e.preventDefault();
-      e.stopPropagation();
-      handle.setPointerCapture(e.pointerId);
-      handle.classList.add('dragging');
-
-      function onMove(ev) {
-        const sec = clampToTrack(ev.clientX);
-        if (isStart) {
-          s0 = Math.max(0, Math.min(sec, e0 - MIN));
-          render(s0);
-        } else {
-          e0 = Math.min(duration, Math.max(sec, s0 + MIN));
-          if (e0 - s0 > MAX) e0 = s0 + MAX;
-          render(e0);
-        }
-      }
-      function onUp() {
-        handle.classList.remove('dragging');
-        handle.removeEventListener('pointermove', onMove);
-      }
-      handle.addEventListener('pointermove', onMove);
-      handle.addEventListener('pointerup',     onUp, { once: true });
-      handle.addEventListener('pointercancel', onUp, { once: true });
-    });
-  }
-
-  // Track click → nearest handle
-  track.addEventListener('pointerdown', e => {
+  // Drag the single handle
+  handle.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    const sec = clampToTrack(e.clientX);
-    if (Math.abs(sec - s0) <= Math.abs(sec - e0)) {
-      s0 = Math.max(0, Math.min(sec, e0 - MIN));
-      render(s0);
-    } else {
-      e0 = Math.min(duration, Math.max(sec, s0 + MIN));
-      if (e0 - s0 > MAX) e0 = s0 + MAX;
-      render(e0);
+    e.preventDefault(); e.stopPropagation();
+    handle.setPointerCapture(e.pointerId);
+    handle.classList.add('dragging');
+
+    function onMove(ev) {
+      s0 = clampToTrack(ev.clientX);
+      render(true);
     }
+    function onUp() {
+      handle.classList.remove('dragging');
+      handle.removeEventListener('pointermove', onMove);
+    }
+    handle.addEventListener('pointermove', onMove);
+    handle.addEventListener('pointerup',     onUp, { once: true });
+    handle.addEventListener('pointercancel', onUp, { once: true });
   });
 
-  // Text input handlers
-  function applyStart() {
-    const parsed = parseSec(startInput.value);
-    if (isNaN(parsed) || parsed < 0 || parsed >= duration) { startInput.value = fmtSec(s0); return; }
-    const prevDur = e0 - s0;
-    s0 = Math.round(parsed);
-    e0 = Math.min(duration, s0 + prevDur);
-    if (e0 - s0 < MIN) e0 = Math.min(duration, s0 + MIN);
-    if (e0 - s0 > MAX) e0 = s0 + MAX;
-    render(s0);
-  }
-  function applyEnd() {
-    const parsed = parseSec(endInput.value);
-    if (isNaN(parsed)) { endInput.value = fmtSec(e0); return; }
-    e0 = Math.max(s0 + MIN, Math.min(duration, Math.round(parsed)));
-    if (e0 - s0 > MAX) e0 = s0 + MAX;
-    render(e0);
-  }
+  // Click anywhere on track → jump start there
+  track.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    s0 = clampToTrack(e.clientX);
+    render(true);
+  });
 
-  startInput.addEventListener('blur',  applyStart);
-  endInput.addEventListener('blur',    applyEnd);
-  startInput.addEventListener('keydown', ev => { if (ev.key === 'Enter') { applyStart(); endInput.focus(); } });
-  endInput.addEventListener('keydown',   ev => { if (ev.key === 'Enter') applyEnd(); });
+  // Duration pill buttons
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const sec = parseInt(pill.dataset.sec, 10);
+      if (isNaN(sec)) return;
+      segDur = sec;
+      pills.forEach(p => p.classList.toggle('active', p === pill));
+      render(false);
+    });
+  });
 
-  drag(hs, true);
-  drag(he, false);
-  render(s0);
+  render(true);
 }
 
 function toggleReelPanel(vodId, vodDuration, vidSrc, thumb) {
@@ -1435,8 +1427,8 @@ function toggleReelPanel(vodId, vodDuration, vidSrc, thumb) {
 }
 
 async function generateReel(vodId) {
-  const start = parseSec(document.getElementById(`rstart-${vodId}`)?.value);
-  const end   = parseSec(document.getElementById(`rend-${vodId}`)?.value);
+  const start = parseInt(document.getElementById(`rstart-${vodId}`)?.value, 10);
+  const end   = parseInt(document.getElementById(`rend-${vodId}`)?.value,   10);
   const pub   = document.getElementById(`rpub-${vodId}`)?.checked || false;
   const dur   = end - start;
   const btn   = document.getElementById(`rgen-${vodId}`);
