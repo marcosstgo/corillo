@@ -167,6 +167,14 @@ function renderReels(reels: any[]) {
             <span>Share</span>
           </button>
         </div>
+      </div>
+      <div class="crl-reel-caption">
+        <div class="crl-reel-streamer">
+          <div class="crl-reel-ava" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaLetter}</div>
+          <a href="/${r.channel}/" class="crl-reel-name" style="text-decoration:none">${r.channel.toUpperCase()}</a>
+        </div>
+        ${r.title ? `<div class="crl-reel-desc" style="-webkit-line-clamp:3">${esc(r.title)}</div>` : ''}
+        <div class="crl-reel-meta">${fmtDate(r.date)}${r.duration ? ' · ' + r.duration + 's' : ''}</div>
       </div>`;
 
     el.addEventListener('click', (e: Event) => {

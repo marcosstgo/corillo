@@ -939,11 +939,6 @@ button { font: inherit; cursor: pointer; }
 @media(max-width:600px) {
   .crl-nav-strip { padding: 12px 16px; }
 }
-.crl-nav-label {
-  font-family: var(--crl-mono); font-size: .75rem; letter-spacing: 2px;
-  text-transform: uppercase; color: var(--crl-muted);
-  border-left: 1px solid var(--crl-border); padding-left: 10px;
-}
 
 .crl-container-narrow {
   max-width: 900px; margin: 0 auto; padding: 0 20px 60px;
@@ -1449,13 +1444,13 @@ button { font: inherit; cursor: pointer; }
 .crl-player-vods-list::-webkit-scrollbar { display: none; }
 
 .crl-player-vod-card {
-  flex-shrink: 0; width: 160px; text-decoration: none; color: inherit; transition: transform .15s;
+  flex-shrink: 0; width: 210px; text-decoration: none; color: inherit; transition: transform .15s;
 }
 
 .crl-player-vod-card:hover { transform: translateY(-2px); }
 
 .crl-player-vod-thumb {
-  position: relative; width: 160px; height: 90px; border-radius: 7px;
+  position: relative; width: 210px; height: 118px; border-radius: 7px;
   background: rgba(0,191,255,.08); border: 1px solid var(--crl-border);
   display: flex; align-items: center; justify-content: center; overflow: hidden;
   transition: border-color .15s;
@@ -1514,6 +1509,12 @@ button { font: inherit; cursor: pointer; }
   justify-content: center;
   background: #000;
   overflow: hidden;
+}
+
+/* Media wrapper — clips bg blur and video */
+.crl-reel-media {
+  position: absolute;
+  inset: 0;
 }
 
 /* Blurred background (16:9 → fills 9:16) */
@@ -1733,20 +1734,96 @@ button { font: inherit; cursor: pointer; }
   box-shadow: 0 0 6px rgba(0,191,255,.5);
 }
 
-/* Desktop: center narrow column */
+/* Caption below video — desktop only */
+.crl-reel-caption { display: none; }
+
+/* Desktop: YouTube Shorts style */
 @media (min-width: 600px) {
   .crl-reels {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0;
+    gap: 0;
+    scroll-snap-type: y mandatory;
+    background: var(--crl-ink);
   }
+
+  /* Reel card: full viewport height, flex row */
   .crl-reel {
-    width: 400px;
+    height: 100dvh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    scroll-snap-align: start;
     flex-shrink: 0;
-    border-radius: var(--crl-r-lg);
-    margin: 0 auto;
-    box-shadow: 0 8px 40px rgba(0,0,0,.6);
   }
+
+  /* Video box: 9:16, fills most of viewport height */
+  .crl-reel-media {
+    position: relative;
+    flex-shrink: 0;
+    height: min(92dvh, 60vw);
+    width: calc(min(92dvh, 60vw) * 9 / 16);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 48px rgba(0,0,0,.7);
+  }
+
+  /* Overlay: action buttons only, to the right of video */
+  .crl-reel-overlay {
+    position: static;
+    background: transparent;
+    padding: 0;
+    width: 72px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+    align-self: flex-end;
+    padding-bottom: 32px;
+  }
+
+  /* Channel info hidden from overlay on desktop — it's below the video */
+  .crl-reel-info { display: none; }
+
+  .crl-reel-actions {
+    flex-direction: column;
+    padding-bottom: 0;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .crl-reel-btn-icon {
+    width: 52px; height: 52px;
+    font-size: 1.2rem;
+    background: rgba(255,255,255,.09);
+    border-color: rgba(255,255,255,.12);
+  }
+
+  .crl-reel-btn span { color: rgba(255,255,255,.5); font-size: .65rem; }
+
+  /* Caption below video — visible on desktop */
+  .crl-reel-caption {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    z-index: 12;
+    padding: 48px 20px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 100%);
+  }
+
+  /* Dots: hide on desktop */
+  .crl-reel-dots { display: none; }
 }
 
 
