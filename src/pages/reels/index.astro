@@ -255,20 +255,21 @@ async function shareReel(channel: string, filename: string) {
 
 async function loadStreamers() {
   try {
-    const [reelsRes, profilesRes] = await Promise.all([
-      fetch(`${PB_URL}/api/collections/reels/records?filter=public=true&fields=channel&perPage=500`),
-      fetch(`${PB_URL}/api/collections/streamers/records?fields=key,id,avatar&perPage=200`),
-    ]);
-    const reelsData    = await reelsRes.json();
-    const profilesData = await profilesRes.json();
+    const reelsRes  = await fetch(`${PB_URL}/api/collections/reels/records?filter=public=true&fields=channel&perPage=500`);
+    const reelsData = await reelsRes.json();
+    const channels  = [...new Set((reelsData.items || []).map((r: any) => r.channel))].sort() as string[];
 
-    (profilesData.items || []).forEach((s: any) => {
-      if (s.avatar) streamerAvatars[s.key] = `${PB_URL}/api/files/streamers/${s.id}/${s.avatar}`;
-    });
+    // Fetch avatars via the profile API (requires admin token, public endpoint)
+    await Promise.allSettled(
+      channels.map((ch: string) =>
+        fetch('/chat-api/profile/' + ch, { signal: AbortSignal.timeout(4000) })
+          .then(r => r.ok ? r.json() : null)
+          .then(data => { if (data?.avatar_url) streamerAvatars[ch] = data.avatar_url; })
+      )
+    );
 
-    const channels = [...new Set((reelsData.items || []).map((r: any) => r.channel))].sort() as string[];
     const bar = document.getElementById('filterBar')!;
-    channels.forEach(ch => {
+    channels.forEach((ch: string) => {
       const btn = document.createElement('button');
       btn.className = 'filter-chip';
       btn.dataset.channel = ch;
