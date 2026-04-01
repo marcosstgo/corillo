@@ -8,7 +8,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 >
   <fragment slot="head">
     <meta name="robots" content="noindex, nofollow" />
-    <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.js"></script>
     <style>
       .page {
         display:flex;align-items:center;justify-content:center;
@@ -99,9 +98,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 </div>
 
 <script>
-const PB_URL = 'https://pb.corillo.live';
-const pb = new (window as any).PocketBase(PB_URL);
-
 const resetForm      = document.getElementById('resetForm')!;
 const invalidState   = document.getElementById('invalidState')!;
 const successState   = document.getElementById('successState')!;
@@ -144,19 +140,25 @@ submitBtn.addEventListener('click', async () => {
   submitBtn.innerHTML = '<span class="spinner"></span> Guardando…';
 
   try {
-    await pb.collection('streamers').confirmPasswordReset(token, pass, confirm);
-    resetForm.style.display = 'none';
-    successState.style.display = 'block';
-  } catch (e: any) {
-    if (e?.response?.code === 400) {
+    const res = await fetch('https://pb.corillo.live/api/collections/streamers/confirm-password-reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token, password: pass, passwordConfirm: confirm }),
+    });
+    if (res.ok) {
+      resetForm.style.display = 'none';
+      successState.style.display = 'block';
+    } else if (res.status === 400) {
       resetForm.style.display = 'none';
       invalidState.style.display = 'block';
     } else {
-      errMsg.textContent = 'Error al guardar. Intenta de nuevo.';
-      errMsg.style.display = 'block';
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Guardar contraseña';
+      throw new Error('server');
     }
+  } catch {
+    errMsg.textContent = 'Error al guardar. Intenta de nuevo.';
+    errMsg.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fa-solid fa-lock"></i> Guardar contraseña';
   }
 });
 
