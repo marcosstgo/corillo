@@ -1241,6 +1241,18 @@ async function update() {
 }
 
 function startPoll() { clearInterval(pollTimer!); pollTimer = setInterval(update, POLL_MS); }
+
+// Refresh live thumbnails every 60s without re-rendering the grid
+setInterval(() => {
+  const t = Math.floor(Date.now() / 60000);
+  document.querySelectorAll('.stream-thumb-img').forEach((img: any) => {
+    img.src = img.src.replace(/\?t=\d+/, `?t=${t}`);
+  });
+  document.querySelectorAll('.stream-thumb-preview').forEach((vid: any) => {
+    const src = vid.src.replace(/\?t=\d+/, `?t=${t}`);
+    if (vid.src !== src) { vid.src = src; }
+  });
+}, 60000);
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     clearInterval(pollTimer!);
