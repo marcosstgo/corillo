@@ -293,6 +293,9 @@
     .vod-slider::before { content: ''; position: absolute; width: 15px; height: 15px; left: 2px; top: 2px; background: rgba(255,255,255,.4); border-radius: 50%; transition: .2s; }
     .vod-toggle input:checked + .vod-slider { background: var(--accent); border-color: var(--accent); }
     .vod-toggle input:checked + .vod-slider::before { transform: translateX(17px); background: #030a0e; }
+    [data-theme="light"] .vod-slider { background: rgba(0,0,0,.1); border-color: rgba(0,0,0,.15); }
+    [data-theme="light"] .vod-slider::before { background: rgba(0,0,0,.35); }
+    [data-theme="light"] .vod-toggle input:checked + .vod-slider::before { background: #fff; }
 
     /* ── Content inner tabs ── */
     .ct-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
@@ -516,9 +519,13 @@
       cursor: pointer; display: flex; align-items: center; justify-content: center;
       font-size: .78rem; transition: .15s; text-decoration: none;
     }
-    .reel-row-dl:hover  { border-color: var(--accent); color: var(--accent); }
-    .reel-row-del:hover { border-color: #e17055; color: #e17055; }
-    .reel-row-del.loading { opacity: .4; pointer-events: none; }
+    .reel-row-dl:hover   { border-color: var(--accent); color: var(--accent); }
+    .reel-row-del:hover  { border-color: #e17055; color: #e17055; }
+    .reel-row-pub-btn { border-color: rgba(0,184,148,.35); color: #00b894; }
+    .reel-row-pub-btn:hover { background: rgba(0,184,148,.1); }
+    .reel-row-pub-btn.is-pub { border-color: var(--border); color: var(--muted); }
+    .reel-row-pub-btn.is-pub:hover { border-color: #e17055; color: #e17055; }
+    .reel-row-del.loading, .reel-row-pub-btn.loading { opacity: .4; pointer-events: none; }
 
     /* ── Paneles ── */
     .panel-row {
@@ -1510,11 +1517,44 @@ async function loadMyReels(channel) {
           </div>
         </div>
         <div class="reel-row-actions">
+          <button class="reel-row-dl reel-row-pub-btn ${r.public?'is-pub':''}" id="rpubbtn-${r.id}"
+            onclick="toggleReelPublic('${r.id}','${channel}')"
+            title="${r.public?'Ocultar de /reels/':'Publicar en /reels/'}">
+            <i class="fa-solid fa-${r.public?'eye-slash':'globe'}"></i>
+          </button>
           <a class="reel-row-dl" href="/vods/reels/${channel}/${r.filename}" download title="Descargar"><i class="fa-solid fa-download"></i></a>
           <button class="reel-row-del" onclick="deleteReel('${r.id}','${channel}')" title="Borrar"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>`).join('');
   } catch(e) { console.error('loadMyReels:', e); }
+}
+
+async function toggleReelPublic(id, channel) {
+  const btn     = document.getElementById(`rpubbtn-${id}`);
+  const pubBadge = document.querySelector(`#rrow-${id} .reel-row-pub`);
+  if (!btn) return;
+  const isPublic = btn.classList.contains('is-pub');
+  btn.classList.add('loading');
+  try {
+    const res = await fetch(`/chat-api/reel/${id}/visibility`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
+      body: JSON.stringify({ public: !isPublic }),
+    });
+    if (!res.ok) throw new Error();
+    btn.classList.toggle('is-pub', !isPublic);
+    btn.title = !isPublic ? 'Ocultar de /reels/' : 'Publicar en /reels/';
+    btn.innerHTML = `<i class="fa-solid fa-${!isPublic?'eye-slash':'globe'}"></i>`;
+    if (pubBadge) {
+      pubBadge.className = `reel-row-pub ${!isPublic?'pub':'priv'}`;
+      pubBadge.innerHTML = `<i class="fa-solid fa-${!isPublic?'globe':'lock'}"></i> ${!isPublic?'Público':'Privado'}`;
+    }
+    showToast(!isPublic ? 'Reel publicado en /reels/' : 'Reel ocultado');
+  } catch(e) {
+    showToast('Error al cambiar visibilidad', 'err');
+  } finally {
+    btn.classList.remove('loading');
+  }
 }
 
 async function deleteReel(id, channel) {
