@@ -292,6 +292,15 @@
     }
     .foot-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:24px;border-top:1px solid var(--crl-border)}
     .foot-copy{font-family:var(--crl-mono);font-size:9px;letter-spacing:1px;color:rgba(255,255,255,.18);text-transform:uppercase}
+    .foot-credits{display:flex;align-items:center;justify-content:center;gap:8px;padding-top:18px;font-family:var(--crl-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.18)}
+    .foot-credits-icon{display:inline-block;animation:crl-bounce 2.2s ease-in-out infinite}
+    .foot-credits-icon--ai{animation-delay:.7s}
+    .foot-credits-sep{opacity:.4}
+    .foot-credits-link{color:rgba(255,255,255,.28);text-decoration:none;transition:color .2s}
+    .foot-credits-link:hover{color:var(--crl-accent)}
+    [data-theme="light"] .foot-credits{color:rgba(0,0,0,.22)}
+    [data-theme="light"] .foot-credits-link{color:rgba(0,0,0,.32)}
+    [data-theme="light"] .foot-credits-link:hover{color:var(--crl-accent)}
     .foot-socials{display:flex;align-items:center;gap:4px}
     .foot-social{width:32px;height:32px;border-radius:8px;border:1px solid var(--crl-border);display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35);font-size:.85rem;transition:.15s;text-decoration:none}
     .foot-social:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
@@ -534,6 +543,13 @@
         </div>
         <span class="foot-version" id="footVersion"></span>
         <div class="foot-copy">© 2026 CORILLO · Hecho con <i class="fa-solid fa-heart" style="color:var(--crl-hot);font-size:9px"></i> en Puerto Rico</div>
+      </div>
+      <div class="foot-credits">
+        <span class="foot-credits-icon">⚡</span>
+        <a href="https://marcossantiago.com" target="_blank" rel="noopener" class="foot-credits-link">Marcos Santiago</a>
+        <span class="foot-credits-sep">·</span>
+        <span class="foot-credits-icon foot-credits-icon--ai">🤖</span>
+        <span>Built with Claude</span>
       </div>
     </footer>
   </main>
