@@ -82,28 +82,24 @@
       <h2>El problema que resolvemos</h2>
       <p>Los streamers hacen momentos que merecen vivir más allá del stream. Un clutch, una reacción, una discusión épica — ese contenido existía, pero quedaba enterrado en VODs de horas que nadie iba a ver completos. Editar un clip manualmente, convertirlo a vertical y subirlo a redes era trabajo extra que nadie tiene tiempo de hacer después de cinco horas de stream.</p>
 
-      <h2>Cómo funciona</h2>
+      <h2>Dos formas de crear un reel</h2>
       <div class="flow-steps">
         <div class="flow-step">
           <div class="flow-num">1</div>
-          <p><strong>Entra a tu perfil</strong> en <code class="crl-mono crl-text-accent">corillo.live/perfil/</code> y busca la sección <em>Mis transmisiones</em>. Cada VOD guardado ahora tiene un botón de tijera.</p>
+          <p><strong>Desde un VOD.</strong> En tu perfil busca la sección <em>Mis transmisiones</em>. Cada VOD guardado tiene un botón de tijera. Ingresa el tiempo de inicio y fin en formato <code class="crl-mono crl-text-accent">mm:ss</code> — entre 5 y 60 segundos — y el sistema corta el clip exacto.</p>
         </div>
         <div class="flow-step">
           <div class="flow-num">2</div>
-          <p><strong>Define el clip.</strong> Ingresa el tiempo de inicio y fin en formato <code class="crl-mono crl-text-accent">mm:ss</code> — entre 5 y 60 segundos. El sistema te muestra la duración en tiempo real para que no te pases.</p>
+          <p><strong>Subiendo tu propio video.</strong> ¿Tienes un clip grabado fuera del stream? Súbelo directamente desde el perfil. Máximo 60 segundos, hasta 500 MB. El servidor lo procesa igual que cualquier reel.</p>
         </div>
         <div class="flow-step">
           <div class="flow-num">3</div>
-          <p><strong>Elige si quieres publicarlo.</strong> El reel puede ser privado (solo descarga) o aparecer en <code class="crl-mono crl-text-accent">corillo.live/reels/</code> para que todo el mundo lo vea.</p>
-        </div>
-        <div class="flow-step">
-          <div class="flow-num">4</div>
-          <p><strong>Genera.</strong> El servidor procesa el clip con ffmpeg, convierte el video 16:9 a 9:16 con blur de fondo — el look que funciona en TikTok e Instagram — y lo deja listo para descargar.</p>
+          <p><strong>Elige si quieres publicarlo.</strong> El reel puede ser privado (solo descarga) o aparecer en <code class="crl-mono crl-text-accent">corillo.live/reels/</code> para que todo el mundo lo vea. Puedes cambiarlo después desde tu perfil.</p>
         </div>
       </div>
 
-      <h2>El formato 9:16 con blur</h2>
-      <p>En vez de recortar el video y perder la acción, el sistema escala el contenido original para que encaje en la pantalla vertical y usa una versión desenfocada del mismo video como fondo. El resultado se ve profesional sin necesitar edición manual y funciona directamente en cualquier red social.</p>
+      <h2>El formato 9:16</h2>
+      <p>El servidor convierte automáticamente cualquier video a 9:16 (1080×1920) — el formato estándar de TikTok, Instagram Reels y YouTube Shorts. Si el video ya está en vertical, se escala sin recortar. Si está en horizontal, se hace un center crop para quedarse con el centro de la acción. Sin edición manual, listo para subir a cualquier red.</p>
 
       <h2>La página pública /reels/</h2>
       <p>Los reels marcados como públicos aparecen en <a href="/reels/" style="color:var(--crl-accent)">corillo.live/reels/</a> — una página de scroll vertical estilo TikTok donde cualquiera puede ver los mejores momentos de todos los streamers de CORILLO. Autoplay al entrar en pantalla, filtros por canal y botón de compartir incluidos.</p>
