@@ -315,10 +315,11 @@
       .featured-wrap{aspect-ratio:16/9}
     }
     @media(max-width:600px){nav{padding:0 12px;gap:8px}.nav-live{font-size:9px;padding:3px 7px 3px 6px;letter-spacing:1px;white-space:nowrap}.nav-btn{font-size:9px;padding:5px 10px;letter-spacing:1px;white-space:nowrap}.content-section{padding:20px 16px}.featured-overlay{padding:24px 16px 16px}.reels-strip{padding:0 16px 32px}
-      .live-grid{display:flex;flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:8px;scrollbar-width:none;margin-bottom:40px}
-      .live-grid::-webkit-scrollbar{display:none}
+      .live-grid{display:flex;flex-direction:column;gap:0;margin-bottom:40px}
       .live-grid .stream-card{flex:0 0 72vw;scroll-snap-align:start}
-      .live-grid .vods-row-header{flex:0 0 100%;min-width:100%}
+      .live-grid .vods-row-header{grid-column:unset;margin-bottom:12px}
+      .cards-carousel{display:flex;flex-direction:row;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding-bottom:8px;scrollbar-width:none}
+      .cards-carousel::-webkit-scrollbar{display:none}
     }
   </style>
 </head>
@@ -1154,7 +1155,7 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
           <span>Últimas transmisiones</span>
           <div class="section-line"></div>
           <a href="/vods/">Ver todos →</a>
-        </div>` + vodCards(_recentVods);
+        </div><div class="cards-carousel">${vodCards(_recentVods)}</div>`;
         attachPreviewListeners(grid);
       }
     } else {
@@ -1211,7 +1212,7 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
       <span>Últimas transmisiones</span>
       <div class="section-line"></div>
       <a href="/vods/">Ver todos →</a>
-    </div>` + vodCards(offlineVods) : '');
+    </div><div class="cards-carousel">${vodCards(offlineVods)}</div>` : '');
 
   _gridState = newState;
   attachPreviewListeners(grid);
