@@ -13,6 +13,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   ]}
   footerInfo="Puerto Rico<br>Creado aquí"
 >
+<fragment slot="head">
+  <style is:global>
+    @media(max-width:600px){.qec-features{grid-template-columns:repeat(2,1fr)!important}}
+  </style>
+</fragment>
 
 <div class="crl-hero">
   <div class="crl-hero-mark">
@@ -51,7 +56,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
 <div class="crl-container-narrow">
   <p class="crl-section-label">Lo Que Tiene Hoy</p>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px" class="qec-features">
     <div class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
       <i class="fa-solid fa-tower-broadcast" style="font-size:1.6rem;color:var(--crl-accent)"></i>
       <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Streaming en vivo</div>
@@ -129,7 +134,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </div>
     <ul class="crl-feature-list">
       <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Chat en vivo, perfiles, VODs, clips y notificaciones sin salir del ecosistema.</li>
-      <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Bot con AI y visión integrado a la experiencia del stream.</li>
+      <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Bot inteligente integrado al chat del stream.</li>
       <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Multiplayer, latencia ultra baja con WebRTC y herramientas pensadas para creadores reales.</li>
       <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Un producto local que cuida tanto la identidad como la calidad técnica.</li>
     </ul>
@@ -145,10 +150,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <span class="badge badge-dim"><i class="fa-regular fa-compass"></i> Comunidad</span>
     </div>
     <ul class="crl-feature-list">
-      <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Para viewers que quieren descubrir streamers boricuas sin tener que buscarlos en Twitch.</li>
-      <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Para streamers que quieren una plataforma propia, con herramientas reales y sin intermediarios.</li>
-      <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Por ahora, entrar a Corillo es por invitación y aprobación manual.</li>
-      <li><i class="fa-regular fa-clock crl-feature-ico crl-text-muted"></i> Para gente que prefiere apoyar algo hecho aquí en vez de darle más números a una plataforma de afuera.</li>
+      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Para viewers que quieren descubrir streamers boricuas sin tener que buscarlos en Twitch.</li>
+      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Para streamers que quieren una plataforma propia, con herramientas reales y sin intermediarios.</li>
+      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Por ahora, entrar a Corillo es por invitación y aprobación manual.</li>
+      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Para gente que prefiere apoyar algo hecho aquí en vez de darle más números a una plataforma de afuera.</li>
     </ul>
   </div>
 
