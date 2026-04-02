@@ -343,6 +343,7 @@
   <div class="drawer-body">
     <div class="aside-label">Navegar</div>
     <a href="/reels/" class="nav-link"><i class="fa-solid fa-scissors"></i> Reels</a>
+    <a href="/vods/" class="nav-link"><i class="fa-solid fa-film"></i> VODs</a>
     <a href="/multiplayer/" class="nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
     <a href="/join/" class="nav-link"><i class="fa-solid fa-plus"></i> Crear Canal</a>
     <a href="/perfil/" class="nav-link"><i class="fa-solid fa-user"></i> Mi Perfil</a>
@@ -396,6 +397,7 @@
     <hr class="aside-mobile-sep">
     <div class="aside-nav">
       <a href="/reels/" class="sidebar-nav-link"><i class="fa-solid fa-scissors"></i> Reels</a>
+      <a href="/vods/" class="sidebar-nav-link"><i class="fa-solid fa-film"></i> VODs</a>
       <a href="/multiplayer/" class="sidebar-nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
       <a href="/join/" class="sidebar-nav-link"><i class="fa-solid fa-plus"></i> Crear Canal</a>
       <a href="/perfil/" class="sidebar-nav-link"><i class="fa-solid fa-user"></i> Mi Perfil</a>
@@ -731,6 +733,11 @@ function renderFeaturedVod() {
 
 function avaStyle(s: any)   { return s.color ? `background:${s.color}` : 'background:#1e3a4a' }
 function initial(name: string) { return name.charAt(0).toUpperCase() }
+function avaContent(s: any) {
+  return s.avatar_url
+    ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    : initial(s.name);
+}
 function splitName(n: string)  { return n.length <= 4 ? `<span>${n}</span>` : `${n.slice(0,-3)}<span>${n.slice(-3)}</span>` }
 
 function hexToRgba(hex: string, alpha: number) {
@@ -906,7 +913,7 @@ function renderSidebar(live: any[], offline: any[], paths: any[], activeFeatured
       const viewers = getViewers(paths, s.key);
       const active  = s.key === activeFeatured ? ' active' : '';
       return `<a href="/${s.key}/" class="channel-row is-live${active}" data-key="${s.key}">
-        <div class="ch-ava" style="${avaStyle(s)}">${initial(s.name)}</div>
+        <div class="ch-ava" style="${avaStyle(s)}">${avaContent(s)}</div>
         <div class="ch-info">
           <div class="ch-name"${s.color ? ` style="color:${s.color}"` : ''}>${s.name}</div>
           <div class="ch-status live">En vivo</div>
@@ -923,7 +930,7 @@ function renderSidebar(live: any[], offline: any[], paths: any[], activeFeatured
   const showAllBtn = document.getElementById('sidebarShowAll')!;
   const renderOffline = (list: any[]) => list.map(s => `
     <a href="/${s.key}/" class="channel-row">
-      <div class="ch-ava" style="${avaStyle(s)};opacity:.45">${initial(s.name)}</div>
+      <div class="ch-ava" style="${avaStyle(s)};opacity:.45">${avaContent(s)}</div>
       <div class="ch-info">
         <div class="ch-name">${s.name}</div>
         <div class="ch-status">Offline</div>
@@ -963,7 +970,7 @@ function renderDrawer(live: any[], offline: any[], paths: any[]) {
     liveRows.innerHTML = live.map((s: any) => {
       const v = getViewers(paths, s.key);
       return `<a href="/${s.key}/" class="channel-row is-live" onclick="window.closeDrawer()">
-        <div class="ch-ava" style="${avaStyle(s)}">${initial(s.name)}</div>
+        <div class="ch-ava" style="${avaStyle(s)}">${avaContent(s)}</div>
         <div class="ch-info">
           <div class="ch-name"${s.color ? ` style="color:${s.color}"` : ''}>${s.name}</div>
           <div class="ch-status live">En vivo</div>
@@ -978,7 +985,7 @@ function renderDrawer(live: any[], offline: any[], paths: any[]) {
   const showAllBtn = document.getElementById('drawerShowAll')!;
   const renderOffline = (list: any[]) => list.map(s => `
     <a href="/${s.key}/" class="channel-row" onclick="window.closeDrawer()">
-      <div class="ch-ava" style="${avaStyle(s)};opacity:.45">${initial(s.name)}</div>
+      <div class="ch-ava" style="${avaStyle(s)};opacity:.45">${avaContent(s)}</div>
       <div class="ch-info">
         <div class="ch-name">${s.name}</div>
         <div class="ch-status">Offline</div>
@@ -1277,8 +1284,9 @@ document.addEventListener('visibilitychange', () => {
       )
     );
     results.forEach((res, i) => {
-      if (res.status === 'fulfilled' && res.value?.display_name) {
-        streamers[i].name = res.value.display_name;
+      if (res.status === 'fulfilled' && res.value) {
+        if (res.value.display_name) streamers[i].name = res.value.display_name;
+        if (res.value.avatar_url)   streamers[i].avatar_url = res.value.avatar_url;
       }
     });
   } catch {}

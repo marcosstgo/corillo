@@ -135,7 +135,8 @@ function fmtDate(iso: string) {
 
 function streamerInfo(channel: string) {
   const s = ((window as any).STREAMERS || []).find((x: any) => x.key === channel);
-  return s || { key: channel, name: channel.toUpperCase(), color: '#00bfff' };
+  const base = s || { key: channel, name: channel.toUpperCase(), color: '#00bfff' };
+  return { ...base, avatar_url: avatarCache[channel] || '' };
 }
 
 function avaStyle(s: any) {
@@ -144,6 +145,24 @@ function avaStyle(s: any) {
 
 function initial(name: string) {
   return (name || '?')[0].toUpperCase();
+}
+
+function avaContent(s: any) {
+  return s.avatar_url
+    ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+    : initial(s.name);
+}
+
+const avatarCache: Record<string, string> = {};
+
+async function fetchAvatars(channels: string[]) {
+  await Promise.allSettled(
+    channels.map(ch =>
+      fetch('/chat-api/profile/' + ch, { signal: AbortSignal.timeout(4000) })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d?.avatar_url) avatarCache[ch] = d.avatar_url; })
+    )
+  );
 }
 
 let allVods: any[] = [];
@@ -155,6 +174,9 @@ async function loadVods() {
     const data = await r.json();
     allVods = data.items || [];
   } catch { allVods = []; }
+
+  const channels = [...new Set(allVods.map(v => v.channel))] as string[];
+  await fetchAvatars(channels);
 
   buildFilters();
 
@@ -231,7 +253,7 @@ function renderGrid() {
       </div>
       <div class="vod-body">
         <div class="vod-channel-row">
-          <div class="vod-ava" style="${avaStyle(s)}">${initial(s.name)}</div>
+          <div class="vod-ava" style="${avaStyle(s)}">${avaContent(s)}</div>
           <div class="vod-name" style="color:${s.color || 'var(--crl-white)'}">${s.name}</div>
         </div>
         <div class="vod-meta">

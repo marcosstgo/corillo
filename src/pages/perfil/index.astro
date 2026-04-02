@@ -89,7 +89,13 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       min-height: calc(100vh - 52px); gap: 24px; padding: 40px 20px;
+      position: relative; overflow: hidden;
     }
+    #loginBg {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+    .login-brand-wrap, .login-card { position: relative; z-index: 1; }
     .login-brand-wrap {
       padding: 14px 18px; border-radius: 16px;
       border: 1px solid var(--border);
@@ -660,6 +666,7 @@
      LOGIN
 ══════════════════════════════════ -->
 <div id="loginScreen">
+  <canvas id="loginBg"></canvas>
   <div class="login-brand-wrap">
     <a href="/" class="login-brand" aria-label="CORILLO">
       <svg viewBox="0 0 250 88" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2040,6 +2047,68 @@ document.getElementById('logoutBtn').addEventListener('click', doLogout);
 
 // ── Start ──
 init();
+</script>
+
+<script is:inline>
+(function () {
+  const canvas = document.getElementById('loginBg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const C1 = '0,191,255', C2 = '0,255,157';
+  const rings = [], particles = [];
+  let lastRing = 0;
+
+  function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+
+  function initParticles() {
+    particles.length = 0;
+    for (let i = 0; i < 48; i++) particles.push({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 1.6 + 0.4, a: Math.random() * 0.5 + 0.08,
+      color: Math.random() > 0.6 ? C2 : C1,
+    });
+  }
+
+  function draw(ts) {
+    if (document.getElementById('loginScreen').style.display === 'none') { requestAnimationFrame(draw); return; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (ts - lastRing > 1100) { rings.push({ r: 0, born: ts, color: Math.random() > 0.7 ? C2 : C1 }); lastRing = ts; }
+    const cx = canvas.width / 2, cy = canvas.height / 2;
+    const maxR = Math.hypot(cx, cy) * 1.05;
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const rg = rings[i]; rg.r = ((ts - rg.born) / 1000) * 90;
+      const life = rg.r / maxR;
+      if (life >= 1) { rings.splice(i, 1); continue; }
+      const alpha = life < 0.15 ? (life / 0.15) * 0.22 : (1 - life) * 0.22;
+      ctx.beginPath(); ctx.arc(cx, cy, rg.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${rg.color},${alpha.toFixed(3)})`; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80 + Math.sin(ts / 900) * 10);
+    grd.addColorStop(0, `rgba(${C1},.09)`); grd.addColorStop(1, `rgba(${C1},0)`);
+    ctx.beginPath(); ctx.arc(cx, cy, 80 + Math.sin(ts / 900) * 10, 0, Math.PI * 2);
+    ctx.fillStyle = grd; ctx.fill();
+    for (const p of particles) {
+      p.x = (p.x + p.vx + canvas.width) % canvas.width;
+      p.y = (p.y + p.vy + canvas.height) % canvas.height;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color},${p.a})`; ctx.fill();
+    }
+    for (let i = 0; i < particles.length; i++) for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < 90) {
+        ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(${C1},${((1 - d / 90) * 0.07).toFixed(3)})`; ctx.lineWidth = 0.8; ctx.stroke();
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize(); initParticles(); rings.push({ r: 0, born: 0, color: C1 });
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+  requestAnimationFrame(draw);
+})();
 </script>
 </body>
 </html>
