@@ -1,0 +1,199 @@
+---
+import FullscreenLayout from '../../../layouts/FullscreenLayout.astro';
+---
+<FullscreenLayout
+  title="Reel — CORILLO"
+  description="Clip de un streamer de CORILLO — plataforma independiente desde Puerto Rico."
+  canonical="https://corillo.live/reels/v/"
+>
+  <fragment slot="head">
+    <style is:global>
+      .rv-wrap{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000}
+
+      /* Nav */
+      .rv-nav{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:linear-gradient(to bottom,rgba(3,10,14,.95),transparent);z-index:100}
+      .rv-nav-logo{display:flex;align-items:center;text-decoration:none}
+
+      /* Video */
+      .rv-video-box{position:relative;height:100dvh;max-height:100dvh;aspect-ratio:9/16;background:#000;overflow:hidden}
+      @media(max-width:480px){.rv-video-box{width:100vw;aspect-ratio:unset}}
+      .rv-video{width:100%;height:100%;object-fit:contain;display:block}
+
+      /* Overlay info */
+      .rv-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 32px;background:linear-gradient(to top,rgba(3,10,14,.92) 0%,transparent 100%);display:flex;flex-direction:column;gap:10px}
+      .rv-streamer{display:flex;align-items:center;gap:10px}
+      .rv-ava{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:18px;color:#030a0e;overflow:hidden}
+      .rv-name{font-family:'Bebas Neue',cursive;font-size:1.4rem;letter-spacing:3px;color:#e8f6ff;text-decoration:none}
+      .rv-title{font-family:'DM Sans',sans-serif;font-size:.9rem;color:rgba(232,246,255,.8);line-height:1.4}
+      .rv-meta{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1px;color:rgba(232,246,255,.45)}
+
+      /* Actions */
+      .rv-actions{position:absolute;right:12px;bottom:100px;display:flex;flex-direction:column;gap:16px;align-items:center}
+      .rv-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:#e8f6ff;cursor:pointer;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none}
+      .rv-btn-icon{width:44px;height:44px;border-radius:50%;background:rgba(232,246,255,.1);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.15s}
+      .rv-btn:hover .rv-btn-icon{background:rgba(232,246,255,.2)}
+
+      /* Unmute */
+      #rvUnmute{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:999px;border:1px solid rgba(0,191,255,.5);background:rgba(3,10,14,.85);color:#00bfff;cursor:pointer;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px)}
+
+      /* States */
+      .rv-state{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:rgba(232,246,255,.4);font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase}
+      .rv-state i{font-size:2.5rem;opacity:.3}
+      .rv-spinner{width:28px;height:28px;border:3px solid rgba(0,191,255,.2);border-top-color:#00bfff;border-radius:50%;animation:rvspin .7s linear infinite}
+      @keyframes rvspin{to{transform:rotate(360deg)}}
+    </style>
+  </fragment>
+
+<!-- Nav -->
+<nav class="rv-nav">
+  <a href="/reels/" class="rv-nav-logo">
+    <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;display:block">
+      <defs><radialGradient id="rv-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <text fill="#e8f6ff" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
+      <circle cx="72" cy="42" r="36" fill="url(#rv-ng)"/>
+      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none" stroke-opacity=".85"/>
+      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <text fill="#e8f6ff" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
+    </svg>
+  </a>
+  <a href="/reels/" class="rv-btn" style="flex-direction:row;gap:6px;font-size:.65rem">
+    <i class="fa-solid fa-arrow-left"></i> Ver todos
+  </a>
+</nav>
+
+<div id="rvLoading" class="rv-state">
+  <div class="rv-spinner"></div>
+  <span>Cargando reel</span>
+</div>
+
+<div id="rvNotFound" class="rv-state" style="display:none">
+  <i class="fa-solid fa-film"></i>
+  <span>Reel no encontrado</span>
+  <a href="/reels/" style="margin-top:8px;color:#00bfff;font-size:.6rem">← Ver todos los reels</a>
+</div>
+
+<div id="rvContent" style="display:none">
+  <div class="rv-wrap">
+    <div class="rv-video-box">
+      <video id="rvVideo" class="rv-video" playsinline autoplay muted loop preload="auto"></video>
+      <div class="rv-overlay">
+        <div class="rv-streamer">
+          <div class="rv-ava" id="rvAva"></div>
+          <a id="rvName" class="rv-name" href="/reels/"></a>
+        </div>
+        <div id="rvTitle" class="rv-title" style="display:none"></div>
+        <div id="rvMeta" class="rv-meta"></div>
+      </div>
+      <div class="rv-actions">
+        <a id="rvDownload" class="rv-btn" href="#" download title="Descargar">
+          <div class="rv-btn-icon"><i class="fa-solid fa-download"></i></div>
+          <span>Bajar</span>
+        </a>
+        <button class="rv-btn" id="rvShare">
+          <div class="rv-btn-icon"><i class="fa-solid fa-share-nodes"></i></div>
+          <span>Share</span>
+        </button>
+      </div>
+      <button id="rvUnmute"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+const PB = 'https://pb.corillo.live';
+
+function fmtDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('es-PR', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+async function init() {
+  const id = new URLSearchParams(location.search).get('id');
+  if (!id) { showNotFound(); return; }
+
+  let reel;
+  try {
+    const r = await fetch(`${PB}/api/collections/reels/records/${id}`);
+    if (!r.ok) { showNotFound(); return; }
+    reel = await r.json();
+  } catch { showNotFound(); return; }
+
+  if (!reel.public) { showNotFound(); return; }
+
+  // Llenar contenido
+  const videoUrl = `/vods/reels/${reel.channel}/${reel.filename}`;
+  const video = document.getElementById('rvVideo');
+  video.src = videoUrl;
+  if (reel.thumb) video.poster = reel.thumb;
+
+  // Avatar
+  const ava = document.getElementById('rvAva');
+  const colors = ['#e8c84a','#00bfff','#ff6b6b','#00ff9d','#ff9f43','#a29bfe','#fd79a8','#6c5ce7'];
+  const color = colors[reel.channel.charCodeAt(0) % colors.length];
+  ava.style.background = `linear-gradient(135deg,${color},${color}99)`;
+
+  // Intentar cargar avatar real
+  fetch(`/chat-api/profile/${reel.channel}`, { signal: AbortSignal.timeout(3000) })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (d?.avatar_url) {
+        ava.innerHTML = `<img src="${d.avatar_url}" style="width:100%;height:100%;object-fit:cover">`;
+      } else {
+        ava.textContent = (reel.channel[0] || '?').toUpperCase();
+      }
+    })
+    .catch(() => { ava.textContent = (reel.channel[0] || '?').toUpperCase(); });
+
+  const nameEl = document.getElementById('rvName');
+  nameEl.textContent = reel.channel.toUpperCase();
+  nameEl.href = `/${reel.channel}/`;
+
+  if (reel.title) {
+    const titleEl = document.getElementById('rvTitle');
+    titleEl.textContent = reel.title;
+    titleEl.style.display = '';
+  }
+
+  const meta = [];
+  if (reel.duration) meta.push(reel.duration + 's');
+  if (reel.date) meta.push(fmtDate(reel.date));
+  document.getElementById('rvMeta').textContent = meta.join(' · ');
+
+  document.getElementById('rvDownload').href = videoUrl;
+  document.title = `${reel.channel.toUpperCase()} — Reel — CORILLO`;
+
+  // Share
+  document.getElementById('rvShare').addEventListener('click', async () => {
+    const url = location.href;
+    if (navigator.share) {
+      try { await navigator.share({ title: `Reel de ${reel.channel.toUpperCase()} en CORILLO`, url }); return; } catch {}
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      const btn = document.getElementById('rvShare');
+      const icon = btn.querySelector('.rv-btn-icon');
+      icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+      setTimeout(() => { icon.innerHTML = '<i class="fa-solid fa-share-nodes"></i>'; }, 2000);
+    } catch {}
+  });
+
+  // Unmute
+  const unmuteBtn = document.getElementById('rvUnmute');
+  unmuteBtn.addEventListener('click', () => { video.muted = false; unmuteBtn.style.display = 'none'; });
+  video.addEventListener('volumechange', () => { if (!video.muted) unmuteBtn.style.display = 'none'; });
+
+  document.getElementById('rvLoading').style.display = 'none';
+  document.getElementById('rvContent').style.display = '';
+}
+
+function showNotFound() {
+  document.getElementById('rvLoading').style.display = 'none';
+  document.getElementById('rvNotFound').style.display = 'flex';
+}
+
+init();
+</script>
+
+</FullscreenLayout>

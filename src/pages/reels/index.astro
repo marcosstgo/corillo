@@ -167,7 +167,7 @@ function renderReels(reels: any[]) {
             <div class="crl-reel-btn-icon"><i class="fa-solid fa-download"></i></div>
             <span>Bajar</span>
           </a>
-          <button class="crl-reel-btn" data-share-channel="${r.channel}" data-share-filename="${r.filename}">
+          <button class="crl-reel-btn" data-share-id="${r.id}" data-share-channel="${r.channel}">
             <div class="crl-reel-btn-icon"><i class="fa-solid fa-share-nodes"></i></div>
             <span>Share</span>
           </button>
@@ -189,9 +189,9 @@ function renderReels(reels: any[]) {
       if (vid.paused) playReel(el); else pauseReel(el);
     });
 
-    el.querySelector('[data-share-channel]')?.addEventListener('click', (e: Event) => {
+    el.querySelector('[data-share-id]')?.addEventListener('click', (e: Event) => {
       const btn = e.currentTarget as HTMLElement;
-      shareReel(btn.dataset.shareChannel!, btn.dataset.shareFilename!);
+      shareReel(btn.dataset.shareId!, btn.dataset.shareChannel!);
     });
 
     container.appendChild(el);
@@ -245,8 +245,8 @@ document.getElementById('unmuteBtn')!.addEventListener('click', () => {
   document.getElementById('unmuteBtn')!.style.display = 'none';
 });
 
-async function shareReel(channel: string, filename: string) {
-  const url = `${location.origin}/vods/reels/${channel}/${filename}`;
+async function shareReel(id: string, channel: string) {
+  const url = `${location.origin}/reels/v/?id=${id}`;
   if (navigator.share) {
     try { await navigator.share({ title: `Reel de ${channel.toUpperCase()} en CORILLO`, url }); return; } catch {}
   }
