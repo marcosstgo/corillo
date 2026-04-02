@@ -658,6 +658,45 @@ async def delete_reel(reel_id: str, request: Request):
     return {"ok": True}
 
 
+@app.delete("/vod/{vod_id}")
+async def delete_vod(vod_id: str, request: Request):
+    """Elimina un VOD. Solo el streamer propietario puede borrarlo."""
+    auth = request.headers.get("Authorization", "")
+    if not auth:
+        raise HTTPException(status_code=401)
+
+    channel = await _streamer_from_token(auth)
+    token   = await _admin_token()
+
+    # Obtener el registro del VOD
+    rv = await _http.get(
+        f"{PB_URL}/api/collections/vods/records/{vod_id}",
+        headers={"Authorization": token},
+        params={"fields": "channel,filepath,filename"},
+    )
+    if rv.status_code != 200:
+        raise HTTPException(status_code=404, detail="VOD no encontrado")
+    vod = rv.json()
+
+    # Verificar ownership
+    if vod.get("channel") != channel:
+        raise HTTPException(status_code=403, detail="Este VOD no te pertenece")
+
+    # Borrar archivos físicos — solo bajo /var/vods/live/
+    fp = Path(vod.get("filepath", ""))
+    if str(fp).startswith("/var/vods/live/"):
+        fp.unlink(missing_ok=True)
+        fp.with_suffix(".jpg").unlink(missing_ok=True)
+        Path(fp.parent / (fp.stem + "-preview.mp4")).unlink(missing_ok=True)
+
+    # Borrar registro en PocketBase
+    await _http.delete(
+        f"{PB_URL}/api/collections/vods/records/{vod_id}",
+        headers={"Authorization": token},
+    )
+    return {"ok": True}
+
+
 @app.patch("/reel/{reel_id}/visibility")
 async def reel_visibility(reel_id: str, request: Request):
     """Cambia la visibilidad pública de un reel. Solo el propietario puede hacerlo."""

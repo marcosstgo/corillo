@@ -1573,7 +1573,11 @@ async function deleteVod(id) {
   const btn = document.querySelector(`#vrow-${id} .vod-row-del`);
   if (btn) btn.classList.add('loading');
   try {
-    await pb.collection('vods').delete(id);
+    const res = await fetch(`/chat-api/vod/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': pb.authStore.token },
+    });
+    if (!res.ok) throw new Error();
     document.getElementById(`vrow-${id}`)?.closest('div')?.remove();
     if (!document.querySelector('.vod-row')) document.getElementById('vodsEmpty').style.display = '';
   } catch(e) {
