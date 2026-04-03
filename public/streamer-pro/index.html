@@ -420,23 +420,27 @@
 
       <!-- Left: copy -->
       <div>
-        <div class="version-badge" aria-label="Version 2.2.3">
+        <div class="version-badge" aria-label="Version 3.0.1">
           <i class="fa-solid fa-microchip" aria-hidden="true"></i>
-          v2.2.3
+          v3.0.1
         </div>
         <h1 class="hero-title">
           STREAMER<span class="gold">PRO</span>
         </h1>
-        <p class="hero-tagline" data-t="hero_tagline">Advanced Streaming Engine</p>
-        <p class="hero-desc" data-t="hero_desc">A Windows desktop application for multi-platform RTMP streaming. Powered by a built-in FFmpeg engine — broadcast live from local playlists, online sources, or direct feeds to Corillo, Twitch, Kick, YouTube, or any custom RTMP endpoint.</p>
+        <p class="hero-tagline" data-t="hero_tagline">Stable RTMP streaming for playlists, highlights, files and capture</p>
+        <p class="hero-desc" data-t="hero_desc">Windows desktop app for reliable RTMP broadcasting to Corillo, Twitch, Kick, YouTube, Facebook, or any custom endpoint. Stream a single file, a full folder, live online sources, screen capture, or auto-detected gaming highlights without the complexity of a full production suite.</p>
         <div class="hero-actions">
-          <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe" aria-label="Download Streamer Pro v2.1.0">
+          <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe" aria-label="Download Streamer Pro v3.0.1">
             <i class="fa-solid fa-download" aria-hidden="true"></i>
-            <span data-t="cta_download">Download v2.2.3</span>
+            <span data-t="cta_download">Download v3.0.1</span>
           </a>
           <a class="btn lg" href="https://github.com/marcosstgo/Streamer" target="_blank" rel="noopener" aria-label="View source on GitHub">
             <i class="fa-brands fa-github" aria-hidden="true"></i>
             GitHub
+          </a>
+          <a class="btn lg" href="https://github.com/marcosstgo/Streamer/releases" target="_blank" rel="noopener" aria-label="View all releases">
+            <i class="fa-solid fa-list" aria-hidden="true"></i>
+            <span data-t="cta_releases">View Releases</span>
           </a>
         </div>
       </div>
@@ -451,6 +455,20 @@
 
     </div>
   </section>
+
+  <!-- ── VALUE STRIP ── -->
+  <div style="display:flex;flex-wrap:wrap;gap:8px;padding:18px 0 4px">
+    <span class="req-pill"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>&nbsp;Single EXE</span>
+    <span class="req-pill"><i class="fa-solid fa-rotate" aria-hidden="true"></i>&nbsp;Auto-update</span>
+    <span class="req-pill"><i class="fa-solid fa-clock" aria-hidden="true"></i>&nbsp;Scheduled Start</span>
+    <span class="req-pill"><i class="fa-solid fa-copyright" aria-hidden="true"></i>&nbsp;Logo Overlay</span>
+    <span class="req-pill"><i class="fa-solid fa-star" aria-hidden="true"></i>&nbsp;Highlight Mode</span>
+    <span class="req-pill"><i class="fa-solid fa-link" aria-hidden="true"></i>&nbsp;Persistent Streamer Pipeline</span>
+    <span class="req-pill"><i class="fa-solid fa-desktop" aria-hidden="true"></i>&nbsp;Screen Capture</span>
+    <span class="req-pill" style="border-color:rgba(232,200,74,.3);color:rgba(232,200,74,.75)"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>&nbsp;Pro Mode</span>
+    <span class="req-pill" style="border-color:rgba(232,200,74,.3);color:rgba(232,200,74,.75)"><i class="fa-solid fa-sliders" aria-hidden="true"></i>&nbsp;ARC Mode</span>
+    <span class="req-pill"><i class="fa-solid fa-palette" aria-hidden="true"></i>&nbsp;Polished UI</span>
+  </div>
 
   <hr class="section-divider">
 
@@ -481,9 +499,15 @@
       </article>
 
       <article class="card">
+        <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-clock"></i></div>
+        <h3 class="feat-title" data-t="f17_title">Scheduled Start</h3>
+        <p class="feat-desc" data-t="f17_desc">Plan a stream for a local date and time while Streamer Pro stays open or minimized to tray. Great for playlist channels, event rollouts, and unattended starts.</p>
+      </article>
+
+      <article class="card">
         <div class="feat-icon" aria-hidden="true"><i class="fa-solid fa-folder-open"></i></div>
-        <h3 class="feat-title" data-t="f11_title">Folder Playlist</h3>
-        <p class="feat-desc" data-t="f11_desc">Point to a local folder and stream all videos as a playlist. Supports Loop, Shuffle, Wait Mode (holds the stream until new files appear), and Highlight Mode.</p>
+        <h3 class="feat-title" data-t="f11_title">Stable Folder Streaming</h3>
+        <p class="feat-desc" data-t="f11_desc">Folder mode uses a Persistent Streamer Pipeline — a long-lived RTMP streamer stays connected while per-clip suppliers feed content into it, improving reliability for looping and randomized local playlists.</p>
       </article>
 
       <article class="card">
@@ -564,6 +588,24 @@
 
   <hr class="section-divider">
 
+  <!-- ── WHY IT FEELS DIFFERENT ── -->
+  <section class="section" id="why" aria-labelledby="why-heading">
+    <div class="section-label" aria-hidden="true" data-t="why_label">Philosophy</div>
+    <h2 class="section-title" id="why-heading" data-t="why_title">WHY IT FEELS DIFFERENT</h2>
+    <p class="section-sub" data-t="why_sub">Built for operational streaming, not scene production. If OBS is the production suite, Streamer Pro is the focused RTMP control room.</p>
+    <div class="tech-block" style="max-width:680px">
+      <ul class="tech-list">
+        <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span>Run clip channels and loop content reliably without scene management overhead.</span></li>
+        <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span>Stream new highlights automatically the moment they're saved to disk.</span></li>
+        <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span>Start streams on schedule — leave it minimized, it handles the rest.</span></li>
+        <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span>One clean dashboard for RTMP delivery — no scene trees, no source nesting.</span></li>
+        <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span>Direct RTMP publishing without OBS complexity or a browser source in sight.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
   <!-- ── TECHNICAL OVERVIEW ── -->
   <section class="section" id="technical" aria-labelledby="tech-heading">
     <div class="section-label" aria-hidden="true" data-t="tech_label">Technical Overview</div>
@@ -576,7 +618,7 @@
         <ul class="tech-list">
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech1">Windows desktop app built with <strong>C# / .NET (WPF)</strong> in Visual Studio 2022.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech2">Uses <strong>FFmpeg</strong> to encode and stream video and audio to RTMP endpoints via the standard RTMP protocol.</span></li>
-          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech3">Folder playlist mode uses <strong>FFmpeg concat</strong> files. Highlight Mode uses a <strong>dual-process MPEG-TS pipe</strong> — a permanent streamer process keeps the RTMP connection alive while a per-clip supplier feeds data through a C# relay.</span></li>
+          <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech3">Folder mode uses a <strong>Persistent Streamer Pipeline</strong> for improved long-running stability — a long-lived RTMP streamer stays connected while per-clip suppliers feed content into it. Highlight Mode extends this with a <strong>dual-process MPEG-TS pipe</strong> for real-time clip injection.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech4">Detects missing <code class="mono-inline">ffmpeg.exe</code> / <code class="mono-inline">ffprobe.exe</code> on startup and downloads them automatically (~35 MB) — no manual install or PATH setup needed.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech5">Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.</span></li>
           <li><i class="fa-solid fa-circle-dot" aria-hidden="true"></i><span data-t="tech6">UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.</span></li>
@@ -599,50 +641,50 @@
     <div class="usecases-grid">
 
       <div class="usecase-card">
-        <i class="fa-solid fa-film usecase-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-rotate usecase-icon" aria-hidden="true"></i>
         <div>
-          <div class="uc-title" data-t="uc1_title">Content Creators</div>
-          <div class="uc-desc" data-t="uc1_desc">Stream pre-recorded content — movies, highlights, clips — to multiple platforms at once with zero manual effort.</div>
+          <div class="uc-title" data-t="uc1_title">Automated 24/7 Clip Channels</div>
+          <div class="uc-desc" data-t="uc1_desc">Run looping playlists around the clock — music channels, highlight reels, curated clips — fully automated without manual intervention.</div>
         </div>
       </div>
 
       <div class="usecase-card">
-        <i class="fa-solid fa-church usecase-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-gamepad usecase-icon" aria-hidden="true"></i>
         <div>
-          <div class="uc-title" data-t="uc2_title">Churches &amp; Communities</div>
-          <div class="uc-desc" data-t="uc2_desc">Broadcast services, events, or community content reliably without expensive broadcast gear.</div>
+          <div class="uc-title" data-t="uc2_title">Gaming Highlight Streams</div>
+          <div class="uc-desc" data-t="uc2_desc">Pairs with SteelSeries Moments, NVIDIA Highlights, and AMD ReLive — new clips hit your stream automatically within minutes of the play.</div>
         </div>
       </div>
 
       <div class="usecase-card">
         <i class="fa-solid fa-calendar-days usecase-icon" aria-hidden="true"></i>
         <div>
-          <div class="uc-title" data-t="uc3_title">Event Broadcasters</div>
-          <div class="uc-desc" data-t="uc3_desc">Set up event streams quickly, with platform selection and stream key management in one place.</div>
+          <div class="uc-title" data-t="uc3_title">Event Pre-roll &amp; Scheduled Starts</div>
+          <div class="uc-desc" data-t="uc3_desc">Schedule a stream for a specific time, add a pre-roll file, and let Streamer Pro handle the start — no babysitting required.</div>
         </div>
       </div>
 
       <div class="usecase-card">
-        <i class="fa-solid fa-rotate usecase-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-church usecase-icon" aria-hidden="true"></i>
         <div>
-          <div class="uc-title" data-t="uc4_title">Automated 24/7 Channels</div>
-          <div class="uc-desc" data-t="uc4_desc">Run looping playlists around the clock — music channels, news tickers, highlight reels — fully automated.</div>
+          <div class="uc-title" data-t="uc4_title">Churches &amp; Community Broadcasts</div>
+          <div class="uc-desc" data-t="uc4_desc">Broadcast services, events, or community content reliably to Facebook, YouTube, or any RTMP endpoint — without expensive broadcast gear.</div>
         </div>
       </div>
 
       <div class="usecase-card">
-        <i class="fa-solid fa-display usecase-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-file-video usecase-icon" aria-hidden="true"></i>
         <div>
-          <div class="uc-title" data-t="uc5_title">Digital Signage</div>
-          <div class="uc-desc" data-t="uc5_desc">Loop waiting room videos, promotional content, or branded playlists through a simple, reliable stream.</div>
+          <div class="uc-title" data-t="uc5_title">Single-File Event Playback</div>
+          <div class="uc-desc" data-t="uc5_desc">Stream one file instantly — presentations, recorded events, or one-off content — with full quality control and automatic recovery.</div>
         </div>
       </div>
 
       <div class="usecase-card">
-        <i class="fa-solid fa-users usecase-icon" aria-hidden="true"></i>
+        <i class="fa-solid fa-tower-broadcast usecase-icon" aria-hidden="true"></i>
         <div>
-          <div class="uc-title" data-t="uc6_title">Small Teams</div>
-          <div class="uc-desc" data-t="uc6_desc">For teams that need "set it and run" streaming — minimal setup, maximum reliability, no technical expertise required.</div>
+          <div class="uc-title" data-t="uc6_title">Direct RTMP Without OBS</div>
+          <div class="uc-desc" data-t="uc6_desc">One clean dashboard for RTMP delivery. No scene trees, no browser sources, no production overhead — just pick a source and go live.</div>
         </div>
       </div>
 
@@ -707,27 +749,32 @@
     <div class="download-box">
       <div class="section-label" style="justify-content:center" data-t="dl_label">Download</div>
       <h2 class="download-title" id="dl-heading" data-t="dl_title">DOWNLOAD STREAMER PRO</h2>
-      <p class="download-sub" data-t="dl_sub">Windows 10/11 · No extra install required</p>
+      <p class="download-sub" data-t="dl_sub">Windows 10/11 · Single EXE · FFmpeg downloaded on demand · Auto-update supported</p>
 
       <div class="download-actions">
-        <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe" aria-label="Download Streamer Pro v2.1.0">
+        <a class="btn primary lg" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe" aria-label="Download Streamer Pro v3.0.1">
           <i class="fa-solid fa-download" aria-hidden="true"></i>
-          <span data-t="dl_btn">Download v2.2.3 (.exe)</span>
+          <span data-t="dl_btn">Download v3.0.1 (.exe)</span>
+        </a>
+        <a class="btn lg" href="https://github.com/marcosstgo/Streamer" target="_blank" rel="noopener" aria-label="View source on GitHub">
+          <i class="fa-brands fa-github" aria-hidden="true"></i>
+          GitHub
         </a>
         <a class="btn lg" href="https://github.com/marcosstgo/Streamer/releases" target="_blank" rel="noopener" aria-label="View all releases on GitHub">
-          <i class="fa-brands fa-github" aria-hidden="true"></i>
+          <i class="fa-solid fa-list" aria-hidden="true"></i>
           GitHub Releases
         </a>
       </div>
 
       <div class="requirements" role="list" aria-label="System requirements">
         <span class="req-pill" role="listitem"><i class="fa-brands fa-windows" aria-hidden="true"></i>&nbsp;Windows 10 / 11</span>
-        <span class="req-pill" role="listitem"><i class="fa-solid fa-gears" aria-hidden="true"></i>&nbsp;<span data-t="req_ffmpeg">FFmpeg Bundled</span></span>
-        <span class="req-pill" role="listitem"><i class="fa-solid fa-flask" aria-hidden="true"></i>&nbsp;Beta</span>
-        <span class="req-pill" role="listitem"><i class="fa-solid fa-box-open" aria-hidden="true"></i>&nbsp;<span data-t="req_noinstall">No Extra Install</span></span>
+        <span class="req-pill" role="listitem"><i class="fa-solid fa-box-archive" aria-hidden="true"></i>&nbsp;<span data-t="req_single_exe">Single EXE</span></span>
+        <span class="req-pill" role="listitem"><i class="fa-solid fa-gears" aria-hidden="true"></i>&nbsp;<span data-t="req_ffmpeg">FFmpeg on demand</span></span>
+        <span class="req-pill" role="listitem"><i class="fa-solid fa-rotate" aria-hidden="true"></i>&nbsp;<span data-t="req_autoupdate">Auto-update</span></span>
+        <span class="req-pill" role="listitem"><i class="fa-solid fa-code-branch" aria-hidden="true"></i>&nbsp;<span data-t="req_releases">Multiple public releases</span></span>
       </div>
 
-      <p class="beta-note" data-t="dl_beta_note">This is a beta release. Some features may be incomplete or change between versions. Report issues to the developer.</p>
+      <p class="beta-note" data-t="dl_beta_note">Multiple public releases available on GitHub. Report issues or follow development in the repository.</p>
     </div>
   </section>
 
@@ -820,10 +867,11 @@ const STRINGS = {
   en: {
     nav_home:          'Home',
     nav_join:          'Join',
-    hero_tagline:      'Advanced Streaming Engine',
-    hero_desc:         'A Windows desktop application for multi-platform RTMP streaming. Powered by a built-in FFmpeg engine — broadcast live from local playlists, online sources, or direct feeds to Corillo, Twitch, Kick, YouTube, or any custom RTMP endpoint.',
+    hero_tagline:      'Stable RTMP streaming for playlists, highlights, files and capture',
+    hero_desc:         'Windows desktop app for reliable RTMP broadcasting to Corillo, Twitch, Kick, YouTube, Facebook, or any custom endpoint. Stream a single file, a full folder, live online sources, screen capture, or auto-detected gaming highlights without the complexity of a full production suite.',
     hero_img_caption:  'Streamer Pro main interface — dashboard view',
-    cta_download:      'Download v2.2.3',
+    cta_download:      'Download v3.0.1',
+    cta_releases:      'View Releases',
     cta_features:      'View Features',
     features_label:    'Key Features',
     features_title:    'FEATURES',
@@ -834,8 +882,10 @@ const STRINGS = {
     f2_desc:           'Automatically detects and downloads FFmpeg (~35 MB) if missing. No PATH configuration needed.',
     f3_title:          'Online Sources',
     f3_desc:           'Relay or rebroadcast any stream URL — YouTube, Twitch, or any HTTP/RTMP source. Pull it in and push it to your destination with full quality control.',
-    f11_title:         'Folder Playlist',
-    f11_desc:          'Point to a local folder and stream all videos as a playlist. Supports Loop, Shuffle, Wait Mode (holds the stream until new files appear), and Highlight Mode.',
+    f17_title:         'Scheduled Start',
+    f17_desc:          'Plan a stream for a local date and time while Streamer Pro stays open or minimized to tray. Great for playlist channels, event rollouts, and unattended starts.',
+    f11_title:         'Stable Folder Streaming',
+    f11_desc:          'Folder mode uses a Persistent Streamer Pipeline — a long-lived RTMP streamer stays connected while per-clip suppliers feed content into it, improving reliability for looping and randomized local playlists.',
     f12_title:         'Single Local File',
     f12_desc:          'Stream a single video file directly — no playlist setup needed. Load the file and go live instantly. Ideal for events, presentations, or one-off broadcasts.',
     f4_title:          'Random + Loop Playlist Mode',
@@ -868,7 +918,7 @@ const STRINGS = {
     tech_stack_label:  'Stack &amp; Architecture',
     tech1:             'Windows desktop app built with <strong>C# / .NET (WPF)</strong> in Visual Studio 2022.',
     tech2:             'Uses <strong>FFmpeg</strong> to encode and stream video and audio to RTMP endpoints via the standard RTMP protocol.',
-    tech3:             'Folder playlist mode uses <strong>FFmpeg concat</strong> files. Highlight Mode uses a <strong>dual-process MPEG-TS pipe</strong> — a permanent streamer process keeps the RTMP connection alive while a per-clip supplier feeds data through a C# relay.',
+    tech3:             'Folder mode uses a <strong>Persistent Streamer Pipeline</strong> for improved long-running stability — a long-lived RTMP streamer stays connected while per-clip suppliers feed content into it. Highlight Mode extends this with a <strong>dual-process MPEG-TS pipe</strong> for real-time clip injection.',
     tech4:             'Detects missing <code class="mono-inline">ffmpeg.exe</code> / <code class="mono-inline">ffprobe.exe</code> on startup and downloads them automatically (~35 MB) — no manual install or PATH setup needed.',
     tech5:             'Source list and settings stored in a user-editable <strong>JSON file under <code class="mono-inline">%AppData%</code></strong> for per-user portability.',
     tech6:             'UI remains fully responsive during streaming using <strong>async process handling</strong> and cancellation tokens — no freezes, no blocking calls.',
@@ -878,18 +928,18 @@ const STRINGS = {
     uc_label:          'Use Cases',
     uc_title:          'WHO IS IT FOR?',
     uc_sub:            'Streamer Pro is designed for anyone who needs reliable, automated, or multi-platform streaming without the complexity of a full production suite.',
-    uc1_title:         'Content Creators',
-    uc1_desc:          'Stream pre-recorded content — movies, highlights, clips — to multiple platforms at once with zero manual effort.',
-    uc2_title:         'Churches &amp; Communities',
-    uc2_desc:          'Broadcast services, events, or community content reliably without expensive broadcast gear.',
-    uc3_title:         'Event Broadcasters',
-    uc3_desc:          'Set up event streams quickly, with platform selection and stream key management in one place.',
-    uc4_title:         'Automated 24/7 Channels',
-    uc4_desc:          'Run looping playlists around the clock — music channels, news tickers, highlight reels — fully automated.',
-    uc5_title:         'Digital Signage',
-    uc5_desc:          'Loop waiting room videos, promotional content, or branded playlists through a simple, reliable stream.',
-    uc6_title:         'Small Teams',
-    uc6_desc:          'For teams that need "set it and run" streaming — minimal setup, maximum reliability, no technical expertise required.',
+    uc1_title:         'Automated 24/7 Clip Channels',
+    uc1_desc:          'Run looping playlists around the clock — music channels, highlight reels, curated clips — fully automated without manual intervention.',
+    uc2_title:         'Gaming Highlight Streams',
+    uc2_desc:          'Pairs with SteelSeries Moments, NVIDIA Highlights, and AMD ReLive — new clips hit your stream automatically within minutes of the play.',
+    uc3_title:         'Event Pre-roll &amp; Scheduled Starts',
+    uc3_desc:          'Schedule a stream for a specific time, add a pre-roll file, and let Streamer Pro handle the start — no babysitting required.',
+    uc4_title:         'Churches &amp; Community Broadcasts',
+    uc4_desc:          'Broadcast services, events, or community content reliably to Facebook, YouTube, or any RTMP endpoint — without expensive broadcast gear.',
+    uc5_title:         'Single-File Event Playback',
+    uc5_desc:          'Stream one file instantly — presentations, recorded events, or one-off content — with full quality control and automatic recovery.',
+    uc6_title:         'Direct RTMP Without OBS',
+    uc6_desc:          'One clean dashboard for RTMP delivery. No scene trees, no browser sources, no production overhead — just pick a source and go live.',
     plat_label:        'Platforms',
     plat_title:        'PLATFORM PRESETS',
     plat_sub:          'Streamer Pro includes built-in presets for the most popular RTMP platforms. Select your destination from the dropdown, enter your stream key, and go live — no URL lookup needed.',
@@ -905,10 +955,13 @@ const STRINGS = {
     dl_label:          'Download',
     dl_title:          'DOWNLOAD STREAMER PRO',
     dl_sub:            'Windows 10/11 · No extra install required',
-    dl_btn:            'Download v2.2.3 (.exe)',
-    req_ffmpeg:        'FFmpeg Bundled',
-    req_noinstall:     'No Extra Install',
-    dl_beta_note:      'This is a beta release. Some features may be incomplete or change between versions. Report issues to the developer.',
+    dl_btn:            'Download v3.0.1 (.exe)',
+    dl_sub:            'Windows 10/11 · Single EXE · FFmpeg downloaded on demand · Auto-update supported',
+    req_single_exe:    'Single EXE',
+    req_ffmpeg:        'FFmpeg on demand',
+    req_autoupdate:    'Auto-update',
+    req_releases:      'Multiple public releases',
+    dl_beta_note:      'Multiple public releases available on GitHub. Report issues or follow development in the repository.',
     gallery_label:     'Screenshots',
     gallery_title:     'SEE IT IN ACTION',
     g1:                'Main Dashboard',
@@ -931,10 +984,11 @@ const STRINGS = {
   es: {
     nav_home:          'Inicio',
     nav_join:          'Crear Canal',
-    hero_tagline:      'Motor avanzado de streaming',
-    hero_desc:         'Aplicación de escritorio para Windows con streaming RTMP multi-plataforma. Transmite desde playlists locales, fuentes online o feeds directos — a Corillo, Twitch, Kick, YouTube o cualquier endpoint RTMP personalizado.',
+    hero_tagline:      'Streaming RTMP estable para playlists, highlights, archivos y captura',
+    hero_desc:         'App de escritorio para Windows para broadcasting RTMP confiable a Corillo, Twitch, Kick, YouTube, Facebook o cualquier endpoint personalizado. Transmite un archivo individual, una carpeta completa, fuentes online, captura de pantalla o highlights de gaming automáticamente.',
     hero_img_caption:  'Interfaz principal de Streamer Pro — vista del dashboard',
-    cta_download:      'Descargar v2.2.3',
+    cta_download:      'Descargar v3.0.1',
+    cta_releases:      'Ver Releases',
     cta_features:      'Ver Funciones',
     features_label:    'Funciones principales',
     features_title:    'FUNCIONES',
@@ -945,8 +999,10 @@ const STRINGS = {
     f2_desc:           'Detecta y descarga FFmpeg (~35 MB) automáticamente si no está instalado. Sin configuración de PATH.',
     f3_title:          'Fuentes Online',
     f3_desc:           'Retransmite cualquier URL de stream — YouTube, Twitch o cualquier fuente HTTP/RTMP. Capturala y envíala a tu destino con control total de calidad.',
-    f11_title:         'Playlist desde Carpeta',
-    f11_desc:          'Apunta a una carpeta local y transmite todos los videos como playlist. Incluye Loop, Random, Modo espera (mantiene el stream hasta que aparezcan nuevos archivos) y Modo Highlight.',
+    f17_title:         'Inicio Programado',
+    f17_desc:          'Programa un stream para una fecha y hora local mientras Streamer Pro está abierto o minimizado en la bandeja. Ideal para canales de playlist, eventos y starts desatendidos.',
+    f11_title:         'Streaming de Carpeta Estable',
+    f11_desc:          'El modo carpeta usa un Persistent Streamer Pipeline — un streamer RTMP de larga vida permanece conectado mientras suppliers por clip alimentan contenido, mejorando la estabilidad para playlists en loop y aleatorias.',
     f12_title:         'Archivo Local Individual',
     f12_desc:          'Transmite un solo archivo de video directamente — sin configurar playlist. Carga el archivo y sal en vivo al instante. Ideal para eventos, presentaciones o transmisiones únicas.',
     f4_title:          'Modo Random + Loop',
@@ -979,7 +1035,7 @@ const STRINGS = {
     tech_stack_label:  'Stack y Arquitectura',
     tech1:             'Aplicación de escritorio para Windows construida en <strong>C# / .NET (WPF)</strong> con Visual Studio 2022.',
     tech2:             'Usa <strong>FFmpeg</strong> para codificar video y audio, y luego transmite a los endpoints RTMP mediante el protocolo estándar.',
-    tech3:             'El modo playlist usa archivos <strong>concat de FFmpeg</strong>. El Modo Highlight usa un <strong>pipe MPEG-TS de dos procesos</strong> — un proceso streamer permanente mantiene la conexión RTMP viva mientras un supplier por clip alimenta datos a través de un relay en C#.',
+    tech3:             'El modo carpeta usa un <strong>Persistent Streamer Pipeline</strong> para mayor estabilidad en sesiones largas — un streamer RTMP de larga vida permanece conectado mientras suppliers por clip alimentan contenido. El Modo Highlight extiende esto con un <strong>pipe MPEG-TS de dos procesos</strong> para inyección de clips en tiempo real.',
     tech4:             'Detecta si falta <code class="mono-inline">ffmpeg.exe</code> / <code class="mono-inline">ffprobe.exe</code> al arrancar y los descarga automáticamente (~35 MB) — sin instalación manual ni configuración de PATH.',
     tech5:             'La lista de fuentes y configuración se guardan en un <strong>archivo JSON editable bajo <code class="mono-inline">%AppData%</code></strong> para portabilidad por usuario.',
     tech6:             'La interfaz permanece completamente responsiva durante el streaming gracias al <strong>manejo async de procesos</strong> y tokens de cancelación.',
@@ -989,18 +1045,18 @@ const STRINGS = {
     uc_label:          'Casos de Uso',
     uc_title:          '¿PARA QUIÉN ES?',
     uc_sub:            'Streamer Pro está diseñado para cualquier persona que necesite streaming confiable, automatizado o multi-plataforma sin la complejidad de una suite de producción completa.',
-    uc1_title:         'Creadores de Contenido',
-    uc1_desc:          'Transmite contenido pregrabado — películas, highlights, clips — a múltiples plataformas a la vez sin esfuerzo manual.',
-    uc2_title:         'Iglesias y Comunidades',
-    uc2_desc:          'Transmite servicios, eventos o contenido comunitario de forma confiable sin equipos de transmisión costosos.',
-    uc3_title:         'Transmisión de Eventos',
-    uc3_desc:          'Configura streams de eventos rápidamente, con selección de plataforma y gestión de stream keys en un solo lugar.',
-    uc4_title:         'Canales Automatizados 24/7',
-    uc4_desc:          'Ejecuta playlists en bucle todo el día — canales de música, noticias, highlights — completamente automatizados.',
-    uc5_title:         'Digital Signage',
-    uc5_desc:          'Reproduce videos de sala de espera, contenido promocional o playlists de marca con un stream simple y confiable.',
-    uc6_title:         'Equipos Pequeños',
-    uc6_desc:          'Para equipos que necesitan streaming tipo "configúralo y funciona" — configuración mínima, máxima confiabilidad.',
+    uc1_title:         'Canales de Clips Automatizados 24/7',
+    uc1_desc:          'Ejecuta playlists en bucle todo el día — canales de música, highlights, clips curados — completamente automatizados sin intervención manual.',
+    uc2_title:         'Streams de Highlights de Gaming',
+    uc2_desc:          'Se integra con SteelSeries Moments, NVIDIA Highlights y AMD ReLive — los clips nuevos llegan al stream automáticamente minutos después de la jugada.',
+    uc3_title:         'Pre-roll de Eventos e Inicio Programado',
+    uc3_desc:          'Programa un stream para una hora específica, agrega un pre-roll y deja que Streamer Pro maneje el inicio — sin supervisión.',
+    uc4_title:         'Iglesias y Comunidades',
+    uc4_desc:          'Transmite servicios, eventos o contenido comunitario a Facebook, YouTube o cualquier RTMP — sin equipos costosos.',
+    uc5_title:         'Reproducción de Archivo Individual para Eventos',
+    uc5_desc:          'Transmite un solo archivo instantáneamente — presentaciones, eventos grabados — con control total de calidad y recuperación automática.',
+    uc6_title:         'RTMP Directo Sin OBS',
+    uc6_desc:          'Un dashboard limpio para distribución RTMP. Sin árboles de escenas ni fuentes de navegador — solo elige la fuente y sal en vivo.',
     plat_label:        'Plataformas',
     plat_title:        'PRESETS DE PLATAFORMA',
     plat_sub:          'Streamer Pro incluye presets integrados para las plataformas RTMP más populares. Selecciona tu destino en el menú, ingresa tu stream key y sal en vivo — sin buscar URLs.',
@@ -1016,10 +1072,13 @@ const STRINGS = {
     dl_label:          'Descarga',
     dl_title:          'DESCARGA STREAMER PRO',
     dl_sub:            'Windows 10/11 · Sin instalación adicional',
-    dl_btn:            'Descargar v2.2.3 (.exe)',
-    req_ffmpeg:        'FFmpeg Incluido',
-    req_noinstall:     'Sin instalación extra',
-    dl_beta_note:      'Esta es una versión beta. Algunas funciones pueden estar incompletas o cambiar entre versiones. Reporta los problemas al desarrollador.',
+    dl_btn:            'Descargar v3.0.1 (.exe)',
+    dl_sub:            'Windows 10/11 · EXE único · FFmpeg bajo demanda · Auto-actualización',
+    req_single_exe:    'EXE único',
+    req_ffmpeg:        'FFmpeg bajo demanda',
+    req_autoupdate:    'Auto-actualización',
+    req_releases:      'Múltiples releases públicos',
+    dl_beta_note:      'Múltiples releases públicos disponibles en GitHub. Reporta problemas o sigue el desarrollo en el repositorio.',
     gallery_label:     'Capturas de Pantalla',
     gallery_title:     'MÍRALO EN ACCIÓN',
     g1:                'Panel Principal',
