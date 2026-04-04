@@ -396,46 +396,79 @@
       50%,90%  { opacity:1 }
       100%     { opacity:.2 }
     }
+    /* ── VIDEO HERO ── */
+    .sp-video-hero{
+      position:relative;width:100%;min-height:520px;
+      display:flex;flex-direction:column;justify-content:flex-end;
+      overflow:hidden;margin-bottom:0;
+    }
+    @media(max-width:800px){.sp-video-hero{min-height:420px}}
+    .sp-video-bg{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;filter:blur(6px) brightness(.38) saturate(1.2);
+      transform:scale(1.06);/* hide blur edges */
+      z-index:0;
+    }
+    .sp-video-overlay{
+      position:absolute;inset:0;z-index:1;
+      background:linear-gradient(to bottom,
+        rgba(6,6,8,.25) 0%,
+        rgba(6,6,8,.1) 40%,
+        rgba(6,6,8,.85) 80%,
+        rgba(6,6,8,1) 100%);
+    }
+    .sp-hero-content{
+      position:relative;z-index:2;
+      padding:28px 32px 40px;
+    }
+    @media(max-width:600px){.sp-hero-content{padding:20px 18px 32px}}
+    .sp-hero-inner{
+      display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:end;
+      max-width:1100px;margin:0 auto;
+    }
+    @media(max-width:800px){.sp-hero-inner{grid-template-columns:1fr}}
+    .sp-hero-right{display:flex;flex-direction:column;align-items:flex-end}
+    @media(max-width:800px){.sp-hero-right{display:none}}
   </style>
 </head>
 <body>
 
-<div class="container">
+<!-- ── VIDEO HERO HEADER ── -->
+<section class="sp-video-hero" aria-label="Streamer Pro hero">
+  <video class="sp-video-bg" autoplay muted loop playsinline
+         poster="/assets/streamer-pro/screenshot-pro.jpg"
+         src="/assets/streamer-pro/hero-bg-opt.mp4"></video>
+  <div class="sp-video-overlay"></div>
 
-  <!-- ── TOP NAV ── -->
-  <nav class="top" aria-label="Site navigation">
-    <a href="/" class="nav-logo" aria-label="CORILLO home" style="display:flex;align-items:center;text-decoration:none">
-      <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:auto">
-        <defs>
-          <radialGradient id="ng" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/>
-            <stop offset="100%" stop-color="#00bfff" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
-        <circle cx="72" cy="42" r="36" fill="url(#ng)"/>
-        <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
-      </svg>
-    </a>
-    <div class="row">
-      <div class="lang-toggle" role="group" aria-label="Language selector">
-        <button class="lang-btn active" id="btnEN" onclick="setLang('en')" aria-label="English">EN</button>
-        <button class="lang-btn"        id="btnES" onclick="setLang('es')" aria-label="Español">ES</button>
-      </div>
-      <button class="theme-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle dark/light theme">☀</button>
-      <a class="btn" href="/"><i class="fa-solid fa-house" aria-hidden="true"></i> <span data-t="nav_home">Home</span></a>
-      <a class="btn" href="/join/"><i class="fa-solid fa-plus" aria-hidden="true"></i> <span data-t="nav_join">Join</span></a>
+  <div class="sp-hero-content">
+    <!-- top nav inside hero -->
+    <div style="max-width:1100px;margin:0 auto 48px">
+      <nav style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap" aria-label="Site navigation">
+        <a href="/" style="display:flex;align-items:center;text-decoration:none" aria-label="CORILLO home">
+          <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:34px;width:auto">
+            <defs><radialGradient id="ng2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+            <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">C</text>
+            <circle cx="72" cy="42" r="36" fill="url(#ng2)"/>
+            <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none"/>
+            <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+            <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+            <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+            <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" fill="#e8f6ff">RILLO</text>
+          </svg>
+        </a>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="lang-toggle" role="group" aria-label="Language selector">
+            <button class="lang-btn active" id="btnEN" onclick="setLang('en')" aria-label="English">EN</button>
+            <button class="lang-btn"        id="btnES" onclick="setLang('es')" aria-label="Español">ES</button>
+          </div>
+          <button class="theme-btn" id="themeBtn" title="Toggle theme" aria-label="Toggle dark/light theme">☀</button>
+          <a class="btn" href="/"><i class="fa-solid fa-house" aria-hidden="true"></i> <span data-t="nav_home">Home</span></a>
+          <a class="btn" href="/join/"><i class="fa-solid fa-plus" aria-hidden="true"></i> <span data-t="nav_join">Join</span></a>
+        </div>
+      </nav>
     </div>
-  </nav>
 
-  <!-- ── HERO ── -->
-  <section class="hero" id="hero" aria-label="Streamer Pro hero">
-    <div class="hero-inner">
-
+    <div class="sp-hero-inner">
       <!-- Left: copy -->
       <div>
         <div class="version-badge" aria-label="Version 3.0.1">
@@ -452,37 +485,34 @@
             <i class="fa-solid fa-download" aria-hidden="true"></i>
             <span data-t="cta_download">Download v3.0.1</span>
           </a>
-          <a class="btn lg" href="https://github.com/marcosstgo/Streamer" target="_blank" rel="noopener" aria-label="View source on GitHub">
+          <a class="btn lg" href="https://github.com/marcosstgo/Streamer" target="_blank" rel="noopener">
             <i class="fa-brands fa-github" aria-hidden="true"></i>
             GitHub
           </a>
-          <a class="btn lg" href="https://github.com/marcosstgo/Streamer/releases" target="_blank" rel="noopener" aria-label="View all releases">
+          <a class="btn lg" href="https://github.com/marcosstgo/Streamer/releases" target="_blank" rel="noopener">
             <i class="fa-solid fa-list" aria-hidden="true"></i>
             <span data-t="cta_releases">View Releases</span>
           </a>
         </div>
       </div>
 
-      <!-- Right: hero screenshot — crossfade PRO ↔ ARC -->
-      <div>
-        <div class="hero-screenshot" style="position:relative;border-radius:12px;overflow:hidden;line-height:0">
-          <img src="/assets/streamer-pro/screenshot-arc.jpg"
-               alt="Streamer Pro — ARC mode"
-               style="width:100%;border-radius:12px;display:block">
-          <img src="/assets/streamer-pro/screenshot-pro.jpg"
-               alt="Streamer Pro — Pro mode"
-               style="width:100%;border-radius:12px;display:block;position:absolute;inset:0;animation:sp-fade 6s ease-in-out infinite">
-          <!-- Theme label badge -->
+      <!-- Right: crossfade screenshots -->
+      <div class="sp-hero-right">
+        <div style="position:relative;border-radius:12px;overflow:hidden;line-height:0;width:100%;max-width:480px;box-shadow:0 24px 64px rgba(0,0,0,.7)">
+          <img src="/assets/streamer-pro/screenshot-arc.jpg" alt="Streamer Pro — ARC mode" style="width:100%;display:block;border-radius:12px">
+          <img src="/assets/streamer-pro/screenshot-pro.jpg" alt="Streamer Pro — Pro mode" style="width:100%;display:block;border-radius:12px;position:absolute;inset:0;animation:sp-fade 6s ease-in-out infinite">
           <div style="position:absolute;top:10px;right:10px;display:flex;gap:6px;pointer-events:none">
             <span style="font-family:var(--mono);font-size:.7rem;letter-spacing:2px;padding:3px 9px;border-radius:4px;background:rgba(0,191,255,.15);border:1px solid rgba(0,191,255,.4);color:#00bfff;animation:sp-label-pro 6s ease-in-out infinite">PRO</span>
             <span style="font-family:var(--mono);font-size:.7rem;letter-spacing:2px;padding:3px 9px;border-radius:4px;background:rgba(232,200,74,.15);border:1px solid rgba(232,200,74,.4);color:#e8c84a;animation:sp-label-arc 6s ease-in-out infinite">ARC</span>
           </div>
         </div>
-        <div class="screenshot-caption">Theme switcher — <span style="color:#00bfff">PRO</span> · <span style="color:#e8c84a">ARC</span></div>
+        <div class="screenshot-caption" style="text-align:right;margin-top:8px">Theme switcher — <span style="color:#00bfff">PRO</span> · <span style="color:#e8c84a">ARC</span></div>
       </div>
-
     </div>
-  </section>
+  </div>
+</section>
+
+<div class="container">
 
   <!-- ── VALUE STRIP ── -->
   <div style="display:flex;flex-wrap:wrap;gap:8px;padding:18px 0 4px">
