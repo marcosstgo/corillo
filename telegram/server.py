@@ -51,6 +51,7 @@ STREAMER_NAMES = {
     "superman": "Superman",
     "stinkyfeets": "Rob",
     "adrian": "AdrianSantiago",
+    "emanuelpinkycolon": "Pinkycolon",
     # AUTO_STREAMER_NAMES_END
 }
 
