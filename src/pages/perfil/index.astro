@@ -428,6 +428,25 @@
       width: 90px; height: 160px;
     }
 
+    /* ── Facecam toggle row ── */
+    .reel-facecam-row {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .reel-facecam-btn {
+      font-size: .72rem; padding: 5px 12px; white-space: nowrap;
+    }
+    .reel-facecam-btn.active {
+      background: rgba(255,121,198,.15);
+      border-color: rgba(255,121,198,.5);
+      color: #ff79c6;
+    }
+    .reel-facecam-hint {
+      font-size: .72rem; color: var(--muted); display: none;
+    }
+    .reel-facecam-hint.show { display: inline; }
+    .face-color { color: #ff79c6; }
+
     /* ── Reel Timeline — single handle ── */
     .rtl { padding: 4px 0 8px; user-select: none; touch-action: none; }
     .rtl-track {
@@ -1394,6 +1413,14 @@ async function loadMyVods(channel) {
                 <div class="reel-preview-label"><i class="fa-solid fa-mobile-screen"></i> Preview 9:16</div>
                 <canvas class="reel-preview-canvas" id="rpreview-${v.id}"></canvas>
               </div>
+            </div>
+            <div class="reel-facecam-row">
+              <button class="btn reel-facecam-btn" id="rfacebtn-${v.id}" onclick="toggleFaceBox('${v.id}')">
+                <i class="fa-solid fa-camera"></i> Agregar cámara
+              </button>
+              <span class="reel-facecam-hint" id="rfacehint-${v.id}">
+                Arrastra el box <span class="face-color">magenta</span> — esquinas para redimensionar
+              </span>
             </div>` : ''}
 
             <div class="rtl" id="rtl-${v.id}" data-duration="${v.duration||0}">
@@ -1563,7 +1590,7 @@ function toggleReelPanel(vodId, vodDuration, vidSrc, thumb) {
   }
 }
 
-// ── Crop box: draggable 9:16 selector sobre el video 16:9 ──
+// ── Crop box: draggable 9:16 selector + facecam zone selector ──
 function initCropBox(vodId) {
   const canvas  = document.getElementById(`rcanvas-${vodId}`);
   const preview = document.getElementById(`rpreview-${vodId}`);
@@ -1572,36 +1599,59 @@ function initCropBox(vodId) {
   if (canvas.dataset.init === '1') return;
   canvas.dataset.init = '1';
 
-  // crop_x normalizado (0=izquierda, 1=derecha, 0.5=centro)
+  // State: crop_x normalizado (0=izq, 1=der, 0.5=centro)
   canvas._cropX = 0.5;
+  // Face box in video-space normalized coords (0-1 of actual video dimensions)
+  canvas._face = { enabled: false, x: 0.05, y: 0.05, w: 0.22, h: 0.38 };
 
-  const ctx     = canvas.getContext('2d');
-  const pctx    = preview?.getContext('2d');
+  const ctx  = canvas.getContext('2d');
+  const pctx = preview?.getContext('2d');
 
+  // ── Letterbox helper ──
+  function getDispInfo() {
+    const W = canvas.offsetWidth, H = canvas.offsetHeight;
+    const vW = video.videoWidth || 1920, vH = video.videoHeight || 1080;
+    const scale = Math.min(W / vW, H / vH);
+    const dispW = vW * scale, dispH = vH * scale;
+    const offX = (W - dispW) / 2, offY = (H - dispH) / 2;
+    return { W, H, vW, vH, scale, dispW, dispH, offX, offY };
+  }
+
+  // Face box in display space
+  function getFaceDisp() {
+    const { dispW, dispH, offX, offY } = getDispInfo();
+    const f = canvas._face;
+    return {
+      x: offX + f.x * dispW,
+      y: offY + f.y * dispH,
+      w: f.w * dispW,
+      h: f.h * dispH,
+    };
+  }
+
+  // ── Draw ──
   function drawCropBox() {
-    const W = canvas.offsetWidth;
-    const H = canvas.offsetHeight;
+    const { W, H } = getDispInfo();
     canvas.width  = W;
     canvas.height = H;
 
-    // Ancho del box: H * 9/16 (proporción 9:16 en el display 16:9)
     const boxW = Math.round(H * 9 / 16);
     const maxX = W - boxW;
     const boxX = Math.round(canvas._cropX * maxX);
 
     ctx.clearRect(0, 0, W, H);
 
-    // Oscurecer las zonas fuera del box
+    // Dim outside 9:16 box
     ctx.fillStyle = 'rgba(0,0,0,0.55)';
     ctx.fillRect(0, 0, boxX, H);
     ctx.fillRect(boxX + boxW, 0, W - (boxX + boxW), H);
 
-    // Borde del box
+    // Cyan crop box border
     ctx.strokeStyle = '#00bfff';
     ctx.lineWidth   = 2;
     ctx.strokeRect(boxX + 1, 1, boxW - 2, H - 2);
 
-    // Esquinas resaltadas
+    // Cyan corner marks
     const cs = 12;
     ctx.lineWidth = 3;
     [[boxX, 0], [boxX + boxW - cs, 0], [boxX, H - cs], [boxX + boxW - cs, H - cs]].forEach(([x, y]) => {
@@ -1610,84 +1660,192 @@ function initCropBox(vodId) {
       ctx.stroke();
     });
 
-    // Label de posición
+    // Position label
     const pct = Math.round(canvas._cropX * 100);
     ctx.fillStyle = 'rgba(0,191,255,0.9)';
     ctx.font = '10px monospace';
     ctx.fillText(pct === 50 ? 'Centro' : pct < 50 ? '← Izquierda' : 'Derecha →', boxX + 6, H - 8);
 
-    drawPreview(boxX, boxW, W, H);
+    // Magenta face box
+    if (canvas._face.enabled) {
+      const f = getFaceDisp();
+      ctx.strokeStyle = '#ff79c6';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(f.x, f.y, f.w, f.h);
+
+      // Corner handles
+      const hs = 8;
+      ctx.fillStyle = '#ff79c6';
+      [[f.x - hs/2, f.y - hs/2], [f.x + f.w - hs/2, f.y - hs/2],
+       [f.x - hs/2, f.y + f.h - hs/2], [f.x + f.w - hs/2, f.y + f.h - hs/2]].forEach(([hx, hy]) => {
+        ctx.fillRect(hx, hy, hs, hs);
+      });
+
+      // Label
+      ctx.fillStyle = 'rgba(255,121,198,0.9)';
+      ctx.font = '10px monospace';
+      ctx.fillText('CÁMARA', f.x + 4, f.y + 14);
+    }
+
+    drawPreview(boxX, boxW);
   }
 
-  function drawPreview(boxX, boxW, W, H) {
+  function drawPreview(boxX, boxW) {
     if (!pctx || !preview || video.readyState < 2) return;
+    const { W, H, vW, vH, dispW, dispH, offX, offY } = getDispInfo();
     const PW = preview.width  = preview.offsetWidth  || 90;
     const PH = preview.height = preview.offsetHeight || 160;
 
-    // Calcular la región del video real que corresponde al box
-    // El video puede tener letterbox (object-fit: contain), hay que compensar
-    const vW = video.videoWidth  || 1920;
-    const vH = video.videoHeight || 1080;
-    const scale = Math.min(W / vW, H / vH);
-    const dispW = vW * scale;
-    const dispH = vH * scale;
-    const offX  = (W - dispW) / 2;
-    const offY  = (H - dispH) / 2;
-
-    // Convertir boxX del display al espacio del video real
+    // Crop box → video space
     const sx = ((boxX - offX) / dispW) * vW;
     const sw = (boxW / dispW) * vW;
-    const sy = 0;
-    const sh = vH;
-
     pctx.clearRect(0, 0, PW, PH);
-    pctx.drawImage(video, Math.max(0, sx), sy, Math.min(sw, vW - Math.max(0, sx)), sh, 0, 0, PW, PH);
+    pctx.drawImage(video, Math.max(0, sx), 0, Math.min(sw, vW - Math.max(0, sx)), vH, 0, 0, PW, PH);
+
+    // Face overlay in preview (bottom-left, ~38% of preview width)
+    if (canvas._face.enabled && video.readyState >= 2) {
+      const f = canvas._face;
+      const fsx = f.x * vW, fsy = f.y * vH, fsw = f.w * vW, fsh = f.h * vH;
+      const fdw = Math.round(PW * 0.38);
+      const fdh = Math.round(fdw * (fsh / fsw));
+      const fdx = 4, fdy = PH - fdh - 4;
+      pctx.fillStyle = 'rgba(0,0,0,0.85)';
+      pctx.fillRect(fdx - 2, fdy - 2, fdw + 4, fdh + 4);
+      pctx.drawImage(video, fsx, fsy, fsw, fsh, fdx, fdy, fdw, fdh);
+      pctx.strokeStyle = '#ff79c6';
+      pctx.lineWidth = 1.5;
+      pctx.strokeRect(fdx, fdy, fdw, fdh);
+    }
   }
 
-  // Drag logic
-  let dragging = false;
-  let dragStartX = 0;
-  let dragStartCropX = 0.5;
+  // ── Hit test ──
+  const HZONE = 14; // corner hit zone radius (px)
 
-  function getBoxW() {
-    return Math.round(canvas.offsetHeight * 9 / 16);
+  function hitTest(cx, cy) {
+    if (!canvas._face.enabled) return 'crop';
+    const rect = canvas.getBoundingClientRect();
+    const lx = cx - rect.left, ly = cy - rect.top;
+    const f = getFaceDisp();
+    const corners = [
+      { type: 'face-tl', px: f.x,       py: f.y },
+      { type: 'face-tr', px: f.x + f.w, py: f.y },
+      { type: 'face-bl', px: f.x,       py: f.y + f.h },
+      { type: 'face-br', px: f.x + f.w, py: f.y + f.h },
+    ];
+    for (const c of corners) {
+      if (Math.abs(lx - c.px) <= HZONE / 2 && Math.abs(ly - c.py) <= HZONE / 2) return c.type;
+    }
+    if (lx >= f.x && lx <= f.x + f.w && ly >= f.y && ly <= f.y + f.h) return 'face-move';
+    return 'crop';
   }
-  function clampCropX(x) {
-    return Math.max(0, Math.min(1, x));
+
+  function cursorFor(type) {
+    if (type === 'face-move') return 'move';
+    if (type === 'face-tl' || type === 'face-br') return 'nwse-resize';
+    if (type === 'face-tr' || type === 'face-bl') return 'nesw-resize';
+    return 'ew-resize';
   }
-  function onStart(clientX) {
-    dragging = true;
-    dragStartX = clientX;
-    dragStartCropX = canvas._cropX;
+
+  // ── Drag state ──
+  let dragType = null;
+  let dragSX = 0, dragSY = 0;
+  let dragSCropX = 0.5;
+  let dragSFace = null;
+
+  function getClientXY(e) {
+    return e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
   }
-  function onMove(clientX) {
-    if (!dragging) return;
-    const W    = canvas.offsetWidth;
-    const boxW = getBoxW();
-    const maxX = W - boxW;
-    const dx   = clientX - dragStartX;
-    canvas._cropX = clampCropX(dragStartCropX + dx / maxX);
+
+  function onStart(e) {
+    const [cx, cy] = getClientXY(e);
+    dragType = hitTest(cx, cy);
+    dragSX = cx; dragSY = cy;
+    dragSCropX = canvas._cropX;
+    if (dragType !== 'crop') dragSFace = { ...canvas._face };
+  }
+
+  function onMove(e) {
+    if (!dragType) return;
+    const [cx, cy] = getClientXY(e);
+    const { W, dispW, dispH } = getDispInfo();
+
+    if (dragType === 'crop') {
+      const boxW = Math.round(canvas.offsetHeight * 9 / 16);
+      const maxX = W - boxW;
+      const dx = cx - dragSX;
+      canvas._cropX = Math.max(0, Math.min(1, dragSCropX + dx / maxX));
+      drawCropBox();
+      return;
+    }
+
+    // Face drag — delta in video-space normalized units
+    const dx = (cx - dragSX) / dispW;
+    const dy = (cy - dragSY) / dispH;
+    const f = { ...dragSFace };
+    const minSz = 0.05;
+
+    if (dragType === 'face-move') {
+      f.x = Math.max(0, Math.min(1 - f.w, f.x + dx));
+      f.y = Math.max(0, Math.min(1 - f.h, f.y + dy));
+    } else if (dragType === 'face-tl') {
+      const nx = Math.max(0, Math.min(f.x + f.w - minSz, f.x + dx));
+      const ny = Math.max(0, Math.min(f.y + f.h - minSz, f.y + dy));
+      f.w = f.x + f.w - nx; f.h = f.y + f.h - ny; f.x = nx; f.y = ny;
+    } else if (dragType === 'face-tr') {
+      const ny = Math.max(0, Math.min(f.y + f.h - minSz, f.y + dy));
+      f.w = Math.max(minSz, Math.min(1 - f.x, f.w + dx));
+      f.h = f.y + f.h - ny; f.y = ny;
+    } else if (dragType === 'face-bl') {
+      const nx = Math.max(0, Math.min(f.x + f.w - minSz, f.x + dx));
+      f.w = f.x + f.w - nx; f.x = nx;
+      f.h = Math.max(minSz, Math.min(1 - f.y, f.h + dy));
+    } else if (dragType === 'face-br') {
+      f.w = Math.max(minSz, Math.min(1 - f.x, f.w + dx));
+      f.h = Math.max(minSz, Math.min(1 - f.y, f.h + dy));
+    }
+    canvas._face = { ...canvas._face, x: f.x, y: f.y, w: f.w, h: f.h };
     drawCropBox();
   }
-  function onEnd() { dragging = false; }
 
-  canvas.addEventListener('mousedown',  e => onStart(e.clientX));
-  window.addEventListener('mousemove',  e => { if (dragging) onMove(e.clientX); });
-  window.addEventListener('mouseup',    onEnd);
-  canvas.addEventListener('touchstart', e => { e.preventDefault(); onStart(e.touches[0].clientX); }, { passive: false });
-  window.addEventListener('touchmove',  e => { if (dragging) { e.preventDefault(); onMove(e.touches[0].clientX); } }, { passive: false });
+  function onEnd() { dragType = null; }
+
+  canvas.addEventListener('mousedown', e => { onStart(e); });
+  canvas.addEventListener('mousemove', e => {
+    if (!dragType) canvas.style.cursor = cursorFor(hitTest(e.clientX, e.clientY));
+  });
+  window.addEventListener('mousemove', e => { if (dragType) onMove(e); });
+  window.addEventListener('mouseup',   onEnd);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); onStart(e); }, { passive: false });
+  window.addEventListener('touchmove',  e => { if (dragType) { e.preventDefault(); onMove(e); } }, { passive: false });
   window.addEventListener('touchend',   onEnd);
 
-  // Redibujar en cada frame del video
   video.addEventListener('timeupdate', drawCropBox);
   video.addEventListener('seeked',     drawCropBox);
-  video.addEventListener('loadeddata', () => { drawCropBox(); });
+  video.addEventListener('loadeddata', drawCropBox);
 
-  // Redibujar al resize
   const ro = new ResizeObserver(drawCropBox);
   ro.observe(canvas);
 
   drawCropBox();
+}
+
+function toggleFaceBox(vodId) {
+  const canvas = document.getElementById(`rcanvas-${vodId}`);
+  const btn    = document.getElementById(`rfacebtn-${vodId}`);
+  const hint   = document.getElementById(`rfacehint-${vodId}`);
+  if (!canvas?._face) return;
+  canvas._face.enabled = !canvas._face.enabled;
+  btn?.classList.toggle('active', canvas._face.enabled);
+  hint?.classList.toggle('show', canvas._face.enabled);
+  // Redraw
+  const canvas2d = canvas.getContext('2d');
+  if (canvas2d) {
+    // Trigger redraw via video element or direct call
+    const video = document.getElementById(`rvid-${vodId}`);
+    if (video) {
+      video.dispatchEvent(new Event('timeupdate'));
+    }
+  }
 }
 
 async function generateReel(vodId) {
@@ -1696,6 +1854,10 @@ async function generateReel(vodId) {
   const pub   = document.getElementById(`rpub-${vodId}`)?.checked || false;
   const cropCanvas = document.getElementById(`rcanvas-${vodId}`);
   const crop_x = cropCanvas?._cropX ?? null;
+  const faceState = cropCanvas?._face;
+  const faceParams = (faceState?.enabled)
+    ? { face_x: faceState.x, face_y: faceState.y, face_w: faceState.w, face_h: faceState.h }
+    : {};
   const dur   = end - start;
   const btn   = document.getElementById(`rgen-${vodId}`);
   const result= document.getElementById(`rresult-${vodId}`);
@@ -1711,7 +1873,7 @@ async function generateReel(vodId) {
     const res = await fetch('/chat-api/reel', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
-      body: JSON.stringify({ vod_id: vodId, record_id: currentRecord.id, start, end, public: pub, crop_x }),
+      body: JSON.stringify({ vod_id: vodId, record_id: currentRecord.id, start, end, public: pub, crop_x, ...faceParams }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Error desconocido');

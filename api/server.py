@@ -373,6 +373,20 @@ async def create_reel(request: Request):
     if crop_x is not None:
         crop_x = max(0.0, min(1.0, crop_x))
 
+    # face overlay: region of the source video to composite on top of the 9:16 output.
+    # All values normalized 0-1 relative to video dimensions. None = no overlay.
+    def _clamp01(v): return max(0.0, min(1.0, float(v)))
+    face_x_raw = data.get("face_x")
+    face_y_raw = data.get("face_y")
+    face_w_raw = data.get("face_w")
+    face_h_raw = data.get("face_h")
+    use_face = all(v is not None for v in [face_x_raw, face_y_raw, face_w_raw, face_h_raw])
+    if use_face:
+        face_x = _clamp01(face_x_raw)
+        face_y = _clamp01(face_y_raw)
+        face_w = max(0.05, _clamp01(face_w_raw))
+        face_h = max(0.05, _clamp01(face_h_raw))
+
     if not vod_id:
         raise HTTPException(status_code=400, detail="Falta vod_id")
 
@@ -417,9 +431,19 @@ async def create_reel(request: Request):
     # ffmpeg: crop 9:16 desde posición elegida por el usuario (o centro si no viene)
     # crop=w=ih*9/16 : h=ih : x=(iw-ih*9/16)*crop_x : y=0  → scale 1080×1920
     if crop_x is not None:
-        filter_complex = f"[0:v]crop=ih*9/16:ih:(iw-ih*9/16)*{crop_x:.6f}:0,scale=1080:1920[out]"
+        bg_filter = f"crop=ih*9/16:ih:(iw-ih*9/16)*{crop_x:.6f}:0,scale=1080:1920"
     else:
-        filter_complex = "[0:v]scale=-2:1920,crop=1080:1920[out]"
+        bg_filter = "scale=-2:1920,crop=1080:1920"
+
+    if use_face:
+        # Crop the face region from the source, scale to 360px wide, overlay bottom-left
+        filter_complex = (
+            f"[0:v]{bg_filter}[bg];"
+            f"[0:v]crop=iw*{face_w:.6f}:ih*{face_h:.6f}:iw*{face_x:.6f}:ih*{face_y:.6f},scale=360:-2[face];"
+            f"[bg][face]overlay=16:H-h-16[out]"
+        )
+    else:
+        filter_complex = f"[0:v]{bg_filter}[out]"
 
     proc = await asyncio.create_subprocess_exec(
         "ffmpeg", "-y",
