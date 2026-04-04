@@ -372,16 +372,31 @@
     .reel-panel-dur { font-family: var(--mono); font-size: .65rem; color: var(--muted); }
     .reel-panel-body { padding: 18px 20px 20px; }
 
+    /* ── Reel crop layout ── */
+    .reel-crop-layout {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: 12px; align-items: start; margin-bottom: 18px;
+    }
+    @media (max-width: 600px) {
+      .reel-crop-layout { grid-template-columns: 1fr; }
+      .reel-preview-wrap { display: none; }
+    }
+
     /* ── Reel video preview ── */
     .reel-video-wrap {
       position: relative; border-radius: 8px; overflow: hidden;
-      background: #000; margin-bottom: 18px;
+      background: #000;
       aspect-ratio: 16/9;
       border: 1px solid rgba(255,255,255,.08);
     }
     .reel-video {
       width: 100%; height: 100%; object-fit: contain;
       display: block;
+    }
+    .reel-crop-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      cursor: ew-resize; touch-action: none;
     }
     .reel-video-overlay {
       position: absolute; inset: 0;
@@ -392,13 +407,25 @@
       pointer-events: none; transition: opacity .2s;
     }
     .reel-video-wrap.loaded .reel-video-overlay { opacity: 0; }
-    /* Scrub position badge */
     .reel-video-badge {
       position: absolute; bottom: 8px; right: 10px;
       background: rgba(0,0,0,.72); border-radius: 5px;
       font-family: var(--mono); font-size: .72rem; letter-spacing: 1px;
       color: rgba(255,255,255,.9); padding: 3px 8px;
       pointer-events: none;
+    }
+    /* ── Preview 9:16 ── */
+    .reel-preview-wrap {
+      display: flex; flex-direction: column; gap: 6px; align-items: center;
+    }
+    .reel-preview-label {
+      font-family: var(--mono); font-size: .6rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .reel-preview-canvas {
+      border-radius: 8px; border: 1px solid rgba(0,191,255,.2);
+      background: #000; display: block;
+      width: 90px; height: 160px;
     }
 
     /* ── Reel Timeline — single handle ── */
@@ -1353,13 +1380,20 @@ async function loadMyVods(channel) {
           </div>
           <div class="reel-panel-body">
             ${vidSrc ? `
-            <div class="reel-video-wrap" id="rvwrap-${v.id}">
-              <video class="reel-video" id="rvid-${v.id}" preload="metadata" muted playsinline
-                ${v.thumb ? `poster="${esc(v.thumb)}"` : ''}>
-                <source src="${esc(vidSrc)}" type="video/mp4">
-              </video>
-              <div class="reel-video-overlay" id="rvoverlay-${v.id}">Arrastra para elegir el inicio del reel</div>
-              <div class="reel-video-badge" id="rvbadge-${v.id}">0:00</div>
+            <div class="reel-crop-layout">
+              <div class="reel-video-wrap" id="rvwrap-${v.id}">
+                <video class="reel-video" id="rvid-${v.id}" preload="metadata" muted playsinline
+                  ${v.thumb ? `poster="${esc(v.thumb)}"` : ''}>
+                  <source src="${esc(vidSrc)}" type="video/mp4">
+                </video>
+                <canvas class="reel-crop-canvas" id="rcanvas-${v.id}"></canvas>
+                <div class="reel-video-overlay" id="rvoverlay-${v.id}">Cargando…</div>
+                <div class="reel-video-badge" id="rvbadge-${v.id}">0:00</div>
+              </div>
+              <div class="reel-preview-wrap">
+                <div class="reel-preview-label"><i class="fa-solid fa-mobile-screen"></i> Preview 9:16</div>
+                <canvas class="reel-preview-canvas" id="rpreview-${v.id}"></canvas>
+              </div>
             </div>` : ''}
 
             <div class="rtl" id="rtl-${v.id}" data-duration="${v.duration||0}">
@@ -1523,13 +1557,145 @@ function toggleReelPanel(vodId, vodDuration, vidSrc, thumb) {
   const opening = !panel.classList.contains('open');
   panel.classList.toggle('open');
   btn?.classList.toggle('active', opening);
-  if (opening) initReelTimeline(vodId, vodDuration);
+  if (opening) {
+    initReelTimeline(vodId, vodDuration);
+    initCropBox(vodId);
+  }
+}
+
+// ── Crop box: draggable 9:16 selector sobre el video 16:9 ──
+function initCropBox(vodId) {
+  const canvas  = document.getElementById(`rcanvas-${vodId}`);
+  const preview = document.getElementById(`rpreview-${vodId}`);
+  const video   = document.getElementById(`rvid-${vodId}`);
+  if (!canvas || !video) return;
+  if (canvas.dataset.init === '1') return;
+  canvas.dataset.init = '1';
+
+  // crop_x normalizado (0=izquierda, 1=derecha, 0.5=centro)
+  canvas._cropX = 0.5;
+
+  const ctx     = canvas.getContext('2d');
+  const pctx    = preview?.getContext('2d');
+
+  function drawCropBox() {
+    const W = canvas.offsetWidth;
+    const H = canvas.offsetHeight;
+    canvas.width  = W;
+    canvas.height = H;
+
+    // Ancho del box: H * 9/16 (proporción 9:16 en el display 16:9)
+    const boxW = Math.round(H * 9 / 16);
+    const maxX = W - boxW;
+    const boxX = Math.round(canvas._cropX * maxX);
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Oscurecer las zonas fuera del box
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, 0, boxX, H);
+    ctx.fillRect(boxX + boxW, 0, W - (boxX + boxW), H);
+
+    // Borde del box
+    ctx.strokeStyle = '#00bfff';
+    ctx.lineWidth   = 2;
+    ctx.strokeRect(boxX + 1, 1, boxW - 2, H - 2);
+
+    // Esquinas resaltadas
+    const cs = 12;
+    ctx.lineWidth = 3;
+    [[boxX, 0], [boxX + boxW - cs, 0], [boxX, H - cs], [boxX + boxW - cs, H - cs]].forEach(([x, y]) => {
+      ctx.beginPath();
+      ctx.moveTo(x, y + cs); ctx.lineTo(x, y); ctx.lineTo(x + cs, y);
+      ctx.stroke();
+    });
+
+    // Label de posición
+    const pct = Math.round(canvas._cropX * 100);
+    ctx.fillStyle = 'rgba(0,191,255,0.9)';
+    ctx.font = '10px monospace';
+    ctx.fillText(pct === 50 ? 'Centro' : pct < 50 ? '← Izquierda' : 'Derecha →', boxX + 6, H - 8);
+
+    drawPreview(boxX, boxW, W, H);
+  }
+
+  function drawPreview(boxX, boxW, W, H) {
+    if (!pctx || !preview || video.readyState < 2) return;
+    const PW = preview.width  = preview.offsetWidth  || 90;
+    const PH = preview.height = preview.offsetHeight || 160;
+
+    // Calcular la región del video real que corresponde al box
+    // El video puede tener letterbox (object-fit: contain), hay que compensar
+    const vW = video.videoWidth  || 1920;
+    const vH = video.videoHeight || 1080;
+    const scale = Math.min(W / vW, H / vH);
+    const dispW = vW * scale;
+    const dispH = vH * scale;
+    const offX  = (W - dispW) / 2;
+    const offY  = (H - dispH) / 2;
+
+    // Convertir boxX del display al espacio del video real
+    const sx = ((boxX - offX) / dispW) * vW;
+    const sw = (boxW / dispW) * vW;
+    const sy = 0;
+    const sh = vH;
+
+    pctx.clearRect(0, 0, PW, PH);
+    pctx.drawImage(video, Math.max(0, sx), sy, Math.min(sw, vW - Math.max(0, sx)), sh, 0, 0, PW, PH);
+  }
+
+  // Drag logic
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartCropX = 0.5;
+
+  function getBoxW() {
+    return Math.round(canvas.offsetHeight * 9 / 16);
+  }
+  function clampCropX(x) {
+    return Math.max(0, Math.min(1, x));
+  }
+  function onStart(clientX) {
+    dragging = true;
+    dragStartX = clientX;
+    dragStartCropX = canvas._cropX;
+  }
+  function onMove(clientX) {
+    if (!dragging) return;
+    const W    = canvas.offsetWidth;
+    const boxW = getBoxW();
+    const maxX = W - boxW;
+    const dx   = clientX - dragStartX;
+    canvas._cropX = clampCropX(dragStartCropX + dx / maxX);
+    drawCropBox();
+  }
+  function onEnd() { dragging = false; }
+
+  canvas.addEventListener('mousedown',  e => onStart(e.clientX));
+  window.addEventListener('mousemove',  e => { if (dragging) onMove(e.clientX); });
+  window.addEventListener('mouseup',    onEnd);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); onStart(e.touches[0].clientX); }, { passive: false });
+  window.addEventListener('touchmove',  e => { if (dragging) { e.preventDefault(); onMove(e.touches[0].clientX); } }, { passive: false });
+  window.addEventListener('touchend',   onEnd);
+
+  // Redibujar en cada frame del video
+  video.addEventListener('timeupdate', drawCropBox);
+  video.addEventListener('seeked',     drawCropBox);
+  video.addEventListener('loadeddata', () => { drawCropBox(); });
+
+  // Redibujar al resize
+  const ro = new ResizeObserver(drawCropBox);
+  ro.observe(canvas);
+
+  drawCropBox();
 }
 
 async function generateReel(vodId) {
   const start = parseInt(document.getElementById(`rstart-${vodId}`)?.value, 10);
   const end   = parseInt(document.getElementById(`rend-${vodId}`)?.value,   10);
   const pub   = document.getElementById(`rpub-${vodId}`)?.checked || false;
+  const cropCanvas = document.getElementById(`rcanvas-${vodId}`);
+  const crop_x = cropCanvas?._cropX ?? null;
   const dur   = end - start;
   const btn   = document.getElementById(`rgen-${vodId}`);
   const result= document.getElementById(`rresult-${vodId}`);
@@ -1545,7 +1711,7 @@ async function generateReel(vodId) {
     const res = await fetch('/chat-api/reel', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
-      body: JSON.stringify({ vod_id: vodId, record_id: currentRecord.id, start, end, public: pub }),
+      body: JSON.stringify({ vod_id: vodId, record_id: currentRecord.id, start, end, public: pub, crop_x }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Error desconocido');

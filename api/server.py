@@ -367,6 +367,11 @@ async def create_reel(request: Request):
     end    = float(data.get("end", 60))
     public = bool(data.get("public", False))
     title  = str(data.get("title", ""))[:80]
+    # crop_x: posición horizontal normalizada 0.0 (izq) → 1.0 (der). None = center crop.
+    crop_x_raw = data.get("crop_x")
+    crop_x = float(crop_x_raw) if crop_x_raw is not None else None
+    if crop_x is not None:
+        crop_x = max(0.0, min(1.0, crop_x))
 
     if not vod_id:
         raise HTTPException(status_code=400, detail="Falta vod_id")
@@ -409,9 +414,12 @@ async def create_reel(request: Request):
     out = str(reel_dir / f"{ts}.mp4")
     thumb_out = str(reel_dir / f"{ts}.jpg")
 
-    # ffmpeg: center crop 16:9 → 9:16
-    # Escala para que el alto sea 1920, luego recorta el centro a 1080px de ancho
-    filter_complex = "[0:v]scale=-2:1920,crop=1080:1920[out]"
+    # ffmpeg: crop 9:16 desde posición elegida por el usuario (o centro si no viene)
+    # crop=w=ih*9/16 : h=ih : x=(iw-ih*9/16)*crop_x : y=0  → scale 1080×1920
+    if crop_x is not None:
+        filter_complex = f"[0:v]crop=ih*9/16:ih:(iw-ih*9/16)*{crop_x:.6f}:0,scale=1080:1920[out]"
+    else:
+        filter_complex = "[0:v]scale=-2:1920,crop=1080:1920[out]"
 
     proc = await asyncio.create_subprocess_exec(
         "ffmpeg", "-y",
