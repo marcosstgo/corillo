@@ -16,5 +16,6 @@ window.STREAMERS = [
   { key:'superman', name:'SUPERMAN', sub:'Gaming Puerto Rico', ava:'S', color:'linear-gradient(135deg,#fd79a8,#e84393)', host:false },
   { key:'stinkyfeets', name:'ROB', sub:'Gaming', ava:'R', color:'linear-gradient(135deg,#00cec9,#00838f)', host:false },
   { key:'adrian', name:'ADRIAN SANTIAGO', sub:'Gaming, Fps', ava:'A', color:'linear-gradient(135deg,#ff7675,#d63031)', host:false },
+  { key:'emanuelpinkycolon', name:'PINKYCOLON', sub:'PODCAST', ava:'P', color:'linear-gradient(135deg,#ff7675,#d63031)', host:false },
 { key:null,            name:'???',           sub:'Próximamente · Invitación', ava:'?', color:'linear-gradient(135deg,#2a2a3a,#1a1a28)', host:false, soon:true },
 ];

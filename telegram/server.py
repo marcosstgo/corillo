@@ -190,7 +190,7 @@ async def auto_create_streamer(handle: str, nombre: str, contenido: str, email: 
         sub     = contenido[:50] if contenido else "Gaming · CORILLO"
 
         # 1 — streamers.js
-        js, js_sha = await _gh_get("assets/streamers.js")
+        js, js_sha = await _gh_get("public/assets/streamers.js")
         new_entry = (
             f"  {{ key:'{handle}', name:'{name_up}', "
             f"sub:'{sub}', ava:'{ava}', color:'{color}', host:false }},"
@@ -200,7 +200,7 @@ async def auto_create_streamer(handle: str, nombre: str, contenido: str, email: 
             js = _re.sub(r'\{[ \t]*key:null,', f"{new_entry}\n{{ key:null,", js, count=1)
         else:
             js = js.rstrip().rstrip("]").rstrip() + f"\n{new_entry}\n];\n"
-        await _gh_put("assets/streamers.js", js, js_sha, f"feat: add streamer {handle} [auto]")
+        await _gh_put("public/assets/streamers.js", js, js_sha, f"feat: add streamer {handle} [auto]")
 
         # 2 — STREAMER_NAMES en telegram/server.py (self-update)
         py, py_sha = await _gh_get("telegram/server.py")

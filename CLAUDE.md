@@ -73,7 +73,7 @@ The site is served as static files. **Nginx** handles reverse proxy and SSL, pro
 | `elbala` | ELBALA | — | — |
 | `marcos` | MARCOS | — | — |
 
-The `STREAMERS` roster lives in **`assets/streamers.js`** (`window.STREAMERS`). Loaded by `index.html`, `multiplayer/index.html`, and `player/index.html`. **Edit only `assets/streamers.js`** when adding or removing a streamer. Each entry: `key` (URL path + MediaMTX path prefix `live/{key}`), `name`, `sub`, `ava`, `color`, `host`, optionally `soon:true` for placeholder cards.
+The `STREAMERS` roster lives in **`public/assets/streamers.js`** (`window.STREAMERS`). Loaded by all pages via the URL `/assets/streamers.js`. **Edit only `public/assets/streamers.js`** when adding or removing a streamer — this is the file Astro copies to `dist/`. The root-level `assets/streamers.js` is legacy and ignored by the build. Each entry: `key` (URL path + MediaMTX path prefix `live/{key}`), `name`, `sub`, `ava`, `color`, `host`, optionally `soon:true` for placeholder cards.
 
 ### HLS playback pattern
 
@@ -95,7 +95,7 @@ Both the homepage and multiplayer page pause polling via `visibilitychange` when
 | File | Contains |
 |------|----------|
 | `assets/styles.css` | Design tokens (`:root` vars), light-mode overrides, CSS reset, grain overlay (`body::after`), `@keyframes blink`, `.theme-btn` |
-| `assets/streamers.js` | `window.STREAMERS` roster — single source of truth |
+| `public/assets/streamers.js` | `window.STREAMERS` roster — single source of truth (Astro copies to `dist/`) |
 | `assets/og-image.html` | Source template for the OG social preview image (1200×630 SVG). To regenerate `og-image.png`: open in a headless browser and screenshot at exactly 1200×630. |
 
 All 11 HTML pages link `styles.css`. Each page's inline `<style>` keeps only page-specific layout and component rules.
@@ -318,7 +318,7 @@ El player de VODs (`vods/v/index.html`) usa `autoplay muted playsinline` para cu
 
 ## Assets compartidos — detalle técnico
 
-### `assets/streamers.js`
+### `public/assets/streamers.js`
 
 Single source of truth de todos los streamers. Estructura de cada entrada:
 
@@ -537,7 +537,7 @@ publish:
 3. Rate limit: 3 solicitudes/hora por IP
 4. Telegram: notificación con botones ✅ Aprobar / ❌ Rechazar
 5. Admin aprueba → `auto_create_streamer()`:
-   - Actualiza `assets/streamers.js` via GitHub API
+   - Actualiza `public/assets/streamers.js` via GitHub API
    - Crea registro en PocketBase (email, password generado, stream_key)
    - Notifica al streamer
    - ~~Crea `{handle}/index.html`~~ — eliminado: Nginx sirve `player/index.html` automáticamente para cualquier canal no encontrado
