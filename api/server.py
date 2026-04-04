@@ -387,6 +387,13 @@ async def create_reel(request: Request):
         face_w = max(0.05, _clamp01(face_w_raw))
         face_h = max(0.05, _clamp01(face_h_raw))
 
+    face_pos = data.get("face_pos", "bl")
+    if face_pos not in ("tl", "tr", "bl", "br"):
+        face_pos = "bl"
+    face_shape = data.get("face_shape", "square")
+    if face_shape not in ("square", "circle"):
+        face_shape = "square"
+
     if not vod_id:
         raise HTTPException(status_code=400, detail="Falta vod_id")
 
@@ -436,11 +443,31 @@ async def create_reel(request: Request):
         bg_filter = "scale=-2:1920,crop=1080:1920"
 
     if use_face:
-        # Crop the face region from the source, scale to 360px wide, overlay bottom-left
+        # Overlay position in the 9:16 output (16px padding from edges)
+        pos_map = {"tl": ("16", "16"), "tr": ("W-w-16", "16"),
+                   "bl": ("16", "H-h-16"), "br": ("W-w-16", "H-h-16")}
+        ox, oy = pos_map[face_pos]
+
+        if face_shape == "circle":
+            # Scale to square, apply circular alpha mask via geq, overlay with alpha
+            face_part = (
+                f"[0:v]crop=iw*{face_w:.6f}:ih*{face_h:.6f}:iw*{face_x:.6f}:ih*{face_y:.6f},"
+                f"scale=360:360,"
+                f"format=rgba,"
+                f"geq=r='r(X,Y)':g='g(X,Y)':b='b(X,Y)':a='255*lte(sqrt((X-180)*(X-180)+(Y-180)*(Y-180)),180)'[face]"
+            )
+            overlay_expr = f"overlay={ox}:{oy}:format=auto"
+        else:
+            face_part = (
+                f"[0:v]crop=iw*{face_w:.6f}:ih*{face_h:.6f}:iw*{face_x:.6f}:ih*{face_y:.6f},"
+                f"scale=360:-2[face]"
+            )
+            overlay_expr = f"overlay={ox}:{oy}"
+
         filter_complex = (
             f"[0:v]{bg_filter}[bg];"
-            f"[0:v]crop=iw*{face_w:.6f}:ih*{face_h:.6f}:iw*{face_x:.6f}:ih*{face_y:.6f},scale=360:-2[face];"
-            f"[bg][face]overlay=16:H-h-16[out]"
+            f"{face_part};"
+            f"[bg][face]{overlay_expr}[out]"
         )
     else:
         filter_complex = f"[0:v]{bg_filter}[out]"
