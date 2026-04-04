@@ -378,6 +378,24 @@
 
     /* ── DIVIDER ── */
     .section-divider{border:none;border-top:1px solid var(--border);margin:0}
+
+    /* ── SCREENSHOT CROSSFADE: PRO ↔ ARC ── */
+    /* 0–40%: PRO visible, 50–90%: PRO invisible, 100%: back */
+    @keyframes sp-fade {
+      0%,40%   { opacity:1 }
+      50%,90%  { opacity:0 }
+      100%     { opacity:1 }
+    }
+    @keyframes sp-label-pro {
+      0%,40%   { opacity:1 }
+      50%,90%  { opacity:.2 }
+      100%     { opacity:1 }
+    }
+    @keyframes sp-label-arc {
+      0%,40%   { opacity:.2 }
+      50%,90%  { opacity:1 }
+      100%     { opacity:.2 }
+    }
   </style>
 </head>
 <body>
@@ -445,12 +463,22 @@
         </div>
       </div>
 
-      <!-- Right: hero screenshot -->
+      <!-- Right: hero screenshot — crossfade PRO ↔ ARC -->
       <div>
-        <div class="hero-screenshot">
-          <img src="/assets/streamer-pro/screenshot-main.jpg" alt="Streamer Pro main interface" style="width:100%;border-radius:12px;display:block">
+        <div class="hero-screenshot" style="position:relative;border-radius:12px;overflow:hidden;line-height:0">
+          <img src="/assets/streamer-pro/screenshot-arc.jpg"
+               alt="Streamer Pro — ARC mode"
+               style="width:100%;border-radius:12px;display:block">
+          <img src="/assets/streamer-pro/screenshot-pro.jpg"
+               alt="Streamer Pro — Pro mode"
+               style="width:100%;border-radius:12px;display:block;position:absolute;inset:0;animation:sp-fade 6s ease-in-out infinite">
+          <!-- Theme label badge -->
+          <div style="position:absolute;top:10px;right:10px;display:flex;gap:6px;pointer-events:none">
+            <span style="font-family:var(--mono);font-size:.7rem;letter-spacing:2px;padding:3px 9px;border-radius:4px;background:rgba(0,191,255,.15);border:1px solid rgba(0,191,255,.4);color:#00bfff;animation:sp-label-pro 6s ease-in-out infinite">PRO</span>
+            <span style="font-family:var(--mono);font-size:.7rem;letter-spacing:2px;padding:3px 9px;border-radius:4px;background:rgba(232,200,74,.15);border:1px solid rgba(232,200,74,.4);color:#e8c84a;animation:sp-label-arc 6s ease-in-out infinite">ARC</span>
+          </div>
         </div>
-        <div class="screenshot-caption" data-t="hero_img_caption">Streamer Pro main interface — dashboard view</div>
+        <div class="screenshot-caption">Theme switcher — <span style="color:#00bfff">PRO</span> · <span style="color:#e8c84a">ARC</span></div>
       </div>
 
     </div>
