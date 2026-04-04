@@ -1,0 +1,37 @@
+---
+import NoticiasPostLayout from '../../layouts/NoticiasPostLayout.astro';
+---
+<NoticiasPostLayout
+  title="CORILLO — Noticias · Sobre Corillo"
+  description="La nueva página Sobre Corillo explica el proyecto desde una voz más humana, local y honesta, nacida en Aibonito, Puerto Rico."
+  canonical="https://corillo.live/noticias/sobre-corillo/"
+  ogTitle="Sobre Corillo ya tiene su espacio"
+  ogDescription="La nueva página Sobre Corillo explica el proyecto desde una voz más humana, local y honesta, nacida en Aibonito, Puerto Rico."
+  badgeClass="badge-confirm"
+  badgeIcon="fa-solid fa-circle-info"
+  badgeLabel="Marca"
+  date="29 marzo 2026"
+  heroTitle="Sobre Corillo ya tiene su espacio"
+  heroSub="La plataforma tiene una página que explica qué es Corillo, para quién es y cómo funciona."
+  footerLinks={[
+    { href: '/noticias/',      label: 'Noticias'      },
+    { href: '/que-es-corillo/', label: 'Sobre Corillo' },
+    { href: '/corillo-css/',   label: 'Corillo CSS'   },
+  ]}
+>
+
+  <h2>Qué cubre la página</h2>
+  <p>El roadmap explica qué se está construyendo. Esta página explica qué es el proyecto en sí — contexto que antes no existía en el site.</p>
+  <ul>
+    <li>Qué es Corillo y de dónde nace — Aibonito, Puerto Rico.</li>
+    <li>Para quién es y cómo se diferencia de otras plataformas.</li>
+    <li>Qué existe hoy y qué está en construcción.</li>
+    <li>Cómo entrar — por ahora es por invitación y aprobación manual.</li>
+  </ul>
+
+  <div class="post-cta crl-flex crl-wrap crl-gap-sm">
+    <a class="btn btn-primary" href="/noticias/">Volver a noticias</a>
+    <a class="btn" href="/roadmap/">Ver roadmap</a>
+  </div>
+
+</NoticiasPostLayout>

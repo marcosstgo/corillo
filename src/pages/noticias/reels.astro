@@ -1,0 +1,62 @@
+---
+import NoticiasPostLayout from '../../layouts/NoticiasPostLayout.astro';
+---
+<NoticiasPostLayout
+  title="CORILLO — Noticias · Reels: comparte tus mejores momentos"
+  description="Los streamers de CORILLO ya pueden crear clips 9:16 desde sus VODs directamente desde el perfil — listos para descargar y subir a TikTok, Instagram o YouTube Shorts."
+  canonical="https://corillo.live/noticias/reels/"
+  ogTitle="Reels: comparte tus mejores momentos"
+  ogDescription="Los streamers de CORILLO ya pueden crear clips 9:16 desde sus VODs directamente desde el perfil — listos para descargar y subir a TikTok, Instagram o YouTube Shorts."
+  badgeClass="badge-accent"
+  badgeIcon="fa-solid fa-scissors"
+  badgeLabel="Plataforma"
+  date="30 marzo 2026"
+  heroTitle="Reels: comparte tus mejores momentos"
+  heroSub="Los streamers de CORILLO ya pueden crear clips 9:16 desde sus VODs directamente desde el perfil. El servidor genera el formato correcto — listos para descargar y subir a TikTok, Instagram o YouTube Shorts."
+  footerLinks={[
+    { href: '/noticias/', label: 'Noticias' },
+    { href: '/reels/',    label: 'Reels'    },
+    { href: '/roadmap/', label: 'Roadmap'   },
+    { href: '/faq/',     label: 'FAQ'       },
+  ]}
+>
+
+  <h2>El problema que resolvemos</h2>
+  <p>Los streamers hacen momentos que merecen vivir más allá del stream. Un clutch, una reacción, una discusión épica — ese contenido existía, pero quedaba enterrado en VODs de horas que nadie iba a ver completos. Editar un clip manualmente, convertirlo a vertical y subirlo a redes era trabajo extra que nadie tiene tiempo de hacer después de cinco horas de stream.</p>
+
+  <h2>Dos formas de crear un reel</h2>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <p><strong>Desde un VOD.</strong> En tu perfil busca la sección <em>Mis transmisiones</em>. Cada VOD guardado tiene un botón de tijera. Ingresa el tiempo de inicio y fin en formato <code class="crl-mono crl-text-accent">mm:ss</code> — entre 5 y 60 segundos — y el sistema corta el clip exacto.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <p><strong>Subiendo tu propio video.</strong> ¿Tienes un clip grabado fuera del stream? Súbelo directamente desde el perfil. Máximo 60 segundos, hasta 500 MB. El servidor lo procesa igual que cualquier reel.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <p><strong>Elige si quieres publicarlo.</strong> El reel puede ser privado (solo descarga) o aparecer en <code class="crl-mono crl-text-accent">corillo.live/reels/</code> para que todo el mundo lo vea. Puedes cambiarlo después desde tu perfil.</p>
+    </div>
+  </div>
+
+  <h2>El formato 9:16</h2>
+  <p>El servidor convierte automáticamente cualquier video a 9:16 (1080×1920) — el formato estándar de TikTok, Instagram Reels y YouTube Shorts. Si el video ya está en vertical, se escala sin recortar. Si está en horizontal, se hace un center crop para quedarse con el centro de la acción. Sin edición manual, listo para subir a cualquier red.</p>
+
+  <h2>La página pública /reels/</h2>
+  <p>Los reels marcados como públicos aparecen en <a href="/reels/" style="color:var(--crl-accent)">corillo.live/reels/</a> — una página de scroll vertical estilo TikTok donde cualquiera puede ver los mejores momentos de todos los streamers de CORILLO. Autoplay al entrar en pantalla, filtros por canal y botón de compartir incluidos.</p>
+
+  <h2>Lo que viene</h2>
+  <ul>
+    <li>Selector visual de tiempo sobre el video (drag para marcar inicio y fin)</li>
+    <li>Sugerencias automáticas de momentos con IA — el streamer siempre tiene la última palabra</li>
+    <li>Estadísticas de reproducciones por reel en el perfil</li>
+  </ul>
+
+  <div class="post-cta crl-flex crl-wrap crl-gap-sm">
+    <a class="btn btn-primary" href="/reels/">Ver página de Reels</a>
+    <a class="btn" href="/perfil/">Ir a mi perfil</a>
+    <a class="btn" href="/noticias/">Volver a noticias</a>
+  </div>
+
+</NoticiasPostLayout>

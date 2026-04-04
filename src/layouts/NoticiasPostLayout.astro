@@ -1,0 +1,102 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  badgeClass: string;        // e.g. "badge-accent"
+  badgeIcon: string;         // e.g. "fa-solid fa-scissors"
+  badgeLabel: string;        // e.g. "Plataforma"
+  date: string;              // e.g. "30 marzo 2026"
+  heroTitle: string;
+  heroSub: string;
+  footerLinks?: Array<{ href: string; label: string }>;
+  wide?: boolean;            // 860px instead of 820px (default false)
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogTitle,
+  ogDescription,
+  badgeClass,
+  badgeIcon,
+  badgeLabel,
+  date,
+  heroTitle,
+  heroSub,
+  footerLinks = [
+    { href: '/noticias/', label: 'Noticias' },
+    { href: '/roadmap/',  label: 'Roadmap'  },
+    { href: '/que-es-corillo/', label: 'Sobre Corillo' },
+    { href: '/faq/',      label: 'FAQ'      },
+  ],
+  wide = false,
+} = Astro.props;
+
+const maxW = wide ? '860px' : '820px';
+---
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  ogType="article"
+  ogTitle={ogTitle}
+  ogDescription={ogDescription}
+  navRightHref="/noticias/"
+  navRightIcon="fa-solid fa-newspaper"
+  footerInfo="Noticias del proyecto<br>Puerto Rico"
+  footerLinks={footerLinks}
+>
+  <fragment slot="head">
+    <style is:global>
+      .post-wrap{max-width:var(--post-max-w,820px);margin:0 auto;padding:0 20px 72px}
+      @media(max-width:600px){.post-wrap{padding:0 14px 56px}}
+      .post-meta{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+      .post-body{display:flex;flex-direction:column;gap:24px}
+      .post-body p{margin:0;font-size:var(--crl-base);line-height:1.75;color:rgba(255,255,255,.76)}
+      .post-body h2{margin:8px 0 0;font-family:var(--crl-display);font-size:1.8rem;letter-spacing:2px;line-height:1}
+      .post-body ul{margin:0;padding-left:18px;color:rgba(255,255,255,.74)}
+      .post-body li{margin:0 0 8px}
+      [data-theme="light"] .post-body p,[data-theme="light"] .post-body ul{color:rgba(0,0,0,.68)}
+      .post-cta{margin-top:8px}
+      /* flow steps (reels / vods) */
+      .flow-steps{display:flex;flex-direction:column;gap:14px;margin:0}
+      .flow-step{display:flex;gap:14px;align-items:flex-start;padding:16px;background:rgba(0,191,255,.04);border:1px solid rgba(0,191,255,.1);border-radius:12px}
+      .flow-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--crl-accent);color:#000;font-family:var(--crl-mono);font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+      .flow-step p{margin:0;font-size:var(--crl-sm);color:rgba(255,255,255,.76);line-height:1.6}
+      [data-theme="light"] .flow-step p{color:rgba(0,0,0,.65)}
+      [data-theme="light"] .flow-step{background:rgba(0,191,255,.04);border-color:rgba(0,191,255,.14)}
+      /* callout (la-fiebre) */
+      .post-callout{padding:18px 18px 16px;border-radius:20px;border:1px solid rgba(0,191,255,.16);background:linear-gradient(160deg,rgba(0,191,255,.06),rgba(7,17,24,.72))}
+      .post-links{display:flex;gap:10px;flex-wrap:wrap}
+      [data-theme="light"] .post-callout{background:rgba(0,191,255,.05);border-color:rgba(0,191,255,.2)}
+    </style>
+    <style define:vars={{ postMaxW: maxW }}>
+      .post-wrap { --post-max-w: var(--postMaxW) }
+    </style>
+    <slot name="head" />
+  </fragment>
+
+  <div class="crl-hero">
+    <div class="post-meta">
+      <span class={`badge ${badgeClass}`}><i class={badgeIcon}></i> {badgeLabel}</span>
+      <span class="crl-xs crl-text-muted crl-mono">{date}</span>
+    </div>
+    <h1 class="crl-hero-title">{heroTitle.toUpperCase()}</h1>
+    <p class="crl-hero-sub">{heroSub}</p>
+  </div>
+  <hr class="crl-divider-fade crl-divider-flush" />
+
+  <div class="post-wrap">
+    <div class="card card-dim">
+      <div class="post-body">
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

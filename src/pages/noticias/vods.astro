@@ -1,0 +1,62 @@
+---
+import NoticiasPostLayout from '../../layouts/NoticiasPostLayout.astro';
+---
+<NoticiasPostLayout
+  title="CORILLO — Noticias · VODs: cada transmisión queda guardada"
+  description="En CORILLO todo se graba automáticamente. Cada transmisión queda guardada con thumbnail y preview, disponible para verse cuando quieras."
+  canonical="https://corillo.live/noticias/vods/"
+  ogTitle="VODs: cada transmisión queda guardada"
+  ogDescription="En CORILLO todo se graba automáticamente. Cada transmisión queda guardada con thumbnail y preview, disponible para verse cuando quieras."
+  badgeClass="badge-accent"
+  badgeIcon="fa-solid fa-film"
+  badgeLabel="Plataforma"
+  date="2 abril 2026"
+  heroTitle="VODs: cada transmisión queda guardada"
+  heroSub="No tienes que hacer nada. Desde el momento en que empiezas a transmitir en CORILLO, todo se graba automáticamente y queda disponible para verse cuando quieras."
+  footerLinks={[
+    { href: '/noticias/', label: 'Noticias' },
+    { href: '/reels/',    label: 'Reels'    },
+    { href: '/roadmap/', label: 'Roadmap'   },
+    { href: '/faq/',     label: 'FAQ'       },
+  ]}
+>
+
+  <h2>Todo automático</h2>
+  <p>En CORILLO no tienes que activar la grabación, no tienes que recordar exportar el VOD al terminar, no tienes que subirlo a ningún lado. El sistema graba cada transmisión desde el primer segundo hasta el último. Streams de más de tres horas, sin interrupciones, sin perder nada.</p>
+
+  <h2>Qué se genera al terminar</h2>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <p><strong>El VOD completo</strong> — el archivo MP4 optimizado para streaming progresivo. Puedes pausar, adelantar, retroceder desde cualquier punto sin esperar a que cargue todo.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <p><strong>Thumbnail automático</strong> — una imagen capturada del stream para identificar visualmente el VOD. Sin editar, sin tener que subir nada tú.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <p><strong>Preview en hover</strong> — un clip corto de 4 segundos que se activa al pasar el cursor sobre la card. En móvil se ve al tocar. Así sabes qué hay en el VOD antes de abrirlo.</p>
+    </div>
+  </div>
+
+  <h2>Dónde verlos</h2>
+  <p>Los VODs aparecen en <a href="/vods/" style="color:var(--crl-accent)">corillo.live/vods/</a> — organizados por canal con filtros, fecha y duración. También aparecen en la página del canal cuando el streamer está offline: en vez de una pantalla vacía, el viewer ve la última transmisión cargando automáticamente mientras espera que el stream vuelva.</p>
+
+  <h2>Para el streamer</h2>
+  <p>Desde tu perfil en <a href="/perfil/" style="color:var(--crl-accent)">corillo.live/perfil/</a> puedes ver todas tus transmisiones guardadas, reproducirlas, borrar las que no quieras y crear Reels directamente desde cualquier VOD. El historial completo en un solo lugar.</p>
+
+  <h2>Lo que viene</h2>
+  <ul>
+    <li>Títulos personalizados para cada VOD desde el perfil</li>
+    <li>Capítulos — marcar momentos clave dentro del stream</li>
+    <li>Estadísticas de reproducciones por VOD</li>
+  </ul>
+
+  <div class="post-cta crl-flex crl-wrap crl-gap-sm">
+    <a class="btn btn-primary" href="/vods/">Ver VODs</a>
+    <a class="btn" href="/perfil/">Ir a mi perfil</a>
+    <a class="btn" href="/noticias/">Volver a noticias</a>
+  </div>
+
+</NoticiasPostLayout>
