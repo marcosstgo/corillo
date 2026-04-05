@@ -2,6 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /perfil/
 Disallow: /perfil/reset/
+Disallow: /player/
+Disallow: /dev/
 Disallow: /live/
 Disallow: /webrtc/
 Disallow: /mediamtx-api/
