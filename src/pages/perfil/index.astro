@@ -2614,7 +2614,7 @@ function initVodUpload() {
     fd.append('title', titleInput.value.trim());
 
     try {
-      await new Promise<void>((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open('POST', '/chat-api/upload-vod');
         xhr.setRequestHeader('Authorization', pb.authStore.token);
@@ -2651,8 +2651,8 @@ function initVodUpload() {
       document.getElementById('vodsCard').style.display = '';
       loadMyVods(currentRecord.key);
 
-    } catch(e: any) {
-      status.textContent = e?.message || 'Error. Intenta de nuevo.';
+    } catch(e) {
+      status.textContent = (e && e.message) || 'Error. Intenta de nuevo.';
       status.style.display = 'block';
       submitBtn.disabled = false;
       submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Subir';
