@@ -126,9 +126,9 @@
     const unmute = document.getElementById('unmuteBtn');
     const ch     = (vod.channel || '').toUpperCase();
 
-    document.title = `${ch} — CORILLO`;
-    document.getElementById('infoChannel').textContent = ch;
-    document.getElementById('infoDate').textContent    = fmtDate(vod.date);
+    document.title = vod.title ? `${vod.title} — ${ch} — CORILLO` : `${ch} — CORILLO`;
+    document.getElementById('infoChannel').textContent = vod.title || ch;
+    document.getElementById('infoDate').textContent    = vod.title ? `${ch} · ${fmtDate(vod.date)}` : fmtDate(vod.date);
 
     vid.src = `/vods/${vod.channel}/${vod.filename}`;
     if (vod.thumb) vid.poster = vod.thumb;

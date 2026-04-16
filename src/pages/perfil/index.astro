@@ -335,7 +335,8 @@
     }
     .vod-row-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .vod-row-info { flex: 1; min-width: 0; }
-    .vod-row-date { font-family: var(--mono); font-size: .72rem; color: var(--white); }
+    .vod-row-title { font-size: .85rem; font-weight: 600; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+    .vod-row-date { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
     .vod-row-meta { font-family: var(--mono); font-size: .65rem; color: var(--muted); margin-top: 2px; }
     .vod-row-link { text-decoration: none; color: inherit; flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
     .vod-row-link:hover .vod-row-date { color: var(--accent); }
@@ -1484,6 +1485,7 @@ async function loadMyVods(channel) {
               ${v.thumb ? `<img src="${v.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
             </div>
             <div class="vod-row-info">
+              ${v.title ? `<div class="vod-row-title">${esc(v.title)}</div>` : ''}
               <div class="vod-row-date">${fmtDate(v.date)}</div>
               <div class="vod-row-meta">${[fmtDur(v.duration), fmtMB(v.size)].filter(Boolean).join(' · ')}</div>
             </div>
