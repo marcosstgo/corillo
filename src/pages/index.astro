@@ -178,8 +178,9 @@
     .stream-live-tag{position:absolute;top:8px;left:8px;display:flex;align-items:center;gap:5px;font-family:var(--crl-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:var(--crl-live);color:#030a0e;padding:3px 8px;border-radius:3px}
     .stream-viewers{position:absolute;top:8px;right:8px;font-family:var(--crl-mono);font-size:10px;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);color:rgba(232,246,255,.7);padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:5px}
     .stream-body{padding:10px 12px;display:flex;align-items:center;gap:10px}
-    .stream-card-ava{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:16px;color:rgba(0,0,0,.8);align-self:flex-start;margin-top:2px}
+    .stream-card-ava{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:16px;color:rgba(0,0,0,.8);align-self:flex-start;margin-top:2px;position:relative;overflow:hidden}
     .stream-card-ava.is-live{box-shadow:0 0 0 2px var(--crl-live),0 0 10px rgba(0,255,157,.2)}
+    .stream-card-ava img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
     .stream-card-info{flex:1;min-width:0}
     .stream-name{font-family:var(--crl-mono);font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
     .stream-desc{font-size:11px;color:var(--crl-muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
@@ -1144,7 +1145,7 @@ function vodCards(vods: any[]) {
         ${dur ? `<div class="vod-duration">${dur}</div>` : ''}
       </div>
       <div class="stream-body">
-        <div class="stream-card-ava" style="background:${s.color||'var(--crl-accent)'}">${s.name.charAt(0)}</div>
+        <div class="stream-card-ava" style="background:${s.color||'var(--crl-accent)'}"><img id="card-ava-${vod.channel}" src="" alt="" style="display:none" onerror="this.style.display='none'"><span id="card-avaf-${vod.channel}">${s.name.charAt(0)}</span></div>
         <div class="stream-card-info">
           <div class="stream-name">${s.name}</div>
           <div class="stream-desc">${relativeTime(vod.date)}</div>
@@ -1221,7 +1222,7 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
         ${v > 0 ? `<div class="stream-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>` : ''}
       </div>
       <div class="stream-body">
-        <div class="stream-card-ava is-live" style="background:${s.color||'var(--crl-accent)'}">${s.name.charAt(0)}</div>
+        <div class="stream-card-ava is-live" style="background:${s.color||'var(--crl-accent)'}"><img id="card-ava-${s.key}" src="" alt="" style="display:none" onerror="this.style.display='none'"><span id="card-avaf-${s.key}">${s.name.charAt(0)}</span></div>
         <div class="stream-card-info">
           <div class="stream-name">${s.name}</div>
           <div class="stream-desc">${s.sub || 'corillo.live'}</div>
@@ -1243,6 +1244,33 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
 
   _gridState = newState;
   attachPreviewListeners(grid);
+
+  // Load profile photos for cards just rendered
+  const keys = [...grid.querySelectorAll('[id^="card-ava-"]')]
+    .map(el => el.id.replace('card-ava-', ''));
+  if (keys.length) loadCardAvatars(keys);
+}
+
+const _avatarCache: Record<string, string | null> = {};
+
+async function loadCardAvatars(keys: string[]) {
+  for (const key of keys) {
+    if (key in _avatarCache) { applyCardAvatar(key, _avatarCache[key]); continue; }
+    try {
+      const r = await fetch(`/chat-api/profile/${key}`);
+      if (!r.ok) { _avatarCache[key] = null; continue; }
+      const d = await r.json();
+      _avatarCache[key] = d.avatar_url || null;
+      applyCardAvatar(key, _avatarCache[key]);
+    } catch { _avatarCache[key] = null; }
+  }
+}
+
+function applyCardAvatar(key: string, url: string | null) {
+  if (!url) return;
+  const img = document.getElementById(`card-ava-${key}`) as HTMLImageElement | null;
+  const fb  = document.getElementById(`card-avaf-${key}`);
+  if (img && img.src !== url) { img.src = url; img.style.display = 'block'; if (fb) (fb as HTMLElement).style.display = 'none'; }
 }
 
 async function update() {
