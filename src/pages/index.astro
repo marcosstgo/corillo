@@ -1145,7 +1145,7 @@ function vodCards(vods: any[]) {
         ${dur ? `<div class="vod-duration">${dur}</div>` : ''}
       </div>
       <div class="stream-body">
-        <div class="stream-card-ava" style="background:${s.color||'var(--crl-accent)'}"><img id="card-ava-${vod.channel}" src="" alt="" style="display:none" onerror="this.style.display='none'"><span id="card-avaf-${vod.channel}">${s.name.charAt(0)}</span></div>
+        <div class="stream-card-ava" style="background:${s.color||'var(--crl-accent)'}"><img id="card-ava-${vod.channel}" alt="" style="display:none"><span id="card-avaf-${vod.channel}">${s.name.charAt(0)}</span></div>
         <div class="stream-card-info">
           <div class="stream-name">${s.name}</div>
           <div class="stream-desc">${relativeTime(vod.date)}</div>
@@ -1224,7 +1224,7 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
         ${v > 0 ? `<div class="stream-viewers"><i class="fa-solid fa-eye" style="font-size:9px"></i> ${v}</div>` : ''}
       </div>
       <div class="stream-body">
-        <div class="stream-card-ava is-live" style="background:${s.color||'var(--crl-accent)'}"><img id="card-ava-${s.key}" src="" alt="" style="display:none" onerror="this.style.display='none'"><span id="card-avaf-${s.key}">${s.name.charAt(0)}</span></div>
+        <div class="stream-card-ava is-live" style="background:${s.color||'var(--crl-accent)'}"><img id="card-ava-${s.key}" alt="" style="display:none"><span id="card-avaf-${s.key}">${s.name.charAt(0)}</span></div>
         <div class="stream-card-info">
           <div class="stream-name">${s.name}</div>
           <div class="stream-desc">${s.sub || 'corillo.live'}</div>
