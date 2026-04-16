@@ -1,0 +1,76 @@
+---
+import NoticiasPostLayout from '../../layouts/NoticiasPostLayout.astro';
+---
+<NoticiasPostLayout
+  title="CORILLO — Noticias · Sube tus videos y ponlos en cualquier lado"
+  description="Ya puedes subir videos directamente desde tu perfil en CORILLO — sin hacer stream. Ponles título, compártelos con un link o embedarlos en cualquier página con un iframe."
+  canonical="https://corillo.live/noticias/vod-upload/"
+  ogTitle="Sube tus videos a CORILLO — y ponlos en cualquier lado"
+  ogDescription="Ya puedes subir videos directamente desde tu perfil en CORILLO — sin hacer stream. Ponles título, compártelos con un link o embedarlos en cualquier página."
+  badgeClass="badge-accent"
+  badgeIcon="fa-solid fa-upload"
+  badgeLabel="Plataforma"
+  date="16 abril 2026"
+  heroTitle="Sube tus videos a CORILLO — y ponlos en cualquier lado"
+  heroSub="Ya no necesitas YouTube para alojar un tutorial, un video de comunidad o cualquier contenido que hagas. Súbelo directo desde tu perfil, ponle título y tendrás un link para verlo y un código para embebarlo en cualquier sitio."
+  footerLinks={[
+    { href: '/noticias/', label: 'Noticias' },
+    { href: '/vods/',     label: 'VODs'     },
+    { href: '/perfil/',   label: 'Mi perfil' },
+    { href: '/roadmap/', label: 'Roadmap'   },
+  ]}
+>
+
+  <h2>Sin stream, sin YouTube</h2>
+  <p>Hasta ahora los VODs en CORILLO eran grabaciones automáticas de tus streams. A partir de hoy también puedes subir cualquier video directamente — un tutorial, una intro, un video de presentación, lo que quieras. Sin tener que transmitir. Sin depender de YouTube para que tu contenido tenga un home.</p>
+
+  <h2>Cómo funciona</h2>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <p><strong>Entra a tu perfil</strong> en <a href="/perfil/" style="color:var(--crl-accent)">corillo.live/perfil/</a> y abre la pestaña <em>VODs</em>. Si tienes acceso al upload verás el botón <strong>Subir Video</strong>.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <p><strong>Selecciona el archivo</strong> — arrastra el video al área o hazle click para buscar. Formatos aceptados: MP4, MOV, MKV, WebM. Hasta 2 GB por video.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <p><strong>Ponle un título</strong> — aparece en el player y en el código de embed. Luego presiona <em>Subir</em>. El servidor procesa el video, genera thumbnail y preview automáticamente.</p>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <p><strong>Listo.</strong> El video aparece en tu lista de VODs con un link directo y un botón para copiar el código de embed — un <code class="crl-mono crl-text-accent">&lt;iframe&gt;</code> listo para pegar en cualquier página.</p>
+    </div>
+  </div>
+
+  <h2>El embed — ponlo donde quieras</h2>
+  <p>Cada video tiene un player embebible en <code class="crl-mono crl-text-accent">corillo.live/embed/v/?id=xxx</code>. Desde tu perfil, al lado de cada VOD hay un botón <strong>&lt;/&gt;</strong> que copia el código de embed al clipboard:</p>
+
+  <pre class="crl-mono" style="background:var(--crl-surface);border:1px solid var(--crl-border);border-radius:10px;padding:16px 18px;font-size:.78rem;overflow-x:auto;line-height:1.7;color:var(--crl-accent)">&lt;iframe
+  src="https://corillo.live/embed/v/?id=TU_VOD_ID"
+  width="100%"
+  style="aspect-ratio:16/9;border:none;border-radius:8px"
+  allowfullscreen
+  loading="lazy"&gt;
+&lt;/iframe&gt;</pre>
+
+  <p>Eso es todo. Lo pegas en el HTML de tu blog, en Notion, en tu portfolio, donde sea. El video se ve nativo — sin marca de YouTube, sin ads, sin que el viewer salga de tu sitio.</p>
+
+  <h2>Para quién es esto</h2>
+  <ul>
+    <li><strong>Streamers</strong> que quieren subir contenido sin estar transmitiendo en vivo — tutoriales de OBS, highlights editados, intros del canal</li>
+    <li><strong>Creadores</strong> que tienen un blog o sitio propio y quieren alojar sus videos sin depender de plataformas externas</li>
+    <li><strong>Cualquiera con un canal en CORILLO</strong> que quiera que su página del canal tenga más que solo streams — que tenga contenido siempre disponible</li>
+  </ul>
+
+  <h2>Quién tiene acceso</h2>
+  <p>El upload directo se activa por canal — no es automático para todos. Si quieres acceso, escríbenos. La idea es ir abriendo el feature gradualmente para asegurar que el servidor aguante bien antes de abrirlo a todos.</p>
+
+  <div class="post-cta crl-flex crl-wrap crl-gap-sm">
+    <a class="btn btn-primary" href="/perfil/">Ir a mi perfil</a>
+    <a class="btn" href="/vods/">Ver VODs</a>
+    <a class="btn" href="/noticias/">Volver a noticias</a>
+  </div>
+
+</NoticiasPostLayout>
