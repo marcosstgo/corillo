@@ -2552,16 +2552,16 @@ function initVodUpload() {
   const btnOpen   = document.getElementById('btnOpenVodUpload');
   const panel     = document.getElementById('vodUploadPanel');
   const dropZone  = document.getElementById('vodDropZone');
-  const fileInput = document.getElementById('vodFileInput') as HTMLInputElement;
-  const fileMeta  = document.getElementById('vodUploadFileMeta');
-  const titleInput = document.getElementById('vodUploadTitle') as HTMLInputElement;
-  const progress  = document.getElementById('vodUploadProgress');
-  const bar       = document.getElementById('vodUploadBar');
-  const status    = document.getElementById('vodUploadStatus');
-  const submitBtn = document.getElementById('vodUploadSubmit') as HTMLButtonElement;
-  const cancelBtn = document.getElementById('vodUploadCancel');
+  const fileInput  = document.getElementById('vodFileInput');
+  const fileMeta   = document.getElementById('vodUploadFileMeta');
+  const titleInput = document.getElementById('vodUploadTitle');
+  const progress   = document.getElementById('vodUploadProgress');
+  const bar        = document.getElementById('vodUploadBar');
+  const status     = document.getElementById('vodUploadStatus');
+  const submitBtn  = document.getElementById('vodUploadSubmit');
+  const cancelBtn  = document.getElementById('vodUploadCancel');
 
-  let selectedFile: File | null = null;
+  let selectedFile = null;
 
   function reset() {
     selectedFile = null;
@@ -2583,7 +2583,7 @@ function initVodUpload() {
 
   cancelBtn.addEventListener('click', () => { panel.style.display = 'none'; reset(); });
 
-  function onFileSelected(f: File) {
+  function onFileSelected(f) {
     selectedFile = f;
     const mb = (f.size / 1024 / 1024).toFixed(1);
     fileMeta.textContent = `${f.name} · ${mb} MB`;
