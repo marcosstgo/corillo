@@ -1182,6 +1182,8 @@ function renderGrid(live: any[], offline: any[], paths: any[]) {
           <a href="/vods/">Ver todos →</a>
         </div><div class="cards-carousel">${vodCards(_recentVods)}</div>`;
         attachPreviewListeners(grid);
+        const vodKeys = [...grid.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
+        if (vodKeys.length) loadCardAvatars(vodKeys);
       }
     } else {
       if (_gridState !== 'empty') {
