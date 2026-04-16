@@ -780,6 +780,175 @@ async def reel_visibility(reel_id: str, request: Request):
     return {"ok": True, "public": public}
 
 
+@app.post("/upload-vod")
+async def upload_vod(
+    request: Request,
+    file: UploadFile = File(...),
+    title: str = Form(""),
+):
+    """Sube un video como VOD. Solo streamers con upload_enabled=true."""
+    auth = request.headers.get("Authorization", "")
+    if not auth:
+        raise HTTPException(status_code=401)
+
+    channel = await _streamer_from_token(auth)
+    token   = await _admin_token()
+
+    # Verificar upload_enabled
+    sr = await _http.get(
+        f"{PB_URL}/api/collections/streamers/records",
+        headers={"Authorization": token},
+        params={"filter": f'key="{channel}"', "fields": "upload_enabled,vod_plan", "perPage": 1},
+    )
+    items = sr.json().get("items", [])
+    if not items or not items[0].get("upload_enabled"):
+        raise HTTPException(status_code=403, detail="Upload no habilitado para este canal")
+    vod_plan = items[0].get("vod_plan", "free")
+
+    ct = file.content_type or ""
+    if not ct.startswith("video/"):
+        raise HTTPException(status_code=400, detail="Solo se aceptan archivos de video")
+
+    # Stream a disco en chunks — evita cargar GB en memoria
+    vod_dir = Path(f"/var/vods/live/{channel}")
+    vod_dir.mkdir(parents=True, exist_ok=True)
+    ts  = int(time.time())
+    ext = Path(file.filename or ".mp4").suffix or ".mp4"
+    tmp = str(vod_dir / f"{ts}_upload_tmp{ext}")
+    out = str(vod_dir / f"{ts}.mp4")
+
+    MAX_SIZE = 2 * 1024 * 1024 * 1024  # 2 GB
+    written  = 0
+    try:
+        with open(tmp, "wb") as fh:
+            while True:
+                chunk = await file.read(4 * 1024 * 1024)  # 4 MB chunks
+                if not chunk:
+                    break
+                written += len(chunk)
+                if written > MAX_SIZE:
+                    raise HTTPException(status_code=413, detail="El archivo supera los 2 GB")
+                fh.write(chunk)
+    except HTTPException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
+
+    # Duración
+    pp = await asyncio.create_subprocess_exec(
+        "ffprobe", "-v", "error", "-show_entries", "format=duration",
+        "-of", "csv=p=0", tmp,
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.DEVNULL,
+    )
+    stdout, _ = await pp.communicate()
+    try:
+        duration = float(stdout.decode().strip())
+    except Exception:
+        Path(tmp).unlink(missing_ok=True)
+        raise HTTPException(status_code=400, detail="No se pudo leer la duración del video")
+
+    # Remux a MP4 faststart (copia streams, no re-encode)
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-i", tmp,
+        "-c", "copy", "-movflags", "+faststart",
+        out,
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(proc.communicate(), timeout=600)
+    except asyncio.TimeoutError:
+        proc.kill()
+        Path(tmp).unlink(missing_ok=True)
+        raise HTTPException(status_code=504, detail="Timeout procesando video")
+
+    Path(tmp).unlink(missing_ok=True)
+    if proc.returncode != 0 or not os.path.exists(out):
+        raise HTTPException(status_code=500, detail="Error procesando el video")
+
+    # Thumbnail (JPEG, seek al 20% o 10s)
+    seek      = min(10, max(1, int(duration * 0.2)))
+    thumb_out = str(vod_dir / f"{ts}.jpg")
+    tp = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-ss", str(seek), "-i", out,
+        "-vframes", "1", "-vf", "scale=640:-2", "-q:v", "3",
+        thumb_out,
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(tp.communicate(), timeout=30)
+    except Exception:
+        pass
+
+    # Preview 4s muted
+    preview_out = str(vod_dir / f"{ts}-preview.mp4")
+    prp = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-ss", str(seek), "-i", out,
+        "-t", "4", "-vf", "scale=640:-2",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "32", "-an",
+        "-movflags", "+faststart",
+        preview_out,
+        stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
+    )
+    try:
+        await asyncio.wait_for(prp.communicate(), timeout=60)
+    except Exception:
+        pass
+
+    size        = os.path.getsize(out) if os.path.exists(out) else 0
+    thumb_url   = f"/vods/{channel}/{ts}.jpg"   if os.path.exists(thumb_out)   else ""
+    preview_url = f"/vods/{channel}/{ts}-preview.mp4" if os.path.exists(preview_out) else ""
+    title_clean = title.strip()[:120]
+
+    vr = await _http.post(
+        f"{PB_URL}/api/collections/vods/records",
+        headers={"Authorization": token},
+        json={
+            "channel":  channel,
+            "filename": f"{ts}.mp4",
+            "filepath": out,
+            "duration": int(duration),
+            "size":     size,
+            "date":     datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S.000Z'),
+            "thumb":    thumb_url,
+            "preview":  preview_url,
+            **({"title": title_clean} if title_clean else {}),
+        },
+        timeout=15,
+    )
+    if vr.status_code not in (200, 201):
+        raise HTTPException(status_code=500, detail="Error guardando VOD en base de datos")
+
+    rec = vr.json()
+
+    # Retención (igual que vod-process.py)
+    keep = 5 if vod_plan == "free" else 9999
+    if keep < 9999:
+        rv_list = await _http.get(
+            f"{PB_URL}/api/collections/vods/records",
+            headers={"Authorization": token},
+            params={"filter": f'channel="{channel}"', "sort": "-date", "perPage": 200, "fields": "id,filepath"},
+        )
+        all_vods = rv_list.json().get("items", [])
+        for old in all_vods[keep:]:
+            fp = Path(old.get("filepath", ""))
+            if str(fp).startswith("/var/vods/live/"):
+                fp.unlink(missing_ok=True)
+                fp.with_suffix(".jpg").unlink(missing_ok=True)
+                Path(fp.parent / (fp.stem + "-preview.mp4")).unlink(missing_ok=True)
+            await _http.delete(
+                f"{PB_URL}/api/collections/vods/records/{old['id']}",
+                headers={"Authorization": token},
+            )
+
+    return {
+        "id":       rec["id"],
+        "filename": f"{ts}.mp4",
+        "thumb":    thumb_url,
+        "preview":  preview_url,
+        "duration": int(duration),
+        "size":     size,
+    }
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}

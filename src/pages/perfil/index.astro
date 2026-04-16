@@ -666,6 +666,23 @@
     }
     .reel-upload-progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width .3s; border-radius: 2px; }
 
+    /* ── Upload VOD ── */
+    .vod-upload-drop {
+      border: 2px dashed var(--border-h); border-radius: var(--r-lg);
+      padding: 32px 20px; text-align: center; cursor: pointer; transition: .15s;
+      color: var(--muted); font-family: var(--mono); font-size: .78rem;
+      letter-spacing: 1px; margin-bottom: 14px; position: relative;
+    }
+    .vod-upload-drop:hover, .vod-upload-drop.drag { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.04); }
+    .vod-upload-drop i { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+    .vod-upload-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .vod-upload-progress {
+      display: none; height: 4px; background: var(--border);
+      border-radius: 2px; margin-bottom: 14px; overflow: hidden;
+    }
+    .vod-upload-progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width .3s; border-radius: 2px; }
+    .vod-upload-status { font-family: var(--mono); font-size: .7rem; color: var(--muted); margin-bottom: 10px; }
+
     /* ── Paneles ── */
     .panel-row {
       background: var(--surface); border: 1px solid var(--border);
@@ -1004,6 +1021,40 @@
       </div>
 
       <div class="ct-panel active" id="ct-vods">
+        <!-- Botón Subir Video (solo si upload_enabled) -->
+        <div id="vodUploadBtnWrap" style="display:none;margin-bottom:14px">
+          <button class="btn btn-primary" id="btnOpenVodUpload" style="font-size:.7rem"><i class="fa-solid fa-upload"></i> Subir Video</button>
+        </div>
+
+        <!-- Panel de upload VOD -->
+        <div id="vodUploadPanel" style="display:none;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px">
+          <div class="pf-s-label" style="margin-bottom:14px"><i class="fa-solid fa-upload"></i> Subir video</div>
+
+          <div class="vod-upload-drop" id="vodDropZone">
+            <input type="file" id="vodFileInput" accept="video/*">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <div>Arrastra tu video aquí o toca para seleccionar</div>
+            <div style="font-size:.65rem;margin-top:6px;opacity:.6">Máx 2 GB · Cualquier duración</div>
+          </div>
+
+          <div id="vodUploadFileMeta" style="display:none;font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:12px"></div>
+
+          <div style="margin-bottom:12px">
+            <label style="font-family:var(--mono);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Título (opcional)</label>
+            <input id="vodUploadTitle" type="text" class="pf-input" placeholder="Ej: Tutorial de OBS, Gameplay de…" maxlength="120" style="width:100%">
+          </div>
+
+          <div class="vod-upload-progress" id="vodUploadProgress">
+            <div class="vod-upload-progress-bar" id="vodUploadBar"></div>
+          </div>
+          <div class="vod-upload-status" id="vodUploadStatus" style="display:none"></div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="vodUploadSubmit" disabled style="font-size:.7rem"><i class="fa-solid fa-upload"></i> Subir</button>
+            <button class="btn" id="vodUploadCancel" style="font-size:.7rem">Cancelar</button>
+          </div>
+        </div>
+
         <div id="vodsCard" style="display:none">
           <div class="vod-rows" id="vodsList"></div>
           <p id="vodsEmpty" style="display:none;font-size:.85rem;color:var(--muted);font-family:var(--mono);padding:8px 0">No tienes transmisiones guardadas aún.</p>
@@ -1282,6 +1333,10 @@ function populateDashboard(rec) {
     document.getElementById('vodsDisabled').style.display = 'none';
     document.getElementById('vodsCard').style.display = '';
     loadMyVods(rec.key);
+  }
+  if (rec.upload_enabled) {
+    document.getElementById('vodUploadBtnWrap').style.display = '';
+    initVodUpload();
   }
   loadMyReels(rec.key);
 
@@ -2475,6 +2530,121 @@ resetBtn.addEventListener('click', async () => {
     }
   });
 })();
+
+// ── VOD Upload ──
+function initVodUpload() {
+  const btnOpen   = document.getElementById('btnOpenVodUpload');
+  const panel     = document.getElementById('vodUploadPanel');
+  const dropZone  = document.getElementById('vodDropZone');
+  const fileInput = document.getElementById('vodFileInput') as HTMLInputElement;
+  const fileMeta  = document.getElementById('vodUploadFileMeta');
+  const titleInput = document.getElementById('vodUploadTitle') as HTMLInputElement;
+  const progress  = document.getElementById('vodUploadProgress');
+  const bar       = document.getElementById('vodUploadBar');
+  const status    = document.getElementById('vodUploadStatus');
+  const submitBtn = document.getElementById('vodUploadSubmit') as HTMLButtonElement;
+  const cancelBtn = document.getElementById('vodUploadCancel');
+
+  let selectedFile: File | null = null;
+
+  function reset() {
+    selectedFile = null;
+    fileInput.value = '';
+    fileMeta.style.display = 'none';
+    fileMeta.textContent = '';
+    titleInput.value = '';
+    bar.style.width = '0%';
+    progress.style.display = 'none';
+    status.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Subir';
+  }
+
+  btnOpen.addEventListener('click', () => {
+    panel.style.display = panel.style.display === 'none' ? '' : 'none';
+    if (panel.style.display === '') reset();
+  });
+
+  cancelBtn.addEventListener('click', () => { panel.style.display = 'none'; reset(); });
+
+  function onFileSelected(f: File) {
+    selectedFile = f;
+    const mb = (f.size / 1024 / 1024).toFixed(1);
+    fileMeta.textContent = `${f.name} · ${mb} MB`;
+    fileMeta.style.display = 'block';
+    submitBtn.disabled = false;
+  }
+
+  fileInput.addEventListener('change', () => { if (fileInput.files?.[0]) onFileSelected(fileInput.files[0]); });
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('drag');
+    const f = e.dataTransfer?.files?.[0];
+    if (f && f.type.startsWith('video/')) onFileSelected(f);
+  });
+
+  submitBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Subiendo…';
+    status.style.display = 'none';
+    progress.style.display = 'block';
+    bar.style.width = '0%';
+
+    const fd = new FormData();
+    fd.append('file', selectedFile);
+    fd.append('title', titleInput.value.trim());
+
+    try {
+      await new Promise<void>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/chat-api/upload-vod');
+        xhr.setRequestHeader('Authorization', pb.authStore.token);
+
+        xhr.upload.addEventListener('progress', e => {
+          if (e.lengthComputable) {
+            const pct = Math.round((e.loaded / e.total) * 100);
+            bar.style.width = pct + '%';
+            if (pct === 100) {
+              submitBtn.innerHTML = '<span class="spinner"></span> Procesando…';
+              status.textContent = 'Procesando video…';
+              status.style.display = 'block';
+            }
+          }
+        });
+
+        xhr.addEventListener('load', () => {
+          if (xhr.status >= 200 && xhr.status < 300) resolve();
+          else {
+            let msg = 'Error al subir.';
+            try { msg = JSON.parse(xhr.responseText).detail || msg; } catch {}
+            reject(new Error(msg));
+          }
+        });
+        xhr.addEventListener('error', () => reject(new Error('Error de red.')));
+        xhr.send(fd);
+      });
+
+      showToast('¡Video subido!');
+      panel.style.display = 'none';
+      reset();
+      // Mostrar VODs si no estaban visibles
+      document.getElementById('vodsDisabled').style.display = 'none';
+      document.getElementById('vodsCard').style.display = '';
+      loadMyVods(currentRecord.key);
+
+    } catch(e: any) {
+      status.textContent = e?.message || 'Error. Intenta de nuevo.';
+      status.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fa-solid fa-upload"></i> Subir';
+      bar.style.width = '0%';
+      progress.style.display = 'none';
+    }
+  });
+}
 
 // ── Logout ──
 function doLogout() {
