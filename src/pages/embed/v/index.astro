@@ -1,0 +1,151 @@
+---
+// embed/v/index.astro — Minimal embeddable VOD player
+// Usage: <iframe src="https://corillo.live/embed/v/?id={VOD_ID}" ...></iframe>
+// No nav, no header — designed for embedding in external sites.
+---
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CORILLO</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Space Mono', monospace; }
+
+    .wrap {
+      position: relative; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    video {
+      width: 100%; height: 100%; object-fit: contain; display: block;
+      background: #000;
+    }
+
+    /* ── Info overlay (bottom, appears on hover / mobile tap) ── */
+    .info-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 48px 14px 10px;
+      background: linear-gradient(transparent, rgba(0,0,0,.82));
+      display: flex; align-items: flex-end; justify-content: space-between;
+      opacity: 0; transition: opacity .25s; pointer-events: none;
+    }
+    .wrap:hover .info-bar,
+    .wrap.show-ui .info-bar { opacity: 1; pointer-events: auto; }
+
+    .info-left { min-width: 0; }
+    .info-channel {
+      font-family: 'Bebas Neue', cursive; font-size: 1rem;
+      letter-spacing: 3px; color: #e8f6ff;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .info-date {
+      font-size: 9px; letter-spacing: 1px; color: rgba(232,246,255,.45);
+      margin-top: 2px;
+    }
+    .info-logo {
+      font-family: 'Bebas Neue', cursive; font-size: .78rem; letter-spacing: 3px;
+      color: rgba(0,191,255,.55); text-decoration: none; flex-shrink: 0;
+      transition: color .15s;
+    }
+    .info-logo:hover { color: #00bfff; }
+
+    /* ── Unmute button ── */
+    .unmute-btn {
+      position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+      z-index: 10; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 8px 18px; border-radius: 8px;
+      border: 1px solid rgba(0,191,255,.5); background: rgba(0,0,0,.8);
+      color: #00bfff; cursor: pointer;
+      display: flex; align-items: center; gap: 7px;
+      backdrop-filter: blur(8px); transition: .15s; white-space: nowrap;
+    }
+    .unmute-btn:hover { background: rgba(0,191,255,.1); }
+    .unmute-btn.hidden { display: none; }
+
+    /* ── Error state ── */
+    .err-state {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px; color: rgba(232,246,255,.3);
+      font-size: 11px; letter-spacing: 2px; text-align: center; padding: 20px;
+    }
+    .err-state i { font-size: 2rem; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <video id="vid" autoplay muted playsinline controls preload="metadata"></video>
+    <button class="unmute-btn" id="unmuteBtn">
+      <i class="fa-solid fa-volume-xmark"></i> Activar sonido
+    </button>
+    <div class="info-bar">
+      <div class="info-left">
+        <div class="info-channel" id="infoChannel"></div>
+        <div class="info-date" id="infoDate"></div>
+      </div>
+      <a href="https://corillo.live" target="_blank" rel="noopener" class="info-logo">CORILLO.LIVE</a>
+    </div>
+  </div>
+
+  <script>
+  const PB = 'https://pb.corillo.live';
+
+  function fmtDate(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function showError(msg) {
+    document.getElementById('wrap').innerHTML = `
+      <div class="err-state">
+        <i class="fa-solid fa-film"></i>
+        <span>${msg}</span>
+      </div>`;
+  }
+
+  async function init() {
+    const id = new URLSearchParams(location.search).get('id');
+    if (!id) { showError('VOD no encontrado'); return; }
+
+    let vod;
+    try {
+      const r = await fetch(`${PB}/api/collections/vods/records/${id}`);
+      if (!r.ok) { showError('VOD no encontrado'); return; }
+      vod = await r.json();
+    } catch { showError('Error al cargar'); return; }
+
+    const vid    = document.getElementById('vid');
+    const unmute = document.getElementById('unmuteBtn');
+    const ch     = (vod.channel || '').toUpperCase();
+
+    document.title = `${ch} — CORILLO`;
+    document.getElementById('infoChannel').textContent = ch;
+    document.getElementById('infoDate').textContent    = fmtDate(vod.date);
+
+    vid.src = `/vods/${vod.channel}/${vod.filename}`;
+    if (vod.thumb) vid.poster = vod.thumb;
+
+    unmute.addEventListener('click', () => { vid.muted = false; unmute.classList.add('hidden'); });
+    vid.addEventListener('volumechange', () => { if (!vid.muted) unmute.classList.add('hidden'); });
+
+    // Show UI on mobile touch
+    const wrap = document.getElementById('wrap');
+    wrap.addEventListener('touchstart', () => {
+      wrap.classList.add('show-ui');
+      clearTimeout(wrap._uiTimer);
+      wrap._uiTimer = setTimeout(() => wrap.classList.remove('show-ui'), 3000);
+    }, { passive: true });
+  }
+
+  init();
+  </script>
+</body>
+</html>

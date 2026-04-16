@@ -340,15 +340,17 @@
     .vod-row-link { text-decoration: none; color: inherit; flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
     .vod-row-link:hover .vod-row-date { color: var(--accent); }
     .vod-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .vod-row-del, .vod-row-reel {
+    .vod-row-del, .vod-row-reel, .vod-row-embed {
       width: 30px; height: 30px; border-radius: 6px;
       border: 1px solid var(--border); background: transparent;
       color: var(--muted); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       font-size: .78rem; transition: .15s; flex-shrink: 0;
     }
-    .vod-row-del:hover  { border-color: #e17055; color: #e17055; }
-    .vod-row-reel:hover { border-color: var(--accent); color: var(--accent); }
+    .vod-row-del:hover   { border-color: #e17055; color: #e17055; }
+    .vod-row-reel:hover  { border-color: var(--accent); color: var(--accent); }
+    .vod-row-embed:hover { border-color: rgba(0,191,255,.4); color: var(--accent); }
+    .vod-row-embed.copied { border-color: #00b894; color: #00b894; }
     .vod-row-reel.active { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.08); }
     .vod-row-del.loading { opacity: .4; pointer-events: none; }
 
@@ -1488,6 +1490,7 @@ async function loadMyVods(channel) {
           </a>
           <div class="vod-row-actions">
             <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}',${v.duration||0},'${esc(vidSrc)}','${esc(v.thumb||'')}')" title="Crear Reel"><i class="fa-solid fa-scissors"></i></button>
+            <button class="vod-row-embed" onclick="copyEmbedCode('${v.id}')" title="Copiar código embed"><i class="fa-solid fa-code"></i></button>
             <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>
@@ -2053,6 +2056,19 @@ async function generateReel(vodId) {
     btn.disabled = false;
     btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generar Reel';
   }
+}
+
+function copyEmbedCode(id) {
+  const code = `<iframe src="https://corillo.live/embed/v/?id=${id}" width="100%" style="aspect-ratio:16/9;border:none;border-radius:8px" allowfullscreen loading="lazy"></iframe>`;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.querySelector(`#vrow-${id} .vod-row-embed`);
+    if (btn) {
+      btn.classList.add('copied');
+      btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '<i class="fa-solid fa-code"></i>'; }, 2000);
+    }
+    showToast('Código embed copiado', 'ok');
+  });
 }
 
 async function deleteVod(id) {
