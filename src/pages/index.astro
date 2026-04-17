@@ -1386,7 +1386,7 @@ const applyTheme = (theme: string) => {
       const thumb = r.thumb ? `background-image:url('${r.thumb}')` : '';
       const a = document.createElement('a');
       a.className = 'reel-card';
-      a.href = '/reels/';
+      a.href = `/reels/v/?id=${r.id}`;
       a.innerHTML = `
         <div class="reel-card-thumb" style="${thumb}">
           <div class="reel-card-play"><i class="fa-solid fa-play"></i></div>
