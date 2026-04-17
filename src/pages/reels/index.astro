@@ -141,6 +141,7 @@ function renderReels(reels: any[]) {
     const el = document.createElement('div');
     el.className = 'crl-reel';
     el.dataset.idx = String(i);
+    el.dataset.reelId = r.id;
     el.innerHTML = `
       <div class="crl-reel-media">
         <div class="crl-reel-bg" style="${thumbBg}"></div>
@@ -156,7 +157,7 @@ function renderReels(reels: any[]) {
       <div class="crl-reel-overlay">
         <div class="crl-reel-info">
           <div class="crl-reel-streamer">
-            <div class="crl-reel-ava" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaHtml}</div>
+            <div class="crl-reel-ava" data-channel="${r.channel}" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaHtml}</div>
             <span class="crl-reel-name">${r.channel.toUpperCase()}</span>
           </div>
           ${r.title ? `<div class="crl-reel-desc">${esc(r.title)}</div>` : ''}
@@ -175,7 +176,7 @@ function renderReels(reels: any[]) {
       </div>
       <div class="crl-reel-caption">
         <div class="crl-reel-streamer">
-          <div class="crl-reel-ava" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaHtml}</div>
+          <div class="crl-reel-ava" data-channel="${r.channel}" style="background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaHtml}</div>
           <a href="/${r.channel}/" class="crl-reel-name" style="text-decoration:none">${r.channel.toUpperCase()}</a>
         </div>
         ${r.title ? `<div class="crl-reel-desc" style="-webkit-line-clamp:3">${esc(r.title)}</div>` : ''}
@@ -203,6 +204,18 @@ function renderReels(reels: any[]) {
 
   container.style.display = '';
   hint.style.display = reels.length > 1 ? 'flex' : 'none';
+
+  const startId = new URLSearchParams(location.search).get('start');
+  if (startId) {
+    requestAnimationFrame(() => {
+      const target = container.querySelector(`[data-reel-id="${startId}"]`) as HTMLElement | null;
+      if (target) {
+        container.style.scrollBehavior = 'auto';
+        container.scrollTop = target.offsetTop;
+        requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
+      }
+    });
+  }
 
   observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -259,7 +272,17 @@ async function loadStreamers() {
     const reelsData = await reelsRes.json();
     const channels  = [...new Set((reelsData.items || []).map((r: any) => r.channel))].sort() as string[];
 
-    // Fetch avatars via the profile API (requires admin token, public endpoint)
+    // Filter chips appear immediately
+    const bar = document.getElementById('filterBar')!;
+    channels.forEach((ch: string) => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-chip';
+      btn.dataset.channel = ch;
+      btn.textContent = ch.toUpperCase();
+      bar.appendChild(btn);
+    });
+
+    // Fetch avatars in background, then patch DOM
     await Promise.allSettled(
       channels.map((ch: string) =>
         fetch('/chat-api/profile/' + ch, { signal: AbortSignal.timeout(4000) })
@@ -268,13 +291,13 @@ async function loadStreamers() {
       )
     );
 
-    const bar = document.getElementById('filterBar')!;
-    channels.forEach((ch: string) => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-chip';
-      btn.dataset.channel = ch;
-      btn.textContent = ch.toUpperCase();
-      bar.appendChild(btn);
+    document.querySelectorAll<HTMLElement>('.crl-reel-ava[data-channel]').forEach(ava => {
+      const ch = ava.dataset.channel!;
+      if (streamerAvatars[ch]) {
+        ava.innerHTML = `<img src="${streamerAvatars[ch]}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+      } else {
+        ava.textContent = (ch[0] || '?').toUpperCase();
+      }
     });
   } catch {}
 }
@@ -302,7 +325,8 @@ function esc(s: string) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-loadStreamers().then(() => loadReels());
+loadReels();
+loadStreamers();
 </script>
 
 </FullscreenLayout>
