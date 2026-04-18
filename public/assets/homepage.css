@@ -776,7 +776,6 @@ body { --grain: 55; }
 
 /* ═══ VOD CARDS IN GRID ═══ */
 .vods-row-header {
-  grid-column: 1 / -1;
   display: flex; align-items: center; gap: 12px;
   margin-top: 8px;
 }
@@ -792,13 +791,13 @@ body { --grain: 55; }
 .vods-row-header a:hover { opacity: .75; }
 
 .cards-carousel {
-  grid-column: 1 / -1;
   display: flex; gap: 12px; overflow-x: auto;
   scrollbar-width: none; -ms-overflow-style: none;
   padding-bottom: 4px;
 }
 .cards-carousel::-webkit-scrollbar { display: none; }
 .cards-carousel .ch { flex: 0 0 200px; }
+#vodsRow { margin-top: 8px; }
 
 /* Preview video inside ch card (VOD hover) */
 .ch-preview-vid {

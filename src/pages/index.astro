@@ -378,6 +378,16 @@
       <!-- rendered by JS -->
     </div>
 
+    <!-- RECENT VODS ROW (below grid, rendered by JS when channels offline) -->
+    <div id="vodsRow" style="display:none">
+      <div class="vods-row-header" style="margin-bottom:12px">
+        <span>Últimas transmisiones</span>
+        <div class="section-line"></div>
+        <a href="/vods/">Ver todos →</a>
+      </div>
+      <div class="cards-carousel" id="vodsCarousel"></div>
+    </div>
+
   </section>
 
   <!-- RAIL -->
@@ -1070,30 +1080,25 @@ function renderChannelGrid(paths) {
       </a>`;
   }).join('');
 
-  // VOD section: show recent VODs for offline channels (todos filter only)
-  let vodHtml = '';
-  if (currentFilter === 'todos' && _recentVods.length) {
-    const liveKeys = new Set(STREAMERS.filter(s => liveSet.has(s.key)).map(s => s.key));
-    const offlineVods = _recentVods.filter(v => !liveKeys.has(v.channel));
-    if (offlineVods.length) {
-      vodHtml = `<div class="vods-row-header">
-        <span>Últimas transmisiones</span>
-        <div class="section-line"></div>
-        <a href="/vods/">Ver todos →</a>
-      </div>
-      <div class="cards-carousel">${vodCards(offlineVods)}</div>`;
-    }
-  }
+  grid.innerHTML = cardsHtml;
+}
 
-  const newState = liveSet.size ? 'live' : 'offline';
-  grid.innerHTML = cardsHtml + vodHtml;
-  _gridState = newState;
+function renderVodsRow(paths) {
+  const vodsRow  = document.getElementById('vodsRow');
+  const carousel = document.getElementById('vodsCarousel');
+  if (!_recentVods.length) { vodsRow.style.display = 'none'; return; }
 
-  if (vodHtml) {
-    attachPreviewListeners(grid);
-    const ids = [...grid.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
-    if (ids.length) loadCardAvatars(ids);
-  }
+  const liveSet  = getLiveSet(paths);
+  const liveKeys = new Set(STREAMERS.filter(s => liveSet.has(s.key)).map(s => s.key));
+  const offlineVods = _recentVods.filter(v => !liveKeys.has(v.channel));
+
+  if (!offlineVods.length) { vodsRow.style.display = 'none'; return; }
+
+  carousel.innerHTML = vodCards(offlineVods);
+  vodsRow.style.display = '';
+  attachPreviewListeners(carousel);
+  const ids = [...carousel.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
+  if (ids.length) loadCardAvatars(ids);
 }
 
 /* ── Drawer ──────────────────────────────────────────── */
@@ -1244,8 +1249,9 @@ async function poll() {
   // Drawer
   renderDrawer(live, offline, paths);
 
-  // Channel grid
+  // Channel grid + VODs row
   renderChannelGrid(paths);
+  renderVodsRow(paths);
 
   // Featured player
   if (live.length > 0) {
