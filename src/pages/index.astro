@@ -281,18 +281,6 @@
   </div>
 </header>
 
-<!-- BANNER -->
-<div class="banner">
-  <div class="banner-stack">
-    <div class="line">
-      <span>TRANSMITIENDO</span>
-      <span class="meta" id="bannerMeta">14 Canales · Puerto Rico</span>
-    </div>
-    <div class="line dim"><span>DESDE LA</span></div>
-    <div class="line"><span class="accent">ISLA DEL ENCANTO</span></div>
-  </div>
-</div>
-
 <!-- MAIN -->
 <main class="main dense" id="mainLayout">
 
@@ -395,19 +383,6 @@
   <!-- RAIL -->
   <aside class="rail">
 
-    <!-- CHAT -->
-    <div class="panel chat-panel">
-      <div class="panel-header">
-        <div class="panel-title"><i class="fa-solid fa-comments"></i> Chat · #corillo</div>
-        <div class="panel-meta"><span class="dot" style="color:var(--confirm)">●</span> <span id="chatOnline">0</span> online</div>
-      </div>
-      <div class="chat-body" id="chatBody"></div>
-      <form class="chat-input" id="chatForm">
-        <input placeholder="Mensaje al chat..." id="chatInput" maxlength="280">
-        <button type="submit">Enviar</button>
-      </form>
-    </div>
-
     <!-- DIGEST -->
     <div class="panel">
       <div class="panel-header">
@@ -434,6 +409,16 @@
   </aside>
 
 </main>
+
+<!-- REELS STRIP -->
+<div class="reels-strip" id="reelsStrip" style="display:none">
+  <div class="reels-strip-hd">
+    <span><i class="fa-solid fa-scissors" style="margin-right:6px"></i>Últimos reels</span>
+    <div class="section-line"></div>
+    <a href="/reels/">Ver todos <i class="fa-solid fa-arrow-right" style="font-size:9px"></i></a>
+  </div>
+  <div class="reels-strip-track" id="reelsTrack"></div>
+</div>
 
 <!-- FOOTER -->
 <footer class="site-footer">
@@ -513,9 +498,11 @@ const POLL_MS     = 15000;
 const API_TIMEOUT = 5000;
 const CACHE_MS    = 8000;
 const ROTATE_MS   = 6000;
+const VOD_TTL     = 120000;
 const PB_URL      = 'https://pb.corillo.live';
 
 const STREAMERS = (window.STREAMERS || []).filter(s => !s.soon);
+const _hover    = window.matchMedia('(hover: hover)').matches;
 
 let cache        = { t: 0, data: null };
 let hlsInstance  = null;
@@ -533,6 +520,11 @@ let vodList      = [];
 let vodRotateIdx = 0;
 let vodRotateTimer = null;
 let cardBitrates = {}; // key → stable bitrate for card display
+
+let _recentVods     = [];
+let _vodLoadedAt    = 0;
+let _gridState      = null;
+const _avatarCache  = {};
 
 /* ── Utils ────────────────────────────────────────────── */
 function getLiveSet(paths) {
@@ -616,6 +608,88 @@ async function fetchRecentVods(limit) {
     );
     return (await r.json()).items || [];
   } catch { return []; }
+}
+
+async function loadVodData() {
+  const vods = await fetchRecentVods(30);
+  const seen = new Set();
+  _recentVods = vods.filter(v => {
+    if (seen.has(v.channel)) return false;
+    seen.add(v.channel);
+    return true;
+  }).slice(0, 6);
+  _vodLoadedAt = Date.now();
+}
+
+function vodCards(vods) {
+  return vods.map(vod => {
+    const s = STREAMERS.find(x => x.key === vod.channel) || {
+      key: vod.channel, name: vod.channel.toUpperCase(),
+      color: 'linear-gradient(135deg,#1a2a3a,#0a1420)',
+      ava: vod.channel[0].toUpperCase()
+    };
+    const dur     = vod.duration ? fmtDuration(vod.duration) : '';
+    const preview = _hover && vod.preview
+      ? `<video class="ch-preview-vid" src="${vod.preview}" muted playsinline preload="none" loop></video>` : '';
+    return `<a href="/vods/v/?id=${vod.id}" class="ch">
+      <div class="ch-thumb">
+        <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
+        <div class="ch-thumb-noise"></div>
+        <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
+        ${vod.thumb ? `<img class="ch-thumb-img" src="${vod.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : ''}
+        ${preview}
+        <div class="ch-top"><span class="ch-badge-off">VOD</span></div>
+        ${dur ? `<div class="ch-bottom"><span class="ch-bitrate">${dur}</span></div>` : ''}
+      </div>
+      <div class="ch-body">
+        <div class="ch-ava" style="background:${s.color || '#1e3a4a'}">
+          <img id="card-ava-${vod.id}" data-channel="${vod.channel}" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:4px">
+          <span id="card-avaf-${vod.id}">${s.ava || s.name[0]}</span>
+        </div>
+        <div class="ch-info">
+          <div class="ch-name">${s.name}</div>
+          <div class="ch-sub">${relativeTime(vod.date)}${dur ? ' · ' + dur : ''}</div>
+        </div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function attachPreviewListeners(container) {
+  if (!_hover) return;
+  container.querySelectorAll('.ch-preview-vid').forEach(vid => {
+    const card = vid.closest('.ch');
+    if (!card) return;
+    card.addEventListener('mouseenter', () => vid.play().catch(() => { vid.style.display = 'none'; }));
+    card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+  });
+}
+
+async function loadCardAvatars(ids) {
+  for (const id of ids) {
+    if (id in _avatarCache) { applyCardAvatar(id, _avatarCache[id]); continue; }
+    try {
+      const el = document.getElementById('card-ava-' + id);
+      const channel = el?.dataset?.channel;
+      if (!channel) { _avatarCache[id] = null; continue; }
+      const r = await fetch('/chat-api/profile/' + encodeURIComponent(channel));
+      if (!r.ok) { _avatarCache[id] = null; continue; }
+      const d = await r.json();
+      _avatarCache[id] = d.avatar_url || null;
+      applyCardAvatar(id, _avatarCache[id]);
+    } catch { _avatarCache[id] = null; }
+  }
+}
+
+function applyCardAvatar(id, url) {
+  if (!url) return;
+  const img = document.getElementById('card-ava-' + id);
+  const fb  = document.getElementById('card-avaf-' + id);
+  if (img && img.src !== url) {
+    img.src = url;
+    img.style.display = 'block';
+    if (fb) fb.style.display = 'none';
+  }
 }
 
 /* ── Chat label ──────────────────────────────────────── */
@@ -948,7 +1022,7 @@ function renderChannelGrid(paths) {
     return;
   }
 
-  grid.innerHTML = withSoon.map(s => {
+  const cardsHtml = withSoon.map(s => {
     if (s.soon) return `
       <div class="ch soon">
         <div class="ch-thumb">
@@ -967,7 +1041,6 @@ function renderChannelGrid(paths) {
 
     const live    = liveSet.has(s.key);
     const viewers = live ? getViewers(paths, s.key) : 0;
-    // Stable bitrate per card — only generate once per channel
     if (live && !cardBitrates[s.key]) cardBitrates[s.key] = jitter(5000, 600);
     if (!live) delete cardBitrates[s.key];
     const bitrate = cardBitrates[s.key];
@@ -978,16 +1051,14 @@ function renderChannelGrid(paths) {
           <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
           <div class="ch-thumb-noise"></div>
           <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
-          ${live ? `<img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg" onerror="this.style.display='none'" alt="">` : ''}
+          ${live ? `<img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" onerror="this.style.display='none'" alt="">` : ''}
           <div class="ch-top">
             ${live
               ? `<span class="ch-live">LIVE</span><span class="ch-viewers"><i class="fa-solid fa-eye"></i>${viewers}</span>`
               : `<span class="ch-badge-off">OFF</span>`
             }
           </div>
-          ${live ? `<div class="ch-bottom">
-            <span class="ch-bitrate">${fmtKbps(bitrate)}bps</span>
-          </div>` : ''}
+          ${live ? `<div class="ch-bottom"><span class="ch-bitrate">${fmtKbps(bitrate)}bps</span></div>` : ''}
         </div>
         <div class="ch-body">
           <div class="ch-ava ${live ? 'ring-live' : ''}" style="background:${s.color || '#1e3a4a'}">${s.ava || s.name[0]}</div>
@@ -998,6 +1069,31 @@ function renderChannelGrid(paths) {
         </div>
       </a>`;
   }).join('');
+
+  // VOD section: show recent VODs for offline channels (todos filter only)
+  let vodHtml = '';
+  if (currentFilter === 'todos' && _recentVods.length) {
+    const liveKeys = new Set(STREAMERS.filter(s => liveSet.has(s.key)).map(s => s.key));
+    const offlineVods = _recentVods.filter(v => !liveKeys.has(v.channel));
+    if (offlineVods.length) {
+      vodHtml = `<div class="vods-row-header">
+        <span>Últimas transmisiones</span>
+        <div class="section-line"></div>
+        <a href="/vods/">Ver todos →</a>
+      </div>
+      <div class="cards-carousel">${vodCards(offlineVods)}</div>`;
+    }
+  }
+
+  const newState = liveSet.size ? 'live' : 'offline';
+  grid.innerHTML = cardsHtml + vodHtml;
+  _gridState = newState;
+
+  if (vodHtml) {
+    attachPreviewListeners(grid);
+    const ids = [...grid.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
+    if (ids.length) loadCardAvatars(ids);
+  }
 }
 
 /* ── Drawer ──────────────────────────────────────────── */
@@ -1092,69 +1188,6 @@ async function loadDigest() {
   } catch { /* digest is optional */ }
 }
 
-/* ── Chat simulation ─────────────────────────────────── */
-function initChat() {
-  const SEED = [
-    { u: 'boricua_89',    c: '#f9a8d4', t: 'eeeso corillo!' },
-    { u: 'santurce_42',   c: '#00bfff', t: 'que clase de clutch 🔥' },
-    { u: 'isla_verde_17', c: '#00ff9d', t: 'dale ponle la canción' },
-    { u: 'aibonito_pr',   c: '#e8c84a', t: 'el stream en 1080 60fps de mátame' },
-    { u: 'ponce_city_55', c: '#ff9f43', t: 'wepa saludos desde ponce 🇵🇷' },
-    { u: null,            c: '',        t: 'MIRA_SANGANOOO está en vivo · 84 viewers', sys: true },
-    { u: 'loiza_33',      c: '#a29bfe', t: 'ajaajaja ese último kill' },
-    { u: 'humacao_21',    c: '#fd79a8', t: 'gg wp squad' },
-    { u: 'bot_corillo',   c: '#00bfff', t: '@santurce cambia a 1080 para mejor calidad', bot: true },
-    { u: 'naranjito_88',  c: '#55efc4', t: 'corillo es lo mejor qué carajo' },
-    { u: 'caguas_10',     c: '#74b9ff', t: 'vamo allá 💪' },
-    { u: 'arecibo_44',    c: '#ff7675', t: 'en qué servidor están jugando?' },
-    { u: 'mayaguez_77',   c: '#fdcb6e', t: 'subtitulos español por favor' },
-    { u: 'santurce_42',   c: '#00bfff', t: 'este bitrate tá fino' },
-    { u: 'rincón_surf',   c: '#81ecec', t: 'desde el oeste representa 🌊' },
-    { u: 'bayamón_real',  c: '#6c5ce7', t: 'cuándo juegan tonight?' },
-  ];
-
-  const body = document.getElementById('chatBody');
-  const form = document.getElementById('chatForm');
-  const input = document.getElementById('chatInput');
-  const onlineEl = document.getElementById('chatOnline');
-
-  let msgs = SEED.slice(0, 6);
-  let seedIdx = 6;
-  let onlineCount = 8;
-
-  function renderMsgs() {
-    body.innerHTML = msgs.map((m, i) => {
-      if (m.sys) return `<div class="msg sys">— ${m.t} —</div>`;
-      return `<div class="msg${m.bot ? ' bot' : ''}">
-        <span class="msg-user" style="color:${m.c}">${m.u}:</span>
-        <span class="msg-text"> ${m.t}</span>
-      </div>`;
-    }).join('');
-    body.scrollTop = body.scrollHeight;
-  }
-
-  renderMsgs();
-
-  // Auto-scroll new messages
-  setInterval(() => {
-    msgs = [...msgs, SEED[seedIdx % SEED.length]].slice(-24);
-    seedIdx++;
-    renderMsgs();
-    // Jitter online count
-    onlineCount = Math.max(4, jitter(onlineCount, 2));
-    onlineEl.textContent = onlineCount;
-  }, 3200);
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!text) return;
-    msgs = [...msgs, { u: 'tú', c: '#00ff9d', t: text }].slice(-24);
-    input.value = '';
-    renderMsgs();
-  });
-}
-
 /* ── Theme ───────────────────────────────────────────── */
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
@@ -1189,7 +1222,10 @@ function initFooter() {
 
 /* ── Main poll ───────────────────────────────────────── */
 async function poll() {
-  const paths  = await fetchPaths();
+  const now    = Date.now();
+  const tasks  = [fetchPaths()];
+  if (now - _vodLoadedAt > VOD_TTL) tasks.push(loadVodData());
+  const [paths] = await Promise.all(tasks);
   lastPaths    = paths;
   const liveSet = getLiveSet(paths);
   const live    = STREAMERS.filter(s => liveSet.has(s.key));
@@ -1199,8 +1235,6 @@ async function poll() {
   // Attach viewer counts to live streamers for ticker
   const liveWithViewers = live.map(s => ({ ...s, _viewers: getViewers(paths, s.key) }));
 
-  // Banner
-  document.getElementById('bannerMeta').textContent = `${total} Canales · Puerto Rico`;
   document.getElementById('liveCountEl').textContent = live.length;
   document.getElementById('totalCountEl').textContent = total;
 
@@ -1233,9 +1267,37 @@ async function poll() {
   }
 }
 
+/* ── Reels strip ─────────────────────────────────────── */
+async function loadReelsStrip() {
+  try {
+    const res  = await fetch(`${PB_URL}/api/collections/reels/records?filter=${encodeURIComponent('public=true')}&sort=-date&perPage=6`);
+    const data = await res.json();
+    const items = data.items || [];
+    if (!items.length) return;
+    const strip = document.getElementById('reelsStrip');
+    const track = document.getElementById('reelsTrack');
+    items.forEach(r => {
+      const dur   = r.duration ? `${r.duration}s` : '';
+      const thumb = r.thumb ? `background-image:url('${r.thumb}')` : '';
+      const a = document.createElement('a');
+      a.className = 'reel-card';
+      a.href = `/reels/?start=${r.id}`;
+      a.innerHTML = `
+        <div class="reel-card-thumb" style="${thumb}">
+          <div class="reel-card-play"><i class="fa-solid fa-play"></i></div>
+          ${dur ? `<div class="reel-card-dur">${dur}</div>` : ''}
+        </div>
+        <div class="reel-card-info">
+          <div class="reel-card-ch">${r.channel.toUpperCase()}</div>
+        </div>`;
+      track.appendChild(a);
+    });
+    strip.style.display = '';
+  } catch {}
+}
+
 /* ── Init ────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
-  initChat();
   initFooter();
   loadVersion();
 
@@ -1254,12 +1316,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderChannelGrid(lastPaths);
   });
 
+  // Patch STREAMERS names + avatars from PocketBase before first render
+  const activeStreamers = STREAMERS.filter(s => !s.soon);
+  try {
+    const results = await Promise.allSettled(
+      activeStreamers.map(s =>
+        fetch('/chat-api/profile/' + s.key, { signal: AbortSignal.timeout(4000) })
+          .then(r => r.ok ? r.json() : null)
+      )
+    );
+    results.forEach((res, i) => {
+      if (res.status === 'fulfilled' && res.value) {
+        if (res.value.display_name) activeStreamers[i].name = res.value.display_name;
+        if (res.value.avatar_url)   activeStreamers[i].avatar_url = res.value.avatar_url;
+      }
+    });
+  } catch {}
+
   await poll();
 
   renderVodStrip();
   loadDigest();
+  loadReelsStrip();
 
   setInterval(poll, POLL_MS);
+
+  // Refresh live thumbnails every 60s without full re-render
+  setInterval(() => {
+    const t = Math.floor(Date.now() / 60000);
+    document.querySelectorAll('.ch-thumb-img').forEach(img => {
+      img.src = img.src.replace(/\?t=\d+/, `?t=${t}`);
+    });
+  }, 60000);
 
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) { cache.t = 0; poll(); }
