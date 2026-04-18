@@ -96,6 +96,40 @@
     .theme-btn { width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; letter-spacing:0; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:.15s; flex-shrink:0; }
     .theme-btn:hover { color:var(--white); border-color:var(--border-h); }
 
+    /* Offline channel badge — no blinking dot */
+    .ch-badge-off {
+      padding:2px 6px; background:rgba(0,0,0,.6); color:var(--muted);
+      font-family:var(--mono); font-size:9px; font-weight:700;
+      letter-spacing:1.5px; border-radius:2px;
+    }
+
+    /* Live thumbnail inside card */
+    .ch-thumb-img {
+      position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;
+    }
+    .ch-thumb-glow  { z-index:0; }
+    .ch-thumb-noise { z-index:2; }
+    .ch-thumb-inner { z-index:0; }
+    .ch:hover .ch-thumb-img { transform:scale(1.04); transition:transform .35s ease; }
+    .ch-top, .ch-bottom { z-index:3; }
+
+    /* Sim-stream with VOD thumbnail */
+    .sim-stream.has-thumb { background-size:cover; background-position:center; }
+    .sim-stream.has-thumb::before {
+      content:''; position:absolute; inset:0; z-index:1;
+      background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.55) 100%);
+    }
+    .sim-stream.has-thumb .sim-stream-grid { display:none; }
+    .sim-stream.has-thumb > div { z-index:2; }
+
+    /* Empty grid state */
+    .grid-empty {
+      grid-column:1/-1; display:flex; flex-direction:column; align-items:center;
+      padding:48px 24px; gap:14px; border:1px dashed var(--border); border-radius:8px;
+      color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    }
+    .grid-empty i { font-size:2rem; opacity:.4; }
+
     /* Brand logo SVG */
     .brand-logo-svg .ring-outer { stroke: #3a6070; }
     [data-theme="light"] .brand-logo-svg .ring-outer { stroke: #0c1a20; }
@@ -485,7 +519,7 @@ const STREAMERS = (window.STREAMERS || []).filter(s => !s.soon);
 
 let cache        = { t: 0, data: null };
 let hlsInstance  = null;
-let featuredKey  = null;
+let featuredKey  = undefined; // undefined=unset, null=offline, string=live channel
 let rotateTimer  = null;
 let statsTimer   = null;
 let rafId        = null;
@@ -495,6 +529,10 @@ let rotateIdx    = 0;
 let lastPaths    = [];
 let currentFilter = 'todos';
 let statsBase    = { bitrate: 5200, latency: 2.4, viewers: 0 };
+let vodList      = [];
+let vodRotateIdx = 0;
+let vodRotateTimer = null;
+let cardBitrates = {}; // key → stable bitrate for card display
 
 /* ── Utils ────────────────────────────────────────────── */
 function getLiveSet(paths) {
@@ -578,6 +616,13 @@ async function fetchRecentVods(limit) {
     );
     return (await r.json()).items || [];
   } catch { return []; }
+}
+
+/* ── Chat label ──────────────────────────────────────── */
+function updateChatLabel(key) {
+  const el = document.querySelector('.chat-panel .panel-title');
+  if (!el) return;
+  el.innerHTML = `<i class="fa-solid fa-comments"></i> Chat · #${key || 'corillo'}`;
 }
 
 /* ── Ticker ──────────────────────────────────────────── */
@@ -688,6 +733,8 @@ function setFeaturedLive(key, paths) {
   featuredKey = key;
   statsBase.viewers = viewers;
 
+  updateChatLabel(key);
+
   // Sim stream
   const sim = document.getElementById('simStream');
   sim.className = 'sim-stream';
@@ -728,7 +775,7 @@ function setFeaturedLive(key, paths) {
   startStatsAnimation(viewers, paths);
 }
 
-function setFeaturedOffline() {
+async function setFeaturedOffline() {
   featuredKey = null;
 
   // Stop HLS
@@ -737,27 +784,88 @@ function setFeaturedOffline() {
   vid.src = '';
   if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
   document.getElementById('featuredVideoWrap').classList.remove('playing');
+  stopStatsAnimation();
+  clearInterval(vodRotateTimer);
+  vodRotateTimer = null;
+  vodRotateIdx   = 0;
 
-  // Sim stream → offline
-  document.getElementById('simStream').className = 'sim-stream offline';
-  document.getElementById('simTitle').textContent = 'OFFLINE';
-  document.getElementById('simSub').textContent = 'ESPERANDO SEÑAL · ÚLTIMO VOD DISPONIBLE';
+  updateChatLabel(null);
 
-  // Top overlay
+  // Load VODs if not cached yet
+  if (!vodList.length) {
+    const raw = await fetchRecentVods(20);
+    const seen = new Set();
+    vodList = raw.filter(v => {
+      if (seen.has(v.channel)) return false;
+      seen.add(v.channel);
+      return true;
+    }).slice(0, 8);
+  }
+
+  if (!vodList.length) {
+    showFeaturedOfflineStatic();
+    return;
+  }
+
+  showFeaturedVod(vodList[0]);
+  if (vodList.length > 1) {
+    startProgressBar();
+    vodRotateTimer = setInterval(() => {
+      vodRotateIdx = (vodRotateIdx + 1) % vodList.length;
+      showFeaturedVod(vodList[vodRotateIdx]);
+      startProgressBar();
+    }, ROTATE_MS);
+  }
+}
+
+function showFeaturedVod(vod) {
+  const s = STREAMERS.find(x => x.key === vod.channel) || {
+    key: vod.channel, name: vod.channel.toUpperCase(),
+    color: 'linear-gradient(135deg,#1a2a3a,#0a1420)',
+    ava: vod.channel[0].toUpperCase(), sub: 'corillo.live'
+  };
+
+  const sim = document.getElementById('simStream');
+  sim.className = 'sim-stream offline' + (vod.thumb ? ' has-thumb' : '');
+  sim.style.backgroundImage = vod.thumb ? `url('${vod.thumb}')` : '';
+  document.getElementById('simTitle').textContent = s.name.split('_')[0];
+  document.getElementById('simSub').textContent = `ÚLTIMA TRANSMISIÓN · ${relativeTime(vod.date)}`;
+
+  document.getElementById('featuredTopLeft').innerHTML = `
+    <span class="live-badge offline">Offline</span>
+    ${vod.date ? `<span class="featured-meta"><i class="fa-regular fa-clock"></i> ${relativeTime(vod.date)}</span>` : ''}
+    ${vod.duration ? `<span class="featured-meta"><i class="fa-solid fa-film"></i> ${fmtDuration(vod.duration)}</span>` : ''}
+  `;
+
+  document.getElementById('featuredAva').style.background = s.color || '#1e3a4a';
+  document.getElementById('featuredAva').textContent = s.ava || s.name[0];
+  document.getElementById('featuredNameEl').textContent = s.name;
+  document.getElementById('featuredSubEl').innerHTML =
+    (s.host ? '<span class="host-tag">HOST</span>' : '') + (s.sub || 'corillo.live · Puerto Rico');
+
+  document.getElementById('featuredActions').innerHTML = `
+    <a href="/vods/v/?id=${vod.id}" class="play-btn"><i class="fa-solid fa-play"></i> Ver VOD</a>
+    <a href="/${vod.channel}/" class="icon-btn" title="Ir al canal"><i class="fa-solid fa-tower-broadcast"></i></a>
+    <a href="/vods/" class="icon-btn" title="Todos los VODs"><i class="fa-solid fa-film"></i></a>
+  `;
+}
+
+function showFeaturedOfflineStatic() {
+  const sim = document.getElementById('simStream');
+  sim.className = 'sim-stream offline';
+  sim.style.backgroundImage = '';
+  document.getElementById('simTitle').textContent = 'SIN STREAM';
+  document.getElementById('simSub').textContent = 'TODOS LOS CANALES OFFLINE';
   document.getElementById('featuredTopLeft').innerHTML =
-    '<span class="live-badge offline" id="liveBadge">Offline</span>';
-
-  // Bottom overlay
+    '<span class="live-badge offline">Offline</span>';
   document.getElementById('featuredAva').style.background = '#1e3a4a';
   document.getElementById('featuredAva').textContent = 'C';
   document.getElementById('featuredNameEl').textContent = 'CORILLO';
   document.getElementById('featuredSubEl').textContent = 'Puerto Rico · Sin stream activo';
   document.getElementById('featuredActions').innerHTML = `
-    <a href="/multiplayer/" class="play-btn"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
-    <a href="/vods/" class="icon-btn" title="VODs"><i class="fa-solid fa-film"></i></a>
+    <a href="/vods/" class="play-btn"><i class="fa-solid fa-film"></i> Ver VODs</a>
+    <a href="/join/" class="icon-btn" title="Crear canal"><i class="fa-solid fa-plus"></i></a>
   `;
-
-  stopStatsAnimation();
 }
 
 function setupHls(key) {
@@ -809,12 +917,13 @@ function startRotation(live, paths) {
     const nextKey = livePlayers[rotateIdx];
     // Fade transition
     const wrap = document.getElementById('featuredVideoWrap');
-    wrap.style.opacity = '0.5';
-    wrap.style.transition = 'opacity .3s';
+    wrap.style.transition = 'opacity .28s';
+    wrap.style.opacity = '0.4';
     setTimeout(() => {
       setFeaturedLive(nextKey, lastPaths);
       wrap.style.opacity = '1';
-    }, 300);
+      setTimeout(() => { wrap.style.transition = ''; wrap.style.opacity = ''; }, 350);
+    }, 280);
     startProgressBar();
   }, ROTATE_MS);
 }
@@ -825,14 +934,19 @@ function renderChannelGrid(paths) {
   const grid    = document.getElementById('channelGrid');
 
   let list = STREAMERS;
-  if (currentFilter === 'live')    list = STREAMERS.filter(s => liveSet.has(s.key));
+  if (currentFilter === 'live')         list = STREAMERS.filter(s => liveSet.has(s.key));
   else if (currentFilter === 'offline') list = STREAMERS.filter(s => !liveSet.has(s.key));
   else if (currentFilter === 'host')    list = STREAMERS.filter(s => s.host);
 
-  // Add soon placeholder when showing all
   const withSoon = currentFilter === 'todos'
     ? [...list, ...(window.STREAMERS || []).filter(s => s.soon)]
     : list;
+
+  if (!withSoon.length) {
+    const msg = currentFilter === 'live' ? 'No hay streams en vivo ahora' : 'No hay canales en esta categoría';
+    grid.innerHTML = `<div class="grid-empty"><i class="fa-solid fa-satellite-dish"></i><p>${msg}</p></div>`;
+    return;
+  }
 
   grid.innerHTML = withSoon.map(s => {
     if (s.soon) return `
@@ -851,22 +965,28 @@ function renderChannelGrid(paths) {
         </div>
       </div>`;
 
-    const live = liveSet.has(s.key);
+    const live    = liveSet.has(s.key);
     const viewers = live ? getViewers(paths, s.key) : 0;
+    // Stable bitrate per card — only generate once per channel
+    if (live && !cardBitrates[s.key]) cardBitrates[s.key] = jitter(5000, 600);
+    if (!live) delete cardBitrates[s.key];
+    const bitrate = cardBitrates[s.key];
+
     return `
       <a class="ch" href="/${s.key}/">
         <div class="ch-thumb">
           <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
           <div class="ch-thumb-noise"></div>
           <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
+          ${live ? `<img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg" onerror="this.style.display='none'" alt="">` : ''}
           <div class="ch-top">
             ${live
               ? `<span class="ch-live">LIVE</span><span class="ch-viewers"><i class="fa-solid fa-eye"></i>${viewers}</span>`
-              : `<span class="ch-live" style="background:rgba(0,0,0,.6);color:var(--muted);animation:none">OFF</span><span class="ch-live" style="display:none"></span>`
+              : `<span class="ch-badge-off">OFF</span>`
             }
           </div>
           ${live ? `<div class="ch-bottom">
-            <span class="ch-bitrate">${fmtKbps(jitter(5000, 400))}bps</span>
+            <span class="ch-bitrate">${fmtKbps(bitrate)}bps</span>
           </div>` : ''}
         </div>
         <div class="ch-body">
@@ -1095,14 +1215,14 @@ async function poll() {
 
   // Featured player
   if (live.length > 0) {
-    if (!featuredKey || !liveSet.has(featuredKey)) {
-      // Either first time live or featured went offline
+    if (featuredKey === undefined || featuredKey === null || !liveSet.has(featuredKey)) {
       clearInterval(rotateTimer);
       rotateTimer = null;
       startRotation(live, paths);
     } else {
-      // Update viewers in stats
       statsBase.viewers = getViewers(paths, featuredKey);
+      const vEl = document.getElementById('featuredViewersMeta');
+      if (vEl) vEl.textContent = statsBase.viewers;
     }
   } else {
     if (featuredKey !== null) {
