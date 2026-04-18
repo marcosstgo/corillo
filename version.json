@@ -1,5 +1,5 @@
 {
-  "version": "2.2.586",
+  "version": "2.2.587",
   "date": "2026-04-18",
   "changes": [
     "Port katatonia player layout to all player pages (sticky header, full-width video, EMA bitrate)",
