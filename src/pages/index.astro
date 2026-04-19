@@ -283,11 +283,9 @@
 </header>
 
 <!-- MAIN -->
-<main class="main dense" id="mainLayout">
+<main class="main" id="mainLayout">
 
-  <section class="stage">
-
-    <!-- FEATURED PLAYER -->
+    <!-- FEATURED HERO -->
     <div class="featured">
       <div class="featured-video" id="featuredVideoWrap">
         <video id="featuredVideo" autoplay muted playsinline></video>
@@ -332,7 +330,6 @@
     <!-- CHANNELS SECTION HEADER -->
     <div class="section-header">
       <div class="section-title">
-        <span class="section-num">02 /</span>
         <span class="section-name">CANALES</span>
         <span class="section-counter">
           <span class="count" id="liveCountEl">0</span> en vivo ·
@@ -352,22 +349,18 @@
       <!-- rendered by JS -->
     </div>
 
-    <!-- RECENT VODS ROW (below grid, rendered by JS when channels offline) -->
-    <div id="vodsRow" style="display:none">
+  <!-- MID SECTION: Últimas transmisiones + Bot Digest -->
+  <div class="mid-section">
+    <div>
       <div class="vods-row-header" style="margin-bottom:12px">
         <span>Últimas transmisiones</span>
         <div class="section-line"></div>
         <a href="/vods/">Ver todos →</a>
       </div>
-      <div class="cards-carousel" id="vodsCarousel"></div>
+      <div class="cards-carousel" id="vodsCarousel">
+        <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
+      </div>
     </div>
-
-  </section>
-
-  <!-- RAIL -->
-  <aside class="rail">
-
-    <!-- DIGEST -->
     <div class="panel">
       <div class="panel-header">
         <div class="panel-title"><i class="fa-solid fa-robot"></i> Bot · Digest</div>
@@ -378,19 +371,7 @@
         <p id="digestText" style="font-size:13px;color:rgba(232,246,255,.8);line-height:1.5">Verificando estado de streams...</p>
       </div>
     </div>
-
-    <!-- VOD STRIP -->
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title"><i class="fa-solid fa-film"></i> Últimos VODs</div>
-        <a href="/vods/" class="panel-meta" style="color:var(--accent)">VER TODOS →</a>
-      </div>
-      <div class="vod-strip" id="vodStrip">
-        <div style="grid-column:1/-1;padding:20px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando VODs...</div>
-      </div>
-    </div>
-
-  </aside>
+  </div>
 
 </main>
 
@@ -1021,19 +1002,10 @@ function renderChannelGrid(paths) {
   grid.innerHTML = cardsHtml;
 }
 
-function renderVodsRow(paths) {
-  const vodsRow  = document.getElementById('vodsRow');
+function renderVodsRow() {
   const carousel = document.getElementById('vodsCarousel');
-  if (!_recentVods.length) { vodsRow.style.display = 'none'; return; }
-
-  const liveSet  = getLiveSet(paths);
-  const liveKeys = new Set(STREAMERS.filter(s => liveSet.has(s.key)).map(s => s.key));
-  const offlineVods = _recentVods.filter(v => !liveKeys.has(v.channel));
-
-  if (!offlineVods.length) { vodsRow.style.display = 'none'; return; }
-
-  carousel.innerHTML = vodCards(offlineVods);
-  vodsRow.style.display = '';
+  if (!carousel || !_recentVods.length) return;
+  carousel.innerHTML = vodCards(_recentVods);
   attachPreviewListeners(carousel);
   const ids = [...carousel.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
   if (ids.length) loadCardAvatars(ids);
@@ -1095,30 +1067,6 @@ window.closeDrawer = () => {
   document.getElementById('drawerOverlay').classList.remove('open');
 };
 
-/* ── VOD Strip ───────────────────────────────────────── */
-async function renderVodStrip() {
-  const strip = document.getElementById('vodStrip');
-  const vods  = await fetchRecentVods(8);
-  if (!vods.length) {
-    strip.innerHTML = '<div style="grid-column:1/-1;padding:16px;text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted)">Sin VODs disponibles</div>';
-    return;
-  }
-  // Dedupe by channel, take 4
-  const seen = new Set();
-  const top  = vods.filter(v => { if (seen.has(v.channel)) return false; seen.add(v.channel); return true; }).slice(0, 4);
-  strip.innerHTML = top.map(v => {
-    const s = STREAMERS.find(x => x.key === v.channel);
-    const thumbStyle = v.thumb ? `background:url('${v.thumb}') center/cover` : `background:${s?.color || 'linear-gradient(135deg,#0a1420,#040a10)'}`;
-    return `<a class="vod" href="/vods/v/?id=${v.id}" style="text-decoration:none">
-      <div class="vod-thumb" style="${thumbStyle}">
-        ${v.duration ? `<span class="vod-dur">${fmtDuration(v.duration)}</span>` : ''}
-      </div>
-      <div class="vod-title">${s?.name || v.channel.toUpperCase()}</div>
-      <div class="vod-meta">${relativeTime(v.date)}</div>
-    </a>`;
-  }).join('');
-}
-
 /* ── Digest ──────────────────────────────────────────── */
 async function loadDigest() {
   try {
@@ -1166,9 +1114,11 @@ function initFooter() {
 /* ── Main poll ───────────────────────────────────────── */
 async function poll() {
   const now    = Date.now();
+  const needVods = now - _vodLoadedAt > VOD_TTL;
   const tasks  = [fetchPaths()];
-  if (now - _vodLoadedAt > VOD_TTL) tasks.push(loadVodData());
+  if (needVods) tasks.push(loadVodData());
   const [paths] = await Promise.all(tasks);
+  if (needVods) renderVodsRow();
   lastPaths    = paths;
   const liveSet = getLiveSet(paths);
   const live    = STREAMERS.filter(s => liveSet.has(s.key));
@@ -1187,9 +1137,8 @@ async function poll() {
   // Drawer
   renderDrawer(live, offline, paths);
 
-  // Channel grid + VODs row
+  // Channel grid
   renderChannelGrid(paths);
-  renderVodsRow(paths);
 
   // Featured player
   if (live.length > 0) {
@@ -1279,7 +1228,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await poll();
 
-  renderVodStrip();
   loadDigest();
   loadReelsStrip();
 

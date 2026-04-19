@@ -135,23 +135,20 @@ body.no-scanlines .scanlines { display: none; }
 
 /* ═══ MAIN LAYOUT ═══ */
 .main {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  display: flex;
+  flex-direction: column;
   gap: var(--gap);
   padding: var(--gap) var(--pad-x);
   max-width: 1440px; margin: 0 auto;
 }
-.main.chat-left { grid-template-columns: 360px minmax(0, 1fr); }
-.main.chat-left .stage { order: 2; }
-.main.chat-left .rail { order: 1; }
 
-@media (max-width: 1100px) {
-  .main, .main.chat-left { grid-template-columns: 1fr; }
-  .main.chat-left .stage, .main.chat-left .rail { order: unset; }
+/* ═══ MID SECTION (VODs + Digest) ═══ */
+.mid-section {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--gap);
+  align-items: start;
 }
-
-/* ═══ STAGE (featured + grid) ═══ */
-.stage { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
 
 /* ═══ FEATURED PLAYER ═══ */
 .featured {
@@ -163,7 +160,7 @@ body.no-scanlines .scanlines { display: none; }
 }
 .featured-video {
   position: relative;
-  aspect-ratio: 16 / 9;
+  height: clamp(280px, 46vh, 560px);
   background:
     radial-gradient(ellipse at 30% 40%, oklch(0.4 0.1 var(--h) / 0.4), transparent 60%),
     radial-gradient(ellipse at 70% 60%, oklch(0.3 0.15 340) 0%, transparent 55%),
@@ -487,8 +484,6 @@ body.no-scanlines .scanlines { display: none; }
 .ch.soon .ch-thumb-inner { color: rgba(255,255,255,0.08); }
 .ch.soon .ch-name { color: var(--muted); }
 
-/* ═══ RAIL (Chat + Other cards) ═══ */
-.rail { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
 
 .panel {
   border: 1px solid var(--border);
@@ -748,8 +743,7 @@ body { --grain: 55; }
   .ticker { display: none; }
   .top-actions .ghost-btn:not(.primary) { display: none; }
   .banner { padding: 16px 16px 8px; }
-  .main, .main.chat-left { grid-template-columns: 1fr; }
-  .rail { order: -1; }
+  .mid-section { grid-template-columns: 1fr; }
   .chat-panel { max-height: 280px; min-height: 200px; }
 }
 @media (max-width: 480px) {
