@@ -139,7 +139,7 @@ body.no-scanlines .scanlines { display: none; }
   grid-template-columns: minmax(0, 1fr) 360px;
   gap: var(--gap);
   padding: var(--gap) var(--pad-x);
-  max-width: 1720px; margin: 0 auto;
+  max-width: 1440px; margin: 0 auto;
 }
 .main.chat-left { grid-template-columns: 360px minmax(0, 1fr); }
 .main.chat-left .stage { order: 2; }
@@ -622,7 +622,7 @@ body.no-scanlines .scanlines { display: none; }
 /* ═══ BIG TYPE BANNER ═══ */
 .banner {
   padding: 28px var(--pad-x) 16px;
-  max-width: 1720px; margin: 0 auto;
+  max-width: 1440px; margin: 0 auto;
   position: relative;
 }
 .banner-stack {
