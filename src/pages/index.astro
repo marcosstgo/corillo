@@ -327,33 +327,6 @@
         <div class="rotate-bar" id="rotateBar"></div>
       </div>
 
-      <!-- STATS ROW -->
-      <div class="featured-stats">
-        <div class="stat-cell">
-          <div class="stat-label">Bitrate</div>
-          <div class="stat-value" id="sBitrate">—<span class="unit">kbps</span></div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">FPS</div>
-          <div class="stat-value" id="sFps">—<span class="unit">/60</span></div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Latencia</div>
-          <div class="stat-value accent" id="sLatency">—<span class="unit">s</span></div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Calidad</div>
-          <div class="stat-value green" id="sQuality">—</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Codec</div>
-          <div class="stat-value" id="sCodec">—</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-label">Viewers</div>
-          <div class="stat-value amber" id="sViewers">—</div>
-        </div>
-      </div>
     </div>
 
     <!-- CHANNELS SECTION HEADER -->
@@ -735,63 +708,27 @@ function renderTicker(liveChannels) {
 
 /* ── Stats animation ─────────────────────────────────── */
 function startStatsAnimation(viewers, paths) {
-  stopStatsAnimation();
-  statsBase.viewers = viewers;
-
-  // Try to get bitrate hint from HLS if available
   let uptimeStart = Date.now();
   if (featuredKey) {
     const rt = getReadyTime(paths, featuredKey);
     if (rt) uptimeStart = rt;
   }
 
+  stopStatsAnimation();
+
   function tick() {
-    const bitrate = jitter(statsBase.bitrate, 180);
-    const fps     = jitter(60, 1);
-    const latency = Math.max(1.2, statsBase.latency + (Math.random() - 0.5) * 0.3);
-    const viewers = Math.max(0, jitter(statsBase.viewers, 2));
-    const uptime  = Date.now() - uptimeStart;
-
-    const bEl = document.getElementById('sBitrate');
-    if (bEl) {
-      bEl.innerHTML = `${bitrate}<span class="unit">kbps</span>`;
-      bEl.className = 'stat-value ' + (bitrate > 6000 ? 'amber' : 'green');
-    }
-    const fEl = document.getElementById('sFps');
-    if (fEl) fEl.innerHTML = `${fps}<span class="unit">/60</span>`;
-    const lEl = document.getElementById('sLatency');
-    if (lEl) lEl.innerHTML = `${latency.toFixed(1)}<span class="unit">s</span>`;
-    const qEl = document.getElementById('sQuality');
-    if (qEl) qEl.textContent = '1080p60';
-    const cEl = document.getElementById('sCodec');
-    if (cEl) cEl.textContent = 'H.264';
-    const vEl = document.getElementById('sViewers');
-    if (vEl) vEl.textContent = viewers;
-
-    // Update uptime in top overlay
+    const uptime = Date.now() - uptimeStart;
     const uptEl = document.getElementById('featuredUptime');
     if (uptEl) uptEl.textContent = fmtUptime(uptime);
   }
 
   tick();
-  statsTimer = setInterval(tick, 1200);
+  statsTimer = setInterval(tick, 1000);
 }
 
 function stopStatsAnimation() {
   clearInterval(statsTimer);
   statsTimer = null;
-  const reset = [
-    ['sBitrate', '—<span class="unit">kbps</span>', 'stat-value'],
-    ['sFps',     '—<span class="unit">/60</span>',  'stat-value'],
-    ['sLatency', '—<span class="unit">s</span>',    'stat-value accent'],
-    ['sQuality', '—', 'stat-value green'],
-    ['sCodec',   '—', 'stat-value'],
-    ['sViewers', '—', 'stat-value amber'],
-  ];
-  reset.forEach(([id, html, cls]) => {
-    const el = document.getElementById(id);
-    if (el) { el.innerHTML = html; el.className = cls; }
-  });
 }
 
 /* ── Progress bar ────────────────────────────────────── */
