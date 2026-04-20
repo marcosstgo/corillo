@@ -107,6 +107,8 @@
     .ch-thumb-img {
       position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;
     }
+    /* VOD thumbnail in offline card — dimmed */
+    .ch-thumb-vod { opacity:.5; filter:saturate(.7); }
     .ch-thumb-glow  { z-index:0; }
     .ch-thumb-noise { z-index:2; }
     .ch-thumb-inner { z-index:0; }
@@ -941,6 +943,10 @@ function renderChannelGrid(paths) {
   const liveSet = getLiveSet(paths);
   const grid    = document.getElementById('channelGrid');
 
+  // Last VOD thumb per channel — used as background for offline cards
+  const vodThumbs = {};
+  _recentVods.forEach(v => { if (v.thumb) vodThumbs[v.channel] = v.thumb; });
+
   let list = STREAMERS;
   if (currentFilter === 'live')         list = STREAMERS.filter(s => liveSet.has(s.key));
   else if (currentFilter === 'offline') list = STREAMERS.filter(s => !liveSet.has(s.key));
@@ -985,7 +991,12 @@ function renderChannelGrid(paths) {
           <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
           <div class="ch-thumb-noise"></div>
           <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
-          ${live ? `<img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" onerror="this.style.display='none'" alt="">` : ''}
+          ${live
+            ? `<img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" onerror="this.style.display='none'" alt="">`
+            : vodThumbs[s.key]
+              ? `<img class="ch-thumb-img ch-thumb-vod" src="${vodThumbs[s.key]}" alt="" loading="lazy" onerror="this.style.display='none'">`
+              : ''
+          }
           <div class="ch-top">
             ${live
               ? `<span class="ch-live">LIVE</span><span class="ch-viewers"><i class="fa-solid fa-eye"></i>${viewers}</span>`
