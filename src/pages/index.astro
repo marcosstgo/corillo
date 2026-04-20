@@ -127,7 +127,7 @@
       display:flex; flex-direction:column; align-items:center;
       padding:48px 24px; gap:14px; border:1px dashed var(--border); border-radius:8px;
       color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase;
-      min-width:200px; flex:1;
+      grid-column: 1 / -1;
     }
     .grid-empty i { font-size:2rem; opacity:.4; }
 
@@ -247,7 +247,7 @@
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <div style="display:flex;align-items:center;gap:10px">
+  <div class="topbar-left">
     <button class="nav-menu-btn" id="menuBtn" aria-label="Menú"><i class="fa-solid fa-bars"></i></button>
     <a href="/" class="brand">
       <svg class="brand-logo-svg" width="28" height="28" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -266,21 +266,24 @@
     </a>
   </div>
 
-  <div class="ticker" id="tickerWrap" style="visibility:hidden">
-    <div class="ticker-label">
-      <i class="fa-solid fa-satellite-dish"></i>
-      ON AIR · <span id="tickerCount">0</span>
-    </div>
-    <div class="ticker-content" id="tickerContent"></div>
-  </div>
+  <nav class="topbar-nav" aria-label="Navegación principal">
+    <a href="/reels/" class="topbar-link"><i class="fa-solid fa-scissors"></i> Reels</a>
+    <a href="/vods/" class="topbar-link"><i class="fa-solid fa-film"></i> VODs</a>
+    <a href="/multiplayer/" class="topbar-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
+    <a href="/streamers/" class="topbar-link"><i class="fa-solid fa-users"></i> Streamers</a>
+  </nav>
 
   <div class="top-actions">
     <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
-    <a href="/multiplayer/" class="ghost-btn"><i class="fa-solid fa-grip"></i> Multi</a>
-    <a href="/vods/" class="ghost-btn"><i class="fa-solid fa-film"></i> VODs</a>
     <a href="/join/" class="ghost-btn primary"><i class="fa-solid fa-plus"></i> Crear canal</a>
   </div>
 </header>
+
+<!-- ticker elements kept hidden for JS compat -->
+<div id="tickerWrap" style="display:none" aria-hidden="true">
+  <span id="tickerCount"></span>
+  <div id="tickerContent"></div>
+</div>
 
 <!-- MAIN -->
 <main class="main" id="mainLayout">
@@ -327,49 +330,50 @@
 
     </div>
 
-    <!-- CHANNELS SECTION HEADER -->
-    <div class="section-header">
-      <div class="section-title">
-        <span class="section-name">CANALES</span>
-        <span class="section-counter">
-          <span class="count" id="liveCountEl">0</span> en vivo ·
-          <span id="totalCountEl">0</span> total
-        </span>
+  <!-- CHANNELS + DIGEST -->
+  <div class="channels-layout">
+    <div class="channels-col">
+      <div class="section-header">
+        <div class="section-title">
+          <span class="section-name">CANALES</span>
+          <span class="section-counter">
+            <span class="count" id="liveCountEl">0</span> en vivo ·
+            <span id="totalCountEl">0</span> total
+          </span>
+        </div>
+        <div class="filter-bar" id="filterBar">
+          <button class="chip active" data-filter="todos">Todos</button>
+          <button class="chip" data-filter="live">En Vivo</button>
+          <button class="chip" data-filter="offline">Offline</button>
+          <button class="chip" data-filter="host">Host</button>
+        </div>
       </div>
-      <div class="filter-bar" id="filterBar">
-        <button class="chip active" data-filter="todos">Todos</button>
-        <button class="chip" data-filter="live">En Vivo</button>
-        <button class="chip" data-filter="offline">Offline</button>
-        <button class="chip" data-filter="host">Host</button>
-      </div>
+      <div class="channels" id="channelGrid"><!-- rendered by JS --></div>
     </div>
 
-    <!-- CHANNEL GRID -->
-    <div class="channels" id="channelGrid">
-      <!-- rendered by JS -->
-    </div>
+    <aside class="digest-col">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-robot"></i> Bot · Digest</div>
+          <div class="panel-meta" id="digestAge">Claude</div>
+        </div>
+        <div class="digest">
+          <div class="digest-label">Señal en tiempo real</div>
+          <p id="digestText" style="font-size:13px;color:rgba(232,246,255,.8);line-height:1.5">Verificando estado de streams...</p>
+        </div>
+      </div>
+    </aside>
+  </div>
 
-  <!-- MID SECTION: Últimas transmisiones + Bot Digest -->
-  <div class="mid-section">
-    <div>
-      <div class="vods-row-header" style="margin-bottom:12px">
-        <span>Últimas transmisiones</span>
-        <div class="section-line"></div>
-        <a href="/vods/">Ver todos →</a>
-      </div>
-      <div class="cards-carousel" id="vodsCarousel">
-        <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
-      </div>
+  <!-- ÚLTIMAS TRANSMISIONES -->
+  <div class="vods-section">
+    <div class="vods-row-header" style="margin-bottom:12px">
+      <span>Últimas transmisiones</span>
+      <div class="section-line"></div>
+      <a href="/vods/">Ver todos →</a>
     </div>
-    <div class="panel">
-      <div class="panel-header">
-        <div class="panel-title"><i class="fa-solid fa-robot"></i> Bot · Digest</div>
-        <div class="panel-meta" id="digestAge">Claude</div>
-      </div>
-      <div class="digest">
-        <div class="digest-label">Señal en tiempo real</div>
-        <p id="digestText" style="font-size:13px;color:rgba(232,246,255,.8);line-height:1.5">Verificando estado de streams...</p>
-      </div>
+    <div class="cards-carousel" id="vodsCarousel">
+      <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
     </div>
   </div>
 
@@ -669,6 +673,7 @@ function renderTicker(liveChannels) {
   const wrap    = document.getElementById('tickerWrap');
   const content = document.getElementById('tickerContent');
   const countEl = document.getElementById('tickerCount');
+  if (!wrap) return;
   if (!liveChannels.length) {
     wrap.style.visibility = 'hidden';
     return;
