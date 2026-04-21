@@ -49,11 +49,40 @@ const footerLinks = [
       .not-found h2{font-family:var(--crl-display);font-size:2.5rem;letter-spacing:4px;color:rgba(232,246,255,.2)}
       .not-found p{font-family:var(--crl-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--crl-muted)}
 
+      /* ── Related sections ── */
+      .related-wrap{max-width:900px;margin:0 auto;padding:0 24px 48px;display:flex;flex-direction:column;gap:32px}
+      .rel-sec{display:flex;flex-direction:column;gap:14px}
+      .rel-hd{display:flex;align-items:center;gap:12px}
+      .rel-title{font-family:var(--crl-display);font-size:20px;letter-spacing:3px;white-space:nowrap;flex-shrink:0}
+      .rel-count{font-family:var(--crl-mono);font-size:11px;letter-spacing:1.5px;color:var(--crl-muted);flex-shrink:0}
+      .rel-rule{flex:1;height:1px;background:var(--crl-border)}
+      .rel-more{font-family:var(--crl-mono);font-size:10px;letter-spacing:1px;color:var(--crl-accent);white-space:nowrap;text-decoration:none;flex-shrink:0;transition:opacity .15s}
+      .rel-more:hover{opacity:.7}
+      .rel-rail{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;scroll-snap-type:x mandatory}
+      .rel-rail::-webkit-scrollbar{display:none}
+
+      /* ── Related card ── */
+      .rel-card{flex:0 0 190px;scroll-snap-align:start;border-radius:6px;overflow:hidden;background:var(--crl-surface);border:1px solid var(--crl-border);text-decoration:none;color:inherit;transition:border-color .15s,transform .15s;display:flex;flex-direction:column}
+      .rel-card:hover{border-color:var(--crl-border-h);transform:translateY(-2px)}
+      .rel-card-thumb{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#050a10,#0a1820);overflow:hidden;flex-shrink:0}
+      .rel-card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+      .rel-card-dur{position:absolute;bottom:4px;right:4px;font-family:var(--crl-mono);font-size:9px;font-weight:700;background:rgba(0,0,0,.8);color:#fff;padding:2px 5px;border-radius:2px}
+      .rel-live-pill{position:absolute;top:6px;left:6px;font-family:var(--crl-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;background:#CE1126;color:#fff;padding:2px 6px;border-radius:2px;display:flex;align-items:center;gap:4px}
+      .rel-live-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:#fff;animation:blink 1.8s infinite}
+      .rel-viewers{position:absolute;top:6px;right:6px;font-family:var(--crl-mono);font-size:9px;font-weight:700;background:rgba(0,0,0,.65);color:#fff;padding:2px 5px;border-radius:2px}
+      .rel-card-body{padding:9px 10px 11px;display:flex;gap:8px;align-items:flex-start}
+      .rel-card-ava{width:28px;height:28px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:13px;color:#000}
+      .rel-card-ava.is-live{box-shadow:0 0 0 2px var(--crl-surface),0 0 0 3px #CE1126}
+      .rel-card-info{min-width:0;flex:1}
+      .rel-card-name{font-family:var(--crl-display);font-size:15px;letter-spacing:1.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;margin-bottom:3px}
+      .rel-card-sub{font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .rel-card-thumb-bg{position:absolute;inset:0;opacity:.8;mix-blend-mode:overlay}
     </style>
   </fragment>
 
 <LiveSidebar>
 <div id="content"></div>
+<div id="related"></div>
 
 <script>
 const PB = 'https://pb.corillo.live';
@@ -150,6 +179,9 @@ async function init() {
     });
   });
 
+  // Load related content async (non-blocking)
+  loadRelated(vod.channel, id);
+
   const clipVodBtn = document.getElementById('clipVodBtn') as HTMLButtonElement;
   clipVodBtn.addEventListener('click', async () => {
     const t = Math.floor(video.currentTime || 0);
@@ -175,6 +207,123 @@ async function init() {
 }
 
 init();
+
+/* ── Related content ─────────────────────────────────── */
+function relativeTime(dateStr: string) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 2)  return 'Hace un momento';
+  if (mins < 60) return `Hace ${mins}m`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)  return `Hace ${hrs}h`;
+  const days = Math.floor(hrs / 24);
+  if (days === 1) return 'Ayer';
+  if (days < 7)  return `Hace ${days} días`;
+  return `Hace ${Math.floor(days / 7)} sem`;
+}
+
+function relCard(vod: any) {
+  const s = streamerInfo(vod.channel);
+  const dur = vod.duration ? fmtDuration(vod.duration) : '';
+  const thumb = vod.thumb
+    ? `<img src="${vod.thumb}" alt="" loading="lazy" onerror="this.style.display='none'">`
+    : `<div class="rel-card-thumb-bg" style="background:${s.color||'#1e3a4a'}"></div>`;
+  return `<a href="/vods/v/?id=${vod.id}" class="rel-card">
+    <div class="rel-card-thumb">${thumb}${dur ? `<span class="rel-card-dur">${dur}</span>` : ''}</div>
+    <div class="rel-card-body">
+      <div class="rel-card-ava" style="background:${s.color||'#1e3a4a'}">${(s.ava||s.name[0]).toUpperCase()}</div>
+      <div class="rel-card-info">
+        <div class="rel-card-name">${s.name}</div>
+        <div class="rel-card-sub">${relativeTime(vod.date)}</div>
+      </div>
+    </div>
+  </a>`;
+}
+
+function liveCard(s: any, viewers: number) {
+  const t = Math.floor(Date.now() / 60000);
+  return `<a href="/${s.key}/" class="rel-card">
+    <div class="rel-card-thumb">
+      <img src="/assets/thumbs/${s.key}.jpg?t=${t}" alt="" loading="lazy" onerror="this.style.display='none'">
+      <span class="rel-live-pill">LIVE</span>
+      ${viewers > 0 ? `<span class="rel-viewers">${viewers}</span>` : ''}
+    </div>
+    <div class="rel-card-body">
+      <div class="rel-card-ava is-live" style="background:${s.color||'#1e3a4a'}">${(s.ava||s.name[0]).toUpperCase()}</div>
+      <div class="rel-card-info">
+        <div class="rel-card-name">${s.name}</div>
+        <div class="rel-card-sub">${viewers > 0 ? viewers + ' viewers' : 'En vivo'}</div>
+      </div>
+    </div>
+  </a>`;
+}
+
+function relSection(title: string, count: string, moreHref: string, moreLabel: string, cards: string) {
+  return `<div class="rel-sec">
+    <div class="rel-hd">
+      <span class="rel-title">${title}</span>
+      ${count ? `<span class="rel-count">${count}</span>` : ''}
+      <div class="rel-rule"></div>
+      ${moreHref ? `<a href="${moreHref}" class="rel-more">${moreLabel}</a>` : ''}
+    </div>
+    <div class="rel-rail">${cards}</div>
+  </div>`;
+}
+
+async function loadRelated(channel: string, currentId: string) {
+  const sections: string[] = [];
+
+  // 1. Live now
+  try {
+    const r = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
+    const j = await r.json();
+    const items = (j.items || []) as any[];
+    const liveStreamers = ((window as any).STREAMERS || []).filter((s: any) => {
+      const path = items.find((p: any) => p.name === 'live/' + s.key);
+      return path?.ready;
+    }).map((s: any) => {
+      const path = items.find((p: any) => p.name === 'live/' + s.key);
+      return { ...s, _viewers: path?.readers?.length ?? 0 };
+    });
+    if (liveStreamers.length) {
+      const cards = liveStreamers.map((s: any) => liveCard(s, s._viewers)).join('');
+      sections.push(relSection('EN VIVO AHORA', `${liveStreamers.length} streamers`, '/multiplayer/', 'Multiplayer →', cards));
+    }
+  } catch {}
+
+  // 2. Más del mismo canal
+  try {
+    const enc = encodeURIComponent(`channel='${channel}'&&id!='${currentId}'`);
+    const r = await fetch(`${PB}/api/collections/vods/records?filter=${enc}&sort=-date&perPage=8&fields=id,channel,filename,thumb,duration,date`);
+    const j = await r.json();
+    const vods = j.items || [];
+    if (vods.length) {
+      const s = streamerInfo(channel);
+      const cards = vods.map(relCard).join('');
+      sections.push(relSection(`MÁS DE ${s.name}`, `${vods.length} VODs`, `/vods/?ch=${channel}`, 'Ver todos →', cards));
+    }
+  } catch {}
+
+  // 3. De otros canales
+  try {
+    const enc = encodeURIComponent(`channel!='${channel}'`);
+    const r = await fetch(`${PB}/api/collections/vods/records?filter=${enc}&sort=-date&perPage=10&fields=id,channel,filename,thumb,duration,date`);
+    const j = await r.json();
+    const vods = j.items || [];
+    // one per channel, max 6
+    const seen = new Set<string>();
+    const unique = vods.filter((v: any) => { if (seen.has(v.channel)) return false; seen.add(v.channel); return true; }).slice(0, 6);
+    if (unique.length) {
+      const cards = unique.map(relCard).join('');
+      sections.push(relSection('DE OTROS CANALES', '', '/vods/', 'Ver todos →', cards));
+    }
+  } catch {}
+
+  if (sections.length) {
+    document.getElementById('related')!.innerHTML =
+      `<div class="related-wrap">${sections.join('')}</div>`;
+  }
+}
 
 </script>
 
