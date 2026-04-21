@@ -1,8 +1,4 @@
-// Service Worker — PWA + Push notifications
-
-// Requerido por Chrome para considerar el SW válido para instalación PWA
-self.addEventListener('fetch', () => {});
-
+// Service Worker — Push notifications
 self.addEventListener('push', e => {
   let d = {};
   try { d = e.data?.json() ?? {}; } catch(_) {}
