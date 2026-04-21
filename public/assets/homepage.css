@@ -837,6 +837,9 @@ body { --grain: 55; }
 [data-theme="light"] .footer { border-color: rgba(0,0,0,.1); }
 [data-theme="light"] .left-sidebar { background: #e8eff4; border-color: rgba(0,0,0,.1); }
 [data-theme="light"] .section-name { color: #051015; }
+[data-theme="light"] .topbar-link { color: rgba(5,16,21,.5); }
+[data-theme="light"] .topbar-link:hover { color: #0c1a20; background: rgba(0,0,0,.05); }
+[data-theme="light"] .digest { color: rgba(5,16,21,.75); }
 
 /* ═══ MOBILE RESPONSIVE ═══ */
 @media (max-width: 1080px) {

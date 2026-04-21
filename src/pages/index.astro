@@ -138,6 +138,13 @@
     .brand-logo-svg .ring-outer { stroke: #3a6070; }
     [data-theme="light"] .brand-logo-svg .ring-outer { stroke: #0c1a20; }
 
+    /* Nav links — light mode */
+    [data-theme="light"] .nav-link { color: rgba(5,16,21,.6); }
+    [data-theme="light"] .nav-link:hover { color: #0c1a20; background: rgba(0,0,0,.05); }
+    [data-theme="light"] .nav-link:hover i { color: var(--accent); }
+    [data-theme="light"] .sidebar-show-all { color: rgba(5,16,21,.35); }
+    [data-theme="light"] .sidebar-show-all:hover { color: var(--accent); }
+
     /* Featured host-tag */
     .featured-sub .host-tag { color:var(--live); border:1px solid rgba(232,200,74,.4); padding:1px 6px; border-radius:3px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; margin-right:6px; display:inline-block; vertical-align:middle; }
 
@@ -400,7 +407,7 @@
         </div>
         <div class="digest">
           <div class="digest-label">Señal en tiempo real</div>
-          <p id="digestText" style="font-size:13px;color:rgba(232,246,255,.8);line-height:1.5">Verificando estado de streams...</p>
+          <p id="digestText" style="font-size:13px;line-height:1.5">Verificando estado de streams...</p>
         </div>
       </div>
     </aside>
@@ -412,6 +419,7 @@
       <span class="sec-name">CANALES</span>
       <span class="sec-count"><span id="totalCountEl">0</span> streamers</span>
       <div class="sec-rule"></div>
+      <a href="/streamers/" class="sec-more">Ver todos →</a>
     </div>
     <div class="channels" id="channelGrid"><!-- rendered by JS --></div>
   </section>
@@ -1055,7 +1063,9 @@ function renderChannelGrid(paths) {
     return;
   }
 
-  const cardsHtml = withSoon.map(s => {
+  const visible = searchQuery ? withSoon : withSoon.slice(0, 8);
+
+  const cardsHtml = visible.map(s => {
     if (s.soon) return `
       <div class="ch soon">
         <div class="ch-thumb">
