@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/corillo.css">
   <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.js" is:inline></script>
   <script is:inline>
     const savedTheme = localStorage.getItem('corillo-theme');
@@ -25,6 +25,22 @@
     }
   </script>
   <style is:global>
+    /* Map legacy var names to corillo.css equivalents */
+    :root {
+      --ink:     var(--crl-ink);
+      --surface: var(--crl-surface);
+      --panel:   var(--crl-panel);
+      --white:   var(--crl-white);
+      --muted:   var(--crl-muted);
+      --accent:  var(--crl-accent);
+      --live:    var(--crl-live);
+      --border:  var(--crl-border);
+      --border-h:var(--crl-border-h);
+      --body:    var(--crl-body);
+      --mono:    var(--crl-mono);
+      --display: var(--crl-display);
+    }
+
     *, *::before, *::after { box-sizing: border-box; }
     body { background: var(--ink); color: var(--white); font-family: var(--body); min-height: 100vh; margin: 0; }
 
