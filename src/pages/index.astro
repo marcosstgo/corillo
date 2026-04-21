@@ -247,6 +247,37 @@
   </div>
 </div>
 
+<!-- LEFT SIDEBAR (desktop only) -->
+<aside class="left-sidebar" id="leftSidebar">
+  <button class="sidebar-toggle" id="sidebarToggle" title="Colapsar menú">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+  <div class="sidebar-inner">
+    <div class="aside-label"><span class="nav-text">Navegar</span></div>
+    <a href="/reels/"      class="nav-link" title="Reels"><i class="fa-solid fa-scissors"></i><span class="nav-text"> Reels</span></a>
+    <a href="/vods/"       class="nav-link" title="VODs"><i class="fa-solid fa-film"></i><span class="nav-text"> VODs</span></a>
+    <a href="/multiplayer/" class="nav-link" title="Multiplayer"><i class="fa-solid fa-table-cells"></i><span class="nav-text"> Multiplayer</span></a>
+    <a href="/streamers/"  class="nav-link" title="Streamers"><i class="fa-solid fa-users"></i><span class="nav-text"> Streamers</span></a>
+    <a href="/join/"       class="nav-link" title="Crear Canal"><i class="fa-solid fa-plus"></i><span class="nav-text"> Crear Canal</span></a>
+    <a href="/perfil/"     class="nav-link" title="Mi Perfil"><i class="fa-solid fa-user"></i><span class="nav-text"> Mi Perfil</span></a>
+    <a href="/roadmap/"    class="nav-link" title="Roadmap"><span class="rdot"></span><span class="nav-text"> Roadmap</span></a>
+    <hr class="aside-divider">
+    <div id="sidebarLiveSection" style="display:none">
+      <div class="aside-label sidebar-live-label">
+        <span class="nav-text">En vivo</span>
+        <span class="sidebar-live-badge" id="sidebarLiveBadge"></span>
+      </div>
+      <div id="sidebarLiveRows"></div>
+      <hr class="aside-divider">
+    </div>
+    <div class="aside-label"><span class="nav-text">Canales</span></div>
+    <div id="sidebarOfflineRows"></div>
+    <button class="sidebar-show-all" id="sidebarShowAll" style="display:none"><i class="fa-solid fa-chevron-down"></i><span class="nav-text"> Ver todos</span></button>
+  </div>
+</aside>
+
+<div class="page-right">
+
 <!-- TOPBAR -->
 <header class="topbar">
   <div class="topbar-left">
@@ -274,6 +305,12 @@
     <a href="/multiplayer/" class="topbar-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
     <a href="/streamers/" class="topbar-link"><i class="fa-solid fa-users"></i> Streamers</a>
   </nav>
+
+  <div class="topbar-search">
+    <i class="fa-solid fa-magnifying-glass topbar-search-icon"></i>
+    <input id="searchInput" class="topbar-search-input" type="search" placeholder="Buscar canal..." autocomplete="off" spellcheck="false">
+    <button class="topbar-search-clear" id="searchClear" aria-label="Limpiar"><i class="fa-solid fa-xmark"></i></button>
+  </div>
 
   <div class="top-actions">
     <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
@@ -332,27 +369,38 @@
 
     </div>
 
-  <!-- CHANNELS + DIGEST -->
-  <div class="channels-layout">
-    <div class="channels-col">
-      <div class="section-header">
-        <div class="section-title">
-          <span class="section-name">CANALES</span>
-          <span class="section-counter">
-            <span class="count" id="liveCountEl">0</span> en vivo ·
-            <span id="totalCountEl">0</span> total
-          </span>
-        </div>
-        <div class="filter-bar" id="filterBar">
-          <button class="chip active" data-filter="todos">Todos</button>
-          <button class="chip" data-filter="live">En Vivo</button>
-          <button class="chip" data-filter="offline">Offline</button>
-          <button class="chip" data-filter="host">Host</button>
-        </div>
-      </div>
-      <div class="channels" id="channelGrid"><!-- rendered by JS --></div>
+  <!-- EN VIVO -->
+  <section class="sec" id="liveSection" style="display:none">
+    <div class="sec-hd">
+      <span class="sec-name">EN VIVO</span>
+      <span class="sec-count"><span id="liveCountEl">0</span> streamers</span>
+      <div class="sec-rule"></div>
     </div>
+    <div class="live-rail" id="liveRail"><!-- rendered by JS --></div>
+  </section>
 
+  <!-- CANALES -->
+  <section class="sec">
+    <div class="sec-hd">
+      <span class="sec-name">CANALES</span>
+      <span class="sec-count"><span id="totalCountEl">0</span> streamers</span>
+      <div class="sec-rule"></div>
+    </div>
+    <div class="channels" id="channelGrid"><!-- rendered by JS --></div>
+  </section>
+
+  <!-- VODs + DIGEST -->
+  <div class="bottom-row">
+    <div class="vods-col">
+      <div class="sec-hd">
+        <span class="sec-name" style="font-size:18px">ÚLTIMAS TRANSMISIONES</span>
+        <div class="sec-rule"></div>
+        <a href="/vods/" class="sec-more">Ver todos →</a>
+      </div>
+      <div class="cards-carousel" id="vodsCarousel">
+        <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
+      </div>
+    </div>
     <aside class="digest-col">
       <div class="panel">
         <div class="panel-header">
@@ -365,18 +413,6 @@
         </div>
       </div>
     </aside>
-  </div>
-
-  <!-- ÚLTIMAS TRANSMISIONES -->
-  <div class="vods-section">
-    <div class="vods-row-header" style="margin-bottom:12px">
-      <span>Últimas transmisiones</span>
-      <div class="section-line"></div>
-      <a href="/vods/">Ver todos →</a>
-    </div>
-    <div class="cards-carousel" id="vodsCarousel">
-      <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
-    </div>
   </div>
 
 </main>
@@ -464,6 +500,8 @@
   </div>
 </footer>
 
+</div><!-- /page-right -->
+
 <script>
 const POLL_MS     = 15000;
 const API_TIMEOUT = 5000;
@@ -477,6 +515,7 @@ const _hover    = window.matchMedia('(hover: hover)').matches;
 
 let cache        = { t: 0, data: null };
 let hlsInstance  = null;
+let searchQuery  = '';
 let featuredKey  = undefined; // undefined=unset, null=offline, string=live channel
 let rotateTimer  = null;
 let statsTimer   = null;
@@ -485,7 +524,6 @@ let rotateStart  = null;
 let livePlayers  = [];
 let rotateIdx    = 0;
 let lastPaths    = [];
-let currentFilter = 'todos';
 let statsBase    = { bitrate: 5200, latency: 2.4, viewers: 0 };
 let vodList      = [];
 let vodRotateIdx = 0;
@@ -938,6 +976,46 @@ function startRotation(live, paths) {
   }, ROTATE_MS);
 }
 
+/* ── Live section ────────────────────────────────────── */
+function renderLiveSection(live, paths) {
+  const section = document.getElementById('liveSection');
+  const rail    = document.getElementById('liveRail');
+  const countEl = document.getElementById('liveCountEl');
+  if (!section) return;
+
+  if (!live.length) { section.style.display = 'none'; return; }
+
+  section.style.display = '';
+  if (countEl) countEl.textContent = live.length;
+
+  const t = Math.floor(Date.now() / 60000);
+  rail.innerHTML = live.map(s => {
+    const viewers = getViewers(paths, s.key);
+    if (!cardBitrates[s.key]) cardBitrates[s.key] = jitter(5000, 600);
+    const bitrate = cardBitrates[s.key];
+    return `<a class="ch" href="/${s.key}/">
+      <div class="ch-thumb">
+        <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
+        <div class="ch-thumb-noise"></div>
+        <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
+        <img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg?t=${t}" onerror="this.style.display='none'" alt="">
+        <div class="ch-top">
+          <span class="ch-live">LIVE</span>
+          <span class="ch-viewers"><i class="fa-solid fa-eye"></i>${viewers}</span>
+        </div>
+        <div class="ch-bottom"><span class="ch-bitrate">${fmtKbps(bitrate)}bps</span></div>
+      </div>
+      <div class="ch-body">
+        <div class="ch-ava ring-live" style="background:${s.color || '#1e3a4a'}">${s.ava || s.name[0]}</div>
+        <div class="ch-info">
+          <div class="ch-name">${s.host ? '<span class="ch-host">H</span>' : ''}${s.name}</div>
+          <div class="ch-sub">${s.sub || 'corillo.live'}</div>
+        </div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
 /* ── Channel grid ────────────────────────────────────── */
 function renderChannelGrid(paths) {
   const liveSet = getLiveSet(paths);
@@ -947,17 +1025,23 @@ function renderChannelGrid(paths) {
   const vodThumbs = {};
   _recentVods.forEach(v => { if (v.thumb) vodThumbs[v.channel] = v.thumb; });
 
-  let list = STREAMERS;
-  if (currentFilter === 'live')         list = STREAMERS.filter(s => liveSet.has(s.key));
-  else if (currentFilter === 'offline') list = STREAMERS.filter(s => !liveSet.has(s.key));
-  else if (currentFilter === 'host')    list = STREAMERS.filter(s => s.host);
+  // When live section is active show only offline; search filters both
+  let list = liveSet.size > 0
+    ? STREAMERS.filter(s => !liveSet.has(s.key))
+    : STREAMERS;
+  if (searchQuery) {
+    list = STREAMERS.filter(s =>
+      s.name.toLowerCase().includes(searchQuery) ||
+      s.key.toLowerCase().includes(searchQuery)
+    );
+  }
 
-  const withSoon = currentFilter === 'todos'
-    ? [...list, ...(window.STREAMERS || []).filter(s => s.soon)]
-    : list;
+  const withSoon = searchQuery
+    ? list
+    : [...list, ...(window.STREAMERS || []).filter(s => s.soon)];
 
   if (!withSoon.length) {
-    const msg = currentFilter === 'live' ? 'No hay streams en vivo ahora' : 'No hay canales en esta categoría';
+    const msg = 'No hay canales disponibles';
     grid.innerHTML = `<div class="grid-empty"><i class="fa-solid fa-satellite-dish"></i><p>${msg}</p></div>`;
     return;
   }
@@ -1025,6 +1109,62 @@ function renderVodsRow() {
   attachPreviewListeners(carousel);
   const ids = [...carousel.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
   if (ids.length) loadCardAvatars(ids);
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+function renderSidebar(live, offline, paths) {
+  const liveSection = document.getElementById('sidebarLiveSection');
+  const liveRows    = document.getElementById('sidebarLiveRows');
+  const offlineRows = document.getElementById('sidebarOfflineRows');
+  const liveBadge   = document.getElementById('sidebarLiveBadge');
+  if (!liveSection) return;
+
+  if (live.length) {
+    liveSection.style.display = '';
+    if (liveBadge) { liveBadge.textContent = live.length; liveBadge.style.display = ''; }
+    const t = Math.floor(Date.now() / 60000);
+    liveRows.innerHTML = live.map(s => {
+      const v = getViewers(paths, s.key);
+      return `<a href="/${s.key}/" class="channel-row is-live">
+        <div class="sidebar-row-inner">
+          <div class="ch-row-ava" style="background:${s.color || '#1e3a4a'}">${s.ava || s.name[0]}</div>
+          <div class="ch-row-info nav-text">
+            <div class="ch-row-name">${s.name}</div>
+            <div class="ch-row-status live">${v > 0 ? v + ' viewers' : 'En vivo'}</div>
+          </div>
+          <div class="live-pip nav-text"></div>
+        </div>
+      </a>`;
+    }).join('');
+  } else {
+    liveSection.style.display = 'none';
+    if (liveBadge) liveBadge.style.display = 'none';
+  }
+
+  const MAX = 8;
+  const showAllBtn = document.getElementById('sidebarShowAll');
+  const renderOffline = list => list.map(s => `
+    <a href="/${s.key}/" class="channel-row">
+      <div class="sidebar-row-inner">
+        <div class="ch-row-ava" style="background:${s.color || '#1e3a4a'};opacity:.45">${s.ava || s.name[0]}</div>
+        <div class="ch-row-info nav-text">
+          <div class="ch-row-name">${s.name}</div>
+          <div class="ch-row-status">Offline</div>
+        </div>
+      </div>
+    </a>`).join('');
+
+  if (offline.length > MAX) {
+    offlineRows.innerHTML = renderOffline(offline.slice(0, MAX));
+    showAllBtn.style.display = '';
+    showAllBtn.onclick = () => {
+      offlineRows.innerHTML = renderOffline(offline);
+      showAllBtn.style.display = 'none';
+    };
+  } else {
+    offlineRows.innerHTML = renderOffline(offline);
+    showAllBtn.style.display = 'none';
+  }
 }
 
 /* ── Drawer ──────────────────────────────────────────── */
@@ -1147,13 +1287,12 @@ async function poll() {
   document.getElementById('liveCountEl').textContent = live.length;
   document.getElementById('totalCountEl').textContent = total;
 
-  // Ticker
-  renderTicker(liveWithViewers);
-
-  // Drawer
+  // Sidebar + Drawer
+  renderSidebar(live, offline, paths);
   renderDrawer(live, offline, paths);
 
-  // Channel grid
+  // Live section + channel grid
+  renderLiveSection(live, paths);
   renderChannelGrid(paths);
 
   // Featured player
@@ -1216,14 +1355,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('themeBtn').addEventListener('click', toggleTheme);
   document.getElementById('themeBtnDrawer').addEventListener('click', toggleTheme);
 
-  document.getElementById('filterBar').addEventListener('click', e => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    document.querySelectorAll('#filterBar .chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    currentFilter = chip.dataset.filter;
+  // Sidebar collapse
+  const sidebar = document.getElementById('leftSidebar');
+  const pageRight = sidebar?.nextElementSibling;
+  const savedCollapsed = localStorage.getItem('corillo-sidebar') === 'collapsed';
+  if (savedCollapsed) sidebar?.classList.add('collapsed');
+  document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+    const collapsed = sidebar.classList.toggle('collapsed');
+    localStorage.setItem('corillo-sidebar', collapsed ? 'collapsed' : 'open');
+  });
+
+  // Search
+  const searchInput = document.getElementById('searchInput');
+  const searchClear = document.getElementById('searchClear');
+  searchInput?.addEventListener('input', e => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    searchClear.style.display = searchQuery ? '' : 'none';
     renderChannelGrid(lastPaths);
   });
+  searchClear?.addEventListener('click', () => {
+    searchInput.value = '';
+    searchQuery = '';
+    searchClear.style.display = 'none';
+    searchInput.focus();
+    renderChannelGrid(lastPaths);
+  });
+  if (searchClear) searchClear.style.display = 'none';
 
   // Patch STREAMERS names + avatars from PocketBase before first render
   const activeStreamers = STREAMERS.filter(s => !s.soon);
