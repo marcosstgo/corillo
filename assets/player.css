@@ -81,7 +81,7 @@ body{display:flex;flex-direction:column}
 /* ── DROPDOWN MENU ── */
 
 /* Mobile */
-@media(max-width:820px){
+@media(max-width:960px){
   /* Stats: compactar para que quepan las 5 columnas */
   .stats-row{flex-wrap:wrap}
   .stats-row .stat{padding:8px 6px;min-width:0}
@@ -305,7 +305,7 @@ body::after{display:none} /* no grain on player pages */
 .panel-url-lbl{
   font-size: var(--crl-base);color:var(--crl-muted);margin-top:4px;
 }
-@media(max-width:820px){
+@media(max-width:960px){
   .panels-grid{grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 12px 12px}
   .panel-link,.panel-card:not(:has(.panel-link)){padding:8px 10px;gap:3px}
   .panel-title{font-size:var(--crl-2xs);letter-spacing:.5px}
@@ -339,10 +339,10 @@ body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,2
 
 
 
-@media(max-width:820px){
+@media(max-width:960px){
   html,body{height:auto;overflow:auto!important}
   body{min-height:100dvh;overflow-x:hidden;overflow-y:auto!important}
-  .app,.crl-player-app{height:auto;min-height:calc(100dvh - 48px);overflow:visible!important}
+  .app,.crl-player-app{height:auto;min-height:calc(100dvh - 48px);overflow:visible!important;grid-template-columns:1fr!important}
   .player-side,.crl-player-main{overflow:visible!important}
 }
 
