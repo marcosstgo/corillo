@@ -345,4 +345,11 @@ body.theme-twitch{background:radial-gradient(800px 400px at 50% 0%,rgba(145,71,2
   .app,.crl-player-app{height:auto;min-height:calc(100dvh - 48px);overflow:visible!important;grid-template-columns:1fr!important}
   .player-side,.crl-player-main{overflow:visible!important}
 }
+/* Phone landscape — orientación como fallback independiente del ancho */
+@media(orientation:landscape) and (max-height:500px){
+  html,body{height:auto;overflow:auto!important}
+  body{min-height:100dvh;overflow-x:hidden;overflow-y:auto!important}
+  .app,.crl-player-app{height:auto;min-height:calc(100dvh - 48px);overflow:visible!important;grid-template-columns:1fr!important}
+  .player-side,.crl-player-main{overflow:visible!important}
+}
 

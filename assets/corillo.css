@@ -1308,6 +1308,10 @@ button { font: inherit; cursor: pointer; }
   .crl-player-app { grid-template-columns: 1fr; height: auto; flex: none; align-content: start; }
   .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
 }
+@media(orientation:landscape) and (max-height:500px) {
+  .crl-player-app { grid-template-columns: 1fr !important; height: auto; flex: none; align-content: start; }
+  .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
+}
 
 [data-theme="light"] .crl-player-nav { background: rgba(238,247,251,.96); }
 
