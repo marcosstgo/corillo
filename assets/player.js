@@ -192,7 +192,7 @@ if (!__isValidChannel) {
 
   function showUnmuteBanner() {
     if (!DOM.video.muted) return;
-    if (!isMobile() && localStorage.getItem('corillo_muted') === 'false') {
+    if (localStorage.getItem('corillo_muted') === 'false') {
       if (App.unmuteAttemptPending) return;
       App.unmuteAttemptPending = true;
       const onPause = () => {
@@ -202,7 +202,11 @@ if (!__isValidChannel) {
       };
       DOM.video.addEventListener('pause', onPause);
       DOM.video.muted = false;
-      setTimeout(() => { DOM.video.removeEventListener('pause', onPause); App.unmuteAttemptPending = false; }, 1000);
+      setTimeout(() => {
+        DOM.video.removeEventListener('pause', onPause);
+        App.unmuteAttemptPending = false;
+        if (DOM.video.muted) DOM.unmuteBtn.classList.add('show');
+      }, 1000);
     } else {
       DOM.unmuteBtn.classList.add('show');
     }
