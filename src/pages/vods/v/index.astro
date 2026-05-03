@@ -168,7 +168,18 @@ async function init() {
 
   const video = document.getElementById('vodVideo') as HTMLVideoElement;
   const unmuteBtn = document.getElementById('unmuteBtn')!;
-  unmuteBtn.addEventListener('click', () => { video.muted = false; unmuteBtn.classList.add('hidden'); });
+
+  // Restore saved mute state
+  if (localStorage.getItem('corillo_muted') === 'false') {
+    video.muted = false;
+    setTimeout(() => { if (video.muted) unmuteBtn.classList.remove('hidden'); else unmuteBtn.classList.add('hidden'); }, 300);
+  }
+
+  unmuteBtn.addEventListener('click', () => {
+    video.muted = false;
+    localStorage.setItem('corillo_muted', 'false');
+    unmuteBtn.classList.add('hidden');
+  });
   video.addEventListener('volumechange', () => { if (!video.muted) unmuteBtn.classList.add('hidden'); });
 
   document.getElementById('copyLinkBtn')!.addEventListener('click', () => {

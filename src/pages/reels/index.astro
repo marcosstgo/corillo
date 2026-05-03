@@ -89,7 +89,7 @@ const PB_URL = 'https://pb.corillo.live';
 let allReels: any[]   = [];
 let activeChannel     = '';
 let observer: IntersectionObserver | null = null;
-let globalMuted       = true;
+let globalMuted       = localStorage.getItem('corillo_muted') !== 'false';
 const streamerAvatars: Record<string, string> = {};
 
 async function loadReels(channel = '') {
@@ -254,6 +254,7 @@ function pauseReel(el: Element) {
 
 document.getElementById('unmuteBtn')!.addEventListener('click', () => {
   globalMuted = false;
+  localStorage.setItem('corillo_muted', 'false');
   document.querySelectorAll('.crl-reel video').forEach(v => { (v as HTMLVideoElement).muted = false; });
   document.getElementById('unmuteBtn')!.style.display = 'none';
 });

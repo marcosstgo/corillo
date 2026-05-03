@@ -179,9 +179,19 @@ async function init() {
     } catch {}
   });
 
-  // Unmute
+  // Unmute — restore saved state
   const unmuteBtn = document.getElementById('rvUnmute');
-  unmuteBtn.addEventListener('click', () => { video.muted = false; unmuteBtn.style.display = 'none'; });
+  if (localStorage.getItem('corillo_muted') === 'false') {
+    video.muted = false;
+    setTimeout(() => { if (video.muted) unmuteBtn.style.display = 'flex'; }, 300);
+  } else {
+    unmuteBtn.style.display = 'flex';
+  }
+  unmuteBtn.addEventListener('click', () => {
+    video.muted = false;
+    localStorage.setItem('corillo_muted', 'false');
+    unmuteBtn.style.display = 'none';
+  });
   video.addEventListener('volumechange', () => { if (!video.muted) unmuteBtn.style.display = 'none'; });
 
   document.getElementById('rvLoading').style.display = 'none';
