@@ -2039,8 +2039,8 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
 
 /* Mobile — player responsive */
 @media(max-width:960px) {
-  html:has(.crl-player-app), body:has(.crl-player-app) { height: auto; overflow: auto!important; }
-  body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: auto!important; }
+  html:has(.crl-player-app), body:has(.crl-player-app) { height: auto; overflow: auto!important; -webkit-overflow-scrolling: touch; }
+  body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
   .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; }
   .player-side, .crl-player-main { overflow: visible!important; }
   .stats-row { flex-wrap: wrap; }
@@ -2056,10 +2056,24 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
   .panel-text { font-size: var(--crl-2xs); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .panel-url-lbl { font-size: var(--crl-2xs); margin-top: 2px; }
 }
-@media(max-width:600px) { #chatInput { font-size: 16px; } }
+@media(max-width:600px) {
+  #chatInput { font-size: 16px; }
+  /* Reduce chat height on phones — 420px is too tall for small viewports */
+  .crl-chat-panel { height: min(300px, 40vh) !important; }
+}
+@media(max-width:420px) {
+  /* Extra-small phones: smaller nav buttons, reduced padding */
+  .crl-player-nav { padding: 0 10px; gap: 6px; }
+  .nav-btn { width: 30px; height: 30px; }
+  .nav-live-pill { display: none !important; }
+  /* Stats: 2 columns on very narrow screens */
+  .stats-row .stat { flex: 0 0 calc(50% - 1px); border-right: none; }
+  .stats-row .stat:nth-child(odd) { border-right: 1px solid var(--crl-border); }
+}
 @media(orientation:landscape) and (max-height:500px) {
-  html:has(.crl-player-app), body:has(.crl-player-app) { height: auto; overflow: auto!important; }
-  body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: auto!important; }
+  html:has(.crl-player-app), body:has(.crl-player-app) { height: auto; overflow: auto!important; -webkit-overflow-scrolling: touch; }
+  body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
   .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; }
   .player-side, .crl-player-main { overflow: visible!important; }
+  .crl-chat-panel { height: min(280px, 35vh) !important; }
 }
