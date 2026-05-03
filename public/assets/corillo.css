@@ -654,10 +654,8 @@ button { font: inherit; cursor: pointer; }
 .crl-grid-3    { grid-template-columns: repeat(3, 1fr); }
 .crl-grid-4    { grid-template-columns: repeat(4, 1fr); }
 
-@media(max-width:960px) {
-  .crl-player-app { grid-template-columns: 1fr; height: auto; flex: 1; align-content: start; overflow-y: auto; overflow-x: hidden; }
-  .crl-player-main { overflow: visible; }
-  .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
+@media(max-width:768px) {
+  .crl-grid-3, .crl-grid-4 { grid-template-columns: repeat(2, 1fr); }
 }
 @media(max-width:560px) {
   .crl-grid-2, .crl-grid-3, .crl-grid-4 { grid-template-columns: 1fr; }
@@ -1305,14 +1303,6 @@ button { font: inherit; cursor: pointer; }
   display: flex; gap: 6px; align-items: center;
 }
 
-@media(max-width:960px) {
-  .crl-player-app { grid-template-columns: 1fr; height: auto; flex: none; align-content: start; }
-  .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
-}
-@media(orientation:landscape) and (max-height:500px) {
-  .crl-player-app { grid-template-columns: 1fr !important; height: auto; flex: none; align-content: start; }
-  .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
-}
 
 [data-theme="light"] .crl-player-nav { background: rgba(238,247,251,.96); }
 
@@ -2041,8 +2031,10 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
 @media(max-width:960px) {
   html:has(.crl-player-app), body:has(.crl-player-app) { height: auto; overflow: auto!important; -webkit-overflow-scrolling: touch; }
   body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
-  .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; }
+  .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; flex: none; align-content: start; }
   .player-side, .crl-player-main { overflow: visible!important; }
+  .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
+  .nav-btn, .chat-send, #chatSend { min-width: 44px; min-height: 44px; }
   .stats-row { flex-wrap: wrap; }
   .stats-row .stat { padding: 8px 6px; min-width: 0; }
   .stats-row .stat-val { font-size: 11px; }
