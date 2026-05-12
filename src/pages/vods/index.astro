@@ -1,24 +1,12 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import LiveSidebar from '../../components/LiveSidebar.astro';
-
-const footerLinks = [
-  { href: '/multiplayer/', label: 'Multiplayer' },
-  { href: '/streamers/', label: 'Streamers' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-  { href: '/legal/', label: 'Términos' },
-  { href: 'https://status.corillo.live', label: 'Status' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — VODs y transmisiones pasadas"
   description="Explora transmisiones pasadas y VODs de los streamers de CORILLO, una plataforma independiente desde Puerto Rico."
   canonical="https://corillo.live/vods/"
   ogTitle="CORILLO — VODs y transmisiones pasadas"
   ogDescription="Explora transmisiones pasadas y VODs de los streamers de CORILLO, una plataforma independiente desde Puerto Rico."
-  navLabel="VODs"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <meta name="theme-color" content="#030a0e" />
@@ -75,7 +63,6 @@ const footerLinks = [
     </style>
   </fragment>
 
-<LiveSidebar>
 <div class="hero">
   <div class="hero-label">Archivo</div>
   <h1>TRANS<span>MISIONES</span></h1>
@@ -296,5 +283,4 @@ loadVods();
 
 </script>
 
-</LiveSidebar>
-</BaseLayout>
+</SiteShell>
