@@ -1,23 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const footerLinks = [
-  { href: '/multiplayer/', label: 'Multiplayer' },
-  { href: '/streamers/', label: 'Streamers' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-  { href: '/configuracion/', label: 'Config OBS' },
-  { href: '/legal/', label: 'Términos' },
-  { href: '/dmca/', label: 'DMCA' },
-  { href: 'https://status.corillo.live', label: 'Status' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Únete por invitación"
   description="CORILLO es una plataforma de streaming independiente creada en Puerto Rico. Por ahora, entrar es por invitación y aprobación manual."
   canonical="https://corillo.live/join/"
-  navLabel="Únete"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <meta name="theme-color" content="#060608" />
@@ -249,4 +236,4 @@ joinForm?.addEventListener('submit', async e => {
 });
 </script>
 
-</BaseLayout>
+</SiteShell>

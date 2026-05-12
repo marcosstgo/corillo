@@ -1,7 +1,7 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import SiteShell from '../../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="Nueva contraseña — CORILLO"
   description="Restablece tu contraseña de CORILLO."
   canonical="https://corillo.live/perfil/reset/"
@@ -166,4 +166,4 @@ newPass.addEventListener('keydown', (e: KeyboardEvent) => { if (e.key === 'Enter
 newPassConfirm.addEventListener('keydown', (e: KeyboardEvent) => { if (e.key === 'Enter') submitBtn.click(); });
 </script>
 
-</BaseLayout>
+</SiteShell>

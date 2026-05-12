@@ -1,19 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const footerLinks = [
-  { href: '/roadmap/', label: 'Roadmap' },
-  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-  { href: '/corillo-css/', label: 'Corillo CSS' },
-  { href: '/faq/', label: 'FAQ' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Noticias"
   description="Novedades de CORILLO: updates de plataforma, software, comunidad e infraestructura."
   canonical="https://corillo.live/noticias/"
-  footerLinks={footerLinks}
-  footerInfo="Noticias del proyecto<br>Puerto Rico"
 >
   <fragment slot="head">
     <style is:global>
@@ -222,4 +213,4 @@ const footerLinks = [
   </section>
 </div>
 
-</BaseLayout>
+</SiteShell>

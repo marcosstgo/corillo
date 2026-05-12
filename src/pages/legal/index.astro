@@ -1,23 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const footerLinks = [
-  { href: '/multiplayer/', label: 'Multiplayer' },
-  { href: '/streamers/', label: 'Streamers' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-  { href: '/configuracion/', label: 'Config OBS' },
-  { href: '/legal/', label: 'Términos' },
-  { href: '/dmca/', label: 'DMCA' },
-  { href: 'https://status.corillo.live', label: 'Status' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Términos de Servicio y Privacidad"
   description="Términos de Servicio y Política de Privacidad de CORILLO."
   canonical="https://corillo.live/legal/"
-  navLabel="Legal"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <meta name="theme-color" content="#060608" />
@@ -314,4 +301,4 @@ const savedLang = localStorage.getItem('corillo-lang') || 'es';
 if (savedLang === 'en') setLang('en');
 </script>
 
-</BaseLayout>
+</SiteShell>

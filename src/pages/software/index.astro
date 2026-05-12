@@ -1,21 +1,12 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const footerLinks = [
-  { href: '/', label: 'Inicio' },
-  { href: '/roadmap/', label: 'Roadmap' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/corillo-css/', label: 'Corillo CSS' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Software para streamers"
   description="Descarga el software de CORILLO para streamers y gamers, incluyendo Streamer Pro, Streamer Lite, Anti-BufferBloat Pro y NATCheck."
   canonical="https://corillo.live/software/"
   ogTitle="CORILLO — Software para streamers"
   ogDescription="Descarga el software de CORILLO para streamers y gamers, incluyendo Streamer Pro, Streamer Lite, Anti-BufferBloat Pro y NATCheck."
-  navLabel="Software"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <style>
@@ -182,4 +173,4 @@ const footerLinks = [
   </div>
 </div>
 
-</BaseLayout>
+</SiteShell>

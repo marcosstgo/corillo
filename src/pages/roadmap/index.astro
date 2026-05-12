@@ -1,21 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const footerLinks = [
-  { href: '/multiplayer/', label: 'Multiplayer' },
-  { href: '/streamers/', label: 'Streamers' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-  { href: '/vods/', label: 'VODs' },
-  { href: '/legal/', label: 'Términos' },
-  { href: 'https://status.corillo.live', label: 'Status' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Roadmap del proyecto"
   description="Mira hacia dónde va CORILLO, qué ya funciona hoy y qué sigue en el roadmap del proyecto."
   canonical="https://corillo.live/roadmap/"
-  footerLinks={footerLinks}
 >
 
 <div class="crl-hero">
@@ -200,4 +189,4 @@ const footerLinks = [
 
 </div>
 
-</BaseLayout>
+</SiteShell>

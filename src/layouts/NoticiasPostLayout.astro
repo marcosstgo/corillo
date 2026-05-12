@@ -1,5 +1,5 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+import SiteShell from './SiteShell.astro';
 
 interface Props {
   title: string;
@@ -13,7 +13,6 @@ interface Props {
   date: string;              // e.g. "30 marzo 2026"
   heroTitle: string;
   heroSub: string;
-  footerLinks?: Array<{ href: string; label: string }>;
   wide?: boolean;            // 860px instead of 820px (default false)
 }
 
@@ -29,28 +28,18 @@ const {
   date,
   heroTitle,
   heroSub,
-  footerLinks = [
-    { href: '/noticias/', label: 'Noticias' },
-    { href: '/roadmap/',  label: 'Roadmap'  },
-    { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-    { href: '/faq/',      label: 'FAQ'      },
-  ],
   wide = false,
 } = Astro.props;
 
 const maxW = wide ? '860px' : '820px';
 ---
-<BaseLayout
+<SiteShell
   title={title}
   description={description}
   canonical={canonical}
   ogType="article"
   ogTitle={ogTitle}
   ogDescription={ogDescription}
-  navRightHref="/noticias/"
-  navRightIcon="fa-solid fa-newspaper"
-  footerInfo="Noticias del proyecto<br>Puerto Rico"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <style is:global>
@@ -99,4 +88,4 @@ const maxW = wide ? '860px' : '820px';
       </div>
     </div>
   </div>
-</BaseLayout>
+</SiteShell>

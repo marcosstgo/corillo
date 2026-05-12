@@ -1,11 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Multiplayer"
   description="Mira varios streams a la vez en CORILLO con una vista multiplayer pensada para seguir al corillo en tiempo real."
   canonical="https://corillo.live/multiplayer/"
-  navLabel="Multiplayer"
 >
   <Fragment slot="head">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js" is:inline></script>
@@ -748,4 +747,4 @@ document.addEventListener('visibilitychange', () => {
 
 refresh();
   </script>
-</BaseLayout>
+</SiteShell>

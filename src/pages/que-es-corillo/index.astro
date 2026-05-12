@@ -1,17 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Sobre Corillo"
   description="Conoce qué es CORILLO, un proyecto de streaming nacido en Aibonito, Puerto Rico, con referencias, lenguaje y prioridades nuestras."
   canonical="https://corillo.live/que-es-corillo/"
-  footerLinks={[
-    { href: '/roadmap/', label: 'Roadmap' },
-    { href: '/streamers/', label: 'Streamers' },
-    { href: '/join/', label: 'Únete' },
-    { href: '/faq/', label: 'FAQ' },
-  ]}
-  footerInfo="Puerto Rico<br>Creado aquí"
 >
 <fragment slot="head">
   <style is:global>
@@ -193,4 +186,4 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   </div>
 </div>
 
-</BaseLayout>
+</SiteShell>

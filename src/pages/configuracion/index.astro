@@ -1,27 +1,12 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const footerLinks = [
-  { href: '/multiplayer/', label: 'Multiplayer' },
-  { href: '/streamers/', label: 'Streamers' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-  { href: '/configuracion/', label: 'Config OBS' },
-  { href: '/legal/', label: 'Términos' },
-  { href: '/dmca/', label: 'DMCA' },
-  { href: 'https://status.corillo.live', label: 'Status' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Configuración OBS & Meld Studio"
   description="Guía paso a paso para configurar OBS Studio o Meld Studio y hacer stream a CORILLO."
   canonical="https://corillo.live/configuracion/"
   ogTitle="CORILLO — Configuración OBS & Meld"
   ogDescription="Guía completa para configurar OBS Studio o Meld Studio y hacer stream a CORILLO desde Puerto Rico."
-  navLabel="Config OBS"
-  navRightHref="/join/"
-  navRightIcon="fa-solid fa-plus"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <meta name="theme-color" content="#060608" />
@@ -491,4 +476,4 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
 });
 </script>
 
-</BaseLayout>
+</SiteShell>
