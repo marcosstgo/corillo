@@ -1,23 +1,10 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import LiveSidebar from '../../../components/LiveSidebar.astro';
-
-const footerLinks = [
-  { href: '/multiplayer/', label: 'Multiplayer' },
-  { href: '/streamers/', label: 'Streamers' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/legal/', label: 'Términos' },
-  { href: 'https://status.corillo.live', label: 'Status' },
-];
+import SiteShell from '../../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="VOD — CORILLO"
   description="Transmisión grabada en CORILLO — plataforma independiente desde Puerto Rico."
   canonical="https://corillo.live/vods/v/"
-  navLabel="VOD"
-  navRightHref="/vods/"
-  navRightIcon="fa-solid fa-film"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <meta name="theme-color" content="#030a0e" />
@@ -80,7 +67,6 @@ const footerLinks = [
     </style>
   </fragment>
 
-<LiveSidebar>
 <div id="content"></div>
 <div id="related"></div>
 
@@ -338,5 +324,4 @@ async function loadRelated(channel: string, currentId: string) {
 
 </script>
 
-</LiveSidebar>
-</BaseLayout>
+</SiteShell>
