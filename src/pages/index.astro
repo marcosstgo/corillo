@@ -1,330 +1,51 @@
 ---
+import SiteShell from '../layouts/SiteShell.astro';
 ---
-<!doctype html>
-<html lang="es" data-theme="dark">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
-  <title>CORILLO — Stream Platform</title>
-  <meta name="description" content="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos." />
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://corillo.live/">
-  <meta property="og:title" content="CORILLO — Stream Platform">
-  <meta property="og:description" content="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos arbitrarios. Solo tú, tu setup y tu audiencia.">
-  <meta property="og:image" content="https://corillo.live/assets/og-image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:locale" content="es_PR">
-  <meta property="og:site_name" content="CORILLO">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="https://corillo.live/">
-  <meta name="twitter:title" content="CORILLO — Stream Platform">
-  <meta name="twitter:description" content="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos arbitrarios.">
-  <meta name="twitter:image" content="https://corillo.live/assets/og-image.png">
-  <meta name="twitter:image:alt" content="CORILLO — plataforma de streaming desde Puerto Rico">
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-  <meta name="theme-color" content="#030a0e">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js" is:inline></script>
-  <script src="/assets/streamers.js" is:inline></script>
-  <link rel="stylesheet" href="/assets/corillo.css">
-  <link rel="stylesheet" href="/assets/homepage.css">
-  <script is:inline>
-    (function(){
-      const t = localStorage.getItem('corillo-theme');
-      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
-    })();
-  </script>
-  <style is:global>
-    :root { --h: 205; --grain: 55; }
-    html, body { overflow-x: hidden; }
-    body { background: var(--ink); font-size: 15px; line-height: 1.5; min-height: 100vh; }
+<SiteShell
+  title="CORILLO — Stream Platform"
+  description="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos."
+  canonical="https://corillo.live/"
+  ogTitle="CORILLO — Stream Platform"
+  ogDescription="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos arbitrarios. Solo tú, tu setup y tu audiencia."
+>
+  <fragment slot="head">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js" is:inline></script>
+    <style is:global>
+      /* ── Home-only styles (channel cards, sim-stream, grid-empty, host-tag, rotate-bar) ── */
+      .ch-badge-off {
+        padding:2px 6px; background:rgba(0,0,0,.6); color:var(--muted);
+        font-family:var(--mono); font-size:9px; font-weight:700;
+        letter-spacing:1.5px; border-radius:2px;
+      }
+      .ch-thumb-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
+      .ch-thumb-vod { opacity:.5; filter:saturate(.7); }
+      .ch-thumb-glow  { z-index:0; }
+      .ch-thumb-noise { z-index:2; }
+      .ch-thumb-inner { z-index:0; }
+      .ch:hover .ch-thumb-img { transform:scale(1.04); transition:transform .35s ease; }
+      .ch-top, .ch-bottom { z-index:3; }
 
-    /* Logo ring animations */
-    @keyframes logo-ring { to { stroke-dashoffset: -126; } }
-    @keyframes logo-ping {
-      0%  { transform: scale(1); opacity: 1; }
-      55% { transform: scale(2.6); opacity: 0; }
-      56% { transform: scale(1); opacity: 0; }
-      100%{ transform: scale(1); opacity: 1; }
-    }
+      .sim-stream.has-thumb { background-size:cover; background-position:center; }
+      .sim-stream.has-thumb::before {
+        content:''; position:absolute; inset:0; z-index:1;
+        background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.55) 100%);
+      }
+      .sim-stream.has-thumb .sim-stream-grid { display:none; }
+      .sim-stream.has-thumb > div { z-index:2; }
 
-    /* Drawer */
-    .drawer-overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,.6); backdrop-filter:blur(4px); }
-    .drawer-overlay.open { display:block; }
-    .drawer { position:fixed; top:0; left:0; bottom:0; z-index:201; width:260px; background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; transform:translateX(-100%); transition:transform .25s cubic-bezier(.4,0,.2,1); }
-    .drawer.open { transform:translateX(0); }
-    .drawer-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); flex-shrink:0; }
-    .drawer-close { width:30px; height:30px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:.85rem; transition:.15s; }
-    .drawer-close:hover { color:var(--white); border-color:var(--border-h); }
-    .drawer-body { flex:1; overflow-y:auto; scrollbar-width:none; padding:12px 0; }
-    .drawer-body::-webkit-scrollbar { display:none; }
-    .aside-label { font-family:var(--mono); font-size:9px; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted); padding:0 20px 8px; margin-top:4px; }
-    .aside-divider { border:none; border-top:1px solid var(--border); margin:10px 0; }
-    .nav-link { display:flex; align-items:center; gap:10px; padding:9px 20px; font-family:var(--mono); font-size:11px; letter-spacing:.5px; color:rgba(232,246,255,.55); transition:.15s; }
-    .nav-link i { width:14px; text-align:center; font-size:.75rem; color:var(--muted); }
-    .nav-link:hover { color:var(--white); background:rgba(0,191,255,.05); }
-    .nav-link:hover i { color:var(--accent); }
-    .channel-row { display:flex; align-items:center; gap:10px; padding:8px 20px; cursor:pointer; transition:background .15s; position:relative; color:inherit; text-decoration:none; }
-    .channel-row:hover { background:rgba(0,191,255,.04); }
-    .ch-row-ava { width:30px; height:30px; border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:14px; color:#000; overflow:hidden; }
-    .ch-row-ava img { width:100%; height:100%; object-fit:cover; display:block; }
-    .channel-row.is-live .ch-row-ava { box-shadow:0 0 0 2px var(--live), 0 0 8px rgba(232,200,74,.25); }
-    .ch-row-info { flex:1; min-width:0; }
-    .ch-row-name { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.5px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-    .ch-row-status { font-size:11px; color:var(--muted); margin-top:1px; }
-    .ch-row-status.live { color:var(--live); }
-    .ch-row-viewers { font-family:var(--mono); font-size:10px; color:var(--muted); flex-shrink:0; }
-    .live-pip { width:6px; height:6px; border-radius:50%; background:var(--live); flex-shrink:0; box-shadow:0 0 8px rgba(232,200,74,.7); }
-    .sidebar-show-all { display:block; width:100%; padding:8px 20px; background:transparent; border:none; color:rgba(232,246,255,.35); font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; text-align:left; transition:.15s; }
-    .sidebar-show-all:hover { color:var(--accent); }
-    .drawer-tools { display:flex; align-items:center; gap:8px; }
-    .rdot { display:inline-flex; align-items:center; justify-content:center; width:14px; flex-shrink:0; }
-    .rdot::before { content:''; display:block; width:7px; height:7px; border-radius:50%; background:var(--accent); animation:logo-ping 1.8s ease-in-out infinite; }
+      .grid-empty {
+        display:flex; flex-direction:column; align-items:center;
+        padding:48px 24px; gap:14px; border:1px dashed var(--border); border-radius:8px;
+        color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase;
+        grid-column: 1 / -1;
+      }
+      .grid-empty i { font-size:2rem; opacity:.4; }
 
-    /* Menu button (mobile only) */
-    .nav-menu-btn { display:none; width:34px; height:34px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; align-items:center; justify-content:center; font-size:.9rem; transition:.15s; flex-shrink:0; }
-    .nav-menu-btn:hover { border-color:var(--border-h); color:var(--white); }
-    @media (max-width:820px) { .nav-menu-btn { display:flex; } }
+      .featured-sub .host-tag { color:var(--live); border:1px solid rgba(232,200,74,.4); padding:1px 6px; border-radius:3px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; margin-right:6px; display:inline-block; vertical-align:middle; }
 
-    /* Theme button */
-    .theme-btn { width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; letter-spacing:0; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:.15s; flex-shrink:0; }
-    .theme-btn:hover { color:var(--white); border-color:var(--border-h); }
-
-    /* Offline channel badge — no blinking dot */
-    .ch-badge-off {
-      padding:2px 6px; background:rgba(0,0,0,.6); color:var(--muted);
-      font-family:var(--mono); font-size:9px; font-weight:700;
-      letter-spacing:1.5px; border-radius:2px;
-    }
-
-    /* Live thumbnail inside card */
-    .ch-thumb-img {
-      position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1;
-    }
-    /* VOD thumbnail in offline card — dimmed */
-    .ch-thumb-vod { opacity:.5; filter:saturate(.7); }
-    .ch-thumb-glow  { z-index:0; }
-    .ch-thumb-noise { z-index:2; }
-    .ch-thumb-inner { z-index:0; }
-    .ch:hover .ch-thumb-img { transform:scale(1.04); transition:transform .35s ease; }
-    .ch-top, .ch-bottom { z-index:3; }
-
-    /* Sim-stream with VOD thumbnail */
-    .sim-stream.has-thumb { background-size:cover; background-position:center; }
-    .sim-stream.has-thumb::before {
-      content:''; position:absolute; inset:0; z-index:1;
-      background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.55) 100%);
-    }
-    .sim-stream.has-thumb .sim-stream-grid { display:none; }
-    .sim-stream.has-thumb > div { z-index:2; }
-
-    /* Empty grid state */
-    .grid-empty {
-      display:flex; flex-direction:column; align-items:center;
-      padding:48px 24px; gap:14px; border:1px dashed var(--border); border-radius:8px;
-      color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase;
-      grid-column: 1 / -1;
-    }
-    .grid-empty i { font-size:2rem; opacity:.4; }
-
-    /* Brand logo SVG */
-    .brand-logo-svg .ring-outer { stroke: #3a6070; }
-    [data-theme="light"] .brand-logo-svg .ring-outer { stroke: #0c1a20; }
-
-    /* Nav links — light mode */
-    [data-theme="light"] .nav-link { color: rgba(5,16,21,.6); }
-    [data-theme="light"] .nav-link:hover { color: #0c1a20; background: rgba(0,0,0,.05); }
-    [data-theme="light"] .nav-link:hover i { color: var(--accent); }
-    [data-theme="light"] .sidebar-show-all { color: rgba(5,16,21,.35); }
-    [data-theme="light"] .sidebar-show-all:hover { color: var(--accent); }
-
-    /* Featured host-tag */
-    .featured-sub .host-tag { color:var(--live); border:1px solid rgba(232,200,74,.4); padding:1px 6px; border-radius:3px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; margin-right:6px; display:inline-block; vertical-align:middle; }
-
-    /* rotate-bar lives inside .featured-video */
-    .rotate-bar { position:absolute; bottom:0; left:0; height:2px; background:var(--accent); opacity:.5; width:0; z-index:4; }
-
-    /* Footer (unchanged from old design) */
-    .site-footer { border-top:1px solid var(--border); padding:48px 32px 28px; margin-top:0; background:var(--panel); position:relative; overflow:hidden; }
-    .site-footer::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(0,191,255,.06),transparent); pointer-events:none; }
-    .foot-top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px; }
-    @media(max-width:900px){ .foot-top { grid-template-columns:1fr 1fr; gap:32px; } }
-    @media(max-width:520px){ .foot-top { grid-template-columns:1fr; } }
-    .foot-brand { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
-    .foot-brand-logo { height:28px; width:auto; opacity:.75; }
-    .foot-brand-word { fill:#e8f6ff; }
-    .foot-brand-ring-outer { stroke:#e8f6ff; }
-    [data-theme="light"] .foot-brand-word { fill:#0c1a20; }
-    [data-theme="light"] .foot-brand-ring-outer { stroke:#0c1a20; }
-    .foot-tagline { font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:rgba(255,255,255,.25); text-transform:uppercase; line-height:1.8; }
-    [data-theme="light"] .foot-tagline { color:rgba(0,0,0,.34); }
-    .foot-col-title { display:flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--white); margin-bottom:14px; font-weight:700; }
-    [data-theme="light"] .foot-col-title { color:#0c1a20; }
-    .foot-col-links { display:flex; flex-direction:column; gap:9px; }
-    .foot-col-links > div { display:flex; flex-direction:column; gap:9px; }
-    .foot-col-links a { font-size:.85rem; color:rgba(255,255,255,.4); transition:.15s; text-decoration:none; }
-    .foot-col-links a:hover { color:var(--white); }
-    [data-theme="light"] .foot-col-links a { color:rgba(0,0,0,.4); }
-    [data-theme="light"] .foot-col-links a:hover { color:rgba(0,0,0,.85); }
-    .foot-chev { margin-left:auto; font-size:10px; color:var(--muted); transition:transform .25s; display:none; }
-    @media(max-width:520px){
-      .foot-chev { display:block; }
-      .foot-col-title { cursor:pointer; user-select:none; margin-bottom:0; padding:12px 0; border-bottom:1px solid var(--border); }
-      .foot-col-title[aria-expanded="true"] { color:var(--accent); border-color:transparent; }
-      .foot-col-title[aria-expanded="true"] .foot-chev { transform:rotate(180deg); color:var(--accent); }
-      .foot-top > div:not(:first-child) { border-top:1px solid var(--border); }
-      .foot-col-links { display:grid; grid-template-rows:0fr; transition:grid-template-rows .25s ease; overflow:hidden; gap:0; }
-      .foot-col-links.open { grid-template-rows:1fr; }
-      .foot-col-links > div { overflow:hidden; }
-      .foot-col-links.open > div { padding:14px 0; }
-    }
-    .foot-bottom { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:24px; border-top:1px solid var(--border); }
-    .foot-copy { font-family:var(--mono); font-size:9px; letter-spacing:1px; color:rgba(255,255,255,.18); text-transform:uppercase; }
-    [data-theme="light"] .foot-copy { color:rgba(0,0,0,.34); }
-    .foot-credits { display:flex; align-items:center; justify-content:center; gap:8px; padding-top:18px; font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.18); }
-    [data-theme="light"] .foot-credits { color:rgba(0,0,0,.22); }
-    .foot-credits-icon { display:inline-block; animation:crl-bounce 2.2s ease-in-out infinite; }
-    .foot-credits-icon--ai { animation-delay:.7s; }
-    @keyframes crl-bounce { 0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)} }
-    .foot-credits-sep { opacity:.4; }
-    .foot-credits-link { color:rgba(255,255,255,.28); text-decoration:none; transition:color .2s; }
-    .foot-credits-link:hover { color:var(--accent); }
-    [data-theme="light"] .foot-credits-link { color:rgba(0,0,0,.32); }
-    [data-theme="light"] .foot-credits-link:hover { color:var(--accent); }
-    .foot-socials { display:flex; align-items:center; gap:4px; }
-    .foot-social { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); display:inline-flex; align-items:center; justify-content:center; color:rgba(255,255,255,.35); font-size:.85rem; transition:.15s; text-decoration:none; }
-    .foot-social:hover { border-color:var(--border-h); color:var(--white); }
-    [data-theme="light"] .foot-social { color:rgba(0,0,0,.42); }
-    [data-theme="light"] .foot-social:hover { color:#0c1a20; }
-    .foot-version { font-family:var(--mono); font-size:9px; color:rgba(255,255,255,.15); }
-    [data-theme="light"] .foot-version { color:rgba(0,0,0,.28); }
-    [data-theme="light"] .site-footer { background:#e8edf0; }
-  </style>
-</head>
-<body>
-
-<div class="grain" aria-hidden="true"></div>
-
-<!-- DRAWER -->
-<div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="drawer" id="drawer">
-  <div class="drawer-header">
-    <a href="/" style="display:flex;align-items:center">
-      <svg class="foot-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">C</text>
-        <circle cx="72" cy="42" r="36" fill="url(#dg)"/>
-        <circle cx="72" cy="42" r="34" class="foot-brand-ring-outer" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">RILLO</text>
-      </svg>
-    </a>
-    <div class="drawer-tools">
-      <button class="theme-btn" id="themeBtnDrawer" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
-      <button class="drawer-close" id="drawerClose"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-  </div>
-  <div class="drawer-body">
-    <div class="aside-label">Navegar</div>
-    <a href="/reels/" class="nav-link"><i class="fa-solid fa-scissors"></i> Reels</a>
-    <a href="/vods/" class="nav-link"><i class="fa-solid fa-film"></i> VODs</a>
-    <a href="/multiplayer/" class="nav-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
-    <a href="/join/" class="nav-link"><i class="fa-solid fa-plus"></i> Crear Canal</a>
-    <a href="/perfil/" class="nav-link"><i class="fa-solid fa-user"></i> Mi Perfil</a>
-    <a href="/roadmap/" class="nav-link"><span class="rdot"></span> Roadmap</a>
-    <a href="/que-es-corillo/" class="nav-link"><i class="fa-solid fa-circle-info"></i> Sobre Corillo</a>
-    <a href="/noticias/" class="nav-link"><i class="fa-solid fa-newspaper"></i> Noticias</a>
-    <hr class="aside-divider">
-    <div id="drawerLiveSection" style="display:none">
-      <div class="aside-label">En vivo</div>
-      <div id="drawerLiveRows"></div>
-      <hr class="aside-divider">
-    </div>
-    <div class="aside-label">Canales</div>
-    <div id="drawerOfflineRows"></div>
-    <button class="sidebar-show-all" id="drawerShowAll" style="display:none"><i class="fa-solid fa-chevron-down"></i> Ver todos</button>
-  </div>
-</div>
-
-<!-- LEFT SIDEBAR (desktop only) -->
-<aside class="left-sidebar" id="leftSidebar">
-  <button class="sidebar-toggle" id="sidebarToggle" title="Colapsar menú">
-    <i class="fa-solid fa-bars"></i>
-  </button>
-  <div class="sidebar-inner">
-    <div class="aside-label"><span class="nav-text">Navegar</span></div>
-    <a href="/reels/"      class="nav-link" title="Reels"><i class="fa-solid fa-scissors"></i><span class="nav-text"> Reels</span></a>
-    <a href="/vods/"       class="nav-link" title="VODs"><i class="fa-solid fa-film"></i><span class="nav-text"> VODs</span></a>
-    <a href="/multiplayer/" class="nav-link" title="Multiplayer"><i class="fa-solid fa-table-cells"></i><span class="nav-text"> Multiplayer</span></a>
-    <a href="/streamers/"  class="nav-link" title="Streamers"><i class="fa-solid fa-users"></i><span class="nav-text"> Streamers</span></a>
-    <a href="/join/"       class="nav-link" title="Crear Canal"><i class="fa-solid fa-plus"></i><span class="nav-text"> Crear Canal</span></a>
-    <a href="/perfil/"     class="nav-link" title="Mi Perfil"><i class="fa-solid fa-user"></i><span class="nav-text"> Mi Perfil</span></a>
-    <a href="/roadmap/"    class="nav-link" title="Roadmap"><span class="rdot"></span><span class="nav-text"> Roadmap</span></a>
-    <hr class="aside-divider">
-    <div id="sidebarLiveSection" style="display:none">
-      <div class="aside-label sidebar-live-label">
-        <span class="nav-text">En vivo</span>
-        <span class="sidebar-live-badge" id="sidebarLiveBadge"></span>
-      </div>
-      <div id="sidebarLiveRows"></div>
-      <hr class="aside-divider">
-    </div>
-    <div class="aside-label"><span class="nav-text">Canales</span></div>
-    <div id="sidebarOfflineRows"></div>
-    <button class="sidebar-show-all" id="sidebarShowAll" style="display:none"><i class="fa-solid fa-chevron-down"></i><span class="nav-text"> Ver todos</span></button>
-  </div>
-</aside>
-
-<div class="page-right">
-
-<!-- TOPBAR -->
-<header class="topbar">
-  <div class="topbar-left">
-    <button class="nav-menu-btn" id="menuBtn" aria-label="Menú"><i class="fa-solid fa-bars"></i></button>
-    <a href="/" class="brand">
-      <svg class="brand-logo-svg" width="28" height="28" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="63" cy="63" r="55" class="ring-outer" stroke-width="2"/>
-        <circle cx="63" cy="63" r="40" class="ring-outer" stroke-width="1.5"/>
-        <circle cx="63" cy="63" r="40" stroke="var(--accent)" stroke-width="2" stroke-dasharray="113 13" stroke-dashoffset="0" style="animation:logo-ring 6s linear infinite"/>
-        <circle cx="63" cy="63" r="8" fill="var(--accent)"/>
-        <circle cx="63" cy="63" r="4" fill="#CE1126" style="transform-box:fill-box;transform-origin:center;animation:logo-ping 3s ease-out infinite"/>
-        <line x1="63" y1="8" x2="63" y2="23" stroke="#3a6070" stroke-width="2"/>
-        <line x1="63" y1="103" x2="63" y2="118" stroke="#3a6070" stroke-width="2"/>
-        <line x1="8" y1="63" x2="23" y2="63" stroke="#3a6070" stroke-width="2"/>
-        <line x1="103" y1="63" x2="118" y2="63" stroke="#3a6070" stroke-width="2"/>
-      </svg>
-      CORILLO<span class="brand-dot">.</span>LIVE
-      <span class="brand-sub">Puerto Rico</span>
-    </a>
-  </div>
-
-  <nav class="topbar-nav" aria-label="Navegación principal">
-    <a href="/reels/" class="topbar-link"><i class="fa-solid fa-scissors"></i> Reels</a>
-    <a href="/vods/" class="topbar-link"><i class="fa-solid fa-film"></i> VODs</a>
-    <a href="/multiplayer/" class="topbar-link"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
-    <a href="/streamers/" class="topbar-link"><i class="fa-solid fa-users"></i> Streamers</a>
-  </nav>
-
-  <div class="topbar-search">
-    <i class="fa-solid fa-magnifying-glass topbar-search-icon"></i>
-    <input id="searchInput" class="topbar-search-input" type="search" placeholder="Buscar canal..." autocomplete="off" spellcheck="false">
-    <button class="topbar-search-clear" id="searchClear" aria-label="Limpiar"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-
-  <div class="top-actions">
-    <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
-    <a href="/join/" class="ghost-btn primary"><i class="fa-solid fa-plus"></i> Crear canal</a>
-  </div>
-</header>
+      .rotate-bar { position:absolute; bottom:0; left:0; height:2px; background:var(--accent); opacity:.5; width:0; z-index:4; }
+    </style>
+  </fragment>
 
 <!-- ticker elements kept hidden for JS compat -->
 <div id="tickerWrap" style="display:none" aria-hidden="true">
@@ -436,81 +157,6 @@
   <div class="reels-strip-track" id="reelsTrack"></div>
 </div>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-  <div class="foot-top">
-    <div>
-      <div class="foot-brand">
-        <svg class="foot-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-          <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">C</text>
-          <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
-          <circle cx="72" cy="42" r="34" class="foot-brand-ring-outer" stroke-width="9" fill="none"/>
-          <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-          <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-          <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-          <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">RILLO</text>
-        </svg>
-      </div>
-      <div class="foot-tagline">Plataforma independiente<br>Puerto Rico</div>
-    </div>
-    <div>
-      <div class="foot-col-title" data-foot-toggle><span class="rdot"></span>Plataforma<i class="fa-solid fa-chevron-down foot-chev"></i></div>
-      <div class="foot-col-links"><div>
-        <a href="/">Inicio</a>
-        <a href="/multiplayer/">Multiplayer</a>
-        <a href="/vods/">VODs</a>
-        <a href="/reels/">Reels</a>
-        <a href="/streamers/">Streamers</a>
-        <a href="/join/">Crear Canal</a>
-        <a href="/configuracion/">Configuración</a>
-      </div></div>
-    </div>
-    <div>
-      <div class="foot-col-title" data-foot-toggle><span class="rdot"></span>Software<i class="fa-solid fa-chevron-down foot-chev"></i></div>
-      <div class="foot-col-links"><div>
-        <a href="/software/">Todo el software</a>
-        <a href="/streamer-pro/">Streamer Pro</a>
-        <a href="/antibufferbloat-pro/">Anti-BufferBloat Pro</a>
-        <a href="/natcheck/">NATCheck</a>
-        <a href="https://github.com/marcosstgo/PingGuard" target="_blank" rel="noopener">Ping Guard</a>
-      </div></div>
-    </div>
-    <div>
-      <div class="foot-col-title" data-foot-toggle><span class="rdot"></span>Info<i class="fa-solid fa-chevron-down foot-chev"></i></div>
-      <div class="foot-col-links"><div>
-        <a href="/roadmap/">Roadmap</a>
-        <a href="/que-es-corillo/">Sobre Corillo</a>
-        <a href="/noticias/">Noticias</a>
-        <a href="/faq/">FAQ</a>
-        <a href="/legal/">Términos</a>
-        <a href="/dmca/">DMCA</a>
-        <a href="https://status.corillo.live" target="_blank" rel="noopener">Status</a>
-      </div></div>
-    </div>
-  </div>
-  <div class="foot-bottom">
-    <div class="foot-socials">
-      <a class="foot-social" href="https://x.com/corillolive" target="_blank" rel="noopener" title="X / Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-      <a class="foot-social" href="https://instagram.com/corillolive" target="_blank" rel="noopener" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-      <a class="foot-social" href="https://tiktok.com/@corillolive" target="_blank" rel="noopener" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-      <a class="foot-social" href="https://discord.gg/corillo" target="_blank" rel="noopener" title="Discord"><i class="fa-brands fa-discord"></i></a>
-      <a class="foot-social" href="https://github.com/marcosstgo" target="_blank" rel="noopener" title="GitHub"><i class="fa-brands fa-github"></i></a>
-    </div>
-    <span class="foot-version" id="footVersion"></span>
-    <div class="foot-copy">© 2026 CORILLO · Hecho con <i class="fa-solid fa-heart" style="color:#CE1126;font-size:9px"></i> en Puerto Rico</div>
-  </div>
-  <div class="foot-credits">
-    <span class="foot-credits-icon">⚡</span>
-    <a href="https://marcossantiago.com" target="_blank" rel="noopener" class="foot-credits-link">Marcos Santiago</a>
-    <span class="foot-credits-sep">·</span>
-    <span class="foot-credits-icon foot-credits-icon--ai">🤖</span>
-    <span>Built with Claude</span>
-  </div>
-</footer>
-
-</div><!-- /page-right -->
-
 <script>
 const POLL_MS     = 15000;
 const API_TIMEOUT = 5000;
@@ -543,14 +189,6 @@ let _recentVods     = [];
 let _vodLoadedAt    = 0;
 let _gridState      = null;
 const _avatarCache  = {};
-
-function rowAva(s, dim = false) {
-  const opacity = dim ? ';opacity:.45' : '';
-  if (s.avatar_url) {
-    return `<div class="ch-row-ava" style="background:${s.color || '#1e3a4a'}${opacity}"><img src="${s.avatar_url}" alt="${s.name}"></div>`;
-  }
-  return `<div class="ch-row-ava" style="background:${s.color || '#1e3a4a'}${opacity}">${s.ava || s.name[0]}</div>`;
-}
 
 /* ── Utils ────────────────────────────────────────────── */
 function getLiveSet(paths) {
@@ -1130,118 +768,6 @@ function renderVodsRow() {
   if (ids.length) loadCardAvatars(ids);
 }
 
-/* ── Sidebar ─────────────────────────────────────────── */
-function renderSidebar(live, offline, paths) {
-  const liveSection = document.getElementById('sidebarLiveSection');
-  const liveRows    = document.getElementById('sidebarLiveRows');
-  const offlineRows = document.getElementById('sidebarOfflineRows');
-  const liveBadge   = document.getElementById('sidebarLiveBadge');
-  if (!liveSection) return;
-
-  if (live.length) {
-    liveSection.style.display = '';
-    if (liveBadge) { liveBadge.textContent = live.length; liveBadge.style.display = ''; }
-    const t = Math.floor(Date.now() / 60000);
-    liveRows.innerHTML = live.map(s => {
-      const v = getViewers(paths, s.key);
-      return `<a href="/${s.key}/" class="channel-row is-live">
-        <div class="sidebar-row-inner">
-          ${rowAva(s)}
-          <div class="ch-row-info nav-text">
-            <div class="ch-row-name">${s.name}</div>
-            <div class="ch-row-status live">${v > 0 ? v + ' viewers' : 'En vivo'}</div>
-          </div>
-          <div class="live-pip nav-text"></div>
-        </div>
-      </a>`;
-    }).join('');
-  } else {
-    liveSection.style.display = 'none';
-    if (liveBadge) liveBadge.style.display = 'none';
-  }
-
-  const MAX = 8;
-  const showAllBtn = document.getElementById('sidebarShowAll');
-  const renderOffline = list => list.map(s => `
-    <a href="/${s.key}/" class="channel-row">
-      <div class="sidebar-row-inner">
-        ${rowAva(s, true)}
-        <div class="ch-row-info nav-text">
-          <div class="ch-row-name">${s.name}</div>
-          <div class="ch-row-status">Offline</div>
-        </div>
-      </div>
-    </a>`).join('');
-
-  if (offline.length > MAX) {
-    offlineRows.innerHTML = renderOffline(offline.slice(0, MAX));
-    showAllBtn.style.display = '';
-    showAllBtn.onclick = () => {
-      offlineRows.innerHTML = renderOffline(offline);
-      showAllBtn.style.display = 'none';
-    };
-  } else {
-    offlineRows.innerHTML = renderOffline(offline);
-    showAllBtn.style.display = 'none';
-  }
-}
-
-/* ── Drawer ──────────────────────────────────────────── */
-function renderDrawer(live, offline, paths) {
-  const liveSection = document.getElementById('drawerLiveSection');
-  const liveRows    = document.getElementById('drawerLiveRows');
-  const offlineRows = document.getElementById('drawerOfflineRows');
-
-  if (live.length) {
-    liveSection.style.display = '';
-    liveRows.innerHTML = live.map(s => {
-      const v = getViewers(paths, s.key);
-      return `<a href="/${s.key}/" class="channel-row is-live" onclick="window.closeDrawer()">
-        ${rowAva(s)}
-        <div class="ch-row-info">
-          <div class="ch-row-name">${s.name}</div>
-          <div class="ch-row-status live">En vivo</div>
-        </div>
-        ${v > 0 ? `<div class="ch-row-viewers">${v}</div>` : '<div class="live-pip"></div>'}
-      </a>`;
-    }).join('');
-  } else {
-    liveSection.style.display = 'none';
-  }
-
-  const MAX = 8;
-  const showAllBtn = document.getElementById('drawerShowAll');
-  const renderOffline = list => list.map(s => `
-    <a href="/${s.key}/" class="channel-row" onclick="window.closeDrawer()">
-      ${rowAva(s, true)}
-      <div class="ch-row-info">
-        <div class="ch-row-name">${s.name}</div>
-        <div class="ch-row-status">Offline</div>
-      </div>
-    </a>`).join('');
-
-  if (offline.length > MAX) {
-    offlineRows.innerHTML = renderOffline(offline.slice(0, MAX));
-    showAllBtn.style.display = '';
-    showAllBtn.onclick = () => {
-      offlineRows.innerHTML = renderOffline(offline);
-      showAllBtn.style.display = 'none';
-    };
-  } else {
-    offlineRows.innerHTML = renderOffline(offline);
-    showAllBtn.style.display = 'none';
-  }
-}
-
-function openDrawer() {
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('drawerOverlay').classList.add('open');
-}
-window.closeDrawer = () => {
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('drawerOverlay').classList.remove('open');
-};
-
 /* ── Digest ──────────────────────────────────────────── */
 async function loadDigest() {
   try {
@@ -1252,38 +778,6 @@ async function loadDigest() {
       document.getElementById('digestAge').textContent  = 'Claude · ahora';
     }
   } catch { /* digest is optional */ }
-}
-
-/* ── Theme ───────────────────────────────────────────── */
-function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  const next = current === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('corillo-theme', next);
-}
-
-/* ── Footer version ──────────────────────────────────── */
-async function loadVersion() {
-  try {
-    const r = await fetch('/version.json', { signal: AbortSignal.timeout(3000) });
-    const j = await r.json();
-    const el = document.getElementById('footVersion');
-    if (el && j.version) el.textContent = 'v' + j.version;
-  } catch {}
-}
-
-/* ── Footer accordion ────────────────────────────────── */
-function initFooter() {
-  document.querySelectorAll('[data-foot-toggle]').forEach(title => {
-    const links = title.nextElementSibling;
-    if (!links) return;
-    title.setAttribute('aria-expanded', 'false');
-    title.addEventListener('click', () => {
-      const isOpen = title.getAttribute('aria-expanded') === 'true';
-      title.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
-      links.classList.toggle('open', !isOpen);
-    });
-  });
 }
 
 /* ── Main poll ───────────────────────────────────────── */
@@ -1305,10 +799,6 @@ async function poll() {
 
   document.getElementById('liveCountEl').textContent = live.length;
   document.getElementById('totalCountEl').textContent = total;
-
-  // Sidebar + Drawer
-  renderSidebar(live, offline, paths);
-  renderDrawer(live, offline, paths);
 
   // Live section + channel grid
   renderLiveSection(live, paths);
@@ -1365,41 +855,11 @@ async function loadReelsStrip() {
 
 /* ── Init ────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
-  initFooter();
-  loadVersion();
-
-  document.getElementById('menuBtn').addEventListener('click', openDrawer);
-  document.getElementById('drawerClose').addEventListener('click', window.closeDrawer);
-  document.getElementById('drawerOverlay').addEventListener('click', window.closeDrawer);
-  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-  document.getElementById('themeBtnDrawer').addEventListener('click', toggleTheme);
-
-  // Sidebar collapse
-  const sidebar = document.getElementById('leftSidebar');
-  const pageRight = sidebar?.nextElementSibling;
-  const savedCollapsed = localStorage.getItem('corillo-sidebar') === 'collapsed';
-  if (savedCollapsed) sidebar?.classList.add('collapsed');
-  document.getElementById('sidebarToggle')?.addEventListener('click', () => {
-    const collapsed = sidebar.classList.toggle('collapsed');
-    localStorage.setItem('corillo-sidebar', collapsed ? 'collapsed' : 'open');
-  });
-
-  // Search
-  const searchInput = document.getElementById('searchInput');
-  const searchClear = document.getElementById('searchClear');
-  searchInput?.addEventListener('input', e => {
-    searchQuery = e.target.value.trim().toLowerCase();
-    searchClear.style.display = searchQuery ? '' : 'none';
+  // Search input vive en el SiteShell; aquí escuchamos el evento que dispara.
+  window.addEventListener('crl-search', e => {
+    searchQuery = (e.detail || '').toLowerCase();
     renderChannelGrid(lastPaths);
   });
-  searchClear?.addEventListener('click', () => {
-    searchInput.value = '';
-    searchQuery = '';
-    searchClear.style.display = 'none';
-    searchInput.focus();
-    renderChannelGrid(lastPaths);
-  });
-  if (searchClear) searchClear.style.display = 'none';
 
   // Patch STREAMERS names + avatars from PocketBase before first render
   const activeStreamers = STREAMERS.filter(s => !s.soon);
@@ -1439,5 +899,5 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 </script>
 
-</body>
-</html>
+
+</SiteShell>
