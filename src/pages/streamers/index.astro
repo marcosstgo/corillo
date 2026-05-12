@@ -1,24 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import LiveSidebar from '../../components/LiveSidebar.astro';
-
-const footerLinks = [
-  { href: '/multiplayer/', label: 'Multiplayer' },
-  { href: '/streamers/', label: 'Streamers' },
-  { href: '/join/', label: 'Crear Canal' },
-  { href: '/roadmap/', label: 'Roadmap' },
-  { href: '/que-es-corillo/', label: 'Sobre Corillo' },
-  { href: '/legal/', label: 'Términos' },
-  { href: '/dmca/', label: 'DMCA' },
-  { href: 'https://status.corillo.live', label: 'Status' },
-];
+import SiteShell from '../../layouts/SiteShell.astro';
 ---
-<BaseLayout
+<SiteShell
   title="CORILLO — Streamers en Puerto Rico"
   description="Conoce a los streamers de CORILLO, una plataforma de streaming independiente creada en Puerto Rico."
   canonical="https://corillo.live/streamers/"
-  navLabel="Streamers"
-  footerLinks={footerLinks}
 >
   <fragment slot="head">
     <meta name="theme-color" content="#060608" />
@@ -122,7 +108,6 @@ const footerLinks = [
     </style>
   </fragment>
 
-<LiveSidebar>
 <main>
   <div class="hero">
     <div class="hero-label">CORILLO · PLATAFORMA INDEPENDIENTE</div>
@@ -263,5 +248,4 @@ const footerLinks = [
 
 </script>
 
-</LiveSidebar>
-</BaseLayout>
+</SiteShell>
