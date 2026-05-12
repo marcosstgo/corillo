@@ -38,6 +38,13 @@
 - Usa `localStorage` con la key `corillo-theme`.
 - Se corrigió el logo para que invierta en light mode.
 - Se ajustó contraste en nav, sidebar, drawer y footer para light mode.
+- Desde 2026-05-12 el home usa el layout compartido `SiteShell` (drawer + sidebar + topbar + footer). Antes tenía el menú inline duplicado.
+
+### Layout compartido — `SiteShell`
+- Archivo: `src/layouts/SiteShell.astro`. Documentación completa en `CLAUDE.md` → "Layout system".
+- Reemplaza a `BaseLayout` + `LiveSidebar` (ambos deprecated). Todas las páginas de contenido lo usan: home, vods, streamers, multiplayer, noticias, software, roadmap, faq, que-es-corillo, legal, dmca, join, configuracion, perfil/reset, vods/v, y los posts de noticias vía `NoticiasPostLayout`.
+- No lo usan (intencional): `player/` (nav por canal), `perfil/` (dashboard propio), `reels/` y `reels/v/` (fullscreen 9:16), `embed/v/` (iframe).
+- Buscador del topbar despacha el evento `crl-search`; la página activa lo escucha para filtrar su contenido (hoy solo el home filtra el grid de canales).
 
 ### Sobre Corillo
 - Página: `/que-es-corillo/`

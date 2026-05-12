@@ -90,6 +90,59 @@ The homepage and multiplayer page poll `/mediamtx-api/v3/paths/list` every 15 se
 
 Both the homepage and multiplayer page pause polling via `visibilitychange` when the tab is hidden and resume (with an immediate fetch, `cache.t = 0`) when it becomes visible again.
 
+### Layout system — `SiteShell.astro`
+
+Todas las páginas de contenido comparten el mismo "chrome" (drawer mobile, sidebar izquierdo desktop, topbar con buscador y "Crear canal", footer con accordion mobile) vía un solo layout: **`src/layouts/SiteShell.astro`**.
+
+**Estructura del layout:**
+
+```
+<SiteShell title=… description=… canonical=… ogTitle? ogDescription? ogType?>
+  <fragment slot="head">…meta/script/style extra de la página…</fragment>
+  …contenido…
+</SiteShell>
+```
+
+El shell se encarga de:
+- `<head>` completo (meta, OG/Twitter cards, fonts, Font Awesome, `corillo.css` + `homepage.css`, theme loader inline).
+- `<div class="grain">` overlay.
+- Drawer + overlay (mobile, abre con `#menuBtn`).
+- `<aside class="left-sidebar">` (desktop ≥820px) con navegación + lista de canales En Vivo / Offline. Estado colapsado se persiste en `localStorage` como `corillo-sidebar`.
+- `<header class="topbar">` con brand, topbar-nav, buscador (`#searchInput`), botón theme, "Crear canal".
+- `<footer class="site-footer">` con columnas Plataforma / Software / Info, redes sociales, version, créditos.
+- JS auto-contenido para: drawer toggle, sidebar collapse, theme toggle, footer accordion, version loader (`/version.json`), patch de nombres/avatares desde `/chat-api/profile/{key}`, poll a `/mediamtx-api/v3/paths/list` cada 15s para llenar `#sidebarLiveRows` / `#sidebarOfflineRows` / `#drawerLiveRows` / `#drawerOfflineRows`.
+- Service worker registration.
+
+**Páginas que consumen SiteShell:**
+
+| Página | Layout |
+|--------|--------|
+| `/`, `/vods/`, `/streamers/`, `/multiplayer/`, `/noticias/`, `/software/`, `/roadmap/`, `/faq/`, `/que-es-corillo/`, `/legal/`, `/dmca/`, `/join/`, `/configuracion/`, `/perfil/reset/`, `/vods/v/` | `SiteShell` directo |
+| `/noticias/<slug>/` (7 posts) | `NoticiasPostLayout` → `SiteShell` |
+| `/player/{canal}/` | Sin layout — nav propio por canal, head customizado vía Nginx `sub_filter '__CHANNEL__'` |
+| `/perfil/` | Sin layout — header propio del dashboard |
+| `/reels/`, `/reels/v/` | `FullscreenLayout` — experiencia 9:16 sin chrome |
+| `/embed/v/` | Sin chrome — para iframes externos |
+
+**`BaseLayout.astro` está deprecated** — ya no lo consume nadie pero se mantiene por compatibilidad. No agregar nuevas páginas a `BaseLayout`. `LiveSidebar.astro` también está deprecated por el mismo motivo.
+
+**Contratos de eventos:**
+
+- El shell despacha `window.dispatchEvent(new CustomEvent('crl-search', { detail: query }))` en cada cambio del input de búsqueda del topbar. Páginas que quieran filtrar su contenido con ese input lo escuchan:
+  ```js
+  window.addEventListener('crl-search', e => {
+    const q = (e.detail || '').toLowerCase();
+    // re-render con q
+  });
+  ```
+  Hoy lo usa el home para filtrar `#channelGrid`.
+
+- El shell expone `window.closeDrawer()` para que los links del drawer puedan cerrarlo al click (`onclick="window.closeDrawer()"`).
+
+**STREAMERS, ¿quién hace el fetch?**
+
+Tanto `SiteShell` como `index.astro` ejecutan en paralelo el patch de `STREAMERS` desde `/chat-api/profile/{key}` en `DOMContentLoaded`. Son fetches duplicados (2× por streamer al boot) — aceptable porque ambos arrays apuntan a los mismos objetos de `window.STREAMERS` y la API es rápida; el primer render usa nombres crudos de `streamers.js` y el patch llega segundos después.
+
 ### Shared assets
 
 | File | Contains |
@@ -294,27 +347,33 @@ El player de VODs (`vods/v/index.html`) usa `autoplay muted playsinline` para cu
 
 ## Inventario completo de páginas
 
-| Ruta | Descripción |
-|------|-------------|
-| `index.html` | Homepage — featured player con rotación, grid de canales, sidebar/drawer |
-| `player/index.html` | Player universal — sirve todos los canales vía fallback Nginx (`try_files`) |
-| `multiplayer/index.html` | Grid multi-stream — todos los streamers en vivo simultáneamente |
-| `dual/index.html` | Layout fijo 2-up KATATONIA + MIRA_SANGANOOO ("KATANA") |
-| `vods/index.html` | Browser de VODs — filtros por canal, cards con preview en hover |
-| `vods/v/index.html` | Player individual de VOD — autoplay muted, botón "Activar sonido" |
-| `join/index.html` | Formulario de onboarding para nuevos streamers |
-| `configuracion/index.html` | Guía paso a paso OBS Studio y Meld Studio |
-| `perfil/index.html` | Dashboard del streamer — stream key, editar perfil, VOD settings |
-| `perfil/reset/index.html` | Reset de contraseña |
-| `streamers/index.html` | Directorio de streamers con status online/offline |
-| `legal/index.html` | Términos de servicio |
-| `dmca/index.html` | Info DMCA |
-| `faq/index.html` | Preguntas frecuentes |
-| `roadmap/index.html` | Roadmap de la plataforma |
-| `dev/index.html` | Página de debug/desarrollo |
-| `natcheck/index.html` | Utilidad de NAT test |
-| `antibufferbloat-pro/index.html` | Feature page |
-| `streamer-pro/index.html` | Feature page |
+| Ruta | Layout | Descripción |
+|------|--------|-------------|
+| `index.html` | SiteShell | Homepage — featured player con rotación, grid de canales |
+| `player/index.html` | — (propio) | Player universal — sirve todos los canales vía fallback Nginx (`try_files`) |
+| `multiplayer/index.html` | SiteShell | Grid multi-stream — todos los streamers en vivo simultáneamente |
+| `dual/index.html` | — (propio) | Layout fijo 2-up KATATONIA + MIRA_SANGANOOO ("KATANA") |
+| `vods/index.html` | SiteShell | Browser de VODs — filtros por canal, cards con preview en hover |
+| `vods/v/index.html` | SiteShell | Player individual de VOD — autoplay muted, botón "Activar sonido" |
+| `join/index.html` | SiteShell | Formulario de onboarding para nuevos streamers |
+| `configuracion/index.html` | SiteShell | Guía paso a paso OBS Studio y Meld Studio |
+| `perfil/index.html` | — (propio) | Dashboard del streamer — stream key, editar perfil, VOD settings |
+| `perfil/reset/index.html` | SiteShell | Reset de contraseña |
+| `streamers/index.html` | SiteShell | Directorio de streamers con status online/offline |
+| `legal/index.html` | SiteShell | Términos de servicio |
+| `dmca/index.html` | SiteShell | Info DMCA |
+| `faq/index.html` | SiteShell | Preguntas frecuentes |
+| `roadmap/index.html` | SiteShell | Roadmap de la plataforma |
+| `que-es-corillo/index.html` | SiteShell | Sobre el proyecto |
+| `software/index.html` | SiteShell | Listado de software (Streamer Pro, Anti-BufferBloat Pro, NATCheck, Ping Guard) |
+| `noticias/index.html` | SiteShell | Listado de noticias del proyecto |
+| `noticias/<slug>/` | NoticiasPostLayout → SiteShell | Posts individuales de noticias |
+| `reels/index.html`, `reels/v/index.html` | FullscreenLayout | Experiencia 9:16 sin chrome |
+| `embed/v/index.html` | — (sin chrome) | Embed para iframes externos |
+| `dev/index.html` | — | Página de debug/desarrollo |
+| `natcheck/index.html` | — | Utilidad de NAT test |
+| `antibufferbloat-pro/index.html` | — | Feature page |
+| `streamer-pro/index.html` | — | Feature page |
 
 ## Assets compartidos — detalle técnico
 
