@@ -193,7 +193,7 @@ body.no-scanlines .scanlines { display: none; }
 }
 .sim-stream.offline { background: linear-gradient(135deg, #0a1014, #050a0d); }
 .sim-stream.offline .sim-title { color: var(--white); text-shadow: none; font-size: clamp(32px, 4vw, 72px); }
-.sim-stream.offline .sim-sub { color: var(--muted); }
+.sim-stream.offline .sim-sub { color: var(--white); }
 
 /* Featured overlay — top */
 .featured-top {
