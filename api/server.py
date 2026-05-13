@@ -846,15 +846,25 @@ async def upload_vod(
         Path(tmp).unlink(missing_ok=True)
         raise HTTPException(status_code=400, detail="No se pudo leer la duración del video")
 
-    # Remux a MP4 faststart (copia streams, no re-encode)
+    # Re-encode a MP4 web-optimizado: 1080p máx, cap 5 Mbps, AAC 128k, faststart.
+    # El original suele venir a 15-20 Mbps (bitrate de transmisión), lo que causa
+    # buffering en conexiones móviles. Re-encodear a 5 Mbps mantiene calidad web
+    # comparable a YouTube/Netflix y baja el peso ~3×.
     proc = await asyncio.create_subprocess_exec(
         "ffmpeg", "-y", "-i", tmp,
-        "-c", "copy", "-movflags", "+faststart",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "23",
+        "-maxrate", "5M", "-bufsize", "10M",
+        "-vf", "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease:flags=lanczos",
+        "-profile:v", "high", "-level", "4.0", "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
+        "-movflags", "+faststart",
         out,
         stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
     )
     try:
-        await asyncio.wait_for(proc.communicate(), timeout=600)
+        # Timeout generoso: re-encode toma ≈0.3-0.6× tiempo real con preset fast.
+        # 1800s ≈ alcanza para videos de hasta ~45 min.
+        await asyncio.wait_for(proc.communicate(), timeout=1800)
     except asyncio.TimeoutError:
         proc.kill()
         Path(tmp).unlink(missing_ok=True)
