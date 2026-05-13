@@ -147,23 +147,41 @@ def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
     return None
 
 
-def remux_faststart(filepath: Path) -> bool:
-    """Remuxea fmp4 → MP4 progresivo con moov al inicio. Reemplaza el archivo original."""
+def transcode_web_optimized(filepath: Path, duration: int) -> bool:
+    """Re-encodea la grabación a MP4 web-optimizado: 1080p máx, cap 5 Mbps, faststart.
+
+    Las grabaciones de MediaMTX heredan el bitrate del stream (típicamente 5-20 Mbps
+    según el OBS del streamer). Para playback fluido en cualquier conexión se cappea
+    a 5 Mbps. Calidad visualmente equivalente a YouTube 1080p.
+
+    Reemplaza el archivo original. Timeout proporcional a la duración.
+    """
     tmp = filepath.with_suffix(".tmp.mp4")
+    # Preset 'faster' rinde ≈0.4× realtime → grabación de 3 h = ≈75 min de encode.
+    # Le damos 8× la duración como margen (mínimo 1 h, default 4 h si no hay duración).
+    timeout_s = max(3600, duration * 8) if duration > 0 else 14400
     try:
         result = subprocess.run(
             ["ffmpeg", "-y", "-i", str(filepath),
-             "-c", "copy", "-movflags", "+faststart",
+             "-c:v", "libx264", "-preset", "faster", "-crf", "23",
+             "-maxrate", "5M", "-bufsize", "10M",
+             "-vf", "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease:flags=lanczos",
+             "-profile:v", "high", "-level", "4.0", "-pix_fmt", "yuv420p",
+             "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
+             "-movflags", "+faststart",
              str(tmp)],
-            capture_output=True, timeout=600,
+            capture_output=True, timeout=timeout_s,
         )
         if result.returncode == 0 and tmp.exists():
             tmp.replace(filepath)
             return True
         tmp.unlink(missing_ok=True)
-        log.warning(f"remux_faststart failed (rc={result.returncode})")
+        log.warning(f"transcode_web_optimized failed (rc={result.returncode})")
+    except subprocess.TimeoutExpired:
+        log.error(f"transcode_web_optimized timed out after {timeout_s}s for {filepath.name}")
+        tmp.unlink(missing_ok=True)
     except Exception as e:
-        log.warning(f"remux_faststart error: {e}")
+        log.warning(f"transcode_web_optimized error: {e}")
         tmp.unlink(missing_ok=True)
     return False
 def generate_preview(filepath: Path, duration: int) -> Path | None:
@@ -235,10 +253,10 @@ def main():
         filepath.unlink(missing_ok=True)
         return
 
-    if remux_faststart(filepath):
-        log.info(f"Remuxed to faststart: {filepath.name}")
+    if transcode_web_optimized(filepath, duration):
+        log.info(f"Transcoded to web-optimized 5 Mbps: {filepath.name}")
     else:
-        log.warning(f"Remux failed, keeping original fmp4: {filepath.name}")
+        log.warning(f"Transcode failed, keeping original recording: {filepath.name}")
 
     size     = filepath.stat().st_size
 
