@@ -5,6 +5,29 @@
 - El framework ya documenta y expone componentes reales usados por el producto.
 - `sitemap.xml` y `robots.txt` ya existen y el sitemap ya fue enviado a Google Search Console.
 
+## 2026-05-13 — VOD pipeline: re-encode automático
+
+### Problema
+- VODs subían/grababan con bitrate intacto del source (15-20 Mbps porque OBS transmite a ese bitrate). En playback web causaba buffering en conexiones <16 Mbps sostenidos.
+- Tanto el endpoint manual (`/chat-api/upload-vod`) como las grabaciones automáticas de MediaMTX (`vod-process.py`) hacían `ffmpeg -c copy -movflags +faststart` — sin re-encodear.
+
+### Fix
+- **`api/server.py`** (endpoint `/upload-vod`): re-encode con `libx264 preset fast`, CRF 23, cap `5 Mbps` + `bufsize 10M`, scale a 1920×1080 max (downscale-only), profile high level 4.0, pix_fmt yuv420p, AAC 128k, faststart. Timeout subido a 1800s.
+- **`scripts/vod-process.py`** (hook MediaMTX): mismo encode pero `preset faster` (más rápido para batch automatizado). Timeout dinámico `max(3600, duration*8)s`. Función renombrada `remux_faststart` → `transcode_web_optimized`.
+- Aplica a TODOS los canales (no solo marcos).
+
+### Batch retroactivo
+- Re-encodeados los 8 VODs de `marcos` que estaban a 15-16 Mbps → 4.6-5.0 Mbps.
+- **Total**: 1358 MB → 401 MB (ahorro ~957 MB).
+- Backups en `/var/vods/live/marcos/*.orig.mp4` (~1.4 GB; borrar cuando Marcos confirme calidad).
+- VODs de `katatonia` quedaron como están (ya estaban a ~6 Mbps; ahorro marginal no justifica ~75 min de CPU). Próximos streams sí saldrán a 5 Mbps automáticamente.
+
+### Para subir el listón a "bulletproof"
+HLS adaptativo (3 calidades + master `.m3u8`) está pendiente. Esto resolvería el último 10-20% de viewers en conexiones móviles malas. Estimado: 3-4 horas de trabajo (re-encode multi-variant + actualizar el player de `/vods/v/` para hls.js).
+
+### Archivos huérfanos detectados
+- `/var/vods/live/marcos/2026-03-23_*.mp4` (9 archivos, ~3.2 GB total) — no están en PocketBase. Probablemente test recordings viejas. Marcos puede confirmar si borrar.
+
 ## Corillo CSS
 - Archivo base: `/assets/corillo.css`
 - Docs: `/corillo-css/index.html`
