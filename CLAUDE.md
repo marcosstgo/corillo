@@ -215,6 +215,10 @@ API pública de la plataforma. Sin dependencias del chat ni Telegram.
 - Subida y borrado de VODs
 - Health check
 
+**Cache:** `/api/streamers` cachea el roster en memoria por 30 segundos (`STREAMERS_CACHE_TTL`).
+Al añadir o borrar un streamer en PocketBase, el cambio tarda hasta 30s en aparecer en el sitio.
+Para forzar actualización inmediata: `sudo systemctl restart corillo-api`.
+
 ### corillo-bot (`chat/server.py`) — Puerto 3001
 Chat en vivo, IA y WebSocket. Solo responsabilidad: el chat.
 - WebSocket por canal para mensajes en tiempo real
