@@ -145,7 +145,7 @@ function renderReels(reels: any[]) {
     el.innerHTML = `
       <div class="crl-reel-media">
         <div class="crl-reel-bg" style="${thumbBg}"></div>
-        <video class="crl-reel-video" src="${videoUrl}"
+        <video class="crl-reel-video" data-src="${videoUrl}"
           playsinline muted loop preload="none"
           style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;opacity:0;transition:opacity .3s">
         </video>
@@ -217,6 +217,24 @@ function renderReels(reels: any[]) {
     });
   }
 
+  // Observer 1: precarga el src cuando el reel está cerca (±1 viewport)
+  const preloadObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      const vid = (e.target as HTMLElement).querySelector('video') as HTMLVideoElement | null;
+      if (!vid) return;
+      if (e.isIntersecting) {
+        if (!vid.src && vid.dataset.src) vid.src = vid.dataset.src;
+      } else {
+        // Limpia el buffer si está lejos y no ha empezado a reproducirse
+        if (vid.src && vid.paused && vid.currentTime === 0) {
+          vid.src = '';
+          vid.load();
+        }
+      }
+    });
+  }, { rootMargin: '100% 0px', threshold: 0 });
+
+  // Observer 2: reproduce/pausa al entrar/salir de pantalla
   observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       const idx = parseInt((e.target as HTMLElement).dataset.idx || '0');
@@ -229,7 +247,10 @@ function renderReels(reels: any[]) {
     });
   }, { threshold: 0.6 });
 
-  container.querySelectorAll('.crl-reel').forEach(r => observer!.observe(r));
+  container.querySelectorAll('.crl-reel').forEach(r => {
+    preloadObserver.observe(r);
+    observer!.observe(r);
+  });
 }
 
 function playReel(el: Element) {
