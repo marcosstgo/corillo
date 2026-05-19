@@ -123,10 +123,6 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
     .theme-btn { width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; letter-spacing:0; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:.15s; flex-shrink:0; }
     .theme-btn:hover { color:var(--white); border-color:var(--border-h); }
 
-    /* Brand logo SVG */
-    .brand-logo-svg .ring-outer { stroke: #3a6070; }
-    [data-theme="light"] .brand-logo-svg .ring-outer { stroke: #0c1a20; }
-
     /* Nav links — light mode */
     [data-theme="light"] .nav-link { color: rgba(5,16,21,.6); }
     [data-theme="light"] .nav-link:hover { color: #0c1a20; background: rgba(0,0,0,.05); }
@@ -275,19 +271,16 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   <div class="topbar-left">
     <button class="nav-menu-btn" id="menuBtn" aria-label="Menú"><i class="fa-solid fa-bars"></i></button>
     <a href="/" class="brand">
-      <svg class="brand-logo-svg" width="28" height="28" viewBox="0 0 126 126" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="63" cy="63" r="55" class="ring-outer" stroke-width="2"/>
-        <circle cx="63" cy="63" r="40" class="ring-outer" stroke-width="1.5"/>
-        <circle cx="63" cy="63" r="40" stroke="var(--accent)" stroke-width="2" stroke-dasharray="113 13" stroke-dashoffset="0" style="animation:logo-ring 6s linear infinite"/>
-        <circle cx="63" cy="63" r="8" fill="var(--accent)"/>
-        <circle cx="63" cy="63" r="4" fill="#CE1126" style="transform-box:fill-box;transform-origin:center;animation:logo-ping 3s ease-out infinite"/>
-        <line x1="63" y1="8" x2="63" y2="23" stroke="#3a6070" stroke-width="2"/>
-        <line x1="63" y1="103" x2="63" y2="118" stroke="#3a6070" stroke-width="2"/>
-        <line x1="8" y1="63" x2="23" y2="63" stroke="#3a6070" stroke-width="2"/>
-        <line x1="103" y1="63" x2="118" y2="63" stroke="#3a6070" stroke-width="2"/>
+      <svg class="foot-brand-logo" style="height:32px" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="hb-dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">C</text>
+        <circle cx="72" cy="42" r="36" fill="url(#hb-dg)"/>
+        <circle cx="72" cy="42" r="34" class="foot-brand-ring-outer" stroke-width="9" fill="none"/>
+        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
+        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">RILLO</text>
       </svg>
-      CORILLO<span class="brand-dot">.</span>LIVE
-      <span class="brand-sub">Puerto Rico</span>
     </a>
   </div>
 
