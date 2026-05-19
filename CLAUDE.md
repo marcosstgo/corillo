@@ -202,6 +202,70 @@ Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
 
 ---
 
+## Servicios — qué hace cada uno
+
+### corillo-api (`api/server.py`) — Puerto 3004
+API pública de la plataforma. Sin dependencias del chat ni Telegram.
+- Roster de streamers con avatares desde PocketBase
+- Perfiles individuales por canal
+- Regeneración de stream keys
+- Notificaciones push (VAPID): config, suscripción, envío
+- Clips de 30s desde live o VOD
+- Subida, borrado y visibilidad de reels
+- Subida y borrado de VODs
+- Health check
+
+### corillo-bot (`chat/server.py`) — Puerto 3001
+Chat en vivo, IA y WebSocket. Solo responsabilidad: el chat.
+- WebSocket por canal para mensajes en tiempo real
+- Integración con LLM (Anthropic) — bot comenta el stream con visión
+- Historial de mensajes persistido en SQLite
+- Digest de resumen de chat
+- Anti-spam y rate limiting
+
+### corillo-telegram (`telegram/server.py`) — Puerto 3003
+Telegram webhook, onboarding de streamers y notificaciones en vivo.
+- Webhook de Telegram para comandos del bot
+- Formulario `/join` — recibe solicitudes de nuevos streamers
+- Aprobación/rechazo de streamers desde Telegram con botones inline
+- Al aprobar: crea el record en PocketBase y se auto-actualiza en GitHub
+- **Monitor de live** — polling a MediaMTX cada 15s, notifica al grupo de Telegram cuando un streamer nuevo va en vivo: `🔴 NOMBRE está en vivo · corillo.live/{canal}/`
+
+### corillo-auth (`auth/server.py`) — Puerto 3002
+Servicio minimalista de autenticación RTMP para MediaMTX.
+- Una sola función: valida stream keys de publishers contra PocketBase
+- MediaMTX llama a este endpoint antes de aceptar un stream entrante
+- Cache de 60s por canal para no saturar PocketBase
+
+### bitrate-monitor (`scripts/bitrate-monitor.py`)
+Daemon que vigila el bitrate de los streams en vivo.
+- Polling a MediaMTX cada `INTERVAL` segundos
+- Si el bitrate supera `AUTO_KICK_KBPS`: alerta por Telegram, auto-kick via `ss -K`
+- Lista `KICK_EXEMPT` de streamers exentos del kick (alertas siguen activas)
+- Cooldown de 300s entre notificaciones para no spamear
+- Notifica al recuperarse dentro del límite
+
+---
+
+## Scripts — referencia rápida
+
+| Script | Cuándo usar |
+|---|---|
+| `scripts/vod-process.py` | Llamado automáticamente por MediaMTX al terminar un segmento grabado. Re-encodea a 5 Mbps, genera thumbnail, registra en PocketBase. No ejecutar manualmente. |
+| `scripts/thumb-gen.py` | Daemon que genera thumbnails y previews de streams en vivo cada 60s. Corre como `corillo-thumbs.service`. |
+| `scripts/vod-cleanup-short.py` | One-time: borra VODs con duración menor a un mínimo (limpieza de grabaciones cortas/fallidas). |
+| `scripts/audit.sh` | Compara archivos críticos entre el repo y producción. Útil para detectar desincronías. |
+| `scripts/pb-setup-vods.py` | One-time setup: crea la colección `vods` en PocketBase. |
+| `scripts/pb-setup-reels.py` | One-time setup: crea la colección `reels` en PocketBase. |
+| `scripts/pb-setup-push.py` | One-time setup: crea la colección `push_subscriptions` en PocketBase. |
+| `scripts/pb-setup-vod-upload.py` | One-time: añade campo `upload_enabled` a la colección `streamers`. |
+| `scripts/pb-add-stream-title.py` | One-time: añade campo `stream_title` a la colección `streamers`. |
+| `scripts/pb-add-sub-field.py` | One-time: añade campo `sub` (categoría/status) a la colección `streamers`. |
+
+> Los scripts `pb-setup-*` y `pb-add-*` son migraciones one-time. Ya están aplicados en producción — no volver a ejecutar.
+
+---
+
 ## Convenciones de desarrollo
 
 - **Editar siempre en `/var/www/stream/`** — es el working tree del repo
