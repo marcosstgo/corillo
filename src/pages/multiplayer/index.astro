@@ -530,7 +530,7 @@ function buildCard(streamer: any, viewers: number) {
       <div class="play-icon"><i class="fa-solid fa-play"></i></div>
     </div>
     <div class="card-foot">
-      <div class="ava" style="background:${streamer.color}">${streamer.ava}</div>
+      <div class="ava" style="background:${streamer.color}">${streamer.avatar_url ? `<img src="${streamer.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">` : streamer.ava}</div>
       <div class="foot-info">
         <div class="ch-name">${streamer.name}</div>
         <div class="ch-sub">${streamer.sub}</div>
@@ -614,7 +614,7 @@ function addChip(streamer: any) {
   chip.className   = 'filter-chip';
   chip.dataset.key = streamer.key;
   chip.title       = streamer.name;
-  chip.innerHTML   = `<span class="chip-ava" style="background:${streamer.color}">${streamer.ava}</span>${streamer.name}`;
+  chip.innerHTML   = `<span class="chip-ava" style="background:${streamer.color}">${streamer.avatar_url ? `<img src="${streamer.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">` : streamer.ava}</span>${streamer.name}`;
   chip.addEventListener('click', () => toggleChip(streamer.key));
   insertInOrder($('filterChips'), chip, streamer.key, '.filter-chip');
 }

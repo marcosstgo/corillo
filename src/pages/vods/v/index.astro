@@ -140,7 +140,7 @@ async function init() {
     </div>
     <div class="meta-bar">
       <div class="meta-channel">
-        <div class="meta-ava" style="${colorStyle}">${(s.name||'?')[0].toUpperCase()}</div>
+        <div class="meta-ava" style="${colorStyle}">${s.avatar_url ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">` : (s.name||'?')[0].toUpperCase()}</div>
         <a href="/${vod.channel}/" class="meta-name" style="color:${s.color||'var(--crl-white)'};text-decoration:none">${s.name}</a>
       </div>
       ${vod.title ? `<div class="meta-title">${vod.title}</div>` : ''}
@@ -234,7 +234,7 @@ function relCard(vod: any) {
   return `<a href="/vods/v/?id=${vod.id}" class="rel-card">
     <div class="rel-card-thumb">${thumb}${dur ? `<span class="rel-card-dur">${dur}</span>` : ''}</div>
     <div class="rel-card-body">
-      <div class="rel-card-ava" style="background:${s.color||'#1e3a4a'}">${(s.ava||s.name[0]).toUpperCase()}</div>
+      <div class="rel-card-ava" style="background:${s.color||'#1e3a4a'}">${s.avatar_url ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:3px" alt="">` : (s.ava||s.name[0]).toUpperCase()}</div>
       <div class="rel-card-info">
         <div class="rel-card-name">${s.name}</div>
         <div class="rel-card-sub">${relativeTime(vod.date)}</div>
@@ -252,7 +252,7 @@ function liveCard(s: any, viewers: number) {
       ${viewers > 0 ? `<span class="rel-viewers">${viewers}</span>` : ''}
     </div>
     <div class="rel-card-body">
-      <div class="rel-card-ava is-live" style="background:${s.color||'#1e3a4a'}">${(s.ava||s.name[0]).toUpperCase()}</div>
+      <div class="rel-card-ava is-live" style="background:${s.color||'#1e3a4a'}">${s.avatar_url ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:3px" alt="">` : (s.ava||s.name[0]).toUpperCase()}</div>
       <div class="rel-card-info">
         <div class="rel-card-name">${s.name}</div>
         <div class="rel-card-sub">${viewers > 0 ? viewers + ' viewers' : 'En vivo'}</div>

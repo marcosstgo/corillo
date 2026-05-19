@@ -60,17 +60,24 @@
 (async () => {
   const rows = document.getElementById('sidebarRows');
   if (!rows) return;
-  const STREAMERS = (window as any).STREAMERS || [];
   try {
-    const r = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
-    const data = await r.json();
+    const [pathsRes, streamersRes] = await Promise.allSettled([
+      fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) }).then(r => r.json()),
+      fetch('/chat-api/streamers',          { signal: AbortSignal.timeout(5000) }).then(r => r.ok ? r.json() : null),
+    ]);
+    const paths     = pathsRes.status     === 'fulfilled' ? pathsRes.value     : null;
+    const streamers = streamersRes.status === 'fulfilled' ? streamersRes.value : null;
+    const list = streamers || ((window as any).STREAMERS || []).filter((s: any) => !s.soon);
     const live = new Set(
-      (data.items || []).filter((p: any) => p.ready).map((p: any) => (p.name as string).replace('live/', ''))
+      ((paths?.items || []) as any[]).filter((p: any) => p.ready).map((p: any) => (p.name as string).replace('live/', ''))
     );
-    rows.innerHTML = STREAMERS.filter((s: any) => !s.soon).map((s: any) => {
-      const isLive = live.has(s.key);
+    rows.innerHTML = list.map((s: any) => {
+      const isLive   = live.has(s.key);
+      const avaInner = s.avatar_url
+        ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">`
+        : (s.ava || (s.name && s.name[0]) || '?');
       return `<a href="/${s.key}/" class="cs-row${isLive ? ' is-live' : ''}" title="${s.name}">
-        <div class="cs-ava" style="background:${s.color}">${s.ava}</div>
+        <div class="cs-ava" style="background:${s.color}">${avaInner}</div>
         <div class="cs-info">
           <div class="cs-name">${s.name}</div>
           <div class="cs-status${isLive ? ' live' : ''}">${isLive ? 'En vivo' : 'Offline'}</div>
