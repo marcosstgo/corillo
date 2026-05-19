@@ -96,12 +96,14 @@ async def get_streamers():
             headers={"Authorization": token},
             params={
                 "filter": "active=true",
-                "fields": "id,key,name,sub,bio,color,twitch,instagram,tiktok,avatar,stream_title,ava",
+                "fields": "id,key,display_name,sub,bio,color,twitch,instagram,tiktok,avatar,stream_title",
                 "perPage": "200",
             },
         )
         items = r.json().get("items", [])
         for rec in items:
+            rec["name"] = rec.pop("display_name", "") or rec.get("key", "")
+            rec["ava"]  = (rec["name"][0] if rec["name"] else "?").upper()
             if rec.get("avatar"):
                 rec["avatar_url"] = f"{PB_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
         return items
