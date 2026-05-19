@@ -6,6 +6,15 @@ import SiteShell from '../../layouts/SiteShell.astro';
   description="Mira hacia dónde va CORILLO, qué ya funciona hoy y qué sigue en el roadmap del proyecto."
   canonical="https://corillo.live/roadmap/"
 >
+  <fragment slot="head">
+    <style is:global>
+      .crl-hero{text-align:left}
+      .crl-hero-eyebrow,.crl-hero-title{text-align:left}
+      .crl-hero-sub{margin:0 0 32px;text-align:left}
+      .crl-hero-actions{justify-content:flex-start}
+      .crl-container-narrow{margin:0}
+    </style>
+  </fragment>
 
 <div class="crl-hero">
   <div class="crl-hero-mark">
