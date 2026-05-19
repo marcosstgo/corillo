@@ -35,6 +35,9 @@ _http: httpx.AsyncClient = None
 _pb_token: dict = {"token": "", "ts": 0.0}
 PB_TOKEN_TTL = 86400
 
+_streamers_cache: dict = {"data": None, "ts": 0.0}
+STREAMERS_CACHE_TTL = 30  # segundos
+
 
 async def _streamer_from_token(auth: str) -> str:
     """Verifica el token del streamer via auth-refresh y retorna su channel key."""
@@ -89,6 +92,9 @@ async def _admin_token() -> str:
 async def get_streamers():
     if not PB_ADMIN_EMAIL or not PB_ADMIN_PASS:
         raise HTTPException(status_code=503)
+    now = time.time()
+    if _streamers_cache["data"] is not None and now - _streamers_cache["ts"] < STREAMERS_CACHE_TTL:
+        return _streamers_cache["data"]
     try:
         token = await _admin_token()
         r = await _http.get(
@@ -106,8 +112,11 @@ async def get_streamers():
             rec["ava"]  = (rec["name"][0] if rec["name"] else "?").upper()
             if rec.get("avatar"):
                 rec["avatar_url"] = f"{PB_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
+        _streamers_cache.update({"data": items, "ts": now})
         return items
     except Exception:
+        if _streamers_cache["data"] is not None:
+            return _streamers_cache["data"]
         raise HTTPException(status_code=503)
 
 
