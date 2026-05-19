@@ -254,7 +254,7 @@ import { version } from '../../../version.json';
   let reg, vapidKey;
   try {
     reg = await navigator.serviceWorker.register('/sw.js');
-    const r = await fetch('/chat-api/push-config');
+    const r = await fetch('/api/push-config');
     if (!r.ok) return;
     vapidKey = (await r.json()).public_key;
   } catch(e) { return; }
@@ -281,7 +281,7 @@ import { version } from '../../../version.json';
       const sub = await reg.pushManager.getSubscription();
       if (sub) {
         await sub.unsubscribe();
-        await fetch('/chat-api/subscribe', {
+        await fetch('/api/subscribe', {
           method: 'DELETE',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ channel: ch, endpoint: sub.endpoint }),
@@ -293,7 +293,7 @@ import { version } from '../../../version.json';
           userVisibleOnly: true,
           applicationServerKey: urlB64ToUint8Array(vapidKey),
         });
-        await fetch('/chat-api/subscribe', {
+        await fetch('/api/subscribe', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ channel: ch, subscription: newSub.toJSON() }),

@@ -283,9 +283,9 @@ async function loadStreamers() {
       bar.appendChild(btn);
     });
 
-    // Cargar avatares desde /chat-api/streamers (una sola llamada)
+    // Cargar avatares desde /api/streamers (una sola llamada)
     try {
-      const sr = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+      const sr = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
       if (sr.ok) {
         const list: any[] = await sr.json();
         for (const s of list) { if (s.avatar_url) streamerAvatars[s.key] = s.avatar_url; }

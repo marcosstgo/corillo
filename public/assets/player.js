@@ -17,7 +17,7 @@ if (!__validFormat) {
   location.replace('/_404/');
 } else if (!__inStaticList) {
   // Canal no en la lista estática — verificar via API (streamers nuevos en PocketBase)
-  fetch('/chat-api/profile/' + encodeURIComponent(__rawChannel), { signal: AbortSignal.timeout(5000) })
+  fetch('/api/profile/' + encodeURIComponent(__rawChannel), { signal: AbortSignal.timeout(5000) })
     .then(r => { if (!r.ok) location.replace('/_404/'); })
     .catch(() => {});
 }
@@ -791,7 +791,7 @@ window.channel = __validFormat ? __rawChannel : '';
 
   function loadProfile() {
     initChannelUI();
-    fetch('/chat-api/profile/' + App.channel, { signal: AbortSignal.timeout(5000) })
+    fetch('/api/profile/' + App.channel, { signal: AbortSignal.timeout(5000) })
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (!data) return;
@@ -1093,7 +1093,7 @@ window.channel = __validFormat ? __rawChannel : '';
         clipBtn.disabled = true;
         clipBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando…';
         try {
-          const r = await fetch(`/chat-api/clip/${App.channel}`, { signal: AbortSignal.timeout(30000) });
+          const r = await fetch(`/api/clip/${App.channel}`, { signal: AbortSignal.timeout(30000) });
           if (!r.ok) throw new Error(r.status);
           const blob = await r.blob();
           const a = document.createElement('a');

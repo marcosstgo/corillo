@@ -95,7 +95,7 @@ function fmtDate(iso: string) {
 
 const _streamerMap: Record<string, any> = {};
 for (const s of ((window as any).STREAMERS || [])) { if (s.key) _streamerMap[s.key] = s; }
-fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) })
+fetch('/api/streamers', { signal: AbortSignal.timeout(5000) })
   .then(r => r.ok ? r.json() : null)
   .then((list: any[] | null) => { if (list) { for (const s of list) _streamerMap[s.key] = s; } })
   .catch(() => {});
@@ -192,7 +192,7 @@ async function init() {
     clipVodBtn.disabled = true;
     clipVodBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando…';
     try {
-      const r = await fetch(`/chat-api/clip/vod/${vod.id}?t=${t}`, { signal: AbortSignal.timeout(30000) });
+      const r = await fetch(`/api/clip/vod/${vod.id}?t=${t}`, { signal: AbortSignal.timeout(30000) });
       if (!r.ok) throw new Error();
       const blob = await r.blob();
       const a = document.createElement('a');

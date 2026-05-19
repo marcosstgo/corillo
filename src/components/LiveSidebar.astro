@@ -63,7 +63,7 @@
   try {
     const [pathsRes, streamersRes] = await Promise.allSettled([
       fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) }).then(r => r.json()),
-      fetch('/chat-api/streamers',          { signal: AbortSignal.timeout(5000) }).then(r => r.ok ? r.json() : null),
+      fetch('/api/streamers',          { signal: AbortSignal.timeout(5000) }).then(r => r.ok ? r.json() : null),
     ]);
     const paths     = pathsRes.status     === 'fulfilled' ? pathsRes.value     : null;
     const streamers = streamersRes.status === 'fulfilled' ? streamersRes.value : null;

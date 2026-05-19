@@ -135,7 +135,7 @@ async function init() {
   ava.style.background = `linear-gradient(135deg,${color},${color}99)`;
 
   // Intentar cargar avatar real
-  fetch(`/chat-api/profile/${reel.channel}`, { signal: AbortSignal.timeout(3000) })
+  fetch(`/api/profile/${reel.channel}`, { signal: AbortSignal.timeout(3000) })
     .then(r => r.ok ? r.json() : null)
     .then(d => {
       if (d?.avatar_url) {

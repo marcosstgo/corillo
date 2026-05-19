@@ -124,7 +124,7 @@ const streamerMap: Record<string, any> = {};
 
 async function loadStreamers() {
   try {
-    const r = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
     if (r.ok) {
       const list = await r.json();
       for (const s of list) streamerMap[s.key] = s;

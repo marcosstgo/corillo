@@ -2050,7 +2050,7 @@ async function generateReel(vodId) {
   result.className = 'reel-result'; result.innerHTML = '';
 
   try {
-    const res = await fetch('/chat-api/reel', {
+    const res = await fetch('/api/reel', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
       body: JSON.stringify({ vod_id: vodId, record_id: currentRecord.id, start, end, public: pub, crop_x, ...faceParams }),
@@ -2094,7 +2094,7 @@ async function deleteVod(id) {
   const btn = document.querySelector(`#vrow-${id} .vod-row-del`);
   if (btn) btn.classList.add('loading');
   try {
-    const res = await fetch(`/chat-api/vod/${id}`, {
+    const res = await fetch(`/api/vod/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': pb.authStore.token },
     });
@@ -2154,7 +2154,7 @@ async function toggleReelPublic(id, channel) {
   const isPublic = btn.classList.contains('is-pub');
   btn.classList.add('loading');
   try {
-    const res = await fetch(`/chat-api/reel/${id}/visibility`, {
+    const res = await fetch(`/api/reel/${id}/visibility`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
       body: JSON.stringify({ public: !isPublic }),
@@ -2180,7 +2180,7 @@ async function deleteReel(id, channel) {
   const btn = document.querySelector(`#rrow-${id} .reel-row-del`);
   if (btn) btn.classList.add('loading');
   try {
-    const res = await fetch(`/chat-api/reel/${id}`, { method: 'DELETE', headers: { 'Authorization': pb.authStore.token } });
+    const res = await fetch(`/api/reel/${id}`, { method: 'DELETE', headers: { 'Authorization': pb.authStore.token } });
     if (!res.ok) throw new Error();
     document.getElementById(`rrow-${id}`)?.remove();
     if (!document.querySelector('.reel-row')) document.getElementById('reelsEmpty').style.display = '';
@@ -2360,7 +2360,7 @@ document.getElementById('regenKeyBtn').addEventListener('click', async () => {
   const btn = document.getElementById('regenKeyBtn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   try {
-    const res = await fetch('/chat-api/regen-stream-key', {
+    const res = await fetch('/api/regen-stream-key', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
       body: JSON.stringify({ record_id: currentRecord.id }),
@@ -2535,7 +2535,7 @@ resetBtn.addEventListener('click', async () => {
     try {
       const result = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/chat-api/reel/upload');
+        xhr.open('POST', '/api/reel/upload');
         xhr.setRequestHeader('Authorization', pb.authStore.token);
         xhr.upload.addEventListener('progress', (e) => {
           if (e.lengthComputable) bar.style.width = Math.round((e.loaded / e.total) * 80) + '%';
@@ -2634,7 +2634,7 @@ function initVodUpload() {
     try {
       await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/chat-api/upload-vod');
+        xhr.open('POST', '/api/upload-vod');
         xhr.setRequestHeader('Authorization', pb.authStore.token);
 
         xhr.upload.addEventListener('progress', e => {

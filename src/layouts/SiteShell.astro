@@ -598,7 +598,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Cargar roster completo desde API (una sola llamada)
   try {
-    const r = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
     if (r.ok) {
       const fresh = await r.json();
       const hostKeys = new Set(STREAMERS.filter((s: any) => s.host).map((s: any) => s.key));

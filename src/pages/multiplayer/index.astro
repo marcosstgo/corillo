@@ -750,7 +750,7 @@ document.addEventListener('visibilitychange', () => {
 
 // Cargar roster desde API antes del primer poll
 let streamerList: any[] = (window as any).STREAMERS?.filter((s: any) => s.key && !s.soon) || [];
-fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) })
+fetch('/api/streamers', { signal: AbortSignal.timeout(5000) })
   .then(r => r.ok ? r.json() : null)
   .then(data => { if (data) streamerList = data; })
   .catch(() => {})

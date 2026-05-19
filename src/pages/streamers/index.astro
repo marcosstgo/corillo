@@ -362,7 +362,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   /* ── Init ── */
   async function init() {
     try {
-      const r = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+      const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
       streamers = r.ok ? await r.json() : (window.STREAMERS || []).filter(s => s.key && !s.soon);
     } catch {
       streamers = (window.STREAMERS || []).filter(s => s.key && !s.soon);

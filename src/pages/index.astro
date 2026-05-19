@@ -336,7 +336,7 @@ async function loadCardAvatars(ids) {
       const el = document.getElementById('card-ava-' + id);
       const channel = el?.dataset?.channel;
       if (!channel) { _avatarCache[id] = null; continue; }
-      const r = await fetch('/chat-api/profile/' + encodeURIComponent(channel));
+      const r = await fetch('/api/profile/' + encodeURIComponent(channel));
       if (!r.ok) { _avatarCache[id] = null; continue; }
       const d = await r.json();
       _avatarCache[id] = d.avatar_url || null;
@@ -684,7 +684,7 @@ function renderLiveSection(live, paths) {
     if (!url) {
       if (s.key in _avatarCache) return;
       try {
-        const r = await fetch('/chat-api/profile/' + encodeURIComponent(s.key));
+        const r = await fetch('/api/profile/' + encodeURIComponent(s.key));
         if (!r.ok) { _avatarCache[s.key] = null; return; }
         const d = await r.json();
         _avatarCache[s.key] = d.avatar_url || null;
@@ -909,7 +909,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Cargar roster completo desde PocketBase — fuente de verdad única
   try {
-    const r = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
     if (r.ok) {
       const fresh = await r.json();
       const soonEntries = (window.STREAMERS || []).filter(s => s.soon);
