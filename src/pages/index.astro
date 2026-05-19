@@ -661,7 +661,10 @@ function renderLiveSection(live, paths) {
         <div class="ch-bottom"><span class="ch-bitrate">${fmtKbps(bitrate)}bps</span></div>
       </div>
       <div class="ch-body">
-        <div class="ch-ava ring-live" style="background:${s.color || '#1e3a4a'}">${s.ava || s.name[0]}</div>
+        <div class="ch-ava ring-live" style="background:${s.color || '#1e3a4a'}">
+          <img id="rail-ava-${s.key}" data-channel="${s.key}" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:4px">
+          <span id="rail-avaf-${s.key}">${s.ava || s.name[0]}</span>
+        </div>
         <div class="ch-info">
           <div class="ch-name">${s.host ? '<span class="ch-host">H</span>' : ''}${s.name}</div>
           <div class="ch-sub">${s.sub || 'corillo.live'}</div>
@@ -669,6 +672,28 @@ function renderLiveSection(live, paths) {
       </div>
     </a>`;
   }).join('');
+
+  // Cargar avatares del live rail (desde cache o API)
+  Promise.allSettled(live.map(async s => {
+    const url = s.avatar_url || _avatarCache[s.key] || null;
+    if (!url) {
+      if (s.key in _avatarCache) return;
+      try {
+        const r = await fetch('/chat-api/profile/' + encodeURIComponent(s.key));
+        if (!r.ok) { _avatarCache[s.key] = null; return; }
+        const d = await r.json();
+        _avatarCache[s.key] = d.avatar_url || null;
+      } catch { _avatarCache[s.key] = null; return; }
+    } else {
+      _avatarCache[s.key] = url;
+    }
+    const avatarUrl = _avatarCache[s.key];
+    if (!avatarUrl) return;
+    const img = document.getElementById('rail-ava-' + s.key);
+    const fb  = document.getElementById('rail-avaf-' + s.key);
+    if (img) { img.src = avatarUrl; img.style.display = 'block'; }
+    if (fb)  fb.style.display = 'none';
+  }));
 }
 
 /* ── Channel grid ────────────────────────────────────── */
@@ -701,7 +726,9 @@ function renderChannelGrid(paths) {
     return;
   }
 
-  const visible = searchQuery ? withSoon : withSoon.slice(0, 8);
+  const GRID_LIMIT = 8;
+  const visible = searchQuery ? withSoon : withSoon.slice(0, GRID_LIMIT);
+  const hasMore  = !searchQuery && withSoon.length > GRID_LIMIT;
 
   const cardsHtml = visible.map(s => {
     if (s.soon) return `
@@ -756,7 +783,21 @@ function renderChannelGrid(paths) {
       </a>`;
   }).join('');
 
-  grid.innerHTML = cardsHtml;
+  grid.innerHTML = cardsHtml
+    + (hasMore ? `<a href="/streamers/" class="ch ch-see-all">
+        <div class="ch-thumb">
+          <div class="ch-thumb-glow" style="background:linear-gradient(135deg,#1a2a3a,#0a1420)"></div>
+          <div class="ch-thumb-noise"></div>
+          <div class="ch-thumb-inner" style="font-size:1.6rem"><i class="fa-solid fa-users"></i></div>
+        </div>
+        <div class="ch-body">
+          <div class="ch-ava" style="background:linear-gradient(135deg,#1a2a3a,#0a1420)"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="ch-info">
+            <div class="ch-name">Ver todos</div>
+            <div class="ch-sub">corillo.live/streamers</div>
+          </div>
+        </div>
+      </a>` : '');
 }
 
 function renderVodsRow() {
@@ -834,7 +875,7 @@ async function loadReelsStrip() {
     const strip = document.getElementById('reelsStrip');
     const track = document.getElementById('reelsTrack');
     items.forEach(r => {
-      const dur   = r.duration ? `${r.duration}s` : '';
+      const dur   = r.duration ? fmtDuration(r.duration) : '';
       const thumb = r.thumb ? `background-image:url('${r.thumb}')` : '';
       const a = document.createElement('a');
       a.className = 'reel-card';
@@ -861,21 +902,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderChannelGrid(lastPaths);
   });
 
-  // Patch STREAMERS names + avatars from PocketBase before first render
-  const activeStreamers = STREAMERS.filter(s => !s.soon);
+  // Cargar roster completo desde PocketBase — fuente de verdad única
   try {
-    const results = await Promise.allSettled(
-      activeStreamers.map(s =>
-        fetch('/chat-api/profile/' + s.key, { signal: AbortSignal.timeout(4000) })
-          .then(r => r.ok ? r.json() : null)
-      )
-    );
-    results.forEach((res, i) => {
-      if (res.status === 'fulfilled' && res.value) {
-        if (res.value.display_name) activeStreamers[i].name = res.value.display_name;
-        if (res.value.avatar_url)   activeStreamers[i].avatar_url = res.value.avatar_url;
+    const r = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+    if (r.ok) {
+      const fresh = await r.json();
+      const soonEntries = (window.STREAMERS || []).filter(s => s.soon);
+      // Preservar host:true del static list para el badge HOST
+      const hostKeys = new Set((window.STREAMERS || []).filter(s => s.host).map(s => s.key));
+      STREAMERS.length = 0;
+      for (const s of fresh) {
+        if (hostKeys.has(s.key)) s.host = true;
+        STREAMERS.push(s);
       }
-    });
+      for (const s of soonEntries) STREAMERS.push(s);
+    }
   } catch {}
 
   await poll();

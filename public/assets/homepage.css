@@ -135,7 +135,7 @@ body.no-scanlines .scanlines { display: none; }
   flex-direction: column;
   gap: var(--gap);
   padding: var(--gap) var(--pad-x);
-  max-width: 1440px; margin: 0 auto;
+  max-width: 1440px; margin: 0;
 }
 
 /* ═══ MID SECTION (VODs + Digest) ═══ */

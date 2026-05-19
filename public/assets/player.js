@@ -10,13 +10,18 @@ const __reservedChannels = new Set([
   'roadmap','streamers','multiplayer','perfil','configuracion','software','noticias','corillo-css','que-es-corillo'
 ]);
 const __knownChannels = new Set((window.STREAMERS || []).map(s => s && s.key).filter(Boolean));
-const __isValidChannel = __validChannelRe.test(__rawChannel)
-  && !__reservedChannels.has(__rawChannel)
-  && __knownChannels.has(__rawChannel);
-window.channel = __isValidChannel ? __rawChannel : '';
-if (!__isValidChannel) {
+const __validFormat = __validChannelRe.test(__rawChannel) && !__reservedChannels.has(__rawChannel);
+const __inStaticList = __knownChannels.has(__rawChannel);
+
+if (!__validFormat) {
   location.replace('/_404/');
+} else if (!__inStaticList) {
+  // Canal no en la lista estática — verificar via API (streamers nuevos en PocketBase)
+  fetch('/chat-api/profile/' + encodeURIComponent(__rawChannel), { signal: AbortSignal.timeout(5000) })
+    .then(r => { if (!r.ok) location.replace('/_404/'); })
+    .catch(() => {});
 }
+window.channel = __validFormat ? __rawChannel : '';
 
 (function () {
   "use strict";

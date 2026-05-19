@@ -552,7 +552,7 @@ function buildCard(streamer: any, viewers: number) {
 }
 
 function streamerOrder(key: string) {
-  return ((window as any).STREAMERS || []).findIndex((s: any) => s.key === key);
+  return streamerList.findIndex((s: any) => s.key === key);
 }
 
 function insertInOrder(parent: Element, el: Element, key: string, selector: string) {
@@ -726,14 +726,17 @@ function animatePollBar() {
 
 async function refresh() {
   try {
-    const data         = await fetchPaths();
-    const livePaths    = getLive(data);
-    const apiStreamers = ((window as any).STREAMERS || [])
-      .filter((s: any) => s.key && livePaths.find((p: any) => p.name === 'live/' + s.key))
-      .map((s: any) => {
-        const pd = livePaths.find((p: any) => p.name === 'live/' + s.key);
-        return { ...s, viewers: pd ? (pd.readers || []).length : 0 };
-      });
+    const data      = await fetchPaths();
+    const livePaths = getLive(data);
+    // O(1) lookup map en vez de .find() por cada streamer
+    const livePathMap: Record<string, any> = {};
+    for (const p of livePaths) {
+      const m = p.name.match(/^live\/(.+)$/);
+      if (m) livePathMap[m[1]] = p;
+    }
+    const apiStreamers = streamerList
+      .filter((s: any) => s.key && livePathMap[s.key])
+      .map((s: any) => ({ ...s, viewers: (livePathMap[s.key].readers || []).length }));
     updateLiveState(apiStreamers);
   } catch {}
   animatePollBar();
@@ -745,6 +748,12 @@ document.addEventListener('visibilitychange', () => {
   else { cache.t = 0; refresh(); }
 });
 
-refresh();
+// Cargar roster desde API antes del primer poll
+let streamerList: any[] = (window as any).STREAMERS?.filter((s: any) => s.key && !s.soon) || [];
+fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) })
+  .then(r => r.ok ? r.json() : null)
+  .then(data => { if (data) streamerList = data; })
+  .catch(() => {})
+  .finally(() => refresh());
   </script>
 </SiteShell>

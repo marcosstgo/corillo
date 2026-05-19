@@ -59,8 +59,8 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="/assets/streamers.js" is:inline></script>
-  <link rel="stylesheet" href="/assets/corillo.css" />
-  <link rel="stylesheet" href="/assets/homepage.css" />
+  <link rel="stylesheet" href="/assets/corillo.css?v=2" />
+  <link rel="stylesheet" href="/assets/homepage.css?v=2" />
   <script is:inline>
     (function(){
       const t = localStorage.getItem('corillo-theme');
@@ -390,7 +390,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
 <script>
 /* SiteShell — interacciones del chrome (drawer/sidebar/topbar/footer). Auto-contenido. */
 const SHELL_POLL_MS = 15000;
-const STREAMERS = ((window as any).STREAMERS || []).filter((s: any) => !s.soon);
+let STREAMERS = ((window as any).STREAMERS || []).filter((s: any) => !s.soon);
 
 function shellToggleTheme() {
   const root = document.documentElement;
@@ -603,20 +603,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   if (searchClear) searchClear.style.display = 'none';
 
-  // Patch nombres/avatares desde PocketBase antes del primer render
+  // Cargar roster completo desde API (una sola llamada)
   try {
-    const results = await Promise.allSettled(
-      STREAMERS.map((s: any) =>
-        fetch('/chat-api/profile/' + s.key, { signal: AbortSignal.timeout(4000) })
-          .then(r => r.ok ? r.json() : null)
-      )
-    );
-    results.forEach((res, i) => {
-      if (res.status === 'fulfilled' && res.value) {
-        if (res.value.display_name) STREAMERS[i].name = res.value.display_name;
-        if (res.value.avatar_url)   STREAMERS[i].avatar_url = res.value.avatar_url;
-      }
-    });
+    const r = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+    if (r.ok) {
+      const fresh = await r.json();
+      const hostKeys = new Set(STREAMERS.filter((s: any) => s.host).map((s: any) => s.key));
+      STREAMERS = fresh.map((s: any) => hostKeys.has(s.key) ? { ...s, host: true } : s);
+    }
   } catch {}
 
   await shellPoll();

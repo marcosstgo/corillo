@@ -283,14 +283,14 @@ async function loadStreamers() {
       bar.appendChild(btn);
     });
 
-    // Fetch avatars in background, then patch DOM
-    await Promise.allSettled(
-      channels.map((ch: string) =>
-        fetch('/chat-api/profile/' + ch, { signal: AbortSignal.timeout(4000) })
-          .then(r => r.ok ? r.json() : null)
-          .then(data => { if (data?.avatar_url) streamerAvatars[ch] = data.avatar_url; })
-      )
-    );
+    // Cargar avatares desde /chat-api/streamers (una sola llamada)
+    try {
+      const sr = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+      if (sr.ok) {
+        const list: any[] = await sr.json();
+        for (const s of list) { if (s.avatar_url) streamerAvatars[s.key] = s.avatar_url; }
+      }
+    } catch {}
 
     document.querySelectorAll<HTMLElement>('.crl-reel-ava[data-channel]').forEach(ava => {
       const ch = ava.dataset.channel!;

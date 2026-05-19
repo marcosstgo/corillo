@@ -120,10 +120,27 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+const streamerMap: Record<string, any> = {};
+
+async function loadStreamers() {
+  try {
+    const r = await fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) });
+    if (r.ok) {
+      const list = await r.json();
+      for (const s of list) streamerMap[s.key] = s;
+    }
+  } catch {}
+  // Fallback: static list
+  if (!Object.keys(streamerMap).length) {
+    for (const s of ((window as any).STREAMERS || [])) {
+      if (s.key) streamerMap[s.key] = s;
+    }
+  }
+}
+
 function streamerInfo(channel: string) {
-  const s = ((window as any).STREAMERS || []).find((x: any) => x.key === channel);
-  const base = s || { key: channel, name: channel.toUpperCase(), color: '#00bfff' };
-  return { ...base, avatar_url: avatarCache[channel] || '' };
+  const s = streamerMap[channel];
+  return s || { key: channel, name: channel.toUpperCase(), color: '#00bfff', ava: channel[0].toUpperCase() };
 }
 
 function avaStyle(s: any) {
@@ -140,30 +157,17 @@ function avaContent(s: any) {
     : initial(s.name);
 }
 
-const avatarCache: Record<string, string> = {};
-
-async function fetchAvatars(channels: string[]) {
-  await Promise.allSettled(
-    channels.map(ch =>
-      fetch('/chat-api/profile/' + ch, { signal: AbortSignal.timeout(4000) })
-        .then(r => r.ok ? r.json() : null)
-        .then(d => { if (d?.avatar_url) avatarCache[ch] = d.avatar_url; })
-    )
-  );
-}
-
 let allVods: any[] = [];
 let activeFilter = 'all';
 
 async function loadVods() {
+  await loadStreamers();
+
   try {
     const r = await fetch(`${PB}/api/collections/vods/records?sort=-date&perPage=200`);
     const data = await r.json();
     allVods = data.items || [];
   } catch { allVods = []; }
-
-  const channels = [...new Set(allVods.map(v => v.channel))] as string[];
-  await fetchAvatars(channels);
 
   buildFilters();
 

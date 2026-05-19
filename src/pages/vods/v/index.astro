@@ -93,9 +93,15 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('es-PR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
+const _streamerMap: Record<string, any> = {};
+for (const s of ((window as any).STREAMERS || [])) { if (s.key) _streamerMap[s.key] = s; }
+fetch('/chat-api/streamers', { signal: AbortSignal.timeout(5000) })
+  .then(r => r.ok ? r.json() : null)
+  .then((list: any[] | null) => { if (list) { for (const s of list) _streamerMap[s.key] = s; } })
+  .catch(() => {});
+
 function streamerInfo(channel: string) {
-  const s = ((window as any).STREAMERS || []).find((x: any) => x.key === channel);
-  return s || { key: channel, name: channel.toUpperCase(), color: '#00bfff' };
+  return _streamerMap[channel] || { key: channel, name: channel.toUpperCase(), color: '#00bfff', ava: channel[0]?.toUpperCase() };
 }
 
 function showNotFound() {
@@ -275,13 +281,12 @@ async function loadRelated(channel: string, currentId: string) {
     const r = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
     const j = await r.json();
     const items = (j.items || []) as any[];
-    const liveStreamers = ((window as any).STREAMERS || []).filter((s: any) => {
-      const path = items.find((p: any) => p.name === 'live/' + s.key);
-      return path?.ready;
-    }).map((s: any) => {
-      const path = items.find((p: any) => p.name === 'live/' + s.key);
-      return { ...s, _viewers: path?.readers?.length ?? 0 };
-    });
+    const livePathMap: Record<string, any> = {};
+    for (const p of items) { const m = p.name?.match(/^live\/(.+)$/); if (m && p.ready) livePathMap[m[1]] = p; }
+    const liveStreamers = Object.entries(livePathMap).map(([key, p]: [string, any]) => ({
+      ...(_streamerMap[key] || { key, name: key.toUpperCase(), color: '#00bfff', ava: key[0]?.toUpperCase() }),
+      _viewers: p.readers?.length ?? 0,
+    }));
     if (liveStreamers.length) {
       const cards = liveStreamers.map((s: any) => liveCard(s, s._viewers)).join('');
       sections.push(relSection('EN VIVO AHORA', `${liveStreamers.length} streamers`, '/multiplayer/', 'Multiplayer →', cards));
