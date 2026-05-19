@@ -11,7 +11,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   <fragment slot="head">
     <meta name="theme-color" content="#030a0e" />
     <style is:global>
-      .hero{padding:56px 32px 40px;max-width:1200px;margin:0 auto}
+      .hero{padding:56px 32px 40px;max-width:1200px;margin:0}
       .hero-label{font-family:var(--crl-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--crl-accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
       .hero-label::before{content:'';display:block;width:24px;height:1px;background:var(--crl-accent)}
       .hero h1{font-family:var(--crl-display);font-size:clamp(3rem,7vw,6rem);letter-spacing:4px;line-height:.9;color:var(--crl-white);margin-bottom:16px}
@@ -19,10 +19,10 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .hero-sub{font-family:var(--crl-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted)}
       @media(max-width:600px){.hero{padding:40px 16px 28px}}
 
-      .filters{padding:0 32px 28px;max-width:1200px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+      .filters{padding:0 32px 28px;max-width:1200px;margin:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
       @media(max-width:600px){.filters{padding:0 16px 20px}}
 
-      .section{padding:0 32px 64px;max-width:1200px;margin:0 auto}
+      .section{padding:0 32px 64px;max-width:1200px;margin:0}
       .vod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
       @media(max-width:1000px){.vod-grid{grid-template-columns:repeat(2,1fr)}}
       @media(max-width:600px){.section{padding:0 16px 48px}.vod-grid{grid-template-columns:1fr;gap:12px}}
