@@ -85,6 +85,30 @@ async def _admin_token() -> str:
     return token
 
 
+@app.get("/streamers")
+async def get_streamers():
+    if not PB_ADMIN_EMAIL or not PB_ADMIN_PASS:
+        raise HTTPException(status_code=503)
+    try:
+        token = await _admin_token()
+        r = await _http.get(
+            f"{PB_URL}/api/collections/streamers/records",
+            headers={"Authorization": token},
+            params={
+                "filter": "active=true",
+                "fields": "id,key,name,sub,bio,color,twitch,instagram,tiktok,avatar,stream_title,ava",
+                "perPage": "200",
+            },
+        )
+        items = r.json().get("items", [])
+        for rec in items:
+            if rec.get("avatar"):
+                rec["avatar_url"] = f"{PB_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
+        return items
+    except Exception:
+        raise HTTPException(status_code=503)
+
+
 @app.get("/profile/{key}")
 async def get_profile(key: str):
     if not PB_ADMIN_EMAIL or not PB_ADMIN_PASS:
