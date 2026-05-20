@@ -67,7 +67,7 @@ Cada push a `main` ejecuta en orden:
 
 Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre>`.
 
-> **Otros servicios en el mismo servidor (no corillo):** `conteo.service` (portal financiero, puertos 8300+8095), `gbn-mikrowisp.service` (puerto 8100), `openclaw.service` (AI gateway, puertos 18789+18791), `netdata.service` (monitoreo, puerto 19999). No tocar a menos que se sepa lo que se hace.
+> **Otros servicios en el mismo servidor (no corillo):** `conteo.service` (portal financiero `conteo.marcossantiago.com`, puertos 8300+8095, repo `marcosstgo/conteo`), `gbn-mikrowisp.service` (puerto 8100), `openclaw.service` (AI gateway, puertos 18789+18791), `netdata.service` (monitoreo, puerto 19999). No tocar a menos que se sepa lo que se hace.
 
 ---
 
@@ -96,6 +96,19 @@ Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre
 Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
 `^/([a-z0-9][a-z0-9_]*)(/|$)` y nginx inyecta el key en
 `player/index.html` via `sub_filter '__CHANNEL__'`.
+
+### Otros dominios en el mismo nginx.conf
+
+| Dominio | Backend | Notas |
+|---|---|---|
+| `conteo.marcossantiago.com` | `/var/www/conteo/` + proxy `/api/` → 8300, `/pb-conteo/` → 8095 | Repo: `marcosstgo/conteo` |
+| `marcossantiago.com` | Docker 3010 | Repo: `marcosstgo/marcossantiago-web` |
+| `kioskko.com` | Landing estática + Docker 4321 | — |
+| `pagos.gbnsolutions.com` | gbn-mikrowisp 8100 | — |
+| `pb.corillo.live` | PocketBase corillo 8090 | — |
+| `uptime.corillo.live` / `status.corillo.live` | Proxy a 192.168.8.148:3001 | Red local |
+| `vault.marcossantiago.com` | Proxy a 192.168.8.148:8080 | Red local |
+| `oc.marcossantiago.com` | OpenClaw 18789 | — |
 
 ---
 
