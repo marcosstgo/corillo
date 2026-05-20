@@ -6,3 +6,4 @@ public/assets/thumbs/
 node_modules/
 dist/
 .astro/
+reel/.env

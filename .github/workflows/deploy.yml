@@ -182,6 +182,25 @@ jobs:
              /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/pb-setup-vods.py
              echo 'vod-process deployed'"
 
+      - name: Deploy reel bot
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "set -e
+             mkdir -p /home/corillo-adm/corillo-reel
+             cp /var/www/stream/reel/bot.py /home/corillo-adm/corillo-reel/bot.py
+             cp /var/www/stream/reel/requirements.txt /home/corillo-adm/corillo-reel/requirements.txt
+             if [ ! -d /home/corillo-adm/corillo-reel/venv ]; then
+               python3 -m venv /home/corillo-adm/corillo-reel/venv
+             fi
+             /home/corillo-adm/corillo-reel/venv/bin/pip install -q -r /home/corillo-adm/corillo-reel/requirements.txt
+             if [ ! -f /etc/systemd/system/corillo-reel.service ]; then
+               sudo cp /var/www/stream/reel/corillo-reel.service /etc/systemd/system/corillo-reel.service
+               sudo systemctl daemon-reload
+               sudo systemctl enable corillo-reel
+             fi
+             sudo systemctl restart corillo-reel"
+
       - name: Deploy bitrate monitor if changed
         run: |
           scp -i ~/.ssh/deploy_key -P 2222 -o StrictHostKeyChecking=no \

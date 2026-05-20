@@ -1,0 +1,17 @@
+[Unit]
+Description=Corillo Reel Bot — descarga de videos desde Telegram
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=corillo-adm
+WorkingDirectory=/home/corillo-adm/corillo-reel
+ExecStart=/home/corillo-adm/corillo-reel/venv/bin/python bot.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

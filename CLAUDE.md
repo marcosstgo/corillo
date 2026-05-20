@@ -204,7 +204,7 @@ Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
 | `/home/corillo-adm/corillo-*/.env` | Variables de entorno de cada servicio |
 | `/home/corillo-adm/corillo-*/*.db` | Datos runtime SQLite |
 | `/home/corillo-adm/corillo-auth/*.pem` | Claves VAPID |
-| `/home/corillo-adm/corillo-reel/` | Bot de descarga de videos — sin git, sin CI/CD |
+| `/home/corillo-adm/corillo-reel/.env` | Variables del reel bot — BOT_TOKEN, ALLOWED_USERS |
 | `/home/corillo-adm/bitrate-monitor.py` | Desplegado por CI desde `scripts/bitrate-monitor.py` |
 | `/usr/local/bin/thumbgen-all.sh` | Script de thumbnails alternativo — fuera del repo |
 | `/var/vods/` | Grabaciones VOD y reels |
@@ -253,13 +253,13 @@ Servicio minimalista de autenticación RTMP para MediaMTX.
 - MediaMTX llama a este endpoint antes de aceptar un stream entrante
 - Cache de 60s por canal para no saturar PocketBase
 
-### corillo-reel (`/home/corillo-adm/corillo-reel/bot.py`)
+### corillo-reel (`reel/bot.py`)
 Bot de Telegram que descarga videos de redes sociales y los sube al servidor.
 - Acepta URLs de Instagram, TikTok, YouTube Shorts, Twitter/X, Facebook
 - Usa `yt-dlp` para la descarga y `ffmpeg` para procesamiento
 - Solo usuarios en `ALLOWED_USERS` pueden usarlo
-- **No está en el CI/CD** — se gestiona manualmente en `/home/corillo-adm/corillo-reel/`
-- No tiene repositorio git propio (sin versionar)
+- Desplegado via CI a `/home/corillo-adm/corillo-reel/`
+- `.env` no está en el repo — ver `.env.example` para las variables requeridas
 
 ### corillo-thumbs (`scripts/thumb-gen.py`) y thumbgen (`thumbgen-all.sh`)
 Dos servicios de thumbnails distintos que corren en paralelo:
