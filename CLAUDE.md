@@ -258,8 +258,10 @@ Bot de Telegram que descarga videos de redes sociales y los sube al servidor.
 - Acepta URLs de Instagram, TikTok, YouTube Shorts, Twitter/X, Facebook
 - Usa `yt-dlp` para la descarga y `ffmpeg` para procesamiento
 - Solo usuarios en `ALLOWED_USERS` pueden usarlo
-- Desplegado via CI a `/home/corillo-adm/corillo-reel/`
-- `.env` no está en el repo — ver `.env.example` para las variables requeridas
+- **Corre en Docker**, parte del stack `/home/corillo-adm/marcossantiago-web/docker-compose.yml`
+- Depende de `telegram-bot-api` container (misma red Docker) — no puede correr como systemd
+- El CI copia `bot.py` a `/home/corillo-adm/corillo-reel/` y hace `docker compose build + up`
+- Variables de entorno en el `.env` del stack `marcossantiago-web`
 
 ### corillo-thumbs (`scripts/thumb-gen.py`) y thumbgen (`thumbgen-all.sh`)
 Dos servicios de thumbnails distintos que corren en paralelo:
