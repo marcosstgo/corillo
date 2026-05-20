@@ -131,11 +131,11 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
     [data-theme="light"] .sidebar-show-all:hover { color: var(--accent); }
 
     /* Footer */
-    .site-footer { border-top:1px solid var(--border); padding:48px 32px 28px; margin-top:0; background:var(--panel); position:relative; overflow:hidden; }
+    .site-footer { border-top:1px solid var(--border); padding:36px 32px 20px; margin-top:0; background:var(--panel); position:relative; overflow:hidden; }
     .site-footer::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(0,191,255,.06),transparent); pointer-events:none; }
-    .foot-top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; margin-bottom:40px; }
-    @media(max-width:900px){ .foot-top { grid-template-columns:1fr 1fr; gap:32px; } }
-    @media(max-width:520px){ .foot-top { grid-template-columns:1fr; } }
+    .foot-top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:32px; margin-bottom:28px; }
+    @media(max-width:900px){ .foot-top { grid-template-columns:1fr 1fr; gap:24px; margin-bottom:20px; } }
+    @media(max-width:520px){ .foot-top { grid-template-columns:1fr 1fr; gap:16px; } .site-footer { padding:24px 16px 16px; } }
     .foot-brand { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
     .foot-brand-logo { height:28px; width:auto; opacity:.75; }
     .foot-brand-word { fill:#e8f6ff; }

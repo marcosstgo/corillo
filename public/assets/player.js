@@ -810,6 +810,8 @@ window.channel = __validFormat ? __rawChannel : '';
           const title = (data.stream_title || '').trim();
           DOM.chStreamTitle.textContent = title;
           DOM.chStreamTitle.style.display = title ? '' : 'none';
+          const navTitle = document.getElementById('navStreamTitle');
+          if (navTitle) { navTitle.textContent = title; navTitle.style.display = title ? '' : 'none'; }
         }
         if (data.bio && data.bio.trim() && DOM.chBio) {
           DOM.chBio.textContent = data.bio.trim();

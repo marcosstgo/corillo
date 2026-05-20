@@ -139,13 +139,20 @@ import SiteShell from '../../layouts/SiteShell.astro';
 
       @media(max-width:600px){
         .hero{padding:40px 16px 24px}
-        .search-row,.grid-wrap{padding-left:16px;padding-right:16px}
-        .s-card-top{padding:14px 14px 0}
-        .s-avatar,.s-avatar-fallback{width:48px;height:48px;font-size:1.4rem}
-        .s-card-body{padding:10px 14px 12px}
-        .s-name{font-size:1.3rem}
-        .s-bio,.s-socials{display:none}
-        .s-card-footer{padding:0 14px 12px}
+        .search-row,.grid-wrap{padding-left:12px;padding-right:12px}
+        /* 2 columnas en mobile */
+        .crl-grid-auto{grid-template-columns:repeat(2,1fr) !important;gap:10px !important}
+        .s-card-top{padding:10px 10px 0}
+        .s-avatar,.s-avatar-fallback{width:40px;height:40px;font-size:1.2rem}
+        .s-card-body{padding:8px 10px 10px;gap:3px}
+        .s-name{font-size:1.1rem}
+        .s-bio{display:none}
+        .s-socials{display:none}
+        .s-card-footer{padding:0 10px 10px}
+        .s-watch-btn{font-size:.7rem;padding:5px 10px}
+        /* Card hero en mobile más pequeño */
+        .s-card-hero{aspect-ratio:16/7}
+        .s-sub{font-size:.68rem}
       }
     </style>
   </fragment>

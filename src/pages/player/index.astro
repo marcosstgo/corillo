@@ -62,7 +62,10 @@ import { version } from '../../../version.json';
   <div class="nav-divider"></div>
   <div class="nav-channel">
     <div class="nav-channel-ava" id="navChAva"></div>
-    <span class="nav-channel-name" id="navChName"></span>
+    <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
+      <span class="nav-channel-name" id="navChName"></span>
+      <span class="nav-stream-title" id="navStreamTitle" style="display:none"></span>
+    </div>
   </div>
   <div class="nav-live-pill" id="navLivePill">
     <span id="liveDot" class="dot"></span>

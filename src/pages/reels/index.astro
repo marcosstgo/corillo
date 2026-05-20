@@ -143,6 +143,18 @@ function renderReels(reels: any[]) {
     el.dataset.idx = String(i);
     el.dataset.reelId = r.id;
     el.innerHTML = `
+      <!-- Panel izquierdo: info visible en desktop -->
+      <div class="crl-reel-left-panel">
+        <a href="/${r.channel}/" style="text-decoration:none;display:flex;align-items:center;gap:10px">
+          <div class="crl-reel-ava" style="width:48px;height:48px;font-size:1.2rem;flex-shrink:0;background:linear-gradient(135deg,${avaColor},${avaColor}99)">${avaHtml}</div>
+          <div>
+            <div style="font-family:var(--crl-display);font-size:1.1rem;color:#fff;letter-spacing:.05em">${r.channel.toUpperCase()}</div>
+            <div style="font-family:var(--crl-mono);font-size:.65rem;color:var(--crl-muted);margin-top:2px">${fmtDate(r.date)}</div>
+          </div>
+        </a>
+        ${r.title ? `<p style="font-size:.85rem;color:rgba(232,246,255,.75);line-height:1.4;margin:0">${esc(r.title)}</p>` : ''}
+        <a href="/${r.channel}/" style="font-family:var(--crl-mono);font-size:.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--crl-accent);text-decoration:none;border:1px solid rgba(0,191,255,.3);padding:6px 14px;border-radius:99px;transition:.15s" onmouseover="this.style.background='rgba(0,191,255,.1)'" onmouseout="this.style.background=''">Ver canal →</a>
+      </div>
       <div class="crl-reel-media">
         <div class="crl-reel-bg" style="${thumbBg}"></div>
         <video class="crl-reel-video" data-src="${videoUrl}"

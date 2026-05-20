@@ -1746,7 +1746,7 @@ button { font: inherit; cursor: pointer; }
     background: var(--crl-ink);
   }
 
-  /* Reel card: full viewport height, flex row */
+  /* Reel card: full viewport height, flex row — centrado */
   .crl-reel {
     height: 100dvh;
     width: 100vw;
@@ -1754,7 +1754,7 @@ button { font: inherit; cursor: pointer; }
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 16px;
+    gap: 24px;
     overflow: visible;
     background: transparent;
     box-shadow: none;
@@ -1763,19 +1763,31 @@ button { font: inherit; cursor: pointer; }
     flex-shrink: 0;
   }
 
-  /* Video box: 9:16, fills most of viewport height */
+  /* Panel izquierdo — info del streamer */
+  .crl-reel-left-panel {
+    width: 220px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 24px;
+    align-self: flex-end;
+  }
+
+  /* Video box: 9:16 */
   .crl-reel-media {
     position: relative;
     flex-shrink: 0;
-    height: 90dvh;
-    width: calc(90dvh * 9 / 16);
-    max-width: 90vw;
-    border-radius: 14px;
+    height: 88dvh;
+    width: calc(88dvh * 9 / 16);
+    max-width: 55vw;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 8px 48px rgba(0,0,0,.7);
   }
 
-  /* Overlay: action buttons only, to the right of video */
+  /* Overlay: action buttons a la derecha */
   .crl-reel-overlay {
     position: static;
     background: transparent;
@@ -1786,10 +1798,11 @@ button { font: inherit; cursor: pointer; }
     justify-content: flex-end;
     gap: 20px;
     align-self: flex-end;
-    padding-bottom: 32px;
+    padding-bottom: 24px;
+    flex-shrink: 0;
   }
 
-  /* Channel info hidden from overlay on desktop — it's below the video */
+  /* Channel info oculta del overlay — va en el panel izquierdo */
   .crl-reel-info { display: none; }
 
   .crl-reel-actions {
@@ -1808,7 +1821,7 @@ button { font: inherit; cursor: pointer; }
 
   .crl-reel-btn span { color: rgba(255,255,255,.5); font-size: .65rem; }
 
-  /* Caption below video — visible on desktop */
+  /* Caption dentro del video — visible en desktop */
   .crl-reel-caption {
     display: flex;
     flex-direction: column;
@@ -1816,11 +1829,11 @@ button { font: inherit; cursor: pointer; }
     position: absolute;
     bottom: 0; left: 0; right: 0;
     z-index: 12;
-    padding: 48px 20px 20px;
-    background: linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 100%);
+    padding: 48px 16px 18px;
+    background: linear-gradient(to top, rgba(0,0,0,.88) 0%, transparent 100%);
   }
 
-  /* Dots: hide on desktop */
+  /* Dots: ocultos en desktop */
   .crl-reel-dots { display: none; }
 }
 
@@ -1888,6 +1901,8 @@ a.nav-btn { display: flex; }
 }
 .ch-stream-title { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-size: var(--crl-xs); color: var(--crl-accent); font-family: var(--crl-mono); }
 .ch-stream-title::before { content: '\25B6'; font-size: 8px; opacity: .7; }
+/* Stream title más prominente en el nav desktop */
+.nav-stream-title { font-family: var(--crl-mono); font-size: 10px; letter-spacing: 1px; color: rgba(232,246,255,.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
 .ch-bio { font-size: 13px; color: rgba(232,246,255,.5); margin-top: 6px; line-height: 1.5; display: none; }
 
 /* Chat input */
@@ -2033,34 +2048,46 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
   body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
   .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; flex: none; align-content: start; }
   .player-side, .crl-player-main { overflow: visible!important; }
-  .crl-chat-panel { height: 420px; border-left: none; border-top: 1px solid var(--crl-border); }
+  /* Chat más compacto en tablet — el video debe dominar */
+  .crl-chat-panel { height: min(380px, 45vh); border-left: none; border-top: 1px solid var(--crl-border); }
   .nav-btn, .chat-send, #chatSend { min-width: 44px; min-height: 44px; }
   .stats-row { flex-wrap: wrap; }
   .stats-row .stat { padding: 8px 6px; min-width: 0; }
   .stats-row .stat-val { font-size: 11px; }
   .stats-row .stat-lbl { font-size: 7px; letter-spacing: 1px; }
-  .ch-info-bar { padding: 12px 14px; gap: 12px; }
+  /* Info bar más compacta: bio oculta, solo nombre + sub + stream_title */
+  .ch-info-bar { padding: 10px 14px; gap: 10px; }
+  .ch-bio { display: none !important; }
+  .ch-name { font-size: 1.15rem !important; }
   .nav-channel { display: none; }
   .nav-divider { display: none; }
-  .panels-grid { grid-template-columns: repeat(2,1fr); gap: 8px; margin: 12px; }
+  /* Panels en fila horizontal en mobile */
+  .panels-grid { grid-template-columns: repeat(2,1fr); gap: 8px; margin: 10px 12px 14px; }
   .panel-link, .panel-card:not(:has(.panel-link)) { padding: 8px 10px; gap: 3px; }
   .panel-title { font-size: var(--crl-2xs); letter-spacing: .5px; }
   .panel-text { font-size: var(--crl-2xs); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .panel-url-lbl { font-size: var(--crl-2xs); margin-top: 2px; }
+  /* Stats row oculto en mobile — info secundaria */
+  .crl-player-stats { display: none; }
+  .nav-stream-title { display: none; }
 }
 @media(max-width:600px) {
   #chatInput { font-size: 16px; }
-  /* Reduce chat height on phones — 420px is too tall for small viewports */
-  .crl-chat-panel { height: min(300px, 40vh) !important; }
+  .crl-chat-panel { height: min(320px, 42vh) !important; }
+  /* Info del canal muy compacta en mobile */
+  .ch-info-bar { padding: 8px 12px; gap: 9px; }
+  .ch-ava { width: 38px !important; height: 38px !important; font-size: 1rem !important; }
+  .ch-name { font-size: 1.05rem !important; }
+  .ch-sub { font-size: .65rem !important; }
+  .ch-links { display: none !important; }
 }
 @media(max-width:420px) {
-  /* Extra-small phones: smaller nav buttons, reduced padding */
   .crl-player-nav { padding: 0 10px; gap: 6px; }
   .nav-btn { width: 30px; height: 30px; }
   .nav-live-pill { display: none !important; }
-  /* Stats: 2 columns on very narrow screens */
   .stats-row .stat { flex: 0 0 calc(50% - 1px); border-right: none; }
   .stats-row .stat:nth-child(odd) { border-right: 1px solid var(--crl-border); }
+  .ch-info-bar { padding: 6px 10px; gap: 8px; }
 }
 @media(orientation:landscape) and (max-height:500px) {
   html:has(.crl-player-app), body:has(.crl-player-app) { height: auto; overflow: auto!important; -webkit-overflow-scrolling: touch; }
