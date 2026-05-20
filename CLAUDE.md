@@ -54,12 +54,20 @@ Cada push a `main` ejecuta en orden:
 | corillo-bot (chat) | 3001 | uvicorn | `/home/corillo-adm/corillo-bot/` |
 | corillo-telegram | 3003 | uvicorn | `/home/corillo-adm/corillo-telegram/` |
 | corillo-auth | 3002 | uvicorn | `/home/corillo-adm/corillo-auth/` |
-| PocketBase | 8090 | pocketbase | `/home/corillo-adm/pocketbase/` |
+| corillo-reel | — | python | `/home/corillo-adm/corillo-reel/` |
+| PocketBase (corillo) | 8090 | pocketbase | `/home/corillo-adm/pocketbase/pb_data` |
 | MediaMTX (HLS) | 8888 | mediamtx | — |
 | MediaMTX (WebRTC) | 8889 | mediamtx | — |
+| MediaMTX (RTSP interno) | 8554 | mediamtx | solo localhost |
+| MediaMTX (API) | 9997 | mediamtx | — |
+| corillo-thumbs | — | python3 | `scripts/thumb-gen.py` |
+| thumbgen | — | bash | `/usr/local/bin/thumbgen-all.sh` |
+| bitrate-monitor | — | python3 | `/home/corillo-adm/bitrate-monitor.py` |
 | win-monitor | 8200 | uvicorn | `/home/corillo-adm/win-monitor/` |
 
 Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre>`.
+
+> **Otros servicios en el mismo servidor (no corillo):** `conteo.service` (portal financiero, puertos 8300+8095), `gbn-mikrowisp.service` (puerto 8100), `openclaw.service` (AI gateway, puertos 18789+18791), `netdata.service` (monitoreo, puerto 19999). No tocar a menos que se sepa lo que se hace.
 
 ---
 
@@ -196,9 +204,13 @@ Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
 | `/home/corillo-adm/corillo-*/.env` | Variables de entorno de cada servicio |
 | `/home/corillo-adm/corillo-*/*.db` | Datos runtime SQLite |
 | `/home/corillo-adm/corillo-auth/*.pem` | Claves VAPID |
+| `/home/corillo-adm/corillo-reel/` | Bot de descarga de videos — sin git, sin CI/CD |
+| `/home/corillo-adm/bitrate-monitor.py` | Desplegado por CI desde `scripts/bitrate-monitor.py` |
+| `/usr/local/bin/thumbgen-all.sh` | Script de thumbnails alternativo — fuera del repo |
 | `/var/vods/` | Grabaciones VOD y reels |
 | `/var/www/stream/assets/thumbs/` | Thumbnails generados cada 60s |
 | `/var/www/stream/assets/kick/` | Banners Kick del bitrate-monitor |
+| `/home/corillo-adm/pocketbase/pb_data` | Datos PocketBase de corillo.live |
 
 ---
 
@@ -240,6 +252,19 @@ Servicio minimalista de autenticación RTMP para MediaMTX.
 - Una sola función: valida stream keys de publishers contra PocketBase
 - MediaMTX llama a este endpoint antes de aceptar un stream entrante
 - Cache de 60s por canal para no saturar PocketBase
+
+### corillo-reel (`/home/corillo-adm/corillo-reel/bot.py`)
+Bot de Telegram que descarga videos de redes sociales y los sube al servidor.
+- Acepta URLs de Instagram, TikTok, YouTube Shorts, Twitter/X, Facebook
+- Usa `yt-dlp` para la descarga y `ffmpeg` para procesamiento
+- Solo usuarios en `ALLOWED_USERS` pueden usarlo
+- **No está en el CI/CD** — se gestiona manualmente en `/home/corillo-adm/corillo-reel/`
+- No tiene repositorio git propio (sin versionar)
+
+### corillo-thumbs (`scripts/thumb-gen.py`) y thumbgen (`thumbgen-all.sh`)
+Dos servicios de thumbnails distintos que corren en paralelo:
+- `corillo-thumbs.service` → `scripts/thumb-gen.py` — genera thumbnails de streams en vivo, los guarda en `/var/www/stream/assets/thumbs/`. **Versionado en el repo**, se despliega via CI.
+- `thumbgen.service` → `/usr/local/bin/thumbgen-all.sh` — script bash alternativo de thumbnails. **No está en el repo**, instalado manualmente en el sistema.
 
 ### bitrate-monitor (`scripts/bitrate-monitor.py`)
 Daemon que vigila el bitrate de los streams en vivo.
