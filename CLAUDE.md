@@ -70,7 +70,7 @@ Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre
   /api/join               → 3003  corillo-telegram
   /api/admin              → 3003  corillo-telegram
   /api/telegram-webhook   → 3003  corillo-telegram
-  /api/upload-vod         → 3004  (timeout 600s, sin buffering, max 2G)
+  /api/upload-vod         → 3004  (timeout 600s, sin buffering, max 3G)
 
 /chat-api/*               → 3001  corillo-bot  (WebSocket, chat, digest, IA)
 
@@ -109,7 +109,7 @@ Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
 | DELETE | `/api/reel/{id}` | Eliminar reel (autenticado) |
 | PATCH | `/api/reel/{id}/visibility` | Cambiar visibilidad de reel |
 | DELETE | `/api/vod/{id}` | Eliminar VOD (autenticado) |
-| POST | `/api/upload-vod` | Subir VOD (autenticado, hasta 2G) |
+| POST | `/api/upload-vod` | Subir VOD (autenticado, hasta 3G) |
 | GET | `/api/health` | Health check |
 
 ---

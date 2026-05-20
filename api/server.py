@@ -852,7 +852,7 @@ async def upload_vod(
     tmp = str(vod_dir / f"{ts}_upload_tmp{ext}")
     out = str(vod_dir / f"{ts}.mp4")
 
-    MAX_SIZE = 2 * 1024 * 1024 * 1024  # 2 GB
+    MAX_SIZE = 3 * 1024 * 1024 * 1024  # 3 GB
     written  = 0
     try:
         with open(tmp, "wb") as fh:
@@ -862,7 +862,7 @@ async def upload_vod(
                     break
                 written += len(chunk)
                 if written > MAX_SIZE:
-                    raise HTTPException(status_code=413, detail="El archivo supera los 2 GB")
+                    raise HTTPException(status_code=413, detail="El archivo supera los 3 GB")
                 fh.write(chunk)
     except HTTPException:
         Path(tmp).unlink(missing_ok=True)
