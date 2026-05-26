@@ -564,9 +564,13 @@ window.channel = __validFormat ? __rawChannel : '';
 
     hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      let hlsPlaySettled = false;
+      const hlsPlayTimeout = setTimeout(() => {
+        if (!hlsPlaySettled) scheduleRetry('timeout hls');
+      }, 20000);
       DOM.video.play()
-        .then(() => { hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner(); })
-        .catch(() => { showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.'); });
+        .then(() => { hlsPlaySettled = true; clearTimeout(hlsPlayTimeout); hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner(); })
+        .catch(() => { hlsPlaySettled = true; clearTimeout(hlsPlayTimeout); showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.'); });
     });
     hls.on(Hls.Events.ERROR, (_, d) => {
       if (!d) return;
