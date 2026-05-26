@@ -601,8 +601,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
     if (r.ok) {
       const fresh = await r.json();
-      const hostKeys = new Set(STREAMERS.filter((s: any) => s.host).map((s: any) => s.key));
-      STREAMERS = fresh.map((s: any) => hostKeys.has(s.key) ? { ...s, host: true } : s);
+      STREAMERS = fresh;
     }
   } catch {}
 

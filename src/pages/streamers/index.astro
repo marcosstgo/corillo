@@ -34,6 +34,18 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .live-pill.show{opacity:1}
       .live-pill .dot{width:7px;height:7px;border-radius:50%;background:#ef4444;animation:crl-blink 1.2s ease-in-out infinite}
 
+      /* ── Filters ── */
+      .filter-row{max-width:1400px;margin:0 auto;padding:0 24px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+      .filter-btn{
+        font-family:var(--crl-mono);font-size:.75rem;letter-spacing:.08em;
+        padding:6px 14px;border-radius:99px;
+        border:1px solid var(--crl-border);background:transparent;
+        color:var(--crl-muted);cursor:pointer;transition:color .2s,border-color .2s,background .2s;
+        white-space:nowrap;
+      }
+      .filter-btn:hover{color:var(--crl-white);border-color:rgba(255,255,255,.2)}
+      .filter-btn.active{color:var(--crl-accent);border-color:rgba(232,200,74,.4);background:rgba(232,200,74,.06)}
+
       /* ── Search ── */
       .search-row{max-width:1400px;margin:0 auto;padding:0 24px 24px}
       .search-box{position:relative;max-width:380px}
@@ -175,6 +187,14 @@ import SiteShell from '../../layouts/SiteShell.astro';
     </div>
   </div>
 
+  <div class="filter-row" id="filterRow">
+    <button class="filter-btn active" data-cat="">Todos</button>
+    <button class="filter-btn" data-cat="Gaming">Gaming</button>
+    <button class="filter-btn" data-cat="Just Chatting">Just Chatting</button>
+    <button class="filter-btn" data-cat="Tecnología">Tecnología</button>
+    <button class="filter-btn" data-cat="Podcast">Podcast</button>
+  </div>
+
   <div class="search-row">
     <div class="search-box">
       <i class="fa-solid fa-magnifying-glass"></i>
@@ -199,6 +219,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   let viewersMap = {};
   let lastVods   = {};
   let searchQ    = '';
+  let filterCat  = '';
   let thumbTick  = Math.floor(Date.now() / 60000);
 
   /* ── Helpers ── */
@@ -258,7 +279,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
       <div class="s-card-body">
         <h2 class="s-name">${s.name}</h2>
-        ${s.sub ? `<p class="s-sub">${s.sub}</p>` : ''}
+        ${s.sub ? `<p class="s-sub">${s.sub}</p>` : (s.category ? `<p class="s-sub">${s.category}</p>` : '')}
         ${live && s.stream_title ? `<p class="s-stream-title">▶ ${s.stream_title}</p>` : ''}
         ${s.bio ? `<p class="s-bio crl-clamp-3">${s.bio}</p>` : ''}
         ${!live && last ? `<p class="s-last-live"><i class="fa-regular fa-clock"></i> ${last}</p>` : ''}
@@ -273,6 +294,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   /* ── Render ── */
   function render() {
     let list = streamers.filter(s => {
+      if (filterCat && s.category !== filterCat) return false;
       if (!searchQ) return true;
       return s.name.toLowerCase().includes(searchQ) || (s.key || '').toLowerCase().includes(searchQ);
     });
@@ -285,8 +307,8 @@ import SiteShell from '../../layouts/SiteShell.astro';
       return (a.name || '').localeCompare(b.name || '');
     });
 
-    // Soon al final (solo cuando no hay búsqueda)
-    const soonItems = searchQ ? [] : (window.STREAMERS || []).filter(s => s.soon);
+    // Soon al final (solo cuando no hay búsqueda ni filtro de categoría)
+    const soonItems = (searchQ || filterCat) ? [] : (window.STREAMERS || []).filter(s => s.soon);
 
     if (!list.length && !soonItems.length) {
       grid.innerHTML = `<div class="s-empty"><i class="fa-solid fa-satellite-dish" style="font-size:2rem;margin-bottom:12px;display:block;opacity:.3"></i>Sin resultados</div>`;
@@ -363,6 +385,15 @@ import SiteShell from '../../layouts/SiteShell.astro';
   /* ── Search ── */
   document.getElementById('searchInput').addEventListener('input', e => {
     searchQ = e.target.value.toLowerCase().trim();
+    render();
+  });
+
+  /* ── Filters ── */
+  document.getElementById('filterRow').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    filterCat = btn.dataset.cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
     render();
   });
 

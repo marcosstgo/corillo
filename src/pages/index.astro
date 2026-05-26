@@ -913,13 +913,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (r.ok) {
       const fresh = await r.json();
       const soonEntries = (window.STREAMERS || []).filter(s => s.soon);
-      // Preservar host:true del static list para el badge HOST
-      const hostKeys = new Set((window.STREAMERS || []).filter(s => s.host).map(s => s.key));
       STREAMERS.length = 0;
-      for (const s of fresh) {
-        if (hostKeys.has(s.key)) s.host = true;
-        STREAMERS.push(s);
-      }
+      for (const s of fresh) STREAMERS.push(s);
       for (const s of soonEntries) STREAMERS.push(s);
     }
   } catch {}
