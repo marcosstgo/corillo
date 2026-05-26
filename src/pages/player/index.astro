@@ -312,7 +312,7 @@ import { version } from '../../../version.json';
         ? `<img src="${reel.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.style.display='none'" loading="lazy">`
         : '';
       const label = reel.title || dur;
-      return `<a class="crl-player-reel-card" href="/reels/v/?id=${reel.id}">
+      return `<a class="crl-player-reel-card" href="/reels/v/?id=${reel.id}" target="_blank" rel="noopener">
         <div class="crl-player-reel-thumb">${thumb}<i class="fa-solid fa-scissors"></i><span class="crl-player-reel-dur">${dur}</span></div>
         <div class="crl-player-reel-title">${label}</div>
       </a>`;

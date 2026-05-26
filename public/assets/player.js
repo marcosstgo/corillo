@@ -424,7 +424,6 @@ window.channel = __validFormat ? __rawChannel : '';
           if (v.duration > 60) v.currentTime = 30;
           v.play().catch(() => {});
         }, { once: true });
-        // Overlay while video loads
         const date = vod.date ? new Date(vod.date).toLocaleDateString('es-PR', { month: 'short', day: 'numeric' }) : '';
         DOM.ovTitle.textContent  = 'Última transmisión';
         DOM.ovMsg.textContent    = (date ? date + ' · ' : '') + 'El canal está offline';

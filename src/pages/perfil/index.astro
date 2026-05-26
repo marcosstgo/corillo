@@ -871,6 +871,14 @@
           <strong id="pfStatReels">—</strong>
           <span>Reels</span>
         </div>
+        <div class="pf-stat" title="Horas totales transmitidas">
+          <strong id="pfStatHours">—</strong>
+          <span>Horas</span>
+        </div>
+        <div class="pf-stat" title="Pico de viewers en un stream">
+          <strong id="pfStatPeak">—</strong>
+          <span>Pico</span>
+        </div>
       </div>
     </div>
   </div>
@@ -932,6 +940,39 @@
         Servidor: <code>rtmp://corillo.live/live</code><br>
         Clave: <code id="obsKeyHint">••••••••</code><br>
         <span style="color:rgba(242,239,233,.35);font-size:.72rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.35)">&#123;canal&#125;?secret=••••••••</code></span>
+      </div>
+
+      <!-- Portada del canal -->
+      <div class="pf-s-label" style="margin-top:24px"><i class="fa-solid fa-image"></i> Foto de portada</div>
+      <div class="card">
+        <div class="card-title">Imagen que aparece cuando no estás en vivo</div>
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex-shrink:0">
+            <img id="thumbPreview" src="" alt="Portada actual"
+              style="width:160px;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);"
+              onerror="this.style.opacity='.2'">
+          </div>
+          <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:8px">
+            <button class="btn" id="thumbUploadBtn"><i class="fa-solid fa-upload"></i> Subir imagen</button>
+            <input type="file" id="thumbFile" class="file-input" accept="image/jpeg,image/png,image/webp">
+            <button class="btn" id="thumbFromVodBtn" style="display:none"><i class="fa-solid fa-film"></i> Capturar de un VOD</button>
+          </div>
+        </div>
+        <!-- Frame picker VOD -->
+        <div id="thumbVodPicker" style="display:none;margin-top:16px">
+          <div style="font-family:var(--mono);font-size:.7rem;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">Selecciona un VOD</div>
+          <select id="thumbVodSelect" style="width:100%;background:var(--surface);border:1px solid var(--border);color:var(--white);border-radius:8px;padding:8px 10px;font-family:var(--mono);font-size:.8rem;margin-bottom:12px"></select>
+          <video id="thumbVodVideo" muted playsinline style="width:100%;border-radius:8px;border:1px solid var(--border);display:none;max-height:200px;object-fit:contain;background:#000"></video>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:8px">
+            <input id="thumbVodSeek" type="range" min="0" max="100" value="0" step="1"
+              style="flex:1;accent-color:var(--accent)" disabled>
+            <span id="thumbVodTime" style="font-family:var(--mono);font-size:.75rem;color:var(--muted);min-width:44px;text-align:right">0:00</span>
+          </div>
+          <button class="btn primary" id="thumbCaptureBtn" style="margin-top:10px;width:100%;display:none">
+            <i class="fa-solid fa-camera"></i> Usar este frame como portada
+          </button>
+        </div>
+        <div id="thumbStatus" style="font-family:var(--mono);font-size:.72rem;letter-spacing:.5px;margin-top:8px;display:none"></div>
       </div>
     </div>
 
@@ -1303,6 +1344,13 @@ function populateDashboard(rec) {
   if (pfHeroSub)  pfHeroSub.textContent  = rec.sub || '';
   if (sessionEmail) sessionEmail.textContent = rec.email || '';
   if (pfSideCh && rec.key) { pfSideCh.href = `/${rec.key}/`; pfSideCh.style.display = ''; }
+
+  // Portada
+  const thumbPreview = document.getElementById('thumbPreview') as HTMLImageElement;
+  if (thumbPreview && rec.key) {
+    thumbPreview.src = `/assets/thumbs/${rec.key}.jpg?t=${Date.now()}`;
+    thumbPreview.style.opacity = '1';
+  }
   if (pfSideAva) updateHeroAva(rec, pfSideAva);
 
   // Hero color glow
@@ -1358,6 +1406,20 @@ function populateDashboard(rec) {
     initVodUpload();
   }
   loadMyReels(rec.key);
+
+  // Stats históricas
+  if (rec.key) {
+    fetch(`/api/stats/${encodeURIComponent(rec.key)}`, { signal: AbortSignal.timeout(6000) })
+      .then(r => r.ok ? r.json() : null)
+      .then(s => {
+        if (!s || !s.streams) return;
+        const hours = document.getElementById('pfStatHours');
+        const peak  = document.getElementById('pfStatPeak');
+        if (hours) hours.textContent = s.total_hours;
+        if (peak)  peak.textContent  = s.peak_viewers || '—';
+      })
+      .catch(() => {});
+  }
 
   // Header nav
   navRight.innerHTML = `<button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>`;
@@ -1488,6 +1550,7 @@ async function loadMyVods(channel) {
     // Update hero stat
     const pfStatVods = document.getElementById('pfStatVods');
     if (pfStatVods) pfStatVods.textContent = items.length;
+    if (items.length) { document.getElementById('thumbFromVodBtn')?.style && (document.getElementById('thumbFromVodBtn')!.style.display = ''); }
 
     if (!items.length) { empty.style.display = ''; return; }
 
@@ -2259,6 +2322,132 @@ avatarFile.addEventListener('change', async () => {
     avatarBtn.disabled = false;
     avatarBtn.innerHTML = '<i class="fa-solid fa-image"></i> Cambiar foto';
     avatarFile.value = '';
+  }
+});
+
+// ── Portada del canal ──
+const thumbUploadBtn = document.getElementById('thumbUploadBtn');
+const thumbFile      = document.getElementById('thumbFile') as HTMLInputElement;
+const thumbFromVodBtn= document.getElementById('thumbFromVodBtn');
+const thumbVodPicker = document.getElementById('thumbVodPicker');
+const thumbVodSelect = document.getElementById('thumbVodSelect') as HTMLSelectElement;
+const thumbVodVideo  = document.getElementById('thumbVodVideo') as HTMLVideoElement;
+const thumbVodSeek   = document.getElementById('thumbVodSeek') as HTMLInputElement;
+const thumbVodTime   = document.getElementById('thumbVodTime');
+const thumbCaptureBtn= document.getElementById('thumbCaptureBtn');
+const thumbStatus    = document.getElementById('thumbStatus');
+const thumbPreviewEl = document.getElementById('thumbPreview') as HTMLImageElement;
+
+function thumbSetStatus(msg: string, ok = true) {
+  if (!thumbStatus) return;
+  thumbStatus.textContent = msg;
+  thumbStatus.style.color = ok ? '#00b894' : '#e17055';
+  thumbStatus.style.display = msg ? '' : 'none';
+}
+
+function thumbRefresh() {
+  if (thumbPreviewEl && currentRecord?.key) {
+    thumbPreviewEl.src = `/assets/thumbs/${currentRecord.key}.jpg?t=${Date.now()}`;
+    thumbPreviewEl.style.opacity = '1';
+  }
+}
+
+thumbUploadBtn?.addEventListener('click', () => thumbFile?.click());
+thumbFile?.addEventListener('change', async () => {
+  const file = thumbFile.files?.[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { thumbSetStatus('Imagen demasiado grande (máx 10 MB)', false); return; }
+  thumbUploadBtn!.disabled = true;
+  thumbUploadBtn!.innerHTML = '<span class="spinner"></span> Subiendo…';
+  thumbSetStatus('');
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    const r = await fetch('/api/upload-thumb', {
+      method: 'POST',
+      headers: { 'Authorization': pb.authStore.token },
+      body: fd,
+    });
+    if (!r.ok) throw new Error((await r.json()).detail || 'Error');
+    thumbSetStatus('Portada actualizada');
+    setTimeout(thumbRefresh, 500);
+    showToast('Portada actualizada');
+  } catch(e: any) {
+    thumbSetStatus(e.message || 'Error subiendo imagen', false);
+  } finally {
+    thumbUploadBtn!.disabled = false;
+    thumbUploadBtn!.innerHTML = '<i class="fa-solid fa-upload"></i> Subir imagen';
+    thumbFile.value = '';
+  }
+});
+
+// VOD picker
+let thumbVodDuration = 0;
+thumbFromVodBtn?.addEventListener('click', async () => {
+  if (thumbVodPicker!.style.display !== 'none') { thumbVodPicker!.style.display = 'none'; return; }
+  thumbVodPicker!.style.display = '';
+  if (thumbVodSelect!.options.length > 1) return; // ya cargado
+  thumbVodSelect!.innerHTML = '<option value="">Cargando…</option>';
+  try {
+    const r = await fetch(`https://pb.corillo.live/api/collections/vods/records?filter=${encodeURIComponent(`channel="${currentRecord?.key}"`)}&sort=-date&perPage=20&fields=id,date,duration,filename,filepath`, { signal: AbortSignal.timeout(5000) });
+    const { items = [] } = await r.json();
+    if (!items.length) { thumbVodSelect!.innerHTML = '<option value="">Sin VODs disponibles</option>'; return; }
+    thumbVodSelect!.innerHTML = items.map((v: any) => {
+      const d = v.date ? new Date(v.date).toLocaleDateString('es-PR', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+      const h = Math.floor((v.duration||0)/3600), m = Math.floor(((v.duration||0)%3600)/60);
+      return `<option value="${v.id}" data-dur="${v.duration||0}" data-ch="${currentRecord?.key}" data-fn="${v.filename||''}">${d} · ${h}h ${m}m</option>`;
+    }).join('');
+    thumbVodSelect!.dispatchEvent(new Event('change'));
+  } catch { thumbVodSelect!.innerHTML = '<option value="">Error cargando VODs</option>'; }
+});
+
+thumbVodSelect?.addEventListener('change', () => {
+  const opt = thumbVodSelect.options[thumbVodSelect.selectedIndex];
+  if (!opt || !opt.value) return;
+  const dur = parseInt(opt.dataset.dur || '0');
+  const ch  = opt.dataset.ch || '';
+  const fn  = opt.dataset.fn || '';
+  if (!fn) return;
+  thumbVodDuration = dur;
+  thumbVodVideo!.src = `/vods/${ch}/${fn}`;
+  thumbVodVideo!.style.display = '';
+  thumbVodSeek!.max = String(dur);
+  thumbVodSeek!.value = '0';
+  thumbVodSeek!.disabled = false;
+  thumbCaptureBtn!.style.display = '';
+  thumbVodTime!.textContent = '0:00';
+  thumbVodVideo!.currentTime = 0;
+});
+
+thumbVodSeek?.addEventListener('input', () => {
+  const t = parseInt(thumbVodSeek.value);
+  if (thumbVodVideo) thumbVodVideo.currentTime = t;
+  const m = Math.floor(t/60), s = t%60;
+  if (thumbVodTime) thumbVodTime.textContent = `${m}:${String(s).padStart(2,'0')}`;
+});
+
+thumbCaptureBtn?.addEventListener('click', async () => {
+  const opt = thumbVodSelect!.options[thumbVodSelect!.selectedIndex];
+  if (!opt?.value) return;
+  thumbCaptureBtn!.disabled = true;
+  thumbCaptureBtn!.innerHTML = '<span class="spinner"></span> Capturando…';
+  thumbSetStatus('');
+  try {
+    const r = await fetch('/api/capture-thumb', {
+      method: 'POST',
+      headers: { 'Authorization': pb.authStore.token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ vod_id: opt.value, time: parseInt(thumbVodSeek!.value) }),
+    });
+    if (!r.ok) throw new Error((await r.json()).detail || 'Error');
+    thumbSetStatus('Portada actualizada con el frame seleccionado');
+    setTimeout(thumbRefresh, 500);
+    showToast('Portada actualizada');
+    thumbVodPicker!.style.display = 'none';
+  } catch(e: any) {
+    thumbSetStatus(e.message || 'Error capturando frame', false);
+  } finally {
+    thumbCaptureBtn!.disabled = false;
+    thumbCaptureBtn!.innerHTML = '<i class="fa-solid fa-camera"></i> Usar este frame como portada';
   }
 });
 

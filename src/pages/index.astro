@@ -186,6 +186,7 @@ let vodRotateTimer = null;
 let cardBitrates = {}; // key → stable bitrate for card display
 
 let _recentVods     = [];
+let _vodThumbMap: Record<string,string> = {};
 let _vodLoadedAt    = 0;
 let _gridState      = null;
 const _avatarCache  = {};
@@ -275,13 +276,18 @@ async function fetchRecentVods(limit) {
 }
 
 async function loadVodData() {
-  const vods = await fetchRecentVods(30);
+  const vods = await fetchRecentVods(50);
   const seen = new Set();
-  _recentVods = vods.filter(v => {
+  const deduped = vods.filter(v => {
     if (seen.has(v.channel)) return false;
     seen.add(v.channel);
     return true;
-  }).slice(0, 6);
+  });
+  // Mapa completo de thumbnails por canal (todos los canales)
+  _vodThumbMap = {};
+  deduped.forEach(v => { if (v.thumb) _vodThumbMap[v.channel] = v.thumb; });
+  // Tira de VODs recientes — máx 6 para el display
+  _recentVods = deduped.slice(0, 6);
   _vodLoadedAt = Date.now();
 }
 
@@ -707,8 +713,7 @@ function renderChannelGrid(paths) {
   const grid    = document.getElementById('channelGrid');
 
   // Last VOD thumb per channel — used as background for offline cards
-  const vodThumbs = {};
-  _recentVods.forEach(v => { if (v.thumb) vodThumbs[v.channel] = v.thumb; });
+  const vodThumbs = _vodThumbMap;
 
   // When live section is active show only offline; search filters both
   let list = liveSet.size > 0
