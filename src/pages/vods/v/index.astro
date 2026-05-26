@@ -27,7 +27,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       .action-btn.primary{border-color:rgba(0,191,255,.4);color:var(--crl-accent)}
       .action-btn.primary:hover{background:rgba(0,191,255,.08)}
 
-      .unmute-btn{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--crl-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;border-radius:8px;border:1px solid rgba(255,107,53,.5);background:rgba(3,10,14,.85);color:var(--crl-accent);cursor:pointer;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);transition:.15s;white-space:nowrap}
+      .unmute-btn{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--crl-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;border-radius:8px;border:1px solid rgba(0,191,255,.5);background:rgba(3,10,14,.85);color:var(--crl-accent);cursor:pointer;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);transition:.15s;white-space:nowrap}
       .unmute-btn:hover{background:rgba(0,191,255,.1);border-color:var(--crl-accent)}
       .unmute-btn.hidden{display:none}
 
@@ -101,7 +101,7 @@ fetch('/api/streamers', { signal: AbortSignal.timeout(5000) })
   .catch(() => {});
 
 function streamerInfo(channel: string) {
-  return _streamerMap[channel] || { key: channel, name: channel.toUpperCase(), color: '#ff6b35', ava: channel[0]?.toUpperCase() };
+  return _streamerMap[channel] || { key: channel, name: channel.toUpperCase(), color: '#00bfff', ava: channel[0]?.toUpperCase() };
 }
 
 function showNotFound() {
@@ -284,7 +284,7 @@ async function loadRelated(channel: string, currentId: string) {
     const livePathMap: Record<string, any> = {};
     for (const p of items) { const m = p.name?.match(/^live\/(.+)$/); if (m && p.ready) livePathMap[m[1]] = p; }
     const liveStreamers = Object.entries(livePathMap).map(([key, p]: [string, any]) => ({
-      ...(_streamerMap[key] || { key, name: key.toUpperCase(), color: '#ff6b35', ava: key[0]?.toUpperCase() }),
+      ...(_streamerMap[key] || { key, name: key.toUpperCase(), color: '#00bfff', ava: key[0]?.toUpperCase() }),
       _viewers: p.readers?.length ?? 0,
     }));
     if (liveStreamers.length) {

@@ -239,7 +239,7 @@ window.channel = __validFormat ? __rawChannel : '';
     App.vodBadge.href = '/vods/v/?id=' + vod.id;
     App.vodBadge.innerHTML = '<i class="fa-solid fa-film" style="font-size:9px;color:rgba(0,191,255,.5)"></i>'
       + ' Última transmisión' + (date ? ' · ' + date : '')
-      + ' <span style="color:var(--accent,#ff6b35);margin-left:2px">Ver →</span>';
+      + ' <span style="color:var(--accent,#00bfff);margin-left:2px">Ver →</span>';
     App.vodBadge.style.display = 'flex';
   }
 
