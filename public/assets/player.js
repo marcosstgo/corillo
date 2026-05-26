@@ -420,6 +420,7 @@ window.channel = __validFormat ? __rawChannel : '';
         const v = DOM.video;
         v.muted = true;
         v.src   = '/vods/' + vod.channel + '/' + vod.filename;
+        v.load();
         v.addEventListener('loadedmetadata', () => {
           if (v.duration > 60) v.currentTime = 30;
           v.play().catch(() => {});
@@ -1137,6 +1138,26 @@ window.channel = __validFormat ? __rawChannel : '';
       } else {
         loadOthersLive();
         if (!App.othersTimer) App.othersTimer = setInterval(loadOthersLive, 15000);
+      }
+    });
+
+    // Reconectar cuando el teléfono recupera señal de red
+    window.addEventListener('online', () => {
+      if (DOM.video.paused || DOM.overlay.classList.contains('show')) {
+        App.retries = 0;
+        cleanup();
+        startPlayer();
+      }
+    });
+
+    // Reconectar si el stream murió mientras la pantalla estaba apagada
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && (DOM.video.paused || DOM.overlay.classList.contains('show'))) {
+        if (!App.inVodMode) {
+          App.retries = 0;
+          cleanup();
+          startPlayer();
+        }
       }
     });
 
