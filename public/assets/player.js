@@ -500,6 +500,7 @@ window.channel = __validFormat ? __rawChannel : '';
   function setupNativeHLS(url) {
     const v = DOM.video;
     v.src = url;
+    v.load(); // Fuerza inicio de carga en iOS antes de play()
 
     // FIX #1: use sessionAc for session-specific listeners only
     const sessionAc = new AbortController();
@@ -528,9 +529,17 @@ window.channel = __validFormat ? __rawChannel : '';
     v.addEventListener('pause',   stopStallWatch,   { signal: sessionAc.signal });
     v.addEventListener('ended',   stopStallWatch,   { signal: sessionAc.signal });
 
+    // Timeout: si play() no resuelve en 20s, reintentar
+    let playSettled = false;
+    const playTimeout = setTimeout(() => {
+      if (!playSettled) scheduleRetry('timeout nativo');
+    }, 20000);
+
     v.play()
-      .then(() => { hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner(); })
+      .then(() => { playSettled = true; clearTimeout(playTimeout); hideOverlay(); setLive(true); startStatsPolling(); showUnmuteBanner(); })
       .catch(e => {
+        playSettled = true;
+        clearTimeout(playTimeout);
         if (e?.name === 'NotAllowedError') showOverlay('Toca para reproducir', 'Presiona el botón para iniciar el stream.');
         else scheduleRetry('Error al reproducir nativo');
       });
