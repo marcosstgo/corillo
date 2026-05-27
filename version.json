@@ -1,6 +1,6 @@
 {
-  "version": "2.2.661",
-  "date": "2026-05-26",
+  "version": "2.2.662",
+  "date": "2026-05-27",
   "changes": [
     "Móvil arranca en 720p automático (viewport ≤768px), desktop en 1080p",
     "Preferencia de calidad guardada en localStorage — respeta elección manual",
