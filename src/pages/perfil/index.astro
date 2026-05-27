@@ -21,7 +21,7 @@ import { version } from '../../../version.json';
   <script src="https://cdn.jsdelivr.net/npm/pocketbase/dist/pocketbase.umd.js" is:inline></script>
   <script is:inline>
     const savedTheme = localStorage.getItem('corillo-theme');
-    if (savedTheme === 'light' || savedTheme === 'dark') {
+    if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'verano') {
       document.documentElement.setAttribute('data-theme', savedTheme);
     }
   </script>
@@ -55,8 +55,8 @@ import { version } from '../../../version.json';
     }
     .pf-header-brand { display: flex; align-items: center; }
     .pf-header-brand svg { height: 30px; width: auto; }
-    .pf-header-brand .crl-brand-word { fill: #e8f6ff; }
-    .pf-header-brand .crl-brand-ring-outer { stroke: #e8f6ff; }
+    .pf-header-brand .crl-brand-word { fill: var(--crl-white); }
+    .pf-header-brand .crl-brand-ring-outer { stroke: var(--crl-white); }
     .pf-header-right { display: flex; align-items: center; gap: 8px; }
     [data-theme="light"] .pf-header { background: rgba(238,247,251,.92); }
     [data-theme="light"] .pf-header-brand .crl-brand-word { fill: #0c1a20; }
@@ -120,8 +120,8 @@ import { version } from '../../../version.json';
       box-shadow: 0 12px 38px rgba(0,0,0,.22);
     }
     .login-brand svg { height: 52px; width: auto; display: block; }
-    .login-brand .crl-brand-word { fill: #e8f6ff; }
-    .login-brand .crl-brand-ring-outer { stroke: #e8f6ff; }
+    .login-brand .crl-brand-word { fill: var(--crl-white); }
+    .login-brand .crl-brand-ring-outer { stroke: var(--crl-white); }
     [data-theme="light"] .login-brand-wrap { background: rgba(255,255,255,.72); border-color: rgba(0,0,0,.1); }
     [data-theme="light"] .login-brand .crl-brand-word { fill: #0c1a20; }
     [data-theme="light"] .login-brand .crl-brand-ring-outer { stroke: #0c1a20; }
@@ -141,7 +141,7 @@ import { version } from '../../../version.json';
       transition: .15s; width: 100%;
     }
     .field textarea { resize: vertical; min-height: 80px; }
-    .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,191,255,.07); }
+    .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(var(--crl-accent-rgb),.07); }
     [data-theme="light"] .field input, [data-theme="light"] .field textarea { color: #0c1a20; }
 
     .error-msg { color: #e17055; font-size: .85rem; font-family: var(--mono); margin-bottom: 10px; display: none; }
@@ -167,7 +167,7 @@ import { version } from '../../../version.json';
     }
     .pf-hero::before {
       content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(ellipse 70% 200% at -5% 50%, rgba(0,191,255,.07) 0%, transparent 60%);
+      background: radial-gradient(ellipse 70% 200% at -5% 50%, rgba(var(--crl-accent-rgb),.07) 0%, transparent 60%);
     }
     .pf-hero-inner {
       position: relative; z-index: 1;
@@ -197,7 +197,7 @@ import { version } from '../../../version.json';
       background: rgba(255,255,255,.03); border: 1px solid var(--border);
       border-radius: 10px; cursor: pointer; transition: border-color .15s;
     }
-    .pf-stat:hover { border-color: rgba(0,191,255,.2); }
+    .pf-stat:hover { border-color: rgba(var(--crl-accent-rgb),.2); }
     .pf-stat strong {
       display: block; font-family: var(--display); font-size: 1.5rem;
       letter-spacing: 1px; color: var(--white); line-height: 1; margin-bottom: 2px;
@@ -255,14 +255,14 @@ import { version } from '../../../version.json';
 
     /* ── Stream key ── */
     .key-hero {
-      background: linear-gradient(135deg,rgba(0,191,255,.06),rgba(0,191,255,.02));
-      border: 1px solid rgba(0,191,255,.15); border-radius: 12px;
+      background: linear-gradient(135deg,rgba(var(--crl-accent-rgb),.06),rgba(var(--crl-accent-rgb),.02));
+      border: 1px solid rgba(var(--crl-accent-rgb),.15); border-radius: 12px;
       padding: 20px; margin-bottom: 14px;
     }
     .key-label { font-family: var(--mono); font-size: .65rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
     .key-value-wrap {
       display: flex; align-items: center; gap: 8px;
-      background: rgba(0,0,0,.25); border: 1px solid rgba(0,191,255,.1);
+      background: rgba(0,0,0,.25); border: 1px solid rgba(var(--crl-accent-rgb),.1);
       border-radius: 8px; padding: 10px 14px;
     }
     .key-value { flex: 1; font-family: var(--mono); font-size: .82rem; color: var(--white); word-break: break-all; letter-spacing: .5px; }
@@ -317,7 +317,7 @@ import { version } from '../../../version.json';
     .vod-slider { position: absolute; inset: 0; background: rgba(255,255,255,.1); border-radius: 21px; cursor: pointer; transition: .2s; border: 1px solid rgba(255,255,255,.1); }
     .vod-slider::before { content: ''; position: absolute; width: 15px; height: 15px; left: 2px; top: 2px; background: rgba(255,255,255,.4); border-radius: 50%; transition: .2s; }
     .vod-toggle input:checked + .vod-slider { background: var(--accent); border-color: var(--accent); }
-    .vod-toggle input:checked + .vod-slider::before { transform: translateX(17px); background: #030a0e; }
+    .vod-toggle input:checked + .vod-slider::before { transform: translateX(17px); background: var(--crl-ink); }
     [data-theme="light"] .vod-slider { background: rgba(0,0,0,.1); border-color: rgba(0,0,0,.15); }
     [data-theme="light"] .vod-slider::before { background: rgba(0,0,0,.35); }
     [data-theme="light"] .vod-toggle input:checked + .vod-slider::before { background: #fff; }
@@ -343,12 +343,12 @@ import { version } from '../../../version.json';
       padding: 10px 12px; background: var(--surface);
       border: 1px solid var(--border); border-radius: 10px; transition: border-color .15s;
     }
-    .vod-row:hover { border-color: rgba(0,191,255,.15); }
+    .vod-row:hover { border-color: rgba(var(--crl-accent-rgb),.15); }
     .vod-row-thumb {
       width: 88px; height: 50px; border-radius: 6px;
-      background: rgba(0,191,255,.06); flex-shrink: 0;
+      background: rgba(var(--crl-accent-rgb),.06); flex-shrink: 0;
       overflow: hidden; display: flex; align-items: center; justify-content: center;
-      font-family: var(--display); font-size: 1rem; color: rgba(0,191,255,.2); position: relative;
+      font-family: var(--display); font-size: 1rem; color: rgba(var(--crl-accent-rgb),.2); position: relative;
     }
     .vod-row-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .vod-row-info { flex: 1; min-width: 0; }
@@ -367,23 +367,23 @@ import { version } from '../../../version.json';
     }
     .vod-row-del:hover   { border-color: #e17055; color: #e17055; }
     .vod-row-reel:hover  { border-color: var(--accent); color: var(--accent); }
-    .vod-row-embed:hover { border-color: rgba(0,191,255,.4); color: var(--accent); }
+    .vod-row-embed:hover { border-color: rgba(var(--crl-accent-rgb),.4); color: var(--accent); }
     .vod-row-embed.copied { border-color: #00b894; color: #00b894; }
-    .vod-row-reel.active { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.08); }
+    .vod-row-reel.active { border-color: var(--accent); color: var(--accent); background: rgba(var(--crl-accent-rgb),.08); }
     .vod-row-del.loading { opacity: .4; pointer-events: none; }
 
     /* ── Reel panel ── */
     .reel-panel {
       display: none; margin-top: 6px; margin-bottom: 8px;
-      background: var(--panel); border: 1px solid rgba(0,191,255,.18);
+      background: var(--panel); border: 1px solid rgba(var(--crl-accent-rgb),.18);
       border-radius: 12px; overflow: hidden;
     }
     .reel-panel.open { display: block; }
     .reel-panel-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 14px 18px 12px;
-      border-bottom: 1px solid rgba(0,191,255,.1);
-      background: rgba(0,191,255,.03);
+      border-bottom: 1px solid rgba(var(--crl-accent-rgb),.1);
+      background: rgba(var(--crl-accent-rgb),.03);
     }
     .reel-panel-title {
       font-family: var(--mono); font-size: .68rem; letter-spacing: 2px;
@@ -443,7 +443,7 @@ import { version } from '../../../version.json';
       text-transform: uppercase; color: var(--muted);
     }
     .reel-preview-canvas {
-      border-radius: 8px; border: 1px solid rgba(0,191,255,.2);
+      border-radius: 8px; border: 1px solid rgba(var(--crl-accent-rgb),.2);
       background: #000; display: block;
       width: 90px; height: 160px;
     }
@@ -551,11 +551,11 @@ import { version } from '../../../version.json';
     }
     /* big invisible hit area */
     .rtl-handle::before { content: ''; position: absolute; inset: -16px; border-radius: 50%; }
-    .rtl-handle:hover { box-shadow: 0 0 0 6px rgba(0,191,255,.18), 0 2px 10px rgba(0,0,0,.5); }
+    .rtl-handle:hover { box-shadow: 0 0 0 6px rgba(var(--crl-accent-rgb),.18), 0 2px 10px rgba(0,0,0,.5); }
     .rtl-handle.dragging {
       cursor: grabbing;
       transform: translate(-50%, -50%) scale(1.2);
-      box-shadow: 0 0 0 8px rgba(0,191,255,.15), 0 4px 16px rgba(0,0,0,.5);
+      box-shadow: 0 0 0 8px rgba(var(--crl-accent-rgb),.15), 0 4px 16px rgba(0,0,0,.5);
     }
     /* time tooltip above handle */
     .rtl-handle .rtl-tip {
@@ -616,9 +616,9 @@ import { version } from '../../../version.json';
     }
     .reel-row-thumb {
       width: 40px; height: 72px; border-radius: 5px;
-      background: rgba(0,191,255,.06); flex-shrink: 0; overflow: hidden;
+      background: rgba(var(--crl-accent-rgb),.06); flex-shrink: 0; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      font-size: .75rem; color: rgba(0,191,255,.3); position: relative;
+      font-size: .75rem; color: rgba(var(--crl-accent-rgb),.3); position: relative;
     }
     .reel-row-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .reel-row-info { flex: 1; min-width: 0; }
@@ -629,7 +629,7 @@ import { version } from '../../../version.json';
       font-family: var(--mono); font-size: .62rem; letter-spacing: 1px;
       text-transform: uppercase; padding: 2px 6px; border-radius: 3px; margin-top: 4px;
     }
-    .reel-row-pub.pub  { background: rgba(0,191,255,.1); color: var(--accent); }
+    .reel-row-pub.pub  { background: rgba(var(--crl-accent-rgb),.1); color: var(--accent); }
     .reel-row-pub.priv { background: rgba(255,255,255,.05); color: var(--muted); }
     .reel-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .reel-row-dl, .reel-row-del {
@@ -661,7 +661,7 @@ import { version } from '../../../version.json';
       margin-bottom: 14px;
       position: relative;
     }
-    .reel-upload-drop:hover, .reel-upload-drop.drag { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.04); }
+    .reel-upload-drop:hover, .reel-upload-drop.drag { border-color: var(--accent); color: var(--accent); background: rgba(var(--crl-accent-rgb),.04); }
     .reel-upload-drop i { font-size: 1.8rem; margin-bottom: 10px; display: block; }
     .reel-upload-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
     .reel-upload-preview {
@@ -693,7 +693,7 @@ import { version } from '../../../version.json';
       color: var(--muted); font-family: var(--mono); font-size: .78rem;
       letter-spacing: 1px; margin-bottom: 14px; position: relative;
     }
-    .vod-upload-drop:hover, .vod-upload-drop.drag { border-color: var(--accent); color: var(--accent); background: rgba(0,191,255,.04); }
+    .vod-upload-drop:hover, .vod-upload-drop.drag { border-color: var(--accent); color: var(--accent); background: rgba(var(--crl-accent-rgb),.04); }
     .vod-upload-drop i { font-size: 1.8rem; margin-bottom: 10px; display: block; }
     .vod-upload-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
     .vod-upload-progress {
@@ -776,13 +776,13 @@ import { version } from '../../../version.json';
 <header class="pf-header">
   <a href="/" class="pf-header-brand" aria-label="CORILLO">
     <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs><radialGradient id="pf-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+      <defs><radialGradient id="pf-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
       <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
       <circle cx="72" cy="42" r="36" fill="url(#pf-ng)"/>
       <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
-      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+      <circle cx="72" cy="42" r="20" stroke="var(--crl-accent)" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="var(--crl-accent)"/>
+      <circle cx="72" cy="42" r="3.5" fill="var(--crl-confirm)"/>
       <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
     </svg>
   </a>
@@ -800,13 +800,13 @@ import { version } from '../../../version.json';
   <div class="login-brand-wrap">
     <a href="/" class="login-brand" aria-label="CORILLO">
       <svg viewBox="0 0 250 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="pf-lg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <defs><radialGradient id="pf-lg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
         <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#pf-lg2)"/>
         <circle cx="72" cy="42" r="34" class="crl-brand-ring-outer" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <circle cx="72" cy="42" r="20" stroke="var(--crl-accent)" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="var(--crl-accent)"/>
+        <circle cx="72" cy="42" r="3.5" fill="var(--crl-confirm)"/>
         <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="crl-brand-word">RILLO</text>
       </svg>
     </a>
@@ -1852,7 +1852,7 @@ function initCropBox(vodId) {
     ctx.fillRect(boxX + boxW, 0, W - (boxX + boxW), H);
 
     // Cyan crop box border
-    ctx.strokeStyle = '#00bfff';
+    ctx.strokeStyle = 'var(--crl-accent)';
     ctx.lineWidth   = 2;
     ctx.strokeRect(boxX + 1, 1, boxW - 2, H - 2);
 
@@ -1867,7 +1867,7 @@ function initCropBox(vodId) {
 
     // Position label
     const pct = Math.round(canvas._cropX * 100);
-    ctx.fillStyle = 'rgba(0,191,255,0.9)';
+    ctx.fillStyle = 'rgba(var(--crl-accent-rgb),0.9)';
     ctx.font = '10px monospace';
     ctx.fillText(pct === 50 ? 'Centro' : pct < 50 ? '← Izquierda' : 'Derecha →', boxX + 6, H - 8);
 

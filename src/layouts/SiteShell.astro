@@ -54,7 +54,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
   <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-  <meta name="theme-color" content="#030a0e" />
+  <meta name="theme-color" content="var(--crl-ink)" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
@@ -65,7 +65,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   <script is:inline>
     (function(){
       const t = localStorage.getItem('corillo-theme');
-      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      if (t === 'light' || t === 'dark' || t === 'verano') document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
   <style is:global>
@@ -96,19 +96,19 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
     .aside-divider { border:none; border-top:1px solid var(--border); margin:10px 0; }
     .nav-link { display:flex; align-items:center; gap:10px; padding:9px 20px; font-family:var(--mono); font-size:11px; letter-spacing:.5px; color:rgba(232,246,255,.55); transition:.15s; }
     .nav-link i { width:14px; text-align:center; font-size:.75rem; color:var(--muted); }
-    .nav-link:hover { color:var(--white); background:rgba(0,191,255,.05); }
+    .nav-link:hover { color:var(--white); background:rgba(var(--crl-accent-rgb),.05); }
     .nav-link:hover i { color:var(--accent); }
     .channel-row { display:flex; align-items:center; gap:10px; padding:8px 20px; cursor:pointer; transition:background .15s; position:relative; color:inherit; text-decoration:none; }
-    .channel-row:hover { background:rgba(0,191,255,.04); }
+    .channel-row:hover { background:rgba(var(--crl-accent-rgb),.04); }
     .ch-row-ava { width:30px; height:30px; border-radius:4px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:14px; color:#000; overflow:hidden; }
     .ch-row-ava img { width:100%; height:100%; object-fit:cover; display:block; }
-    .channel-row.is-live .ch-row-ava { box-shadow:0 0 0 2px var(--live), 0 0 8px rgba(232,200,74,.25); }
+    .channel-row.is-live .ch-row-ava { box-shadow:0 0 0 2px var(--live), 0 0 8px rgba(var(--crl-live-rgb),.25); }
     .ch-row-info { flex:1; min-width:0; }
     .ch-row-name { font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.5px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
     .ch-row-status { font-size:11px; color:var(--muted); margin-top:1px; }
     .ch-row-status.live { color:var(--live); }
     .ch-row-viewers { font-family:var(--mono); font-size:10px; color:var(--muted); flex-shrink:0; }
-    .live-pip { width:6px; height:6px; border-radius:50%; background:var(--live); flex-shrink:0; box-shadow:0 0 8px rgba(232,200,74,.7); }
+    .live-pip { width:6px; height:6px; border-radius:50%; background:var(--live); flex-shrink:0; box-shadow:0 0 8px rgba(var(--crl-live-rgb),.7); }
     .sidebar-show-all { display:block; width:100%; padding:8px 20px; background:transparent; border:none; color:rgba(232,246,255,.35); font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; text-align:left; transition:.15s; }
     .sidebar-show-all:hover { color:var(--accent); }
     .drawer-tools { display:flex; align-items:center; gap:8px; }
@@ -121,8 +121,10 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
     @media (max-width:820px) { .nav-menu-btn { display:flex; } }
 
     /* Theme button */
-    .theme-btn { width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; letter-spacing:0; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; transition:.15s; flex-shrink:0; }
-    .theme-btn:hover { color:var(--white); border-color:var(--border-h); }
+    .theme-btn { width:34px; height:34px; padding:0; display:inline-flex; align-items:center; justify-content:center; font-size:.85rem; letter-spacing:0; border-radius:6px; border:1px solid var(--crl-border); background:transparent; color:var(--crl-muted); cursor:pointer; transition:.15s; flex-shrink:0; }
+    .theme-btn:hover { color:var(--crl-white); border-color:var(--crl-border-h); }
+    [data-theme="verano"] .theme-btn { border-image: linear-gradient(135deg, #CE1126, #2AABDF, #CE1126) 1; border-width:1px; border-style:solid; }
+    [data-theme="verano"] .theme-btn i { color: #F5C000; }
 
     /* Nav links — light mode */
     [data-theme="light"] .nav-link { color: rgba(5,16,21,.6); }
@@ -133,14 +135,14 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
 
     /* Footer */
     .site-footer { border-top:1px solid var(--border); padding:36px 32px 20px; margin-top:0; background:var(--panel); position:relative; overflow:hidden; }
-    .site-footer::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(0,191,255,.06),transparent); pointer-events:none; }
+    .site-footer::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(var(--crl-accent-rgb),.06),transparent); pointer-events:none; }
     .foot-top { display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:32px; margin-bottom:28px; }
     @media(max-width:900px){ .foot-top { grid-template-columns:1fr 1fr; gap:24px; margin-bottom:20px; } }
     @media(max-width:520px){ .foot-top { grid-template-columns:1fr 1fr; gap:16px; } .site-footer { padding:24px 16px 16px; } }
     .foot-brand { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
     .foot-brand-logo { height:28px; width:auto; opacity:.75; }
-    .foot-brand-word { fill:#e8f6ff; }
-    .foot-brand-ring-outer { stroke:#e8f6ff; }
+    .foot-brand-word { fill:var(--crl-white); }
+    .foot-brand-ring-outer { stroke:var(--crl-white); }
     [data-theme="light"] .foot-brand-word { fill:#0c1a20; }
     [data-theme="light"] .foot-brand-ring-outer { stroke:#0c1a20; }
     .foot-tagline { font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:rgba(255,255,255,.25); text-transform:uppercase; line-height:1.8; }
@@ -199,18 +201,18 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   <div class="drawer-header">
     <a href="/" style="display:flex;align-items:center">
       <svg class="foot-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <defs><radialGradient id="dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
         <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#dg)"/>
         <circle cx="72" cy="42" r="34" class="foot-brand-ring-outer" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <circle cx="72" cy="42" r="20" stroke="var(--crl-accent)" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="var(--crl-accent)"/>
+        <circle cx="72" cy="42" r="3.5" fill="var(--crl-confirm)"/>
         <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">RILLO</text>
       </svg>
     </a>
     <div class="drawer-tools">
-      <button class="theme-btn" id="themeBtnDrawer" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
+      <button class="theme-btn" id="themeBtnDrawer" title="Cambiar tema"><i id="themeIconDrawer" class="fa-solid fa-moon"></i></button>
       <button class="drawer-close" id="drawerClose"><i class="fa-solid fa-xmark"></i></button>
     </div>
   </div>
@@ -273,13 +275,13 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
     <button class="nav-menu-btn" id="menuBtn" aria-label="Menú"><i class="fa-solid fa-bars"></i></button>
     <a href="/" class="brand">
       <svg class="foot-brand-logo" style="height:32px" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="hb-dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+        <defs><radialGradient id="hb-dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
         <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">C</text>
         <circle cx="72" cy="42" r="36" fill="url(#hb-dg)"/>
         <circle cx="72" cy="42" r="34" class="foot-brand-ring-outer" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-        <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+        <circle cx="72" cy="42" r="20" stroke="var(--crl-accent)" stroke-width="6" fill="none"/>
+        <circle cx="72" cy="42" r="8" fill="var(--crl-accent)"/>
+        <circle cx="72" cy="42" r="3.5" fill="var(--crl-confirm)"/>
         <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">RILLO</text>
       </svg>
     </a>
@@ -299,7 +301,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   </div>
 
   <div class="top-actions">
-    <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i class="fa-solid fa-circle-half-stroke"></i></button>
+    <button class="theme-btn" id="themeBtn" title="Cambiar tema"><i id="themeIcon" class="fa-solid fa-moon"></i></button>
     <a href="/join/" class="ghost-btn primary"><i class="fa-solid fa-plus"></i> Crear canal</a>
   </div>
 </header>
@@ -312,13 +314,13 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
     <div>
       <div class="foot-brand">
         <svg class="foot-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
+          <defs><radialGradient id="fg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
           <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">C</text>
           <circle cx="72" cy="42" r="36" fill="url(#fg)"/>
           <circle cx="72" cy="42" r="34" class="foot-brand-ring-outer" stroke-width="9" fill="none"/>
-          <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-          <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-          <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
+          <circle cx="72" cy="42" r="20" stroke="var(--crl-accent)" stroke-width="6" fill="none"/>
+          <circle cx="72" cy="42" r="8" fill="var(--crl-accent)"/>
+          <circle cx="72" cy="42" r="3.5" fill="var(--crl-confirm)"/>
           <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">RILLO</text>
         </svg>
       </div>
@@ -368,7 +370,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
       <a class="foot-social" href="https://github.com/marcosstgo" target="_blank" rel="noopener" title="GitHub"><i class="fa-brands fa-github"></i></a>
     </div>
     <span class="foot-version" id="footVersion"></span>
-    <div class="foot-copy">© 2026 CORILLO · Hecho con <i class="fa-solid fa-heart" style="color:#CE1126;font-size:9px"></i> en Puerto Rico</div>
+    <div class="foot-copy">© 2026 CORILLO · Hecho con <i class="fa-solid fa-heart" style="color:var(--crl-hot);font-size:9px"></i> en Puerto Rico</div>
   </div>
   <div class="foot-credits">
     <span class="foot-credits-icon">⚡</span>
@@ -386,12 +388,25 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
 const SHELL_POLL_MS = 15000;
 let STREAMERS = ((window as any).STREAMERS || []).filter((s: any) => !s.soon);
 
+const THEME_CYCLE: Record<string, string> = { dark: 'verano', verano: 'light', light: 'dark' };
+const THEME_ICON: Record<string, string> = { dark: 'fa-moon', verano: 'fa-sun', light: 'fa-circle-half-stroke' };
+const THEME_LABEL: Record<string, string> = { dark: 'Modo oscuro', verano: 'Modo Verano PR 🇵🇷', light: 'Modo claro' };
+
+function shellSetThemeIcons(t: string) {
+  const icon = THEME_ICON[t] || 'fa-moon';
+  document.getElementById('themeIcon')?.setAttribute('class', `fa-solid ${icon}`);
+  document.getElementById('themeIconDrawer')?.setAttribute('class', `fa-solid ${icon}`);
+  document.getElementById('themeBtn')?.setAttribute('title', THEME_LABEL[t] || '');
+  document.getElementById('themeBtnDrawer')?.setAttribute('title', THEME_LABEL[t] || '');
+}
+
 function shellToggleTheme() {
   const root = document.documentElement;
-  const current = root.getAttribute('data-theme');
-  const next = current === 'light' ? 'dark' : 'light';
+  const current = root.getAttribute('data-theme') || 'dark';
+  const next = THEME_CYCLE[current] || 'dark';
   root.setAttribute('data-theme', next);
   localStorage.setItem('corillo-theme', next);
+  shellSetThemeIcons(next);
 }
 
 function shellOpenDrawer() {
@@ -570,6 +585,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('drawerOverlay')?.addEventListener('click', (window as any).closeDrawer);
   document.getElementById('themeBtn')?.addEventListener('click', shellToggleTheme);
   document.getElementById('themeBtnDrawer')?.addEventListener('click', shellToggleTheme);
+  shellSetThemeIcons(document.documentElement.getAttribute('data-theme') || 'dark');
 
   // Sidebar collapse
   const sidebar = document.getElementById('leftSidebar');

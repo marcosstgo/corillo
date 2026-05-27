@@ -41,7 +41,7 @@ import SiteShell from '../layouts/SiteShell.astro';
       }
       .grid-empty i { font-size:2rem; opacity:.4; }
 
-      .featured-sub .host-tag { color:var(--live); border:1px solid rgba(232,200,74,.4); padding:1px 6px; border-radius:3px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; margin-right:6px; display:inline-block; vertical-align:middle; }
+      .featured-sub .host-tag { color:var(--live); border:1px solid rgba(var(--crl-live-rgb),.4); padding:1px 6px; border-radius:3px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; margin-right:6px; display:inline-block; vertical-align:middle; }
 
       .rotate-bar { position:absolute; bottom:0; left:0; height:2px; background:var(--accent); opacity:.5; width:0; z-index:4; }
     </style>
@@ -196,8 +196,8 @@ function getLiveSet(paths) {
   const s = new Set();
   for (const p of paths) {
     if (!p.ready) continue;
-    const m = p.name.match(/^live\/(.+)$/);
-    if (m) s.add(m[1]);
+    const m = p.name.match(/^live\/([^/]+)$/);
+    if (m && !/(_(low|rtc))$/.test(m[1])) s.add(m[1]);
   }
   return s;
 }

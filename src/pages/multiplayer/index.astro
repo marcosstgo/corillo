@@ -8,7 +8,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 >
   <Fragment slot="head">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js" is:inline></script>
-    <meta name="theme-color" content="#030a0e" />
+    <meta name="theme-color" content="var(--crl-ink)" />
   </Fragment>
 
   <style is:global>
@@ -127,7 +127,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       display: flex; align-items: center; justify-content: center;
       font-size: .78rem; transition: .15s; flex-shrink: 0;
     }
-    .layout-btn.active { border-color: rgba(232,200,74,.4); color: #e8c84a; background: rgba(232,200,74,.06); }
+    .layout-btn.active { border-color: rgba(var(--crl-live-rgb),.4); color: var(--crl-live); background: rgba(var(--crl-live-rgb),.06); }
     .layout-btn:hover:not(.active) { border-color: var(--crl-border-h); color: rgba(255,255,255,.7); }
     @media (max-width: 600px) { .layout-btns { display: none; } }
 
@@ -200,7 +200,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       text-decoration: none; color: inherit; display: block;
     }
     .stream-card:hover { border-color: var(--crl-border-h); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,.6); }
-    .stream-card.is-featured { border-color: rgba(232,200,74,.2); }
+    .stream-card.is-featured { border-color: rgba(var(--crl-live-rgb),.2); }
     .stream-card.is-live { animation: pulse-border 3s infinite; }
     @keyframes pulse-border {
       0%, 100% { box-shadow: 0 0 0 0 rgba(223,48,48,0); }
@@ -216,8 +216,8 @@ import SiteShell from '../../layouts/SiteShell.astro';
     }
     .tag-host {
       position: absolute; top: 10px; right: 10px; z-index: 3;
-      font-family: var(--crl-mono); font-size: .72rem; letter-spacing: 1.5px; color: #e8c84a;
-      border: 1px solid rgba(232,200,74,.3); padding: 3px 8px; border-radius: 2px;
+      font-family: var(--crl-mono); font-size: .72rem; letter-spacing: 1.5px; color: var(--crl-live);
+      border: 1px solid rgba(var(--crl-live-rgb),.3); padding: 3px 8px; border-radius: 2px;
       background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
     }
     .tag-viewers {
@@ -243,7 +243,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       cursor: pointer; transition: color .15s, background .15s, transform .1s;
     }
     .vol-btn:hover { background: rgba(0,0,0,.8); color: var(--crl-white); transform: scale(1.1); }
-    .vol-btn.active { color: #e8c84a; background: rgba(232,200,74,.18); border: 1px solid rgba(232,200,74,.3); }
+    .vol-btn.active { color: var(--crl-live); background: rgba(var(--crl-live-rgb),.18); border: 1px solid rgba(var(--crl-live-rgb),.3); }
     .card-foot {
       display: flex; align-items: center; gap: 10px; padding: 10px 12px;
       border-top: 1px solid var(--crl-border);
@@ -258,11 +258,11 @@ import SiteShell from '../../layouts/SiteShell.astro';
     .ch-name { font-family: var(--crl-mono); font-size: .62rem; letter-spacing: 1px; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .ch-sub { font-size: .72rem; color: var(--crl-muted); margin-top: 2px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .expand-icon { color: rgba(255,255,255,.25); font-size: .85rem; flex-shrink: 0; transition: .2s; }
-    .stream-card:hover .expand-icon { color: #e8c84a; }
+    .stream-card:hover .expand-icon { color: var(--crl-live); }
 
     /* ── POLL BAR ── */
     .poll-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: var(--crl-border); z-index: 55; overflow: hidden; }
-    .poll-progress { height: 100%; background: #e8c84a; width: 100%; transform-origin: left; transition: transform linear; }
+    .poll-progress { height: 100%; background: var(--crl-live); width: 100%; transform-origin: left; transition: transform linear; }
 
     /* ── FILTER ALL BUTTON ── */
     .filter-all {

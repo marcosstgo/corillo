@@ -80,10 +80,12 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
 (function(){
   const root = document.documentElement;
   const btn  = document.getElementById('themeBtn');
+  const THEMES_B = { dark: 'verano', verano: 'light', light: 'dark' };
   const saved = localStorage.getItem('corillo-theme') || 'dark';
   root.setAttribute('data-theme', saved);
   if (btn) btn.addEventListener('click', () => {
-    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    const cur = root.getAttribute('data-theme') || 'dark';
+    const next = THEMES_B[cur] || 'dark';
     root.setAttribute('data-theme', next);
     localStorage.setItem('corillo-theme', next);
   });

@@ -25,9 +25,9 @@ import SiteShell from '../../layouts/SiteShell.astro';
 
       .app-head{display:flex;align-items:flex-start;gap:14px}
       .app-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
-      .app-icon-amber{background:rgba(232,200,74,.12);color:#e8c84a;border:1px solid rgba(232,200,74,.2)}
-      .app-icon-cyan{background:rgba(0,191,255,.10);color:var(--crl-accent);border:1px solid rgba(0,191,255,.18)}
-      .app-icon-green{background:rgba(0,255,157,.10);color:var(--crl-confirm);border:1px solid rgba(0,255,157,.18)}
+      .app-icon-amber{background:rgba(var(--crl-live-rgb),.12);color:var(--crl-live);border:1px solid rgba(var(--crl-live-rgb),.2)}
+      .app-icon-cyan{background:rgba(var(--crl-accent-rgb),.10);color:var(--crl-accent);border:1px solid rgba(var(--crl-accent-rgb),.18)}
+      .app-icon-green{background:rgba(var(--crl-confirm-rgb),.10);color:var(--crl-confirm);border:1px solid rgba(var(--crl-confirm-rgb),.18)}
 
       .app-meta{flex:1;min-width:0}
       .app-name{font-family:var(--crl-display);letter-spacing:2px;font-size:1.35rem;line-height:1;margin-bottom:5px}
@@ -83,11 +83,11 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
       <p class="app-desc">App de escritorio para broadcasting RTMP confiable. Archivo, carpeta, fuentes online, captura de pantalla o highlights automáticos — sin la complejidad de OBS.</p>
       <ul class="app-feats">
-        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Persistent Streamer Pipeline — carpetas y loops estables</li>
-        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Highlight Mode — SteelSeries, NVIDIA, AMD ReLive</li>
-        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Inicio programado (Scheduled Start)</li>
-        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Captura de pantalla con GPU encoding</li>
-        <li><i class="fa-solid fa-check" style="color:#e8c84a"></i> Temas Pro (cyan) y ARC (dorado) · Auto-update</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-live)"></i> Persistent Streamer Pipeline — carpetas y loops estables</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-live)"></i> Highlight Mode — SteelSeries, NVIDIA, AMD ReLive</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-live)"></i> Inicio programado (Scheduled Start)</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-live)"></i> Captura de pantalla con GPU encoding</li>
+        <li><i class="fa-solid fa-check" style="color:var(--crl-live)"></i> Temas Pro (cyan) y ARC (dorado) · Auto-update</li>
       </ul>
       <div class="app-actions">
         <a class="btn btn-primary" href="https://github.com/marcosstgo/Streamer/releases/latest/download/Streamer.Pro.exe"><i class="fa-solid fa-download"></i> Descargar v3.0.1</a>

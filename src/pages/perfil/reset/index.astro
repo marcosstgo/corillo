@@ -35,11 +35,11 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         color:var(--crl-white);font-family:var(--crl-body);font-size:.95rem;
         transition:.15s;width:100%;
       }
-      .field input:focus{outline:none;border-color:var(--crl-accent);box-shadow:0 0 0 3px rgba(232,200,74,.08)}
+      .field input:focus{outline:none;border-color:var(--crl-accent);box-shadow:0 0 0 3px rgba(var(--crl-live-rgb),.08)}
 
       .msg{font-size:.88rem;font-family:var(--crl-mono);margin-bottom:12px;display:none;padding:8px 12px;border-radius:7px}
       .msg.err{color:var(--crl-hot);border:1px dashed rgba(206,17,38,.3);background:rgba(206,17,38,.05)}
-      .msg.ok {color:var(--crl-confirm);border:1px solid rgba(0,255,157,.2);background:rgba(0,255,157,.05)}
+      .msg.ok {color:var(--crl-confirm);border:1px solid rgba(var(--crl-confirm-rgb),.2);background:rgba(var(--crl-confirm-rgb),.05)}
 
       .spinner{
         display:inline-block;width:14px;height:14px;

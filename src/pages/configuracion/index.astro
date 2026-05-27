@@ -28,7 +28,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
         padding:10px 18px;border-radius:8px;border:1px solid var(--crl-border);
         background:transparent;color:var(--crl-muted);cursor:pointer;transition:.18s;
       }
-      .tab.active{border-color:rgba(232,200,74,.4);color:var(--crl-accent);background:rgba(232,200,74,.06)}
+      .tab.active{border-color:rgba(var(--crl-live-rgb),.4);color:var(--crl-accent);background:rgba(var(--crl-live-rgb),.06)}
       .tab:hover:not(.active){border-color:var(--crl-border-h);color:var(--crl-white)}
 
       /* cards */
@@ -44,7 +44,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
         padding-bottom:14px;border-bottom:1px solid var(--crl-border);
       }
       .step-num{
-        font-family:var(--crl-display);font-size:2rem;color:rgba(232,200,74,.25);
+        font-family:var(--crl-display);font-size:2rem;color:rgba(var(--crl-live-rgb),.25);
         letter-spacing:1px;line-height:1;flex-shrink:0;
       }
       .step-title{font-family:var(--crl-mono);text-transform:uppercase;letter-spacing:2.5px;font-size:11px;color:rgba(242,239,233,.7)}
@@ -76,28 +76,28 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .field-note{margin-top:7px;font-size:.92rem;color:rgba(242,239,233,.45);line-height:1.5}
       .field-note a{color:var(--crl-accent);text-decoration:none}
       .field-note a:hover{text-decoration:underline}
-      .field-note code{font-family:var(--crl-mono);font-size:10px;color:rgba(232,200,74,.8);
-        background:rgba(232,200,74,.08);padding:2px 5px;border-radius:4px}
+      .field-note code{font-family:var(--crl-mono);font-size:10px;color:rgba(var(--crl-live-rgb),.8);
+        background:rgba(var(--crl-live-rgb),.08);padding:2px 5px;border-radius:4px}
 
       .val-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
       @media(max-width:500px){.val-grid{grid-template-columns:1fr}}
 
       .note-card{
-        border:1px solid rgba(232,200,74,.15);border-radius:14px;
-        background:rgba(232,200,74,.03);padding:16px;margin-top:14px;
+        border:1px solid rgba(var(--crl-live-rgb),.15);border-radius:14px;
+        background:rgba(var(--crl-live-rgb),.03);padding:16px;margin-top:14px;
       }
       [data-theme="light"] .note-card{background:rgba(0,0,0,.03)}
       .note-card-title{
         font-family:var(--crl-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
-        color:rgba(232,200,74,.7);margin-bottom:10px;
+        color:rgba(var(--crl-live-rgb),.7);margin-bottom:10px;
       }
       .note-card p{font-size:.92rem;color:rgba(242,239,233,.5);line-height:1.6;margin:0}
-      .note-card code{font-family:var(--crl-mono);font-size:10px;color:rgba(232,200,74,.8);
-        background:rgba(232,200,74,.08);padding:2px 5px;border-radius:4px}
+      .note-card code{font-family:var(--crl-mono);font-size:10px;color:rgba(var(--crl-live-rgb),.8);
+        background:rgba(var(--crl-live-rgb),.08);padding:2px 5px;border-radius:4px}
 
       .tshoot{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
       .tshoot li{display:flex;gap:12px;align-items:flex-start;font-size:.85rem;color:rgba(242,239,233,.65);line-height:1.5}
-      .tshoot li i{color:rgba(232,200,74,.6);margin-top:2px;flex-shrink:0;width:14px}
+      .tshoot li i{color:rgba(var(--crl-live-rgb),.6);margin-top:2px;flex-shrink:0;width:14px}
       .tshoot strong{color:rgba(242,239,233,.85)}
 
       .page-footer{
@@ -181,7 +181,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
           <span class="field-label">Bitrate de vídeo</span>
           <div class="val-grid">
             <div>
-              <div class="field-note" style="margin:0 0 4px">1080p <span style="color:rgba(232,200,74,.7);font-size:9px;">· Recomendado</span></div>
+              <div class="field-note" style="margin:0 0 4px">1080p <span style="color:rgba(var(--crl-live-rgb),.7);font-size:9px;">· Recomendado</span></div>
               <div class="code-wrap">
                 <div class="code" id="bitrate1080">6000 Kbps</div>
                 <button class="copy-btn" data-target="bitrate1080">Copiar</button>

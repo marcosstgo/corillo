@@ -22,24 +22,24 @@ import FullscreenLayout from '../../../layouts/FullscreenLayout.astro';
       /* Overlay info */
       .rv-overlay{position:absolute;bottom:0;left:0;right:0;padding:20px 16px 32px;background:linear-gradient(to top,rgba(3,10,14,.92) 0%,transparent 100%);display:flex;flex-direction:column;gap:10px}
       .rv-streamer{display:flex;align-items:center;gap:10px}
-      .rv-ava{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:18px;color:#030a0e;overflow:hidden}
-      .rv-name{font-family:'Bebas Neue',cursive;font-size:1.4rem;letter-spacing:3px;color:#e8f6ff;text-decoration:none}
+      .rv-ava{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:18px;color:var(--crl-ink);overflow:hidden}
+      .rv-name{font-family:'Bebas Neue',cursive;font-size:1.4rem;letter-spacing:3px;color:var(--crl-white);text-decoration:none}
       .rv-title{font-family:'DM Sans',sans-serif;font-size:.9rem;color:rgba(232,246,255,.8);line-height:1.4}
       .rv-meta{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:1px;color:rgba(232,246,255,.45)}
 
       /* Actions */
       .rv-actions{position:absolute;right:12px;bottom:100px;display:flex;flex-direction:column;gap:16px;align-items:center}
-      .rv-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:#e8f6ff;cursor:pointer;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none}
+      .rv-btn{display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:var(--crl-white);cursor:pointer;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;text-decoration:none}
       .rv-btn-icon{width:44px;height:44px;border-radius:50%;background:rgba(232,246,255,.1);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:1rem;transition:.15s}
       .rv-btn:hover .rv-btn-icon{background:rgba(232,246,255,.2)}
 
       /* Unmute */
-      #rvUnmute{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:999px;border:1px solid rgba(0,191,255,.5);background:rgba(3,10,14,.85);color:#00bfff;cursor:pointer;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px)}
+      #rvUnmute{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:999px;border:1px solid rgba(var(--crl-accent-rgb),.5);background:rgba(3,10,14,.85);color:var(--crl-accent);cursor:pointer;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px)}
 
       /* States */
       .rv-state{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;color:rgba(232,246,255,.4);font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:1.5px;text-transform:uppercase}
       .rv-state i{font-size:2.5rem;opacity:.3}
-      .rv-spinner{width:28px;height:28px;border:3px solid rgba(255,107,53,.2);border-top-color:#00bfff;border-radius:50%;animation:rvspin .7s linear infinite}
+      .rv-spinner{width:28px;height:28px;border:3px solid rgba(255,107,53,.2);border-top-color:var(--crl-accent);border-radius:50%;animation:rvspin .7s linear infinite}
       @keyframes rvspin{to{transform:rotate(360deg)}}
     </style>
   </fragment>
@@ -48,14 +48,14 @@ import FullscreenLayout from '../../../layouts/FullscreenLayout.astro';
 <nav class="rv-nav">
   <a href="/reels/" class="rv-nav-logo">
     <svg viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;display:block">
-      <defs><radialGradient id="rv-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00bfff" stop-opacity="0.18"/><stop offset="100%" stop-color="#00bfff" stop-opacity="0"/></radialGradient></defs>
-      <text fill="#e8f6ff" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
+      <defs><radialGradient id="rv-ng" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
+      <text fill="var(--crl-white)" x="0" y="74" font-family="Bebas Neue, cursive" font-size="82">C</text>
       <circle cx="72" cy="42" r="36" fill="url(#rv-ng)"/>
-      <circle cx="72" cy="42" r="34" stroke="#e8f6ff" stroke-width="9" fill="none" stroke-opacity=".85"/>
-      <circle cx="72" cy="42" r="20" stroke="#00bfff" stroke-width="6" fill="none"/>
-      <circle cx="72" cy="42" r="8" fill="#00bfff"/>
-      <circle cx="72" cy="42" r="3.5" fill="#00ff9d"/>
-      <text fill="#e8f6ff" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
+      <circle cx="72" cy="42" r="34" stroke="var(--crl-white)" stroke-width="9" fill="none" stroke-opacity=".85"/>
+      <circle cx="72" cy="42" r="20" stroke="var(--crl-accent)" stroke-width="6" fill="none"/>
+      <circle cx="72" cy="42" r="8" fill="var(--crl-accent)"/>
+      <circle cx="72" cy="42" r="3.5" fill="var(--crl-confirm)"/>
+      <text fill="var(--crl-white)" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
     </svg>
   </a>
   <a href="/reels/" class="rv-btn" style="flex-direction:row;gap:6px;font-size:.65rem">
@@ -71,7 +71,7 @@ import FullscreenLayout from '../../../layouts/FullscreenLayout.astro';
 <div id="rvNotFound" class="rv-state" style="display:none">
   <i class="fa-solid fa-film"></i>
   <span>Reel no encontrado</span>
-  <a href="/reels/" style="margin-top:8px;color:#00bfff;font-size:.6rem">← Ver todos los reels</a>
+  <a href="/reels/" style="margin-top:8px;color:var(--crl-accent);font-size:.6rem">← Ver todos los reels</a>
 </div>
 
 <div id="rvContent" style="display:none">
@@ -130,7 +130,7 @@ async function init() {
 
   // Avatar
   const ava = document.getElementById('rvAva');
-  const colors = ['#e8c84a','#00bfff','#ff6b6b','#00ff9d','#ff9f43','#a29bfe','#fd79a8','#6c5ce7'];
+  const colors = ['var(--crl-live)','var(--crl-accent)','#ff6b6b','var(--crl-confirm)','#ff9f43','#a29bfe','#fd79a8','#6c5ce7'];
   const color = colors[reel.channel.charCodeAt(0) % colors.length];
   ava.style.background = `linear-gradient(135deg,${color},${color}99)`;
 

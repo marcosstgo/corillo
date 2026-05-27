@@ -3,9 +3,9 @@
 
 /* ── Dark-mode design tokens (defaults) ── */
 :root{
-  --ink:#030a0e; --surface:#071118; --panel:#0d1c28;
-  --border:rgba(0,191,255,.08); --border-h:rgba(0,191,255,.2);
-  --white:#e8f6ff; --muted:#3a6070; --accent:#00bfff; --live:#e8c84a; --confirm:#00ff9d; --hot:#CE1126;
+  --ink:var(--crl-ink); --surface:var(--crl-surface); --panel:var(--crl-panel);
+  --border:rgba(var(--crl-accent-rgb),.08); --border-h:rgba(var(--crl-accent-rgb),.2);
+  --white:var(--crl-white); --muted:var(--crl-muted); --accent:var(--crl-accent); --live:var(--crl-live); --confirm:var(--crl-confirm); --hot:var(--crl-hot);
   --mono:'Space Mono',monospace; --display:'Bebas Neue',cursive; --body:'DM Sans',sans-serif;
 
   /* ── Type scale ── */
@@ -20,7 +20,7 @@
 [data-theme="light"]{
   --ink:#eef7fb; --surface:#dceef5; --panel:#cce4ef;
   --border:rgba(0,0,0,.1); --border-h:rgba(0,0,0,.2);
-  --white:#051015; --muted:#3a6070; --accent:#0088bb; --live:#c9920a; --confirm:#00aa6e; --hot:#CE1126;
+  --white:#051015; --muted:var(--crl-muted); --accent:#0088bb; --live:#c9920a; --confirm:#00aa6e; --hot:var(--crl-hot);
 }
 [data-theme="light"] body{background:var(--ink);color:var(--white)}
 [data-theme="light"] body::after{opacity:.3}
@@ -32,7 +32,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{max-width:100%;overflow-x:hidden}
 a{color:inherit;text-decoration:none}
-:focus-visible{outline:2px solid rgba(0,191,255,.7);outline-offset:3px;border-radius:6px}
+:focus-visible{outline:2px solid rgba(var(--crl-accent-rgb),.7);outline-offset:3px;border-radius:6px}
 
 
 /* ── Logo animations ── */

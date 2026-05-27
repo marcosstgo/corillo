@@ -42,7 +42,7 @@
     .info-left { min-width: 0; }
     .info-channel {
       font-family: 'Bebas Neue', cursive; font-size: 1rem;
-      letter-spacing: 3px; color: #e8f6ff;
+      letter-spacing: 3px; color: var(--crl-white);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .info-date {
@@ -51,22 +51,22 @@
     }
     .info-logo {
       font-family: 'Bebas Neue', cursive; font-size: .78rem; letter-spacing: 3px;
-      color: rgba(0,191,255,.55); text-decoration: none; flex-shrink: 0;
+      color: rgba(var(--crl-accent-rgb),.55); text-decoration: none; flex-shrink: 0;
       transition: color .15s;
     }
-    .info-logo:hover { color: #00bfff; }
+    .info-logo:hover { color: var(--crl-accent); }
 
     /* ── Unmute button ── */
     .unmute-btn {
       position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
       z-index: 10; font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
       padding: 8px 18px; border-radius: 8px;
-      border: 1px solid rgba(0,191,255,.5); background: rgba(0,0,0,.8);
-      color: #00bfff; cursor: pointer;
+      border: 1px solid rgba(var(--crl-accent-rgb),.5); background: rgba(0,0,0,.8);
+      color: var(--crl-accent); cursor: pointer;
       display: flex; align-items: center; gap: 7px;
       backdrop-filter: blur(8px); transition: .15s; white-space: nowrap;
     }
-    .unmute-btn:hover { background: rgba(0,191,255,.1); }
+    .unmute-btn:hover { background: rgba(var(--crl-accent-rgb),.1); }
     .unmute-btn.hidden { display: none; }
 
     /* ── Error state ── */

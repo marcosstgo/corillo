@@ -23,7 +23,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
         padding:6px 14px;border-radius:6px;border:1px solid var(--crl-border);
         background:transparent;color:var(--crl-muted);cursor:pointer;transition:.15s;
       }
-      .lang-tab.active{border-color:rgba(232,200,74,.4);color:var(--crl-accent);background:rgba(232,200,74,.06)}
+      .lang-tab.active{border-color:rgba(var(--crl-live-rgb),.4);color:var(--crl-accent);background:rgba(var(--crl-live-rgb),.06)}
       .lang-tab:hover:not(.active){border-color:var(--crl-border-h);color:var(--crl-white)}
 
       .content-block{display:none}
@@ -48,7 +48,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .legal-section p{color:rgba(255,255,255,.7);line-height:1.8;margin-bottom:12px;font-size:.95rem}
       .legal-section ul,.legal-section ol{padding-left:20px;margin-bottom:12px}
       .legal-section li{color:rgba(255,255,255,.7);line-height:1.8;margin:6px 0;font-size:.95rem}
-      .legal-section a{color:var(--crl-accent);text-decoration:underline;text-decoration-color:rgba(232,200,74,.3)}
+      .legal-section a{color:var(--crl-accent);text-decoration:underline;text-decoration-color:rgba(var(--crl-live-rgb),.3)}
       .legal-section a:hover{text-decoration-color:var(--crl-accent)}
       .legal-section strong{color:var(--crl-white)}
       [data-theme="light"] .legal-section p,[data-theme="light"] .legal-section li{color:rgba(0,0,0,.7)}
@@ -60,7 +60,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       }
       [data-theme="light"] .step-card{background:rgba(255,255,255,.7)}
       .step-num{
-        font-family:var(--crl-display);font-size:2rem;color:rgba(232,200,74,.25);
+        font-family:var(--crl-display);font-size:2rem;color:rgba(var(--crl-live-rgb),.25);
         line-height:1;flex-shrink:0;width:32px;
       }
       .step-content h3{font-family:var(--crl-mono);font-size:.92rem;letter-spacing:2px;text-transform:uppercase;color:var(--crl-accent);margin-bottom:6px}
@@ -68,7 +68,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       [data-theme="light"] .step-content p{color:rgba(0,0,0,.7)}
 
       .contact-card{
-        background:rgba(232,200,74,.05);border:1px solid rgba(232,200,74,.15);
+        background:rgba(var(--crl-live-rgb),.05);border:1px solid rgba(var(--crl-live-rgb),.15);
         border-radius:10px;padding:24px;margin-top:16px;
       }
       .contact-card p{margin:6px 0;font-size:.95rem;color:rgba(255,255,255,.75)}

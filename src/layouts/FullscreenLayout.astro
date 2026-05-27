@@ -11,7 +11,7 @@ const {
   title,
   description = '',
   canonical,
-  themeColor = '#030a0e',
+  themeColor = 'var(--crl-ink)',
 } = Astro.props;
 ---
 <!doctype html>
@@ -37,7 +37,7 @@ const {
     // Apply saved theme before first paint
     (function(){
       const t = localStorage.getItem('corillo-theme');
-      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      if (t === 'light' || t === 'dark' || t === 'verano') document.documentElement.setAttribute('data-theme', t);
     })();
   </script>
   <style>

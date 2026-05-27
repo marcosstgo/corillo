@@ -51,6 +51,7 @@ window.channel = __validFormat ? __rawChannel : '';
     ovTitle:          $('#ovTitle'),
     ovMsg:            $('#ovMsg'),
     ovRetry:          $('#ovRetry'),
+    ovRetryLow:       $('#ovRetryLow'),
     unmuteBtn:        $('#unmuteBtn'),
     chTag:            $('#chTag'),
     twitchLink:       $('#twitchLink'),
@@ -71,6 +72,8 @@ window.channel = __validFormat ? __rawChannel : '';
     ctrlPlay:         $('#ctrlPlay'),
     ctrlMute:         $('#ctrlMute'),
     ctrlVol:          $('#ctrlVol'),
+    ctrlQuality:      $('#ctrlQuality'),
+    ctrlQualityLow:   $('#ctrlQualityLow'),
     ctrlFs:           $('#ctrlFs'),
     themeBtn:         $('#themeBtn'),
     statsRow:         $('#statsRow'),
@@ -113,6 +116,8 @@ window.channel = __validFormat ? __rawChannel : '';
     sessionAc: null,
     // Flags
     useWebRTC:             false,
+    lowQuality:            (localStorage.getItem('crl-quality') === 'low') ||
+                           (localStorage.getItem('crl-quality') === null && window.matchMedia('(max-width: 768px)').matches),
     unmuteAttemptPending:  false,
     // HLS stats
     emaBitrate:  null,
@@ -268,6 +273,16 @@ window.channel = __validFormat ? __rawChannel : '';
     DOM.btnThemeTw.classList.toggle('active', name === 'twitch');
   }
 
+
+  function setQuality(low) {
+    App.lowQuality = low;
+    localStorage.setItem('crl-quality', low ? 'low' : 'high');
+    DOM.ctrlQuality?.classList.toggle('active', !low);
+    DOM.ctrlQualityLow?.classList.toggle('active', low);
+    DOM.hlsTxt.textContent = low ? '720p' : (App.mode === 'vertical' ? '9:16' : '16:9');
+    App.retries = 0;
+    startPlayer();
+  }
 
   function toggleWebRTC() {
     App.useWebRTC = !App.useWebRTC;
@@ -430,6 +445,7 @@ window.channel = __validFormat ? __rawChannel : '';
         DOM.ovMsg.textContent    = (date ? date + ' · ' : '') + 'El canal está offline';
         DOM.ovRetry.innerHTML    = '<i class="fa-solid fa-film"></i> Ver VOD completo';
         DOM.ovRetry.onclick      = () => { location.href = '/vods/v/?id=' + vod.id; };
+        if (DOM.ovRetryLow) DOM.ovRetryLow.style.display = 'none';
         DOM.overlay.classList.add('show');
       } else {
         showOverlay('Sin transmisión', 'El canal no está en vivo ahora mismo.');
@@ -485,9 +501,10 @@ window.channel = __validFormat ? __rawChannel : '';
     App.inVodMode  = false;
     App.currentVod = null;
     hideVodBadge();
-    // Reset overlay retry button to default
-    DOM.ovRetry.innerHTML = '<i class="fa-solid fa-play"></i> Reintentar';
-    DOM.ovRetry.onclick   = null;
+    // Reset overlay retry buttons to default
+    DOM.ovRetry.innerHTML    = '<i class="fa-solid fa-display"></i> 1080p';
+    DOM.ovRetry.onclick      = null;
+    if (DOM.ovRetryLow) DOM.ovRetryLow.style.display = '';
     // Restore stats row if it was hidden in VOD mode
     const statsRow = document.getElementById('statsRow');
     if (statsRow) statsRow.style.display = '';
@@ -750,9 +767,10 @@ window.channel = __validFormat ? __rawChannel : '';
       } catch {} // network error → fall through and attempt HLS normally
     }
 
-    const path = App.mode === 'vertical' ? App.channel + '-vertical' : App.channel;
+    const basePath = App.mode === 'vertical' ? App.channel + '-vertical' : App.channel;
+    const path = App.lowQuality ? basePath + '_low' : basePath;
     const url  = '/live/' + encodeURIComponent(path) + '/index.m3u8';
-    DOM.hlsTxt.textContent = App.mode === 'vertical' ? '9:16' : '16:9';
+    if (!App.lowQuality) DOM.hlsTxt.textContent = App.mode === 'vertical' ? '9:16' : '16:9';
     showOverlay('Cargando', 'Iniciando stream…');
 
     if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
@@ -991,8 +1009,9 @@ window.channel = __validFormat ? __rawChannel : '';
     DOM.btnThemeTm.addEventListener('click', () => setTheme('terminal'));
     DOM.btnThemeTw.addEventListener('click', () => setTheme('twitch'));
 
-    // Overlay retry
-    DOM.ovRetry.addEventListener('click', () => { App.retries = 0; startPlayer(); });
+    // Overlay retry — HD or 720p
+    DOM.ovRetry.addEventListener('click',    () => { App.retries = 0; setQuality(false); });
+    DOM.ovRetryLow?.addEventListener('click', () => { App.retries = 0; setQuality(true);  });
 
     // Unmute button
     DOM.unmuteBtn.addEventListener('click', () => {
@@ -1032,6 +1051,8 @@ window.channel = __validFormat ? __rawChannel : '';
     // Control buttons
     DOM.ctrlPlay.addEventListener('click', () => { if (DOM.video.paused) DOM.video.play().catch(() => {}); else DOM.video.pause(); });
     DOM.ctrlMute.addEventListener('click', () => { DOM.video.muted = !DOM.video.muted; if (!DOM.video.muted && DOM.video.volume === 0) DOM.video.volume = 1; });
+    DOM.ctrlQuality?.addEventListener('click', () => setQuality(false));
+    DOM.ctrlQualityLow?.addEventListener('click', () => setQuality(true));
     DOM.ctrlVol.addEventListener('input',  () => { DOM.video.volume = +DOM.ctrlVol.value; DOM.video.muted = DOM.video.volume === 0; });
 
     // Fullscreen
@@ -1160,6 +1181,10 @@ window.channel = __validFormat ? __rawChannel : '';
         }
       }
     });
+
+    // Sync quality buttons to initial state (mobile auto-detect or saved preference)
+    DOM.ctrlQuality?.classList.toggle('active', !App.lowQuality);
+    DOM.ctrlQualityLow?.classList.toggle('active', App.lowQuality);
 
     startPlayer();
   }

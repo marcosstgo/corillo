@@ -9,14 +9,14 @@
   --accent-dim: oklch(0.55 0.14 var(--h));
   --accent-glow: oklch(0.72 0.18 var(--h) / 0.25);
 
-  --live: #e8c84a;
-  --confirm: #00ff9d;
-  --hot: #CE1126;
-  --ink: #030a0e;
-  --surface: #071118;
-  --panel: #0d1c28;
-  --white: #e8f6ff;
-  --muted: #3a6070;
+  --live: var(--crl-live);
+  --confirm: var(--crl-confirm);
+  --hot: var(--crl-hot);
+  --ink: var(--crl-ink);
+  --surface: var(--crl-surface);
+  --panel: var(--crl-panel);
+  --white: var(--crl-white);
+  --muted: var(--crl-muted);
   --border: oklch(0.72 0.18 var(--h) / 0.10);
   --border-h: oklch(0.72 0.18 var(--h) / 0.25);
 
@@ -124,7 +124,7 @@ body.no-scanlines .scanlines { display: none; }
   background: oklch(0.72 0.18 var(--h) / 0.06);
 }
 .ghost-btn.primary {
-  background: var(--accent); color: #030a0e; border-color: transparent;
+  background: var(--accent); color: var(--crl-ink); border-color: transparent;
   font-weight: 700;
 }
 .ghost-btn.primary:hover { background: oklch(0.82 0.18 var(--h)); }
@@ -729,7 +729,7 @@ body.no-scanlines .scanlines { display: none; }
   transition: color .15s, background .15s;
   flex-shrink: 0;
 }
-.sidebar-toggle:hover { color: var(--white); background: rgba(0,191,255,.04); }
+.sidebar-toggle:hover { color: var(--white); background: rgba(var(--crl-accent-rgb),.04); }
 
 /* Collapsed state */
 .left-sidebar.collapsed { width: 56px; }
@@ -780,7 +780,7 @@ body.no-scanlines .scanlines { display: none; }
 }
 .topbar-search:focus-within {
   border-color: var(--border-h);
-  background: rgba(0,191,255,.04);
+  background: rgba(var(--crl-accent-rgb),.04);
 }
 .topbar-search-icon { color: var(--muted); font-size: .75rem; flex-shrink: 0; }
 .topbar-search-input {
@@ -824,7 +824,7 @@ body { --grain: 55; }
 [data-theme="light"] .ticker-label { color: #0a8a3a; }
 [data-theme="light"] .ghost-btn { color: rgba(5,16,21,.6); border-color: rgba(0,0,0,.12); }
 [data-theme="light"] .ghost-btn:hover { color: #0c1a20; background: rgba(0,0,0,.05); }
-[data-theme="light"] .ghost-btn.primary { color: #030a0e; }
+[data-theme="light"] .ghost-btn.primary { color: var(--crl-ink); }
 [data-theme="light"] .banner-stack { color: #051015; }
 [data-theme="light"] .panel { background: rgba(220,235,245,.5); border-color: rgba(0,0,0,.1); }
 [data-theme="light"] .panel-header { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.08); }

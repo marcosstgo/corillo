@@ -14,7 +14,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .news-hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.8fr);gap:18px;align-items:stretch}
       @media(max-width:980px){.news-hero-grid{grid-template-columns:1fr}}
       .news-kicker{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 14px}
-      .news-dot{width:8px;height:8px;border-radius:999px;background:#00ff9d;box-shadow:0 0 0 6px rgba(0,255,157,.1)}
+      .news-dot{width:8px;height:8px;border-radius:999px;background:var(--crl-confirm);box-shadow:0 0 0 6px rgba(var(--crl-confirm-rgb),.1)}
       .news-intro{max-width:760px;margin:0 auto 26px;text-align:center}
       .news-feature{padding:28px;border-radius:28px}
       .news-feature-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
@@ -38,7 +38,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       @media(max-width:980px){.news-grid{grid-template-columns:1fr 1fr}}
       @media(max-width:640px){.news-grid{grid-template-columns:1fr}}
       .news-card{display:flex;flex-direction:column;gap:16px;height:100%;padding:22px;border-radius:24px;position:relative;overflow:hidden}
-      .news-card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg, #00bfff, transparent 80%);opacity:.72}
+      .news-card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg, var(--crl-accent), transparent 80%);opacity:.72}
       .news-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
       .news-title{font-family:var(--crl-display);font-size:1.8rem;letter-spacing:1.5px;line-height:.98;margin:0}
       .news-desc{font-size:var(--crl-sm);color:rgba(255,255,255,.66);line-height:1.72;margin:0}

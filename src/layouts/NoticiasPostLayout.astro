@@ -55,15 +55,15 @@ const maxW = wide ? '860px' : '820px';
       .post-cta{margin-top:8px}
       /* flow steps (reels / vods) */
       .flow-steps{display:flex;flex-direction:column;gap:14px;margin:0}
-      .flow-step{display:flex;gap:14px;align-items:flex-start;padding:16px;background:rgba(0,191,255,.04);border:1px solid rgba(0,191,255,.1);border-radius:12px}
+      .flow-step{display:flex;gap:14px;align-items:flex-start;padding:16px;background:rgba(var(--crl-accent-rgb),.04);border:1px solid rgba(var(--crl-accent-rgb),.1);border-radius:12px}
       .flow-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--crl-accent);color:#000;font-family:var(--crl-mono);font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center}
       .flow-step p{margin:0;font-size:var(--crl-sm);color:rgba(255,255,255,.76);line-height:1.6}
       [data-theme="light"] .flow-step p{color:rgba(0,0,0,.65)}
-      [data-theme="light"] .flow-step{background:rgba(0,191,255,.04);border-color:rgba(0,191,255,.14)}
+      [data-theme="light"] .flow-step{background:rgba(var(--crl-accent-rgb),.04);border-color:rgba(var(--crl-accent-rgb),.14)}
       /* callout (la-fiebre) */
-      .post-callout{padding:18px 18px 16px;border-radius:20px;border:1px solid rgba(0,191,255,.16);background:linear-gradient(160deg,rgba(0,191,255,.06),rgba(7,17,24,.72))}
+      .post-callout{padding:18px 18px 16px;border-radius:20px;border:1px solid rgba(var(--crl-accent-rgb),.16);background:linear-gradient(160deg,rgba(var(--crl-accent-rgb),.06),rgba(7,17,24,.72))}
       .post-links{display:flex;gap:10px;flex-wrap:wrap}
-      [data-theme="light"] .post-callout{background:rgba(0,191,255,.05);border-color:rgba(0,191,255,.2)}
+      [data-theme="light"] .post-callout{background:rgba(var(--crl-accent-rgb),.05);border-color:rgba(var(--crl-accent-rgb),.2)}
     </style>
     <style define:vars={{ postMaxW: maxW }}>
       .post-wrap { --post-max-w: var(--postMaxW) }
