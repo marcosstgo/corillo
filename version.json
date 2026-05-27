@@ -6,6 +6,7 @@
     "Preferencia de calidad guardada en localStorage — respeta elección manual",
     "Botones overlay 1080p/720p en estado de error",
     "Opción B: 1080p HD + 720p/1500kbps móvil",
-    "Modo Verano PR, migración CSS variables"
+    "Modo Verano PR, migración CSS variables",
+    "WebRTC WHEP funcional — fix mediamtx path ordering + corillo-rtc-start.sh"
   ]
 }
