@@ -1,5 +1,5 @@
 {
-  "version": "2.2.662",
+  "version": "2.2.663",
   "date": "2026-05-27",
   "changes": [
     "Móvil arranca en 720p automático (viewport ≤768px), desktop en 1080p",
