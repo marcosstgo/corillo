@@ -82,11 +82,6 @@ import { version } from '../../../version.json';
 <!-- Dropdown / bottom sheet -->
 <div class="drop-backdrop crl-player-drop-backdrop" id="dropBackdrop"></div>
 <div class="drop-panel crl-player-drop-panel" id="dropPanel">
-  <div class="drop-section-lbl crl-dropdown-label">Calidad</div>
-  <div class="drop-row crl-player-drop-row">
-    <button class="drop-btn crl-player-drop-btn active" id="ctrlQuality" data-q="hd"><i class="fa-solid fa-display"></i> 1080p</button>
-    <button class="drop-btn crl-player-drop-btn" id="ctrlQualityLow" data-q="sd"><i class="fa-solid fa-mobile-screen-button"></i> 720p <span style="font-size:.65rem;opacity:.6">(móvil)</span></button>
-  </div>
   <div class="drop-sep crl-dropdown-sep"></div>
   <div class="drop-section-lbl crl-dropdown-label">Modo</div>
   <div class="drop-row crl-player-drop-row">
@@ -123,8 +118,7 @@ import { version } from '../../../version.json';
           <h3 id="ovTitle">Cargando</h3>
           <p id="ovMsg">Iniciando stream…</p>
           <div class="row">
-            <button class="btn primary" id="ovRetry"><i class="fa-solid fa-display"></i> 1080p</button>
-            <button class="btn" id="ovRetryLow"><i class="fa-solid fa-mobile-screen-button"></i> 720p</button>
+            <button class="btn primary" id="ovRetry"><i class="fa-solid fa-rotate"></i> Reintentar</button>
           </div>
         </div>
       </div>
