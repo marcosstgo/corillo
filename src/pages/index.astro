@@ -44,6 +44,49 @@ import SiteShell from '../layouts/SiteShell.astro';
       .featured-sub .host-tag { color:var(--live); border:1px solid rgba(var(--crl-live-rgb),.4); padding:1px 6px; border-radius:3px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; margin-right:6px; display:inline-block; vertical-align:middle; }
 
       .rotate-bar { position:absolute; bottom:0; left:0; height:2px; background:var(--accent); opacity:.5; width:0; z-index:4; }
+
+      /* ── Colored top border (channel color via CSS var) ── */
+      .ch {
+        border-top: 3px solid var(--ch-top, var(--crl-border));
+      }
+      .ch:has(.ch-live) { --ch-top: var(--crl-hot, #ce1126); }
+      .ch:hover {
+        box-shadow: 0 20px 52px rgba(0,0,0,.55),
+                    0 0 0 1px color-mix(in srgb, var(--ch-top, var(--crl-accent)) 25%, transparent),
+                    0 0 36px color-mix(in srgb, var(--ch-top, var(--crl-accent)) 10%, transparent);
+      }
+      .ch:has(.ch-live):hover {
+        box-shadow: 0 20px 52px rgba(0,0,0,.55),
+                    0 0 0 1px rgba(var(--crl-live-rgb),.35),
+                    0 0 36px rgba(var(--crl-live-rgb),.15);
+      }
+
+      /* ── Scan-line on thumbnail hover ── */
+      .ch-thumb::before {
+        content: ''; position:absolute; inset:0; z-index:2; pointer-events:none;
+        background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px);
+        opacity:0; transition:opacity .25s;
+      }
+      .ch:hover .ch-thumb::before { opacity:1; }
+
+      /* ── Entrance animation — channel grid ── */
+      @keyframes hm-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+      .channels .ch { animation: hm-in .35s both; }
+      .channels .ch:nth-child(2) { animation-delay: 45ms; }
+      .channels .ch:nth-child(3) { animation-delay: 90ms; }
+      .channels .ch:nth-child(4) { animation-delay:135ms; }
+      .channels .ch:nth-child(5) { animation-delay:180ms; }
+      .channels .ch:nth-child(6) { animation-delay:225ms; }
+      .channels .ch:nth-child(7) { animation-delay:270ms; }
+      .channels .ch:nth-child(8) { animation-delay:315ms; }
+
+      /* ── Section headers: más editorial ── */
+      .sec-name {
+        color: rgba(232,246,255,.22);
+        font-size: 28px;
+        letter-spacing: 5px;
+      }
+      #liveSection .sec-name { color: var(--crl-white); }
     </style>
   </fragment>
 
@@ -276,18 +319,29 @@ async function fetchRecentVods(limit) {
 }
 
 async function loadVodData() {
-  const vods = await fetchRecentVods(50);
+  // Fetch ligero de todos los VODs para el mapa de thumbnails (solo channel+thumb)
+  const thumbFetch = fetch(
+    `${PB_URL}/api/collections/vods/records?sort=-date&perPage=500&fields=channel,thumb`,
+    { signal: AbortSignal.timeout(6000) }
+  ).then(r => r.json()).then(j => j.items || []).catch(() => []);
+
+  // Fetch con todos los campos para el carousel de recientes
+  const [thumbItems, recentVods] = await Promise.all([thumbFetch, fetchRecentVods(50)]);
+
+  // Mapa completo: un thumb por canal, usando el VOD más reciente de cada uno
+  _vodThumbMap = {};
+  for (const v of thumbItems) {
+    if (v.thumb && !_vodThumbMap[v.channel]) _vodThumbMap[v.channel] = v.thumb;
+  }
+
+  // Carousel: deduplicado por canal, máx 6
   const seen = new Set();
-  const deduped = vods.filter(v => {
+  _recentVods = recentVods.filter(v => {
     if (seen.has(v.channel)) return false;
     seen.add(v.channel);
     return true;
-  });
-  // Mapa completo de thumbnails por canal (todos los canales)
-  _vodThumbMap = {};
-  deduped.forEach(v => { if (v.thumb) _vodThumbMap[v.channel] = v.thumb; });
-  // Tira de VODs recientes — máx 6 para el display
-  _recentVods = deduped.slice(0, 6);
+  }).slice(0, 6);
+
   _vodLoadedAt = Date.now();
 }
 
@@ -301,7 +355,7 @@ function vodCards(vods) {
     const dur     = vod.duration ? fmtDuration(vod.duration) : '';
     const preview = _hover && vod.preview
       ? `<video class="ch-preview-vid" src="${vod.preview}" muted playsinline preload="none" loop></video>` : '';
-    return `<a href="/vods/v/?id=${vod.id}" class="ch">
+    return `<a href="/vods/v/?id=${vod.id}" class="ch" style="--ch-top:${s.color || 'var(--crl-accent)'}">
       <div class="ch-thumb">
         <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
         <div class="ch-thumb-noise"></div>
@@ -659,7 +713,7 @@ function renderLiveSection(live, paths) {
     const viewers = getViewers(paths, s.key);
     if (!cardBitrates[s.key]) cardBitrates[s.key] = jitter(5000, 600);
     const bitrate = cardBitrates[s.key];
-    return `<a class="ch" href="/${s.key}/">
+    return `<a class="ch" href="/${s.key}/" style="--ch-top:${s.color || 'var(--crl-accent)'}">
       <div class="ch-thumb">
         <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
         <div class="ch-thumb-noise"></div>
@@ -764,7 +818,7 @@ function renderChannelGrid(paths) {
     const bitrate = cardBitrates[s.key];
 
     return `
-      <a class="ch" href="/${s.key}/">
+      <a class="ch" href="/${s.key}/" style="--ch-top:${s.color || 'var(--crl-accent)'}">
         <div class="ch-thumb">
           <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
           <div class="ch-thumb-noise"></div>

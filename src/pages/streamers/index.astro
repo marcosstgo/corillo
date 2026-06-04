@@ -68,20 +68,25 @@ import SiteShell from '../../layouts/SiteShell.astro';
         border-radius:16px;overflow:hidden;
         display:flex;flex-direction:column;
         cursor:pointer;text-decoration:none;
-        transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .25s;
+        transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s,border-color .28s;
         position:relative;
       }
-      .s-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.15)}
-      .s-card.is-live{border-color:rgba(239,68,68,.35)}
-      .s-card.is-live:hover{box-shadow:0 16px 48px rgba(239,68,68,.18)}
-      .s-card:not(.is-live):hover{box-shadow:0 16px 48px rgba(0,0,0,.5)}
+      .s-card:hover{transform:translateY(-7px) scale(1.01);border-color:rgba(255,255,255,.2)}
+      .s-card.is-live{border-color:rgba(var(--crl-hot-rgb,206,17,38),.35)}
+      .s-card.is-live:hover{
+        border-color:rgba(var(--crl-hot-rgb,206,17,38),.55);
+        box-shadow:0 20px 56px rgba(0,0,0,.55),0 0 40px rgba(206,17,38,.15);
+      }
+      .s-card:not(.is-live):hover{
+        box-shadow:0 20px 56px rgba(0,0,0,.55),0 0 40px oklch(0.72 0.18 205/.1);
+      }
       .s-card.soon{opacity:.45;pointer-events:none;background:rgba(255,255,255,.02)}
 
       /* Live thumbnail hero inside card */
       .s-card-hero{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;background:#070c10;flex-shrink:0}
       .s-card-hero img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
       .s-card:hover .s-card-hero img{transform:scale(1.04)}
-      .s-card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#0c1117 0%,transparent 65%)}
+      .s-card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#0c1117 0%,rgba(0,0,0,.15) 65%,transparent 100%)}
 
       .s-card-accent{height:3px;width:100%;flex-shrink:0}
 
@@ -96,11 +101,12 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .s-badges{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
       .s-live-badge{
         display:none;align-items:center;gap:5px;
-        background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.4);
-        color:#ef4444;font-family:var(--crl-mono);font-size:.62rem;letter-spacing:.08em;
-        padding:4px 9px;border-radius:99px;
+        background:rgba(206,17,38,.15);border:1px solid rgba(206,17,38,.4);
+        color:#ff3a50;font-family:var(--crl-mono);font-size:.62rem;letter-spacing:.1em;
+        padding:4px 10px;border-radius:99px;
+        box-shadow:0 0 10px rgba(206,17,38,.25);
       }
-      .s-live-badge .dot{width:5px;height:5px;border-radius:50%;background:#ef4444;animation:crl-blink 1.2s ease-in-out infinite}
+      .s-live-badge .dot{width:5px;height:5px;border-radius:50%;background:#ff3a50;animation:crl-blink 1.2s ease-in-out infinite}
       .is-live .s-live-badge{display:flex}
       .s-viewers{font-family:var(--crl-mono);font-size:.8rem;color:var(--crl-muted);letter-spacing:.05em;display:none}
       .is-live .s-viewers{display:block}
@@ -139,8 +145,8 @@ import SiteShell from '../../layouts/SiteShell.astro';
         transition:background .2s,border-color .2s;
       }
       .s-watch-btn:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2)}
-      .is-live .s-watch-btn{background:#ef4444;border-color:#ef4444;color:#fff}
-      .is-live .s-watch-btn:hover{background:#dc2626;border-color:#dc2626}
+      .is-live .s-watch-btn{background:#CE1126;border-color:#CE1126;color:#fff;box-shadow:0 0 16px rgba(206,17,38,.35)}
+      .is-live .s-watch-btn:hover{background:#b00f1f;border-color:#b00f1f}
 
       /* Empty state */
       .s-empty{

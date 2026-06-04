@@ -345,10 +345,11 @@ async def get_clip(channel: str):
 
 
 @app.get("/clip/vod/{vod_id}")
-async def get_vod_clip(vod_id: str, t: float = 0):
+async def get_vod_clip(vod_id: str, t: float = 0, dur: float = 30):
     if not vod_id or not re.match(r'^[a-zA-Z0-9]+$', vod_id):
         raise HTTPException(status_code=400)
-    t = max(0.0, t)
+    t   = max(0.0, t)
+    dur = min(max(1.0, dur), 300.0)
     token = await _admin_token()
     r = await _http.get(
         f"{PB_URL}/api/collections/vods/records/{vod_id}",
@@ -368,14 +369,20 @@ async def get_vod_clip(vod_id: str, t: float = 0):
     if not os.path.exists(filepath):
         raise HTTPException(status_code=404, detail="Archivo no encontrado")
     out = f"/tmp/vod_clip_{vod_id}_{int(t)}_{int(time.time())}.mp4"
+    timeout_secs = max(dur / 5 + 15, 30)  # VAAPI runs ~7x realtime
     proc = await asyncio.create_subprocess_exec(
-        "ffmpeg", "-y", "-ss", str(int(t)), "-i", filepath,
-        "-t", "30", "-c", "copy", "-movflags", "+faststart", out,
+        "ffmpeg", "-y",
+        "-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "vaapi",
+        "-ss", str(int(t)), "-i", filepath,
+        "-t", str(int(dur)),
+        "-c:v", "h264_vaapi", "-qp", "23",
+        "-c:a", "aac", "-b:a", "192k",
+        "-movflags", "+faststart", out,
         stdout=asyncio.subprocess.DEVNULL,
         stderr=asyncio.subprocess.DEVNULL,
     )
     try:
-        await asyncio.wait_for(proc.communicate(), timeout=25)
+        await asyncio.wait_for(proc.communicate(), timeout=timeout_secs)
     except asyncio.TimeoutError:
         proc.kill()
         raise HTTPException(status_code=504)

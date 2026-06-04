@@ -11,104 +11,374 @@ import SiteShell from '../../layouts/SiteShell.astro';
   <fragment slot="head">
     <meta name="theme-color" content="var(--crl-ink)" />
     <style is:global>
-      .hero{padding:56px 32px 40px;max-width:1200px;margin:0}
-      .hero-label{font-family:var(--crl-mono);font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--crl-accent);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-      .hero-label::before{content:'';display:block;width:24px;height:1px;background:var(--crl-accent)}
-      .hero h1{font-family:var(--crl-display);font-size:clamp(3rem,7vw,6rem);letter-spacing:4px;line-height:.9;color:var(--crl-white);margin-bottom:16px}
-      .hero h1 span{color:var(--crl-accent)}
-      .hero-sub{font-family:var(--crl-mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted)}
-      @media(max-width:600px){.hero{padding:40px 16px 28px}}
 
-      .filters{padding:0 32px 28px;max-width:1200px;margin:0;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-      @media(max-width:600px){.filters{padding:0 16px 20px}}
+      /* ═══ HERO ═══════════════════════════════════════════ */
+      .va-hero {
+        position: relative;
+        padding: 52px 32px 40px;
+        overflow: hidden;
+        max-width: 1200px;
+      }
+      .va-hero-grid {
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgba(var(--crl-accent-rgb),.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(var(--crl-accent-rgb),.035) 1px, transparent 1px);
+        background-size: 52px 52px;
+        pointer-events: none;
+      }
+      .va-hero-scan {
+        position: absolute; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent 0%, rgba(var(--crl-accent-rgb),.5) 40%, rgba(var(--crl-accent-rgb),.8) 50%, rgba(var(--crl-accent-rgb),.5) 60%, transparent 100%);
+        animation: va-scan 5s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes va-scan {
+        0%   { top: -2px; opacity: 0; }
+        4%   { opacity: 1; }
+        96%  { opacity: 1; }
+        100% { top: calc(100% + 2px); opacity: 0; }
+      }
+      .va-eyebrow {
+        font-family: var(--crl-mono);
+        font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+        color: var(--crl-accent);
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 14px;
+      }
+      .va-eyebrow::before { content: ''; width: 28px; height: 1px; background: var(--crl-accent); }
+      .va-title-wrap {
+        position: relative;
+        margin-bottom: 20px;
+        line-height: .88;
+      }
+      .va-title {
+        font-family: var(--crl-display);
+        font-size: clamp(4.5rem, 9vw, 8rem);
+        letter-spacing: 6px; line-height: .88;
+        color: var(--crl-white);
+        position: relative; z-index: 1;
+        display: inline-block;
+      }
+      .va-title em { font-style: normal; color: var(--crl-accent); }
+      .va-title-ghost {
+        position: absolute; left: 6px; top: 6px; z-index: 0;
+        font-family: var(--crl-display);
+        font-size: clamp(4.5rem, 9vw, 8rem);
+        letter-spacing: 6px; line-height: .88;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(var(--crl-accent-rgb),.12);
+        pointer-events: none; user-select: none;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .va-stats {
+        font-family: var(--crl-mono); font-size: 11px;
+        letter-spacing: 1.5px; color: var(--crl-muted);
+        display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+      }
+      .va-stats span { display: flex; align-items: center; gap: 7px; }
+      .va-stats i { color: var(--crl-accent); font-size: .6rem; }
+      .va-stats strong { color: rgba(232,246,255,.8); }
 
-      .section{padding:0 32px 64px;max-width:1200px;margin:0}
-      .vod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-      @media(max-width:1000px){.vod-grid{grid-template-columns:repeat(2,1fr)}}
-      @media(max-width:600px){.section{padding:0 16px 48px}.vod-grid{grid-template-columns:1fr;gap:12px}}
+      /* ═══ CONTROLS ════════════════════════════════════════ */
+      .va-controls {
+        padding: 0 32px 28px; max-width: 1200px;
+        display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      }
+      .va-search { position: relative; flex-shrink: 0; }
+      .va-search input {
+        background: rgba(var(--crl-accent-rgb),.04);
+        border: 1px solid var(--crl-border); border-radius: 6px;
+        padding: 8px 12px 8px 34px;
+        font-family: var(--crl-mono); font-size: 11px;
+        color: var(--crl-white); outline: none; width: 200px;
+        transition: .2s; letter-spacing: .5px;
+      }
+      .va-search input:focus { border-color: rgba(var(--crl-accent-rgb),.4); background: rgba(var(--crl-accent-rgb),.07); }
+      .va-search input::placeholder { color: var(--crl-muted); }
+      .va-search i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--crl-muted); font-size: .75rem; pointer-events: none; }
+      .va-filter-row { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; flex: 1; }
+      .va-filter-row::-webkit-scrollbar { display: none; }
 
-      .vod-card{border-radius:10px;overflow:hidden;border:1px solid var(--crl-border);background:var(--crl-surface);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}
-      .vod-card:hover{transform:translateY(-3px);border-color:rgba(var(--crl-accent-rgb),.25);box-shadow:0 16px 48px rgba(0,0,0,.5),0 0 0 1px rgba(var(--crl-accent-rgb),.06)}
-      .vod-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
-      .vod-thumb-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-      .vod-thumb-letter{font-family:var(--crl-display);font-size:5rem;letter-spacing:4px;opacity:.12}
-      .vod-thumb-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(var(--crl-accent-rgb),.03) 1px,transparent 1px),linear-gradient(90deg,rgba(var(--crl-accent-rgb),.03) 1px,transparent 1px);background-size:32px 32px}
-      .vod-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;background:rgba(3,10,14,.4)}
-      .vod-card:hover .vod-play-btn{opacity:1}
-      .vod-play-icon{width:52px;height:52px;border-radius:50%;background:rgba(var(--crl-accent-rgb),.15);border:1px solid rgba(var(--crl-accent-rgb),.4);display:flex;align-items:center;justify-content:center;color:var(--crl-white);font-size:1.1rem;backdrop-filter:blur(8px);transition:transform .15s}
-      .vod-card:hover .vod-play-icon{transform:scale(1.08)}
-      .vod-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s;pointer-events:none}
-      .vod-card:hover .vod-preview{opacity:1}
-      .vod-duration{position:absolute;bottom:8px;right:8px;font-family:var(--crl-mono);font-size:10px;letter-spacing:.5px;background:rgba(3,10,14,.85);backdrop-filter:blur(6px);color:rgba(232,246,255,.85);padding:3px 8px;border-radius:4px}
-      .vod-body{padding:12px 14px 14px}
-      .vod-channel-row{display:flex;align-items:center;gap:9px;margin-bottom:5px}
-      .vod-ava{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:12px;color:var(--crl-ink)}
-      .vod-name{font-family:var(--crl-mono);font-size:11px;font-weight:700;letter-spacing:.5px}
-      .vod-title{font-size:13px;color:var(--crl-white);font-weight:500;line-height:1.35;margin-bottom:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-      .vod-meta{display:flex;align-items:center;gap:10px;font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:.5px}
-      .vod-meta i{font-size:.65rem}
-      /* Búsqueda */
-      .search-bar{padding:0 32px 20px;max-width:1200px;margin:0}
-      .search-bar input{width:100%;max-width:360px;background:var(--crl-surface);border:1px solid var(--crl-border);border-radius:10px;padding:9px 14px 9px 38px;font-family:var(--crl-mono);font-size:.85rem;color:var(--crl-white);outline:none;transition:border-color .2s;box-sizing:border-box}
-      .search-bar input:focus{border-color:var(--crl-accent)}
-      .search-bar input::placeholder{color:var(--crl-muted)}
-      .search-bar{position:relative}
-      .search-bar i{position:absolute;left:46px;top:50%;transform:translateY(-50%);color:var(--crl-muted);font-size:.8rem;pointer-events:none}
-      @media(max-width:600px){.search-bar{padding:0 16px 16px}.search-bar input{max-width:100%}}
-      .vod-empty-wrap{grid-column:1/-1}
+      /* ═══ FEATURED LAYOUT ═════════════════════════════════ */
+      .va-featured {
+        padding: 0 32px 14px; max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr 264px;
+        grid-template-rows: auto;
+        gap: 12px;
+      }
+      .va-featured.hidden { display: none; }
 
-      .crl-modal{max-width:860px}
-      .modal-ava{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:13px;color:var(--crl-ink)}
-      .modal-name{font-family:var(--crl-mono);font-size:12px;font-weight:700;letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      .modal-date{font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:.5px;flex-shrink:0;margin-left:auto}
-      .modal-close{width:32px;height:32px;border-radius:6px;border:1px solid var(--crl-border);background:transparent;color:var(--crl-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:.15s;flex-shrink:0}
-      .modal-close:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
-      .modal-video{background:#000;aspect-ratio:16/9;width:100%}
-      .modal-video video{width:100%;height:100%;display:block}
-      .modal-stat{font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:.5px;display:flex;align-items:center;gap:6px}
-      .modal-stat i{color:var(--crl-accent);font-size:.65rem}
-      @media(max-width:600px){.crl-modal{border-radius:12px 12px 0 0}.crl-modal-backdrop{align-items:flex-end;padding:0}}
+      /* ── Featured main card ── */
+      .va-fcard {
+        position: relative; border-radius: 10px; overflow: hidden;
+        cursor: pointer; background: var(--crl-surface);
+        border: 1px solid var(--crl-border);
+        transition: box-shadow .3s, border-color .3s;
+        --ch: var(--crl-accent);
+      }
+      .va-fcard:hover { border-color: color-mix(in srgb, var(--ch) 40%, transparent); box-shadow: 0 24px 64px rgba(0,0,0,.6), 0 0 48px color-mix(in srgb, var(--ch) 12%, transparent); }
+      .va-fcard-thumb { aspect-ratio: 16/9; position: relative; overflow: hidden; background: #071118; }
+      .va-fcard-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.4,0,.2,1); }
+      .va-fcard:hover .va-fcard-thumb img { transform: scale(1.05); }
+      .va-fcard-thumb video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 2; }
+      .va-fcard:hover .va-fcard-thumb video { opacity: 1; }
+      /* Scan lines on hover */
+      .va-fcard-thumb::before {
+        content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+        background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.08) 3px, rgba(0,0,0,.08) 4px);
+        opacity: 0; transition: opacity .3s;
+      }
+      .va-fcard:hover .va-fcard-thumb::before { opacity: 1; }
+      /* Gradient overlay */
+      .va-fcard-thumb::after {
+        content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none;
+        background: linear-gradient(to top, rgba(3,10,14,.92) 0%, rgba(3,10,14,.3) 45%, transparent 100%);
+      }
+      .va-fcard-dur {
+        position: absolute; top: 10px; right: 10px; z-index: 6;
+        font-family: var(--crl-mono); font-size: 10px; letter-spacing: .5px;
+        background: rgba(3,10,14,.88); backdrop-filter: blur(8px);
+        color: rgba(232,246,255,.9); padding: 3px 8px; border-radius: 4px;
+      }
+      .va-fcard-play {
+        position: absolute; inset: 0; z-index: 5;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; transition: opacity .2s;
+      }
+      .va-fcard:hover .va-fcard-play { opacity: 1; }
+      .va-fcard-play-icon {
+        width: 68px; height: 68px; border-radius: 50%;
+        background: rgba(var(--crl-accent-rgb),.12);
+        border: 1.5px solid rgba(var(--crl-accent-rgb),.5);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 1.5rem;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 0 40px rgba(var(--crl-accent-rgb),.25);
+        transition: transform .15s;
+      }
+      .va-fcard:hover .va-fcard-play-icon { transform: scale(1.08); }
+      .va-fcard-info {
+        position: absolute; bottom: 0; left: 0; right: 0; z-index: 6;
+        padding: 22px 20px 18px;
+      }
+      .va-fcard-ch {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-family: var(--crl-mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+        color: var(--ch); margin-bottom: 8px;
+      }
+      .va-fcard-ch-ava {
+        width: 20px; height: 20px; border-radius: 50%; overflow: hidden;
+        display: flex; align-items: center; justify-content: center;
+        font-family: var(--crl-display); font-size: 10px; color: #000; flex-shrink: 0;
+        background: var(--ch);
+      }
+      .va-fcard-ch-ava img { width: 100%; height: 100%; object-fit: cover; }
+      .va-fcard-title {
+        font-family: var(--crl-display);
+        font-size: clamp(1.4rem, 2.5vw, 2rem);
+        letter-spacing: 2px; line-height: 1.05; color: var(--crl-white);
+        margin-bottom: 9px;
+      }
+      .va-fcard-meta {
+        font-family: var(--crl-mono); font-size: 10px; letter-spacing: 1px;
+        color: rgba(232,246,255,.45); display: flex; gap: 16px; flex-wrap: wrap;
+      }
 
+      /* ── Side stack ── */
+      .va-side { display: flex; flex-direction: column; gap: 12px; }
+
+      /* ── Side small card ── */
+      .va-scard {
+        border-radius: 8px; overflow: hidden;
+        background: var(--crl-surface); border: 1px solid var(--crl-border);
+        cursor: pointer; display: flex;
+        transition: border-color .2s, box-shadow .2s;
+        --ch: var(--crl-accent);
+        border-left: 3px solid var(--ch);
+        flex: 1;
+      }
+      .va-scard:hover { border-color: color-mix(in srgb, var(--ch) 35%, transparent); box-shadow: 0 8px 32px rgba(0,0,0,.45), 0 0 20px color-mix(in srgb, var(--ch) 8%, transparent); }
+      .va-scard-thumb { width: 112px; flex-shrink: 0; position: relative; overflow: hidden; background: #071118; }
+      .va-scard-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+      .va-scard:hover .va-scard-thumb img { transform: scale(1.08); }
+      .va-scard-dur {
+        position: absolute; bottom: 5px; right: 5px;
+        font-family: var(--crl-mono); font-size: 9px;
+        background: rgba(3,10,14,.85); color: rgba(232,246,255,.9);
+        padding: 2px 5px; border-radius: 3px;
+      }
+      .va-scard-body { padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; min-width: 0; flex: 1; gap: 3px; }
+      .va-scard-ch { font-family: var(--crl-mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ch); }
+      .va-scard-title { font-size: 12px; font-weight: 500; color: var(--crl-white); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .va-scard-meta { font-family: var(--crl-mono); font-size: 9px; color: var(--crl-muted); }
+
+      /* ═══ GRID SECTION ════════════════════════════════════ */
+      .va-section { padding: 0 32px 72px; max-width: 1200px; }
+      .va-section-hd {
+        display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+      }
+      .va-section-label {
+        font-family: var(--crl-display); font-size: 1.4rem; letter-spacing: 4px;
+        color: rgba(232,246,255,.18);
+        white-space: nowrap;
+      }
+      .va-section-rule { flex: 1; height: 1px; background: var(--crl-border); }
+      .va-section-count { font-family: var(--crl-mono); font-size: 10px; letter-spacing: 1px; color: var(--crl-muted); white-space: nowrap; }
+
+      .va-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      /* ═══ GRID CARD ═══════════════════════════════════════ */
+      .va-card {
+        border-radius: 8px; overflow: hidden;
+        background: var(--crl-surface);
+        border: 1px solid var(--crl-border);
+        border-top: 3px solid var(--ch, var(--crl-accent));
+        cursor: pointer;
+        transition: transform .25s cubic-bezier(.4,0,.2,1), border-color .25s, box-shadow .25s;
+        animation: va-in .35s both;
+        --ch: var(--crl-accent);
+      }
+      @keyframes va-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: none; }
+      }
+      .va-card:hover {
+        transform: translateY(-5px);
+        border-color: color-mix(in srgb, var(--ch) 35%, transparent);
+        box-shadow: 0 18px 52px rgba(0,0,0,.55), 0 0 0 1px color-mix(in srgb, var(--ch) 20%, transparent), 0 0 32px color-mix(in srgb, var(--ch) 8%, transparent);
+      }
+      .va-card-thumb { aspect-ratio: 16/9; position: relative; overflow: hidden; background: #071118; }
+      .va-card-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+      .va-card:hover .va-card-thumb img { transform: scale(1.07); }
+      /* scan-line hover */
+      .va-card-thumb::before {
+        content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+        background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px);
+        opacity: 0; transition: opacity .25s;
+      }
+      .va-card:hover .va-card-thumb::before { opacity: 1; }
+      /* play overlay */
+      .va-card-play {
+        position: absolute; inset: 0; z-index: 5;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0; transition: opacity .2s;
+      }
+      .va-card:hover .va-card-play { opacity: 1; }
+      .va-card-play-icon {
+        width: 44px; height: 44px; border-radius: 50%;
+        background: rgba(0,0,0,.35);
+        border: 1px solid rgba(232,246,255,.35);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: 1rem; backdrop-filter: blur(8px);
+      }
+      /* channel badge on thumb */
+      .va-card-ch {
+        position: absolute; bottom: 8px; left: 8px; z-index: 4;
+        display: inline-flex; align-items: center; gap: 5px;
+        background: rgba(3,10,14,.82); backdrop-filter: blur(6px);
+        border-radius: 4px; padding: 3px 7px;
+        font-family: var(--crl-mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+        color: rgba(232,246,255,.75);
+      }
+      .va-card-ch-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ch); flex-shrink: 0; }
+      .va-card-dur {
+        position: absolute; top: 8px; right: 8px; z-index: 4;
+        font-family: var(--crl-mono); font-size: 9px; letter-spacing: .5px;
+        background: rgba(3,10,14,.88); backdrop-filter: blur(6px);
+        color: rgba(232,246,255,.9); padding: 2px 7px; border-radius: 4px;
+      }
+      /* fallback bg */
+      .va-card-thumb-bg {
+        position: absolute; inset: 0; z-index: 0;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .va-card-thumb-letter {
+        font-family: var(--crl-display); font-size: 5rem; letter-spacing: 4px;
+        opacity: .1; color: var(--ch);
+      }
+      .va-card-thumb-lines {
+        position: absolute; inset: 0;
+        background-image: linear-gradient(rgba(var(--crl-accent-rgb),.03) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(var(--crl-accent-rgb),.03) 1px, transparent 1px);
+        background-size: 28px 28px;
+      }
+      /* video preview */
+      .va-card-preview {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 2;
+      }
+      .va-card:hover .va-card-preview { opacity: 1; }
+
+      .va-card-body { padding: 11px 13px 13px; }
+      .va-card-title {
+        font-size: 13px; font-weight: 500; color: var(--crl-white);
+        line-height: 1.35; margin-bottom: 7px;
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      }
+      .va-card-meta { font-family: var(--crl-mono); font-size: 9px; color: var(--crl-muted); letter-spacing: .5px; display: flex; gap: 12px; }
+
+      .va-empty { grid-column: 1/-1; }
+
+      /* ═══ RESPONSIVE ══════════════════════════════════════ */
+      @media (max-width: 960px) {
+        .va-featured { grid-template-columns: 1fr; }
+        .va-side { display: none; }
+        .va-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 600px) {
+        .va-hero  { padding: 36px 16px 28px; }
+        .va-controls { padding: 0 16px 20px; }
+        .va-featured { padding: 0 16px 14px; }
+        .va-section { padding: 0 16px 56px; }
+        .va-grid { grid-template-columns: 1fr; gap: 10px; }
+        .va-search input { width: 100%; }
+      }
     </style>
   </fragment>
 
-<div class="hero">
-  <div class="hero-label">Archivo</div>
-  <h1>VIDE<span>OS</span></h1>
-  <div class="hero-sub" id="heroSub">Cargando…</div>
-</div>
-
-<div class="search-bar">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input id="vodSearch" type="search" placeholder="Buscar transmisión..." autocomplete="off" spellcheck="false">
-</div>
-
-<div class="filters" id="filters">
-  <button class="crl-filter-pill active" data-channel="all">Todos</button>
-</div>
-
-<div class="section">
-  <div class="vod-grid" id="vodGrid"></div>
-</div>
-
-<div class="crl-modal-backdrop" id="modalBackdrop">
-  <div class="crl-modal" id="modal">
-    <div class="crl-modal-header">
-      <div style="display:flex;align-items:center;gap:10px;min-width:0;flex:1">
-        <div class="modal-ava" id="modalAva"></div>
-        <div class="modal-name" id="modalName"></div>
-      </div>
-      <div class="modal-date" id="modalDate"></div>
-      <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <div class="modal-video">
-      <video id="modalVideo" controls preload="metadata"></video>
-    </div>
-    <div class="crl-modal-footer">
-      <div class="modal-stat"><i class="fa-solid fa-clock"></i> <span id="modalDuration">—</span></div>
-      <div class="modal-stat"><i class="fa-solid fa-weight-hanging"></i> <span id="modalSize">—</span></div>
-    </div>
+<!-- ═══ HERO ══════════════════════════════════════════════ -->
+<div class="va-hero">
+  <div class="va-hero-grid"></div>
+  <div class="va-hero-scan"></div>
+  <div class="va-eyebrow">Transmisiones · Archivo</div>
+  <div class="va-title-wrap">
+    <span class="va-title-ghost" aria-hidden="true">VIDEOS</span>
+    <span class="va-title">VIDE<em>OS</em></span>
   </div>
+  <div class="va-stats" id="vaStats">
+    <span><i class="fa-solid fa-circle"></i> Cargando…</span>
+  </div>
+</div>
+
+<!-- ═══ CONTROLS ══════════════════════════════════════════ -->
+<div class="va-controls">
+  <div class="va-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input id="vodSearch" type="search" placeholder="Buscar..." autocomplete="off" spellcheck="false">
+  </div>
+  <div class="va-filter-row" id="filters">
+    <button class="crl-filter-pill active" data-channel="all">Todos</button>
+  </div>
+</div>
+
+<!-- ═══ FEATURED ══════════════════════════════════════════ -->
+<div class="va-featured hidden" id="vaFeatured"></div>
+
+<!-- ═══ GRID ══════════════════════════════════════════════ -->
+<div class="va-section">
+  <div class="va-section-hd" id="vaSecHd" style="display:none">
+    <span class="va-section-label">ARCHIVO</span>
+    <div class="va-section-rule"></div>
+    <span class="va-section-count" id="vaSecCount"></span>
+  </div>
+  <div class="va-grid" id="vodGrid"></div>
 </div>
 
 <script>
@@ -123,12 +393,6 @@ function fmtDuration(s: number) {
   return `${m}:${ss.toString().padStart(2,'0')}`;
 }
 
-function fmtSize(bytes: number) {
-  if (!bytes) return '—';
-  if (bytes > 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
-  return (bytes / 1048576).toFixed(0) + ' MB';
-}
-
 function fmtDate(iso: string) {
   if (!iso) return '—';
   return new Date(iso).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -139,45 +403,32 @@ const streamerMap: Record<string, any> = {};
 async function loadStreamers() {
   try {
     const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
-    if (r.ok) {
-      const list = await r.json();
-      for (const s of list) streamerMap[s.key] = s;
-    }
+    if (r.ok) { const list = await r.json(); for (const s of list) streamerMap[s.key] = s; }
   } catch {}
-  // Fallback: static list
   if (!Object.keys(streamerMap).length) {
-    for (const s of ((window as any).STREAMERS || [])) {
-      if (s.key) streamerMap[s.key] = s;
-    }
+    for (const s of ((window as any).STREAMERS || [])) { if (s.key) streamerMap[s.key] = s; }
   }
 }
 
-function streamerInfo(channel: string) {
-  const s = streamerMap[channel];
-  return s || { key: channel, name: channel.toUpperCase(), color: 'var(--crl-accent)', ava: channel[0].toUpperCase() };
+function si(ch: string) {
+  return streamerMap[ch] || { key: ch, name: ch.toUpperCase(), color: 'var(--crl-accent)', ava: ch[0]?.toUpperCase() };
 }
 
-function avaStyle(s: any) {
-  return s.color ? `background:${s.color}` : 'background:var(--crl-accent)';
-}
-
-function initial(name: string) {
-  return (name || '?')[0].toUpperCase();
-}
-
-function avaContent(s: any) {
-  return s.avatar_url
-    ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
-    : initial(s.name);
+function avaHtml(s: any, size = 20) {
+  const st = s.color ? `background:${s.color}` : 'background:var(--crl-accent)';
+  const inner = s.avatar_url
+    ? `<img src="${s.avatar_url}" alt="" style="width:100%;height:100%;object-fit:cover">`
+    : (s.ava || s.name?.[0] || '?').toUpperCase();
+  return `<span class="va-fcard-ch-ava" style="${st};width:${size}px;height:${size}px;font-size:${Math.round(size*.5)}px">${inner}</span>`;
 }
 
 let allVods: any[] = [];
 let activeFilter = 'all';
 let searchQ = '';
+const hasHover = window.matchMedia('(hover: hover)').matches;
 
 async function loadVods() {
   await loadStreamers();
-
   try {
     const r = await fetch(`${PB}/api/collections/vods/records?sort=-date&perPage=200`);
     const data = await r.json();
@@ -185,17 +436,18 @@ async function loadVods() {
   } catch { allVods = []; }
 
   buildFilters();
-
   const initCh = new URLSearchParams(location.search).get('ch');
   if (initCh && initCh !== 'all') setFilter(initCh);
-  else renderGrid();
+  else renderAll();
 
-  const heroSub = document.getElementById('heroSub')!;
-  if (allVods.length === 0) {
-    heroSub.textContent = 'Aún no hay transmisiones grabadas';
+  const statsEl = document.getElementById('vaStats')!;
+  if (!allVods.length) {
+    statsEl.innerHTML = `<span>Aún no hay transmisiones grabadas</span>`;
   } else {
     const channels = new Set(allVods.map(v => v.channel)).size;
-    heroSub.textContent = `${allVods.length} transmisión${allVods.length !== 1 ? 'es' : ''} · ${channels} canal${channels !== 1 ? 'es' : ''}`;
+    statsEl.innerHTML =
+      `<span><i class="fa-solid fa-film"></i> <strong>${allVods.length}</strong> transmisión${allVods.length !== 1 ? 'es' : ''}</span>` +
+      `<span><i class="fa-solid fa-tower-broadcast"></i> <strong>${channels}</strong> canal${channels !== 1 ? 'es' : ''}</span>`;
   }
 }
 
@@ -203,11 +455,11 @@ function buildFilters() {
   const channels = [...new Set(allVods.map(v => v.channel))] as string[];
   const container = document.getElementById('filters')!;
   channels.forEach(ch => {
-    const s = streamerInfo(ch);
+    const s = si(ch);
     const btn = document.createElement('button');
     btn.className = 'crl-filter-pill';
     btn.dataset.channel = ch;
-    btn.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.color || 'var(--crl-accent)'};margin-right:6px"></span>${s.name}`;
+    btn.innerHTML = `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${s.color||'var(--crl-accent)'};margin-right:5px;flex-shrink:0"></span>${s.name}`;
     container.appendChild(btn);
   });
   container.addEventListener('click', (e: Event) => {
@@ -216,109 +468,187 @@ function buildFilters() {
   });
 }
 
-function setFilter(channel: string) {
-  activeFilter = channel;
+function setFilter(ch: string) {
+  activeFilter = ch;
   document.querySelectorAll('.crl-filter-pill').forEach(b => {
-    b.classList.toggle('active', (b as HTMLElement).dataset.channel === channel);
+    b.classList.toggle('active', (b as HTMLElement).dataset.channel === ch);
   });
-  renderGrid();
+  renderAll();
 }
 
-function renderGrid() {
-  const grid = document.getElementById('vodGrid')!;
+/* ── Featured large card ── */
+function renderFcard(vod: any) {
+  const s = si(vod.channel);
+  const chColor = s.color || 'var(--crl-accent)';
+  const thumb = vod.thumb ? `<img src="${vod.thumb}" alt="" loading="eager">` : '';
+  const preview = (vod.preview && hasHover)
+    ? `<video class="va-fcard-preview" src="${vod.preview}" muted playsinline preload="none" loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s;pointer-events:none;z-index:2"></video>`
+    : '';
+  const title = vod.title
+    ? `<div class="va-fcard-title">${vod.title}</div>`
+    : `<div class="va-fcard-title">${s.name}</div>`;
+  return `
+  <div class="va-fcard" data-id="${vod.id}" style="--ch:${chColor}">
+    <div class="va-fcard-thumb">
+      <div class="va-card-thumb-bg">
+        <div class="va-card-thumb-lines"></div>
+        <span class="va-card-thumb-letter">${(s.ava||s.name[0]).toUpperCase()}</span>
+      </div>
+      ${thumb}${preview}
+      <div class="va-fcard-play"><div class="va-fcard-play-icon"><i class="fa-solid fa-play" style="margin-left:3px"></i></div></div>
+      <div class="va-fcard-dur">${fmtDuration(vod.duration)}</div>
+    </div>
+    <div class="va-fcard-info">
+      <div class="va-fcard-ch">${avaHtml(s, 20)} ${s.name}</div>
+      ${title}
+      <div class="va-fcard-meta">
+        <span><i class="fa-regular fa-calendar"></i> ${fmtDate(vod.date)}</span>
+        ${vod.duration ? `<span><i class="fa-solid fa-clock"></i> ${fmtDuration(vod.duration)}</span>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── Side small card ── */
+function renderScard(vod: any) {
+  const s = si(vod.channel);
+  const chColor = s.color || 'var(--crl-accent)';
+  const thumb = vod.thumb ? `<img src="${vod.thumb}" alt="" loading="eager">` : '';
+  return `
+  <div class="va-scard" data-id="${vod.id}" style="--ch:${chColor}">
+    <div class="va-scard-thumb">
+      <div class="va-card-thumb-bg" style="background:color-mix(in srgb,${chColor} 12%,#071118)">
+        <span style="font-family:var(--crl-display);font-size:2.5rem;color:${chColor};opacity:.15">${(s.ava||s.name[0]).toUpperCase()}</span>
+      </div>
+      ${thumb}
+      <div class="va-scard-dur">${fmtDuration(vod.duration)}</div>
+    </div>
+    <div class="va-scard-body">
+      <div class="va-scard-ch">${s.name}</div>
+      <div class="va-scard-title">${vod.title || fmtDate(vod.date)}</div>
+      <div class="va-scard-meta">${fmtDate(vod.date)}</div>
+    </div>
+  </div>`;
+}
+
+/* ── Grid card ── */
+function renderCard(vod: any, idx: number) {
+  const s = si(vod.channel);
+  const chColor = s.color || 'var(--crl-accent)';
+  const delay = Math.min(idx * 40, 300);
+  const thumb = vod.thumb ? `<img src="${vod.thumb}" alt="" loading="lazy">` : '';
+  const preview = (vod.preview && hasHover)
+    ? `<video class="va-card-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>`
+    : '';
+  return `
+  <div class="va-card" data-id="${vod.id}" style="--ch:${chColor};animation-delay:${delay}ms">
+    <div class="va-card-thumb">
+      <div class="va-card-thumb-bg">
+        <div class="va-card-thumb-lines"></div>
+        <span class="va-card-thumb-letter">${(s.ava||s.name[0]).toUpperCase()}</span>
+      </div>
+      ${thumb}${preview}
+      <div class="va-card-play"><div class="va-card-play-icon"><i class="fa-solid fa-play" style="margin-left:2px"></i></div></div>
+      <div class="va-card-ch"><span class="va-card-ch-dot"></span>${s.name}</div>
+      ${vod.duration ? `<div class="va-card-dur">${fmtDuration(vod.duration)}</div>` : ''}
+    </div>
+    <div class="va-card-body">
+      ${vod.title ? `<div class="va-card-title">${vod.title}</div>` : ''}
+      <div class="va-card-meta">
+        <span><i class="fa-regular fa-calendar"></i> ${fmtDate(vod.date)}</span>
+        ${vod.duration ? `<span><i class="fa-solid fa-clock"></i> ${fmtDuration(vod.duration)}</span>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderAll() {
+  const featEl  = document.getElementById('vaFeatured')!;
+  const gridEl  = document.getElementById('vodGrid')!;
+  const secHd   = document.getElementById('vaSecHd')!;
+  const secCount = document.getElementById('vaSecCount')!;
+
   let list = activeFilter === 'all' ? allVods : allVods.filter(v => v.channel === activeFilter);
   if (searchQ) {
     const q = searchQ.toLowerCase();
     list = list.filter(v => {
-      const s = streamerInfo(v.channel);
-      return (v.title || '').toLowerCase().includes(q) ||
-             (s.name || '').toLowerCase().includes(q) ||
-             (v.channel || '').toLowerCase().includes(q);
+      const s = si(v.channel);
+      return (v.title||'').toLowerCase().includes(q) ||
+             (s.name||'').toLowerCase().includes(q) ||
+             (v.channel||'').toLowerCase().includes(q);
     });
   }
 
   if (!list.length) {
-    grid.innerHTML = `
-      <div class="vod-empty-wrap">
+    featEl.classList.add('hidden');
+    secHd.style.display = 'none';
+    gridEl.innerHTML = `
+      <div class="va-empty">
         <div class="crl-empty">
           <div class="crl-empty-icon"><i class="fa-solid fa-film"></i></div>
           <div class="crl-empty-title">SIN VODS</div>
-          <div class="crl-empty-sub">Aún no hay transmisiones grabadas${activeFilter !== 'all' ? ' para este canal' : ''}</div>
+          <div class="crl-empty-sub">No hay transmisiones que coincidan${activeFilter !== 'all' ? ' para este canal' : ''}</div>
         </div>
       </div>`;
     return;
   }
 
-  grid.innerHTML = list.map(vod => {
-    const s = streamerInfo(vod.channel);
-    const colorBg = s.color ? `${s.color}18` : 'rgba(var(--crl-accent-rgb),.07)';
-    return `
-    <div class="vod-card" data-id="${vod.id}">
-      <div class="vod-thumb" style="background:${colorBg}">
-        <div class="vod-thumb-bg">
-          <div class="vod-thumb-letter" style="color:${s.color || 'var(--crl-accent)'}">${initial(s.name)}</div>
-        </div>
-        <div class="vod-thumb-grid"></div>
-        ${vod.thumb ? `<img src="${vod.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.35);" onerror="this.style.display='none'" loading="lazy">` : ''}
-        ${vod.preview && window.matchMedia('(hover: hover)').matches ? `<video class="vod-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : ''}
-        <div class="vod-play-btn">
-          <div class="vod-play-icon"><i class="fa-solid fa-play" style="margin-left:3px"></i></div>
-        </div>
-        <div class="vod-duration">${fmtDuration(vod.duration)}</div>
-      </div>
-      <div class="vod-body">
-        <div class="vod-channel-row">
-          <div class="vod-ava" style="${avaStyle(s)}">${avaContent(s)}</div>
-          <div class="vod-name" style="color:${s.color || 'var(--crl-white)'}">${s.name}</div>
-        </div>
-        ${vod.title ? `<div class="vod-title">${vod.title}</div>` : ''}
-        <div class="vod-meta">
-          <span><i class="fa-regular fa-calendar"></i> ${fmtDate(vod.date)}</span>
-          ${vod.duration ? `<span><i class="fa-solid fa-clock"></i> ${fmtDuration(vod.duration)}</span>` : ''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+  const useFeature = activeFilter === 'all' && !searchQ && list.length >= 3;
 
-  grid.querySelectorAll('.vod-card').forEach(card => {
-    card.addEventListener('click', () => {
-      location.href = `/vods/v/?id=${(card as HTMLElement).dataset.id}`;
-    });
-    if (window.matchMedia('(hover: hover)').matches) {
-      const vid = card.querySelector('.vod-preview') as HTMLVideoElement | null;
-      if (vid) {
-        card.addEventListener('mouseenter', () => { vid.play().catch(() => {}); });
-        card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-      }
+  if (useFeature) {
+    const [feat, sc1, sc2, ...rest] = list;
+    featEl.classList.remove('hidden');
+    featEl.innerHTML =
+      renderFcard(feat) +
+      `<div class="va-side">${renderScard(sc1)}${sc2 ? renderScard(sc2) : ''}</div>`;
+
+    if (rest.length) {
+      secHd.style.display = 'flex';
+      secCount.textContent = `${rest.length} más`;
+      gridEl.innerHTML = rest.map(renderCard).join('');
+    } else {
+      secHd.style.display = 'none';
+      gridEl.innerHTML = '';
     }
+  } else {
+    featEl.classList.add('hidden');
+    secHd.style.display = 'flex';
+    secCount.textContent = `${list.length} transmisión${list.length !== 1 ? 'es' : ''}`;
+    gridEl.innerHTML = list.map(renderCard).join('');
+  }
+
+  /* ── Wire clicks ── */
+  [featEl, gridEl].forEach(wrap => {
+    wrap.querySelectorAll('[data-id]').forEach(el => {
+      el.addEventListener('click', () => {
+        location.href = `/vods/v/?id=${(el as HTMLElement).dataset.id}`;
+      });
+    });
   });
+
+  /* ── Wire preview hovers ── */
+  if (hasHover) {
+    [featEl, gridEl].forEach(wrap => {
+      wrap.querySelectorAll('[data-id]').forEach(el => {
+        const vid = el.querySelector('video') as HTMLVideoElement | null;
+        if (!vid) return;
+        el.addEventListener('mouseenter', () => vid.play().catch(() => {}));
+        el.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
+      });
+    });
+  }
 }
 
-function closeModal() {
-  document.getElementById('modalBackdrop')!.classList.remove('open');
-  const video = document.getElementById('modalVideo') as HTMLVideoElement;
-  video.pause();
-  video.src = '';
-  document.body.style.overflow = '';
-}
-
-document.getElementById('modalClose')!.addEventListener('click', closeModal);
-document.getElementById('modalBackdrop')!.addEventListener('click', (e: Event) => {
-  if (e.target === e.currentTarget) closeModal();
-});
-document.addEventListener('keydown', (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); });
-
-// Búsqueda
-const vodSearchEl = document.getElementById('vodSearch') as HTMLInputElement | null;
-if (vodSearchEl) {
-  vodSearchEl.addEventListener('input', (e: Event) => {
+/* ── Search ── */
+const searchEl = document.getElementById('vodSearch') as HTMLInputElement | null;
+if (searchEl) {
+  searchEl.addEventListener('input', (e: Event) => {
     searchQ = (e.target as HTMLInputElement).value.toLowerCase().trim();
-    renderGrid();
+    renderAll();
   });
 }
 
 loadVods();
-
 </script>
 
 </SiteShell>
