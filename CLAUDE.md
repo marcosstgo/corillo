@@ -64,6 +64,7 @@ Cada push a `main` ejecuta en orden:
 | thumbgen | — | bash | `/usr/local/bin/thumbgen-all.sh` |
 | bitrate-monitor | — | python3 | `/home/corillo-adm/bitrate-monitor.py` |
 | win-monitor | 8200 | uvicorn | `/home/corillo-adm/win-monitor/` |
+| corillo-bf6-proxy | 3011 | node | `/opt/corillo/bf6-proxy/` |
 
 Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre>`.
 
@@ -74,6 +75,7 @@ Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre
 ## Routing nginx
 
 ```
+/api/bf6/*                → 3011  corillo-bf6-proxy
 /api/*                    → 3004  corillo-api  (catch-all ^~, sin regex)
   /api/join               → 3003  corillo-telegram
   /api/admin              → 3003  corillo-telegram
@@ -90,6 +92,7 @@ Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre
 /vods/*                   → /var/vods/live/
 /assets/thumbs/*          → /var/www/stream/assets/thumbs/
 /assets/kick/*            → /var/www/stream/assets/kick/
+/overlay/bf6/*            → /opt/corillo/bf6-proxy/public/  (archivos estáticos)
 /*                        → /var/www/stream/dist/  (Astro SSG)
 ```
 
@@ -280,6 +283,28 @@ Bot de Telegram que descarga videos de redes sociales y los sube al servidor.
 Dos servicios de thumbnails distintos que corren en paralelo:
 - `corillo-thumbs.service` → `scripts/thumb-gen.py` — genera thumbnails de streams en vivo, los guarda en `/var/www/stream/assets/thumbs/`. **Versionado en el repo**, se despliega via CI.
 - `thumbgen.service` → `/usr/local/bin/thumbgen-all.sh` — script bash alternativo de thumbnails. **No está en el repo**, instalado manualmente en el sistema.
+
+### corillo-bf6-proxy — Puerto 3011
+
+Proxy Node.js que sirve stats de Battlefield 6 desde gametools.network sin problemas de CORS.
+- **Directorio:** `/opt/corillo/bf6-proxy/`
+- **Endpoint proxy:** `GET /bf6/stats?name=JUGADOR&platform=PLATAFORMA`
+- Llama a `https://api.gametools.network/bf6/stats/` y devuelve el JSON con `Access-Control-Allow-Origin: *`
+- Caché en memoria de 5 minutos por jugador+plataforma
+- Timeout de 12s hacia gametools — si falla devuelve JSON de error limpio
+- Plataformas válidas: `ea`, `steam`, `psn`, `xbox`, `ps5`, `epic` (BF6 disponible en EA y Steam al 2026-06-05)
+
+**Overlays estáticos** servidos en `/overlay/bf6/` desde `/opt/corillo/bf6-proxy/public/`:
+
+| Archivo | URL pública | Tamaño OBS |
+|---|---|---|
+| `index.html` | `/overlay/bf6/` | Generador (no es overlay) |
+| `overlay.html` | `/overlay/bf6/overlay.html?name=X&platform=Y` | 380×175 |
+| `weapons.html` | `/overlay/bf6/weapons.html?name=X&platform=Y` | 380×255 |
+| `accuracy.html` | `/overlay/bf6/accuracy.html?name=X&platform=Y` | 380×195 |
+| `objective.html` | `/overlay/bf6/objective.html?name=X&platform=Y` | 380×225 |
+
+> **Nota:** Las rutas `/api/bf6/` y `/overlay/bf6/` están en `/etc/nginx/nginx.conf` pero **NO en el `nginx.conf` del repo** — fueron agregadas directamente al servidor el 2026-06-05. Si el CI sobreescribe nginx.conf, hay que volver a agregar estos bloques. Pendiente: mover al repo.
 
 ### bitrate-monitor (`scripts/bitrate-monitor.py`)
 Daemon que vigila el bitrate de los streams en vivo.
