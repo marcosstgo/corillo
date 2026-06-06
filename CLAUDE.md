@@ -296,15 +296,16 @@ Proxy Node.js que sirve stats de Battlefield 6 desde gametools.network sin probl
 
 **Overlays estáticos** servidos en `/overlay/bf6/` desde `/opt/corillo/bf6-proxy/public/`:
 
-| Archivo | URL pública | Tamaño OBS |
-|---|---|---|
-| `index.html` | `/overlay/bf6/` | Generador (no es overlay) |
-| `overlay.html` | `/overlay/bf6/overlay.html?name=X&platform=Y` | 380×175 |
-| `weapons.html` | `/overlay/bf6/weapons.html?name=X&platform=Y` | 380×255 |
-| `accuracy.html` | `/overlay/bf6/accuracy.html?name=X&platform=Y` | 380×195 |
-| `objective.html` | `/overlay/bf6/objective.html?name=X&platform=Y` | 380×225 |
+| Archivo | URL pública | Tamaño OBS | Descripción |
+|---|---|---|---|
+| `index.html` | `/overlay/bf6/` | — | Generador público (no es overlay) |
+| `overlay.html` | `/overlay/bf6/overlay.html?name=X&platform=Y` | 380×175 | Stats generales |
+| `weapons.html` | `/overlay/bf6/weapons.html?name=X&platform=Y` | 380×255 | Top 5 armas |
+| `accuracy.html` | `/overlay/bf6/accuracy.html?name=X&platform=Y` | 380×195 | Accuracy / headshots |
+| `objective.html` | `/overlay/bf6/objective.html?name=X&platform=Y` | 380×225 | Objetivo / soporte |
+| `lowerthird.html` | `/overlay/bf6/lowerthird.html?name=X&platform=Y` | 1920×80 | Barra inferior full-width, 4 bloques rotativos (General → Armas → Accuracy → Objetivo) cada 8s con animación slide+fade y barra de progreso. Ubicar en la parte inferior de la escena en OBS. |
 
-> **Nota:** Las rutas `/api/bf6/` y `/overlay/bf6/` están en `/etc/nginx/nginx.conf` pero **NO en el `nginx.conf` del repo** — fueron agregadas directamente al servidor el 2026-06-05. Si el CI sobreescribe nginx.conf, hay que volver a agregar estos bloques. Pendiente: mover al repo.
+> Las rutas `/api/bf6/` y `/overlay/bf6/` están en `nginx.conf` del repo (añadidas 2026-06-05). Los archivos HTML del proxy están en `/opt/corillo/bf6-proxy/public/` — **fuera del repo**, editar directamente en el servidor.
 
 ### bitrate-monitor (`scripts/bitrate-monitor.py`)
 Daemon que vigila el bitrate de los streams en vivo.
