@@ -2072,8 +2072,31 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
   body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
   .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; flex: none; align-content: start; }
   .player-side, .crl-player-main { overflow: visible!important; }
-  /* Chat más compacto en tablet — el video debe dominar */
-  .crl-chat-panel { height: min(380px, 45vh); border-left: none; border-top: 1px solid var(--crl-border); }
+  /* Chat = bottom sheet deslizable en móvil/tablet (sube desde abajo) */
+  .crl-chat-panel {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    height: min(70vh, 600px); max-height: 70dvh;
+    z-index: 250; border-left: none; border-top: 1px solid var(--crl-border);
+    border-radius: 18px 18px 0 0; box-shadow: 0 -10px 44px rgba(0,0,0,.6);
+    background: var(--crl-bg); transform: translateY(100%);
+    transition: transform .32s cubic-bezier(.32,.72,0,1); will-change: transform;
+  }
+  .crl-player-app:not(.chat-hidden) .crl-chat-panel { transform: translateY(0); }
+  /* En móvil no ocultar con display:none — se anima con transform */
+  .crl-player-app.chat-hidden .crl-chat-panel { display: flex !important; }
+  .crl-player-app.chat-hidden { grid-template-columns: 1fr; }
+  /* Backdrop del bottom sheet */
+  .crl-chat-backdrop {
+    position: fixed; inset: 0; z-index: 240; background: rgba(0,0,0,.5);
+    opacity: 0; pointer-events: none; transition: opacity .3s;
+  }
+  .crl-player-app:not(.chat-hidden) ~ .crl-chat-backdrop { opacity: 1; pointer-events: auto; }
+  /* Asa visual del sheet */
+  .crl-chat-panel-header { position: relative; }
+  .crl-chat-panel-header::before {
+    content: ''; position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
+    width: 36px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.22);
+  }
   .nav-btn, .chat-send, #chatSend { min-width: 44px; min-height: 44px; }
   .stats-row { flex-wrap: wrap; }
   .stats-row .stat { padding: 8px 6px; min-width: 0; }
@@ -2097,7 +2120,7 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
 }
 @media(max-width:600px) {
   #chatInput { font-size: 16px; }
-  .crl-chat-panel { height: min(320px, 42vh) !important; }
+  .crl-chat-panel { height: min(72vh, 560px) !important; max-height: 72dvh !important; }
   /* Info del canal muy compacta en mobile */
   .ch-info-bar { padding: 8px 12px; gap: 9px; }
   .ch-ava { width: 38px !important; height: 38px !important; font-size: 1rem !important; }
@@ -2118,7 +2141,7 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
   body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
   .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; }
   .player-side, .crl-player-main { overflow: visible!important; }
-  .crl-chat-panel { height: min(280px, 35vh) !important; }
+  .crl-chat-panel { height: 90vh !important; max-height: 90dvh !important; }
 }
 
 /* ── Player: Stats del canal ────────────────────────────── */

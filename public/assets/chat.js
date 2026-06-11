@@ -2,8 +2,12 @@
 /* Requires: player.js loaded first (provides `channel` global) */
 
 // ── CHAT VISIBILITY ──
-// Default: visible (chat shows on first visit, like Kick)
-let chatVisible = localStorage.getItem('corillo_chat') !== 'hidden';
+// Desktop: visible por defecto (columna lateral, como Kick).
+// Móvil (≤960px): cerrado por defecto — el chat es un panel deslizable
+// que se abre con el botón 💬; así no tapa el contenido al entrar.
+const _chatIsMobile = window.matchMedia('(max-width:960px)').matches;
+const _chatSaved = localStorage.getItem('corillo_chat');
+let chatVisible = _chatSaved !== null ? _chatSaved !== 'hidden' : !_chatIsMobile;
 
 function showChat() {
   chatVisible = true;
@@ -32,6 +36,8 @@ if (!chatVisible) {
 if ($('#chatToggleBtn')) $('#chatToggleBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
 if ($('#chatCloseBtn'))  $('#chatCloseBtn').addEventListener('click', hideChat);
 if ($('#chatRailBtn'))   $('#chatRailBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
+// Cerrar el bottom sheet de móvil al tocar fuera (backdrop)
+if ($('#chatBackdrop'))  $('#chatBackdrop').addEventListener('click', hideChat);
 
 // ── WEBSOCKET CHAT ──
 const WS_BASE = location.protocol === 'https:' ? 'wss:' : 'ws:';
