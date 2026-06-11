@@ -1,7 +1,8 @@
 {
-  "version": "2.2.668",
-  "date": "2026-06-06",
+  "version": "2.2.669",
+  "date": "2026-06-11",
   "changes": [
+    "Fix: móvil ya no cae a VOD cuando la variante _low no existe — fallback a calidad normal",
     "Móvil arranca en 720p automático (viewport ≤768px), desktop en 1080p",
     "Preferencia de calidad guardada en localStorage — respeta elección manual",
     "Botones overlay 1080p/720p en estado de error",

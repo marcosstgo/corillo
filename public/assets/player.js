@@ -760,10 +760,19 @@ window.channel = __validFormat ? __rawChannel : '';
     // Skips 4 retry cycles (~8s) when channel is known offline.
     if (App.retries === 0) {
       try {
-        const r    = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
-        const data = await r.json();
-        const live = (data.items || []).find(p => p.name === 'live/' + App.channel && p.ready);
+        const r     = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
+        const data  = await r.json();
+        const items = data.items || [];
+        const live  = items.find(p => p.name === 'live/' + App.channel && p.ready);
         if (!live) { startWatch(); return; }
+        // Fallback: si se pidió calidad baja pero la variante _low no existe en mediamtx,
+        // usar la calidad normal en vez de fallar a "offline". La variante _low no siempre
+        // se genera (no hay transcodificación de baja calidad en el servidor).
+        if (App.lowQuality && !items.find(p => p.name === 'live/' + App.channel + '_low' && p.ready)) {
+          App.lowQuality = false;
+          DOM.ctrlQuality?.classList.add('active');
+          DOM.ctrlQualityLow?.classList.remove('active');
+        }
       } catch {} // network error → fall through and attempt HLS normally
     }
 
