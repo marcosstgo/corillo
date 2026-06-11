@@ -9,13 +9,53 @@ const _chatIsMobile = window.matchMedia('(max-width:960px)').matches;
 const _chatSaved = localStorage.getItem('corillo_chat');
 let chatVisible = _chatSaved !== null ? _chatSaved !== 'hidden' : !_chatIsMobile;
 
+// Bloquea el scroll del fondo mientras el bottom sheet está abierto (solo móvil).
+// Evita que iOS arrastre la página hasta abajo al enfocar el input del chat.
+let _chatScrollY = 0;
+function lockBodyScroll() {
+  if (!window.matchMedia('(max-width:960px)').matches) return;
+  _chatScrollY = window.scrollY || window.pageYOffset || 0;
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${_chatScrollY}px`;
+  document.body.style.left = '0';
+  document.body.style.right = '0';
+  document.body.style.width = '100%';
+}
+function unlockBodyScroll() {
+  if (document.body.style.position !== 'fixed') return;
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.left = '';
+  document.body.style.right = '';
+  document.body.style.width = '';
+  window.scrollTo(0, _chatScrollY);
+}
+
+// Saca el panel del flujo (display:none) cuando está cerrado en móvil, para que
+// el bottom sheet fuera de pantalla no genere scroll fantasma / zona negra en iOS.
+const _chatPanel = document.getElementById('chatCol') || document.querySelector('.crl-chat-panel');
+let _chatHideTimer = null;
+function chatPanelShow() {
+  if (!_chatPanel || !window.matchMedia('(max-width:960px)').matches) return;
+  clearTimeout(_chatHideTimer);
+  _chatPanel.style.display = 'flex';
+  void _chatPanel.offsetHeight; // reflow para que la animación de entrada corra
+}
+function chatPanelHideAfterAnim() {
+  if (!_chatPanel || !window.matchMedia('(max-width:960px)').matches) return;
+  clearTimeout(_chatHideTimer);
+  _chatHideTimer = setTimeout(() => { if (!chatVisible) _chatPanel.style.display = 'none'; }, 360);
+}
+
 function showChat() {
   chatVisible = true;
   localStorage.setItem('corillo_chat', 'visible');
+  chatPanelShow();
   $('#content').classList.remove('chat-hidden');
   document.body.classList.remove('chat-is-hidden');
   if ($('#railBadge')) $('#railBadge').classList.remove('show');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
+  lockBodyScroll();
 }
 
 function hideChat() {
@@ -24,11 +64,15 @@ function hideChat() {
   $('#content').classList.add('chat-hidden');
   document.body.classList.add('chat-is-hidden');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.remove('active');
+  unlockBodyScroll();
+  chatPanelHideAfterAnim();
 }
 
 if (!chatVisible) {
   $('#content').classList.add('chat-hidden');
   document.body.classList.add('chat-is-hidden');
+  // Arranca fuera del flujo en móvil (evita scroll fantasma desde el inicio)
+  if (_chatPanel && _chatIsMobile) _chatPanel.style.display = 'none';
 } else {
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
 }
