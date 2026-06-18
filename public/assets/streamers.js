@@ -14,5 +14,6 @@ window.STREAMERS = [
   { key:'bambua',        name:'ANTONIO LOPEZ', sub:'',                             ava:'A', color:'linear-gradient(135deg,#fd79a8,#e84393)', host:false, category:'Just Chatting'},
   { key:'stinkyfeets',   name:'ROB',           sub:'Carolina PR',                  ava:'R', color:'linear-gradient(135deg,#00cec9,#00838f)', host:false, category:'Gaming'       },
   { key:'adrian',        name:'Adrián',        sub:'',                             ava:'A', color:'linear-gradient(135deg,#ff7675,#d63031)', host:false, category:'Gaming'       },
-  { key:null, name:'???', sub:'Próximamente · Invitación', ava:'?', color:'linear-gradient(135deg,#2a2a3a,#1a1a28)', host:false, soon:true },
+    { key:'jcgaming', name:'XXDUR3XX', sub:'Gaming', ava:'X', color:'linear-gradient(135deg,#ff7675,#d63031)', host:false },
+{ key:null, name:'???', sub:'Próximamente · Invitación', ava:'?', color:'linear-gradient(135deg,#2a2a3a,#1a1a28)', host:false, soon:true },
 ];
