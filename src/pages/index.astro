@@ -9,7 +9,6 @@ import SiteShell from '../layouts/SiteShell.astro';
   ogDescription="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos arbitrarios. Solo tú, tu setup y tu audiencia."
 >
   <fragment slot="head">
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js" is:inline></script>
     <style is:global>
       /* ── Home-only styles (channel cards, sim-stream, grid-empty, host-tag, rotate-bar) ── */
       .ch-badge-off {
@@ -213,6 +212,20 @@ const _hover    = window.matchMedia('(hover: hover)').matches;
 
 let cache        = { t: 0, data: null };
 let hlsInstance  = null;
+let hlsLoadPromise = null;
+// Carga hls.min.js (149KB gz) solo bajo demanda. Safari usa HLS nativo y nunca lo descarga.
+function ensureHls() {
+  if (window.Hls) return Promise.resolve();
+  if (hlsLoadPromise) return hlsLoadPromise;
+  hlsLoadPromise = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = '/assets/hls.min.js';
+    s.onload = () => resolve();
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+  return hlsLoadPromise;
+}
 let searchQuery  = '';
 let featuredKey  = undefined; // undefined=unset, null=offline, string=live channel
 let rotateTimer  = null;
@@ -651,7 +664,13 @@ function setupHls(key) {
     vid.src = url;
     vid.play().catch(() => {});
     wrap.classList.add('playing');
-  } else if (window.Hls?.isSupported()) {
+    return;
+  }
+
+  // Navegadores sin HLS nativo (Chrome/Firefox/Android): cargar hls.js bajo demanda
+  ensureHls().then(() => {
+    if (featuredKey !== key) return;          // cambió de canal mientras cargaba el script
+    if (!window.Hls?.isSupported()) return;
     hlsInstance = new window.Hls({ lowLatencyMode: true, maxBufferLength: 8 });
     hlsInstance.loadSource(url);
     hlsInstance.attachMedia(vid);
@@ -662,7 +681,7 @@ function setupHls(key) {
     hlsInstance.on(window.Hls.Events.ERROR, (_, data) => {
       if (data.fatal) wrap.classList.remove('playing');
     });
-  }
+  }).catch(() => {});
 }
 
 /* ── Rotation ────────────────────────────────────────── */
