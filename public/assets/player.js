@@ -232,7 +232,7 @@ window.channel = __validFormat ? __rawChannel : '';
         'position:absolute','top:12px','left:12px','z-index:15',
         'display:none','align-items:center','gap:7px',
         'background:rgba(3,10,14,.82)','backdrop-filter:blur(8px)',
-        'border:1px solid rgba(0,191,255,.15)','border-radius:6px',
+        'border:1px solid rgba(90, 123, 255,.15)','border-radius:6px',
         'padding:5px 12px','font-family:var(--mono,monospace)',
         'font-size:10px','letter-spacing:1.5px','text-transform:uppercase',
         'color:rgba(232,246,255,.55)','text-decoration:none','cursor:pointer',
@@ -242,9 +242,9 @@ window.channel = __validFormat ? __rawChannel : '';
     }
     const date = vod.date ? new Date(vod.date).toLocaleDateString('es-PR', { month: 'short', day: 'numeric' }) : '';
     App.vodBadge.href = '/vods/v/?id=' + vod.id;
-    App.vodBadge.innerHTML = '<i class="fa-solid fa-film" style="font-size:9px;color:rgba(0,191,255,.5)"></i>'
+    App.vodBadge.innerHTML = '<i class="fa-solid fa-film" style="font-size:9px;color:rgba(90, 123, 255,.5)"></i>'
       + ' Última transmisión' + (date ? ' · ' + date : '')
-      + ' <span style="color:var(--accent,#00bfff);margin-left:2px">Ver →</span>';
+      + ' <span style="color:var(--accent,#5a7bff);margin-left:2px">Ver →</span>';
     App.vodBadge.style.display = 'flex';
   }
 

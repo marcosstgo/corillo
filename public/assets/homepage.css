@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --h: 205;               /* accent hue — tweakable */
+  --h: 266;               /* accent hue — tweakable */
   --accent: oklch(0.72 0.18 var(--h));
   --accent-dim: oklch(0.55 0.14 var(--h));
   --accent-glow: oklch(0.72 0.18 var(--h) / 0.25);
@@ -272,13 +272,13 @@ body.no-scanlines .scanlines { display: none; }
 .play-btn {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 18px;
-  background: var(--accent); color: #000;
+  background: linear-gradient(110deg, var(--accent), var(--crl-accent2)); color: #fff;
   border-radius: 4px;
   font-family: var(--mono); font-size: 11px; font-weight: 700;
   letter-spacing: 2px; text-transform: uppercase;
   transition: transform 0.15s;
 }
-.play-btn:hover { transform: scale(1.04); }
+.play-btn:hover { transform: scale(1.04); box-shadow: 0 6px 22px rgba(var(--crl-accent2-rgb),.4); }
 .play-btn i { font-size: 12px; }
 
 .icon-btn {

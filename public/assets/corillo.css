@@ -6,24 +6,26 @@
 
 /* ── 1. TOKENS ──────────────────────────────────────────── */
 :root {
-  /* Palette */
-  --crl-ink:       #030a0e;
-  --crl-surface:   #071118;
-  --crl-panel:     #0d1c28;
-  --crl-white:     #e8f6ff;
-  --crl-muted:     #3a6070;
+  /* Palette — Tokio Profundo (premium azul + magenta) */
+  --crl-ink:       #060912;
+  --crl-surface:   #0b1020;
+  --crl-panel:     #131a33;
+  --crl-white:     #e7ecf7;
+  --crl-muted:     #51607e;
 
   /* Brand colors */
-  --crl-accent:    #00bfff;   /* cian     — UI principal   */
-  --crl-live:      #e8c84a;   /* oro      — en vivo        */
-  --crl-confirm:   #00ff9d;   /* verde    — éxito          */
-  --crl-hot:       #CE1126;   /* rojo PR  — alertas        */
+  --crl-accent:    #5a7bff;   /* azul prof — UI principal  */
+  --crl-accent2:   #f5408a;   /* magenta   — co-acento/dúo */
+  --crl-live:      #f5b73c;   /* oro       — en vivo       */
+  --crl-confirm:   #34e0b0;   /* menta     — éxito         */
+  --crl-hot:       #CE1126;   /* rojo PR   — alertas       */
 
   /* RGB components — para rgba(var(--crl-*-rgb), opacity) */
-  --crl-accent-rgb:  0, 191, 255;
-  --crl-live-rgb:    232, 200, 74;
-  --crl-confirm-rgb: 0, 255, 157;
-  --crl-ink-rgb:     3, 10, 14;
+  --crl-accent-rgb:  90, 123, 255;
+  --crl-accent2-rgb: 245, 64, 138;
+  --crl-live-rgb:    245, 183, 60;
+  --crl-confirm-rgb: 52, 224, 176;
+  --crl-ink-rgb:     6, 9, 18;
 
   /* Borders */
   --crl-border:    rgba(var(--crl-accent-rgb),.08);
@@ -59,7 +61,7 @@
 
 /* Verano PR — azul celeste, rojo y blanco de la bandera */
 [data-theme="verano"] {
-  --crl-accent:     #2AABDF;          /* celeste — triángulo bandera PR */
+  --crl-accent:     #2aabdf;          /* celeste — triángulo bandera PR */
   --crl-accent-rgb: 42, 171, 223;
   --crl-live:       #CE1126;          /* rojo PR — en vivo */
   --crl-live-rgb:   206, 17, 38;
@@ -151,10 +153,10 @@ button { font: inherit; cursor: pointer; }
 
 /* Variants */
 .crl-btn-primary, .btn-primary {
-  background: var(--crl-accent); color: var(--crl-ink);
+  background: linear-gradient(110deg, var(--crl-accent), var(--crl-accent2)); color: #fff;
   border-color: transparent;
 }
-.crl-btn-primary:hover, .btn-primary:hover { opacity: .88; box-shadow: 0 0 24px rgba(var(--crl-accent-rgb),.35); }
+.crl-btn-primary:hover, .btn-primary:hover { filter: brightness(1.08); box-shadow: 0 6px 24px rgba(var(--crl-accent2-rgb),.4); }
 
 .crl-btn-gold, .btn-gold {
   background: var(--crl-live); color: var(--crl-ink);
@@ -1975,7 +1977,7 @@ a.nav-btn { display: flex; }
 .panel .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
 .panel .btn { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.15); font-size: .85rem; padding: 11px 22px; }
 .panel .btn:hover { color: #fff; border-color: rgba(255,255,255,.35); background: rgba(255,255,255,.08); }
-.panel .btn.primary { background: var(--crl-accent); color: #111; border-color: transparent; }
+.panel .btn.primary { background: linear-gradient(110deg, var(--crl-accent), var(--crl-accent2)); color: #fff; border-color: transparent; }
 
 /* Controls bar */
 .ctrl-bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 12; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 28px 12px 10px; background: linear-gradient(to top,rgba(0,0,0,.8),transparent); opacity: 0; transition: opacity .25s; pointer-events: none; }
