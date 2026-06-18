@@ -1,6 +1,6 @@
 {
-  "version": "2.2.673",
-  "date": "2026-06-11",
+  "version": "2.2.674",
+  "date": "2026-06-18",
   "changes": [
     "Chat móvil: altura a 50% de pantalla + bloqueo de scroll del fondo (ya no salta la página al enfocar el input)",
     "Chat en móvil: panel deslizable (bottom sheet) que se abre con el botón 💬, en vez de quedar al fondo de la página",
