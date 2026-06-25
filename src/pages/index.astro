@@ -150,7 +150,7 @@ import SiteShell from '../layouts/SiteShell.astro';
     <div class="live-rail" id="liveRail"><!-- rendered by JS --></div>
   </section>
 
-  <!-- VODs + DIGEST -->
+  <!-- VODs -->
   <div class="bottom-row">
     <div class="vods-col">
       <div class="sec-hd">
@@ -162,18 +162,6 @@ import SiteShell from '../layouts/SiteShell.astro';
         <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
       </div>
     </div>
-    <aside class="digest-col">
-      <div class="panel">
-        <div class="panel-header">
-          <div class="panel-title"><i class="fa-solid fa-robot"></i> Bot · Digest</div>
-          <div class="panel-meta" id="digestAge">Claude</div>
-        </div>
-        <div class="digest">
-          <div class="digest-label">Señal en tiempo real</div>
-          <p id="digestText" style="font-size:13px;line-height:1.5">Verificando estado de streams...</p>
-        </div>
-      </div>
-    </aside>
   </div>
 
   <!-- CANALES -->
@@ -892,18 +880,6 @@ function renderVodsRow() {
   if (ids.length) loadCardAvatars(ids);
 }
 
-/* ── Digest ──────────────────────────────────────────── */
-async function loadDigest() {
-  try {
-    const r = await fetch('/chat-api/digest', { signal: AbortSignal.timeout(5000) });
-    const j = await r.json();
-    if (j.digest) {
-      document.getElementById('digestText').textContent = j.digest;
-      document.getElementById('digestAge').textContent  = 'Claude · ahora';
-    }
-  } catch { /* digest is optional */ }
-}
-
 /* ── Main poll ───────────────────────────────────────── */
 async function poll() {
   const now    = Date.now();
@@ -999,7 +975,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await poll();
 
-  loadDigest();
   loadReelsStrip();
 
   setInterval(poll, POLL_MS);
