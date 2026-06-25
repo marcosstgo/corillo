@@ -1,0 +1,13 @@
+=== MÉTRICAS BASE (Fase 0) — Wed Jun 24 10:31:58 PM AST 2026 ===
+Astro: 6.3.5
+--- peso de páginas clave (dist, HTML) ---
+  index.html                 18 KB
+  perfil/index.html          92 KB
+  vods/index.html            14 KB
+  streamers/index.html       14 KB
+  reels/index.html           5 KB
+--- transferencia real homepage (gzip on the wire) ---
+  HTML: 5410 bytes en 0.018643s
+--- tamaño total dist + assets de imágenes ---
+  dist total: 21M
+  imágenes (png/jpg/webp) en dist: 14 archivos, 1.0 MB

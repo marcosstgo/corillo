@@ -8,4 +8,8 @@ export default defineConfig({
     format: 'directory',
   },
   trailingSlash: 'always',
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
+  },
 });
