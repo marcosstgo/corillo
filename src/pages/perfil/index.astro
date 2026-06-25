@@ -2270,7 +2270,9 @@ async function doLogin() {
     currentRecord = pb.authStore.record;
     showDashboard();
   } catch(e) {
-    loginErr.textContent = 'Email o contraseña incorrectos.';
+    const apiMsg = (e && (e.response?.message || e.message)) || '';
+    // Mostrar el mensaje del servidor cuando es una expulsión/ban; si no, genérico.
+    loginErr.textContent = /expulsad|comunidad|banead/i.test(apiMsg) ? apiMsg : 'Email o contraseña incorrectos.';
     loginErr.style.display = 'block';
   } finally {
     loginBtn.disabled = false;
