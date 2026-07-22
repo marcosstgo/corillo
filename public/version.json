@@ -1,7 +1,11 @@
 {
-  "version": "2.2.662",
-  "date": "2026-05-27",
+  "version": "2.2.678",
+  "date": "2026-06-18",
   "changes": [
+    "Nuevo diseño 'Tokio Profundo': paleta azul + magenta, CTAs con gradiente azul→magenta",
+    "Chat móvil: altura a 50% de pantalla + bloqueo de scroll del fondo (ya no salta la página al enfocar el input)",
+    "Chat en móvil: panel deslizable (bottom sheet) que se abre con el botón 💬, en vez de quedar al fondo de la página",
+    "Fix: móvil ya no cae a VOD cuando la variante _low no existe — fallback a calidad normal",
     "Móvil arranca en 720p automático (viewport ≤768px), desktop en 1080p",
     "Preferencia de calidad guardada en localStorage — respeta elección manual",
     "Botones overlay 1080p/720p en estado de error",
