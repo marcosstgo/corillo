@@ -13,6 +13,7 @@ interface Props {
   ogType?: string;
   ogTitle?: string;
   ogDescription?: string;
+  pageClass?: string;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   ogType = 'website',
   ogTitle,
   ogDescription,
+  pageClass = '',
 } = Astro.props;
 
 const resolvedOgTitle = ogTitle ?? title;
@@ -60,6 +62,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   <script src="/assets/streamers.js" is:inline></script>
   <link rel="stylesheet" href={`/assets/corillo.css?v=${version}`} />
   <link rel="stylesheet" href="/assets/homepage.css?v=3" />
+  <link rel="stylesheet" href={`/assets/senal-home.css?v=${version}`} />
   <script is:inline>
     (function(){
       const t = localStorage.getItem('corillo-theme');
@@ -189,7 +192,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   </style>
   <slot name="head" />
 </head>
-<body>
+<body class={pageClass}>
 
 <div class="grain" aria-hidden="true"></div>
 
