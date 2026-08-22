@@ -1,7 +1,9 @@
 {
-  "version": "2.2.678",
-  "date": "2026-06-18",
+  "version": "2.2.679",
+  "date": "2026-07-22",
   "changes": [
+    "Rediseño 'SEÑAL' del home: estética de transmisión (broadcast), acento único rojo señal, tipografía Oswald + Archivo",
+    "Home: hero en espera con retícula de 'señal lock'; datos (duración, viewers) en mono neutral",
     "Nuevo diseño 'Tokio Profundo': paleta azul + magenta, CTAs con gradiente azul→magenta",
     "Chat móvil: altura a 50% de pantalla + bloqueo de scroll del fondo (ya no salta la página al enfocar el input)",
     "Chat en móvil: panel deslizable (bottom sheet) que se abre con el botón 💬, en vez de quedar al fondo de la página",

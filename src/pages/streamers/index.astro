@@ -16,23 +16,52 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .hero-sub{color:var(--crl-muted);font-size:.95rem;max-width:480px;margin:0 auto 20px}
 
       .hero-stats{
-        display:none;align-items:center;justify-content:center;gap:10px;
-        font-family:var(--crl-mono);font-size:.82rem;letter-spacing:.06em;
+        display:none;align-items:center;justify-content:center;gap:0;
+        font-family:var(--crl-mono);font-size:.78rem;letter-spacing:.1em;
         color:var(--crl-muted);margin-bottom:18px;
+        border:1px solid var(--crl-border);border-radius:99px;
+        padding:8px 4px;background:var(--crl-surface);
       }
-      .hero-stats.show{display:flex}
-      .hero-stats strong{color:var(--crl-white)}
+      .hero-stats.show{display:inline-flex}
+      .hero-stats span{padding:0 16px;position:relative}
+      .hero-stats span:not(:last-child)::after{content:"";position:absolute;right:0;top:2px;bottom:2px;width:1px;background:var(--crl-border)}
+      .hero-stats strong{color:var(--crl-white);font-weight:700}
       .hero-stats .s-live-num{color:#ef4444}
-      .hero-stats .sep{opacity:.35}
+      .hero-stats .s-live-num.pulsing{animation:crl-pulse-dot 1.6s ease-in-out infinite}
 
-      .live-pill{
-        display:inline-flex;align-items:center;gap:7px;
-        background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);
-        color:#ef4444;font-family:var(--crl-mono);font-size:.85rem;
-        letter-spacing:.1em;padding:6px 14px;border-radius:99px;opacity:0;transition:opacity .3s;
+      /* ── EN VIVO AHORA — rail ── */
+      .live-rail-wrap{max-width:1400px;margin:0 auto;padding:0 24px 28px;display:none}
+      .live-rail-wrap.show{display:block}
+      .live-rail-label{
+        display:flex;align-items:center;gap:8px;
+        font-family:var(--crl-mono);font-size:.72rem;letter-spacing:.15em;
+        color:#ef4444;text-transform:uppercase;margin-bottom:12px;
       }
-      .live-pill.show{opacity:1}
-      .live-pill .dot{width:7px;height:7px;border-radius:50%;background:#ef4444;animation:crl-blink 1.2s ease-in-out infinite}
+      .live-rail-label .dot{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:crl-blink 1.2s ease-in-out infinite}
+      .live-rail{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+      .live-rail::-webkit-scrollbar{display:none}
+      .live-tile{
+        flex:0 0 auto;width:280px;border-radius:14px;overflow:hidden;
+        background:var(--crl-surface);border:1px solid rgba(239,68,68,.3);
+        text-decoration:none;position:relative;
+        box-shadow:0 0 0 rgba(206,17,38,0);transition:box-shadow .25s,transform .25s;
+      }
+      .live-tile:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 30px rgba(206,17,38,.18)}
+      .live-tile-thumb{width:100%;aspect-ratio:16/9;position:relative;background:#070c10}
+      .live-tile-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+      .live-tile-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(7,17,24,.92) 0%,transparent 55%)}
+      .live-tile-tag{
+        position:absolute;top:10px;left:10px;z-index:1;
+        display:flex;align-items:center;gap:5px;
+        background:#CE1126;color:#fff;font-family:var(--crl-mono);font-size:.62rem;
+        letter-spacing:.1em;padding:4px 9px;border-radius:99px;
+      }
+      .live-tile-tag .dot{width:5px;height:5px;border-radius:50%;background:#fff;animation:crl-blink 1.2s ease-in-out infinite}
+      .live-tile-viewers{position:absolute;top:10px;right:10px;z-index:1;font-family:var(--crl-mono);font-size:.68rem;color:#fff;background:rgba(0,0,0,.5);padding:4px 8px;border-radius:99px}
+      .live-tile-info{position:absolute;bottom:0;left:0;right:0;padding:12px;display:flex;align-items:center;gap:8px}
+      .live-tile-ava{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:.95rem;color:#fff;object-fit:cover}
+      .live-tile-name{font-family:var(--crl-mono);font-size:.82rem;font-weight:700;color:#fff;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      @media(max-width:600px){.live-tile{width:220px}}
 
       /* ── Filters ── */
       .filter-row{max-width:1400px;margin:0 auto;padding:0 24px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -101,9 +130,9 @@ import SiteShell from '../../layouts/SiteShell.astro';
         .s-card-footer{justify-content:center}
       }
 
-      .s-card-accent{height:3px;width:100%;flex-shrink:0}
+      .s-card-accent{position:absolute;left:0;top:0;bottom:0;width:4px;z-index:1}
 
-      .s-card-top{padding:20px 20px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+      .s-card-top{padding:20px 20px 0 22px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
       .s-avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,.1)}
       .s-avatar-fallback{
         width:64px;height:64px;border-radius:50%;flex-shrink:0;
@@ -124,7 +153,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .s-viewers{font-family:var(--crl-mono);font-size:.8rem;color:var(--crl-muted);letter-spacing:.05em;display:none}
       .is-live .s-viewers{display:block}
 
-      .s-card-body{padding:14px 20px 16px;flex:1;display:flex;flex-direction:column;gap:6px}
+      .s-card-body{padding:14px 20px 16px 22px;flex:1;display:flex;flex-direction:column;gap:6px}
       .s-name{font-family:var(--crl-display);font-size:1.6rem;letter-spacing:.04em;color:var(--crl-white);line-height:1;margin:0}
       .s-sub{font-family:var(--crl-mono);font-size:.8rem;letter-spacing:.08em;color:var(--crl-accent);margin:0}
       .s-bio{font-size:.83rem;color:var(--crl-muted);line-height:1.55;margin:2px 0 0;flex:1}
@@ -136,7 +165,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       }
       .s-last-live i{opacity:.55;font-size:.65rem}
 
-      .s-card-footer{padding:0 20px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+      .s-card-footer{padding:0 20px 18px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px}
       .s-socials{display:flex;gap:7px}
       .s-social-btn{
         width:30px;height:30px;border-radius:7px;
@@ -173,13 +202,13 @@ import SiteShell from '../../layouts/SiteShell.astro';
         .search-row,.grid-wrap{padding-left:12px;padding-right:12px}
         /* 2 columnas en mobile */
         .crl-grid-auto{grid-template-columns:repeat(2,1fr) !important;gap:10px !important}
-        .s-card-top{padding:10px 10px 0}
+        .s-card-top{padding:10px 10px 0 12px}
         .s-avatar,.s-avatar-fallback{width:40px;height:40px;font-size:1.2rem}
-        .s-card-body{padding:8px 10px 10px;gap:3px}
+        .s-card-body{padding:8px 10px 10px 12px;gap:3px}
         .s-name{font-size:1.1rem}
         .s-bio{display:none}
         .s-socials{display:none}
-        .s-card-footer{padding:0 10px 10px}
+        .s-card-footer{padding:0 10px 10px 12px}
         .s-watch-btn{font-size:.7rem;padding:5px 10px}
         /* Card hero en mobile más pequeño */
         .s-card-hero{aspect-ratio:16/7}
@@ -194,16 +223,15 @@ import SiteShell from '../../layouts/SiteShell.astro';
     <h1 class="hero-title">STREAMERS</h1>
     <p class="hero-sub">Los creadores que hacen vibrar la plataforma desde Puerto Rico y más allá.</p>
     <div class="hero-stats" id="heroStats">
-      <span><strong id="statTotal">0</strong> streamers</span>
-      <span class="sep">·</span>
-      <span><strong id="statLive" class="s-live-num">0</strong> en vivo</span>
-      <span class="sep">·</span>
-      <span><strong id="statViewers">0</strong> viewers</span>
+      <span><strong id="statTotal">0</strong> canales</span>
+      <span><strong id="statLive" class="s-live-num">0</strong> en el aire</span>
+      <span><strong id="statViewers">0</strong> viendo ahora</span>
     </div>
-    <div class="live-pill" id="livePill">
-      <span class="dot"></span>
-      <span id="liveCount">0</span> EN VIVO
-    </div>
+  </div>
+
+  <div class="live-rail-wrap" id="liveRailWrap">
+    <div class="live-rail-label"><span class="dot"></span> En vivo ahora</div>
+    <div class="live-rail" id="liveRail"></div>
   </div>
 
   <div class="filter-row" id="filterRow">
@@ -362,8 +390,32 @@ import SiteShell from '../../layouts/SiteShell.astro';
     document.getElementById('statLive').textContent    = liveCount;
     document.getElementById('statViewers').textContent = totalViewers;
     document.getElementById('heroStats').classList.add('show');
-    document.getElementById('liveCount').textContent   = String(liveCount);
-    document.getElementById('livePill').classList.toggle('show', liveCount > 0);
+    document.getElementById('statLive').classList.toggle('pulsing', liveCount > 0);
+  }
+
+  /* ── Rail "en vivo ahora" ── */
+  function renderLiveRail() {
+    const railWrap = document.getElementById('liveRailWrap');
+    const rail     = document.getElementById('liveRail');
+    const live = streamers.filter(s => s.key && liveSet.has(s.key));
+
+    if (!live.length) { railWrap.classList.remove('show'); rail.innerHTML = ''; return; }
+
+    rail.innerHTML = live.map(s => {
+      const viewers = viewersMap[s.key] || 0;
+      const ava = s.avatar_url
+        ? `<img class="live-tile-ava" src="${s.avatar_url}" alt="" style="object-fit:cover">`
+        : `<div class="live-tile-ava" style="background:${s.color}">${s.ava || (s.name || '?')[0]}</div>`;
+      return `<a class="live-tile" href="/${s.key}/">
+        <div class="live-tile-thumb">
+          <img src="/assets/thumbs/${s.key}.jpg?t=${thumbTick}" onerror="this.style.display='none'" alt="">
+          <span class="live-tile-tag"><span class="dot"></span>EN VIVO</span>
+          <span class="live-tile-viewers">${viewers} viewer${viewers !== 1 ? 's' : ''}</span>
+          <div class="live-tile-info">${ava}<span class="live-tile-name">${s.name}</span></div>
+        </div>
+      </a>`;
+    }).join('');
+    railWrap.classList.add('show');
   }
 
   /* ── Poll ── */
@@ -379,6 +431,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       }
       thumbTick = Math.floor(Date.now() / 60000);
       updateStats();
+      renderLiveRail();
       render();
     } catch {}
   }

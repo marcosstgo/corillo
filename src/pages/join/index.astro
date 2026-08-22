@@ -2,173 +2,277 @@
 import SiteShell from '../../layouts/SiteShell.astro';
 ---
 <SiteShell
-  title="CORILLO — Únete por invitación"
-  description="CORILLO es una plataforma de streaming independiente creada en Puerto Rico. Por ahora, entrar es por invitación y aprobación manual."
+  title="CORILLO — Crea tu canal"
+  description="CORILLO es una plataforma de streaming independiente creada en Puerto Rico. Crea tu cuenta, confirma tu email, y transmite en minutos."
   canonical="https://corillo.live/join/"
 >
   <fragment slot="head">
-    <meta name="theme-color" content="#060608" />
+    <meta name="theme-color" content="#060912" />
     <style>
-      .wrap{max-width:860px;margin:0;padding:0 20px}
+      .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
       @media(max-width:600px){.wrap{padding:0 14px}}
-      .hero{padding:64px 0 48px;border-bottom:1px solid var(--crl-border)}
-      .hero-title{font-family:var(--crl-display);font-size:clamp(2.4rem,6vw,4rem);letter-spacing:3px;line-height:1;margin-bottom:18px}
-      .hero-desc{font-size:1rem;line-height:1.7;color:rgba(242,239,233,.6);max-width:52ch;margin-bottom:32px}
+
+      /* ── Hero ── */
+      .hero{padding:56px 0 40px;border-bottom:1px solid var(--crl-border)}
+      .hero-eyebrow{
+        display:flex;align-items:center;gap:8px;
+        font-family:var(--crl-mono);font-size:.72rem;letter-spacing:3px;text-transform:uppercase;
+        color:var(--crl-accent);margin-bottom:16px;
+      }
+      .hero-eyebrow .dot{
+        width:6px;height:6px;border-radius:50%;background:var(--crl-confirm);
+        box-shadow:0 0 8px rgba(var(--crl-confirm-rgb),.6);
+        animation:crl-pulse-dot 2.2s ease-in-out infinite;
+      }
+      @keyframes crl-pulse-dot{0%,100%{opacity:1}50%{opacity:.35}}
+      .hero-title{font-family:var(--crl-display);font-size:clamp(2.4rem,6vw,4rem);letter-spacing:3px;line-height:1;margin-bottom:20px}
+
+      /* URL readout — la "frecuencia" que van a ocupar */
+      .freq-readout{
+        display:flex;align-items:center;gap:2px;flex-wrap:wrap;
+        font-family:var(--crl-mono);font-size:clamp(.95rem,2vw,1.15rem);
+        padding:14px 18px;border-radius:var(--crl-r-md);
+        background:var(--crl-surface);border:1px solid var(--crl-border);
+        margin-bottom:28px;max-width:fit-content;
+      }
+      .freq-readout .fixed{color:var(--crl-muted)}
+      .freq-readout .slug{color:var(--crl-white);font-weight:700;min-width:1ch}
+      .freq-readout .slug:empty::before{content:"tu-handle";color:var(--crl-muted);opacity:.5;font-weight:400}
+      .freq-readout .caret{
+        display:inline-block;width:2px;height:1em;background:var(--crl-live);margin-left:2px;
+        animation:crl-caret-blink 1s step-end infinite;
+      }
+      @media(prefers-reduced-motion:reduce){ .freq-readout .caret{animation:none} .hero-eyebrow .dot{animation:none} }
+
+      .hero-desc{font-size:1rem;line-height:1.7;color:rgba(242,239,233,.6);max-width:56ch}
       [data-theme="light"] .hero-desc{color:rgba(18,18,15,.6)}
-      .section{padding:48px 0;border-bottom:1px solid var(--crl-border)}
-      .section-label{font-family:var(--crl-mono);font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--crl-accent);margin-bottom:10px}
-      .section-title{font-family:var(--crl-display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:32px}
-      .steps{display:flex;flex-direction:column}
-      .step{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--crl-border)}
-      .step:last-child{border-bottom:none}
-      .step-num{font-family:var(--crl-display);font-size:2rem;letter-spacing:2px;color:rgba(var(--crl-live-rgb),.2);flex-shrink:0;width:40px;line-height:1;padding-top:2px}
-      .step-body{flex:1}
-      .step-title{font-family:var(--crl-mono);font-size:.92rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white);margin-bottom:6px}
-      .step-desc{font-size:.9rem;line-height:1.6;color:rgba(242,239,233,.55)}
-      .step-desc a{color:var(--crl-accent)}
-      .step-desc a:hover{text-decoration:underline}
-      [data-theme="light"] .step-desc{color:rgba(18,18,15,.6)}
-      .contact-box{padding:36px 32px;text-align:center}
-      @media(max-width:600px){.contact-box{padding:24px 18px}}
-      .contact-title{font-family:var(--crl-display);font-size:clamp(1.4rem,3vw,2rem);letter-spacing:2px;margin-bottom:10px}
-      .contact-sub{font-size:.9rem;color:rgba(242,239,233,.55);margin-bottom:24px;line-height:1.6}
-      [data-theme="light"] .contact-sub{color:rgba(18,18,15,.55)}
+
+      /* ── Panel principal: form + preview ── */
+      .panel-section{padding:48px 0 64px}
+      .panel-grid{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start}
+      @media(max-width:860px){.panel-grid{grid-template-columns:1fr}}
+
+      .form-card{padding:32px}
+      @media(max-width:600px){.form-card{padding:22px 18px}}
+      .form-card-title{font-family:var(--crl-display);font-size:1.5rem;letter-spacing:1.5px;margin-bottom:6px}
+      .form-card-sub{font-size:.85rem;color:var(--crl-muted);margin-bottom:24px}
+
       .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
       @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
       .field{display:flex;flex-direction:column;gap:4px}
-      .field textarea{padding:10px 12px;border-radius:7px;border:1px solid var(--crl-border);background:var(--crl-surface);color:var(--crl-white);outline:none;font-family:var(--crl-body);font-size:.9rem;transition:border-color .18s;resize:none}
-      .field textarea:focus{border-color:rgba(var(--crl-live-rgb),.35);box-shadow:0 0 0 3px rgba(var(--crl-live-rgb),.08)}
-      .field .input:focus{border-color:rgba(var(--crl-live-rgb),.35);box-shadow:0 0 0 3px rgba(var(--crl-live-rgb),.08)}
+      .field textarea{
+        width:100%;padding:9px 14px;border-radius:var(--crl-r-sm);border:1px solid var(--crl-border);
+        background:var(--crl-surface);color:var(--crl-white);outline:none;
+        font-family:var(--crl-body);font-size:var(--crl-sm);transition:border-color .15s;resize:none;
+      }
+      .field textarea:focus{border-color:rgba(var(--crl-accent-rgb),.4);box-shadow:0 0 0 3px rgba(var(--crl-accent-rgb),.08)}
       .field-full{grid-column:1/-1}
-      .form-err{padding:8px 12px;border-radius:7px;border:1px dashed rgba(206,17,38,.3);background:rgba(206,17,38,.05);color:var(--crl-hot);font-family:var(--crl-mono);font-size:.75rem;display:none;margin-top:8px}
-      [data-theme="light"] .field textarea{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:#12120f}
-      .form-success{display:none;text-align:center;padding:32px 0;animation:crl-fade-up .4s ease}
-      .form-success .check{width:56px;height:56px;border-radius:50%;background:rgba(var(--crl-confirm-rgb),.1);border:1px solid rgba(var(--crl-confirm-rgb),.25);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.6rem;color:var(--crl-confirm)}
-      .success-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(var(--crl-confirm-rgb),.06);border:1px solid rgba(var(--crl-confirm-rgb),.2);border-radius:10px;padding:10px 18px;font-family:var(--crl-mono);font-size:.78rem;letter-spacing:1px;color:rgba(var(--crl-confirm-rgb),.8)}
+      .form-err{
+        padding:8px 12px;border-radius:var(--crl-r-sm);border:1px dashed rgba(206,17,38,.3);
+        background:rgba(206,17,38,.05);color:var(--crl-hot);font-family:var(--crl-mono);font-size:.75rem;
+        display:none;margin-top:8px;
+      }
+      .form-actions{margin-top:18px}
+
+      .form-success{display:none;text-align:center;padding:24px 0 8px;animation:crl-fade-up .4s ease}
+      .form-success .check{
+        width:52px;height:52px;border-radius:50%;background:rgba(var(--crl-confirm-rgb),.1);
+        border:1px solid rgba(var(--crl-confirm-rgb),.25);display:flex;align-items:center;justify-content:center;
+        margin:0 auto 14px;font-size:1.4rem;color:var(--crl-confirm);
+      }
+      .success-title{font-family:var(--crl-display);font-size:1.4rem;letter-spacing:1.5px;margin-bottom:8px}
+      .success-sub{font-size:.88rem;color:var(--crl-muted);max-width:360px;margin:0 auto 18px;line-height:1.6}
+      .success-pill{
+        display:inline-flex;align-items:center;gap:8px;background:rgba(var(--crl-confirm-rgb),.06);
+        border:1px solid rgba(var(--crl-confirm-rgb),.2);border-radius:var(--crl-r-md);padding:9px 16px;
+        font-family:var(--crl-mono);font-size:.75rem;letter-spacing:1px;color:rgba(var(--crl-confirm-rgb),.85);
+      }
+
+      /* ── Panel de preview (firma visual) ── */
+      .preview-panel{position:sticky;top:20px;display:flex;flex-direction:column;gap:20px;padding:22px}
+      @media(max-width:860px){.preview-panel{position:static}}
+      .preview-label{font-family:var(--crl-mono);font-size:.68rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--crl-muted)}
+
+      .chip-preview{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--crl-r-md);background:var(--crl-surface);border:1px solid var(--crl-border)}
+      .chip-ava{
+        width:42px;height:42px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+        font-family:var(--crl-display);font-size:1.3rem;color:#000;background:var(--crl-panel);
+        transition:background .25s;
+      }
+      .chip-info{flex:1;min-width:0}
+      .chip-name{font-family:var(--crl-mono);font-size:.82rem;font-weight:700;letter-spacing:.5px;color:var(--crl-white);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+      .chip-status{font-size:.75rem;color:var(--crl-muted);margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+      .chip-hint{font-size:.72rem;color:var(--crl-muted);line-height:1.5}
+
+      /* Rastreador de señal — reemplaza el típico "cómo funciona" */
+      .signal-track{display:flex;flex-direction:column;gap:2px}
+      .signal-step{display:flex;align-items:flex-start;gap:12px;padding:10px 0;position:relative}
+      .signal-step:not(:last-child)::after{
+        content:"";position:absolute;left:9px;top:28px;bottom:-4px;width:1px;background:var(--crl-border);
+      }
+      .signal-dot{
+        width:19px;height:19px;border-radius:50%;flex-shrink:0;margin-top:1px;
+        border:2px solid var(--crl-border-h);background:var(--crl-ink);
+        display:flex;align-items:center;justify-content:center;font-size:.6rem;color:transparent;
+        transition:.25s;
+      }
+      .signal-step.is-active .signal-dot{border-color:var(--crl-accent);box-shadow:0 0 0 4px rgba(var(--crl-accent-rgb),.15);animation:crl-pulse-dot 1.8s ease-in-out infinite}
+      .signal-step.is-done .signal-dot{border-color:var(--crl-confirm);background:var(--crl-confirm);color:#04140e}
+      .signal-step.is-done .signal-dot::before{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900}
+      .signal-title{font-family:var(--crl-mono);font-size:.78rem;letter-spacing:.5px;text-transform:uppercase;color:var(--crl-muted);transition:color .25s}
+      .signal-step.is-active .signal-title,.signal-step.is-done .signal-title{color:var(--crl-white)}
+      .signal-desc{font-size:.76rem;color:var(--crl-muted);line-height:1.5;margin-top:2px}
+      @media(prefers-reduced-motion:reduce){ .signal-step.is-active .signal-dot{animation:none} }
     </style>
   </fragment>
 
 <section class="hero">
   <div class="wrap">
-    <div class="section-label">Plataforma independiente · Puerto Rico</div>
-    <h1 class="hero-title">CREAR CANAL</h1>
-    <p class="hero-desc">
-      CORILLO es una plataforma pequeña e independiente desde Puerto Rico.
-      Los canales son <strong>por invitación y aprobación manual</strong> — no hay registro automático.
-      Katatonia revisa cada solicitud personalmente antes de abrir un canal.
-    </p>
-    <a class="btn btn-primary" href="#aplicar"><i class="fa-solid fa-arrow-down"></i> Aplica ahora</a>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap">
-    <div class="section-label">El proceso</div>
-    <h2 class="section-title">CÓMO FUNCIONA</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-body">
-          <div class="step-title">Completa el formulario</div>
-          <p class="step-desc">Llena el formulario más abajo: elige tu handle de canal, cuéntanos qué tipo de contenido haces y por qué quieres unirte. Es todo lo que necesitas para aplicar.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-body">
-          <div class="step-title">Revisión manual — no es automático</div>
-          <p class="step-desc">Katatonia revisa cada solicitud personalmente. No existe aprobación automática. Respondemos a todas las solicitudes — aprobadas o no — en menos de 24 horas.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-body">
-          <div class="step-title">Aprobación o rechazo</div>
-          <p class="step-desc">Si tu solicitud es aprobada, te notificamos por email. Si no encaja en este momento, también te avisamos — no dejamos solicitudes sin respuesta.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-body">
-          <div class="step-title">Tu canal queda listo al instante</div>
-          <p class="step-desc">Al aprobar, el sistema crea tu página automáticamente en <strong>corillo.live/&#123;tu-handle&#125;</strong> y te enviamos tu stream key. Configuras OBS o Meld Studio con esa key y ya puedes transmitir. El tiempo total desde aprobación hasta primer stream es de minutos.</p>
-        </div>
-      </div>
+    <div class="hero-eyebrow"><span class="dot"></span> Cuentas activas al instante · Puerto Rico</div>
+    <h1 class="hero-title">CREA TU CANAL</h1>
+    <div class="freq-readout">
+      <span class="fixed">corillo.live/</span><span class="slug" id="slugPreview"></span><span class="caret"></span>
     </div>
+    <p class="hero-desc">
+      Elige tu handle, tu contraseña, y confirma tu email. Sin aprobación manual, sin espera —
+      tu canal queda en el aire en el momento en que confirmas.
+    </p>
   </div>
 </section>
 
-<hr class="crl-divider" style="margin:0">
-
-<section class="section" id="aplicar" style="border-bottom:none">
+<section class="panel-section">
   <div class="wrap">
-    <div class="contact-box card-glass" id="formWrap">
-      <div class="contact-title">APLICA AHORA</div>
-      <p class="contact-sub">Respondemos a todas las solicitudes en menos de 24 horas.</p>
+    <div class="panel-grid">
 
-      <form id="joinForm" style="text-align:left;margin-top:20px" autocomplete="off">
-        <input id="f-hp" type="text" name="website" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
-        <div class="form-grid">
-          <div class="field">
-            <label class="crl-label" for="f-handle">Handle del canal *</label>
-            <input id="f-handle" class="input" type="text" placeholder="ej: kamikazepr" maxlength="24" required autocomplete="off" spellcheck="false" />
-            <span class="crl-hint">Solo: a-z, 0-9, _ · 3–24 caracteres</span>
-          </div>
-          <div class="field">
-            <label class="crl-label" for="f-nombre">Tu nombre *</label>
-            <input id="f-nombre" class="input" type="text" placeholder="Como quieres que te llamen" maxlength="60" required />
-          </div>
-          <div class="field field-full">
-            <label class="crl-label" for="f-email">Email *</label>
-            <input id="f-email" class="input" type="email" placeholder="tu@email.com" maxlength="120" required />
-            <span class="crl-hint">Solo para contactarte — no se muestra públicamente</span>
-          </div>
-          <div class="field field-full">
-            <label class="crl-label" for="f-contenido">Tipo de contenido *</label>
-            <input id="f-contenido" class="input" type="text" placeholder="ej: Gaming FPS, Just chatting, Música en vivo..." maxlength="120" required />
-          </div>
-          <div class="field">
-            <label class="crl-label" for="f-plataforma">¿Dónde transmites ahora? <span style="opacity:.45">(opcional)</span></label>
-            <input id="f-plataforma" class="input" type="text" placeholder="ej: Twitch, YouTube, ninguno" maxlength="60" />
-          </div>
-          <div class="field">
-            <label class="crl-label" for="f-mensaje">Algo más <span style="opacity:.45">(opcional)</span></label>
-            <textarea id="f-mensaje" rows="3" placeholder="Por qué quieres unirte, qué transmites, etc." maxlength="300"></textarea>
-          </div>
-        </div>
-        <div class="form-err" id="formErr"></div>
-        <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;margin-top:16px;padding:12px 20px">
-          <i class="fa-solid fa-paper-plane"></i> Enviar solicitud
-        </button>
-      </form>
+      <div class="form-card card-glass">
+        <div class="form-card-title">CREAR CUENTA</div>
+        <div class="form-card-sub">Todos los campos con * son obligatorios.</div>
 
-      <div class="form-success" id="formSuccess">
-        <div class="check">✓</div>
-        <div class="contact-title" style="font-size:clamp(1.2rem,3vw,1.8rem)">¡SOLICITUD ENVIADA!</div>
-        <p class="contact-sub" style="max-width:360px;margin:0 auto 20px">
-          Recibimos tu solicitud. Te vamos a contactar al email que pusiste en menos de 24 horas.
-        </p>
-        <div class="success-pill">
-          <i class="fa-solid fa-envelope" style="font-size:.85rem"></i>
-          Revisa tu bandeja de entrada
+        <form id="joinForm" autocomplete="off">
+          <input id="f-hp" type="text" name="website" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0" />
+          <div class="form-grid">
+            <div class="field">
+              <label class="crl-label" for="f-handle">Handle del canal *</label>
+              <input id="f-handle" class="input" type="text" placeholder="ej: kamikazepr" maxlength="24" required autocomplete="off" spellcheck="false" />
+              <span class="crl-hint">Solo: a-z, 0-9, _ · 3–24 caracteres</span>
+            </div>
+            <div class="field">
+              <label class="crl-label" for="f-nombre">Tu nombre *</label>
+              <input id="f-nombre" class="input" type="text" placeholder="Como quieres que te llamen" maxlength="60" required />
+            </div>
+            <div class="field field-full">
+              <label class="crl-label" for="f-email">Email *</label>
+              <input id="f-email" class="input" type="email" placeholder="tu@email.com" maxlength="120" required />
+              <span class="crl-hint">Te enviamos ahí el enlace de confirmación — no se muestra públicamente</span>
+            </div>
+            <div class="field">
+              <label class="crl-label" for="f-pass">Contraseña *</label>
+              <input id="f-pass" class="input" type="password" placeholder="••••••••" autocomplete="new-password" required />
+              <span class="crl-hint">Mínimo 8 caracteres</span>
+            </div>
+            <div class="field">
+              <label class="crl-label" for="f-pass2">Confirmar contraseña *</label>
+              <input id="f-pass2" class="input" type="password" placeholder="••••••••" autocomplete="new-password" required />
+            </div>
+            <div class="field field-full">
+              <label class="crl-label" for="f-contenido">Tipo de contenido *</label>
+              <input id="f-contenido" class="input" type="text" placeholder="ej: Gaming FPS, Just chatting, Música en vivo..." maxlength="120" required />
+            </div>
+            <div class="field">
+              <label class="crl-label" for="f-plataforma">¿Dónde transmites ahora? <span style="opacity:.45">(opcional)</span></label>
+              <input id="f-plataforma" class="input" type="text" placeholder="ej: Twitch, YouTube, ninguno" maxlength="60" />
+            </div>
+            <div class="field">
+              <label class="crl-label" for="f-mensaje">Algo más <span style="opacity:.45">(opcional)</span></label>
+              <textarea id="f-mensaje" rows="3" placeholder="Por qué quieres unirte, qué transmites, etc." maxlength="300"></textarea>
+            </div>
+          </div>
+          <div class="form-err" id="formErr"></div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;padding:12px 20px">
+              <i class="fa-solid fa-paper-plane"></i> Crear cuenta
+            </button>
+          </div>
+        </form>
+
+        <div class="form-success" id="formSuccess">
+          <div class="check"><i class="fa-solid fa-check"></i></div>
+          <div class="success-title">¡CASI LISTO!</div>
+          <p class="success-sub">Te enviamos un correo de confirmación. Haz click en el enlace y tu canal queda activo al instante.</p>
+          <div class="success-pill"><i class="fa-solid fa-envelope"></i> Revisa tu bandeja de entrada</div>
         </div>
       </div>
+
+      <aside class="preview-panel card-glass">
+        <div>
+          <div class="preview-label" style="margin-bottom:10px">Así se vería tu canal</div>
+          <div class="chip-preview">
+            <div class="chip-ava" id="prevAva">?</div>
+            <div class="chip-info">
+              <div class="chip-name" id="prevName">TU CANAL</div>
+              <div class="chip-status" id="prevStatus">Fuera del aire</div>
+            </div>
+          </div>
+          <div class="chip-hint" style="margin-top:8px">Vista ilustrativa — el color final se asigna al crear la cuenta.</div>
+        </div>
+
+        <hr class="crl-divider" style="margin:0">
+
+        <div>
+          <div class="preview-label" style="margin-bottom:6px">Señal</div>
+          <div class="signal-track" id="signalTrack">
+            <div class="signal-step is-active" id="step1">
+              <div class="signal-dot"></div>
+              <div>
+                <div class="signal-title">Completa el formulario</div>
+                <div class="signal-desc">Handle, contraseña, y qué contenido haces.</div>
+              </div>
+            </div>
+            <div class="signal-step" id="step2">
+              <div class="signal-dot"></div>
+              <div>
+                <div class="signal-title">Confirma tu email</div>
+                <div class="signal-desc">Un click, sin revisión manual.</div>
+              </div>
+            </div>
+            <div class="signal-step" id="step3">
+              <div class="signal-dot"></div>
+              <div>
+                <div class="signal-title">En el aire</div>
+                <div class="signal-desc">Tu página y tu stream key, listas.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
     </div>
   </div>
 </section>
 
 <script>
-const JOIN_URL = '/api/join';
+const REGISTER_URL = '/api/register';
 const RESERVED_H = new Set([
-  'join','assets','mediamtx-api','live','api','static','admin','robots',
-  'sitemap','favicon','index','stream','dual','multiplayer','configuracion',
-  'roadmap','dmca','legal','streamer-pro','player','katatonia','tea',
+  'join','register','verificar','assets','mediamtx-api','live','api','static',
+  'admin','robots','sitemap','favicon','index','stream','dual','multiplayer',
+  'configuracion','roadmap','dmca','legal','streamer-pro','player','perfil',
+  'webrtc','chat-api','twitch-api','katatonia','tea',
   'mira_sanganooo','404','elbala','marcos','pataecabra','streamerpro',
   'radblaster','elhermanoquiles','xxdur3xx','kamikazepr',
 ]);
 
-function sanitizeH(v){ return (v||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,''); }
-function validateH(h){
+// Misma paleta que usa el backend para asignar color — solo ilustrativa aquí,
+// el color real se asigna al crear la cuenta (ver corillo-telegram/server.py).
+const PREVIEW_COLORS = [
+  'linear-gradient(135deg,#74b9ff,#0984e3)', 'linear-gradient(135deg,#55efc4,#00b894)',
+  'linear-gradient(135deg,#fd79a8,#e84393)', 'linear-gradient(135deg,#fdcb6e,#e17055)',
+  'linear-gradient(135deg,#a29bfe,#6c5ce7)', 'linear-gradient(135deg,#00cec9,#00838f)',
+  'linear-gradient(135deg,#ff7675,#d63031)', 'linear-gradient(135deg,#ff9f43,#e06010)',
+];
+function stableHash(s: string){ let h = 0; for (let i = 0; i < s.length; i++){ h = (h * 31 + s.charCodeAt(i)) | 0; } return Math.abs(h); }
+
+function sanitizeH(v: string){ return (v||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,''); }
+function validateH(h: string){
   if (!h)            return 'Escribe un handle.';
   if (h.length < 3)  return 'Mínimo 3 caracteres.';
   if (h.length > 24) return 'Máximo 24 caracteres.';
@@ -177,63 +281,98 @@ function validateH(h){
   return '';
 }
 
-const fHandle    = document.getElementById('f-handle');
-const fNombre    = document.getElementById('f-nombre');
-const fContenido = document.getElementById('f-contenido');
-const fPlat      = document.getElementById('f-plataforma');
-const fMensaje   = document.getElementById('f-mensaje');
-const formErr    = document.getElementById('formErr');
-const submitBtn  = document.getElementById('submitBtn');
-const joinForm   = document.getElementById('joinForm');
-const formSuccess = document.getElementById('formSuccess');
+const fHandle    = document.getElementById('f-handle') as HTMLInputElement;
+const fNombre    = document.getElementById('f-nombre') as HTMLInputElement;
+const fEmail     = document.getElementById('f-email') as HTMLInputElement;
+const fPass      = document.getElementById('f-pass') as HTMLInputElement;
+const fPass2     = document.getElementById('f-pass2') as HTMLInputElement;
+const fContenido = document.getElementById('f-contenido') as HTMLInputElement;
+const fPlat      = document.getElementById('f-plataforma') as HTMLInputElement;
+const fMensaje   = document.getElementById('f-mensaje') as HTMLTextAreaElement;
+const formErr    = document.getElementById('formErr') as HTMLElement;
+const submitBtn  = document.getElementById('submitBtn') as HTMLButtonElement;
+const joinForm   = document.getElementById('joinForm') as HTMLElement;
+const formSuccess = document.getElementById('formSuccess') as HTMLElement;
 
-fHandle?.addEventListener('input', e => {
-  const s = sanitizeH((e.target as HTMLInputElement).value);
-  if (s !== (e.target as HTMLInputElement).value) (e.target as HTMLInputElement).value = s;
+const slugPreview = document.getElementById('slugPreview')!;
+const prevAva     = document.getElementById('prevAva')!;
+const prevName    = document.getElementById('prevName')!;
+const prevStatus  = document.getElementById('prevStatus')!;
+const step1 = document.getElementById('step1')!;
+const step2 = document.getElementById('step2')!;
+const step3 = document.getElementById('step3')!;
+
+function updatePreview(){
+  const h = sanitizeH(fHandle.value);
+  slugPreview.textContent = h;
+  const nombre = fNombre.value.trim();
+  prevName.textContent = nombre ? nombre.toUpperCase() : (h || 'TU CANAL');
+  prevAva.textContent = (nombre[0] || h[0] || '?').toUpperCase();
+  prevAva.style.background = h ? PREVIEW_COLORS[stableHash(h) % PREVIEW_COLORS.length] : 'var(--crl-panel)';
+  const contenido = fContenido.value.trim();
+  prevStatus.textContent = contenido ? contenido.slice(0, 40) : 'Fuera del aire';
+
+  const allValid = !validateH(h) && !!nombre && !!fEmail.value.trim()
+    && fPass.value.length >= 8 && fPass.value === fPass2.value && !!contenido;
+  step1.classList.toggle('is-active', !allValid);
+  step1.classList.toggle('is-done', allValid);
+}
+[fHandle, fNombre, fEmail, fPass, fPass2, fContenido].forEach(el => el.addEventListener('input', updatePreview));
+
+fHandle.addEventListener('input', () => {
+  const s = sanitizeH(fHandle.value);
+  if (s !== fHandle.value) fHandle.value = s;
 });
 
-function showErr(msg: string){ (formErr as HTMLElement).textContent = msg; (formErr as HTMLElement).style.display = msg ? 'block' : 'none'; }
+function showErr(msg: string){ formErr.textContent = msg; formErr.style.display = msg ? 'block' : 'none'; }
 
-joinForm?.addEventListener('submit', async e => {
+joinForm.addEventListener('submit', async e => {
   e.preventDefault();
-  const handle = sanitizeH((fHandle as HTMLInputElement).value);
-  (fHandle as HTMLInputElement).value = handle;
+  const handle = sanitizeH(fHandle.value);
+  fHandle.value = handle;
   const hErr = validateH(handle);
-  if (hErr) { showErr(hErr); (fHandle as HTMLElement).focus(); return; }
-  if (!(fNombre as HTMLInputElement).value.trim()) { showErr('Escribe tu nombre.'); (fNombre as HTMLElement).focus(); return; }
-  const fEmail = document.getElementById('f-email') as HTMLInputElement;
+  if (hErr) { showErr(hErr); fHandle.focus(); return; }
+  if (!fNombre.value.trim()) { showErr('Escribe tu nombre.'); fNombre.focus(); return; }
   if (!fEmail.value.trim()) { showErr('Escribe tu email.'); fEmail.focus(); return; }
-  if (!(fContenido as HTMLInputElement).value.trim()) { showErr('Describe tu tipo de contenido.'); (fContenido as HTMLElement).focus(); return; }
+  if (fPass.value.length < 8) { showErr('La contraseña debe tener al menos 8 caracteres.'); fPass.focus(); return; }
+  if (fPass.value !== fPass2.value) { showErr('Las contraseñas no coinciden.'); fPass2.focus(); return; }
+  if (!fContenido.value.trim()) { showErr('Describe tu tipo de contenido.'); fContenido.focus(); return; }
   showErr('');
-  (submitBtn as HTMLButtonElement).disabled = true;
-  (submitBtn as HTMLElement).innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creando...';
   try {
-    const res = await fetch(JOIN_URL, {
+    const res = await fetch(REGISTER_URL, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         handle,
-        nombre:    (fNombre as HTMLInputElement).value.trim(),
+        nombre:    fNombre.value.trim(),
         email:     fEmail.value.trim(),
-        contenido: (fContenido as HTMLInputElement).value.trim(),
-        plataforma: (fPlat as HTMLInputElement).value.trim(),
-        mensaje:   (fMensaje as HTMLTextAreaElement).value.trim(),
+        password:  fPass.value,
+        contenido: fContenido.value.trim(),
+        plataforma: fPlat.value.trim(),
+        mensaje:   fMensaje.value.trim(),
         hp:        (document.getElementById('f-hp') as HTMLInputElement).value,
       }),
     });
     if (!res.ok) {
       const d = await res.json().catch(()=>({}));
-      throw new Error((d as any).detail || 'Error al enviar.');
+      throw new Error((d as any).detail || 'Error al crear la cuenta.');
     }
-    (joinForm as HTMLElement).style.display = 'none';
-    (formSuccess as HTMLElement).style.display = 'block';
-    (formSuccess as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    joinForm.style.display = 'none';
+    formSuccess.style.display = 'block';
+    step1.classList.remove('is-active'); step1.classList.add('is-done');
+    step2.classList.add('is-active');
+    prevStatus.textContent = 'Esperando confirmación de email';
+    formSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
   } catch(err: any) {
-    showErr(err.message || 'No se pudo enviar. Intenta de nuevo.');
-    (submitBtn as HTMLButtonElement).disabled = false;
-    (submitBtn as HTMLElement).innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar solicitud';
+    showErr(err.message || 'No se pudo crear la cuenta. Intenta de nuevo.');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Crear cuenta';
   }
 });
+
+updatePreview();
 </script>
 
 </SiteShell>

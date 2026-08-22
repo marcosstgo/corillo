@@ -1,107 +1,17 @@
 /* ============================================================================
    SEÑAL — rediseño del home (broadcast boricua)
    Scopeado a body.page-home: NO afecta VODs, streamers ni el resto del sitio.
-   Override de tokens (paleta + tipografía) + ajustes de componentes.
+
+   2026-08-07: Marcos pidió regresar el COLOR original ("Tokio Profundo",
+   azul→magenta) — se quitó el override de paleta completo. Luego, 2026-08-21,
+   se adoptó la identidad "Anti-BufferBloat Pro" (negro + cian/magenta neón)
+   para TODO el sitio, y se quitó también el override tipográfico Oswald/
+   Archivo exclusivo de home (ahora usa la misma Bebas Neue/DM Sans que el
+   resto). Ese mismo día, Marcos pidió quitar la retícula "señal lock" del
+   hero offline por sentirse demasiado "gaming" — ya no queda nada visual
+   propio de este archivo salvo el detalle tipográfico de abajo.
    ============================================================================ */
 
-body.page-home {
-  /* hue del acento — muchas reglas usan oklch(0.72 0.18 var(--h)) directo;
-     266 = púrpura (Tokio). 28 = rojo señal → vira glows/grids/borders sin tocarlos. */
-  --h: 28;
-
-  /* ── base palette ── */
-  --crl-ink:       #0A0B0D;   /* negro-señal (canvas) */
-  --crl-surface:   #14161B;   /* carbón */
-  --crl-panel:     #14161B;
-  --crl-white:     #EDEAE3;   /* hueso (texto, no blanco puro) */
-  --crl-muted:     #8A8F99;   /* humo */
-
-  /* ── acento único: rojo señal ── */
-  --crl-accent:    #E4322B;
-  --crl-accent2:   #E4322B;
-  --crl-live:      #E4322B;
-  --crl-hot:       #E4322B;
-  --crl-confirm:   #E4322B;
-  --crl-accent-rgb:  228,50,43;
-  --crl-accent2-rgb: 228,50,43;
-  --crl-live-rgb:    228,50,43;
-  --crl-confirm-rgb: 228,50,43;
-  --crl-ink-rgb:     10,11,13;
-
-  --crl-border:    rgba(237,234,227,.08);
-  --crl-border-h:  rgba(237,234,227,.16);
-
-  /* ── tipografía ── */
-  --crl-display:   'Oswald', 'Bebas Neue', sans-serif;
-  --crl-body:      'Archivo', 'DM Sans', sans-serif;
-
-  /* ── alias de homepage.css / styles.css (no derivan de --crl-*) ── */
-  --accent:      #E4322B;
-  --accent-dim:  #B31E19;
-  --accent-glow: rgba(228,50,43,.22);
-  --border:      rgba(237,234,227,.08);
-  --border-h:    rgba(237,234,227,.16);
-  --white:  #EDEAE3;
-  --muted:  #8A8F99;
-  --ink:    #0A0B0D;
-  --surface:#14161B;
-  --panel:  #14161B;
-  --live:   #E4322B;
-  --confirm:#E4322B;
-  --hot:    #E4322B;
-  --display: 'Oswald', 'Bebas Neue', sans-serif;
-  --body:    'Archivo', 'DM Sans', sans-serif;
-}
-
-/* ── atmósfera de señal (leve, desde arriba-izquierda) ── */
-body.page-home {
-  background-image:
-    radial-gradient(120% 80% at 12% -8%, rgba(228,50,43,.05), transparent 55%),
-    radial-gradient(90% 60% at 100% 0%, rgba(70,90,120,.04), transparent 50%);
-  background-attachment: fixed;
-}
-
-/* ============ disciplina del rojo: datos = hueso, rojo solo para EN VIVO ============ */
-/* duración de VOD en las cards: neutral (usaba --confirm) */
-body.page-home .ch-bitrate {
-  color: var(--white);
-  background: rgba(9,10,13,.62);
-  letter-spacing: .5px;
-  font-variant-numeric: tabular-nums;
-}
-/* glow rojo del título del hero: bajarlo (era chroma alta a .6) */
-body.page-home .sim-title { text-shadow: 0 4px 48px rgba(228,50,43,.28); }
-
-/* ============ firma: retícula de "señal lock" en el hero offline ============ */
-body.page-home .sim-reticle {
-  width: clamp(64px, 9vw, 104px); height: clamp(64px, 9vw, 104px);
-  display: block; margin: 0 auto 18px; color: var(--white);
-}
-body.page-home .sim-reticle-spin { transform-origin: 50% 50%; animation: senal-lock 11s linear infinite; }
-@keyframes senal-lock { to { transform: rotate(360deg); } }
-/* si hay stream en vivo, el sim-stream se oculta; la retícula solo vive en offline */
-body.page-home .sim-stream:not(.offline) .sim-reticle { display: none; }
-
-/* ============ avatar del hero: anillo neutral (rojo se reserva para EN VIVO) ============ */
-body.page-home .featured-ava {
-  box-shadow: 0 0 0 2px rgba(0,0,0,.6), 0 0 0 3px rgba(237,234,227,.16);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body.page-home .sim-reticle-spin { animation: none; }
-}
-
-/* ============ marco de transmisión: quita el radial magenta hardcoded (hue 340) ============ */
-body.page-home .featured-video {
-  background:
-    radial-gradient(120% 90% at 50% 6%, rgba(120,140,170,.14), transparent 60%),
-    linear-gradient(180deg, #10131a 0%, #0b0d12 60%, #090a0e 100%);
-}
-/* vignette del marco */
-body.page-home .featured-video::before {
-  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: radial-gradient(120% 100% at 50% 38%, transparent 45%, rgba(0,0,0,.5));
-}
-/* nombres del hero en mayúscula (rótulo de transmisión) */
+/* nombres del hero en mayúscula (rótulo de transmisión) — no es color */
 body.page-home .sim-title,
 body.page-home .featured-name { text-transform: uppercase; }

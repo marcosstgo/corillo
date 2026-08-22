@@ -124,8 +124,18 @@ import { version } from '../../../version.json';
     [data-theme="light"] .login-brand .crl-brand-word { fill: #0c1a20; }
     [data-theme="light"] .login-brand .crl-brand-ring-outer { stroke: #0c1a20; }
     .login-card {
-      background: var(--panel); border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at top left, rgba(var(--crl-accent-rgb),.14), transparent 40%),
+        linear-gradient(160deg, rgba(13,28,40,.92), rgba(7,17,24,.86));
+      border: 1px solid rgba(var(--crl-accent-rgb),.16);
       border-radius: 14px; padding: 32px 36px; width: 100%; max-width: 380px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.28);
+    }
+    [data-theme="light"] .login-card {
+      background:
+        radial-gradient(circle at top left, rgba(var(--crl-accent-rgb),.08), transparent 40%),
+        linear-gradient(160deg, rgba(255,255,255,.94), rgba(245,250,252,.94));
+      border-color: rgba(0,0,0,.1);
     }
     .login-card h2 { font-family: var(--display); font-size: 1.8rem; margin-bottom: 6px; letter-spacing: 1px; }
     .login-card > p { color: var(--muted); font-size: .85rem; margin-bottom: 24px; }
@@ -356,16 +366,18 @@ import { version } from '../../../version.json';
     .vod-row-link { text-decoration: none; color: inherit; flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
     .vod-row-link:hover .vod-row-date { color: var(--accent); }
     .vod-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .vod-row-del, .vod-row-reel, .vod-row-embed {
+    .vod-row-del, .vod-row-reel, .vod-row-embed, .vod-row-download {
       width: 30px; height: 30px; border-radius: 6px;
       border: 1px solid var(--border); background: transparent;
       color: var(--muted); cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       font-size: .78rem; transition: .15s; flex-shrink: 0;
+      text-decoration: none;
     }
     .vod-row-del:hover   { border-color: #e17055; color: #e17055; }
     .vod-row-reel:hover  { border-color: var(--accent); color: var(--accent); }
     .vod-row-embed:hover { border-color: rgba(var(--crl-accent-rgb),.4); color: var(--accent); }
+    .vod-row-download:hover { border-color: #00b894; color: #00b894; }
     .vod-row-embed.copied { border-color: #00b894; color: #00b894; }
     .vod-row-reel.active { border-color: var(--accent); color: var(--accent); background: rgba(var(--crl-accent-rgb),.08); }
     .vod-row-del.loading { opacity: .4; pointer-events: none; }
@@ -826,7 +838,7 @@ import { version } from '../../../version.json';
     </button>
     <button class="forgot-link" id="forgotBtn">¿Olvidaste tu contraseña?</button>
     <p style="margin-top:14px;font-size:.75rem;color:var(--muted);text-align:center">
-      ¿No tienes cuenta? <a href="/join/" style="color:var(--accent);text-decoration:none">Solicita acceso →</a>
+      ¿No tienes cuenta? <a href="/join/" style="color:var(--accent);text-decoration:none">Crea tu canal →</a>
     </p>
   </div>
   <div class="login-card" id="resetCard" style="display:none">
@@ -1571,6 +1583,7 @@ async function loadMyVods(channel) {
           <div class="vod-row-actions">
             <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}',${v.duration||0},'${esc(vidSrc)}','${esc(v.thumb||'')}')" title="Crear Reel"><i class="fa-solid fa-scissors"></i></button>
             <button class="vod-row-embed" onclick="copyEmbedCode('${v.id}')" title="Copiar código embed"><i class="fa-solid fa-code"></i></button>
+            ${vidSrc ? `<a class="vod-row-download" href="${esc(vidSrc)}" download="${esc(v.filename||'')}" title="Descargar VOD completo"><i class="fa-solid fa-download"></i></a>` : ''}
             <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>

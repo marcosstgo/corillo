@@ -1,0 +1,102 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+---
+<SiteShell
+  title="Confirma tu email — CORILLO"
+  description="Confirma tu email para activar tu canal de CORILLO."
+  canonical="https://corillo.live/verificar/"
+>
+  <fragment slot="head">
+    <meta name="robots" content="noindex, nofollow" />
+    <style>
+      .page {
+        display:flex;align-items:center;justify-content:center;
+        min-height:calc(100vh - 52px);padding:40px 20px;
+      }
+      .card {
+        width:100%;max-width:420px;text-align:center;
+        padding:36px 40px;
+      }
+      @media(max-width:480px){.card{padding:28px 24px}}
+      .card h2 {
+        font-family:var(--crl-display);font-size:1.6rem;
+        margin-bottom:8px;letter-spacing:1px;
+      }
+      .card p{color:var(--crl-muted);font-size:.9rem;line-height:1.6;margin-bottom:20px}
+      .spinner{
+        display:inline-block;width:28px;height:28px;
+        border:3px solid rgba(255,255,255,.2);border-top-color:var(--crl-accent);
+        border-radius:50%;animation:spin .7s linear infinite;margin-bottom:16px;
+      }
+      @keyframes spin{to{transform:rotate(360deg)}}
+      #loadingState i, #invalidState i, #successState i{font-size:2rem;margin-bottom:16px;display:block}
+      #invalidState{display:none}
+      #invalidState i{color:var(--crl-hot)}
+      #successState{display:none}
+      #successState i{color:var(--crl-confirm)}
+    </style>
+  </fragment>
+
+<div class="page">
+  <div class="card card-glass">
+
+    <div id="loadingState">
+      <span class="spinner"></span>
+      <h2>CONFIRMANDO...</h2>
+      <p>Un momento, estamos activando tu cuenta.</p>
+    </div>
+
+    <div id="invalidState">
+      <i class="fa-solid fa-circle-xmark"></i>
+      <h2>LINK INVÁLIDO</h2>
+      <p>Este enlace ya expiró o no es válido. Puedes pedir uno nuevo desde el login con "¿Olvidaste tu verificación?", o contactarnos.</p>
+      <a href="/join/" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px">Volver a intentar</a>
+    </div>
+
+    <div id="successState">
+      <i class="fa-solid fa-circle-check"></i>
+      <h2>¡CUENTA ACTIVADA!</h2>
+      <p>Tu email fue confirmado y tu canal ya está listo. Entra para conseguir tu stream key y empezar a transmitir.</p>
+      <a href="/perfil/" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Ir a mi perfil
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const loadingState  = document.getElementById('loadingState')!;
+const invalidState  = document.getElementById('invalidState')!;
+const successState  = document.getElementById('successState')!;
+
+const params = new URLSearchParams(window.location.search);
+const token  = params.get('token');
+
+async function confirm() {
+  if (!token) {
+    loadingState.style.display = 'none';
+    invalidState.style.display = 'block';
+    return;
+  }
+  try {
+    const res = await fetch('https://pb.corillo.live/api/collections/streamers/confirm-verification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+    loadingState.style.display = 'none';
+    if (res.ok) {
+      successState.style.display = 'block';
+    } else {
+      invalidState.style.display = 'block';
+    }
+  } catch {
+    loadingState.style.display = 'none';
+    invalidState.style.display = 'block';
+  }
+}
+confirm();
+</script>
+
+</SiteShell>

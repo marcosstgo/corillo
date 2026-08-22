@@ -87,7 +87,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
     /* ── EMPTY STATE ── */
     .empty {
       display: none; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 55vh; gap: 16px; text-align: center;
+      min-height: 55vh; gap: 18px; text-align: center;
     }
     .empty.show { display: flex; }
     .empty-icon {
@@ -96,8 +96,20 @@ import SiteShell from '../../layouts/SiteShell.astro';
       display: flex; align-items: center; justify-content: center;
       font-size: 1.8rem; color: var(--crl-muted);
     }
-    .empty h2 { font-family: var(--crl-display); font-size: 2rem; letter-spacing: 3px; color: rgba(255,255,255,.25); margin: 0; }
+    .empty h2 { font-family: var(--crl-display); font-size: 2rem; letter-spacing: 3px; color: rgba(255,255,255,.35); margin: 0; }
     .empty p { font-family: var(--crl-mono); font-size: .78rem; letter-spacing: 2px; color: var(--crl-muted); text-transform: uppercase; margin: 0; }
+    .empty-cta { display: none; gap: 10px; margin-top: 4px; }
+    .empty-cta.show { display: flex; }
+    .empty-cta a {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--crl-mono); font-size: .75rem; letter-spacing: 1px; text-transform: uppercase;
+      padding: 9px 18px; border-radius: 999px; border: 1px solid var(--crl-border);
+      color: rgba(255,255,255,.7); text-decoration: none; transition: .15s;
+    }
+    .empty-cta a:hover { border-color: var(--crl-border-h); color: var(--crl-white); background: rgba(255,255,255,.05); }
+    .empty-cta a.primary { border-color: rgba(var(--crl-live-rgb),.4); color: var(--crl-live); background: rgba(var(--crl-live-rgb),.06); }
+    .empty-cta a.primary:hover { background: rgba(var(--crl-live-rgb),.12); }
+    [data-theme="light"] .empty-cta a { color: rgba(5,16,21,.6); }
 
     /* ── GRID ── */
     .gallery { display: grid; gap: 12px; grid-template-columns: repeat(2, 1fr); }
@@ -342,9 +354,13 @@ import SiteShell from '../../layouts/SiteShell.astro';
     </div>
 
     <div class="empty show" id="emptyState">
-      <div class="empty-icon"><i class="fa-solid fa-broadcast-tower"></i></div>
+      <div class="empty-icon"><i class="fa-solid fa-satellite-dish"></i></div>
       <h2 id="emptyTitle">NADIE EN VIVO</h2>
       <p id="emptyMsg">Cuando alguien inicie stream aparecerá aquí</p>
+      <div class="empty-cta" id="emptyCta">
+        <a href="/vods/" class="primary"><i class="fa-solid fa-play"></i> Ver VODs</a>
+        <a href="/streamers/"><i class="fa-solid fa-users"></i> Ver streamers</a>
+      </div>
     </div>
 
     <div class="gallery" id="gallery"></div>
@@ -600,9 +616,11 @@ function updateUI() {
     if (totalLive > 0) {
       $('emptyTitle').textContent = 'ELIGE A QUIÉN VER';
       $('emptyMsg').textContent   = 'Selecciona uno o varios streamers arriba';
+      $('emptyCta').classList.remove('show');
     } else {
       $('emptyTitle').textContent = 'NADIE EN VIVO';
       $('emptyMsg').textContent   = 'Cuando alguien inicie stream aparecerá aquí';
+      $('emptyCta').classList.add('show');
     }
   } else {
     $('emptyState').classList.remove('show');

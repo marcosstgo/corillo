@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --h: 266;               /* accent hue — tweakable */
+  --h: 195;               /* accent hue — cian (Anti-BufferBloat Pro), tweakable */
   --accent: oklch(0.72 0.18 var(--h));
   --accent-dim: oklch(0.55 0.14 var(--h));
   --accent-glow: oklch(0.72 0.18 var(--h) / 0.25);

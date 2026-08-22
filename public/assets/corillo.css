@@ -6,26 +6,26 @@
 
 /* ── 1. TOKENS ──────────────────────────────────────────── */
 :root {
-  /* Palette — Tokio Profundo (premium azul + magenta) */
-  --crl-ink:       #060912;
-  --crl-surface:   #0b1020;
-  --crl-panel:     #131a33;
-  --crl-white:     #e7ecf7;
-  --crl-muted:     #51607e;
+  /* Palette — Anti-BufferBloat Pro (negro + cian/magenta neón) */
+  --crl-ink:       #060608;
+  --crl-surface:   #0c0c10;
+  --crl-panel:     #16161c;
+  --crl-white:     #f2efe9;
+  --crl-muted:     #6b7280;
 
   /* Brand colors */
-  --crl-accent:    #5a7bff;   /* azul prof — UI principal  */
-  --crl-accent2:   #f5408a;   /* magenta   — co-acento/dúo */
-  --crl-live:      #f5b73c;   /* oro       — en vivo       */
-  --crl-confirm:   #34e0b0;   /* menta     — éxito         */
-  --crl-hot:       #CE1126;   /* rojo PR   — alertas       */
+  --crl-accent:    #00f0ff;   /* cian      — UI principal  */
+  --crl-accent2:   #ff00e5;   /* magenta   — co-acento/dúo */
+  --crl-live:      #df3030;   /* rojo      — en vivo       */
+  --crl-confirm:   #00ff88;   /* verde     — éxito         */
+  --crl-hot:       #df3030;   /* rojo      — alertas       */
 
   /* RGB components — para rgba(var(--crl-*-rgb), opacity) */
-  --crl-accent-rgb:  90, 123, 255;
-  --crl-accent2-rgb: 245, 64, 138;
-  --crl-live-rgb:    245, 183, 60;
-  --crl-confirm-rgb: 52, 224, 176;
-  --crl-ink-rgb:     6, 9, 18;
+  --crl-accent-rgb:  0, 240, 255;
+  --crl-accent2-rgb: 255, 0, 229;
+  --crl-live-rgb:    223, 48, 48;
+  --crl-confirm-rgb: 0, 255, 136;
+  --crl-ink-rgb:     6, 6, 8;
 
   /* Borders */
   --crl-border:    rgba(var(--crl-accent-rgb),.08);
@@ -86,9 +86,9 @@
   --crl-muted:    #4a7a8a;
   --crl-border:   rgba(0,0,0,.1);
   --crl-border-h: rgba(0,0,0,.2);
-  --crl-accent:   #0088bb;
-  --crl-live:     #c9920a;
-  --crl-confirm:  #00aa6e;
+  --crl-accent:   #007a8c;
+  --crl-live:     #b81f1f;
+  --crl-confirm:  #00875f;
 }
 
 
@@ -1866,11 +1866,11 @@ button { font: inherit; cursor: pointer; }
 
 /* ── 50. PLAYER — channel, video & controls ─────────────── */
 
-/* Layout lock — scoped to player pages only */
-html:has(.crl-player-app),
-body:has(.crl-player-app) { height: 100%; overflow: hidden; }
-body:has(.crl-player-app) { display: flex; flex-direction: column; }
-body:has(.crl-player-app)::after { display: none; }
+/* Layout lock — scoped to player pages only (excludes docs-preview demos) */
+html:has(.crl-player-app:not(.preview .crl-player-app)),
+body:has(.crl-player-app:not(.preview .crl-player-app)) { height: 100%; overflow: hidden; }
+body:has(.crl-player-app:not(.preview .crl-player-app)) { display: flex; flex-direction: column; }
+body:has(.crl-player-app:not(.preview .crl-player-app))::after { display: none; }
 
 /* Nav inner elements */
 .nav-logo { display: flex; align-items: center; }
@@ -2074,8 +2074,8 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
   body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
   .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; flex: none; align-content: start; }
   .player-side, .crl-player-main { overflow: visible!important; }
-  /* Chat = bottom sheet deslizable en móvil/tablet (sube desde abajo) */
-  .crl-chat-panel {
+  /* Chat = bottom sheet deslizable en móvil/tablet (sube desde abajo); excluye demos de docs */
+  .crl-chat-panel:not(.preview .crl-chat-panel) {
     position: fixed; left: 0; right: 0; bottom: 0;
     height: 50vh; height: 50dvh; max-height: 50dvh;
     z-index: 250; border-left: none; border-top: 1px solid var(--crl-border);
@@ -2083,7 +2083,7 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
     background: var(--crl-surface); transform: translateY(100%);
     transition: transform .32s cubic-bezier(.32,.72,0,1); will-change: transform;
   }
-  .crl-player-app:not(.chat-hidden) .crl-chat-panel { transform: translateY(0); }
+  .crl-player-app:not(.chat-hidden) .crl-chat-panel:not(.preview .crl-chat-panel) { transform: translateY(0); }
   /* Visible durante la animación; chat.js pone display:none al terminar el cierre
      para que el panel fuera de pantalla no genere scroll fantasma en iOS. */
   .crl-player-app.chat-hidden .crl-chat-panel { display: flex; }
@@ -2123,7 +2123,7 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
 }
 @media(max-width:600px) {
   #chatInput { font-size: 16px; }
-  .crl-chat-panel { height: 50vh !important; height: 50dvh !important; max-height: 50dvh !important; }
+  .crl-chat-panel:not(.preview .crl-chat-panel) { height: 50vh !important; height: 50dvh !important; max-height: 50dvh !important; }
   /* Info del canal muy compacta en mobile */
   .ch-info-bar { padding: 8px 12px; gap: 9px; }
   .ch-ava { width: 38px !important; height: 38px !important; font-size: 1rem !important; }
@@ -2144,7 +2144,7 @@ body.theme-twitch { background: radial-gradient(800px 400px at 50% 0%,rgba(145,7
   body:has(.crl-player-app) { min-height: 100dvh; overflow-x: hidden; overflow-y: scroll!important; -webkit-overflow-scrolling: touch; }
   .app, .crl-player-app { height: auto; min-height: calc(100dvh - 48px); overflow: visible!important; grid-template-columns: 1fr!important; }
   .player-side, .crl-player-main { overflow: visible!important; }
-  .crl-chat-panel { height: 90vh !important; max-height: 90dvh !important; }
+  .crl-chat-panel:not(.preview .crl-chat-panel) { height: 90vh !important; max-height: 90dvh !important; }
 }
 
 /* ── Player: Stats del canal ────────────────────────────── */
