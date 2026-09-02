@@ -137,6 +137,7 @@ import SiteShell from '../layouts/SiteShell.astro';
         </div>
 
         <div class="rotate-bar" id="rotateBar"></div>
+        <div class="featured-dots" id="featuredDots" style="display:none"></div>
       </div>
 
     </div>
@@ -499,6 +500,7 @@ function setFeaturedLive(key, paths) {
   statsBase.viewers = viewers;
 
   updateChatLabel(key);
+  updateFeaturedDots(key);
 
   // Sim stream
   const sim = document.getElementById('simStream');
@@ -544,6 +546,7 @@ function setFeaturedLive(key, paths) {
 
 async function setFeaturedOffline() {
   featuredKey = null;
+  renderFeaturedDots([]);
 
   // Stop HLS
   const vid = document.getElementById('featuredVideo');
@@ -674,10 +677,59 @@ function setupHls(key) {
 }
 
 /* ── Rotation ────────────────────────────────────────── */
+function fadeToFeatured(key) {
+  const wrap = document.getElementById('featuredVideoWrap');
+  wrap.style.transition = 'opacity .28s';
+  wrap.style.opacity = '0.4';
+  setTimeout(() => {
+    setFeaturedLive(key, lastPaths);
+    wrap.style.opacity = '1';
+    setTimeout(() => { wrap.style.transition = ''; wrap.style.opacity = ''; }, 350);
+  }, 280);
+  startProgressBar();
+}
+
+function armRotateTimer() {
+  clearInterval(rotateTimer);
+  if (livePlayers.length < 2) return;
+  rotateTimer = setInterval(() => {
+    rotateIdx = (rotateIdx + 1) % livePlayers.length;
+    fadeToFeatured(livePlayers[rotateIdx]);
+  }, ROTATE_MS);
+}
+
+function jumpToFeatured(key) {
+  const idx = livePlayers.indexOf(key);
+  if (idx < 0 || key === featuredKey) return;
+  rotateIdx = idx;
+  fadeToFeatured(key);
+  armRotateTimer();
+}
+
+function renderFeaturedDots(keys) {
+  const wrap = document.getElementById('featuredDots');
+  if (!wrap) return;
+  if (keys.length < 2) { wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+  wrap.style.display = '';
+  wrap.innerHTML = keys.map(k => `<button class="dot" data-key="${k}" aria-label="Ver ${k}"></button>`).join('');
+  wrap.querySelectorAll('.dot').forEach(btn => {
+    btn.addEventListener('click', () => jumpToFeatured(btn.dataset.key));
+  });
+  updateFeaturedDots(featuredKey);
+}
+
+function updateFeaturedDots(key) {
+  document.querySelectorAll('#featuredDots .dot').forEach(btn => {
+    btn.classList.toggle('on', btn.dataset.key === key);
+  });
+}
+
 function startRotation(live, paths) {
   clearInterval(rotateTimer);
   livePlayers = live.map(s => s.key);
   if (!livePlayers.length) return;
+
+  renderFeaturedDots(livePlayers);
 
   // Set initial featured
   const preferredIdx = featuredKey ? livePlayers.indexOf(featuredKey) : -1;
@@ -685,23 +737,8 @@ function startRotation(live, paths) {
   const firstKey = livePlayers[rotateIdx];
   if (firstKey !== featuredKey) setFeaturedLive(firstKey, paths);
 
-  if (livePlayers.length === 1) { startProgressBar(); return; }
-
   startProgressBar();
-  rotateTimer = setInterval(() => {
-    rotateIdx = (rotateIdx + 1) % livePlayers.length;
-    const nextKey = livePlayers[rotateIdx];
-    // Fade transition
-    const wrap = document.getElementById('featuredVideoWrap');
-    wrap.style.transition = 'opacity .28s';
-    wrap.style.opacity = '0.4';
-    setTimeout(() => {
-      setFeaturedLive(nextKey, lastPaths);
-      wrap.style.opacity = '1';
-      setTimeout(() => { wrap.style.transition = ''; wrap.style.opacity = ''; }, 350);
-    }, 280);
-    startProgressBar();
-  }, ROTATE_MS);
+  armRotateTimer();
 }
 
 /* ── Live section ────────────────────────────────────── */

@@ -11,6 +11,14 @@ LOCAL_API_URL = os.environ.get("LOCAL_API_URL", "http://telegram-bot-api:8081/bo
 YTDLP         = "yt-dlp"
 FFMPEG        = "ffmpeg"
 ALLOWED_USERS = set(os.environ.get("ALLOWED_USERS", "").split(",")) - {""}
+COOKIES_FILE  = os.environ.get("COOKIES_FILE", "/app/cookies.txt")
+
+
+def _cookie_args() -> list:
+    """Devuelve ['--cookies', <path>] si hay archivo de cookies; Instagram lo exige."""
+    if COOKIES_FILE and Path(COOKIES_FILE).is_file():
+        return ["--cookies", COOKIES_FILE]
+    return []
 
 logging.basicConfig(
     level=logging.INFO,
@@ -123,6 +131,7 @@ async def _download(update: Update, url: str, audio_only: bool) -> None:
             if audio_only:
                 yt_cmd = [
                     YTDLP, "-x", "--audio-format", "mp3",
+                    *_cookie_args(),
                     "-o", f"{tmpdir}/%(id)s.%(ext)s", url,
                 ]
             else:
@@ -131,6 +140,7 @@ async def _download(update: Update, url: str, audio_only: bool) -> None:
                     "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
                     "--merge-output-format", "mp4",
                     "--no-playlist",
+                    *_cookie_args(),
                     "-o", f"{tmpdir}/%(id)s.%(ext)s", url,
                 ]
 
