@@ -411,7 +411,8 @@ async function loadRelated(channel: string, currentId: string) {
     const j = await r.json();
     const items = (j.items || []) as any[];
     const livePathMap: Record<string, any> = {};
-    for (const p of items) { const m = p.name?.match(/^live\/(.+)$/); if (m && p.ready) livePathMap[m[1]] = p; }
+    // Ignorar variantes derivadas del canal (_low = 720p ABR, _rtc = WebRTC): no son streamers.
+    for (const p of items) { const m = p.name?.match(/^live\/(.+)$/); if (m && p.ready && !/_(low|rtc)$/.test(m[1])) livePathMap[m[1]] = p; }
     const liveStreamers = Object.entries(livePathMap).map(([key, p]: [string, any]) => ({
       ...(_streamerMap[key] || { key, name: key.toUpperCase(), color: 'var(--crl-accent)', ava: key[0]?.toUpperCase() }),
       _viewers: p.readers?.length ?? 0,

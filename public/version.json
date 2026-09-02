@@ -1,7 +1,11 @@
 {
-  "version": "2.2.679",
-  "date": "2026-07-22",
+  "version": "2.2.683",
+  "date": "2026-09-02",
   "changes": [
+    "Player: la pastilla de calidad es un control (AUTO → 1080p → 720p); estados playing/offline; botón de overlay \"Reintentar\".",
+    "Player: máquina de estados (window.__corilloPlayer), fallos clasificados offline/transitorio, stall nativo tolera 10 s, sin recoverMediaError en stalls, guard contra arranques solapados.",
+    "Fix: ABR (master.m3u8) solo con hls.js; el HLS nativo (iOS y Chrome 152+) recibe una sola variante — evitaba pantallas negras/\"Sin transmisión\" al cambiar de nivel.",
+    "ABR: calidad AUTO por defecto (master.m3u8 720p+1080p); el player sube/baja solo según la conexión. Botones 1080p/720p fuerzan; repulsar vuelve a AUTO.",
     "Rediseño 'SEÑAL' del home: estética de transmisión (broadcast), acento único rojo señal, tipografía Oswald + Archivo",
     "Home: hero en espera con retícula de 'señal lock'; datos (duración, viewers) en mono neutral",
     "Nuevo diseño 'Tokio Profundo': paleta azul + magenta, CTAs con gradiente azul→magenta",

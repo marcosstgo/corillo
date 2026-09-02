@@ -422,7 +422,8 @@ import SiteShell from '../../layouts/SiteShell.astro';
   async function poll() {
     try {
       const res   = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(5000) });
-      const items = (await res.json()).items || [];
+      // Variantes derivadas (_low 720p ABR, _rtc WebRTC) no son streamers.
+      const items = ((await res.json()).items || []).filter(p => !/_(low|rtc)$/.test(p.name));
       liveSet     = new Set(items.filter(p => p.ready).map(p => p.name.replace('live/', '')));
       viewersMap  = {};
       for (const p of items) {

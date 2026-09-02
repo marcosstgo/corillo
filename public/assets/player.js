@@ -98,6 +98,10 @@ window.channel = __validFormat ? __rawChannel : '';
     channel:  '',
     twitchUser: '',
     mode:     'horizontal',
+    // Estado de reproducción (una sola fuente de verdad; ver setState):
+    //   idle → checking → loading → playing → recovering → (loading | offline)
+    state:    'idle',
+    startSeq: 0,          // cada startPlayer() incrementa; los async viejos se descartan
     // Player
     hls:      null,
     rtcPc:    null,
@@ -116,8 +120,11 @@ window.channel = __validFormat ? __rawChannel : '';
     sessionAc: null,
     // Flags
     useWebRTC:             false,
-    lowQuality:            (localStorage.getItem('crl-quality') === 'low') ||
-                           (localStorage.getItem('crl-quality') === null && window.matchMedia('(max-width: 768px)').matches),
+    // Calidad: 'auto' (ABR: master.m3u8 con 720p+1080p, hls.js/Safari eligen según la conexión),
+    // 'high' (fuerza 1080p) o 'low' (fuerza 720p). Clave nueva 'crl-quality2' para no heredar
+    // la preferencia vieja ('crl-quality'), que dejaba a viewers atascados en 1080p fijo.
+    quality:               (['auto','high','low'].includes(localStorage.getItem('crl-quality2'))
+                             ? localStorage.getItem('crl-quality2') : 'auto'),
     unmuteAttemptPending:  false,
     // HLS stats
     emaBitrate:  null,
@@ -154,6 +161,25 @@ window.channel = __validFormat ? __rawChannel : '';
   function isMobile() {
     return window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   }
+
+  // Máquina de estados: registra transiciones (últimas 40) para diagnóstico desde consola:
+  //   window.__corilloPlayer.log  /  window.__corilloPlayer.snapshot()
+  const STATE_LOG = [];
+  function setState(next, why) {
+    if (App.state === next && !why) return;
+    STATE_LOG.push([new Date().toISOString().slice(11, 19), App.state, '→', next, why || '']);
+    if (STATE_LOG.length > 40) STATE_LOG.shift();
+    App.state = next;
+  }
+  window.__corilloPlayer = {
+    log: STATE_LOG,
+    snapshot() {
+      const v = DOM.video;
+      return { state: App.state, quality: App.quality, rtc: App.useWebRTC, retries: App.retries, lowReady: !!App.lowReady,
+        engine: App.hls ? 'hlsjs' : App.rtcPc ? 'webrtc' : v?.src ? 'native' : '-',
+        level: App.hls ? App.hls.currentLevel : null, res: v ? v.videoWidth + 'x' + v.videoHeight : null, t: v ? +v.currentTime.toFixed(1) : null };
+    },
+  };
 
   // ================================
   // UI
@@ -274,15 +300,28 @@ window.channel = __validFormat ? __rawChannel : '';
   }
 
 
-  function setQuality(low) {
-    App.lowQuality = low;
-    localStorage.setItem('crl-quality', low ? 'low' : 'high');
-    DOM.ctrlQuality?.classList.toggle('active', !low);
-    DOM.ctrlQualityLow?.classList.toggle('active', low);
-    DOM.hlsTxt.textContent = low ? '720p' : (App.mode === 'vertical' ? '9:16' : '16:9');
+  function syncQualityButtons() {
+    DOM.ctrlQuality?.classList.toggle('active', App.quality === 'high');
+    DOM.ctrlQualityLow?.classList.toggle('active', App.quality === 'low');
+  }
+
+  function qualityBadge(height) {
+    if (App.mode === 'vertical') return '9:16';
+    const res = height > 0 ? height + 'p' : (App.quality === 'low' ? '720p' : App.quality === 'high' ? '1080p' : '…');
+    return App.quality === 'auto' ? 'AUTO ' + res : res;
+  }
+
+  // mode: 'auto' | 'high' | 'low'. Pulsar el botón ya activo vuelve a 'auto'.
+  function setQuality(mode) {
+    App.quality = mode;
+    localStorage.setItem('crl-quality2', mode);
+    syncQualityButtons();
+    DOM.hlsTxt.textContent = qualityBadge(0);
     App.retries = 0;
     startPlayer();
   }
+
+  function toggleQuality(mode) { setQuality(App.quality === mode ? 'auto' : mode); }
 
   function toggleWebRTC() {
     App.useWebRTC = !App.useWebRTC;
@@ -392,6 +431,8 @@ window.channel = __validFormat ? __rawChannel : '';
       }
       const w = v.videoWidth, h = v.videoHeight;
       DOM.sLevel.textContent   = (w > 0 && h > 0) ? `${w}×${h}` : '—';
+      // Safari nativo no emite LEVEL_SWITCHED: el badge sigue la resolución real del video.
+      if (!App.hls && !App.useWebRTC && h > 0) DOM.hlsTxt.textContent = qualityBadge(h);
       DOM.sBitrate.textContent = formatBitrate(App.emaBitrate);
     }, STATS_INTERVAL);
   }
@@ -414,6 +455,7 @@ window.channel = __validFormat ? __rawChannel : '';
 
   async function startWatch() {
     cleanup();   // limpia timers, hls, retryTimer — garantiza estado limpio
+    setState('offline');
 
     // Try to show the latest VOD while the channel is offline
     try {
@@ -502,7 +544,7 @@ window.channel = __validFormat ? __rawChannel : '';
     App.currentVod = null;
     hideVodBadge();
     // Reset overlay retry buttons to default
-    DOM.ovRetry.innerHTML    = '<i class="fa-solid fa-display"></i> 1080p';
+    DOM.ovRetry.innerHTML    = '<i class="fa-solid fa-rotate"></i> Reintentar';
     DOM.ovRetry.onclick      = null;
     if (DOM.ovRetryLow) DOM.ovRetryLow.style.display = '';
     // Restore stats row if it was hidden in VOD mode
@@ -524,19 +566,22 @@ window.channel = __validFormat ? __rawChannel : '';
     const sessionAc = new AbortController();
     App.sessionAc = sessionAc;
 
-    v.addEventListener('error', () => scheduleRetry('Error de HLS nativo'), { signal: sessionAc.signal, once: true });
+    // Error del elemento <video> en nativo: casi siempre es que la playlist ya no existe (canal offline).
+    v.addEventListener('error', () => scheduleRetry('error nativo', 'offline'), { signal: sessionAc.signal, once: true });
 
-    // FIX #2: start stall watcher only after 'playing' fires — avoids false positives during initial buffering
+    // Stall watcher (solo tras 'playing'): el nativo no avisa cuando se queda sin datos. Se exige
+    // 2 comprobaciones seguidas sin avanzar (10 s) — con 5 s reiniciaba en cambios de nivel legítimos.
     let stallTimer = null;
     let lastTime   = -1;
+    let stalled    = 0;
 
     function startStallWatch() {
       lastTime   = DOM.video.currentTime;
       stallTimer = setInterval(() => {
         if (!v.paused && v.currentTime === lastTime) {
-          clearInterval(stallTimer);
-          scheduleRetry('stall nativo');
-        }
+          stalled++;
+          if (stalled >= 2) { clearInterval(stallTimer); scheduleRetry('stall nativo ' + (stalled * STALL_CHECK_INTERVAL / 1000) + 's', 'transient'); }
+        } else stalled = 0;
         lastTime = v.currentTime;
       }, STALL_CHECK_INTERVAL);
     }
@@ -576,11 +621,17 @@ window.channel = __validFormat ? __rawChannel : '';
       maxLiveSyncPlaybackRate: 1.1,
       manifestLoadingMaxRetry: 1,
       fragLoadingMaxRetry:     2,
+      // ABR: un celular nunca baja 1080p si su player no lo puede mostrar.
+      capLevelToPlayerSize:    true,
     });
     App.hls = hls;
     window._hlsInstance = hls;
 
     hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
+    hls.on(Hls.Events.LEVEL_SWITCHED, (_, d) => {
+      const lvl = hls.levels?.[d?.level];
+      if (lvl && !App.useWebRTC) DOM.hlsTxt.textContent = qualityBadge(lvl.height);
+    });
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
       let hlsPlaySettled = false;
       const hlsPlayTimeout = setTimeout(() => {
@@ -592,8 +643,15 @@ window.channel = __validFormat ? __rawChannel : '';
     });
     hls.on(Hls.Events.ERROR, (_, d) => {
       if (!d) return;
-      if (d.fatal) { cleanup(); scheduleRetry(d.type || 'Error fatal'); return; }
-      if (d.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR) { try { hls.recoverMediaError(); } catch {} }
+      if (d.fatal) {
+        // 404/403 de la playlist principal = el canal dejó de emitir → offline. Todo lo demás es transitorio.
+        const status  = d.response?.code || 0;
+        const offline = d.type === Hls.ErrorTypes.NETWORK_ERROR && (status === 404 || status === 403 || d.details === Hls.ErrorDetails.MANIFEST_LOAD_ERROR);
+        cleanup(); scheduleRetry(d.details || d.type || 'hls fatal', offline ? 'offline' : 'transient'); return;
+      }
+      // Stalls no fatales: hls.js los resuelve solo (nudge/skip). recoverMediaError() aquí era un
+      // error: es para MEDIA_ERROR de decodificación y provocaba reinicios innecesarios.
+      if (d.details === Hls.ErrorDetails.BUFFER_STALLED_ERROR) setState('playing', 'stall (hls.js lo maneja)');
     });
     hls.attachMedia(DOM.video);
   }
@@ -681,69 +739,56 @@ window.channel = __validFormat ? __rawChannel : '';
   // Retry Logic
   // ================================
 
-  function scheduleRetry(reason) {
+  // Único punto de entrada para cualquier fallo de reproducción.
+  //   reason: texto para el log de estados.
+  //   kind:   'offline'   → el servidor dice que no hay stream (404 de playlist, error nativo de red)
+  //           'transient' → red/decodificación/stall; el stream probablemente sigue ahí
+  // Política: transitorios reintentan con backoff; offline reintenta 4 veces rápido y pasa a
+  // modo espera (startWatch, que muestra el último VOD y sondea cada 15 s).
+  function scheduleRetry(reason, kind = 'transient') {
     App.retries++;
     DOM.sRetries.textContent = App.retries;
     DOM.retryTxt.textContent = App.retries;
+    setState('recovering', reason + ' (' + kind + ')');
 
-    // WebRTC fallback: after 2 failures switch silently to HLS
+    // WebRTC: tras 2 fallos, caer a HLS sin drama
     if (App.useWebRTC && App.retries >= 2) {
       App.useWebRTC = false;
       const btn = $('#ctrlRtc');
       if (btn) { btn.style.opacity = '.4'; btn.style.color = ''; btn.title = 'Activar WebRTC (latencia baja ~200ms)'; }
-      showOverlay('Reconectando', 'WebRTC no disponible en esta red. Cambiando a HLS…');
-      App.retryTimer = setTimeout(startPlayer, 1500);
+      retryLater(1500, 'Reconectando', 'WebRTC no disponible en esta red. Cambiando a HLS…');
       return;
     }
 
-    const delay     = getRetryDelay(App.retries);
-    const isOffline = reason === 'networkError' || reason === 'Error de HLS nativo';
+    const isOffline = kind === 'offline';
+    if (isOffline && App.retries > MAX_RETRIES_BEFORE_OFFLINE) { startWatch(); return; }
 
-    // Debounce: skip kick check if last one was within 30s
+    const delay = getRetryDelay(App.retries);
+    const fallback = () => retryLater(delay,
+      isOffline ? 'Sin transmisión' : 'Reconectando',
+      (isOffline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(delay / 1000) + 's…');
+
+    // ¿Lo kickeó el monitor de bitrate? (máx. una consulta cada 30 s)
     const now = Date.now();
-    if (App.lastKickCheck && (now - App.lastKickCheck) < 30000) {
-      if (isOffline && App.retries > MAX_RETRIES_BEFORE_OFFLINE) { startWatch(); return; }
-      showOverlay(
-        isOffline ? 'Sin transmisión' : 'Reconectando',
-        (isOffline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(delay / 1000) + 's…'
-      );
-      App.retryTimer = setTimeout(startPlayer, delay);
-      return;
-    }
+    if (App.lastKickCheck && (now - App.lastKickCheck) < 30000) { fallback(); return; }
     App.lastKickCheck = now;
-
-    fetch('/assets/kick/' + App.channel + '.json?t=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(3000) })
+    fetch('/assets/kick/' + App.channel + '.json?t=' + now, { cache: 'no-store', signal: AbortSignal.timeout(3000) })
       .then(r => r.ok ? r.json() : null)
       .then(kick => {
-        if (kick && (Date.now() / 1000 - kick.ts) < KICK_MAX_AGE) {
-          showOverlay(
-            'Stream pausado temporalmente',
+        if (kick && (now / 1000 - kick.ts) < KICK_MAX_AGE) {
+          retryLater(delay, 'Stream pausado temporalmente',
             'El stream fue desconectado por bitrate alto (' + kick.kbps.toLocaleString() + ' Kbps). ' +
             'Si eres el streamer: configura máximo 6,500 Kbps en OBS o Meld Studio y reconecta. ' +
-            'Reintentando en ' + Math.round(delay / 1000) + 's…'
-          );
-          App.retryTimer = setTimeout(startPlayer, delay);
-        } else if (isOffline && App.retries > MAX_RETRIES_BEFORE_OFFLINE) {
-          startWatch();
-        } else {
-          showOverlay(
-            isOffline ? 'Sin transmisión' : 'Reconectando',
-            (isOffline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(delay / 1000) + 's…'
-          );
-          App.retryTimer = setTimeout(startPlayer, delay);
-        }
+            'Reintentando en ' + Math.round(delay / 1000) + 's…');
+        } else fallback();
       })
-      .catch(() => {
-        if (isOffline && App.retries > MAX_RETRIES_BEFORE_OFFLINE) {
-          startWatch();
-        } else {
-          showOverlay(
-            isOffline ? 'Sin transmisión' : 'Reconectando',
-            (isOffline ? 'El canal no está en vivo ahora mismo.' : 'Error de conexión.') + ' Reintentando en ' + Math.round(delay / 1000) + 's…'
-          );
-          App.retryTimer = setTimeout(startPlayer, delay);
-        }
-      });
+      .catch(fallback);
+  }
+
+  function retryLater(delay, title, msg) {
+    showOverlay(title, msg);
+    clearTimeout(App.retryTimer);
+    App.retryTimer = setTimeout(startPlayer, delay);
   }
 
   // ================================
@@ -753,6 +798,8 @@ window.channel = __validFormat ? __rawChannel : '';
   async function startPlayer() {
     if (App.useWebRTC) { startWebRTC(); return; }
     cleanup();
+    const seq = ++App.startSeq;   // si otro startPlayer arranca mientras esperamos, este se descarta
+    setState('checking');
     showOverlay('Cargando', 'Verificando…');
     DOM.video.muted = true;
 
@@ -762,27 +809,44 @@ window.channel = __validFormat ? __rawChannel : '';
       try {
         const r     = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
         const data  = await r.json();
+        if (seq !== App.startSeq) return;
         const items = data.items || [];
         const live  = items.find(p => p.name === 'live/' + App.channel && p.ready);
         if (!live) { startWatch(); return; }
-        // Fallback: si se pidió calidad baja pero la variante _low no existe en mediamtx,
-        // usar la calidad normal en vez de fallar a "offline". La variante _low no siempre
-        // se genera (no hay transcodificación de baja calidad en el servidor).
-        if (App.lowQuality && !items.find(p => p.name === 'live/' + App.channel + '_low' && p.ready)) {
-          App.lowQuality = false;
-          DOM.ctrlQuality?.classList.add('active');
-          DOM.ctrlQualityLow?.classList.remove('active');
-        }
+        // La variante _low la genera corillo-stream-up.sh unos segundos después de que
+        // arranca el canal; si todavía no está, no ofrecerla (ni en auto ni forzada).
+        App.lowReady = !!items.find(p => p.name === 'live/' + App.channel + '_low' && p.ready);
+        if (App.quality === 'low' && !App.lowReady) { App.quality = 'auto'; syncQualityButtons(); }
       } catch {} // network error → fall through and attempt HLS normally
+      if (seq !== App.startSeq) return;
     }
+    setState('loading');
 
     const basePath = App.mode === 'vertical' ? App.channel + '-vertical' : App.channel;
-    const path = App.lowQuality ? basePath + '_low' : basePath;
-    const url  = '/live/' + encodeURIComponent(path) + '/index.m3u8';
-    if (!App.lowQuality) DOM.hlsTxt.textContent = App.mode === 'vertical' ? '9:16' : '16:9';
+
+    // hls.js siempre que se pueda (Chrome, Firefox, Edge, Android, Safari macOS). Nativo SOLO en
+    // iOS/iPadOS. El HLS nativo de Chrome 152+ existe pero se traba al cambiar de nivel, y las
+    // variantes 720p/1080p no tienen segmentos alineados (2 s vs keyframe de OBS), así que el
+    // ABR con master.m3u8 va únicamente por hls.js; el nativo recibe una sola variante.
+    const isIOS    = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const useHlsJs = !isIOS && !!(window.Hls && Hls.isSupported());
+    const canNative = !!DOM.video.canPlayType('application/vnd.apple.mpegurl');
+
+    let url;
+    if (useHlsJs && App.mode !== 'vertical' && App.quality === 'auto' && App.lowReady) {
+      url = '/live/' + encodeURIComponent(basePath) + '/master.m3u8';
+    } else {
+      // Nativo en auto: 720p en pantallas pequeñas, 1080p en el resto (una sola variante, sin cambios).
+      const smallScreen = window.matchMedia('(max-width: 768px)').matches;
+      const wantLow = App.quality === 'low' || (App.quality === 'auto' && App.lowReady && !useHlsJs && smallScreen);
+      url = '/live/' + encodeURIComponent(wantLow ? basePath + '_low' : basePath) + '/index.m3u8';
+    }
+    DOM.hlsTxt.textContent = qualityBadge(0);
     showOverlay('Cargando', 'Iniciando stream…');
 
-    if (DOM.video.canPlayType('application/vnd.apple.mpegurl')) {
+    if (useHlsJs) {
+      setupHlsJs(url);
+    } else if (canNative) {
       setupNativeHLS(url);
     } else if (window.Hls && Hls.isSupported()) {
       setupHlsJs(url);
@@ -976,8 +1040,20 @@ window.channel = __validFormat ? __rawChannel : '';
     setTheme(localStorage.getItem('corillo_theme') || 'original');
 
 
-    // WebRTC toggle button
+    // Control de calidad: la pastilla "AUTO 720p" rota AUTO → 1080p → 720p → AUTO.
+    // (La página no tiene botones #ctrlQuality/#ctrlQualityLow; si algún día los tiene, siguen funcionando.)
     const pill   = DOM.hlsTxt.closest('.pill') || DOM.hlsTxt.parentElement;
+    const QUALITY_CYCLE = { auto: 'high', high: 'low', low: 'auto' };
+    const qualityTitle = () => 'Calidad: ' + ({ auto: 'automática (según tu conexión)', high: '1080p fija', low: '720p fija' })[App.quality] + ' — clic para cambiar';
+    pill.style.cursor = 'pointer';
+    pill.title = qualityTitle();
+    pill.addEventListener('click', (e) => {
+      if (e.target.closest('#ctrlRtc')) return;
+      setQuality(QUALITY_CYCLE[App.quality] || 'auto');
+      pill.title = qualityTitle();
+    });
+
+    // WebRTC toggle button
     const rtcBtn = document.createElement('button');
     rtcBtn.id = 'ctrlRtc';
     rtcBtn.className = 'ctrl-btn';
@@ -1006,8 +1082,8 @@ window.channel = __validFormat ? __rawChannel : '';
     DOM.btnThemeTw.addEventListener('click', () => setTheme('twitch'));
 
     // Overlay retry — HD or 720p
-    DOM.ovRetry.addEventListener('click',    () => { App.retries = 0; setQuality(false); });
-    DOM.ovRetryLow?.addEventListener('click', () => { App.retries = 0; setQuality(true);  });
+    DOM.ovRetry.addEventListener('click',    () => { App.retries = 0; setQuality('auto'); });
+    DOM.ovRetryLow?.addEventListener('click', () => { App.retries = 0; setQuality('low');  });
 
     // Unmute button
     DOM.unmuteBtn.addEventListener('click', () => {
@@ -1026,6 +1102,7 @@ window.channel = __validFormat ? __rawChannel : '';
         if (App.currentVod) showVodBadge(App.currentVod);
         return;
       }
+      setState('playing');
       setLive(true); hideOverlay(); startStatsPolling(); showUnmuteBanner(); checkKickBanner(); requestWakeLock();
     });
     DOM.video.addEventListener('pause',   releaseWakeLock);
@@ -1047,8 +1124,8 @@ window.channel = __validFormat ? __rawChannel : '';
     // Control buttons
     DOM.ctrlPlay.addEventListener('click', () => { if (DOM.video.paused) DOM.video.play().catch(() => {}); else DOM.video.pause(); });
     DOM.ctrlMute.addEventListener('click', () => { DOM.video.muted = !DOM.video.muted; if (!DOM.video.muted && DOM.video.volume === 0) DOM.video.volume = 1; });
-    DOM.ctrlQuality?.addEventListener('click', () => setQuality(false));
-    DOM.ctrlQualityLow?.addEventListener('click', () => setQuality(true));
+    DOM.ctrlQuality?.addEventListener('click', () => toggleQuality('high'));
+    DOM.ctrlQualityLow?.addEventListener('click', () => toggleQuality('low'));
     DOM.ctrlVol.addEventListener('input',  () => { DOM.video.volume = +DOM.ctrlVol.value; DOM.video.muted = DOM.video.volume === 0; });
 
     // Fullscreen
@@ -1178,9 +1255,8 @@ window.channel = __validFormat ? __rawChannel : '';
       }
     });
 
-    // Sync quality buttons to initial state (mobile auto-detect or saved preference)
-    DOM.ctrlQuality?.classList.toggle('active', !App.lowQuality);
-    DOM.ctrlQualityLow?.classList.toggle('active', App.lowQuality);
+    // Sync quality buttons to initial state (auto por defecto, o preferencia guardada)
+    syncQualityButtons();
 
     startPlayer();
   }
