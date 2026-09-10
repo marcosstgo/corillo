@@ -43,7 +43,9 @@ def get_live_keys() -> list[str]:
         return [
             item["name"].removeprefix("live/")
             for item in items
-            if item.get("ready") and item["name"].startswith("live/")
+            if item.get("ready")
+            and item["name"].startswith("live/")
+            and not item["name"].endswith("_rtc")  # Opus-only (WebRTC); HLS/ffmpeg no lo puede miniaturizar
         ]
     except Exception as e:
         log.warning(f"API error: {e}")
