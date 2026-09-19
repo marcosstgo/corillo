@@ -10,4 +10,4 @@ Disallow: /mediamtx-api/
 Disallow: /chat-api/
 Disallow: /twitch-api/
 
-Sitemap: https://corillo.live/sitemap.xml
+Sitemap: https://corillo.live/sitemap-index.xml

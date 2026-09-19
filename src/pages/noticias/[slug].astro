@@ -1,0 +1,32 @@
+---
+import { getCollection, render } from 'astro:content';
+import NoticiasPostLayout from '../../layouts/NoticiasPostLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('noticias');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const canonical = `https://corillo.live/noticias/${post.id}/`;
+---
+<NoticiasPostLayout
+  title={post.data.title}
+  description={post.data.description}
+  canonical={canonical}
+  ogTitle={post.data.ogTitle}
+  ogDescription={post.data.ogDescription}
+  badgeClass={post.data.badgeClass}
+  badgeIcon={post.data.badgeIcon}
+  badgeLabel={post.data.badgeLabel}
+  date={post.data.date}
+  heroTitle={post.data.heroTitle}
+  heroSub={post.data.heroSub}
+  wide={post.data.wide}
+>
+  <Content />
+</NoticiasPostLayout>

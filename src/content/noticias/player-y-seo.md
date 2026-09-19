@@ -1,0 +1,30 @@
+---
+title: "CORILLO — Noticias · Player, theme y SEO"
+description: "El site sigue puliéndose con mejoras en el player, ajustes de tema claro y una base SEO más ordenada para buscadores y previews sociales."
+ogTitle: "Mejoras en player, theme y SEO"
+ogDescription: "El site sigue puliéndose con mejoras en el player, ajustes de tema claro y una base SEO más ordenada para buscadores y previews sociales."
+badgeClass: "badge-dim"
+badgeIcon: "fa-solid fa-screwdriver-wrench"
+badgeLabel: "Plataforma"
+date: "29 marzo 2026"
+pubDate: 2026-03-29T08:00:00Z
+heroTitle: "Mejoras en player, theme y SEO"
+heroSub: "Seguimos cerrando detalles que quizá no siempre se ven como una gran feature, pero sí hacen que el site se sienta más sólido."
+summary: "Se siguió puliendo el player, se mejoró el tema claro en varias páginas y el site quedó mejor preparado para descubrimiento en buscadores."
+---
+
+<h2>Player más alineado con el framework</h2>
+<p>El player sigue migrando hacia Corillo CSS. Eso incluye estructura, dropdown, panel de chat, rail de otros en vivo y últimas transmisiones.</p>
+<ul>
+  <li>Se corrigieron regresiones pequeñas que aparecieron al mover lógica vieja a clases nuevas del framework.</li>
+  <li>También se siguió afinando el tema claro para que los contrastes no se pierdan.</li>
+</ul>
+
+<h2>SEO más ordenado</h2>
+<p>Además, varias páginas públicas del site recibieron una pasada de metadatos para dejar títulos, descriptions, Open Graph, Twitter cards y canonical más consistentes.</p>
+<p>Ese tipo de trabajo ayuda a que Corillo se descubra mejor en buscadores y se vea mejor cuando alguien comparte una página.</p>
+
+<div class="post-cta crl-flex crl-wrap crl-gap-sm">
+  <a class="btn btn-primary" href="/noticias/">Volver a noticias</a>
+  <a class="btn" href="/roadmap/">Ver roadmap</a>
+</div>

@@ -1,5 +1,10 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('noticias')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
 <SiteShell
   title="CORILLO — Noticias"
@@ -119,96 +124,23 @@ import SiteShell from '../../layouts/SiteShell.astro';
     </div>
 
     <div class="news-grid">
-      <article class="card news-card card-accent">
-        <div class="news-meta">
-          <span class="badge badge-accent"><i class="fa-solid fa-upload"></i> Plataforma</span>
-          <span class="news-date">16 abril 2026</span>
-        </div>
-        <h2 class="news-title">Sube tus videos — sin stream, sin YouTube</h2>
-        <p class="news-desc">Upload directo desde el perfil, título personalizado y código embed para poner tu video en cualquier sitio. Sin depender de plataformas externas.</p>
-        <div class="news-actions">
-          <a class="btn btn-primary" href="/noticias/vod-upload/">Leer nota</a>
-          <span class="news-arrow">Ver más <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </article>
-
-      <article class="card news-card card-accent">
-        <div class="news-meta">
-          <span class="badge badge-accent"><i class="fa-solid fa-film"></i> Plataforma</span>
-          <span class="news-date">2 abril 2026</span>
-        </div>
-        <h2 class="news-title">VODs: cada transmisión queda guardada</h2>
-        <p class="news-desc">No tienes que hacer nada. Desde el momento en que empiezas a transmitir en CORILLO, todo se graba automáticamente y queda disponible para verse cuando quieras.</p>
-        <div class="news-actions">
-          <a class="btn btn-primary" href="/noticias/vods/">Leer nota</a>
-          <span class="news-arrow">Ver más <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </article>
-
-      <article class="card news-card card-accent">
-        <div class="news-meta">
-          <span class="badge badge-accent"><i class="fa-solid fa-scissors"></i> Plataforma</span>
-          <span class="news-date">30 marzo 2026</span>
-        </div>
-        <h2 class="news-title">Reels: clips 9:16 desde tus VODs</h2>
-        <p class="news-desc">Ya puedes crear clips verticales desde el perfil, elegir el momento exacto y descargarlos o publicarlos en corillo.live/reels/ para que todo el mundo los vea.</p>
-        <div class="news-actions">
-          <a class="btn btn-primary" href="/noticias/reels/">Leer nota</a>
-          <span class="news-arrow">Ver más <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </article>
-
-      <article class="card news-card card-accent">
-        <div class="news-meta">
-          <span class="badge badge-accent"><i class="fa-solid fa-layer-group"></i> Framework</span>
-          <span class="news-date">29 marzo 2026</span>
-        </div>
-        <h2 class="news-title">Corillo CSS entra en v1.4</h2>
-        <p class="news-desc">El framework del proyecto sigue creciendo con componentes reales del player, nueva documentación y una base más sólida para seguir migrando páginas grandes.</p>
-        <div class="news-actions">
-          <a class="btn btn-primary" href="/noticias/corillo-css-v1-4/">Leer nota</a>
-          <span class="news-arrow">Ver más <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </article>
-
-      <article class="card news-card card-confirm">
-        <div class="news-meta">
-          <span class="badge badge-confirm"><i class="fa-solid fa-circle-info"></i> Marca</span>
-          <span class="news-date">29 marzo 2026</span>
-        </div>
-        <h2 class="news-title">Sobre Corillo ya tiene su espacio</h2>
-        <p class="news-desc">La nueva página explica qué es CORILLO, cómo funciona y para quién es, sin rodeos.</p>
-        <div class="news-actions">
-          <a class="btn btn-primary" href="/noticias/sobre-corillo/">Leer nota</a>
-          <span class="news-arrow">Leer más <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </article>
-
-      <article class="card news-card card-dim">
-        <div class="news-meta">
-          <span class="badge badge-dim"><i class="fa-solid fa-screwdriver-wrench"></i> Plataforma</span>
-          <span class="news-date">29 marzo 2026</span>
-        </div>
-        <h2 class="news-title">Mejoras en player, theme y SEO</h2>
-        <p class="news-desc">Se siguió puliendo el player, se mejoró el tema claro en varias páginas y el site quedó mejor preparado para descubrimiento en buscadores.</p>
-        <div class="news-actions">
-          <a class="btn btn-primary" href="/noticias/player-y-seo/">Leer nota</a>
-          <span class="news-arrow">Abrir <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </article>
-
-      <article class="card news-card card-confirm">
-        <div class="news-meta">
-          <span class="badge badge-confirm"><i class="fa-solid fa-gamepad"></i> Gaming</span>
-          <span class="news-date">29 marzo 2026</span>
-        </div>
-        <h2 class="news-title">La Fiebre: Puerto Rico pone la cultura de autos boricua al frente</h2>
-        <p class="news-desc">Fiebru Studios está trabajando un juego de carreras en mundo abierto inspirado en Puerto Rico, con drag racing, personalización, multiplayer y una vibra que se siente de aquí.</p>
-        <div class="news-actions">
-          <a class="btn btn-primary" href="/noticias/la-fiebre-puerto-rico/">Leer nota</a>
-          <span class="news-arrow">Entrar <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </article>
+      {posts.map(post => {
+        const variant = post.data.badgeClass.replace('badge-', '');
+        return (
+          <article class={`card news-card card-${variant}`}>
+            <div class="news-meta">
+              <span class={`badge ${post.data.badgeClass}`}><i class={post.data.badgeIcon}></i> {post.data.badgeLabel}</span>
+              <span class="news-date">{post.data.date}</span>
+            </div>
+            <h2 class="news-title">{post.data.cardTitle || post.data.heroTitle}</h2>
+            <p class="news-desc">{post.data.summary}</p>
+            <div class="news-actions">
+              <a class="btn btn-primary" href={`/noticias/${post.id}/`}>Leer nota</a>
+              <span class="news-arrow">Ver más <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+          </article>
+        );
+      })}
     </div>
   </section>
 </div>
