@@ -1,0 +1,98 @@
+/* ============================================================================
+   SITE 2 — capa de shell para todo el sitio (sep-2026)
+   Cargada por SiteShell. Define los tokens h2-*, quita la sidebar, rehace la
+   topbar y el footer, y fija tipografía/color base. Cada página encima ajusta
+   su propio contenido (home2.css, vods2.css…).
+   Modo oscuro únicamente: la identidad es negro + cian/magenta.
+   ============================================================================ */
+:root {
+  --h2-ink:   #060608;
+  --h2-panel: #0e0e13;
+  --h2-raise: #16161c;
+  --h2-line:  rgba(242,239,233,.10);
+  --h2-bone:  #f2efe9;
+  --h2-mute:  #9a9ea9;
+  --h2-cyan:  #00f0ff;
+  --h2-mag:   #ff00e5;
+  --h2-live:  #ff3b4f;
+  --h2-gutter: clamp(18px, 4vw, 56px);
+  --h2-display: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+  --h2-body:    'DM Sans', system-ui, sans-serif;
+}
+html { color-scheme: dark; }
+body { background: var(--h2-ink); color: var(--h2-bone); font-family: var(--h2-body); }
+body .scanlines, body .grain { display: none; }
+
+/* ── sin sidebar: la navegación vive arriba; los canales, en cada página ── */
+body .left-sidebar { display: none !important; }
+body .page-right   { margin-left: 0 !important; }
+
+/* ── topbar ── */
+body .topbar {
+  position: sticky; top: 0; height: 64px; padding: 0 var(--h2-gutter);
+  background: rgba(6,6,8,.86); border-bottom: 1px solid var(--h2-line);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+@media (min-width: 1100px) {
+  body .topbar-nav   { display: flex !important; gap: 4px; margin-left: 28px; }
+  body .nav-menu-btn { display: none !important; }
+}
+body .topbar-link {
+  padding: 8px 14px; border-radius: 999px; text-transform: none;
+  font: 500 .95rem/1 var(--h2-body); letter-spacing: 0;
+  color: var(--h2-bone); opacity: .78; transition: opacity .15s, background .15s;
+}
+body .topbar-link i { display: none; }
+body .topbar-link:hover { opacity: 1; background: rgba(242,239,233,.08); }
+body .topbar-link.is-current { opacity: 1; background: rgba(242,239,233,.12); }
+body .topbar-search {
+  background: rgba(242,239,233,.07); border: 1px solid transparent; border-radius: 999px;
+  transition: border-color .15s, background .15s;
+}
+body .topbar-search:focus-within { border-color: var(--h2-cyan); background: rgba(242,239,233,.1); box-shadow: none; }
+body .topbar-search .topbar-search-input { background: transparent; border: 0; box-shadow: none; text-transform: none; letter-spacing: 0; font-family: var(--h2-body); }
+body .topbar-search-input::placeholder { font-family: var(--h2-body); text-transform: none; letter-spacing: 0; color: var(--h2-mute); }
+body .top-actions .ghost-btn.primary {
+  border-radius: 999px; padding: 10px 20px;
+  font: 700 .9rem/1 var(--h2-body); letter-spacing: 0; text-transform: none;
+}
+body .theme-btn { display: none; }
+
+/* ── footer ── */
+body .site-footer { background: var(--h2-ink); border-top: 1px solid var(--h2-line); padding-left: var(--h2-gutter); padding-right: var(--h2-gutter); }
+body .site-footer .foot-col-title { font: 700 .95rem var(--h2-body); text-transform: none; letter-spacing: 0; }
+body .site-footer .foot-tagline   { font: 400 .85rem/1.5 var(--h2-body); text-transform: none; letter-spacing: 0; color: var(--h2-mute); }
+body .site-footer a { font-family: var(--h2-body); }
+
+/* ── foco visible y transición nativa entre páginas ── */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--h2-cyan); outline-offset: 3px; }
+@view-transition { navigation: auto; }
+
+/* ── encabezado de página interior (reutilizable) ── */
+.h2-page { padding: clamp(36px, 6vw, 72px) var(--h2-gutter) 0; max-width: 1680px; margin: 0 auto; }
+.h2-page-hd { display: grid; gap: 12px; margin-bottom: clamp(24px, 4vw, 44px); }
+.h2-page-hd h1 { margin: 0; font: 800 clamp(2.6rem, 8vw, 6.5rem)/.88 var(--h2-display); letter-spacing: -.04em; text-transform: none; color: var(--h2-bone); }
+.h2-page-hd p  { margin: 0; max-width: 56ch; font: 400 clamp(1rem, 1.5vw, 1.2rem)/1.5 var(--h2-body); color: var(--h2-mute); }
+
+/* ═════════ Capa tipográfica común para páginas interiores ═════════
+   Las páginas de contenido (faq, legal, roadmap, software, noticias, join…)
+   comparten clases del sistema corillo.css. Aquí se les da la misma voz que
+   al home: Bricolage para títulos, DM Sans para todo lo demás, sin
+   MAYÚSCULAS espaciadas, y el degradado cian→magenta reservado para "en vivo". */
+body .page-right .crl-hero-title, body .page-right .hero-title, body .page-right .page-title {
+  font-family: var(--h2-display); font-weight: 800; text-transform: none;
+  font-size: clamp(2.6rem, 8vw, 6.5rem); line-height: .9; letter-spacing: -.04em; text-align: left;
+  color: var(--h2-bone); margin-bottom: 18px;
+}
+body .page-right .page-title span { color: inherit; }
+body .page-right .crl-hero-sub, body .page-right .hero-sub, body .page-right .page-sub { text-align: left; margin-left: 0; margin-right: 0; font-family: var(--h2-body); }
+body .page-right .crl-hero, body .page-right .hero { text-align: left; align-items: flex-start; }
+body .page-right h2, body .page-right h3 { font-family: var(--h2-display); text-transform: none; letter-spacing: -.025em; }
+body .page-right [class*="eyebrow"], body .page-right .crl-section-label, body .page-right .crl-label, body .page-right .field-label,
+body .page-right .cat-label, body .page-right .plat-tag, body .page-right .app-tag, body .page-right .key-label, body .page-right .preview-label {
+  font-family: var(--h2-body); text-transform: none; letter-spacing: 0; font-size: .88rem; font-weight: 600;
+}
+body .page-right .crl-btn, body .page-right .btn { border-radius: 999px; font-family: var(--h2-body); text-transform: none; letter-spacing: 0; font-weight: 700; }
+body .page-right .crl-btn-primary, body .page-right .btn-primary { background: var(--h2-bone); color: var(--h2-ink); border-color: transparent; }
+body .page-right .crl-btn-primary:hover, body .page-right .btn-primary:hover { filter: none; background: #fff; box-shadow: 0 0 0 4px rgba(0,240,255,.35); }
+body .page-right input:not([type="checkbox"]):not([type="radio"]), body .page-right select, body .page-right textarea { font-family: var(--h2-body); }

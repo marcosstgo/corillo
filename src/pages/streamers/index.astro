@@ -8,250 +8,40 @@ import SiteShell from '../../layouts/SiteShell.astro';
 >
   <fragment slot="head">
     <meta name="theme-color" content="#060608" />
-    <style is:global>
-      /* ── Hero ── */
-      .hero{text-align:center;padding:64px 24px 32px;max-width:1400px;margin:0 auto}
-      .hero-label{font-family:var(--crl-mono);font-size:.85rem;letter-spacing:.2em;color:var(--crl-accent);margin-bottom:12px}
-      .hero-title{font-family:var(--crl-display);font-size:clamp(3rem,8vw,6rem);line-height:1;color:var(--crl-white);margin:0 0 16px;letter-spacing:.02em}
-      .hero-sub{color:var(--crl-muted);font-size:.95rem;max-width:480px;margin:0 auto 20px}
-
-      .hero-stats{
-        display:none;align-items:center;justify-content:center;gap:0;
-        font-family:var(--crl-mono);font-size:.78rem;letter-spacing:.1em;
-        color:var(--crl-muted);margin-bottom:18px;
-        border:1px solid var(--crl-border);border-radius:99px;
-        padding:8px 4px;background:var(--crl-surface);
-      }
-      .hero-stats.show{display:inline-flex}
-      .hero-stats span{padding:0 16px;position:relative}
-      .hero-stats span:not(:last-child)::after{content:"";position:absolute;right:0;top:2px;bottom:2px;width:1px;background:var(--crl-border)}
-      .hero-stats strong{color:var(--crl-white);font-weight:700}
-      .hero-stats .s-live-num{color:#ef4444}
-      .hero-stats .s-live-num.pulsing{animation:crl-pulse-dot 1.6s ease-in-out infinite}
-
-      /* ── EN VIVO AHORA — rail ── */
-      .live-rail-wrap{max-width:1400px;margin:0 auto;padding:0 24px 28px;display:none}
-      .live-rail-wrap.show{display:block}
-      .live-rail-label{
-        display:flex;align-items:center;gap:8px;
-        font-family:var(--crl-mono);font-size:.72rem;letter-spacing:.15em;
-        color:#ef4444;text-transform:uppercase;margin-bottom:12px;
-      }
-      .live-rail-label .dot{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:crl-blink 1.2s ease-in-out infinite}
-      .live-rail{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
-      .live-rail::-webkit-scrollbar{display:none}
-      .live-tile{
-        flex:0 0 auto;width:280px;border-radius:14px;overflow:hidden;
-        background:var(--crl-surface);border:1px solid rgba(239,68,68,.3);
-        text-decoration:none;position:relative;
-        box-shadow:0 0 0 rgba(206,17,38,0);transition:box-shadow .25s,transform .25s;
-      }
-      .live-tile:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 30px rgba(206,17,38,.18)}
-      .live-tile-thumb{width:100%;aspect-ratio:16/9;position:relative;background:#070c10}
-      .live-tile-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-      .live-tile-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(7,17,24,.92) 0%,transparent 55%)}
-      .live-tile-tag{
-        position:absolute;top:10px;left:10px;z-index:1;
-        display:flex;align-items:center;gap:5px;
-        background:#CE1126;color:#fff;font-family:var(--crl-mono);font-size:.62rem;
-        letter-spacing:.1em;padding:4px 9px;border-radius:99px;
-      }
-      .live-tile-tag .dot{width:5px;height:5px;border-radius:50%;background:#fff;animation:crl-blink 1.2s ease-in-out infinite}
-      .live-tile-viewers{position:absolute;top:10px;right:10px;z-index:1;font-family:var(--crl-mono);font-size:.68rem;color:#fff;background:rgba(0,0,0,.5);padding:4px 8px;border-radius:99px}
-      .live-tile-info{position:absolute;bottom:0;left:0;right:0;padding:12px;display:flex;align-items:center;gap:8px}
-      .live-tile-ava{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:.95rem;color:#fff;object-fit:cover}
-      .live-tile-name{font-family:var(--crl-mono);font-size:.82rem;font-weight:700;color:#fff;letter-spacing:.03em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-      @media(max-width:600px){.live-tile{width:220px}}
-
-      /* ── Filters ── */
-      .filter-row{max-width:1400px;margin:0 auto;padding:0 24px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-      .filter-btn{
-        font-family:var(--crl-mono);font-size:.75rem;letter-spacing:.08em;
-        padding:6px 14px;border-radius:99px;
-        border:1px solid var(--crl-border);background:transparent;
-        color:var(--crl-muted);cursor:pointer;transition:color .2s,border-color .2s,background .2s;
-        white-space:nowrap;
-      }
-      .filter-btn:hover{color:var(--crl-white);border-color:rgba(255,255,255,.2)}
-      .filter-btn.active{color:var(--crl-accent);border-color:rgba(var(--crl-live-rgb),.4);background:rgba(var(--crl-live-rgb),.06)}
-
-      /* ── Search ── */
-      .search-row{max-width:1400px;margin:0 auto;padding:0 24px 24px}
-      .search-box{position:relative;max-width:380px}
-      .search-box i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--crl-muted);font-size:.85rem;pointer-events:none}
-      .search-box input{
-        width:100%;background:var(--crl-surface);border:1px solid var(--crl-border);
-        border-radius:10px;padding:10px 14px 10px 38px;
-        font-family:var(--crl-mono);font-size:.85rem;color:var(--crl-white);
-        outline:none;transition:border-color .2s;box-sizing:border-box;
-      }
-      .search-box input:focus{border-color:var(--crl-accent)}
-      .search-box input::placeholder{color:var(--crl-muted)}
-
-      /* ── Grid ── */
-      .grid-wrap{max-width:1400px;margin:0 auto;padding:0 24px 80px}
-
-      /* ── Cards ── */
-      .s-card{
-        background:var(--crl-surface);border:1px solid var(--crl-border);
-        border-radius:16px;overflow:hidden;
-        display:flex;flex-direction:column;
-        cursor:pointer;text-decoration:none;
-        transition:transform .28s cubic-bezier(.34,1.56,.64,1),box-shadow .28s,border-color .28s;
-        position:relative;
-      }
-      .s-card:hover{transform:translateY(-7px) scale(1.01);border-color:rgba(255,255,255,.2)}
-      .s-card.is-live{border-color:rgba(var(--crl-hot-rgb,206,17,38),.35)}
-      .s-card.is-live:hover{
-        border-color:rgba(var(--crl-hot-rgb,206,17,38),.55);
-        box-shadow:0 20px 56px rgba(0,0,0,.55),0 0 40px rgba(206,17,38,.15);
-      }
-      .s-card:not(.is-live):hover{
-        box-shadow:0 20px 56px rgba(0,0,0,.55),0 0 40px oklch(0.72 0.18 205/.1);
-      }
-      .s-card.soon{opacity:.45;pointer-events:none;background:rgba(255,255,255,.02)}
-
-      /* Live thumbnail hero inside card */
-      .s-card-hero{width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;background:#070c10;flex-shrink:0}
-      .s-card-hero img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
-      .s-card:hover .s-card-hero img{transform:scale(1.04)}
-      .s-card-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#0c1117 0%,rgba(0,0,0,.15) 65%,transparent 100%)}
-      .s-card-play{
-        position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-        width:48px;height:48px;border-radius:50%;
-        background:rgba(0,0,0,.55);border:2px solid rgba(255,255,255,.75);
-        display:flex;align-items:center;justify-content:center;
-        color:#fff;font-size:1rem;pointer-events:none;
-        transition:transform .25s,background .25s;
-      }
-      .s-card:hover .s-card-play{transform:translate(-50%,-50%) scale(1.12);background:rgba(206,17,38,.7);border-color:rgba(255,255,255,.9)}
-      @media(max-width:600px){
-        .s-card-play{width:36px;height:36px;font-size:.8rem}
-        .s-card-footer{justify-content:center}
-      }
-
-      .s-card-accent{position:absolute;left:0;top:0;bottom:0;width:4px;z-index:1}
-
-      .s-card-top{padding:20px 20px 0 22px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-      .s-avatar{width:64px;height:64px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid rgba(255,255,255,.1)}
-      .s-avatar-fallback{
-        width:64px;height:64px;border-radius:50%;flex-shrink:0;
-        display:flex;align-items:center;justify-content:center;
-        font-family:var(--crl-display);font-size:1.8rem;
-        color:rgba(255,255,255,.9);border:2px solid rgba(255,255,255,.08);
-      }
-      .s-badges{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-      .s-live-badge{
-        display:none;align-items:center;gap:5px;
-        background:rgba(206,17,38,.15);border:1px solid rgba(206,17,38,.4);
-        color:#ff3a50;font-family:var(--crl-mono);font-size:.62rem;letter-spacing:.1em;
-        padding:4px 10px;border-radius:99px;
-        box-shadow:0 0 10px rgba(206,17,38,.25);
-      }
-      .s-live-badge .dot{width:5px;height:5px;border-radius:50%;background:#ff3a50;animation:crl-blink 1.2s ease-in-out infinite}
-      .is-live .s-live-badge{display:flex}
-      .s-viewers{font-family:var(--crl-mono);font-size:.8rem;color:var(--crl-muted);letter-spacing:.05em;display:none}
-      .is-live .s-viewers{display:block}
-
-      .s-card-body{padding:14px 20px 16px 22px;flex:1;display:flex;flex-direction:column;gap:6px}
-      .s-name{font-family:var(--crl-display);font-size:1.6rem;letter-spacing:.04em;color:var(--crl-white);line-height:1;margin:0}
-      .s-sub{font-family:var(--crl-mono);font-size:.8rem;letter-spacing:.08em;color:var(--crl-accent);margin:0}
-      .s-bio{font-size:.83rem;color:var(--crl-muted);line-height:1.55;margin:2px 0 0;flex:1}
-      .s-stream-title{font-family:var(--crl-mono);font-size:.72rem;color:var(--crl-accent);margin:2px 0 0}
-      .s-last-live{
-        display:flex;align-items:center;gap:5px;
-        font-family:var(--crl-mono);font-size:.72rem;color:var(--crl-muted);
-        margin:2px 0 0;
-      }
-      .s-last-live i{opacity:.55;font-size:.65rem}
-
-      .s-card-footer{padding:0 20px 18px 22px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-      .s-socials{display:flex;gap:7px}
-      .s-social-btn{
-        width:30px;height:30px;border-radius:7px;
-        border:1px solid var(--crl-border);background:transparent;
-        color:var(--crl-muted);font-size:.85rem;
-        display:flex;align-items:center;justify-content:center;
-        text-decoration:none;transition:color .2s,border-color .2s,background .2s;
-      }
-      .s-social-btn:hover{color:var(--crl-white);border-color:var(--crl-muted);background:rgba(255,255,255,.05)}
-      .s-social-btn.twitch:hover{color:#9147ff;border-color:#9147ff}
-      .s-social-btn.instagram:hover{color:#e1306c;border-color:#e1306c}
-      .s-social-btn.tiktok:hover{color:#69c9d0;border-color:#69c9d0}
-
-      .s-watch-btn{
-        font-family:var(--crl-mono);font-size:.8rem;letter-spacing:.06em;
-        padding:7px 14px;border-radius:8px;
-        border:1px solid var(--crl-border);background:transparent;
-        color:var(--crl-white);text-decoration:none;white-space:nowrap;
-        transition:background .2s,border-color .2s;
-      }
-      .s-watch-btn:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2)}
-      .is-live .s-watch-btn{background:#CE1126;border-color:#CE1126;color:#fff;box-shadow:0 0 16px rgba(206,17,38,.35)}
-      .is-live .s-watch-btn:hover{background:#b00f1f;border-color:#b00f1f}
-
-      /* Empty state */
-      .s-empty{
-        grid-column:1/-1;text-align:center;padding:48px 24px;
-        font-family:var(--crl-mono);font-size:.85rem;letter-spacing:.1em;
-        color:var(--crl-muted);text-transform:uppercase;
-      }
-
-      @media(max-width:600px){
-        .hero{padding:40px 16px 24px}
-        .search-row,.grid-wrap{padding-left:12px;padding-right:12px}
-        /* 2 columnas en mobile */
-        .crl-grid-auto{grid-template-columns:repeat(2,1fr) !important;gap:10px !important}
-        .s-card-top{padding:10px 10px 0 12px}
-        .s-avatar,.s-avatar-fallback{width:40px;height:40px;font-size:1.2rem}
-        .s-card-body{padding:8px 10px 10px 12px;gap:3px}
-        .s-name{font-size:1.1rem}
-        .s-bio{display:none}
-        .s-socials{display:none}
-        .s-card-footer{padding:0 10px 10px 12px}
-        .s-watch-btn{font-size:.7rem;padding:5px 10px}
-        /* Card hero en mobile más pequeño */
-        .s-card-hero{aspect-ratio:16/7}
-        .s-sub{font-size:.68rem}
-      }
-    </style>
+    <link rel="stylesheet" href="/assets/streamers2.css?v=1">
   </fragment>
 
-<main>
-  <div class="hero">
-    <div class="hero-label">CORILLO · PLATAFORMA INDEPENDIENTE</div>
-    <h1 class="hero-title">STREAMERS</h1>
-    <p class="hero-sub">Los creadores que hacen vibrar la plataforma desde Puerto Rico y más allá.</p>
-    <div class="hero-stats" id="heroStats">
+<main class="h2-page sr-page">
+  <header class="h2-page-hd">
+    <h1>Streamers</h1>
+    <p>Los creadores que hacen vibrar la plataforma desde Puerto Rico y más allá.</p>
+    <div class="sr-stats" id="heroStats" hidden>
       <span><strong id="statTotal">0</strong> canales</span>
-      <span><strong id="statLive" class="s-live-num">0</strong> en el aire</span>
+      <span class="is-on"><strong id="statLive">0</strong> en vivo</span>
       <span><strong id="statViewers">0</strong> viendo ahora</span>
     </div>
-  </div>
+  </header>
 
-  <div class="live-rail-wrap" id="liveRailWrap">
-    <div class="live-rail-label"><span class="dot"></span> En vivo ahora</div>
-    <div class="live-rail" id="liveRail"></div>
-  </div>
+  <section class="sr-live-wrap" id="liveRailWrap" aria-label="En vivo ahora">
+    <h2 class="sr-live-title">En vivo ahora</h2>
+    <div class="sr-live-rail" id="liveRail"></div>
+  </section>
 
-  <div class="filter-row" id="filterRow">
-    <button class="filter-btn active" data-cat="">Todos</button>
-    <button class="filter-btn" data-cat="Gaming">Gaming</button>
-    <button class="filter-btn" data-cat="Just Chatting">Just Chatting</button>
-    <button class="filter-btn" data-cat="Tecnología">Tecnología</button>
-    <button class="filter-btn" data-cat="Podcast">Podcast</button>
-  </div>
-
-  <div class="search-row">
-    <div class="search-box">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input id="searchInput" type="search" placeholder="Buscar streamer..." autocomplete="off" spellcheck="false">
+  <div class="sr-tools">
+    <div class="sr-filters" id="filterRow" role="group" aria-label="Filtrar por categoría">
+      <button class="filter-btn active" data-cat="">Todos</button>
+      <button class="filter-btn" data-cat="Gaming">Gaming</button>
+      <button class="filter-btn" data-cat="Just Chatting">Just Chatting</button>
+      <button class="filter-btn" data-cat="Tecnología">Tecnología</button>
+      <button class="filter-btn" data-cat="Podcast">Podcast</button>
     </div>
+    <label class="sr-search">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input id="searchInput" type="search" placeholder="Buscar streamer" aria-label="Buscar streamer" autocomplete="off" spellcheck="false">
+    </label>
   </div>
 
-  <div class="grid-wrap">
-    <div class="crl-grid crl-grid-auto" id="grid"></div>
-  </div>
+  <div class="sr-list" id="grid"></div>
 </main>
 
 <script>
@@ -283,60 +73,33 @@ import SiteShell from '../../layouts/SiteShell.astro';
     return `Hace ${Math.floor(days / 7)} sem`;
   }
 
-  /* ── Card HTML ── */
+  /* ── Fila de streamer ── */
   function cardHTML(s) {
-    if (s.soon) return `
-      <div class="s-card soon">
-        <div class="s-card-accent" style="background:${s.color}"></div>
-        <div class="s-card-top">
-          <div class="s-avatar-fallback" style="background:${s.color}">?</div>
-        </div>
-        <div class="s-card-body">
-          <p class="s-name">???</p>
-          <p class="s-sub">${s.sub || 'Próximamente'}</p>
-        </div>
-      </div>`;
-
     const live    = liveSet.has(s.key);
     const viewers = viewersMap[s.key] || 0;
     const last    = lastVods[s.key];
-
-    const avatar = s.avatar_url
-      ? `<img class="s-avatar" src="${s.avatar_url}" alt="${s.name}" loading="lazy">`
-      : `<div class="s-avatar-fallback" style="background:${s.color}">${s.ava}</div>`;
-
+    const face = s.avatar_url
+      ? `<img src="${s.avatar_url}" alt="" loading="lazy" onerror="this.remove()">`
+      : (s.ava || s.name[0]);
+    const social = (href, icon, label) => `<a href="${href}" class="sr-social" target="_blank" rel="noopener" aria-label="${label}" onclick="event.stopPropagation()"><i class="fa-brands fa-${icon}"></i></a>`;
     const socials = [
-      s.twitch    ? `<a href="https://twitch.tv/${s.twitch}" class="s-social-btn twitch" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-brands fa-twitch"></i></a>` : '',
-      s.instagram ? `<a href="https://instagram.com/${s.instagram}" class="s-social-btn instagram" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-brands fa-instagram"></i></a>` : '',
-      s.tiktok    ? `<a href="https://tiktok.com/@${s.tiktok}" class="s-social-btn tiktok" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fa-brands fa-tiktok"></i></a>` : '',
+      s.twitch    ? social(`https://twitch.tv/${s.twitch}`, 'twitch', 'Twitch de ' + s.name) : '',
+      s.instagram ? social(`https://instagram.com/${s.instagram}`, 'instagram', 'Instagram de ' + s.name) : '',
+      s.tiktok    ? social(`https://tiktok.com/@${s.tiktok}`, 'tiktok', 'TikTok de ' + s.name) : '',
     ].join('');
-
-    return `<div class="s-card${live ? ' is-live' : ''}" data-href="/${s.key}/" data-key="${s.key}" role="link" tabindex="0">
-      ${live ? `<div class="s-card-hero">
-        <img src="/assets/thumbs/${s.key}.jpg?t=${thumbTick}" onerror="this.style.display='none'" alt="">
-        <div class="s-card-hero-overlay"></div>
-        <div class="s-card-play"><i class="fa-solid fa-play"></i></div>
-      </div>` : ''}
-      <div class="s-card-accent" style="background:${s.color}"></div>
-      <div class="s-card-top">
-        ${avatar}
-        <div class="s-badges">
-          <span class="s-live-badge"><span class="dot"></span>EN VIVO</span>
-          <span class="s-viewers">${viewers} viewer${viewers !== 1 ? 's' : ''}</span>
-        </div>
+    const meta = live
+      ? `En vivo · ${viewers} viendo${s.stream_title ? ` <span>— ${s.stream_title}</span>` : ''}`
+      : (last ? `Última transmisión: ${last.toLowerCase()}` : '');
+    return `<article class="sr${live ? ' is-live' : ''}" data-href="/${s.key}/" data-key="${s.key}" role="link" tabindex="0" aria-label="${s.name}${live ? ', en vivo' : ''}">
+      <div class="sr-face" style="background:${s.color || '#1e3a4a'}">${face}</div>
+      <div class="sr-main">
+        <h2 class="sr-name">${s.name}</h2>
+        ${s.sub || s.category ? `<p class="sr-sub">${s.sub || s.category}</p>` : ''}
+        ${s.bio && s.bio.trim() !== (s.sub || '').trim() ? `<p class="sr-bio">${s.bio}</p>` : ''}
+        ${meta ? `<p class="sr-meta">${meta}</p>` : ''}
       </div>
-      <div class="s-card-body">
-        <h2 class="s-name">${s.name}</h2>
-        ${s.sub ? `<p class="s-sub">${s.sub}</p>` : (s.category ? `<p class="s-sub">${s.category}</p>` : '')}
-        ${live && s.stream_title ? `<p class="s-stream-title">▶ ${s.stream_title}</p>` : ''}
-        ${s.bio ? `<p class="s-bio crl-clamp-3">${s.bio}</p>` : ''}
-        ${!live && last ? `<p class="s-last-live"><i class="fa-regular fa-clock"></i> ${last}</p>` : ''}
-      </div>
-      <div class="s-card-footer">
-        <div class="s-socials">${socials}</div>
-        <span class="s-watch-btn">${live ? '▶ VER EN VIVO →' : 'VER CANAL →'}</span>
-      </div>
-    </div>`;
+      <div class="sr-side">${socials}<span class="sr-go">${live ? 'Ver en vivo' : 'Ver canal'}</span></div>
+    </article>`;
   }
 
   /* ── Render ── */
@@ -355,17 +118,14 @@ import SiteShell from '../../layouts/SiteShell.astro';
       return (a.name || '').localeCompare(b.name || '');
     });
 
-    // Soon al final (solo cuando no hay búsqueda ni filtro de categoría)
-    const soonItems = (searchQ || filterCat) ? [] : (window.STREAMERS || []).filter(s => s.soon);
-
-    if (!list.length && !soonItems.length) {
-      grid.innerHTML = `<div class="s-empty"><i class="fa-solid fa-satellite-dish" style="font-size:2rem;margin-bottom:12px;display:block;opacity:.3"></i>Sin resultados</div>`;
+    if (!list.length) {
+      grid.innerHTML = `<p class="sr-empty">Ningún streamer coincide con tu búsqueda.</p>`;
       return;
     }
 
-    grid.innerHTML = [...list, ...soonItems].map(cardHTML).join('');
+    grid.innerHTML = list.map(cardHTML).join('');
 
-    grid.querySelectorAll('.s-card[data-href]').forEach(card => {
+    grid.querySelectorAll('.sr[data-href]').forEach(card => {
       card.addEventListener('click', e => {
         if (e.target.closest('a')) return;
         window.location.href = card.dataset.href;
@@ -389,8 +149,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
     document.getElementById('statTotal').textContent   = streamers.filter(s => s.key).length;
     document.getElementById('statLive').textContent    = liveCount;
     document.getElementById('statViewers').textContent = totalViewers;
-    document.getElementById('heroStats').classList.add('show');
-    document.getElementById('statLive').classList.toggle('pulsing', liveCount > 0);
+    document.getElementById('heroStats').hidden = false;
   }
 
   /* ── Rail "en vivo ahora" ── */
@@ -403,16 +162,13 @@ import SiteShell from '../../layouts/SiteShell.astro';
 
     rail.innerHTML = live.map(s => {
       const viewers = viewersMap[s.key] || 0;
-      const ava = s.avatar_url
-        ? `<img class="live-tile-ava" src="${s.avatar_url}" alt="" style="object-fit:cover">`
-        : `<div class="live-tile-ava" style="background:${s.color}">${s.ava || (s.name || '?')[0]}</div>`;
-      return `<a class="live-tile" href="/${s.key}/">
-        <div class="live-tile-thumb">
+      return `<a class="sr-live" href="/${s.key}/">
+        <div class="sr-live-thumb" style="background:${s.color || '#1e3a4a'}">
           <img src="/assets/thumbs/${s.key}.jpg?t=${thumbTick}" onerror="this.style.display='none'" alt="">
-          <span class="live-tile-tag"><span class="dot"></span>EN VIVO</span>
-          <span class="live-tile-viewers">${viewers} viewer${viewers !== 1 ? 's' : ''}</span>
-          <div class="live-tile-info">${ava}<span class="live-tile-name">${s.name}</span></div>
+          <span class="sr-chip live">En vivo</span>
+          <span class="sr-chip n">${viewers} viendo</span>
         </div>
+        <strong>${s.name}</strong>
       </a>`;
     }).join('');
     railWrap.classList.add('show');
