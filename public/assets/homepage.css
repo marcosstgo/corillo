@@ -690,19 +690,75 @@ body.no-scanlines .scanlines { display: none; }
 }
 .sec-more:hover { opacity: .7; }
 
+/* ═══ RAIL CHROME — fade edges + hover arrows (live rail + vods carousel) ═══ */
+.rail-outer { position: relative; }
+.rail-fade {
+  position: absolute; top: 0; bottom: 6px; width: 56px; z-index: 5; pointer-events: none;
+  opacity: 0; transition: opacity .25s;
+}
+.rail-fade.left  { left: 0;  background: linear-gradient(90deg,  var(--ink), transparent); }
+.rail-fade.right { right: 0; background: linear-gradient(270deg, var(--ink), transparent); }
+.rail-outer.can-left  .rail-fade.left  { opacity: 1; }
+.rail-outer.can-right .rail-fade.right { opacity: 1; }
+
+.rail-arrow {
+  position: absolute; top: 50%; translate: 0 -50%; z-index: 6;
+  width: 36px; height: 36px; display: grid; place-items: center;
+  background: rgba(6, 6, 8, .7); backdrop-filter: blur(6px);
+  border: 1px solid var(--border-h); color: var(--white);
+  opacity: 0; visibility: hidden; transition: opacity .2s, border-color .2s, background .2s, transform .15s;
+}
+.rail-arrow::before, .rail-arrow::after {
+  content: ''; position: absolute; width: 6px; height: 6px; border: 1px solid var(--accent); opacity: 0; transition: opacity .2s;
+}
+.rail-arrow.prev { left: -4px; }
+.rail-arrow.next { right: -4px; }
+.rail-arrow.prev::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.rail-arrow.prev::after  { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.rail-arrow.next::before { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.rail-arrow.next::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+.rail-outer:hover .rail-arrow { opacity: 1; }
+.rail-outer:hover .rail-arrow::before, .rail-outer:hover .rail-arrow::after { opacity: 1; }
+.rail-arrow:focus-visible { opacity: 1; visibility: visible !important; }
+.rail-arrow:focus-visible::before, .rail-arrow:focus-visible::after { opacity: 1; }
+.rail-arrow:hover { background: rgba(var(--crl-accent-rgb), .12); border-color: var(--accent); }
+.rail-arrow:active { transform: translateY(-50%) scale(.94); }
+@media (pointer: coarse) { .rail-arrow { display: none; } }
+
 /* ═══ LIVE RAIL ═══ */
 .live-rail {
-  display: flex; gap: 14px;
-  overflow-x: auto; scrollbar-width: none; padding-bottom: 6px;
+  display: flex; gap: 16px;
+  overflow-x: auto; scrollbar-width: none; padding: 4px 2px 10px;
   scroll-snap-type: x mandatory;
 }
 .live-rail::-webkit-scrollbar { display: none; }
 .live-rail .ch {
+  position: relative;
   flex: 0 0 clamp(240px, 24vw, 300px);
   scroll-snap-align: start;
 }
 .live-rail .ch-thumb-inner { font-size: clamp(52px, 6vw, 90px); }
 .live-rail .ch-name { font-size: 22px; }
+
+/* First live card — the rail's anchor */
+.live-rail .ch.ch-hero { flex-basis: clamp(320px, 34vw, 420px); }
+.live-rail .ch.ch-hero .ch-name { font-size: 26px; }
+
+/* Ghost rank numeral, broadcast-tally style — lives inside the thumb so the
+   card's own overflow:hidden gives it a clean, intentional bleed at the edge */
+.ch-rank {
+  position: absolute; left: 2px; bottom: -16px; z-index: 2; pointer-events: none;
+  font-family: var(--display); font-size: 76px; line-height: 1;
+  color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, .38);
+  mix-blend-mode: screen;
+}
+.live-rail .ch.ch-hero .ch-rank {
+  font-size: 108px; bottom: -22px; -webkit-text-stroke: 1.5px rgba(255, 255, 255, .42);
+}
+@media (max-width: 640px) {
+  .ch-rank { font-size: 50px; bottom: -10px; }
+  .live-rail .ch.ch-hero .ch-rank { font-size: 68px; bottom: -14px; }
+}
 
 /* ═══ BOTTOM ROW (VODs) ═══ */
 .bottom-row {
@@ -897,8 +953,10 @@ body { --grain: 55; }
 .cards-carousel {
   display: flex; gap: 14px; overflow-x: auto;
   scrollbar-width: none; -ms-overflow-style: none;
-  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+  padding: 4px 2px 6px;
 }
+.cards-carousel .ch { scroll-snap-align: start; }
 .cards-carousel::-webkit-scrollbar { display: none; }
 .cards-carousel .ch { flex: 0 0 220px; }
 .cards-carousel .ch-thumb-inner { font-size: 44px; }

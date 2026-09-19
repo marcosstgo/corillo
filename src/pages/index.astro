@@ -149,7 +149,17 @@ import SiteShell from '../layouts/SiteShell.astro';
       <span class="sec-count"><span id="liveCountEl">0</span> streamers</span>
       <div class="sec-rule"></div>
     </div>
-    <div class="live-rail" id="liveRail"><!-- rendered by JS --></div>
+    <div class="rail-outer" id="liveRailOuter">
+      <div class="rail-fade left"></div>
+      <div class="rail-fade right"></div>
+      <button class="rail-arrow prev" data-target="liveRail" aria-label="Anterior" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button class="rail-arrow next" data-target="liveRail" aria-label="Siguiente" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+      <div class="live-rail" id="liveRail"><!-- rendered by JS --></div>
+    </div>
   </section>
 
   <!-- VODs -->
@@ -160,8 +170,18 @@ import SiteShell from '../layouts/SiteShell.astro';
         <div class="sec-rule"></div>
         <a href="/vods/" class="sec-more">Ver todos →</a>
       </div>
-      <div class="cards-carousel" id="vodsCarousel">
-        <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
+      <div class="rail-outer" id="vodsRailOuter">
+        <div class="rail-fade left"></div>
+        <div class="rail-fade right"></div>
+        <button class="rail-arrow prev" data-target="vodsCarousel" aria-label="Anterior" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button class="rail-arrow next" data-target="vodsCarousel" aria-label="Siguiente" type="button">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <div class="cards-carousel" id="vodsCarousel">
+          <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
+        </div>
       </div>
     </div>
   </div>
@@ -278,6 +298,32 @@ function fmtUptime(ms) {
 
 function fmtKbps(b) {
   return b >= 1000 ? (b/1000).toFixed(1) + 'M' : b + 'K';
+}
+
+/* ── Rail chrome: hover arrows + edge fade (live rail, vods carousel) ── */
+const _railUpdaters = {};
+function wireRail(outerId, railId) {
+  if (_railUpdaters[railId]) { _railUpdaters[railId](); return; }
+  const outer = document.getElementById(outerId);
+  const rail  = document.getElementById(railId);
+  if (!outer || !rail) return;
+  const prev = outer.querySelector('.rail-arrow.prev');
+  const next = outer.querySelector('.rail-arrow.next');
+  function update() {
+    const max = rail.scrollWidth - rail.clientWidth - 2;
+    const canL = max > 4 && rail.scrollLeft > 4;
+    const canR = max > 4 && rail.scrollLeft < max;
+    outer.classList.toggle('can-left', canL);
+    outer.classList.toggle('can-right', canR);
+    if (prev) prev.style.visibility = canL ? 'visible' : 'hidden';
+    if (next) next.style.visibility = canR ? 'visible' : 'hidden';
+  }
+  prev?.addEventListener('click', () => rail.scrollBy({ left: -rail.clientWidth * 0.85, behavior: 'smooth' }));
+  next?.addEventListener('click', () => rail.scrollBy({ left: rail.clientWidth * 0.85, behavior: 'smooth' }));
+  rail.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  _railUpdaters[railId] = update;
+  update();
 }
 
 function relativeTime(dateStr) {
@@ -753,22 +799,28 @@ function renderLiveSection(live, paths) {
   section.style.display = '';
   if (countEl) countEl.textContent = live.length;
 
+  // Rango por audiencia real — el streamer #1 ancla el rail
+  const ranked = [...live].sort((a, b) => getViewers(paths, b.key) - getViewers(paths, a.key));
+
   const t = Math.floor(Date.now() / 60000);
-  rail.innerHTML = live.map(s => {
+  rail.innerHTML = ranked.map((s, i) => {
     const viewers = getViewers(paths, s.key);
     if (!cardBitrates[s.key]) cardBitrates[s.key] = jitter(5000, 600);
     const bitrate = cardBitrates[s.key];
-    return `<a class="ch" href="/${s.key}/" style="--ch-top:${s.color || 'var(--crl-accent)'}">
+    const isHero = i === 0;
+    const catTag = s.stream_title ? `<span class="ch-cat">${s.stream_title}</span>` : '';
+    return `<a class="ch${isHero ? ' ch-hero' : ''}" href="/${s.key}/" style="--ch-top:${s.color || 'var(--crl-accent)'}">
       <div class="ch-thumb">
         <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
         <div class="ch-thumb-noise"></div>
+        <span class="ch-rank">${String(i + 1).padStart(2, '0')}</span>
         <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
         <img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg?t=${t}" onerror="this.style.display='none'" alt="">
         <div class="ch-top">
           <span class="ch-live">LIVE</span>
           <span class="ch-viewers"><i class="fa-solid fa-eye"></i>${viewers}</span>
         </div>
-        <div class="ch-bottom"><span class="ch-bitrate">${fmtKbps(bitrate)}bps</span></div>
+        <div class="ch-bottom"><span class="ch-bitrate">${fmtKbps(bitrate)}bps</span>${catTag}</div>
       </div>
       <div class="ch-body">
         <div class="ch-ava ring-live" style="background:${s.color || '#1e3a4a'}">
@@ -782,6 +834,8 @@ function renderLiveSection(live, paths) {
       </div>
     </a>`;
   }).join('');
+
+  wireRail('liveRailOuter', 'liveRail');
 
   // Cargar avatares del live rail (desde cache o API)
   Promise.allSettled(live.map(async s => {
@@ -916,6 +970,7 @@ function renderVodsRow() {
   attachPreviewListeners(carousel);
   const ids = [...carousel.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
   if (ids.length) loadCardAvatars(ids);
+  wireRail('vodsRailOuter', 'vodsCarousel');
 }
 
 /* ── Main poll ───────────────────────────────────────── */
