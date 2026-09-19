@@ -22,6 +22,20 @@ respaldo → rollback trivial. Cada fase es independiente y reversible.
   solo prefetch y posponer ClientRouter con manejo de `astro:page-load`.
 - Rollback: quitar líneas del layout/config.
 
+## Fase 1b — Content Collections + sitemap/RSS · esfuerzo S-M · riesgo bajo · Astro 6
+- Hoy `/noticias/` son 7 archivos `.astro` a mano (uno por post) + `noticias/index.astro`
+  que las lista a mano con tarjetas hardcodeadas → cada post nuevo exige tocar 2 archivos
+  y acordarse de `sitemap.xml`.
+- `public/sitemap.xml` es un archivo **estático escrito a mano**, fechado 2026-03-29 —
+  ya desactualizado (le faltan rutas nuevas como `/join/`). No hay generación automática.
+- No hay feed RSS para noticias (fácil de justificar para un sitio de streaming local).
+- Propuesta: migrar `/noticias/*` a `src/content/noticias/*.md` con
+  `astro:content` (`content.config.ts` con schema: title, date, badge, description...),
+  `getCollection('noticias')` genera el index automáticamente ordenado por fecha,
+  `@astrojs/sitemap` reemplaza el XML a mano, `@astrojs/rss` da el feed. Todo compatible
+  con `output: 'static'`, cero riesgo arquitectónico — solo reorganiza contenido existente.
+- Rollback: son archivos de contenido, revertir el commit alcanza.
+
 ## Fase 2 — Ahorro de banda (imágenes) · esfuerzo M · riesgo bajo · Astro 6
 - 2a: `astro:assets` para imágenes estáticas del repo (logos/UI) → AVIF/WebP + responsive + lazy.
 - 2b: pipeline de miniaturas dinámicas (avatars/banners PB, thumbs VOD) optimizado en el
@@ -39,6 +53,10 @@ respaldo → rollback trivial. Cada fase es independiente y reversible.
 
 ## Fase 5 — Server Islands para "en vivo ahora" · esfuerzo M · riesgo medio
 - Estático + islas server-rendered con caché para lo dinámico (live, viewers, estado).
+- Encaje directo con el rail EN VIVO rediseñado (sep-2026, numerales de rango +
+  tarjeta ancla): hoy esa sección nace `display:none` y aparece tras el primer fetch
+  del cliente a mediamtx — un streamer en vivo es invisible para Google y para el primer
+  paint. Una isla server-rendered la resolvería sin sacrificar que el resto siga estático.
 
 ## Fase 6 (opcional/futuro) — Islas de UI con framework · esfuerzo L
 - Migrar lo interactivo pesado (perfil 131KB, player, dashboard) a islas. Refactor, baja prioridad.
@@ -46,6 +64,6 @@ respaldo → rollback trivial. Cada fase es independiente y reversible.
 ---
 
 ## Secuencia
-Fase 0 → 1 → 2 → 3 → 4 → 5 → [6 opcional]
-- Quick wins sin arquitectura: 1 y 2 (sobre Astro 6).
+Fase 0 → 1 → 1b → 2 → 3 → 4 → 5 → [6 opcional]
+- Quick wins sin arquitectura: 1, 1b y 2 (sobre Astro 6, `output: 'static'` intacto).
 - Cambio arquitectónico: desde Fase 4.
