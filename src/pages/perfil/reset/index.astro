@@ -2,6 +2,7 @@
 import SiteShell from '../../../layouts/SiteShell.astro';
 ---
 <SiteShell
+  pageClass="p-legacy"
   title="Nueva contraseña — CORILLO"
   description="Restablece tu contraseña de CORILLO."
   canonical="https://corillo.live/perfil/reset/"
@@ -62,7 +63,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
   <div class="card card-glass">
 
     <div id="resetForm">
-      <h2>NUEVA CONTRASEÑA</h2>
+      <h2>Nueva contraseña</h2>
       <p>Crea una nueva contraseña para tu cuenta de CORILLO.</p>
       <div class="field">
         <label>Nueva contraseña</label>
@@ -80,14 +81,14 @@ import SiteShell from '../../../layouts/SiteShell.astro';
 
     <div id="invalidState">
       <i class="fa-solid fa-circle-xmark"></i>
-      <h2 style="font-family:var(--crl-display);font-size:1.6rem;margin-bottom:8px">LINK INVÁLIDO</h2>
+      <h2 style="font-family:var(--crl-display);font-size:1.6rem;margin-bottom:8px">Enlace inválido</h2>
       <p>Este link ya expiró o no es válido. Solicita uno nuevo desde el login.</p>
       <a href="/perfil/" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px">Volver al login</a>
     </div>
 
     <div id="successState">
       <i class="fa-solid fa-circle-check"></i>
-      <h2 style="font-family:var(--crl-display);font-size:1.6rem;margin-bottom:8px">¡LISTO!</h2>
+      <h2 style="font-family:var(--crl-display);font-size:1.6rem;margin-bottom:8px">¡Listo!</h2>
       <p>Tu contraseña fue actualizada. Ya puedes entrar con tu nueva contraseña.</p>
       <a href="/perfil/" class="btn btn-primary" style="width:100%;justify-content:center;padding:10px">
         <i class="fa-solid fa-arrow-right-to-bracket"></i> Ir al login

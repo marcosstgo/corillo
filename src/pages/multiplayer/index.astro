@@ -2,6 +2,7 @@
 import SiteShell from '../../layouts/SiteShell.astro';
 ---
 <SiteShell
+  pageClass="p-legacy"
   title="CORILLO — Multiplayer"
   description="Mira varios streams a la vez en CORILLO con una vista multiplayer pensada para seguir al corillo en tiempo real."
   canonical="https://corillo.live/multiplayer/"
@@ -355,7 +356,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 
     <div class="empty show" id="emptyState">
       <div class="empty-icon"><i class="fa-solid fa-satellite-dish"></i></div>
-      <h2 id="emptyTitle">NADIE EN VIVO</h2>
+      <h2 id="emptyTitle">Nadie en vivo</h2>
       <p id="emptyMsg">Cuando alguien inicie stream aparecerá aquí</p>
       <div class="empty-cta" id="emptyCta">
         <a href="/vods/" class="primary"><i class="fa-solid fa-play"></i> Ver VODs</a>
@@ -618,7 +619,7 @@ function updateUI() {
       $('emptyMsg').textContent   = 'Selecciona uno o varios streamers arriba';
       $('emptyCta').classList.remove('show');
     } else {
-      $('emptyTitle').textContent = 'NADIE EN VIVO';
+      $('emptyTitle').textContent = 'Nadie en vivo';
       $('emptyMsg').textContent   = 'Cuando alguien inicie stream aparecerá aquí';
       $('emptyCta').classList.add('show');
     }

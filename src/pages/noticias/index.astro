@@ -7,6 +7,7 @@ const posts = (await getCollection('noticias')).sort(
 );
 ---
 <SiteShell
+  pageClass="p-legacy"
   title="CORILLO — Noticias"
   description="Novedades de CORILLO: updates de plataforma, software, comunidad e infraestructura."
   canonical="https://corillo.live/noticias/"
@@ -77,7 +78,7 @@ const posts = (await getCollection('noticias')).sort(
         <span class="badge badge-accent"><i class="fa-solid fa-bolt"></i> Nuevo</span>
         <span class="news-date">16 abril 2026</span>
       </div>
-      <h2 class="news-feature-title">SUBE TUS VIDEOS — sin stream, sin YouTube</h2>
+      <h2 class="news-feature-title">Sube tus videos — sin stream, sin YouTube</h2>
       <p class="news-feature-copy">Ya puedes subir cualquier video directo desde tu perfil en CORILLO. Ponle título, compártelo con un link o embedalo en tu blog con un <code style="font-family:var(--crl-mono);font-size:.9em;color:var(--crl-accent)">&lt;iframe&gt;</code> — sin depender de YouTube, sin ads, sin que el viewer salga de tu sitio.</p>
       <div class="news-feature-actions">
         <a class="btn btn-primary" href="/noticias/vod-upload/">Leer nota destacada</a>

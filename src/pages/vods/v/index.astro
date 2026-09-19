@@ -2,6 +2,7 @@
 import SiteShell from '../../../layouts/SiteShell.astro';
 ---
 <SiteShell
+  pageClass="p-legacy"
   title="VOD — CORILLO"
   description="Transmisión grabada en CORILLO — plataforma independiente desde Puerto Rico."
   canonical="https://corillo.live/vods/v/"
@@ -432,7 +433,7 @@ async function loadRelated(channel: string, currentId: string) {
     if (vods.length) {
       const s = streamerInfo(channel);
       const cards = vods.map(relCard).join('');
-      sections.push(relSection(`MÁS DE ${s.name}`, `${vods.length} VODs`, `/vods/?ch=${channel}`, 'Ver todos →', cards));
+      sections.push(relSection(`Más de ${s.name}`, `${vods.length} VODs`, `/vods/?ch=${channel}`, 'Ver todos →', cards));
     }
   } catch {}
 
@@ -447,7 +448,7 @@ async function loadRelated(channel: string, currentId: string) {
     const unique = vods.filter((v: any) => { if (seen.has(v.channel)) return false; seen.add(v.channel); return true; }).slice(0, 6);
     if (unique.length) {
       const cards = unique.map(relCard).join('');
-      sections.push(relSection('DE OTROS CANALES', '', '/vods/', 'Ver todos →', cards));
+      sections.push(relSection('De otros canales', '', '/vods/', 'Ver todos →', cards));
     }
   } catch {}
 

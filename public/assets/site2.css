@@ -74,6 +74,19 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .h2-page-hd h1 { margin: 0; font: 800 clamp(2.6rem, 8vw, 6.5rem)/.88 var(--h2-display); letter-spacing: -.04em; text-transform: none; color: var(--h2-bone); }
 .h2-page-hd p  { margin: 0; max-width: 56ch; font: 400 clamp(1rem, 1.5vw, 1.2rem)/1.5 var(--h2-body); color: var(--h2-mute); }
 
+/* ═════════ Páginas con CSS propio (faq, legal, dmca, configuración, join…) ═════════
+   Usan var(--crl-display)=Bebas y var(--crl-mono)=Space Mono en decenas de sitios,
+   casi siempre en MAYÚSCULAS espaciadas. Se remapean las variables por página y se
+   neutralizan las mayúsculas/espaciado con :where() (especificidad baja, pero mayor
+   que los selectores de una clase de cada página). */
+body.p-legacy {
+  --crl-display: var(--h2-display);
+  --crl-mono: var(--h2-body);
+}
+body.p-legacy .page-right :where(*) { text-transform: none; letter-spacing: normal; }
+body.p-legacy .page-right :where(h2, h3, h4, .section-title, .sec-title) { font-weight: 700; letter-spacing: -.02em; }
+body.p-legacy .page-right :where(code, pre, kbd, samp, .mono, [class*="code"], [class*="cmd"], [class*="stream-key"], input.mono) { font-family: 'Space Mono', ui-monospace, monospace; letter-spacing: 0; }
+
 /* ═════════ Capa tipográfica común para páginas interiores ═════════
    Las páginas de contenido (faq, legal, roadmap, software, noticias, join…)
    comparten clases del sistema corillo.css. Aquí se les da la misma voz que
@@ -85,8 +98,11 @@ body .page-right .crl-hero-title, body .page-right .hero-title, body .page-right
   color: var(--h2-bone); margin-bottom: 18px;
 }
 body .page-right .page-title span { color: inherit; }
-body .page-right .crl-hero-sub, body .page-right .hero-sub, body .page-right .page-sub { text-align: left; margin-left: 0; margin-right: 0; font-family: var(--h2-body); }
-body .page-right .crl-hero, body .page-right .hero { text-align: left; align-items: flex-start; }
+body .page-right .hero-sub, body .page-right .page-sub { text-align: left; margin-left: 0; margin-right: 0; font-family: var(--h2-body); }
+body .page-right .hero { text-align: left; align-items: flex-start; }
+/* Páginas con .crl-hero (noticias, qué-es, roadmap, software): su contenido va centrado, el titular también */
+body .page-right .crl-hero-title { text-align: center; }
+body .page-right .crl-hero-sub { text-align: center; font-family: var(--h2-body); }
 body .page-right h2, body .page-right h3 { font-family: var(--h2-display); text-transform: none; letter-spacing: -.025em; }
 body .page-right [class*="eyebrow"], body .page-right .crl-section-label, body .page-right .crl-label, body .page-right .field-label,
 body .page-right .cat-label, body .page-right .plat-tag, body .page-right .app-tag, body .page-right .key-label, body .page-right .preview-label {
