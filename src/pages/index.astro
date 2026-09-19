@@ -10,84 +10,9 @@ import SiteShell from '../layouts/SiteShell.astro';
   pageClass="page-home"
 >
   <fragment slot="head">
-    <style is:global>
-      /* ── Home-only styles (channel cards, sim-stream, grid-empty, host-tag, rotate-bar) ── */
-      .ch-badge-off {
-        padding:2px 6px; background:rgba(0,0,0,.6); color:var(--muted);
-        font-family:var(--mono); font-size:9px; font-weight:700;
-        letter-spacing:1.5px; border-radius:2px;
-      }
-      .ch-thumb-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; }
-      .ch-thumb-vod { opacity:.5; filter:saturate(.7); }
-      .ch-thumb-glow  { z-index:0; }
-      .ch-thumb-noise { z-index:2; }
-      .ch-thumb-inner { z-index:0; }
-      .ch:hover .ch-thumb-img { transform:scale(1.04); transition:transform .35s ease; }
-      .ch-top, .ch-bottom { z-index:3; }
-
-      .sim-stream.has-thumb { background-size:cover; background-position:center; }
-      .sim-stream.has-thumb::before {
-        content:''; position:absolute; inset:0; z-index:1;
-        background:linear-gradient(to top, rgba(0,0,0,.75) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.55) 100%);
-      }
-      .sim-stream.has-thumb .sim-stream-grid { display:none; }
-      .sim-stream.has-thumb > div { z-index:2; }
-
-      .grid-empty {
-        display:flex; flex-direction:column; align-items:center;
-        padding:48px 24px; gap:14px; border:1px dashed var(--border); border-radius:8px;
-        color:var(--muted); font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase;
-        grid-column: 1 / -1;
-      }
-      .grid-empty i { font-size:2rem; opacity:.4; }
-
-      .featured-sub .host-tag { color:var(--live); border:1px solid rgba(var(--crl-live-rgb),.4); padding:1px 6px; border-radius:3px; font-family:var(--mono); font-size:10px; letter-spacing:1.5px; margin-right:6px; display:inline-block; vertical-align:middle; }
-
-      .rotate-bar { position:absolute; bottom:0; left:0; height:2px; background:var(--accent); opacity:.5; width:0; z-index:4; }
-
-      /* ── Colored top border (channel color via CSS var) ── */
-      .ch {
-        border-top: 3px solid var(--ch-top, var(--crl-border));
-      }
-      .ch:has(.ch-live) { --ch-top: var(--crl-hot, #ce1126); }
-      .ch:hover {
-        box-shadow: 0 20px 52px rgba(0,0,0,.55),
-                    0 0 0 1px color-mix(in srgb, var(--ch-top, var(--crl-accent)) 25%, transparent),
-                    0 0 36px color-mix(in srgb, var(--ch-top, var(--crl-accent)) 10%, transparent);
-      }
-      .ch:has(.ch-live):hover {
-        box-shadow: 0 20px 52px rgba(0,0,0,.55),
-                    0 0 0 1px rgba(var(--crl-live-rgb),.35),
-                    0 0 36px rgba(var(--crl-live-rgb),.15);
-      }
-
-      /* ── Scan-line on thumbnail hover ── */
-      .ch-thumb::before {
-        content: ''; position:absolute; inset:0; z-index:2; pointer-events:none;
-        background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px);
-        opacity:0; transition:opacity .25s;
-      }
-      .ch:hover .ch-thumb::before { opacity:1; }
-
-      /* ── Entrance animation — channel grid ── */
-      @keyframes hm-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
-      .channels .ch { animation: hm-in .35s both; }
-      .channels .ch:nth-child(2) { animation-delay: 45ms; }
-      .channels .ch:nth-child(3) { animation-delay: 90ms; }
-      .channels .ch:nth-child(4) { animation-delay:135ms; }
-      .channels .ch:nth-child(5) { animation-delay:180ms; }
-      .channels .ch:nth-child(6) { animation-delay:225ms; }
-      .channels .ch:nth-child(7) { animation-delay:270ms; }
-      .channels .ch:nth-child(8) { animation-delay:315ms; }
-
-      /* ── Section headers: más editorial ── */
-      .sec-name {
-        color: rgba(232,246,255,.22);
-        font-size: 28px;
-        letter-spacing: 5px;
-      }
-      #liveSection .sec-name { color: var(--crl-white); }
-    </style>
+    <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/assets/home2.css?v=1">
+    <script is:inline>document.documentElement.setAttribute('data-theme','dark');</script>
   </fragment>
 
 <!-- ticker elements kept hidden for JS compat -->
@@ -96,118 +21,93 @@ import SiteShell from '../layouts/SiteShell.astro';
   <div id="tickerContent"></div>
 </div>
 
-<!-- MAIN -->
-<main class="main" id="mainLayout">
+<h1 class="h2-sr">Corillo, plataforma de streaming independiente de Puerto Rico</h1>
 
-    <!-- FEATURED HERO -->
-    <div class="featured">
-      <div class="featured-video" id="featuredVideoWrap">
-        <video id="featuredVideo" autoplay muted playsinline></video>
+<!-- HERO: a sangre, el nombre es el titular -->
+<section class="h2-stage" aria-label="Destacado">
+  <div class="featured">
+    <div class="featured-video" id="featuredVideoWrap">
+      <video id="featuredVideo" autoplay muted playsinline></video>
+      <div class="sim-stream offline" id="simStream"></div>
+      <div class="h2-scrim"></div>
 
-        <div class="sim-stream offline" id="simStream">
-          <div class="sim-stream-grid"></div>
-          <div style="position:relative;z-index:2;text-align:center">
-            <div class="sim-title" id="simTitle">CORILLO</div>
-            <div class="sim-sub" id="simSub">EN ESPERA DE SEÑAL</div>
-          </div>
+      <div class="h2-hero">
+        <div class="featured-top-left h2-status" id="featuredTopLeft">
+          <span class="live-badge offline" id="liveBadge">Sin transmisión</span>
         </div>
-
-        <!-- Top overlay -->
-        <div class="featured-top">
-          <div class="featured-top-left" id="featuredTopLeft">
-            <span class="live-badge offline" id="liveBadge">Offline</span>
-          </div>
-        </div>
-
-        <!-- Bottom overlay -->
-        <div class="featured-bottom">
-          <div class="featured-info">
-            <div class="featured-streamer">
-              <div class="featured-ava" id="featuredAva" style="background:#1e3a4a">C</div>
-              <div class="featured-text">
-                <div class="featured-name" id="featuredNameEl">CORILLO</div>
-                <div class="featured-sub" id="featuredSubEl">Puerto Rico · Sin stream activo</div>
-              </div>
-            </div>
-            <div class="featured-actions" id="featuredActions">
-              <a href="/multiplayer/" class="play-btn"><i class="fa-solid fa-table-cells"></i> Multiplayer</a>
-              <a href="/vods/" class="icon-btn" title="VODs"><i class="fa-solid fa-film"></i></a>
+        <div class="sim-title" id="simTitle">Corillo</div>
+        <p class="sim-sub" id="simSub">Streaming independiente desde Puerto Rico</p>
+        <div class="h2-who">
+          <div class="featured-streamer">
+            <div class="featured-ava" id="featuredAva" style="background:#1e3a4a">C</div>
+            <div class="featured-text">
+              <div class="featured-name" id="featuredNameEl">Corillo</div>
+              <div class="featured-sub" id="featuredSubEl">Puerto Rico</div>
             </div>
           </div>
+          <div class="featured-actions" id="featuredActions">
+            <a href="/vods/" class="play-btn">Ver VODs</a>
+            <a href="/join/" class="icon-btn" title="Crear canal"><i class="fa-solid fa-plus"></i></a>
+          </div>
         </div>
-
-        <div class="rotate-bar" id="rotateBar"></div>
-        <div class="featured-dots" id="featuredDots" style="display:none"></div>
       </div>
 
+      <nav class="h2-roster" id="heroRoster" aria-label="Streamers del corillo"></nav>
+      <div class="rotate-bar" id="rotateBar"></div>
+      <div class="featured-dots" id="featuredDots" style="display:none"></div>
     </div>
+  </div>
+</section>
 
-  <!-- EN VIVO -->
-  <section class="sec" id="liveSection" style="display:none">
-    <div class="sec-hd">
-      <span class="sec-name">EN VIVO</span>
-      <span class="sec-count"><span id="liveCountEl">0</span> streamers</span>
-      <div class="sec-rule"></div>
+<main class="h2-main" id="mainLayout">
+
+  <!-- EN VIVO AHORA (solo aparece si hay alguien transmitiendo) -->
+  <section class="h2-sec" id="liveSection" style="display:none">
+    <div class="h2-sec-hd">
+      <h2>En vivo ahora</h2>
+      <span class="h2-count"><span id="liveCountEl">0</span> transmitiendo</span>
     </div>
-    <div class="rail-outer" id="liveRailOuter">
-      <div class="rail-fade left"></div>
-      <div class="rail-fade right"></div>
-      <button class="rail-arrow prev" data-target="liveRail" aria-label="Anterior" type="button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
-      </button>
-      <button class="rail-arrow next" data-target="liveRail" aria-label="Siguiente" type="button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg>
-      </button>
-      <div class="live-rail" id="liveRail"><!-- rendered by JS --></div>
+    <div class="h2-live-rail" id="liveRail"><!-- rendered by JS --></div>
+  </section>
+
+  <!-- PONTE AL DÍA -->
+  <section class="h2-sec" id="vodsSection">
+    <div class="h2-sec-hd">
+      <h2>Ponte al día</h2>
+      <a href="/vods/" class="h2-more-link">Ver todos los VODs</a>
+    </div>
+    <div class="h2-vods" id="vodsCarousel">
+      <p class="h2-empty">Cargando transmisiones…</p>
     </div>
   </section>
 
-  <!-- VODs -->
-  <div class="bottom-row">
-    <div class="vods-col">
-      <div class="sec-hd">
-        <span class="sec-name" style="font-size:18px">ÚLTIMAS TRANSMISIONES</span>
-        <div class="sec-rule"></div>
-        <a href="/vods/" class="sec-more">Ver todos →</a>
-      </div>
-      <div class="rail-outer" id="vodsRailOuter">
-        <div class="rail-fade left"></div>
-        <div class="rail-fade right"></div>
-        <button class="rail-arrow prev" data-target="vodsCarousel" aria-label="Anterior" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <button class="rail-arrow next" data-target="vodsCarousel" aria-label="Siguiente" type="button">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
-        <div class="cards-carousel" id="vodsCarousel">
-          <div style="padding:16px 0;font-family:var(--mono);font-size:10px;color:var(--muted)">Cargando...</div>
-        </div>
-      </div>
+  <!-- EL CORILLO -->
+  <section class="h2-sec">
+    <div class="h2-sec-hd">
+      <h2>El corillo</h2>
+      <span class="h2-count"><span id="totalCountEl">0</span> streamers</span>
+      <a href="/streamers/" class="h2-more-link">Ver todos</a>
     </div>
-  </div>
+    <div class="h2-people" id="channelGrid"><!-- rendered by JS --></div>
+  </section>
 
-  <!-- CANALES -->
-  <section class="sec">
-    <div class="sec-hd">
-      <span class="sec-name">CANALES</span>
-      <span class="sec-count"><span id="totalCountEl">0</span> streamers</span>
-      <div class="sec-rule"></div>
-      <a href="/streamers/" class="sec-more">Ver todos →</a>
+  <!-- REELS -->
+  <section class="h2-sec" id="reelsStrip" style="display:none">
+    <div class="h2-sec-hd">
+      <h2>Reels</h2>
+      <a href="/reels/" class="h2-more-link">Ver todos</a>
     </div>
-    <div class="channels" id="channelGrid"><!-- rendered by JS --></div>
+    <div class="h2-reels" id="reelsTrack"></div>
+  </section>
+
+  <!-- INVITACIÓN -->
+  <section class="h2-join">
+    <h2>¿Tienes algo que transmitir?</h2>
+    <p>Sin algoritmos y sin baneos arbitrarios. Solo tú, tu setup y tu audiencia.</p>
+    <a href="/join/">Crear mi canal</a>
   </section>
 
 </main>
-
-<!-- REELS STRIP -->
-<div class="reels-strip" id="reelsStrip" style="display:none">
-  <div class="reels-strip-hd">
-    <span><i class="fa-solid fa-scissors" style="margin-right:6px"></i>Últimos reels</span>
-    <div class="section-line"></div>
-    <a href="/reels/">Ver todos <i class="fa-solid fa-arrow-right" style="font-size:9px"></i></a>
-  </div>
-  <div class="reels-strip-track" id="reelsTrack"></div>
-</div>
 
 <script>
 const POLL_MS     = 15000;
@@ -255,7 +155,6 @@ let _recentVods     = [];
 let _vodThumbMap = {};
 let _vodLoadedAt    = 0;
 let _gridState      = null;
-const _avatarCache  = {};
 
 /* ── Utils ────────────────────────────────────────────── */
 function getLiveSet(paths) {
@@ -298,32 +197,6 @@ function fmtUptime(ms) {
 
 function fmtKbps(b) {
   return b >= 1000 ? (b/1000).toFixed(1) + 'M' : b + 'K';
-}
-
-/* ── Rail chrome: hover arrows + edge fade (live rail, vods carousel) ── */
-const _railUpdaters = {};
-function wireRail(outerId, railId) {
-  if (_railUpdaters[railId]) { _railUpdaters[railId](); return; }
-  const outer = document.getElementById(outerId);
-  const rail  = document.getElementById(railId);
-  if (!outer || !rail) return;
-  const prev = outer.querySelector('.rail-arrow.prev');
-  const next = outer.querySelector('.rail-arrow.next');
-  function update() {
-    const max = rail.scrollWidth - rail.clientWidth - 2;
-    const canL = max > 4 && rail.scrollLeft > 4;
-    const canR = max > 4 && rail.scrollLeft < max;
-    outer.classList.toggle('can-left', canL);
-    outer.classList.toggle('can-right', canR);
-    if (prev) prev.style.visibility = canL ? 'visible' : 'hidden';
-    if (next) next.style.visibility = canR ? 'visible' : 'hidden';
-  }
-  prev?.addEventListener('click', () => rail.scrollBy({ left: -rail.clientWidth * 0.85, behavior: 'smooth' }));
-  next?.addEventListener('click', () => rail.scrollBy({ left: rail.clientWidth * 0.85, behavior: 'smooth' }));
-  rail.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', update);
-  _railUpdaters[railId] = update;
-  update();
 }
 
 function relativeTime(dateStr) {
@@ -394,75 +267,57 @@ async function loadVodData() {
   _vodLoadedAt = Date.now();
 }
 
+/* Rostro redondo: foto si hay, inicial sobre el color del canal si no */
+function faceInner(s) {
+  return s.avatar_url
+    ? `<img src="${s.avatar_url}" alt="" loading="lazy" onerror="this.remove()">`
+    : (s.ava || s.name[0]);
+}
+function streamerOf(channel) {
+  return STREAMERS.find(x => x.key === channel) || {
+    key: channel, name: channel.toUpperCase(),
+    color: 'linear-gradient(135deg,#1a2a3a,#0a1420)', ava: channel[0].toUpperCase()
+  };
+}
+
+/* VODs: el más reciente va grande; el resto, en cola a la derecha */
+function vodCard(vod, lead) {
+  const s   = streamerOf(vod.channel);
+  const dur = vod.duration ? fmtDuration(vod.duration) : '';
+  const preview = _hover && vod.preview
+    ? `<video class="h2-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : '';
+  return `<a href="/vods/v/?id=${vod.id}" class="h2-vod${lead ? ' is-lead' : ''}">
+    <div class="h2-vod-thumb">
+      ${vod.thumb
+        ? `<img src="${vod.thumb}" alt="" loading="${lead ? 'eager' : 'lazy'}" onerror="this.style.display='none'">`
+        : `<div class="h2-vod-initial" style="background:${s.color || '#1e3a4a'}">${s.ava || s.name[0]}</div>`}
+      ${preview}
+      ${dur ? `<span class="h2-dur">${dur}</span>` : ''}
+    </div>
+    <div class="h2-vod-body">
+      <span class="h2-mini-face" style="background:${s.color || '#1e3a4a'}">${faceInner(s)}</span>
+      <div><strong>${s.name}</strong><small>${relativeTime(vod.date)}</small></div>
+    </div>
+  </a>`;
+}
 function vodCards(vods) {
-  return vods.map(vod => {
-    const s = STREAMERS.find(x => x.key === vod.channel) || {
-      key: vod.channel, name: vod.channel.toUpperCase(),
-      color: 'linear-gradient(135deg,#1a2a3a,#0a1420)',
-      ava: vod.channel[0].toUpperCase()
-    };
-    const dur     = vod.duration ? fmtDuration(vod.duration) : '';
-    const preview = _hover && vod.preview
-      ? `<video class="ch-preview-vid" src="${vod.preview}" muted playsinline preload="none" loop></video>` : '';
-    return `<a href="/vods/v/?id=${vod.id}" class="ch" style="--ch-top:${s.color || 'var(--crl-accent)'}">
-      <div class="ch-thumb">
-        <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
-        <div class="ch-thumb-noise"></div>
-        <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
-        ${vod.thumb ? `<img class="ch-thumb-img" src="${vod.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : ''}
-        ${preview}
-        <div class="ch-top"><span class="ch-badge-off">VOD</span></div>
-        ${dur ? `<div class="ch-bottom"><span class="ch-bitrate">${dur}</span></div>` : ''}
-      </div>
-      <div class="ch-body">
-        <div class="ch-ava" style="background:${s.color || '#1e3a4a'}">
-          <img id="card-ava-${vod.id}" data-channel="${vod.channel}" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:4px">
-          <span id="card-avaf-${vod.id}">${s.ava || s.name[0]}</span>
-        </div>
-        <div class="ch-info">
-          <div class="ch-name">${s.name}</div>
-          <div class="ch-sub">${relativeTime(vod.date)}${dur ? ' · ' + dur : ''}</div>
-        </div>
-      </div>
-    </a>`;
-  }).join('');
+  const box = document.getElementById('vodsCarousel');
+  const even = vods.length <= 3;                 // pocos VODs: cuadrícula pareja
+  box.classList.toggle('is-even', even);
+  box.style.setProperty('--n', vods.length);
+  if (even) return vods.map(v => vodCard(v, false)).join('');
+  const [lead, ...rest] = vods;                  // 4+: uno grande + cola
+  return vodCard(lead, true) + `<div class="h2-vod-list">${rest.map(v => vodCard(v, false)).join('')}</div>`;
 }
 
 function attachPreviewListeners(container) {
   if (!_hover) return;
-  container.querySelectorAll('.ch-preview-vid').forEach(vid => {
-    const card = vid.closest('.ch');
+  container.querySelectorAll('.h2-preview').forEach(vid => {
+    const card = vid.closest('.h2-vod');
     if (!card) return;
     card.addEventListener('mouseenter', () => vid.play().catch(() => { vid.style.display = 'none'; }));
     card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
   });
-}
-
-async function loadCardAvatars(ids) {
-  for (const id of ids) {
-    if (id in _avatarCache) { applyCardAvatar(id, _avatarCache[id]); continue; }
-    try {
-      const el = document.getElementById('card-ava-' + id);
-      const channel = el?.dataset?.channel;
-      if (!channel) { _avatarCache[id] = null; continue; }
-      const r = await fetch('/api/profile/' + encodeURIComponent(channel));
-      if (!r.ok) { _avatarCache[id] = null; continue; }
-      const d = await r.json();
-      _avatarCache[id] = d.avatar_url || null;
-      applyCardAvatar(id, _avatarCache[id]);
-    } catch { _avatarCache[id] = null; }
-  }
-}
-
-function applyCardAvatar(id, url) {
-  if (!url) return;
-  const img = document.getElementById('card-ava-' + id);
-  const fb  = document.getElementById('card-avaf-' + id);
-  if (img && img.src !== url) {
-    img.src = url;
-    img.style.display = 'block';
-    if (fb) fb.style.display = 'none';
-  }
 }
 
 /* ── Chat label ──────────────────────────────────────── */
@@ -551,12 +406,14 @@ function setFeaturedLive(key, paths) {
   // Sim stream
   const sim = document.getElementById('simStream');
   sim.className = 'sim-stream';
+  // miniatura en vivo mientras el video carga (evita el hueco negro)
+  sim.style.backgroundImage = `url('/assets/thumbs/${key}.jpg?t=${Math.floor(Date.now() / 60000)}')`;
   document.getElementById('simTitle').textContent = s.name.split('_')[0];
-  document.getElementById('simSub').textContent = s.sub?.split('·').pop()?.trim() || 'Puerto Rico';
+  document.getElementById('simSub').textContent = s.stream_title || '';
 
   // Top overlay
   document.getElementById('featuredTopLeft').innerHTML = `
-    <span class="live-badge" id="liveBadge">En Vivo</span>
+    <span class="live-badge" id="liveBadge">En vivo</span>
     <span class="featured-meta"><i class="fa-solid fa-eye"></i> <span id="featuredViewersMeta">${viewers}</span></span>
     <span class="featured-meta"><i class="fa-regular fa-clock"></i> <span id="featuredUptime">00:00:00</span></span>
   `;
@@ -573,7 +430,7 @@ function setFeaturedLive(key, paths) {
   subEl.innerHTML = (s.host ? '<span class="host-tag">HOST</span>' : '') + (s.sub || 'corillo.live · Puerto Rico');
 
   document.getElementById('featuredActions').innerHTML = `
-    <a href="/${key}/" class="play-btn"><i class="fa-solid fa-play"></i> Ver Ahora</a>
+    <a href="/${key}/" class="play-btn">Ver en vivo</a>
     ${s.twitch ? `<a href="https://twitch.tv/${s.twitch}" target="_blank" rel="noopener" class="icon-btn" title="Twitch"><i class="fab fa-twitch"></i></a>` : ''}
     <button class="icon-btn" title="Fullscreen" id="featFsBtn"><i class="fa-solid fa-expand"></i></button>
   `;
@@ -645,10 +502,10 @@ function showFeaturedVod(vod) {
   sim.className = 'sim-stream offline' + (vod.thumb ? ' has-thumb' : '');
   sim.style.backgroundImage = vod.thumb ? `url('${vod.thumb}')` : '';
   document.getElementById('simTitle').textContent = s.name.split('_')[0];
-  document.getElementById('simSub').textContent = `ÚLTIMA TRANSMISIÓN · ${relativeTime(vod.date)}`;
+  document.getElementById('simSub').textContent = `Última transmisión · ${relativeTime(vod.date).toLowerCase()}`;
 
   document.getElementById('featuredTopLeft').innerHTML = `
-    <span class="live-badge offline">Offline</span>
+    <span class="live-badge offline">Sin transmisión</span>
     ${vod.date ? `<span class="featured-meta"><i class="fa-regular fa-clock"></i> ${relativeTime(vod.date)}</span>` : ''}
     ${vod.duration ? `<span class="featured-meta"><i class="fa-solid fa-film"></i> ${fmtDuration(vod.duration)}</span>` : ''}
   `;
@@ -663,9 +520,8 @@ function showFeaturedVod(vod) {
     (s.host ? '<span class="host-tag">HOST</span>' : '') + (s.sub || 'corillo.live · Puerto Rico');
 
   document.getElementById('featuredActions').innerHTML = `
-    <a href="/vods/v/?id=${vod.id}" class="play-btn"><i class="fa-solid fa-play"></i> Ver VOD</a>
+    <a href="/vods/v/?id=${vod.id}" class="play-btn">Ver VOD</a>
     <a href="/${vod.channel}/" class="icon-btn" title="Ir al canal"><i class="fa-solid fa-tower-broadcast"></i></a>
-    <a href="/vods/" class="icon-btn" title="Todos los VODs"><i class="fa-solid fa-film"></i></a>
   `;
 }
 
@@ -673,16 +529,16 @@ function showFeaturedOfflineStatic() {
   const sim = document.getElementById('simStream');
   sim.className = 'sim-stream offline';
   sim.style.backgroundImage = '';
-  document.getElementById('simTitle').textContent = 'SIN STREAM';
-  document.getElementById('simSub').textContent = 'TODOS LOS CANALES OFFLINE';
+  document.getElementById('simTitle').textContent = 'Sin transmisión';
+  document.getElementById('simSub').textContent = 'Todos los canales están fuera de línea';
   document.getElementById('featuredTopLeft').innerHTML =
-    '<span class="live-badge offline">Offline</span>';
+    '<span class="live-badge offline">Sin transmisión</span>';
   document.getElementById('featuredAva').style.background = '#1e3a4a';
   document.getElementById('featuredAva').textContent = 'C';
-  document.getElementById('featuredNameEl').textContent = 'CORILLO';
+  document.getElementById('featuredNameEl').textContent = 'Corillo';
   document.getElementById('featuredSubEl').textContent = 'Puerto Rico · Sin stream activo';
   document.getElementById('featuredActions').innerHTML = `
-    <a href="/vods/" class="play-btn"><i class="fa-solid fa-film"></i> Ver VODs</a>
+    <a href="/vods/" class="play-btn">Ver VODs</a>
     <a href="/join/" class="icon-btn" title="Crear canal"><i class="fa-solid fa-plus"></i></a>
   `;
 }
@@ -701,7 +557,9 @@ function setupHls(key) {
   if (vid.canPlayType('application/vnd.apple.mpegurl')) {
     vid.src = url;
     vid.play().catch(() => {});
-    wrap.classList.add('playing');
+    // Solo tapamos la miniatura cuando el video de verdad está reproduciendo
+    vid.addEventListener('playing', () => { if (featuredKey === key) wrap.classList.add('playing'); }, { once: true });
+    vid.addEventListener('error',   () => wrap.classList.remove('playing'), { once: true });
     return;
   }
 
@@ -803,177 +661,83 @@ function renderLiveSection(live, paths) {
   const ranked = [...live].sort((a, b) => getViewers(paths, b.key) - getViewers(paths, a.key));
 
   const t = Math.floor(Date.now() / 60000);
-  rail.innerHTML = ranked.map((s, i) => {
+  rail.innerHTML = ranked.map(s => {
     const viewers = getViewers(paths, s.key);
-    if (!cardBitrates[s.key]) cardBitrates[s.key] = jitter(5000, 600);
-    const bitrate = cardBitrates[s.key];
-    const isHero = i === 0;
-    const catTag = s.stream_title ? `<span class="ch-cat">${s.stream_title}</span>` : '';
-    return `<a class="ch${isHero ? ' ch-hero' : ''}" href="/${s.key}/" style="--ch-top:${s.color || 'var(--crl-accent)'}">
-      <div class="ch-thumb">
-        <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
-        <div class="ch-thumb-noise"></div>
-        <span class="ch-rank">${String(i + 1).padStart(2, '0')}</span>
-        <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
-        <img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg?t=${t}" onerror="this.style.display='none'" alt="">
-        <div class="ch-top">
-          <span class="ch-live">LIVE</span>
-          <span class="ch-viewers"><i class="fa-solid fa-eye"></i>${viewers}</span>
-        </div>
-        <div class="ch-bottom"><span class="ch-bitrate">${fmtKbps(bitrate)}bps</span>${catTag}</div>
+    return `<a class="h2-live" href="/${s.key}/">
+      <div class="h2-live-thumb" style="background:${s.color || '#1e3a4a'}">
+        <img src="/assets/thumbs/${s.key}.jpg?t=${t}" alt="" onerror="this.style.display='none'">
+        <span class="h2-chip live">En vivo</span>
+        <span class="h2-chip viewers"><i class="fa-solid fa-eye"></i> ${viewers}</span>
       </div>
-      <div class="ch-body">
-        <div class="ch-ava ring-live" style="background:${s.color || '#1e3a4a'}">
-          <img id="rail-ava-${s.key}" data-channel="${s.key}" alt="" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:4px">
-          <span id="rail-avaf-${s.key}">${s.ava || s.name[0]}</span>
-        </div>
-        <div class="ch-info">
-          <div class="ch-name">${s.host ? '<span class="ch-host">H</span>' : ''}${s.name}</div>
-          <div class="ch-sub">${s.sub || 'corillo.live'}</div>
-        </div>
+      <div class="h2-live-meta">
+        <span class="h2-mini-face" style="background:${s.color || '#1e3a4a'}">${faceInner(s)}</span>
+        <div><strong>${s.name}</strong><small>${s.stream_title || s.sub || 'corillo.live'}</small></div>
       </div>
     </a>`;
   }).join('');
-
-  wireRail('liveRailOuter', 'liveRail');
-
-  // Cargar avatares del live rail (desde cache o API)
-  Promise.allSettled(live.map(async s => {
-    const url = s.avatar_url || _avatarCache[s.key] || null;
-    if (!url) {
-      if (s.key in _avatarCache) return;
-      try {
-        const r = await fetch('/api/profile/' + encodeURIComponent(s.key));
-        if (!r.ok) { _avatarCache[s.key] = null; return; }
-        const d = await r.json();
-        _avatarCache[s.key] = d.avatar_url || null;
-      } catch { _avatarCache[s.key] = null; return; }
-    } else {
-      _avatarCache[s.key] = url;
-    }
-    const avatarUrl = _avatarCache[s.key];
-    if (!avatarUrl) return;
-    const img = document.getElementById('rail-ava-' + s.key);
-    const fb  = document.getElementById('rail-avaf-' + s.key);
-    if (img) { img.src = avatarUrl; img.style.display = 'block'; }
-    if (fb)  fb.style.display = 'none';
-  }));
 }
 
-/* ── Channel grid ────────────────────────────────────── */
+/* ── El corillo: rostros primero ─────────────────────── */
+function renderHeroRoster(liveSet) {
+  const box = document.getElementById('heroRoster');
+  if (!box) return;
+  const ordered = STREAMERS.filter(s => !s.soon).sort((a, b) => (liveSet.has(b.key) ? 1 : 0) - (liveSet.has(a.key) ? 1 : 0));
+  const shown = ordered.slice(0, 7);
+  box.innerHTML = shown.map(s => {
+    const live = liveSet.has(s.key);
+    return `<a href="/${s.key}/" class="${live ? 'is-live' : ''}" data-name="${s.name}${live ? ' · en vivo' : ''}" aria-label="${s.name}${live ? ', en vivo' : ''}">
+      <span class="h2-face" style="background:${s.color || '#1e3a4a'}">${faceInner(s)}</span></a>`;
+  }).join('') + (ordered.length > shown.length
+    ? `<a href="/streamers/" class="h2-more" aria-label="Ver los ${ordered.length} streamers">+${ordered.length - shown.length}</a>` : '');
+}
+
 function renderChannelGrid(paths) {
   const liveSet = getLiveSet(paths);
   const grid    = document.getElementById('channelGrid');
+  renderHeroRoster(liveSet);
 
-  // Last VOD thumb per channel — used as background for offline cards
-  const vodThumbs = _vodThumbMap;
-
-  // When live section is active show only offline; search filters both
-  let list = liveSet.size > 0
-    ? STREAMERS.filter(s => !liveSet.has(s.key))
-    : STREAMERS;
+  let list = STREAMERS.filter(s => !s.soon);
   if (searchQuery) {
-    list = STREAMERS.filter(s =>
+    list = list.filter(s =>
       s.name.toLowerCase().includes(searchQuery) ||
       s.key.toLowerCase().includes(searchQuery)
     );
   }
+  // En vivo primero; el resto conserva el orden del roster
+  list = [...list].sort((a, b) => (liveSet.has(b.key) ? 1 : 0) - (liveSet.has(a.key) ? 1 : 0));
 
-  const withSoon = searchQuery
-    ? list
-    : [...list, ...(window.STREAMERS || []).filter(s => s.soon)];
-
-  if (!withSoon.length) {
-    const msg = 'No hay canales disponibles';
-    grid.innerHTML = `<div class="grid-empty"><i class="fa-solid fa-satellite-dish"></i><p>${msg}</p></div>`;
+  if (!list.length) {
+    grid.innerHTML = `<p class="h2-empty">No hay canales que coincidan con “${searchQuery}”.</p>`;
     return;
   }
 
-  const GRID_LIMIT = 8;
-  const visible = searchQuery ? withSoon : withSoon.slice(0, GRID_LIMIT);
-  const hasMore  = !searchQuery && withSoon.length > GRID_LIMIT;
-
-  const cardsHtml = visible.map(s => {
-    if (s.soon) return `
-      <div class="ch soon">
-        <div class="ch-thumb">
-          <div class="ch-thumb-glow" style="background:${s.color || 'linear-gradient(135deg,#2a2a3a,#1a1a28)'}"></div>
-          <div class="ch-thumb-noise"></div>
-          <div class="ch-thumb-inner">?</div>
-        </div>
-        <div class="ch-body">
-          <div class="ch-ava" style="background:${s.color || '#1e3a4a'}">${s.ava || '?'}</div>
-          <div class="ch-info">
-            <div class="ch-name">???</div>
-            <div class="ch-sub">${s.sub || 'Próximamente'}</div>
-          </div>
-        </div>
-      </div>`;
-
+  const person = s => {
     const live    = liveSet.has(s.key);
     const viewers = live ? getViewers(paths, s.key) : 0;
-    if (live && !cardBitrates[s.key]) cardBitrates[s.key] = jitter(5000, 600);
-    if (!live) delete cardBitrates[s.key];
-    const bitrate = cardBitrates[s.key];
+    const face = s.avatar_url
+      ? `<img src="${s.avatar_url}" alt="" loading="lazy" onerror="this.remove()">`
+      : `<span class="h2-initial">${s.ava || s.name[0]}</span>`;
+    return `<a class="h2-person${live ? ' is-live' : ''}" href="/${s.key}/">
+      <span class="h2-person-img" style="background:${s.color || '#1e3a4a'}">${face}</span>
+      ${live ? `<span class="h2-chip live">En vivo · ${viewers}</span>` : ''}
+      <span class="h2-person-txt"><strong>${s.name}</strong><small>${live ? (s.stream_title || 'Transmitiendo ahora') : (s.sub || 'corillo.live')}</small></span>
+    </a>`;
+  };
 
-    return `
-      <a class="ch" href="/${s.key}/" style="--ch-top:${s.color || 'var(--crl-accent)'}">
-        <div class="ch-thumb">
-          <div class="ch-thumb-glow" style="background:${s.color || '#1e3a4a'}"></div>
-          <div class="ch-thumb-noise"></div>
-          <div class="ch-thumb-inner">${s.ava || s.name[0]}</div>
-          ${live
-            ? `<img class="ch-thumb-img" src="/assets/thumbs/${s.key}.jpg?t=${Math.floor(Date.now()/60000)}" onerror="this.style.display='none'" alt="">`
-            : vodThumbs[s.key]
-              ? `<img class="ch-thumb-img ch-thumb-vod" src="${vodThumbs[s.key]}" alt="" loading="lazy" onerror="this.style.display='none'">`
-              : ''
-          }
-          <div class="ch-top">
-            ${live
-              ? `<span class="ch-live">LIVE</span><span class="ch-viewers"><i class="fa-solid fa-eye"></i>${viewers}</span>`
-              : `<span class="ch-badge-off">OFF</span>`
-            }
-          </div>
-          ${live ? `<div class="ch-bottom"><span class="ch-bitrate">${fmtKbps(bitrate)}bps</span></div>` : ''}
-        </div>
-        <div class="ch-body">
-          <div class="ch-ava ${live ? 'ring-live' : ''}" style="background:${s.color || '#1e3a4a'}">${s.avatar_url ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:4px" alt="">` : (s.ava || s.name[0])}</div>
-          <div class="ch-info">
-            <div class="ch-name">${s.host ? '<span class="ch-host">H</span>' : ''}${s.name}</div>
-            <div class="ch-sub">${s.sub || 'corillo.live'}</div>
-          </div>
-        </div>
-      </a>`;
-  }).join('');
-
-  grid.innerHTML = cardsHtml
-    + (hasMore ? `<a href="/streamers/" class="ch ch-see-all">
-        <div class="ch-thumb">
-          <div class="ch-thumb-glow" style="background:linear-gradient(135deg,#1a2a3a,#0a1420)"></div>
-          <div class="ch-thumb-noise"></div>
-          <div class="ch-thumb-inner" style="font-size:1.6rem"><i class="fa-solid fa-users"></i></div>
-        </div>
-        <div class="ch-body">
-          <div class="ch-ava" style="background:linear-gradient(135deg,#1a2a3a,#0a1420)"><i class="fa-solid fa-arrow-right"></i></div>
-          <div class="ch-info">
-            <div class="ch-name">Ver todos</div>
-            <div class="ch-sub">corillo.live/streamers</div>
-          </div>
-        </div>
-      </a>` : '');
+  grid.innerHTML = list.map(person).join('');
 }
 
 function renderVodsRow() {
-  const carousel = document.getElementById('vodsCarousel');
-  if (!carousel || !_recentVods.length) return;
-  carousel.innerHTML = vodCards(_recentVods);
-  attachPreviewListeners(carousel);
-  const ids = [...carousel.querySelectorAll('[id^="card-ava-"]')].map(el => el.id.replace('card-ava-', ''));
-  if (ids.length) loadCardAvatars(ids);
-  wireRail('vodsRailOuter', 'vodsCarousel');
+  const box = document.getElementById('vodsCarousel');
+  if (!box) return;
+  if (!_recentVods.length) {
+    box.innerHTML = '<p class="h2-empty">Todavía no hay transmisiones grabadas.</p>';
+    return;
+  }
+  box.innerHTML = vodCards(_recentVods);
+  attachPreviewListeners(box);
 }
 
-/* ── Main poll ───────────────────────────────────────── */
 async function poll() {
   const now    = Date.now();
   const needVods = now - _vodLoadedAt > VOD_TTL;
@@ -991,7 +755,7 @@ async function poll() {
   const liveWithViewers = live.map(s => ({ ...s, _viewers: getViewers(paths, s.key) }));
 
   document.getElementById('liveCountEl').textContent = live.length;
-  document.getElementById('totalCountEl').textContent = total;
+  document.getElementById('totalCountEl').textContent = STREAMERS.filter(s => !s.soon).length;
 
   // Live section + channel grid
   renderLiveSection(live, paths);
@@ -1027,19 +791,12 @@ async function loadReelsStrip() {
     const strip = document.getElementById('reelsStrip');
     const track = document.getElementById('reelsTrack');
     items.forEach(r => {
-      const dur   = r.duration ? fmtDuration(r.duration) : '';
-      const thumb = r.thumb ? `background-image:url('${r.thumb}')` : '';
+      const dur = r.duration ? fmtDuration(r.duration) : '';
       const a = document.createElement('a');
-      a.className = 'reel-card';
+      a.className = 'h2-reel';
       a.href = `/reels/?start=${r.id}`;
-      a.innerHTML = `
-        <div class="reel-card-thumb" style="${thumb}">
-          <div class="reel-card-play"><i class="fa-solid fa-play"></i></div>
-          ${dur ? `<div class="reel-card-dur">${dur}</div>` : ''}
-        </div>
-        <div class="reel-card-info">
-          <div class="reel-card-ch">${r.channel.toUpperCase()}</div>
-        </div>`;
+      if (r.thumb) a.style.backgroundImage = `url('${r.thumb}')`;
+      a.innerHTML = `${dur ? `<em>${dur}</em>` : ''}<span>${streamerOf(r.channel).name}</span>`;
       track.appendChild(a);
     });
     strip.style.display = '';
@@ -1048,6 +805,10 @@ async function loadReelsStrip() {
 
 /* ── Init ────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
+  const onScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 40);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
   // Search input vive en el SiteShell; aquí escuchamos el evento que dispara.
   window.addEventListener('crl-search', e => {
     searchQuery = (e.detail || '').toLowerCase();
@@ -1075,7 +836,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Refresh live thumbnails every 60s without full re-render
   setInterval(() => {
     const t = Math.floor(Date.now() / 60000);
-    document.querySelectorAll('.ch-thumb-img').forEach(img => {
+    document.querySelectorAll('.h2-live-thumb img').forEach(img => {
       img.src = img.src.replace(/\?t=\d+/, `?t=${t}`);
     });
   }, 60000);
