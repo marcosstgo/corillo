@@ -8,7 +8,7 @@ Documentación técnica completa de corillo.live. Actualizada 2026-05-19.
 
 | Capa | Tecnología | Versión |
 |---|---|---|
-| Frontend | Astro (SSG) | 6.3.5 |
+| Frontend | Astro (SSG) | 7.3.3 |
 | CSS framework | Corillo CSS (propio) | v1.4 |
 | Runtime | Node.js | 22 |
 | Backend services | Python / FastAPI / Uvicorn | 3.12 / 0.135 |
