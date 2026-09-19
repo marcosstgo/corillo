@@ -33,8 +33,8 @@ import { version } from '../../../version.json';
   <meta name="theme-color" content="#060608" />
   <link rel="stylesheet" href="/assets/fonts/fonts.css" />
   <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
-  <script src={`/assets/hls.min.js?v=${version}`}></script>
-  <script src={`/assets/streamers.js?v=${version}`}></script>
+  <script is:inline src={`/assets/hls.min.js?v=${version}`}></script>
+  <script is:inline src={`/assets/streamers.js?v=${version}`}></script>
   <link rel="stylesheet" href={`/assets/corillo.css?v=${version}`} />
 </head>
 <body class="crl-body">
@@ -388,7 +388,7 @@ import { version } from '../../../version.json';
   });
 })();
 </script>
-<script src={`/assets/player.js?v=${version}`}></script>
-<script src={`/assets/chat.js?v=${version}`}></script>
+<script is:inline src={`/assets/player.js?v=${version}`}></script>
+<script is:inline src={`/assets/chat.js?v=${version}`}></script>
 </body>
 </html>
