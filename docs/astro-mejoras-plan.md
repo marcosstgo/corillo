@@ -1,8 +1,8 @@
 # Plan de mejoras Astro — corillo.live
 
 Adopción gradual de funciones avanzadas de Astro sin romper producción.
-Estado actual: Astro 6.3.5, 100% estático (`output: 'static'`), sin integraciones,
-datos de PocketBase/corillo-api traídos en el cliente, servido de `/dist` por nginx.
+**Estado (2026-09-20): HECHAS Fase 0, 1, 1b y 3 — Astro 7.3.3, estático, con `@astrojs/sitemap` y `@astrojs/rss`. PENDIENTES: 2 (imágenes), 4 (SEO/pre-render), 5 (Server Islands).**
+Datos de PocketBase/corillo-api se traen en el cliente; nginx sirve `/dist`. El texto de abajo conserva el planteamiento original.
 
 **Principio rector:** trabajar en branch, probar el build, deploy = swap de `dist` con
 respaldo → rollback trivial. Cada fase es independiente y reversible.

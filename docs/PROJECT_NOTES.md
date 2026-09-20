@@ -1,3 +1,5 @@
+> **HISTÓRICO (may-2026) — no leer salvo que se investigue el origen de algo.** El estado vigente está en `CLAUDE.md`. Menciona `BaseLayout`/`LiveSidebar`, ya eliminados, y modo claro (hoy el shell es solo oscuro).
+
 # Project Notes
 
 ## Estado actual

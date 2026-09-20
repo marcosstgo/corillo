@@ -1,346 +1,73 @@
-# CLAUDE.md — Corillo Technical Reference
+# CLAUDE.md — corillo.live
 
-Documentación técnica completa de corillo.live. Actualizada 2026-05-19.
+Plataforma de streaming boricua (Aibonito, PR). Monorepo `marcosstgo/corillo`; el working tree
+es `/var/www/stream/` y es **a la vez** el repo y lo que nginx sirve. Actualizado 2026-09-20.
 
----
+## ⚠ Leer antes de tocar nada
+
+1. **Nunca `npm run build` directo en `/var/www/stream`** — publica en vivo. Desplegar = `bash scripts/deploy-corillo.sh`
+   (respalda `dist`, compila, revierte si falla; conserva los 3 últimos `dist.bak-*`).
+   Para solo comprobar que compila: `npx astro build --outDir <dir-temporal>`.
+2. **Un push a `main` dispara CI** (`.github/workflows/deploy.yml`): rsync con `--delete` de todo el repo, y además copia al servidor `telegram|api|auth|chat|reel`, `scripts/vod-process.py`, `bitrate-monitor.py`, `nginx.conf` y `mediamtx.yml` (y **reinicia MediaMTX y nginx si cambian**).
+   - **Reconciliado el 2026-09-20:** el repo estaba atrasado respecto a producción (sin `POST /register`, sin el arreglo `_low` de MediaMTX, sin los vhosts de pabarranquitas/pueblospr). Se copió producción → repo en `telegram/server.py`, `api/server.py`, `mediamtx.yml`, `nginx.conf`. La versión anterior del repo (incl. el clip con VAAPI de `api/server.py`) está en `~/backups-corillo-2026-09-20/`.
+   - El rsync ahora **excluye** `/pabarranquitas`, `/pueblospr`, `/ruta-preview-hub` (otros proyectos servidos desde aquí, con su propio `.git`), `/dist.bak-*` y `/.claude`. Comprobado con un `rsync --dry-run`: antes borraba 154+42 archivos de esos proyectos y los 3 respaldos de `dist`; ahora solo recambia `dist/_astro`.
+   - **Regla nueva:** si cambias algo directamente en producción (`/etc/nginx`, `/etc/mediamtx`, `~/corillo-*/server.py`), cópialo también al repo en el mismo momento; si no, el próximo push lo pisa. Comprobación rápida: `diff` de esos 4 archivos contra producción.
+   - `mediamtx.yml` invoca `/usr/local/bin/corillo-{rtc-start,stream-up,notify}.sh`, que **no están en ningún repo** (copia en `~/backups-corillo-2026-09-20/`).
+3. El remote `origin` de este repo lleva un token de GitHub embebido en la URL. No imprimir `git remote -v`; pendiente sacarlo.
+4. Rama actual del working tree: `feat/senal-home`. El rediseño de sep-2026 está en producción pero **sin push a GitHub**.
 
 ## Stack
+Astro **7.3.3** estático (`output:'static'`, `trailingSlash:'always'`, `format:'directory'`) · Node 22 · sitemap+RSS por integración ·
+servicios Python/FastAPI · PocketBase · MediaMTX · nginx · Ubuntu 24.04. Solo hay 3 dependencias npm. Rendimiento medido 2026-09-20 (móvil 4G lento, CPU x4): inicio FCP 0.8 s, LCP 0.8 s, CLS 0.04; nginx sirve HTTP/2 + gzip (sin brotli), CSS/JS 1 h, fuentes 6 meses. Pendiente de rendimiento: Font Awesome completo (100 KB css + 156 KB fuente) para ~20 íconos.
 
-| Capa | Tecnología | Versión |
-|---|---|---|
-| Frontend | Astro (SSG) | 7.3.3 |
-| CSS framework | Corillo CSS (propio) | v1.4 |
-| Runtime | Node.js | 22 |
-| Backend services | Python / FastAPI / Uvicorn | 3.12 / 0.135 |
-| Base de datos | PocketBase | 0.36.7 |
-| Streaming | MediaMTX | — |
-| Web server | nginx | — |
-| OS | Ubuntu Server 24.04 LTS | — |
+## Mapa del frontend (`src/`)
+- `layouts/SiteShell.astro` — shell de casi todas las páginas. **Navegación estilo Kick** (`public/assets/shell.css`, clases `nv-*`): barra superior fija (logo, búsqueda, Entrar/Crear cuenta o avatar) + menú lateral con los canales (en vivo primero, con audiencia; colapsable a íconos, estado en `localStorage corillo-sb`) en escritorio; en móvil, barra inferior de 5 pestañas y el menú pasa a cajón ("Más"). La sesión se lee de `localStorage.pocketbase_auth` sin cargar el SDK. Carga `corillo.css`, `homepage.css`, `senal-home.css`, `site2.css?v=5`, `shell.css?v=1`; **fuerza `data-theme=dark`**.
+  `FullscreenLayout` → `reels/`, `reels/v/`. `NoticiasPostLayout` → `noticias/[slug]`.
+  Sin layout (HTML propio): `player/`, `perfil/`, `embed/v/`.
+- `pages/`: `index`, `streamers`, `vods`, `vods/v`, `multiplayer`, `reels`, `reels/v`, `perfil`(+`reset`), `player`, `join`, `verificar`,
+  `configuracion`, `faq`, `legal`, `dmca`, `que-es-corillo`, `roadmap`, `software`, `noticias`(+`[slug]`), `embed/v`, `rss.xml.js`.
+- `content/noticias/*.md` — content collection (schema en `content.config.ts`); un post nuevo = un `.md`.
+- CSS por página (en `public/assets/`): `home2.css`, `streamers2.css`, `vods2.css` (rediseño); `site2.css` = shell global y tokens `--h2-*`;
+  `corillo.css` = framework `crl-*` heredado; `homepage.css`/`senal-home.css`/`styles.css` = legado, no crecer.
+  Al cambiar un CSS con `?v=N` fijo, subir `N` en el `<link>` que lo carga.
+- Páginas `p-legacy` (14 de contenido): capa tipográfica que remapea `--crl-display/--crl-mono`. Astro añade `[data-astro-cid-*]`
+  a sus estilos, así que los overrides comunes usan prefijo `body`.
+- Identidad (desde 2026-09-20): **paleta Cobalto** — fondo azul bandera `#06143f`, acento flamboyán `#ff6a3d`, acento 2 sol `#ffd23f`, en vivo `#ff2d55`. Tokens en 2 sitios: `--crl-*` en `corillo.css` `:root` y `--h2-*` en `site2.css` (los nombres `--h2-cyan`/`--h2-mag` son históricos: hoy son acento y acento 2); `--h` (matiz oklch) en `homepage.css`. Los degradados sobre video usan `--crl-ink-rgb`. El aro acento→acento 2 solo marca "en vivo". Evitar estética gamer.
+- Skeletons de carga: clases `sk*` en `site2.css`; el HTML estático los lleva y el JS los reemplaza con `innerHTML`.
+- Roster: PocketBase manda (`/api/streamers`); `public/assets/streamers.js` es solo fallback y además **valida las keys del player**
+  (una key que no esté ahí cae en `/_404/`).
 
----
+## Registro / correo (verificar antes de tocar)
+Registro autoservicio: `/join/` → `POST /api/register` (telegram-service :3003, código solo en producción) crea la cuenta en PocketBase (`active:false`) y pide el correo; el enlace lleva a `/verificar/?token=` que llama `confirm-verification`; el hook `pb_hooks/activate_on_verify.pb.js` la activa. Correo por Mailgun (`noreply@mg.corillo.live`, SPF/DKIM ok).
+**BUG ABIERTO (2026-09-20):** las plantillas de la colección `streamers` usan marcadores que PocketBase 0.36.7 no reemplaza (`{{.Token}}`, `{{"{{"}.ActionUrl…}}`; esta versión solo entiende `{TOKEN}`, `{ACTION_URL}`, `{APP_URL}`). Resultado: el correo de verificación y el de reseteo salen con enlace roto; en el log de PB, las 2 confirmaciones registradas fallaron (`Missing email token claim`). Corrección pendiente de aprobar: verificación → `https://corillo.live/verificar/?token={TOKEN}`; reseteo → `https://corillo.live/perfil/reset/?token={TOKEN}`. Respaldar la colección antes.
 
-## Repositorio
+## Trampas de Astro 7 / player
+- `<script src={expr}>` sin `is:inline` **se descarta en silencio** (el build dice "Complete"). Todos los de `player/index.astro` son `is:inline`.
+- `/{canal}/` lo sirve nginx con `sub_filter '__CHANNEL__'` sobre `player/index.html`: ese HTML debe conservar `__CHANNEL__` y sus 4 scripts externos.
+- Tras un upgrade mayor: comparar `<script>/<link>` por página entre `dist` viejo y nuevo. Un timeout en una ruta con video es una falla, no un artefacto.
 
-**GitHub:** `marcosstgo/corillo` (público)
-**Working tree en producción:** `/var/www/stream/`
-**CI/CD:** GitHub Actions → `.github/workflows/deploy.yml`
+## 🚫 No leer completos (usar Grep, o Read con `offset`/`limit`)
+`public/assets/hls.min.js` (414 KB, una línea) · `package-lock.json` · `public/assets/fontawesome/` · `public/assets/pocketbase.umd.js` ·
+`public/assets/streamer-pro/` (18 MB binarios) · `dist*/` · `node_modules/`.
+Grandes pero editables: `src/pages/perfil/index.astro` (2960 líneas) · `public/assets/corillo.css` (2220) · `public/assets/player.js` (1271) ·
+`src/pages/index.astro` (851). `public/corillo-css/index.html` y `public/streamer-pro/index.html` son documentación/landing estática de ~80–90 KB.
 
-El repo es el monorepo completo. `/var/www/stream/` es el clone directo donde se edita, se hace build y se pushea. No hay entorno separado de staging.
+## Carpetas de otros proyectos que viven aquí (fuera de git, en `.gitignore`)
+`pabarranquitas/` (pabqtas, `/app` lo sirve nginx), `pueblospr/` (`registro/`, `panel/`; `pueblospr-pb.service` usa `pb_migrations`),
+`ruta-preview-hub/`, `assets/kick/`. **No mover ni borrar**: producción las usa. Cada una tiene su README/CLAUDE.md.
+Como están en `.gitignore`, Grep/Glob no las ven; usar `rg --no-ignore` con la ruta explícita si hay que trabajar ahí.
+Material suelto que había en la raíz (capturas, zips, PDFs, propuestas) se archivó en `/home/corillo-adm/archivo-corillo-raiz/`.
 
-### Deploy pipeline
-
-Cada push a `main` ejecuta en orden:
-1. Bump de versión en `version.json`
-2. `npm ci` + `npm run build` (Astro → `dist/`)
-3. `rsync` del repo completo a `/var/www/stream/` en el servidor
-4. Si `nginx.conf` cambió → `sudo cp` a `/etc/nginx/nginx.conf` + `nginx reload`
-5. Si `mediamtx.yml` cambió → reinicia MediaMTX
-6. Despliega `api/server.py` → `/home/corillo-adm/corillo-api/` + reinicia servicio
-7. Despliega `auth/server.py` → `/home/corillo-adm/corillo-auth/` + reinicia servicio
-8. Despliega `chat/server.py` → `/home/corillo-adm/corillo-bot/` + reinicia servicio
-9. Despliega `telegram/server.py` → `/home/corillo-adm/corillo-telegram/` + reinicia servicio
-10. Despliega scripts VOD y bitrate-monitor
-
-> **IMPORTANTE:** El nginx que importa es `/var/www/stream/nginx.conf` en el repo.
-> Editar `/etc/nginx/nginx.conf` directamente es temporal — el CI lo sobreescribe en el próximo push.
-
----
-
-## Servicios en producción
-
-| Servicio | Puerto | Proceso | Directorio |
-|---|---|---|---|
-| corillo-api | 3004 | uvicorn | `/home/corillo-adm/corillo-api/` |
-| corillo-bot (chat) | 3001 | uvicorn | `/home/corillo-adm/corillo-bot/` |
-| corillo-telegram | 3003 | uvicorn | `/home/corillo-adm/corillo-telegram/` |
-| corillo-auth | 3002 | uvicorn | `/home/corillo-adm/corillo-auth/` |
-| corillo-reel | — | python | `/home/corillo-adm/corillo-reel/` |
-| PocketBase (corillo) | 8090 | pocketbase | `/home/corillo-adm/pocketbase/pb_data` |
-| MediaMTX (HLS) | 8888 | mediamtx | — |
-| MediaMTX (WebRTC) | 8889 | mediamtx | — |
-| MediaMTX (RTSP interno) | 8554 | mediamtx | solo localhost |
-| MediaMTX (API) | 9997 | mediamtx | — |
-| corillo-thumbs | — | python3 | `scripts/thumb-gen.py` |
-| thumbgen | — | bash | `/usr/local/bin/thumbgen-all.sh` |
-| bitrate-monitor | — | python3 | `/home/corillo-adm/bitrate-monitor.py` |
-| win-monitor | 8200 | uvicorn | `/home/corillo-adm/win-monitor/` |
-| corillo-bf6-proxy | 3011 | node | `/opt/corillo/bf6-proxy/` |
-
-Todos corren como systemd units. Para reiniciar: `sudo systemctl restart <nombre>`.
-
-> **Otros servicios en el mismo servidor (no corillo):** `conteo.service` (portal financiero `conteo.marcossantiago.com`, puertos 8300+8095, repo `marcosstgo/conteo`), `gbn-mikrowisp.service` (puerto 8100), `openclaw.service` (AI gateway, puertos 18789+18791), `netdata.service` (monitoreo, puerto 19999). No tocar a menos que se sepa lo que se hace.
-
----
-
-## Routing nginx
-
-```
-/api/bf6/*                → 3011  corillo-bf6-proxy
-/api/*                    → 3004  corillo-api  (catch-all ^~, sin regex)
-  /api/join               → 3003  corillo-telegram
-  /api/admin              → 3003  corillo-telegram
-  /api/telegram-webhook   → 3003  corillo-telegram
-  /api/upload-vod         → 3004  (timeout 600s, sin buffering, max 3G)
-
-/chat-api/*               → 3001  corillo-bot  (WebSocket, chat, digest, IA)
-
-/live/*                   → 8888  MediaMTX HLS
-/mediamtx-api/*           → 9997  MediaMTX HTTP API
-/twitch-api/*             → 8880  Twitch proxy (inactivo al 2026-05-19)
-/webrtc/*                 → 8889  MediaMTX WebRTC WHEP
-/vods/reels/*             → /var/vods/reels/
-/vods/*                   → /var/vods/live/
-/assets/thumbs/*          → /var/www/stream/assets/thumbs/
-/assets/kick/*            → /var/www/stream/assets/kick/
-/overlay/bf6/*            → /opt/corillo/bf6-proxy/public/  (archivos estáticos)
-/*                        → /var/www/stream/dist/  (Astro SSG)
-```
-
-Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
-`^/([a-z0-9][a-z0-9_]*)(/|$)` y nginx inyecta el key en
-`player/index.html` via `sub_filter '__CHANNEL__'`.
-
-### Otros dominios en el mismo nginx.conf
-
-| Dominio | Backend | Notas |
-|---|---|---|
-| `conteo.marcossantiago.com` | `/var/www/conteo/` + proxy `/api/` → 8300, `/pb-conteo/` → 8095 | Repo: `marcosstgo/conteo` |
-| `marcossantiago.com` | Docker 3010 | Repo: `marcosstgo/marcossantiago-web` |
-| `kioskko.com` | Landing estática + Docker 4321 | — |
-| `pagos.gbnsolutions.com` | gbn-mikrowisp 8100 | — |
-| `pb.corillo.live` | PocketBase corillo 8090 | — |
-| `uptime.corillo.live` / `status.corillo.live` | Proxy a 192.168.8.148:3001 | Red local |
-| `vault.marcossantiago.com` | Proxy a 192.168.8.148:8080 | Red local |
-| `oc.marcossantiago.com` | OpenClaw 18789 | — |
-
----
-
-## corillo-api — Endpoints (`/api/`)
-
-| Método | Ruta | Descripción |
-|---|---|---|
-| GET | `/api/streamers` | Roster completo activo con `avatar_url` desde PocketBase |
-| GET | `/api/profile/{key}` | Perfil individual de un streamer |
-| POST | `/api/regen-stream-key` | Regenerar stream key (autenticado) |
-| GET | `/api/push-config` | Config VAPID para notificaciones push |
-| POST | `/api/subscribe` | Suscribirse a notificaciones push de un canal |
-| DELETE | `/api/subscribe` | Cancelar suscripción push |
-| POST | `/api/internal/notify` | Disparar notificación push (uso interno) |
-| GET | `/api/clip/{channel}` | Crear clip de 30s del live actual |
-| GET | `/api/clip/vod/{vod_id}` | Crear clip de un VOD |
-| POST | `/api/reel` | Crear reel (autenticado) |
-| POST | `/api/reel/upload` | Subir video como reel (autenticado) |
-| DELETE | `/api/reel/{id}` | Eliminar reel (autenticado) |
-| PATCH | `/api/reel/{id}/visibility` | Cambiar visibilidad de reel |
-| DELETE | `/api/vod/{id}` | Eliminar VOD (autenticado) |
-| POST | `/api/upload-vod` | Subir VOD (autenticado, hasta 3G) |
-| GET | `/api/health` | Health check |
-
----
-
-## PocketBase — Colecciones principales
-
-| Colección | Campos clave |
+## Documentación de detalle (leer solo si hace falta)
+| Archivo | Contenido |
 |---|---|
-| `streamers` | `key`, `display_name`, `sub`, `bio`, `color`, `avatar`, `twitch`, `instagram`, `tiktok`, `stream_title`, `active`, `stream_key`, `upload_enabled` |
-| `vods` | `channel`, `filename`, `title`, `duration`, `size`, `thumb`, `date`, `public` |
-| `reels` | `channel`, `filename`, `title`, `duration`, `public` |
-| `push_subscriptions` | `channel`, `endpoint`, `p256dh`, `auth` |
+| `docs/infra.md` | servicios y puertos, routing nginx, endpoints de `corillo-api`, colecciones PocketBase, archivos fuera del repo, qué hace cada servicio, scripts, pipeline de CI |
+| `docs/astro-mejoras-plan.md` | plan por fases de Astro; hechas 0, 1, 1b, 3; pendientes 2, 4, 5 |
+| `docs/MIGRATION.md` | mover la plataforma a otro servidor |
+| `docs/PROJECT_NOTES.md` | histórico may-2026 (VOD re-encode, Corillo CSS, SEO); no vigente |
 
-**Admin UI:** `https://pb.corillo.live`
-**Credenciales:** en `/home/corillo-adm/corillo-api/.env`
-
-> El campo nombre en PocketBase es `display_name`, no `name`.
-> El endpoint `/api/streamers` lo mapea a `name` y computa `ava` (inicial).
-
----
-
-## Frontend — Páginas
-
-| URL | Archivo fuente | Descripción |
-|---|---|---|
-| `/` | `src/pages/index.astro` | Homepage: featured player, live rail, channel grid, VOD strip |
-| `/{canal}/` | `src/pages/player/index.html` | Player universal (template con `__CHANNEL__`) |
-| `/streamers/` | `src/pages/streamers/index.astro` | Directorio con stats en vivo y búsqueda |
-| `/vods/` | `src/pages/vods/index.astro` | Browser de VODs filtrable por canal |
-| `/vods/v/` | `src/pages/vods/v/index.astro` | Player de VOD individual |
-| `/multiplayer/` | `src/pages/multiplayer/index.astro` | Vista multi-stream simultáneo |
-| `/reels/` | `src/pages/reels/index.astro` | Grid de reels públicos |
-| `/reels/v/` | `src/pages/reels/v/index.astro` | Player de reel individual |
-| `/perfil/` | `src/pages/perfil/index.astro` | Dashboard del streamer (auth PocketBase) |
-| `/join/` | `src/pages/join/index.astro` | Formulario de onboarding |
-| `/roadmap/` | `src/pages/roadmap/index.astro` | Roadmap del proyecto |
-
----
-
-## Layouts
-
-| Archivo | Usado en |
-|---|---|
-| `src/layouts/SiteShell.astro` | Todas las páginas Astro (topbar, drawer, sidebar, footer) |
-| `src/layouts/BaseLayout.astro` | Páginas sin sidebar |
-| `src/layouts/FullscreenLayout.astro` | Embed fullscreen |
-| `src/layouts/NoticiasPostLayout.astro` | Posts de noticias |
-
----
-
-## Assets globales
-
-| Archivo | Descripción |
-|---|---|
-| `public/assets/corillo.css` | Design system (tokens, componentes). Cache `?v=2` |
-| `public/assets/homepage.css` | Layout homepage y topbar. Cache `?v=2` |
-| `public/assets/player.js` | Lógica del player universal |
-| `public/assets/streamers.js` | Fallback estático (`window.STREAMERS`) — backup si `/api/streamers` falla |
-| `public/assets/styles.css` | Tokens CSS del player |
-
-> Al modificar `corillo.css` o `homepage.css`, incrementar `?v=N` en todos
-> los layouts que los cargan: `SiteShell.astro`, `BaseLayout.astro`,
-> `FullscreenLayout.astro`, `perfil/index.astro`.
-
----
-
-## Fuente de verdad de streamers
-
-**PocketBase** es la fuente primaria. `/api/streamers` devuelve el roster con `avatar_url`.
-
-`window.STREAMERS` (en `assets/streamers.js`) es fallback de emergencia si la API falla — no tiene `avatar_url`, solo letra inicial (`ava`).
-
-**Para borrar un streamer:**
-1. PocketBase → borrar o desactivar el record en colección `streamers`
-2. `assets/streamers.js` → eliminar la línea correspondiente
-3. Build + push
-
----
-
-## Archivos fuera del repo (no versionados)
-
-| Path | Descripción |
-|---|---|
-| `/home/corillo-adm/corillo-*/.env` | Variables de entorno de cada servicio |
-| `/home/corillo-adm/corillo-*/*.db` | Datos runtime SQLite |
-| `/home/corillo-adm/corillo-auth/*.pem` | Claves VAPID |
-| `/home/corillo-adm/corillo-reel/.env` | Variables del reel bot — BOT_TOKEN, ALLOWED_USERS |
-| `/home/corillo-adm/bitrate-monitor.py` | Desplegado por CI desde `scripts/bitrate-monitor.py` |
-| `/usr/local/bin/thumbgen-all.sh` | Script de thumbnails alternativo — fuera del repo |
-| `/var/vods/` | Grabaciones VOD y reels |
-| `/var/www/stream/assets/thumbs/` | Thumbnails generados cada 60s |
-| `/var/www/stream/assets/kick/` | Banners Kick del bitrate-monitor |
-| `/home/corillo-adm/pocketbase/pb_data` | Datos PocketBase de corillo.live |
-
----
-
-## Servicios — qué hace cada uno
-
-### corillo-api (`api/server.py`) — Puerto 3004
-API pública de la plataforma. Sin dependencias del chat ni Telegram.
-- Roster de streamers con avatares desde PocketBase
-- Perfiles individuales por canal
-- Regeneración de stream keys
-- Notificaciones push (VAPID): config, suscripción, envío
-- Clips de 30s desde live o VOD
-- Subida, borrado y visibilidad de reels
-- Subida y borrado de VODs
-- Health check
-
-**Cache:** `/api/streamers` cachea el roster en memoria por 30 segundos (`STREAMERS_CACHE_TTL`).
-Al añadir o borrar un streamer en PocketBase, el cambio tarda hasta 30s en aparecer en el sitio.
-Para forzar actualización inmediata: `sudo systemctl restart corillo-api`.
-
-### corillo-bot (`chat/server.py`) — Puerto 3001
-Chat en vivo, IA y WebSocket. Solo responsabilidad: el chat.
-- WebSocket por canal para mensajes en tiempo real
-- Integración con LLM (Anthropic) — bot comenta el stream con visión
-- Historial de mensajes persistido en SQLite
-- Digest de resumen de chat
-- Anti-spam y rate limiting
-
-### corillo-telegram (`telegram/server.py`) — Puerto 3003
-Telegram webhook, onboarding de streamers y notificaciones en vivo.
-- Webhook de Telegram para comandos del bot
-- Formulario `/join` — recibe solicitudes de nuevos streamers
-- Aprobación/rechazo de streamers desde Telegram con botones inline
-- Al aprobar: crea el record en PocketBase y se auto-actualiza en GitHub
-- **Monitor de live** — polling a MediaMTX cada 15s, notifica al grupo de Telegram cuando un streamer nuevo va en vivo: `🔴 NOMBRE está en vivo · corillo.live/{canal}/`
-
-### corillo-auth (`auth/server.py`) — Puerto 3002
-Servicio minimalista de autenticación RTMP para MediaMTX.
-- Una sola función: valida stream keys de publishers contra PocketBase
-- MediaMTX llama a este endpoint antes de aceptar un stream entrante
-- Cache de 60s por canal para no saturar PocketBase
-
-### corillo-reel (`reel/bot.py`)
-Bot de Telegram que descarga videos de redes sociales y los sube al servidor.
-- Acepta URLs de Instagram, TikTok, YouTube Shorts, Twitter/X, Facebook
-- Usa `yt-dlp` para la descarga y `ffmpeg` para procesamiento
-- Solo usuarios en `ALLOWED_USERS` pueden usarlo
-- **Corre en Docker**, parte del stack `/home/corillo-adm/marcossantiago-web/docker-compose.yml`
-- Depende de `telegram-bot-api` container (misma red Docker) — no puede correr como systemd
-- El CI copia `bot.py` a `/home/corillo-adm/corillo-reel/` y hace `docker compose build + up`
-- Variables de entorno en el `.env` del stack `marcossantiago-web`
-
-### corillo-thumbs (`scripts/thumb-gen.py`) y thumbgen (`thumbgen-all.sh`)
-Dos servicios de thumbnails distintos que corren en paralelo:
-- `corillo-thumbs.service` → `scripts/thumb-gen.py` — genera thumbnails de streams en vivo, los guarda en `/var/www/stream/assets/thumbs/`. **Versionado en el repo**, se despliega via CI.
-- `thumbgen.service` → `/usr/local/bin/thumbgen-all.sh` — script bash alternativo de thumbnails. **No está en el repo**, instalado manualmente en el sistema.
-
-### corillo-bf6-proxy — Puerto 3011
-
-Proxy Node.js que sirve stats de Battlefield 6 desde gametools.network sin problemas de CORS.
-- **Directorio:** `/opt/corillo/bf6-proxy/`
-- **Endpoint proxy:** `GET /bf6/stats?name=JUGADOR&platform=PLATAFORMA`
-- Llama a `https://api.gametools.network/bf6/stats/` y devuelve el JSON con `Access-Control-Allow-Origin: *`
-- Caché en memoria de 5 minutos por jugador+plataforma
-- Timeout de 12s hacia gametools — si falla devuelve JSON de error limpio
-- Plataformas válidas: `ea`, `steam`, `psn`, `xbox`, `ps5`, `epic` (BF6 disponible en EA y Steam al 2026-06-05)
-
-**Overlays estáticos** servidos en `/overlay/bf6/` desde `/opt/corillo/bf6-proxy/public/`:
-
-| Archivo | URL pública | Tamaño OBS | Descripción |
-|---|---|---|---|
-| `index.html` | `/overlay/bf6/` | — | Generador público (no es overlay) |
-| `overlay.html` | `/overlay/bf6/overlay.html?name=X&platform=Y` | 380×175 | Stats generales |
-| `weapons.html` | `/overlay/bf6/weapons.html?name=X&platform=Y` | 380×255 | Top 5 armas |
-| `accuracy.html` | `/overlay/bf6/accuracy.html?name=X&platform=Y` | 380×195 | Accuracy / headshots |
-| `objective.html` | `/overlay/bf6/objective.html?name=X&platform=Y` | 380×225 | Objetivo / soporte |
-| `lowerthird.html` | `/overlay/bf6/lowerthird.html?name=X&platform=Y` | 1920×80 | Barra inferior full-width, 4 bloques rotativos (General → Armas → Accuracy → Objetivo) cada 8s con animación slide+fade y barra de progreso. Ubicar en la parte inferior de la escena en OBS. |
-
-> Las rutas `/api/bf6/` y `/overlay/bf6/` están en `nginx.conf` del repo (añadidas 2026-06-05). Los archivos HTML del proxy están en `/opt/corillo/bf6-proxy/public/` — **fuera del repo**, editar directamente en el servidor.
-
-### bitrate-monitor (`scripts/bitrate-monitor.py`)
-Daemon que vigila el bitrate de los streams en vivo.
-- Polling a MediaMTX cada `INTERVAL` segundos
-- Si el bitrate supera `AUTO_KICK_KBPS`: alerta por Telegram, auto-kick via `ss -K`
-- Lista `KICK_EXEMPT` de streamers exentos del kick (alertas siguen activas)
-- Cooldown de 300s entre notificaciones para no spamear
-- Notifica al recuperarse dentro del límite
-
----
-
-## Scripts — referencia rápida
-
-| Script | Cuándo usar |
-|---|---|
-| `scripts/vod-process.py` | Llamado automáticamente por MediaMTX al terminar un segmento grabado. Re-encodea a 5 Mbps, genera thumbnail, registra en PocketBase. No ejecutar manualmente. |
-| `scripts/thumb-gen.py` | Daemon que genera thumbnails y previews de streams en vivo cada 60s. Corre como `corillo-thumbs.service`. |
-| `scripts/vod-cleanup-short.py` | One-time: borra VODs con duración menor a un mínimo (limpieza de grabaciones cortas/fallidas). |
-| `scripts/audit.sh` | Compara archivos críticos entre el repo y producción. Útil para detectar desincronías. |
-| `scripts/pb-setup-vods.py` | One-time setup: crea la colección `vods` en PocketBase. |
-| `scripts/pb-setup-reels.py` | One-time setup: crea la colección `reels` en PocketBase. |
-| `scripts/pb-setup-push.py` | One-time setup: crea la colección `push_subscriptions` en PocketBase. |
-| `scripts/pb-setup-vod-upload.py` | One-time: añade campo `upload_enabled` a la colección `streamers`. |
-| `scripts/pb-add-stream-title.py` | One-time: añade campo `stream_title` a la colección `streamers`. |
-| `scripts/pb-add-sub-field.py` | One-time: añade campo `sub` (categoría/status) a la colección `streamers`. |
-
-> Los scripts `pb-setup-*` y `pb-add-*` son migraciones one-time. Ya están aplicados en producción — no volver a ejecutar.
-
----
-
-## Convenciones de desarrollo
-
-- **Editar siempre en `/var/www/stream/`** — es el working tree del repo
-- `npm run build` para compilar Astro
-- `git pull --rebase` antes de push (el CI hace commits automáticos de version bump)
-- Cambios de nginx van en `nginx.conf` del repo — nunca editar `/etc/nginx/nginx.conf` directamente
-- Cambios de API van en `api/server.py` — el CI los despliega automáticamente
-- Nuevos endpoints en corillo-api no requieren cambios en nginx gracias al `^~ /api/` catch-all
+## Convenciones
+- Editar en `/var/www/stream/`; cambios de nginx en `nginx.conf` del repo (y aplicar al vivo con backup + `nginx -t` antes de reload: es un único archivo monolítico).
+- Cambios de API en `api/server.py` (el CI los despliega y reinicia el servicio); nuevos endpoints no requieren nginx (`^~ /api/`).
+- `git pull --rebase` antes de push (el CI hace commits de version bump).
+- Servicios: `sudo systemctl restart <nombre>`. Datos y `.env` de cada servicio en `/home/corillo-adm/corillo-*/` (no versionados).

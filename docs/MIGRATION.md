@@ -1,3 +1,5 @@
+> Guía para mover la plataforma a otro servidor (redactada may-2026; verificar contra el estado actual antes de usar).
+
 # MIGRATION.md
 
 ## Migrar CORILLO a otro servidor
