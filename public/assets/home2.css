@@ -38,7 +38,9 @@ body.page-home {
   background-size: cover; background-position: center 30%;
 }
 .h2-stage .sim-stream.offline { background-color: var(--h2-ink); }
-.h2-stage .sim-stream.has-thumb { background-size: cover; background-position: center; }
+.h2-stage .sim-stream.has-thumb { background-size: cover; background-position: center; transform-origin: 62% 42%; animation: h2-drift 16s ease-in-out infinite alternate; }
+@keyframes h2-drift { from { transform: scale(1); } to { transform: scale(1.07); } }
+@media (prefers-reduced-motion: reduce) { .h2-stage .sim-stream.has-thumb { animation: none; } }
 .h2-stage .sim-stream.has-thumb::before { display: none; }
 .h2-stage .sim-stream-grid { display: none; }
 

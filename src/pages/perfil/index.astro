@@ -1573,7 +1573,7 @@ async function loadMyVods(channel) {
         <div class="vod-row" id="vrow-${v.id}">
           <a class="vod-row-link" href="/vods/v/?id=${v.id}" target="_blank" rel="noopener">
             <div class="vod-row-thumb">
-              ${v.thumb ? `<img src="${v.thumb}" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
+              ${v.thumb ? `<img src="${v.thumb}?v=2" alt="" onerror="this.style.display='none'" loading="lazy">` : channel.toUpperCase()[0]}
             </div>
             <div class="vod-row-info">
               ${v.title ? `<div class="vod-row-title">${esc(v.title)}</div>` : ''}
@@ -1599,7 +1599,7 @@ async function loadMyVods(channel) {
             <div class="reel-crop-layout">
               <div class="reel-video-wrap" id="rvwrap-${v.id}">
                 <video class="reel-video" id="rvid-${v.id}" preload="metadata" muted playsinline
-                  ${v.thumb ? `poster="${esc(v.thumb)}"` : ''}>
+                  ${v.thumb ? `poster="${esc(v.thumb)+'?v=2'}"` : ''}>
                   <source src="${esc(vidSrc)}" type="video/mp4">
                 </video>
                 <canvas class="reel-crop-canvas" id="rcanvas-${v.id}"></canvas>

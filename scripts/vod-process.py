@@ -8,7 +8,7 @@ Variables de entorno provistas por MediaMTX (v1.17+):
   MTX_SEGMENT_PATH     — ruta del archivo grabado
   MTX_SEGMENT_DURATION — duración del segmento en segundos
 """
-import os, sys, subprocess, logging
+import os, re, sys, subprocess, logging
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -124,21 +124,50 @@ def get_duration(filepath: str) -> int:
         return 0
 
 
+# ── Recorte de barras negras (copia de scripts/thumb_crop.py; este archivo se despliega suelto) ──
+_CROP_RE = re.compile(r"crop=(\d+):(\d+):(\d+):(\d+)")
+
+
+def _detect_crop(src: str, seek: int = 0):
+    """(w, h, x, y) si hay barras negras ARRIBA/ABAJO que valga la pena recortar; si no, None."""
+    try:
+        pr = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+                             "-of", "csv=p=0:s=x", src], capture_output=True, text=True, timeout=20)
+        W, H = (int(v) for v in pr.stdout.strip().splitlines()[0].split("x")[:2])
+        cmd = ["ffmpeg", "-hide_banner", "-nostats"] + (["-ss", str(seek)] if seek else []) + \
+              ["-i", src, "-vf", "fps=1,cropdetect=limit=24:round=2:reset=0", "-frames:v", "5", "-f", "null", "-"]
+        found = _CROP_RE.findall(subprocess.run(cmd, capture_output=True, text=True, timeout=60).stderr)
+        if not found:
+            return None
+        h, y = int(found[-1][1]), int(found[-1][3])
+        if H - h < 0.03 * H or h < 0.55 * H:
+            return None
+        return W, h, 0, y
+    except Exception:
+        return None
+
+
+def _crop_vf(crop) -> str:
+    return f"crop={crop[0]}:{crop[1]}:{crop[2]}:{crop[3]}," if crop else ""
+
+
 def _seek_point(duration: int) -> int:
     """Punto de inicio para thumbnail y preview: 5% de la duración, mínimo 60s, máximo 300s."""
     return max(60, min(300, int(duration * 0.05))) if duration > 0 else 60
 
 
 def generate_thumbnail(filepath: Path, duration: int) -> Path | None:
-    """Extrae un frame del video como thumbnail JPEG. Retorna el path o None."""
+    """Extrae un frame como miniatura JPEG 1280x720 (16:9), sin barras negras. Retorna el path o None."""
     thumb_path = filepath.with_suffix(".jpg")
     seek = _seek_point(duration)
     try:
+        crop = _detect_crop(str(filepath), seek)
+        vf = f"{_crop_vf(crop)}scale=1280:720:force_original_aspect_ratio=increase:flags=lanczos,crop=1280:720"
         subprocess.run(
             ["ffmpeg", "-y", "-ss", str(seek), "-i", str(filepath),
-             "-vframes", "1", "-q:v", "3", "-vf", "scale=640:-1",
+             "-vframes", "1", "-q:v", "2", "-vf", vf,
              str(thumb_path)],
-            capture_output=True, timeout=60,
+            capture_output=True, timeout=90,
         )
         if thumb_path.exists():
             return thumb_path
@@ -195,9 +224,9 @@ def generate_preview(filepath: Path, duration: int) -> Path | None:
             ["ffmpeg", "-y", "-ss", str(seek), "-i", str(filepath),
              "-t", "4",
              "-c:v", "libx264", "-profile:v", "baseline", "-level:v", "3.1",
-             "-preset", "ultrafast", "-crf", "26",
-             "-vf", "scale=1280:-2",
-             "-an",
+             "-preset", "veryfast", "-crf", "28",
+             "-vf", f"{_crop_vf(_detect_crop(str(filepath), seek))}scale=960:540:force_original_aspect_ratio=increase:flags=lanczos,crop=960:540",
+             "-an", "-movflags", "+faststart",
              str(preview_path)],
             capture_output=True, timeout=120,
         )

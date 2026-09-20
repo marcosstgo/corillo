@@ -256,9 +256,9 @@ import { version } from '../../../version.json';
       const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);
       const dur=s?(h?h+'h ':'')+m+'m':'';
       const d=v.date?new Date(v.date).toLocaleDateString('es-PR',{month:'short',day:'numeric'}):'';
-      const thumb=v.thumb?`<img src="${v.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.style.display='none'" loading="lazy">`:'';
+      const thumb=v.thumb?`<img src="${v.thumb}?v=2" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.style.display='none'" loading="lazy">`:'';
       const canHover=window.matchMedia('(hover: hover)').matches;
-      const preview=v.preview&&canHover?`<video data-preview src="${v.preview}" muted playsinline preload="none" loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px;opacity:0;transition:opacity .3s;pointer-events:none"></video>`:'';
+      const preview=v.preview&&canHover?`<video data-preview src="${v.preview}?v=2" muted playsinline preload="none" loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px;opacity:0;transition:opacity .3s;pointer-events:none"></video>`:'';
       return `<a class="cvod-card crl-player-vod-card" href="/vods/v/?id=${v.id}"><div class="cvod-thumb crl-player-vod-thumb" style="overflow:hidden">${thumb}${preview}<i class="fa-solid fa-play" style="position:relative;z-index:1"></i>${dur?`<span class="cvod-dur crl-player-vod-duration">${dur}</span>`:''}</div><div class="cvod-date crl-player-vod-date">${d}</div></a>`;
     }).join('');
     if(window.matchMedia('(hover: hover)').matches){

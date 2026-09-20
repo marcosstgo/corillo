@@ -303,11 +303,11 @@ function vodCard(vod, lead) {
   const s   = streamerOf(vod.channel);
   const dur = vod.duration ? fmtDuration(vod.duration) : '';
   const preview = _hover && vod.preview
-    ? `<video class="h2-preview" src="${vod.preview}" muted playsinline preload="none" loop></video>` : '';
+    ? `<video class="h2-preview" src="${vod.preview}?v=2" muted playsinline preload="none" loop></video>` : '';
   return `<a href="/vods/v/?id=${vod.id}" class="h2-vod${lead ? ' is-lead' : ''}">
     <div class="h2-vod-thumb">
       ${vod.thumb
-        ? `<img src="${vod.thumb}" alt="" loading="${lead ? 'eager' : 'lazy'}" onerror="this.style.display='none'">`
+        ? `<img src="${vod.thumb}?v=2" alt="" loading="${lead ? 'eager' : 'lazy'}" onerror="this.style.display='none'">`
         : `<div class="h2-vod-initial" style="background:${s.color || '#1e3a4a'}">${s.ava || s.name[0]}</div>`}
       ${preview}
       ${dur ? `<span class="h2-dur">${dur}</span>` : ''}
@@ -518,7 +518,8 @@ function showFeaturedVod(vod) {
 
   const sim = document.getElementById('simStream');
   sim.className = 'sim-stream offline' + (vod.thumb ? ' has-thumb' : '');
-  sim.style.backgroundImage = vod.thumb ? `url('${vod.thumb}')` : '';
+  sim.style.backgroundImage = vod.thumb ? `url('${vod.thumb}?v=2')` : '';
+  sim.style.animation = 'none'; void sim.offsetWidth; sim.style.animation = '';   // reinicia el zoom lento con cada VOD
   document.getElementById('simTitle').textContent = s.name.split('_')[0];
   document.getElementById('simSub').textContent = `Última transmisión · ${relativeTime(vod.date).toLowerCase()}`;
 

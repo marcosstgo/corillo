@@ -164,7 +164,7 @@ async function init() {
   const s = streamerInfo(vod.channel);
   const colorStyle = s.color ? `background:${s.color}` : 'background:var(--crl-accent)';
   const videoUrl   = `/vods/${vod.channel}/${vod.filename}`;
-  const posterAttr = vod.thumb ? `poster="${vod.thumb}"` : '';
+  const posterAttr = vod.thumb ? `poster="${vod.thumb}?v=2"` : '';
 
   const titleTxt = vod.title || `Transmisión del ${new Date(vod.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`;
   const pageTitle = `${titleTxt} — ${s.name}`;
@@ -349,7 +349,7 @@ function relCard(vod: any) {
   const s = streamerInfo(vod.channel);
   const dur = vod.duration ? fmtDuration(vod.duration) : '';
   const thumb = vod.thumb
-    ? `<img src="${vod.thumb}" alt="" loading="lazy" onerror="this.style.display='none'">`
+    ? `<img src="${vod.thumb}?v=2" alt="" loading="lazy" onerror="this.style.display='none'">`
     : `<div class="rel-card-thumb-bg" style="background:${s.color||'#1e3a4a'}"></div>`;
   return `<a href="/vods/v/?id=${vod.id}" class="rel-card">
     <div class="rel-card-thumb">${thumb}${dur ? `<span class="rel-card-dur">${dur}</span>` : ''}</div>

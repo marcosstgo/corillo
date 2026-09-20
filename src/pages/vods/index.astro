@@ -155,10 +155,10 @@ function setFilter(ch: string) {
 function thumbHtml(vod: any, s: any, lazy: boolean, previewClass = '') {
   const bg = s.color || 'var(--crl-accent)';
   const preview = (vod.preview && hasHover)
-    ? `<video src="${vod.preview}" muted playsinline preload="none" loop></video>` : '';
+    ? `<video src="${vod.preview}?v=2" muted playsinline preload="none" loop></video>` : '';
   return `<div class="va-thumb">
     <div class="va-thumb-fallback" style="background:${bg}">${(s.ava||s.name[0]).toUpperCase()}</div>
-    ${vod.thumb ? `<img src="${vod.thumb}" alt="" loading="${lazy ? 'lazy' : 'eager'}" onerror="this.style.display='none'">` : ''}
+    ${vod.thumb ? `<img src="${vod.thumb}?v=2" alt="" loading="${lazy ? 'lazy' : 'eager'}" onerror="this.style.display='none'">` : ''}
     ${preview}
     ${vod.duration ? `<span class="va-dur">${fmtDuration(vod.duration)}</span>` : ''}
   </div>`;

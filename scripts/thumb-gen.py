@@ -20,6 +20,9 @@ from pathlib import Path
 
 import httpx
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import thumb_crop as tc   # recorte de barras negras + salida 1280x720
+
 MEDIAMTX_API = os.environ.get("MEDIAMTX_API", "http://127.0.0.1:9997")
 HLS_BASE     = os.environ.get("HLS_BASE",     "http://127.0.0.1:8888")
 THUMB_DIR    = Path(os.environ.get("THUMB_DIR", "/var/www/stream/assets/thumbs"))
@@ -54,6 +57,20 @@ def get_live_keys() -> list[str]:
 
 BLACK_THRESHOLD = 18   # 0-255; frames con brillo medio < umbral se descartan
 MAX_RETRIES     = 3
+CROP_TTL        = 600  # las barras de un canal no cambian a cada rato: se re-detectan cada 10 min
+_crop_cache: dict = {}
+
+
+def crop_for(key: str, url: str):
+    now = time.time()
+    hit = _crop_cache.get(key)
+    if hit and now - hit[0] < CROP_TTL:
+        return hit[1]
+    crop = tc.detect_crop(url, frames=4, timeout=25)
+    _crop_cache[key] = (now, crop)
+    if crop:
+        log.info(f"Barras negras en {key}: recorte {crop}")
+    return crop
 RETRY_DELAY     = 6    # segundos entre reintentos cuando el frame es negro
 
 
@@ -80,15 +97,11 @@ def capture_thumb(key: str) -> bool:
 
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            r = subprocess.run(
-                ["ffmpeg", "-y", "-i", url,
-                 "-vframes", "1", "-q:v", "3", "-vf", "scale=640:-1",
-                 str(tmp)],
-                capture_output=True, timeout=20,
-            )
-            if r.returncode != 0 or not tmp.exists():
+            crop = crop_for(key, url)
+            ok = tc.make_jpeg(url, str(tmp), crop=crop, width=1280, height=720, q=2, timeout=25)
+            if not ok or not tmp.exists():
                 tmp.unlink(missing_ok=True)
-                log.warning(f"thumb failed for {key} attempt {attempt} (rc={r.returncode})")
+                log.warning(f"thumb failed for {key} attempt {attempt}")
                 break
 
             brightness = mean_brightness(tmp)
@@ -121,8 +134,8 @@ def capture_preview(key: str) -> bool:
             ["ffmpeg", "-y", "-i", url,
              "-t", "4",
              "-c:v", "libx264", "-profile:v", "baseline", "-level:v", "3.1",
-             "-preset", "ultrafast", "-crf", "32",
-             "-vf", "scale=640:-2",
+             "-preset", "ultrafast", "-crf", "29",
+             "-vf", f"{tc.crop_vf(crop_for(key, url))}scale=960:540:force_original_aspect_ratio=increase,crop=960:540",
              "-an",
              "-movflags", "+faststart",
              str(tmp)],
