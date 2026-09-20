@@ -10,115 +10,101 @@ import SiteShell from '../../../layouts/SiteShell.astro';
   <fragment slot="head">
     <meta name="theme-color" content="var(--crl-ink)" />
     <style is:global>
-      .player-wrap{background:#000;width:100%;aspect-ratio:16/9;max-height:70vh;display:flex;align-items:center;justify-content:center;position:relative}
-      .player-wrap video{width:100%;height:100%;display:block}
+      /* Disposición: reproductor + datos a la izquierda, "Más de…" en columna lateral (patrón YouTube/Twitch) */
+      .vd{display:grid;grid-template-columns:minmax(0,1fr);gap:28px;max-width:1680px;margin:0 auto;padding:22px var(--h2-gutter) 64px}
+      @media(min-width:1100px){.vd{grid-template-columns:minmax(0,1fr) 400px}}
+      @media(min-width:1500px){.vd{grid-template-columns:minmax(0,1fr) 450px}}
+      .vd-main{min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-content:start}
+      .player-wrap{position:relative;background:#000;aspect-ratio:16/9;border-radius:22px;overflow:hidden;box-shadow:0 30px 70px -30px rgb(0 0 0/.8),0 0 0 1px var(--h2-line)}
+      .player-wrap video{width:100%;height:100%;display:block;object-fit:contain}
+      .vd-title{margin:0;font:800 clamp(1.5rem,2.8vw,2.3rem)/1.08 var(--h2-display);letter-spacing:-.03em}
 
-      .meta-bar{max-width:900px;margin:0 auto;padding:20px 24px 0}
-      .meta-channel{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-      .meta-ava{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:16px;color:var(--crl-ink)}
-      .meta-name{font-family:var(--crl-display);font-size:1.5rem;letter-spacing:3px}
-      .meta-title{font-size:1.1rem;font-weight:600;margin:8px 0 4px;color:var(--crl-white);line-height:1.3}
-      .meta-stats{display:flex;align-items:center;gap:20px;font-family:var(--crl-mono);font-size:11px;color:var(--crl-muted);letter-spacing:.5px;flex-wrap:wrap}
-      .meta-stats i{color:var(--crl-accent);font-size:.65rem}
-      .meta-divider{border:none;border-top:1px solid var(--crl-border);margin:16px 0}
+      .vd-ch{display:flex;align-items:center;gap:16px;padding:14px 16px;border-radius:22px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .vd-ava{flex:none;width:58px;height:58px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font:800 1.3rem var(--h2-display);color:#fff;box-shadow:0 0 0 3px var(--h2-ink),0 0 0 5px var(--tc,var(--h2-cyan))}
+      .vd-ava img{width:100%;height:100%;object-fit:cover;display:block}
+      .vd-ch-t{flex:1;min-width:0}
+      .vd-ch-t a{display:block;color:inherit;text-decoration:none;font:800 1.25rem/1.1 var(--h2-display);letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .vd-ch-t small{display:block;margin-top:5px;color:var(--h2-mute);font:500 .9rem/1.3 var(--h2-body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+      .vd-go{flex:none;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;background:var(--h2-cyan);color:var(--h2-ink);text-decoration:none;font:700 .92rem/1 var(--h2-body);transition:box-shadow .15s}
+      .vd-go:hover{box-shadow:0 0 0 4px color-mix(in srgb,var(--h2-cyan) 35%,transparent)}
 
-      .actions{max-width:900px;margin:0 auto;padding:0 24px 16px;display:flex;gap:10px;flex-wrap:wrap}
-      .action-btn{font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;border-radius:6px;border:1px solid var(--crl-border);background:transparent;color:var(--crl-muted);cursor:pointer;transition:.15s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
-      .action-btn:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
-      .action-btn.primary{border-color:rgba(var(--crl-accent-rgb),.4);color:var(--crl-accent)}
-      .action-btn.primary:hover{background:rgba(var(--crl-accent-rgb),.08)}
+      .vd-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+      .vd-stat{--tc:var(--h2-bone);display:flex;align-items:center;gap:12px;padding:14px;border-radius:20px;background:color-mix(in srgb,var(--tc) 9%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tc) 22%,transparent);min-width:0}
+      .vd-tile{flex:none;width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:color-mix(in srgb,var(--tc) 20%,transparent);color:var(--tc);font-size:1rem}
+      .vd-stat small{display:block;margin-bottom:5px;color:var(--h2-mute);font:600 .76rem/1 var(--h2-body)}
+      .vd-stat b{display:block;font:800 1rem/1.15 var(--h2-body);overflow:hidden;text-overflow:ellipsis}
+      @media(max-width:720px){.vd-stats{grid-template-columns:1fr 1fr}.vd-stat:first-child{grid-column:1/-1}}
 
-      .clip-panel{max-width:900px;margin:0 auto 4px;padding:0 24px;display:none}
+      .vd-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+      .vd-btn{--tc:var(--h2-bone);display:flex;align-items:center;gap:10px;height:52px;padding:0 16px 0 8px;border:0;border-radius:18px;background:color-mix(in srgb,var(--h2-bone) 9%,transparent);color:var(--h2-bone);font:700 .95rem/1 var(--h2-body);text-decoration:none;cursor:pointer;transition:background .15s,transform .15s}
+      .vd-btn .vd-tile{width:36px;height:36px;border-radius:12px}
+      .vd-btn:hover{background:color-mix(in srgb,var(--h2-bone) 16%,transparent);transform:translateY(-1px)}
+      .vd-btn:active{transform:scale(.98)}
+
+      .action-btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;border-radius:999px;border:0;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);color:var(--h2-bone);font:700 .9rem/1 var(--h2-body);text-decoration:none;cursor:pointer}
+      .action-btn.primary{background:var(--h2-cyan);color:var(--h2-ink)}
+
+      /* recortar clip */
+      .clip-panel{display:none}
       .clip-panel.open{display:block}
-      .clip-panel-inner{background:var(--crl-surface);border:1px solid var(--crl-border);border-radius:10px;padding:16px 20px;display:flex;flex-direction:column;gap:14px}
-      .clip-panel-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-      .clip-field{display:flex;align-items:center;gap:8px;flex:1;min-width:200px}
-      .clip-field label{font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted);white-space:nowrap;flex-shrink:0;width:40px}
-      .clip-time-input{font-family:var(--crl-mono);font-size:13px;background:var(--crl-bg,#06143f);border:1px solid var(--crl-border);color:var(--crl-white);border-radius:6px;padding:6px 10px;width:90px;text-align:center;outline:none;transition:.15s}
-      .clip-time-input:focus{border-color:rgba(var(--crl-accent-rgb),.6)}
-      .clip-mark-btn{font-family:var(--crl-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:5px;border:1px solid var(--crl-border);background:transparent;color:var(--crl-muted);cursor:pointer;transition:.15s;white-space:nowrap}
-      .clip-mark-btn:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
-      .clip-dur-label{font-family:var(--crl-mono);font-size:10px;letter-spacing:1px;color:var(--crl-muted);margin-left:4px}
-      .clip-dur-label span{color:var(--crl-accent)}
+      .clip-panel-inner{display:grid;gap:16px;padding:18px 20px;border-radius:22px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .clip-panel-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+      .clip-field{display:flex;align-items:center;gap:10px;flex:1;min-width:230px}
+      .clip-field label{flex:none;width:44px;color:var(--h2-mute);font:700 .85rem/1 var(--h2-body)}
+      .clip-time-input{width:100px;padding:10px 12px;border-radius:12px;border:1px solid var(--h2-line);background:var(--h2-ink);color:var(--h2-bone);font:600 .95rem 'Space Mono',ui-monospace,monospace}
+      .clip-time-input:focus{outline:none;border-color:var(--h2-cyan)}
+      .clip-mark-btn,.clip-cancel-btn{padding:10px 14px;border-radius:999px;border:0;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);color:var(--h2-bone);font:700 .82rem/1 var(--h2-body);cursor:pointer}
+      .clip-mark-btn:hover,.clip-cancel-btn:hover{background:color-mix(in srgb,var(--h2-bone) 18%,transparent)}
+      .clip-dur-label{color:var(--h2-mute);font:600 .9rem var(--h2-body)}
+      .clip-dur-label span{color:var(--h2-cyan);font-weight:800}
       .clip-panel-actions{display:flex;gap:8px;justify-content:flex-end}
-      .clip-cancel-btn{font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;border-radius:6px;border:1px solid var(--crl-border);background:transparent;color:var(--crl-muted);cursor:pointer;transition:.15s}
-      .clip-cancel-btn:hover{border-color:var(--crl-border-h);color:var(--crl-white)}
-      .clip-gen-btn{font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 18px;border-radius:6px;border:1px solid rgba(var(--crl-accent-rgb),.5);background:rgba(var(--crl-accent-rgb),.08);color:var(--crl-accent);cursor:pointer;transition:.15s}
-      .clip-gen-btn:hover{background:rgba(var(--crl-accent-rgb),.15);border-color:var(--crl-accent)}
+      .clip-gen-btn{padding:11px 20px;border-radius:999px;border:0;background:var(--h2-cyan);color:var(--h2-ink);font:800 .9rem/1 var(--h2-body);cursor:pointer}
       .clip-gen-btn:disabled{opacity:.5;cursor:not-allowed}
 
-      .unmute-btn{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:10;font-family:var(--crl-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;border-radius:8px;border:1px solid rgba(var(--crl-accent-rgb),.5);background:rgba(6,20,63,.85);color:var(--crl-accent);cursor:pointer;display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);transition:.15s;white-space:nowrap}
-      .unmute-btn:hover{background:rgba(var(--crl-accent-rgb),.1);border-color:var(--crl-accent)}
+      .unmute-btn{position:absolute;bottom:64px;left:50%;transform:translateX(-50%);z-index:10;display:inline-flex;align-items:center;gap:9px;padding:11px 18px;border:0;border-radius:999px;background:var(--h2-bone);color:var(--h2-ink);font:700 .88rem/1 var(--h2-body);cursor:pointer;box-shadow:0 10px 30px rgb(0 0 0/.4)}
       .unmute-btn.hidden{display:none}
 
-      .not-found{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px;text-align:center;padding:40px}
-      .not-found-icon{font-size:3rem;color:var(--crl-muted);margin-bottom:8px}
-      .not-found h2{font-family:var(--crl-display);font-size:2.5rem;letter-spacing:4px;color:rgba(232,246,255,.2)}
-      .not-found p{font-family:var(--crl-mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--crl-muted)}
+      .not-found{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:50vh;gap:14px;text-align:center;padding:40px}
+      .not-found-icon{font-size:3rem;color:var(--h2-mute)}
+      .not-found h2{margin:0;font:800 2.2rem/1 var(--h2-display);letter-spacing:-.03em}
+      .not-found p{margin:0;color:var(--h2-mute);font:500 1rem var(--h2-body)}
 
-      /* ── Related sections ── */
-      .related-wrap{max-width:900px;margin:0 auto;padding:0 24px 48px;display:flex;flex-direction:column;gap:36px}
-      .rel-sec{display:flex;flex-direction:column;gap:16px}
-      .rel-hd{display:flex;align-items:center;gap:12px}
-      .rel-title{font-family:var(--crl-display);font-size:22px;letter-spacing:3px;white-space:nowrap;flex-shrink:0}
-      .rel-count{font-family:var(--crl-mono);font-size:11px;letter-spacing:1.5px;color:var(--crl-muted);flex-shrink:0}
-      .rel-rule{flex:1;height:1px;background:var(--crl-border)}
-      .rel-more{font-family:var(--crl-mono);font-size:10px;letter-spacing:1px;color:var(--crl-accent);white-space:nowrap;text-decoration:none;flex-shrink:0;transition:opacity .15s}
-      .rel-more:hover{opacity:.7}
-      .rel-rail{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding-bottom:6px;scroll-snap-type:x mandatory}
-      .rel-rail::-webkit-scrollbar{display:none}
-
-      /* ── Related card ── */
-      .rel-card{
-        flex:0 0 220px;scroll-snap-align:start;
-        border-radius:12px;overflow:hidden;
-        background:var(--crl-surface);border:1px solid var(--crl-border);
-        text-decoration:none;color:inherit;
-        transition:border-color .25s cubic-bezier(.4,0,.2,1),transform .25s cubic-bezier(.4,0,.2,1),box-shadow .25s;
-        display:flex;flex-direction:column;
-      }
-      .rel-card:hover{
-        border-color:var(--crl-border-h);
-        transform:translateY(-5px) scale(1.01);
-        box-shadow:0 20px 48px rgba(0,0,0,.5),0 0 0 1px rgba(var(--crl-accent-rgb),.25),0 0 32px rgba(var(--crl-accent-rgb),.1);
-      }
-      .rel-card:has(.rel-live-pill){border-color:rgba(var(--crl-hot-rgb,206,17,38),.25)}
-      .rel-card:has(.rel-live-pill):hover{
-        border-color:rgba(var(--crl-hot-rgb,206,17,38),.45);
-        box-shadow:0 20px 48px rgba(0,0,0,.5),0 0 0 1px rgba(206,17,38,.3),0 0 32px rgba(206,17,38,.12);
-      }
-      .rel-card-thumb{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#050a10,#0a1820);overflow:hidden;flex-shrink:0}
-      .rel-card-thumb::after{
-        content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
-        background:linear-gradient(135deg,rgba(var(--crl-accent-rgb),.13) 0%,transparent 45%,rgba(232,200,74,.07) 100%);
-        transition:opacity .25s;
-      }
-      .rel-card:hover .rel-card-thumb::after{opacity:1.5}
-      .rel-card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
-      .rel-card-dur{position:absolute;bottom:5px;right:5px;z-index:3;font-family:var(--crl-mono);font-size:9px;font-weight:700;background:rgba(0,0,0,.82);color:#fff;padding:2px 6px;border-radius:3px}
-      .rel-live-pill{
-        position:absolute;top:7px;left:7px;z-index:3;
-        font-family:var(--crl-mono);font-size:9px;font-weight:700;letter-spacing:2px;
-        background:var(--crl-hot);color:#fff;
-        padding:3px 8px;border-radius:4px;
-        display:flex;align-items:center;gap:5px;
-        box-shadow:0 0 12px rgba(206,17,38,.5);
-      }
-      .rel-live-pill::before{content:'';width:5px;height:5px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
-      .rel-viewers{position:absolute;top:7px;right:7px;z-index:3;font-family:var(--crl-mono);font-size:9px;font-weight:700;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);color:#fff;padding:2px 6px;border-radius:3px}
-      .rel-card-body{padding:11px 12px 13px;display:flex;gap:9px;align-items:flex-start}
-      .rel-card-ava{width:32px;height:32px;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--crl-display);font-size:15px;color:#000;overflow:hidden}
-      .rel-card-ava img{width:100%;height:100%;object-fit:cover;border-radius:5px}
-      .rel-card-ava.is-live{box-shadow:0 0 0 2px var(--crl-surface),0 0 0 3px var(--crl-hot),0 0 14px rgba(206,17,38,.4)}
-      .rel-card-info{min-width:0;flex:1}
-      .rel-card-name{font-family:var(--crl-display);font-size:17px;letter-spacing:1.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;margin-bottom:3px}
-      .rel-card-sub{font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      .rel-card-thumb-bg{position:absolute;inset:0;opacity:.85;mix-blend-mode:overlay;z-index:0}
+      /* ── columna lateral: más contenido ── */
+      .vd-side{display:grid;grid-template-columns:minmax(0,1fr);gap:28px;align-content:start;min-width:0}
+      .rel-sec{display:grid;gap:10px}
+      .rel-hd{display:flex;align-items:baseline;gap:10px}
+      .rel-title{font:800 1.3rem/1 var(--h2-display);letter-spacing:-.025em}
+      .rel-count{color:var(--h2-mute);font:500 .85rem var(--h2-body)}
+      .rel-rule{display:none}
+      .rel-more{margin-left:auto;color:var(--h2-cyan);font:700 .85rem var(--h2-body);text-decoration:none;white-space:nowrap}
+      .rel-more:hover{text-decoration:underline}
+      .rel-rail{display:grid;gap:4px}
+      .rel-card{display:grid;grid-template-columns:168px minmax(0,1fr);gap:14px;align-items:center;padding:8px;margin:0 -8px;border-radius:18px;color:inherit;text-decoration:none;transition:background .15s}
+      .rel-card:hover{background:color-mix(in srgb,var(--h2-bone) 8%,transparent)}
+      .rel-card-thumb{position:relative;aspect-ratio:16/9;border-radius:13px;overflow:hidden;background:var(--h2-panel)}
+      .rel-card-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .35s}
+      .rel-card:hover .rel-card-thumb img{transform:scale(1.05)}
+      .rel-card-thumb-bg{position:absolute;inset:0;opacity:.8}
+      .rel-card-dur{position:absolute;right:6px;bottom:6px;padding:3px 7px;border-radius:7px;background:rgb(0 0 0/.75);color:#fff;font:700 .72rem/1 var(--h2-body);font-variant-numeric:tabular-nums}
+      .rel-live-pill{position:absolute;top:7px;left:7px;display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;background:var(--h2-live);color:#fff;font:800 .68rem/1 var(--h2-body)}
+      .rel-live-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+      .rel-viewers{position:absolute;top:7px;right:7px;padding:4px 8px;border-radius:999px;background:rgb(0 0 0/.65);color:#fff;font:700 .7rem/1 var(--h2-body)}
+      .rel-card-body{min-width:0;display:block;padding:0}
+      .rel-card-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:700 1rem/1.2 var(--h2-display);letter-spacing:-.015em}
+      .rel-card-sub{margin-top:6px;color:var(--h2-mute);font:500 .84rem/1.3 var(--h2-body)}
+      @media(max-width:560px){.rel-card{grid-template-columns:132px minmax(0,1fr);gap:12px}}
     </style>
   </fragment>
 
-<div id="content"></div>
-<div id="related"></div>
+<div class="vd">
+  <div class="vd-main" id="content">
+    <div class="sk sk-thumb" style="border-radius:22px" aria-hidden="true"></div>
+    <span class="sk sk-line lg" style="width:62%" aria-hidden="true"></span>
+    <span class="sk sk-line" style="width:100%;height:78px;border-radius:22px" aria-hidden="true"></span>
+    <span class="sk-label" role="status">Cargando transmisión…</span>
+  </div>
+  <aside class="vd-side" id="related" aria-label="Más contenido"></aside>
+</div>
 
 <script>
 const PB = 'https://pb.corillo.live';
@@ -180,7 +166,8 @@ async function init() {
   const videoUrl   = `/vods/${vod.channel}/${vod.filename}`;
   const posterAttr = vod.thumb ? `poster="${vod.thumb}"` : '';
 
-  const pageTitle = vod.title ? `${vod.title} — ${s.name}` : s.name;
+  const titleTxt = vod.title || `Transmisión del ${new Date(vod.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`;
+  const pageTitle = `${titleTxt} — ${s.name}`;
   document.title = `${pageTitle} — VOD — CORILLO`;
 
   document.getElementById('content')!.innerHTML = `
@@ -188,24 +175,21 @@ async function init() {
       <video id="vodVideo" controls autoplay muted playsinline preload="metadata" src="${videoUrl}" ${posterAttr}></video>
       <button class="unmute-btn" id="unmuteBtn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
     </div>
-    <div class="meta-bar">
-      <div class="meta-channel">
-        <div class="meta-ava" style="${colorStyle}">${s.avatar_url ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="">` : (s.name||'?')[0].toUpperCase()}</div>
-        <a href="/${vod.channel}/" class="meta-name" style="color:${s.color||'var(--crl-white)'};text-decoration:none">${s.name}</a>
-      </div>
-      ${vod.title ? `<div class="meta-title">${vod.title}</div>` : ''}
-      <div class="meta-stats">
-        <span><i class="fa-regular fa-calendar"></i> ${fmtDate(vod.date)}</span>
-        <span><i class="fa-solid fa-clock"></i> ${fmtDuration(vod.duration)}</span>
-        <span><i class="fa-solid fa-weight-hanging"></i> ${fmtSize(vod.size)}</span>
-      </div>
-      <hr class="meta-divider">
+    <h1 class="vd-title">${titleTxt}</h1>
+    <div class="vd-ch" style="--tc:${s.color || 'var(--h2-cyan)'}">
+      <div class="vd-ava" style="${colorStyle}">${s.avatar_url ? `<img src="${s.avatar_url}" alt="">` : (s.name||'?')[0].toUpperCase()}</div>
+      <div class="vd-ch-t"><a href="/${vod.channel}/">${s.name}</a>${s.sub ? `<small>${s.sub}</small>` : ''}</div>
+      <a href="/${vod.channel}/" class="vd-go"><i class="fa-solid fa-tower-broadcast"></i> Ver canal</a>
     </div>
-    <div class="actions">
-      <a href="/${vod.channel}/" class="action-btn"><i class="fa-solid fa-tower-broadcast"></i> Canal de ${s.name}</a>
-      <a href="/vods/?ch=${vod.channel}" class="action-btn"><i class="fa-solid fa-film"></i> Más VODs de ${s.name}</a>
-      <button class="action-btn" id="copyLinkBtn"><i class="fa-solid fa-link"></i> Copiar enlace</button>
-      <button class="action-btn" id="clipVodBtn"><i class="fa-solid fa-scissors"></i> Descargar clip</button>
+    <div class="vd-stats">
+      <div class="vd-stat" style="--tc:var(--h2-mag)"><span class="vd-tile"><i class="fa-regular fa-calendar"></i></span><div><small>Fecha</small><b>${new Date(vod.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' })}</b></div></div>
+      <div class="vd-stat" style="--tc:var(--crl-confirm)"><span class="vd-tile"><i class="fa-solid fa-clock"></i></span><div><small>Duración</small><b>${fmtDuration(vod.duration)}</b></div></div>
+      <div class="vd-stat" style="--tc:var(--h2-live)"><span class="vd-tile"><i class="fa-solid fa-weight-hanging"></i></span><div><small>Tamaño</small><b>${fmtSize(vod.size)}</b></div></div>
+    </div>
+    <div class="vd-actions">
+      <a href="/vods/?ch=${vod.channel}" class="vd-btn" style="--tc:var(--crl-confirm)"><span class="vd-tile"><i class="fa-solid fa-film"></i></span>Más de ${s.name}</a>
+      <button class="vd-btn" id="copyLinkBtn" style="--tc:var(--h2-mag)"><span class="vd-tile"><i class="fa-solid fa-link"></i></span>Copiar enlace</button>
+      <button class="vd-btn" id="clipVodBtn" style="--tc:var(--h2-cyan)"><span class="vd-tile"><i class="fa-solid fa-scissors"></i></span>Descargar clip</button>
     </div>
     <div class="clip-panel" id="clipPanel">
       <div class="clip-panel-inner">
@@ -232,6 +216,10 @@ async function init() {
   const video = document.getElementById('vodVideo') as HTMLVideoElement;
   const unmuteBtn = document.getElementById('unmuteBtn')!;
 
+  // ?t=SEGUNDOS — permite enlazar un momento exacto (lo usan los Reels: "Ver la transmisión completa")
+  const t0 = Number(new URLSearchParams(location.search).get('t'));
+  if (t0 > 0) video.addEventListener('loadedmetadata', () => { video.currentTime = Math.min(t0, video.duration || t0); }, { once: true });
+
   // Restore saved mute state
   if (localStorage.getItem('corillo_muted') === 'false') {
     video.muted = false;
@@ -248,8 +236,9 @@ async function init() {
   document.getElementById('copyLinkBtn')!.addEventListener('click', () => {
     navigator.clipboard.writeText(location.href).then(() => {
       const btn = document.getElementById('copyLinkBtn')!;
-      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado';
-      setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-link"></i> Copiar enlace'; }, 2000);
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<span class="vd-tile"><i class="fa-solid fa-check"></i></span>¡Copiado!';
+      setTimeout(() => { btn.innerHTML = orig; }, 2000);
     });
   });
 
@@ -355,6 +344,7 @@ function relativeTime(dateStr: string) {
   return `Hace ${Math.floor(days / 7)} sem`;
 }
 
+const vodName = (v: any) => v.title || `Transmisión del ${new Date(v.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`;
 function relCard(vod: any) {
   const s = streamerInfo(vod.channel);
   const dur = vod.duration ? fmtDuration(vod.duration) : '';
@@ -364,11 +354,8 @@ function relCard(vod: any) {
   return `<a href="/vods/v/?id=${vod.id}" class="rel-card">
     <div class="rel-card-thumb">${thumb}${dur ? `<span class="rel-card-dur">${dur}</span>` : ''}</div>
     <div class="rel-card-body">
-      <div class="rel-card-ava" style="background:${s.color||'#1e3a4a'}">${s.avatar_url ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:3px" alt="">` : (s.ava||s.name[0]).toUpperCase()}</div>
-      <div class="rel-card-info">
-        <div class="rel-card-name">${s.name}</div>
-        <div class="rel-card-sub">${relativeTime(vod.date)}</div>
-      </div>
+      <div class="rel-card-t">${vodName(vod)}</div>
+      <div class="rel-card-sub">${s.name} · ${relativeTime(vod.date)}</div>
     </div>
   </a>`;
 }
@@ -378,15 +365,12 @@ function liveCard(s: any, viewers: number) {
   return `<a href="/${s.key}/" class="rel-card">
     <div class="rel-card-thumb">
       <img src="/assets/thumbs/${s.key}.jpg?t=${t}" alt="" loading="lazy" onerror="this.style.display='none'">
-      <span class="rel-live-pill">LIVE</span>
-      ${viewers > 0 ? `<span class="rel-viewers">${viewers}</span>` : ''}
+      <span class="rel-live-pill">EN VIVO</span>
+      ${viewers > 0 ? `<span class="rel-viewers"><i class="fa-solid fa-eye"></i> ${viewers}</span>` : ''}
     </div>
     <div class="rel-card-body">
-      <div class="rel-card-ava is-live" style="background:${s.color||'#1e3a4a'}">${s.avatar_url ? `<img src="${s.avatar_url}" style="width:100%;height:100%;object-fit:cover;border-radius:3px" alt="">` : (s.ava||s.name[0]).toUpperCase()}</div>
-      <div class="rel-card-info">
-        <div class="rel-card-name">${s.name}</div>
-        <div class="rel-card-sub">${viewers > 0 ? viewers + ' viewers' : 'En vivo'}</div>
-      </div>
+      <div class="rel-card-t">${s.stream_title || s.sub || s.name}</div>
+      <div class="rel-card-sub">${s.name} · ${viewers > 0 ? viewers + ' viendo' : 'en vivo ahora'}</div>
     </div>
   </a>`;
 }
@@ -420,27 +404,27 @@ async function loadRelated(channel: string, currentId: string) {
     }));
     if (liveStreamers.length) {
       const cards = liveStreamers.map((s: any) => liveCard(s, s._viewers)).join('');
-      sections.push(relSection('EN VIVO AHORA', `${liveStreamers.length} streamers`, '/multiplayer/', 'Multiplayer →', cards));
+      sections.push(relSection('En vivo ahora', `${liveStreamers.length} streamers`, '/multiplayer/', 'Multiplayer', cards));
     }
   } catch {}
 
   // 2. Más del mismo canal
   try {
     const enc = encodeURIComponent(`channel='${channel}'&&id!='${currentId}'`);
-    const r = await fetch(`${PB}/api/collections/vods/records?filter=${enc}&sort=-date&perPage=8&fields=id,channel,filename,thumb,duration,date`);
+    const r = await fetch(`${PB}/api/collections/vods/records?filter=${enc}&sort=-date&perPage=8&fields=id,channel,filename,thumb,duration,date,title`);
     const j = await r.json();
     const vods = j.items || [];
     if (vods.length) {
       const s = streamerInfo(channel);
       const cards = vods.map(relCard).join('');
-      sections.push(relSection(`Más de ${s.name}`, `${vods.length} VODs`, `/vods/?ch=${channel}`, 'Ver todos →', cards));
+      sections.push(relSection(`Más de ${s.name}`, `${vods.length} VODs`, `/vods/?ch=${channel}`, 'Ver todos', cards));
     }
   } catch {}
 
   // 3. De otros canales
   try {
     const enc = encodeURIComponent(`channel!='${channel}'`);
-    const r = await fetch(`${PB}/api/collections/vods/records?filter=${enc}&sort=-date&perPage=10&fields=id,channel,filename,thumb,duration,date`);
+    const r = await fetch(`${PB}/api/collections/vods/records?filter=${enc}&sort=-date&perPage=10&fields=id,channel,filename,thumb,duration,date,title`);
     const j = await r.json();
     const vods = j.items || [];
     // one per channel, max 6
@@ -448,13 +432,12 @@ async function loadRelated(channel: string, currentId: string) {
     const unique = vods.filter((v: any) => { if (seen.has(v.channel)) return false; seen.add(v.channel); return true; }).slice(0, 6);
     if (unique.length) {
       const cards = unique.map(relCard).join('');
-      sections.push(relSection('De otros canales', '', '/vods/', 'Ver todos →', cards));
+      sections.push(relSection('De otros canales', '', '/vods/', 'Ver todos', cards));
     }
   } catch {}
 
   if (sections.length) {
-    document.getElementById('related')!.innerHTML =
-      `<div class="related-wrap">${sections.join('')}</div>`;
+    document.getElementById('related')!.innerHTML = sections.join('');
   }
 }
 

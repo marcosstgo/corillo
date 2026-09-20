@@ -1,0 +1,159 @@
+/* ============================================================================
+   REELS 2 — visor vertical inmersivo (sep-2026). Solo la página /reels/.
+   Ideas tomadas de YouTube Shorts / TikTok: feed con imán vertical, un video activo,
+   barra de progreso con scrub, pausa al tocar, flechas y teclado en escritorio,
+   enlace directo por reel. Propio de Corillo: los directos aparecen primero en el feed y
+   cada clip lleva a la transmisión completa en el minuto exacto.
+   Usa los tokens --crl-* de corillo.css (paleta Cobalto).
+   ============================================================================ */
+:root { --rl-top: 58px; --rl-ease: cubic-bezier(.2, .75, .2, 1); --rl-glass: color-mix(in srgb, var(--crl-white) 12%, transparent); }
+body { background: var(--crl-ink); }
+
+/* ── barra superior ───────────────────────────────────────────────────── */
+.rl-top {
+  position: fixed; z-index: 60; inset: 0 0 auto 0; height: var(--rl-top);
+  display: flex; align-items: center; gap: 10px; padding: 0 12px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--crl-ink) 92%, transparent), color-mix(in srgb, var(--crl-ink) 0%, transparent));
+}
+.rl-icon, .rl-back {
+  flex: none; width: 42px; height: 42px; display: grid; place-items: center; border: 0; border-radius: 50%;
+  background: var(--rl-glass); color: var(--crl-white); font-size: 1rem; text-decoration: none; cursor: pointer;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .15s, transform .15s;
+}
+.rl-icon:hover, .rl-back:hover { background: color-mix(in srgb, var(--crl-white) 22%, transparent); }
+.rl-icon:active, .rl-back:active { transform: scale(.92); }
+.rl-logo { display: none; align-items: center; padding: 0 6px; }
+.rl-logo svg { height: 26px; width: auto; display: block; }
+.rl-filters { flex: 1; min-width: 0; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 4px 2px; }
+.rl-filters::-webkit-scrollbar { display: none; }
+.rl-chip {
+  flex: none; display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border: 0; border-radius: 999px;
+  background: var(--rl-glass); color: var(--crl-white); font: 600 .9rem/1 var(--crl-body); cursor: pointer; white-space: nowrap;
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .15s, color .15s;
+}
+.rl-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--crl-accent)); }
+.rl-chip:hover { background: color-mix(in srgb, var(--crl-white) 22%, transparent); }
+.rl-chip[aria-pressed="true"] { background: var(--crl-white); color: var(--crl-ink); }
+.rl-top-r { display: flex; gap: 8px; }
+
+/* ── feed ─────────────────────────────────────────────────────────────── */
+.rl-feed {
+  position: fixed; inset: 0; overflow-y: auto; overscroll-behavior: contain; outline: none;
+  scroll-snap-type: y mandatory; scrollbar-width: none;
+}
+.rl-feed::-webkit-scrollbar { display: none; }
+.rl-item {
+  position: relative; height: 100%; height: 100dvh; scroll-snap-align: start; scroll-snap-stop: always;
+  display: flex; align-items: center; justify-content: center; gap: 18px;
+  padding: calc(var(--rl-top) + 4px) 0 max(16px, env(safe-area-inset-bottom)); overflow: hidden;
+}
+.rl-ambient {
+  position: absolute; inset: -12%; background-size: cover; background-position: center; opacity: 0; pointer-events: none;
+  filter: blur(70px) saturate(1.4) brightness(.5); transform: scale(1.1); transition: opacity .5s;
+  background-color: color-mix(in srgb, var(--crl-accent) 25%, var(--crl-ink));
+}
+.rl-item.is-active .rl-ambient { opacity: 1; }
+
+/* escenario 9:16 */
+.rl-stage {
+  position: relative; flex: none; height: 100%; aspect-ratio: 9 / 16; max-width: 100%; border-radius: 26px; overflow: hidden;
+  background: #000; box-shadow: 0 30px 80px -20px rgb(0 0 0 / .7), 0 0 0 1px var(--rl-glass);
+}
+.rl-video, .rl-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background-size: cover; background-position: center; }
+.rl-video { opacity: 0; transition: opacity .25s; }
+.rl-item.is-playing .rl-video { opacity: 1; }
+.rl-shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgb(0 0 0 / .78) 0%, rgb(0 0 0 / .25) 34%, transparent 58%), linear-gradient(to bottom, rgb(0 0 0 / .35), transparent 22%); }
+.rl-tap { position: absolute; inset: 0; z-index: 2; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.rl-flash {
+  position: absolute; z-index: 3; top: 50%; left: 50%; width: 84px; height: 84px; margin: -42px 0 0 -42px; display: grid; place-items: center; pointer-events: none;
+  border-radius: 50%; background: rgb(0 0 0 / .5); color: #fff; font-size: 1.6rem; opacity: 0; transform: scale(.7);
+}
+.rl-flash.go { animation: rl-flash .55s var(--rl-ease); }
+@keyframes rl-flash { 0% { opacity: 0; transform: scale(.7); } 25% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.15); } }
+.rl-buffer { position: absolute; z-index: 3; top: 50%; left: 50%; width: 38px; height: 38px; margin: -19px 0 0 -19px; border-radius: 50%; border: 3px solid rgb(255 255 255 / .25); border-top-color: #fff; animation: rl-spin .7s linear infinite; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.rl-item.is-loading .rl-buffer { opacity: 1; }
+@keyframes rl-spin { to { transform: rotate(360deg); } }
+
+/* información sobre el video */
+.rl-info { position: absolute; z-index: 4; left: 18px; right: 84px; bottom: 26px; display: grid; gap: 10px; color: #fff; }
+.rl-ch { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; min-width: 0; }
+.rl-ava { flex: none; width: 42px; height: 42px; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: var(--c, var(--crl-panel)); font: 800 1rem var(--crl-display); box-shadow: 0 0 0 2px rgb(255 255 255 / .85); }
+.rl-ava img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.rl-ch b { display: block; font: 800 1.05rem/1.1 var(--crl-display); letter-spacing: -.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rl-ch small { display: block; margin-top: 2px; opacity: .8; font: 500 .8rem/1 var(--crl-body); }
+.rl-cap { margin: 0; font: 500 .95rem/1.35 var(--crl-body); text-shadow: 0 1px 8px rgb(0 0 0 / .6); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.rl-full {
+  justify-self: start; display: inline-flex; align-items: center; gap: 9px; height: 40px; padding: 0 16px 0 14px; border-radius: 999px;
+  background: var(--crl-white); color: var(--crl-ink); font: 700 .88rem/1 var(--crl-body); text-decoration: none; transition: transform .15s, box-shadow .15s;
+}
+.rl-full:hover { box-shadow: 0 0 0 4px color-mix(in srgb, var(--crl-white) 30%, transparent); }
+.rl-full:active { transform: scale(.97); }
+.rl-full.is-live { background: var(--crl-live); color: #fff; }
+.rl-full i { font-size: .8rem; }
+
+/* progreso con scrub */
+.rl-progress { position: absolute; z-index: 5; left: 0; right: 0; bottom: 0; height: 18px; display: flex; align-items: flex-end; cursor: pointer; touch-action: none; }
+.rl-progress::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: rgb(255 255 255 / .28); transition: height .15s; }
+.rl-progress i { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--crl-accent); transform-origin: left; transform: scaleX(0); transition: height .15s; }
+.rl-progress:hover::before, .rl-progress:hover i, .rl-progress.drag::before, .rl-progress.drag i { height: 6px; }
+
+/* directo dentro del feed */
+.rl-live-pill { position: absolute; z-index: 4; top: 16px; left: 16px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--crl-live); color: #fff; font: 800 .8rem/1 var(--crl-body); letter-spacing: .02em; }
+.rl-live-pill::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: rl-pulse 1.4s ease-in-out infinite; }
+@keyframes rl-pulse { 50% { opacity: .3; } }
+.rl-viewers { position: absolute; z-index: 4; top: 16px; right: 16px; padding: 8px 12px; border-radius: 999px; background: rgb(0 0 0 / .55); color: #fff; font: 700 .8rem/1 var(--crl-body); }
+.rl-live .rl-poster { transform: scale(1.02); }
+
+/* columna de acciones */
+.rl-rail { flex: none; display: grid; gap: 16px; align-self: end; padding-bottom: 26px; }
+.rl-act { display: grid; justify-items: center; gap: 6px; border: 0; background: none; color: var(--crl-white); text-decoration: none; font: 600 .74rem/1 var(--crl-body); cursor: pointer; }
+.rl-act span:first-child { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; background: var(--rl-glass); font-size: 1.15rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); transition: background .15s, transform .15s; }
+.rl-act:hover span:first-child { background: color-mix(in srgb, var(--crl-white) 24%, transparent); }
+.rl-act:active span:first-child { transform: scale(.9); }
+
+/* flechas y contador (escritorio) */
+.rl-arrows { position: fixed; z-index: 60; right: 22px; top: 50%; transform: translateY(-50%); display: none; gap: 10px; justify-items: center; }
+.rl-arrows small { color: var(--crl-muted); font: 700 .8rem/1 var(--crl-body); font-variant-numeric: tabular-nums; }
+.rl-arrows .rl-icon[disabled] { opacity: .3; pointer-events: none; }
+
+/* pastilla de sonido, aviso y estados */
+.rl-pill { position: fixed; z-index: 70; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 999px; border: 0; background: var(--crl-white); color: var(--crl-ink); font: 700 .9rem/1 var(--crl-body); box-shadow: 0 10px 30px rgb(0 0 0 / .4); cursor: pointer; transition: opacity .25s, transform .25s var(--rl-ease); }
+.rl-pill.show { opacity: 1; transform: translateX(-50%); pointer-events: auto; }
+.rl-state { position: fixed; inset: 0; z-index: 5; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; color: var(--crl-muted); font: 500 1rem/1.4 var(--crl-body); }
+.rl-state.show { display: flex; }
+.rl-state i { font-size: 2.2rem; color: var(--crl-white); opacity: .6; }
+.rl-state b { color: var(--crl-white); font: 800 1.5rem/1.1 var(--crl-display); letter-spacing: -.02em; }
+.rl-state a, .rl-state button { display: inline-flex; align-items: center; height: 44px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--crl-accent); color: var(--crl-ink); font: 700 .95rem/1 var(--crl-body); text-decoration: none; cursor: pointer; }
+
+/* póster con esqueleto: el brillo se ve hasta que carga la imagen / empieza el video */
+.rl-shimmer { background: linear-gradient(100deg, var(--crl-panel) 30%, color-mix(in srgb, var(--crl-accent) 12%, var(--crl-panel)) 50%, var(--crl-panel) 70%) 100% 0 / 300% 100%; animation: rl-sweep 1.7s ease-in-out infinite; }
+.rl-poster { opacity: 0; transition: opacity .35s; }
+.rl-poster.ok { opacity: 1; }
+.rl-slow { position: absolute; z-index: 3; left: 50%; top: calc(50% + 36px); transform: translateX(-50%); padding: 9px 15px; border-radius: 999px; background: rgb(0 0 0 / .62); color: #fff; font: 600 .8rem/1 var(--crl-body); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.rl-item.is-slow .rl-slow { opacity: 1; }
+
+/* esqueleto de carga */
+.rl-skel .rl-stage { background: linear-gradient(100deg, var(--crl-panel) 30%, color-mix(in srgb, var(--crl-accent) 10%, var(--crl-panel)) 50%, var(--crl-panel) 70%) 100% 0 / 300% 100%; animation: rl-sweep 1.7s ease-in-out infinite; }
+@keyframes rl-sweep { to { background-position: 0 0; } }
+
+/* ═════════ ESCRITORIO ═════════ */
+@media (min-width: 900px) {
+  .rl-logo { display: flex; }
+  .rl-arrows { display: grid; }
+  .rl-filters { justify-content: center; }
+  .rl-top-r { min-width: 42px; }
+}
+/* ═════════ MÓVIL: pantalla completa, acciones sobre el video ═════════ */
+@media (max-width: 700px) {
+  .rl-item { padding: 0; gap: 0; }
+  .rl-stage { width: 100%; height: 100%; aspect-ratio: auto; border-radius: 0; box-shadow: none; }
+  .rl-rail { position: absolute; z-index: 6; right: 10px; bottom: calc(96px + env(safe-area-inset-bottom)); padding: 0; }
+  .rl-info { right: 76px; bottom: calc(30px + env(safe-area-inset-bottom)); left: 14px; }
+  .rl-progress { bottom: env(safe-area-inset-bottom); }
+  .rl-feed { inset: 0; }
+  .rl-pill { bottom: calc(90px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rl-flash.go, .rl-skel .rl-stage, .rl-shimmer, .rl-live-pill::before, .rl-buffer { animation: none; }
+  .rl-ambient { transition: none; }
+}
