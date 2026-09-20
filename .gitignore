@@ -10,3 +10,12 @@ reel/.env
 
 # Documentos sueltos (no son contenido del sitio)
 *.pdf
+
+# Respaldos de dist generados por scripts/deploy-corillo.sh
+dist.bak-*/
+
+# Otros proyectos servidos por nginx desde este directorio (no son parte del repo corillo)
+pabarranquitas/
+pueblospr/
+ruta-preview-hub/
+assets/kick/

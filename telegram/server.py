@@ -74,6 +74,20 @@ _join_rl: dict[str, list] = {}
 JOIN_RL_MAX    = 3
 JOIN_RL_WINDOW = 3600
 
+_register_rl: dict[str, list] = {}
+REGISTER_RL_MAX    = 3
+REGISTER_RL_WINDOW = 3600
+
+RESERVED_HANDLES = {
+    'join', 'register', 'verificar', 'assets', 'mediamtx-api', 'live', 'api',
+    'static', 'admin', 'robots', 'sitemap', 'favicon', 'index', 'stream',
+    'dual', 'multiplayer', 'configuracion', 'roadmap', 'dmca', 'legal',
+    'streamer-pro', 'player', 'perfil', 'webrtc', 'chat-api', 'twitch-api',
+    'katatonia', 'tea', 'mira_sanganooo', '404', 'elbala', 'marcos',
+    'pataecabra', 'streamerpro', 'radblaster', 'elhermanoquiles', 'xxdur3xx',
+    'kamikazepr',
+}
+
 
 class JoinRequest(BaseModel):
     handle:    str
@@ -83,6 +97,26 @@ class JoinRequest(BaseModel):
     plataforma: str = ""
     mensaje:   str = ""
     hp:        str = ""
+
+
+class RegisterRequest(BaseModel):
+    handle:    str
+    nombre:    str
+    email:     str
+    password:  str
+    contenido: str
+    plataforma: str = ""
+    mensaje:   str = ""
+    hp:        str = ""
+
+
+async def _pb_admin_token() -> str:
+    r = await _http.post(
+        f"{PB_URL}/api/collections/_superusers/auth-with-password",
+        json={"identity": PB_ADMIN_EMAIL, "password": PB_ADMIN_PASS},
+    )
+    r.raise_for_status()
+    return r.json()["token"]
 
 
 async def get_live():
@@ -316,6 +350,87 @@ async def submit_join(req: JoinRequest, request: Request):
         if req.mensaje.strip():
             lines.append(f"Mensaje: {req.mensaje.strip()[:200]}")
         asyncio.create_task(_tg(lines, handle=handle))
+    return {"ok": True}
+
+
+@app.post("/register")
+async def register(req: RegisterRequest, request: Request):
+    if req.hp:
+        return {"ok": True}
+    ip = (request.headers.get("x-real-ip")
+          or request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+          or (request.client.host if request.client else "unknown"))
+    now = time.time()
+    hits = [t for t in _register_rl.get(ip, []) if now - t < REGISTER_RL_WINDOW]
+    if len(hits) >= REGISTER_RL_MAX:
+        raise HTTPException(status_code=429, detail="Demasiados intentos. Intenta más tarde.")
+    hits.append(now)
+    _register_rl[ip] = hits
+
+    handle = req.handle.strip().lower()
+    if not re.match(r'^[a-z0-9_]{3,24}$', handle):
+        raise HTTPException(status_code=400, detail="Handle inválido")
+    if "__" in handle:
+        raise HTTPException(status_code=400, detail="Evita guiones bajos dobles en el handle")
+    if handle in RESERVED_HANDLES:
+        raise HTTPException(status_code=400, detail="Este handle está reservado")
+    if not req.nombre.strip() or not req.contenido.strip() or not req.email.strip():
+        raise HTTPException(status_code=400, detail="Faltan campos requeridos")
+    if len(req.password) < 8:
+        raise HTTPException(status_code=400, detail="La contraseña debe tener al menos 8 caracteres")
+
+    try:
+        token = await _pb_admin_token()
+    except Exception:
+        raise HTTPException(status_code=503, detail="Servicio no disponible, intenta más tarde")
+    headers = {"Authorization": token}
+
+    dup = await _http.get(
+        f"{PB_URL}/api/collections/streamers/records",
+        headers=headers,
+        params={"filter": f'key="{handle}" || email="{req.email.strip()}"'},
+    )
+    if dup.status_code == 200 and dup.json().get("items"):
+        existing = dup.json()["items"][0]
+        if existing.get("key") == handle:
+            raise HTTPException(status_code=409, detail="Ese handle ya está en uso")
+        raise HTTPException(status_code=409, detail="Ya existe una cuenta con ese email")
+
+    color = STREAMER_COLORS[hash(handle) % len(STREAMER_COLORS)]
+    bio = req.contenido.strip()[:100]
+    if req.plataforma.strip():
+        bio += f" · antes en {req.plataforma.strip()[:40]}"
+    stream_key = secrets.token_urlsafe(24)
+
+    create = await _http.post(
+        f"{PB_URL}/api/collections/streamers/records",
+        headers=headers,
+        json={
+            "email": req.email.strip()[:120],
+            "password": req.password,
+            "passwordConfirm": req.password,
+            "key": handle,
+            "display_name": req.nombre.strip()[:60].upper(),
+            "bio": bio,
+            "color": color,
+            "stream_key": stream_key,
+            "stream_key_full": f"{handle}?secret={stream_key}",
+            "active": False,
+            "emailVisibility": False,
+            "verified": False,
+        },
+    )
+    if create.status_code not in (200, 201):
+        raise HTTPException(status_code=400, detail="No se pudo crear la cuenta. Revisa los datos e intenta de nuevo.")
+
+    try:
+        await _http.post(
+            f"{PB_URL}/api/collections/streamers/request-verification",
+            json={"email": req.email.strip()[:120]},
+        )
+    except Exception:
+        pass
+
     return {"ok": True}
 
 

@@ -59,6 +59,11 @@ jobs:
             --exclude='assets/kick' \
             --exclude='node_modules' \
             --exclude='.astro' \
+            --exclude='/dist.bak-*' \
+            --exclude='/.claude' \
+            --exclude='/pabarranquitas' \
+            --exclude='/pueblospr' \
+            --exclude='/ruta-preview-hub' \
             -e "ssh -i ~/.ssh/deploy_key -p 2222 -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/stream/
 

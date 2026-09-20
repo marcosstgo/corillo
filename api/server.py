@@ -9,7 +9,7 @@ import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from pywebpush import webpush, WebPushException
 
 load_dotenv()
@@ -17,6 +17,9 @@ load_dotenv()
 PB_URL         = os.environ.get("PB_URL", "https://pb.corillo.live")
 PB_ADMIN_EMAIL = os.environ.get("PB_ADMIN_EMAIL", "")
 PB_ADMIN_PASS  = os.environ.get("PB_ADMIN_PASS", "")
+
+MEDIAMTX_URL = os.environ.get("MEDIAMTX_URL", "http://127.0.0.1:9997")
+CHANNEL_RE   = re.compile(r"^[a-z0-9_-]+$")
 
 VAPID_PUBLIC_KEY  = os.environ.get("VAPID_PUBLIC_KEY", "")
 VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY", "")
@@ -369,14 +372,13 @@ async def get_vod_clip(vod_id: str, t: float = 0, dur: float = 30):
     if not os.path.exists(filepath):
         raise HTTPException(status_code=404, detail="Archivo no encontrado")
     out = f"/tmp/vod_clip_{vod_id}_{int(t)}_{int(time.time())}.mp4"
-    timeout_secs = max(dur / 5 + 15, 30)  # VAAPI runs ~7x realtime
+    timeout_secs = 30
     proc = await asyncio.create_subprocess_exec(
         "ffmpeg", "-y",
-        "-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "vaapi",
-        "-ss", str(int(t)), "-i", filepath,
-        "-t", str(int(dur)),
-        "-c:v", "h264_vaapi", "-qp", "23",
-        "-c:a", "aac", "-b:a", "192k",
+        "-ss", str(t), "-i", filepath,
+        "-t", str(dur),
+        "-c", "copy",
+        "-avoid_negative_ts", "1",
         "-movflags", "+faststart", out,
         stdout=asyncio.subprocess.DEVNULL,
         stderr=asyncio.subprocess.DEVNULL,
@@ -896,7 +898,7 @@ async def upload_vod(
         "ffmpeg", "-y", "-i", tmp,
         "-c:v", "libx264", "-preset", "fast", "-crf", "23",
         "-maxrate", "5M", "-bufsize", "10M",
-        "-vf", "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease:flags=lanczos",
+        "-vf", "scale='min(1920,iw)':'min(1080,ih)':force_original_aspect_ratio=decrease:force_divisible_by=2:flags=lanczos",
         "-profile:v", "high", "-level", "4.0", "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
         "-movflags", "+faststart",
@@ -998,6 +1000,81 @@ async def upload_vod(
         "preview":  preview_url,
         "duration": int(duration),
         "size":     size,
+    }
+
+
+async def _mediamtx_resolution(path: str) -> tuple[int, int] | None:
+    """Lee width/height reales del track de video de un path de mediamtx (None si no está online)."""
+    try:
+        r = await _http.get(f"{MEDIAMTX_URL}/v3/paths/get/{path}")
+    except httpx.HTTPError:
+        return None
+    if r.status_code != 200:
+        return None
+    for t in r.json().get("tracks2", []):
+        props = t.get("codecProps") or {}
+        if "width" in props and "height" in props:
+            return props["width"], props["height"]
+    return None
+
+
+@app.get("/live-manifest/{channel}")
+async def live_manifest(channel: str):
+    """Master playlist ABR con la RESOLUTION real de cada variante (lee mediamtx en vivo).
+    Antes esto era un 'return' estático en nginx con 1920x1080/1280x720 fijos, que no
+    reflejaba lo que el streamer manda de verdad — ver incidente 2026-09-09 (audio
+    distorsionado por confiar en la etiqueta de calidad equivocada)."""
+    if not CHANNEL_RE.match(channel):
+        raise HTTPException(status_code=400)
+
+    low_res, main_res = await asyncio.gather(
+        _mediamtx_resolution(f"live/{channel}_low"),
+        _mediamtx_resolution(f"live/{channel}"),
+    )
+    low_w,  low_h  = low_res  or (1280, 720)
+    main_w, main_h = main_res or (1920, 1080)
+
+    body = (
+        "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-INDEPENDENT-SEGMENTS\n"
+        f'#EXT-X-STREAM-INF:BANDWIDTH=2600000,RESOLUTION={low_w}x{low_h},NAME="{low_h}p"\n'
+        f"/live/{channel}_low/main_stream.m3u8\n"
+        f'#EXT-X-STREAM-INF:BANDWIDTH=7000000,RESOLUTION={main_w}x{main_h},NAME="{main_h}p"\n'
+        f"/live/{channel}/main_stream.m3u8\n"
+    )
+    return Response(
+        content=body,
+        media_type="application/vnd.apple.mpegurl",
+        headers={"Cache-Control": "no-store", "Access-Control-Allow-Origin": "*"},
+    )
+
+
+@app.get("/stats/{channel}")
+async def channel_stats(channel: str):
+    if not channel or '/' in channel or '..' in channel:
+        raise HTTPException(status_code=400)
+    token = await _admin_token()
+    r = await _http.get(
+        f"{PB_URL}/api/collections/vods/records",
+        headers={"Authorization": token},
+        params={
+            "filter": f'channel="{channel}"',
+            "fields": "duration",
+            "perPage": 500,
+        },
+    )
+    if r.status_code != 200:
+        raise HTTPException(status_code=502)
+    items = r.json().get("items", [])
+    if not items:
+        return {"streams": 0, "total_hours": 0, "avg_duration_min": 0, "peak_viewers": None}
+    total_secs = sum(v.get("duration") or 0 for v in items)
+    total_hours = round(total_secs / 3600, 1)
+    avg_min = round(total_secs / len(items) / 60)
+    return {
+        "streams":          len(items),
+        "total_hours":      total_hours,
+        "avg_duration_min": avg_min,
+        "peak_viewers":     None,
     }
 
 

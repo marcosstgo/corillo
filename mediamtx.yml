@@ -35,7 +35,7 @@ authHTTPExclude:
   - action: read
   - action: playback
   - action: publish
-    path: "~^live/[^/]+_rtc$"
+    path: "~^live/[^/]+_(rtc|low)$"
 
 ###############################################
 # Control API
@@ -251,7 +251,7 @@ pathDefaults:
   runOnDemandStartTimeout: 10s
   runOnDemandCloseAfter: 10s
   runOnUnDemand:
-  runOnReady: /usr/local/bin/notify-discord.sh $MTX_PATH
+  runOnReady:
   runOnReadyRestart: no
   runOnNotReady:
   runOnRead:
@@ -264,21 +264,26 @@ pathDefaults:
 # Paths específicos
 ###############################################
 paths:
-  # Re-encoding paths: AAC → Opus para WebRTC
-  # Se inicia ffmpeg bajo demanda cuando alguien se conecta via WebRTC
+  # OJO mediamtx v1.17: cuando varios regex hacen match gana el que ordena PRIMERO
+  # alfabéticamente. Por eso el general es "~^live/[a-z0-9_-]+$" ('[a' ordena después
+  # de '[^') y no "~^live/" (que ganaría siempre y rompería _rtc/_low).
+
+  # WebRTC: AAC → Opus bajo demanda (video copy). Script real, no inline (mediamtx no usa shell).
   "~^live/[^/]+_rtc$":
-    runOnDemand: >-
-      ffmpeg -rtsp_transport tcp
-      -i rtsp://127.0.0.1:8554/${MTX_PATH%_rtc}
-      -c:v libx264 -profile:v baseline -level:v 3.1 -bf 0 -preset ultrafast -tune zerolatency
-      -c:a libopus -b:a 96k -ar 48000 -ac 2
-      -f rtsp rtsp://127.0.0.1:8554/$MTX_PATH 2>/dev/null
+    runOnReady:
+    runOnDemand: /usr/local/bin/corillo-rtc-start.sh
     runOnDemandRestart: yes
     runOnDemandStartTimeout: 15s
     runOnDemandCloseAfter: 10s
 
-  "~^live/":
-    runOnReady: /usr/local/bin/corillo-notify.sh
+  # Variante 720p @ 1.5 Mbps para móvil (la publica corillo-stream-up.sh). Sin grabar.
+  "~^live/[^/]+_low$":
+    runOnReady:
+    record: no
+
+  # Canal principal
+  "~^live/[a-z0-9_-]+$":
+    runOnReady: /usr/local/bin/corillo-stream-up.sh
     runOnReadyRestart: no
     record: yes
     runOnRecordSegmentComplete: /home/corillo-adm/corillo-vod/venv/bin/python /home/corillo-adm/corillo-vod/vod-process.py
