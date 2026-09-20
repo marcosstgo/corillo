@@ -8,13 +8,14 @@ export async function GET(context) {
 
   return rss({
     title: 'CORILLO — Noticias',
-    description: 'Updates de plataforma, software nuevo, cambios en el site y anuncios del proyecto.',
+    description: 'Gaming y esports, tecnología e IA, streaming y creación de contenido, cultura geek y Puerto Rico. Por CORILLO.',
     site: context.site,
     items: posts.map(post => ({
       title: post.data.heroTitle,
       description: post.data.summary,
       pubDate: post.data.pubDate,
       link: `/noticias/${post.id}/`,
+      categories: [post.data.category || 'corillo', ...(post.data.tags || [])],
     })),
     customData: `<language>es-pr</language>`,
   });

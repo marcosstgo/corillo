@@ -18,6 +18,11 @@ const noticias = defineCollection({
     wide: z.boolean().optional(),
     cardTitle: z.string().optional(), // título alterno para la tarjeta en /noticias/ (default: heroTitle)
     summary: z.string(),    // teaser corto para la tarjeta en /noticias/
+    // — línea editorial (opcionales: las notas viejas no los tienen) —
+    category: z.enum(['gaming', 'tech', 'streaming', 'geek', 'pr', 'corillo']).optional(),
+    tags: z.array(z.string()).optional(),
+    sources: z.array(z.object({ name: z.string(), url: z.string().url() })).optional(),
+    ai: z.boolean().optional(),   // redactada con apoyo de IA a partir de las fuentes citadas (se avisa al lector)
   }),
 });
 

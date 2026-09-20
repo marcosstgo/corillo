@@ -1,32 +1,43 @@
 ---
 import { getCollection, render } from 'astro:content';
 import NoticiasPostLayout from '../../layouts/NoticiasPostLayout.astro';
+import { catOf, readMinutes } from '../../data/news';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('noticias');
+  const posts = (await getCollection('noticias')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
   return posts.map(post => ({
     params: { slug: post.id },
-    props: { post },
+    props: {
+      post,
+      related: posts.filter(p => p.id !== post.id).slice(0, 3).map(p => {
+        const c = catOf(p.data);
+        return { id: p.id, title: p.data.cardTitle || p.data.heroTitle, date: p.data.date, catLabel: c.label, catIcon: c.icon, catColor: c.color };
+      }),
+    },
   }));
 }
 
-const { post } = Astro.props;
+const { post, related } = Astro.props;
 const { Content } = await render(post);
 const canonical = `https://corillo.live/noticias/${post.id}/`;
+const d = post.data;
 ---
 <NoticiasPostLayout
-  title={post.data.title}
-  description={post.data.description}
+  title={d.title}
+  description={d.description}
   canonical={canonical}
-  ogTitle={post.data.ogTitle}
-  ogDescription={post.data.ogDescription}
-  badgeClass={post.data.badgeClass}
-  badgeIcon={post.data.badgeIcon}
-  badgeLabel={post.data.badgeLabel}
-  date={post.data.date}
-  heroTitle={post.data.heroTitle}
-  heroSub={post.data.heroSub}
-  wide={post.data.wide}
+  ogTitle={d.ogTitle}
+  ogDescription={d.ogDescription}
+  badgeLabel={d.badgeLabel}
+  category={d.category}
+  date={d.date}
+  heroTitle={d.heroTitle}
+  heroSub={d.heroSub}
+  minutes={readMinutes(post.body)}
+  tags={d.tags}
+  sources={d.sources}
+  ai={d.ai}
+  related={related}
 >
   <Content />
 </NoticiasPostLayout>

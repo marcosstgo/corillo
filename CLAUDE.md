@@ -87,3 +87,9 @@ Material suelto que había en la raíz (capturas, zips, PDFs, propuestas) se arc
 - Cambios de API en `api/server.py` (el CI los despliega y reinicia el servicio); nuevos endpoints no requieren nginx (`^~ /api/`).
 - `git pull --rebase` antes de push (el CI hace commits de version bump).
 - Servicios: `sudo systemctl restart <nombre>`. Datos y `.env` de cada servicio en `/home/corillo-adm/corillo-*/` (no versionados).
+
+## Noticias automáticas y Discord (2026-09-20)
+- **Noticia diaria**: `scripts/daily-news.py` (venv en `~/corillo-news/venv`, cron 7:30 AM PR, log `~/corillo-news/logs/daily.log`). RSS (`scripts/news_sources.json`) → Claude elige 1 noticia (score ≥7 o nada) → lee 2-4 fuentes → redacta original → verificador + chequeo de copia (shingles de 10 palabras) → `.md` en `src/content/noticias/AAAA-MM-DD-auto-*.md` (`ai: true`) → `deploy-corillo.sh` → commit `[skip ci]` + push de la rama actual → aviso Telegram.
+  - `--dry-run` (no escribe), `--backfill N` (varias seguidas), `--unpublish SLUG` (retira). Modelo `claude-opus-5`, respaldo `claude-opus-4-8`. La API key sale de `corillo-bot/.env`.
+  - Categorías/colores en `src/data/news.ts` (espejo `CATS` en el script).
+- **Discord**: invitación permanente en `src/data/site.ts` (`DISCORD_INVITE`); página propia `/discord/` con miembros en línea leídos de `public/assets/discord-live.js` (widget público del servidor `240118405116461056`, caché 5 min, bots filtrados).

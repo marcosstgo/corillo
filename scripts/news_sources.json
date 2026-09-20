@@ -1,0 +1,26 @@
+{
+  "_nota": "Fuentes para DESCUBRIR noticias (titulares y resúmenes por RSS). El artículo que se publica es redacción propia; estas fuentes solo se leen para documentarse y se citan al final. 'kw': solo se consideran los ítems que mencionen alguno de esos temas (medios generalistas).",
+  "feeds": [
+    {"name": "GameSpot",        "url": "https://www.gamespot.com/feeds/mashup/",        "cat": "gaming"},
+    {"name": "IGN",             "url": "https://feeds.feedburner.com/ign/all",           "cat": "gaming"},
+    {"name": "PC Gamer",        "url": "https://www.pcgamer.com/rss/",                   "cat": "gaming"},
+    {"name": "Eurogamer",       "url": "https://www.eurogamer.net/feed",                 "cat": "gaming"},
+    {"name": "Dexerto",         "url": "https://www.dexerto.com/feed/",                  "cat": "streaming"},
+    {"name": "Vandal",          "url": "https://www.vandal.net/rss/",                    "cat": "gaming"},
+    {"name": "3DJuegos",        "url": "https://www.3djuegos.com/index.xml",            "cat": "gaming"},
+    {"name": "Hobby Consolas",  "url": "https://www.hobbyconsolas.com/rss",              "cat": "gaming"},
+    {"name": "The Verge",       "url": "https://www.theverge.com/rss/index.xml",         "cat": "tech"},
+    {"name": "Ars Technica",    "url": "https://feeds.arstechnica.com/arstechnica/index", "cat": "tech"},
+    {"name": "TechCrunch",      "url": "https://techcrunch.com/feed/",                   "cat": "tech"},
+    {"name": "Xataka",          "url": "https://www.xataka.com/feedburner.xml",          "cat": "tech"},
+    {"name": "Hipertextual",    "url": "https://hipertextual.com/feed",                  "cat": "tech"},
+    {"name": "Engadget",        "url": "https://www.engadget.com/rss.xml",               "cat": "tech"},
+    {"name": "Tubefilter",      "url": "https://www.tubefilter.com/feed/",               "cat": "streaming"},
+    {"name": "Polygon",         "url": "https://www.polygon.com/rss/index.xml",          "cat": "geek"},
+    {"name": "Espinof",         "url": "https://www.espinof.com/index.xml",              "cat": "geek"},
+    {"name": "CBR",             "url": "https://www.cbr.com/feed/",                      "cat": "geek"},
+    {"name": "El Nuevo Día",    "url": "https://www.elnuevodia.com/arcio/rss/",          "cat": "pr", "kw": true},
+    {"name": "Primera Hora",    "url": "https://www.primerahora.com/arcio/rss/",         "cat": "pr", "kw": true}
+  ],
+  "kw_regex": "videojueg|gaming|gamer|esport|e-sport|streamer|streaming|twitch|youtube|kick\\b|tecnolog|inteligencia artificial|\\bIA\\b|robot|ciber|creador de contenido|influenc|anime|c[oó]mic|convenci[oó]n|fortnite|playstation|xbox|nintendo|steam\\b|cine\\b|pel[ií]cula|serie\\b|netflix|marvel|star wars"
+}

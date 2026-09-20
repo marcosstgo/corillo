@@ -1,0 +1,351 @@
+#!/home/corillo-adm/corillo-news/venv/bin/python
+"""Noticia diaria de CORILLO.
+
+Flujo: RSS (descubrir) -> Claude elige UNA noticia que valga la pena (o ninguna) -> lee 2-4 fuentes ->
+Claude redacta una nota ORIGINAL en español -> Claude + comprobación programática verifican que los
+datos salen de las fuentes y que no hay texto copiado -> escribe el .md, despliega, commit y avisa por Telegram.
+
+Uso:
+  daily-news.py                  # corrida normal (cron): máx. 1 nota al día
+  daily-news.py --dry-run        # hace todo menos escribir/desplegar; imprime el resultado
+  daily-news.py --backfill 3     # publica hasta 3 notas seguidas (para arrancar); ignora el tope diario
+  daily-news.py --unpublish SLUG # retira una nota (borra el .md, despliega, commit)
+
+Nunca publica basura: si el selector da menos de MIN_SCORE, o el verificador rechaza dos veces, no publica nada.
+"""
+import argparse, datetime as dt, difflib, hashlib, html, json, os, re, subprocess, sys, time, unicodedata
+from html.parser import HTMLParser
+from pathlib import Path
+from urllib import robotparser
+from urllib.parse import urlparse
+
+import anthropic, feedparser, httpx
+
+REPO = Path('/var/www/stream')
+POSTS = REPO / 'src/content/noticias'
+CFG = json.loads((REPO / 'scripts/news_sources.json').read_text())
+HOME = Path('/home/corillo-adm/corillo-news')
+LOGS = HOME / 'logs'; LOGS.mkdir(parents=True, exist_ok=True)
+STATE = HOME / 'state.json'
+MODEL = os.environ.get('NEWS_MODEL', 'claude-opus-5')
+FALLBACK_MODEL = 'claude-opus-4-8'
+MIN_SCORE = 7
+UA = 'CorilloNewsBot/1.0 (+https://corillo.live/noticias/; hello@marcossantiago.com)'
+WINDOW_H = 40
+MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+CATS = {  # espejo de src/data/news.ts
+    'gaming': ('Gaming y esports', 'fa-solid fa-gamepad', 'badge-confirm'),
+    'tech': ('Tecnología e IA', 'fa-solid fa-microchip', 'badge-accent'),
+    'streaming': ('Streaming y creadores', 'fa-solid fa-tower-broadcast', 'badge-confirm'),
+    'geek': ('Cultura geek', 'fa-solid fa-wand-magic-sparkles', 'badge-accent'),
+    'pr': ('Puerto Rico', 'fa-solid fa-flag', 'badge-accent'),
+}
+
+def log(*a):
+    line = f"{dt.datetime.now():%Y-%m-%d %H:%M:%S} " + ' '.join(str(x) for x in a)
+    print(line, flush=True)
+
+def load_env():
+    for f in ('/home/corillo-adm/corillo-bot/.env', '/home/corillo-adm/corillo-telegram/.env'):
+        for l in Path(f).read_text().splitlines():
+            if '=' in l and not l.startswith('#'):
+                k, v = l.split('=', 1); os.environ.setdefault(k.strip(), v.strip().strip('"\''))
+
+def telegram(msg):
+    try:
+        httpx.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
+                   data={'chat_id': os.environ['TELEGRAM_CHAT_ID'], 'text': msg, 'disable_web_page_preview': 'true'}, timeout=15)
+    except Exception as e:
+        log('telegram falló:', e)
+
+# ───────────── estado / publicadas ─────────────
+def published():
+    out = []
+    for f in sorted(POSTS.glob('*.md')):
+        t = f.read_text()
+        title = (re.search(r'^heroTitle:\s*"(.*)"\s*$', t, re.M) or re.search(r'^title:\s*"(.*)"\s*$', t, re.M))
+        urls = re.findall(r'^\s+url:\s*"(.*)"\s*$', t, re.M)
+        out.append({'file': f.name, 'title': title.group(1) if title else f.stem, 'urls': urls})
+    return out
+
+def state():
+    try: return json.loads(STATE.read_text())
+    except Exception: return {'seen': {}}
+
+def save_state(s):
+    cutoff = time.time() - 14 * 86400
+    s['seen'] = {k: v for k, v in s['seen'].items() if v > cutoff}
+    STATE.write_text(json.dumps(s))
+
+def norm(t):
+    t = unicodedata.normalize('NFKD', t.lower()); t = ''.join(c for c in t if not unicodedata.combining(c))
+    return re.sub(r'[^a-z0-9 ]+', ' ', t).split()
+
+# ───────────── descubrir ─────────────
+def discover(exclude_urls):
+    cutoff = time.time() - WINDOW_H * 3600
+    kw = re.compile(CFG['kw_regex'], re.I)
+    items, seen_t = [], []
+    for f in CFG['feeds']:
+        try:
+            r = httpx.get(f['url'], headers={'User-Agent': UA}, timeout=15, follow_redirects=True)
+            d = feedparser.parse(r.content)
+        except Exception as e:
+            log('feed falló', f['name'], type(e).__name__); continue
+        n = 0
+        for e in d.entries[:40]:
+            ts = e.get('published_parsed') or e.get('updated_parsed')
+            if ts and time.mktime(ts) < cutoff - 3600 * 8: continue  # (mktime local vs UTC: margen de 8 h)
+            title = html.unescape(e.get('title', '')).strip(); link = e.get('link', '')
+            summ = re.sub(r'<[^>]+>', ' ', html.unescape(e.get('summary', ''))); summ = re.sub(r'\s+', ' ', summ).strip()[:400]
+            if not title or not link or link in exclude_urls: continue
+            if f.get('kw') and not kw.search(title + ' ' + summ): continue
+            key = ' '.join(norm(title)[:8])
+            if any(difflib.SequenceMatcher(None, key, s).ratio() > .85 for s in seen_t): continue
+            seen_t.append(key); n += 1
+            items.append({'source': f['name'], 'cat': f['cat'], 'title': title, 'url': link, 'summary': summ})
+        log(f"feed {f['name']}: {n}")
+    for i, it in enumerate(items): it['id'] = i
+    return items
+
+# ───────────── Claude ─────────────
+def claude_json(client, system, user, schema, max_tokens=8000):
+    last = None
+    for model in (MODEL, FALLBACK_MODEL):
+        try:
+            with client.messages.stream(
+                model=model, max_tokens=max_tokens, thinking={'type': 'adaptive'}, system=system,
+                messages=[{'role': 'user', 'content': user}],
+                output_config={'format': {'type': 'json_schema', 'schema': schema}},
+            ) as s:
+                m = s.get_final_message()
+            if m.stop_reason == 'refusal': raise RuntimeError('refusal')
+            txt = ''.join(b.text for b in m.content if b.type == 'text')
+            log(f"  {model}: in={m.usage.input_tokens} out={m.usage.output_tokens}")
+            return json.loads(txt)
+        except Exception as e:
+            last = e; log(f'  {model} falló: {type(e).__name__}: {str(e)[:160]}')
+    raise last
+
+SEL_SYS = """Eres el editor de CORILLO (corillo.live), una plataforma independiente de streaming de Puerto Rico con comunidad gamer.
+Línea editorial: gaming y esports; tecnología e IA que importa a gamers y creadores; streaming y creación de contenido;
+cultura geek y entretenimiento (cine, series, anime, cómics); y noticias de Puerto Rico en esas áreas.
+Tu trabajo: de la lista de titulares recientes, escoger LA noticia que de verdad valga la pena para esa audiencia hispana,
+o ninguna. Criterios: relevancia real para la comunidad, hecho concreto y verificable (no rumor ni clickbait), novedad,
+que se pueda explicar aportando contexto útil. Descarta ofertas/cupones, listas de "mejores X", reseñas de producto,
+política general, crónica roja y notas que ya cubrimos. Prefiere historias con varias fuentes independientes.
+Puntúa 1-10 (10 = imperdible). Si nada llega a 7, devuelve choice_id null."""
+SEL_SCHEMA = {'type': 'object', 'additionalProperties': False,
+    'required': ['choice_id', 'score', 'category', 'angle', 'related_ids', 'reason'],
+    'properties': {'choice_id': {'type': ['integer', 'null']}, 'score': {'type': 'integer'},
+        'category': {'type': 'string', 'enum': list(CATS)}, 'angle': {'type': 'string'},
+        'related_ids': {'type': 'array', 'items': {'type': 'integer'}}, 'reason': {'type': 'string'}}}
+
+WRITE_SYS = """Eres redactor de CORILLO, una plataforma de streaming de Puerto Rico. Escribes en español natural y cercano (neutro con calidez
+boricua, sin jerga forzada), para gamers y creadores. Redactas una nota ORIGINAL a partir de las fuentes que te doy.
+Reglas estrictas:
+- Usa SOLO hechos que aparezcan en las fuentes (cifras, fechas, nombres, citas). No inventes ni especules; si algo no está claro, dilo o déjalo fuera.
+- Redacta con tus propias palabras y tu propia estructura. Prohibido copiar o parafrasear de cerca frases de las fuentes; las citas textuales, máximo una y corta (<15 palabras), entre comillas y atribuida.
+- Aporta valor: qué pasó, por qué importa a la comunidad de CORILLO, qué sigue. Una sección 'Por qué importa' concreta.
+- Longitud del cuerpo: 350-550 palabras. Markdown: párrafos, 2-3 subtítulos ## como máximo, sin H1, sin listas de relleno, sin emoji.
+- Título informativo (máx. 90 caracteres), sin clickbait ni mayúsculas gritonas. No menciones que eres una IA en el texto (el sitio ya lo avisa).
+- El extracto (description) máx. 160 caracteres. summary: 1-2 frases para la tarjeta. heroSub: una frase de apoyo.
+- tags: 3-5 etiquetas cortas. sources_used: índices (empezando en 0) de las fuentes de las que realmente sacaste datos.
+- Si te dan 'problemas' de un intento anterior, corrígelos todos."""
+WRITE_SCHEMA = {'type': 'object', 'additionalProperties': False,
+    'required': ['title', 'description', 'summary', 'heroSub', 'body', 'category', 'tags', 'sources_used'],
+    'properties': {k: {'type': 'string'} for k in ('title', 'description', 'summary', 'heroSub', 'body')} | {
+        'category': {'type': 'string', 'enum': list(CATS)},
+        'tags': {'type': 'array', 'items': {'type': 'string'}},
+        'sources_used': {'type': 'array', 'items': {'type': 'integer'}}}}
+
+VER_SYS = """Eres verificador de hechos de una redacción. Recibes una nota y los textos de las fuentes. Comprueba:
+1) cada dato concreto (cifras, fechas, nombres, cargos, citas, lanzamientos) está respaldado por alguna fuente;
+2) nada contradice a las fuentes; 3) no hay especulación presentada como hecho; 4) el título no exagera lo que dicen las fuentes;
+5) el tono es informativo y sin clickbait. Sé estricto con los datos, tolerante con el estilo.
+Devuelve ok=false y la lista de problemas concretos si hay algún dato sin respaldo o incorrecto."""
+VER_SCHEMA = {'type': 'object', 'additionalProperties': False, 'required': ['ok', 'problems'],
+    'properties': {'ok': {'type': 'boolean'}, 'problems': {'type': 'array', 'items': {'type': 'string'}}}}
+
+# ───────────── leer fuentes ─────────────
+class _Text(HTMLParser):
+    SKIP = {'script', 'style', 'nav', 'header', 'footer', 'aside', 'form', 'noscript', 'svg', 'iframe', 'button'}
+    def __init__(self):
+        super().__init__(); self.buf, self.skip, self.in_p = [], 0, 0
+    def handle_starttag(self, t, a):
+        if t in self.SKIP: self.skip += 1
+        if t == 'p': self.in_p += 1
+    def handle_endtag(self, t):
+        if t in self.SKIP and self.skip: self.skip -= 1
+        if t == 'p' and self.in_p: self.in_p -= 1; self.buf.append('\n')
+    def handle_data(self, d):
+        if not self.skip and self.in_p and len(d.strip()) > 1: self.buf.append(d)
+
+_robots = {}
+def allowed(url):
+    o = urlparse(url); base = f'{o.scheme}://{o.netloc}'
+    if base not in _robots:
+        rp = robotparser.RobotFileParser()
+        try:
+            r = httpx.get(base + '/robots.txt', headers={'User-Agent': UA}, timeout=8, follow_redirects=True)
+            rp.parse(r.text.splitlines() if r.status_code == 200 else [])
+        except Exception: rp.parse([])
+        _robots[base] = rp
+    return _robots[base].can_fetch('CorilloNewsBot', url)
+
+def fetch_text(url):
+    if not allowed(url): log('  robots.txt no permite', url); return ''
+    try:
+        r = httpx.get(url, headers={'User-Agent': UA}, timeout=20, follow_redirects=True)
+        if r.status_code != 200: return ''
+        p = _Text(); p.feed(r.text)
+        t = re.sub(r'[ \t]+', ' ', ''.join(p.buf)); t = re.sub(r'\n\s*\n+', '\n', t).strip()
+        return t[:9000]
+    except Exception as e:
+        log('  fetch falló', url, type(e).__name__); return ''
+
+# ───────────── comprobación de copia ─────────────
+def copied_ratio(article, sources, n=10):
+    def shingles(t):
+        w = norm(t); return {' '.join(w[i:i + n]) for i in range(max(0, len(w) - n + 1))}
+    a = shingles(article)
+    if not a: return 0.0
+    s = set().union(*[shingles(x) for x in sources]) if sources else set()
+    return len(a & s) / len(a)
+
+# ───────────── escribir el post ─────────────
+def slugify(t):
+    w, out = norm(t), ''
+    for x in w:
+        if len(out) + len(x) + 1 > 70: break
+        out += ('-' if out else '') + x
+    return out or 'nota'
+
+def yq(s): return json.dumps(s, ensure_ascii=False)
+
+def build_md(a, srcs, now):
+    cat = a['category']; label, icon, badge = CATS[cat]
+    used = [srcs[i] for i in a['sources_used'] if 0 <= i < len(srcs)] or srcs
+    fm = ['---', f"title: {yq('CORILLO — Noticias · ' + a['title'])}", f"description: {yq(a['description'])}",
+          f"ogTitle: {yq(a['title'])}", f"ogDescription: {yq(a['description'])}", f'badgeClass: "{badge}"', f'badgeIcon: "{icon}"',
+          f'badgeLabel: {yq(label)}', f'date: "{now.day} {MESES[now.month - 1]} {now.year}"', f'pubDate: {now:%Y-%m-%dT%H:%M:%SZ}',
+          f"heroTitle: {yq(a['title'])}", f"heroSub: {yq(a['heroSub'])}", f"summary: {yq(a['summary'])}", f'category: "{cat}"',
+          f"tags: {json.dumps(a['tags'][:5], ensure_ascii=False)}", 'ai: true', 'sources:']
+    for s in used: fm += [f"  - name: {yq(s['source'])}", f"    url: {yq(s['url'])}"]
+    fm.append('---')
+    return '\n'.join(fm) + '\n\n' + a['body'].strip() + '\n'
+
+def sh(cmd, **kw):
+    return subprocess.run(cmd, cwd=REPO, text=True, capture_output=True, **kw)
+
+def deploy():
+    r = sh(['bash', 'scripts/deploy-corillo.sh'])
+    log('deploy', 'OK' if r.returncode == 0 else 'FALLÓ');
+    if r.returncode: log(r.stdout[-800:], r.stderr[-800:])
+    return r.returncode == 0
+
+def git_publish(files, msg):
+    try:
+        sh(['git', 'add', '--'] + [str(f) for f in files])
+        c = sh(['git', 'commit', '-m', msg + '\n\n[skip ci]\n\nCo-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>'])
+        if c.returncode: log('commit:', c.stderr[-300:]); return
+        p = sh(['git', 'push', 'origin', 'HEAD'], timeout=90)
+        log('push', 'OK' if p.returncode == 0 else 'falló (queda commit local): ' + p.stderr[-200:])
+    except Exception as e:
+        log('git falló (no bloquea):', e)
+
+# ───────────── una nota ─────────────
+def make_one(client, items, used_ids, pub, dry):
+    recent = '\n'.join('- ' + p['title'] for p in pub[-20:])
+    lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in items if i['id'] not in used_ids)
+    sel = claude_json(client, SEL_SYS, f"Notas que CORILLO ya publicó (no repetir tema):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
+    log('selector:', json.dumps(sel, ensure_ascii=False)[:400])
+    if sel['choice_id'] is None or sel['score'] < MIN_SCORE:
+        log(f"nada a la altura (score={sel['score']}): no se publica"); return None
+    byid = {i['id']: i for i in items}
+    if sel['choice_id'] not in byid: return None
+    used_ids.add(sel['choice_id'])
+    chosen = [byid[sel['choice_id']]] + [byid[r] for r in sel['related_ids'] if r in byid and r != sel['choice_id']][:3]
+    srcs, texts = [], []
+    for c in chosen:
+        t = fetch_text(c['url'])
+        if len(t) < 500: t = c['title'] + '. ' + c['summary']  # solo el resumen del feed si la página no sirve
+        if len(t) > 200: srcs.append(c); texts.append(t)
+    full = [t for t in texts if len(t) > 800]
+    if not full: log('ninguna fuente legible con suficiente texto: no se publica'); return None
+    log('fuentes:', [s['source'] for s in srcs])
+    block = '\n\n'.join(f"=== FUENTE {i}: {s['source']} — {s['title']} ({s['url']}) ===\n{t}" for i, (s, t) in enumerate(zip(srcs, texts)))
+    problems, art = [], None
+    for attempt in (1, 2):
+        u = f"Enfoque sugerido por el editor: {sel['angle']}\nCategoría sugerida: {sel['category']}\n\n{block}"
+        if problems: u += '\n\nProblemas del intento anterior a corregir:\n' + '\n'.join('- ' + p for p in problems)
+        art = claude_json(client, WRITE_SYS, u, WRITE_SCHEMA, 10000)
+        ratio = copied_ratio(art['body'], texts)
+        words = len(art['body'].split())
+        log(f"intento {attempt}: {words} palabras, copia={ratio:.1%}")
+        problems = []
+        if ratio > 0.04: problems.append(f'Copia demasiado texto de las fuentes ({ratio:.0%}); reescribe con tus palabras.')
+        if not 250 <= words <= 800: problems.append(f'Longitud {words} palabras; debe ser 350-550.')
+        if len(art['description']) > 165: problems.append(f"description mide {len(art['description'])} caracteres; máx. 160.")
+        ver = claude_json(client, VER_SYS, f"NOTA:\nTítulo: {art['title']}\n{art['body']}\n\n{block}", VER_SCHEMA, 8000)
+        if not ver['ok']: problems += ver['problems']
+        if not problems: break
+        log('problemas:', problems)
+    else:
+        log('rechazada dos veces: no se publica'); return None
+    art['category'] = art['category'] if art['category'] in CATS else sel['category']
+    return art, srcs
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--dry-run', action='store_true'); ap.add_argument('--backfill', type=int, default=0)
+    ap.add_argument('--unpublish'); a = ap.parse_args()
+    load_env()
+
+    if a.unpublish:
+        f = POSTS / (a.unpublish if a.unpublish.endswith('.md') else a.unpublish + '.md')
+        if not f.exists(): sys.exit(f'no existe {f}')
+        f.unlink(); ok = deploy(); git_publish([f], f'noticias: retirar {f.stem}')
+        telegram(f'🗑️ Nota retirada: {f.stem}'); sys.exit(0 if ok else 1)
+
+    now = dt.datetime.now(dt.timezone.utc)
+    pub = published()
+    today = f'{now:%Y-%m-%d}'
+    if not a.backfill and not a.dry_run and any(p['file'].startswith(dt.datetime.now().strftime('%Y-%m-%d')) and 'auto' in p['file'] for p in pub):
+        log('ya hay nota automática de hoy'); return
+    client = anthropic.Anthropic()
+    exclude = {u for p in pub for u in p['urls']}
+    items = discover(exclude)
+    st = state(); items = [i for i in items if hashlib.md5(i['url'].encode()).hexdigest() not in st['seen']]
+    log(f'{len(items)} candidatos')
+    if len(items) < 5: log('muy pocos candidatos'); telegram('⚠️ Noticias: muy pocos candidatos hoy (¿feeds caídos?)'); return
+
+    n = max(1, a.backfill); made, used = [], set()
+    for _ in range(n):
+        try: r = make_one(client, items, used, pub, a.dry_run)
+        except Exception as e:
+            log('ERROR', type(e).__name__, e); telegram(f'⚠️ Noticias: error del pipeline: {type(e).__name__}: {str(e)[:200]}'); break
+        if not r: break
+        art, srcs = r
+        md = build_md(art, srcs, now + dt.timedelta(minutes=len(made)))
+        fname = f"{dt.datetime.now():%Y-%m-%d}-auto-{slugify(art['title'])}.md"
+        if a.dry_run:
+            print('\n' + '=' * 70 + f'\n{fname}\n' + '=' * 70 + f'\n{md}')
+            made.append(fname); continue
+        (POSTS / fname).write_text(md); made.append(fname)
+        pub.append({'file': fname, 'title': art['title'], 'urls': [s['url'] for s in srcs]})
+        for s in srcs: st['seen'][hashlib.md5(s['url'].encode()).hexdigest()] = time.time()
+    if a.dry_run or not made:
+        if not made: log('hoy no se publica nada');
+        save_state(st) if not a.dry_run else None; return
+    save_state(st)
+    if not deploy():
+        for f in made: (POSTS / f).unlink(missing_ok=True)
+        telegram('❌ Noticias: el build falló con la nota nueva; se retiró y el sitio quedó como estaba.'); sys.exit(1)
+    git_publish([POSTS / f for f in made], 'noticias: ' + ', '.join(m[11:-3] for m in made)[:100])
+    for f in made:
+        t = re.search(r'^heroTitle: "(.*)"', (POSTS / f).read_text(), re.M).group(1)
+        telegram(f"📰 Nota publicada en CORILLO:\n{t}\nhttps://corillo.live/noticias/{f[:-3]}/\n\nRetirar: daily-news.py --unpublish {f[:-3]}")
+
+if __name__ == '__main__':
+    main()

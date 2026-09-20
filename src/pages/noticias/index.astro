@@ -1,149 +1,111 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
 import { getCollection } from 'astro:content';
+import { CATEGORIES, catOf, readMinutes } from '../../data/news';
+import { DISCORD_PATH } from '../../data/site';
 
-const posts = (await getCollection('noticias')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const posts = (await getCollection('noticias')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const [lead, ...rest] = posts;
+const leadCat = catOf(lead.data);
+const counts = Object.fromEntries(CATEGORIES.map(c => [c.id, posts.filter(p => catOf(p.data).id === c.id).length]));
 ---
 <SiteShell
-  pageClass="p-legacy"
-  title="CORILLO — Noticias"
-  description="Novedades de CORILLO: updates de plataforma, software, comunidad e infraestructura."
+  title="Noticias — CORILLO"
+  description="Noticias de gaming y esports, tecnología e IA, streaming y creación de contenido, cultura geek y Puerto Rico. Por CORILLO."
   canonical="https://corillo.live/noticias/"
 >
   <fragment slot="head">
+    <link rel="alternate" type="application/rss+xml" title="CORILLO — Noticias" href="/rss.xml" />
     <style is:global>
-      .news-shell{max-width:1140px;margin:0 auto;padding:0 20px 80px}
-      @media(max-width:600px){.news-shell{padding:0 14px 56px}}
-      .news-hero{padding:34px 0 22px}
-      .news-hero-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.8fr);gap:18px;align-items:stretch}
-      @media(max-width:980px){.news-hero-grid{grid-template-columns:1fr}}
-      .news-kicker{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 14px}
-      .news-dot{width:8px;height:8px;border-radius:999px;background:var(--crl-confirm);box-shadow:0 0 0 6px rgba(var(--crl-confirm-rgb),.1)}
-      .news-intro{max-width:760px;margin:0 auto 26px;text-align:center}
-      .news-feature{padding:28px;border-radius:28px}
-      .news-feature-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px}
-      .news-date{font-family:var(--crl-mono);font-size:10px;letter-spacing:1.7px;text-transform:uppercase;color:var(--crl-muted)}
-      .news-feature-title{font-family:var(--crl-display);font-size:clamp(2.5rem,5vw,4.7rem);line-height:.92;letter-spacing:2px;margin:0 0 14px;max-width:12ch}
-      .news-feature-copy{max-width:62ch;font-size:1rem;line-height:1.72;color:rgba(255,255,255,.76);margin:0 0 22px}
-      .news-feature-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-      .news-feature-note{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.64);font-size:var(--crl-sm)}
-      .news-pulse{padding:22px 20px;border-radius:26px;border:1px solid var(--crl-border);background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));display:flex;flex-direction:column;gap:18px}
-      .news-pulse-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
-      .news-pulse-title{margin:0;font-family:var(--crl-display);font-size:1.6rem;letter-spacing:1.4px}
-      .news-pulse-sub{margin:0;color:var(--crl-muted);font-size:var(--crl-sm);line-height:1.6}
-      .news-pulse-list{display:grid;gap:12px}
-      .news-pulse-item{padding:14px 14px 14px 16px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}
-      .news-pulse-item strong{display:block;font-size:var(--crl-sm);margin-bottom:4px}
-      .news-pulse-item span{display:block;font-size:var(--crl-xs);line-height:1.6;color:var(--crl-muted)}
-      .news-pulse-tags{display:flex;gap:8px;flex-wrap:wrap}
-      .news-rule{margin:0 0 28px}
-      .news-section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 18px}
-      .news-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-      @media(max-width:980px){.news-grid{grid-template-columns:1fr 1fr}}
-      @media(max-width:640px){.news-grid{grid-template-columns:1fr}}
-      .news-card{display:flex;flex-direction:column;gap:16px;height:100%;padding:22px;border-radius:24px;position:relative;overflow:hidden}
-      .news-card::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:linear-gradient(90deg, var(--crl-accent), transparent 80%);opacity:.72}
-      .news-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-      .news-title{font-family:var(--crl-display);font-size:1.8rem;letter-spacing:1.5px;line-height:.98;margin:0}
-      .news-desc{font-size:var(--crl-sm);color:rgba(255,255,255,.66);line-height:1.72;margin:0}
-      .news-actions{margin-top:auto;display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
-      .news-arrow{display:inline-flex;align-items:center;gap:8px;font-size:var(--crl-xs);letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-muted)}
-      [data-theme="light"] .news-feature-copy,[data-theme="light"] .news-feature-note{color:rgba(0,0,0,.62)}
-      [data-theme="light"] .news-pulse{background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(244,248,250,.96))}
-      [data-theme="light"] .news-pulse-item{background:rgba(0,0,0,.025);border-color:rgba(10,28,82,.08)}
-      [data-theme="light"] .news-desc{color:rgba(0,0,0,.58)}
-      [data-theme="light"] .news-title{color:rgba(0,0,0,.88)}
-      [data-theme="light"] .news-feature-title{color:rgba(0,0,0,.88)}
-      [data-theme="light"] .news-pulse-title{color:rgba(0,0,0,.88)}
-      [data-theme="light"] .news-arrow{color:rgba(0,0,0,.4)}
+      .nw{max-width:1500px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
+      .nw-hd h1{margin:0;font:800 clamp(3rem,9vw,7rem)/.88 var(--h2-display);letter-spacing:-.05em;text-transform:none}
+      .nw-hd p{margin:18px 0 0;max-width:60ch;color:var(--h2-mute);font:500 clamp(1rem,1.6vw,1.25rem)/1.5 var(--h2-body)}
+      .nw-chips{display:flex;gap:8px;flex-wrap:wrap;margin:30px 0 26px}
+      .nw-chip{--tc:var(--h2-bone);display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 18px 0 10px;border:0;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 8%,transparent);color:var(--h2-bone);font:700 .92rem var(--h2-body);cursor:pointer;transition:background .15s,transform .15s}
+      .nw-chip i{width:26px;height:26px;display:grid;place-items:center;border-radius:9px;background:color-mix(in srgb,var(--tc) 20%,transparent);color:var(--tc);font-size:.75rem}
+      .nw-chip:hover{background:color-mix(in srgb,var(--h2-bone) 14%,transparent)}
+      .nw-chip[aria-pressed="true"]{background:var(--h2-bone);color:var(--h2-ink)}
+      .nw-chip[aria-pressed="true"] i{background:var(--tc);color:var(--h2-ink)}
+      .nw-chip small{opacity:.6;font-weight:700}
+      .nw-lead{--tc:var(--h2-cyan);display:grid;gap:18px;padding:clamp(24px,4vw,44px);border-radius:34px;text-decoration:none;color:inherit;
+        background:radial-gradient(100% 120% at 100% 0%,color-mix(in srgb,var(--tc) 28%,transparent),transparent 65%),color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);transition:transform .2s}
+      .nw-lead:hover{transform:translateY(-3px)}
+      .nw-lead h2{margin:0;max-width:22ch;font:800 clamp(2rem,5vw,4.2rem)/.98 var(--h2-display);letter-spacing:-.04em;text-transform:none}
+      .nw-lead p{margin:0;max-width:62ch;color:color-mix(in srgb,var(--h2-bone) 82%,transparent);font:500 1.12rem/1.6 var(--h2-body)}
+      .nw-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:var(--h2-mute);font:600 .88rem var(--h2-body)}
+      .nw-cat{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 13px 0 7px;border-radius:999px;background:color-mix(in srgb,var(--tc) 20%,transparent);color:var(--tc);font:800 .8rem var(--h2-body)}
+      .nw-cat i{width:20px;height:20px;display:grid;place-items:center;border-radius:7px;background:var(--tc);color:var(--h2-ink);font-size:.62rem}
+      .nw-go{display:inline-flex;align-items:center;gap:10px;justify-self:start;height:48px;padding:0 24px;border-radius:999px;background:var(--h2-cyan);color:var(--h2-ink);font:800 .95rem var(--h2-body)}
+      .nw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px;margin-top:16px}
+      .nw-card{--tc:var(--h2-cyan);display:grid;align-content:start;gap:14px;padding:24px;border-radius:30px;text-decoration:none;color:inherit;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);position:relative;overflow:hidden;transition:transform .2s,background .2s}
+      .nw-card::before{content:'';position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--tc),transparent)}
+      .nw-card:hover{transform:translateY(-4px);background:color-mix(in srgb,var(--h2-bone) 10%,transparent)}
+      .nw-card h2{margin:0;font:800 1.4rem/1.15 var(--h2-display);letter-spacing:-.03em;text-transform:none}
+      .nw-card p{margin:0;color:var(--h2-mute);font:500 .98rem/1.55 var(--h2-body);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+      .nw-tags{display:flex;gap:6px;flex-wrap:wrap}
+      .nw-tags span{padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 8%,transparent);color:var(--h2-mute);font:700 .74rem var(--h2-body)}
+      .nw-empty{padding:60px 0;color:var(--h2-mute);font:500 1.1rem var(--h2-body)}
+      .nw-dc{--tc:#8b95ff;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:44px;padding:26px 30px;border-radius:30px;background:radial-gradient(80% 140% at 0% 0%,rgba(88,101,242,.4),transparent 70%),color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .nw-dc b{display:block;font:800 1.4rem var(--h2-display);letter-spacing:-.03em}
+      .nw-dc span{color:var(--h2-mute);font:500 1rem var(--h2-body)}
+      .nw-dc a{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 26px;border-radius:999px;background:#5865f2;color:#fff;text-decoration:none;font:800 1rem var(--h2-body)}
+      .nw-rss{margin-top:22px;color:var(--h2-mute);font:500 .9rem var(--h2-body)} .nw-rss a{color:var(--h2-bone)}
     </style>
   </fragment>
 
-<div class="crl-hero news-hero">
-  <div class="news-kicker">
-    <span class="news-dot"></span>
-    <p class="crl-hero-eyebrow" style="margin:0">Plataforma · Software · Comunidad</p>
-  </div>
-  <h1 class="crl-hero-title">Noticias</h1>
-  <p class="crl-hero-sub news-intro">Updates de plataforma, software nuevo, cambios en el site y anuncios del proyecto.</p>
-</div>
-<hr class="crl-divider-fade news-rule">
+  <main class="nw">
+    <header class="nw-hd">
+      <h1>Noticias</h1>
+      <p>Lo que importa del gaming y los esports, la tecnología y la IA, el streaming y la creación de contenido, la cultura geek y Puerto Rico. Escrito por CORILLO.</p>
+    </header>
 
-<div class="news-shell">
-  <section class="news-hero-grid">
-    <article class="news-feature card-glass">
-      <div class="news-feature-top">
-        <span class="badge badge-accent"><i class="fa-solid fa-bolt"></i> Nuevo</span>
-        <span class="news-date">16 abril 2026</span>
-      </div>
-      <h2 class="news-feature-title">Sube tus videos — sin stream, sin YouTube</h2>
-      <p class="news-feature-copy">Ya puedes subir cualquier video directo desde tu perfil en CORILLO. Ponle título, compártelo con un link o embedalo en tu blog con un <code style="font-family:var(--crl-mono);font-size:.9em;color:var(--crl-accent)">&lt;iframe&gt;</code> — sin depender de YouTube, sin ads, sin que el viewer salga de tu sitio.</p>
-      <div class="news-feature-actions">
-        <a class="btn btn-primary" href="/noticias/vod-upload/">Leer nota destacada</a>
-        <span class="news-feature-note"><i class="fa-solid fa-upload"></i> Upload directo, embed player y título personalizado</span>
-      </div>
-    </article>
-
-    <aside class="news-pulse">
-      <div class="news-pulse-head">
-        <div>
-          <p class="crl-section-label" style="margin:0 0 6px">Pulso del proyecto</p>
-          <h2 class="news-pulse-title">Qué se está moviendo</h2>
-        </div>
-        <span class="badge badge-dim"><i class="fa-solid fa-wave-square"></i> Vivo</span>
-      </div>
-      <p class="news-pulse-sub">Las áreas que más actividad tienen en este momento.</p>
-      <div class="news-pulse-list">
-        <div class="news-pulse-item">
-          <strong>Video hosting propio</strong>
-          <span>Upload directo, embed player y títulos — CORILLO ya no solo graba streams, también aloja video.</span>
-        </div>
-        <div class="news-pulse-item">
-          <strong>Integración con sitios externos</strong>
-          <span>El embed iframe permite poner videos de CORILLO en cualquier blog o portfolio sin YouTube.</span>
-        </div>
-        <div class="news-pulse-item">
-          <strong>Perfil del streamer</strong>
-          <span>Upload, Reels y VODs en un solo panel — el perfil se convierte en un estudio completo.</span>
-        </div>
-      </div>
-      <div class="news-pulse-tags">
-        <span class="badge badge-confirm"><i class="fa-solid fa-map"></i> Roadmap activo</span>
-        <span class="badge badge-accent"><i class="fa-solid fa-code-branch"></i> Framework propio</span>
-      </div>
-    </aside>
-  </section>
-
-  <section style="margin-top:34px">
-    <div class="news-section-head">
-      <div>
-        <p class="crl-section-label">Últimas notas</p>
-        <h2 class="crl-section-title" style="margin:0">Últimas notas</h2>
-      </div>
+    <div class="nw-chips" role="group" aria-label="Filtrar por área">
+      <button class="nw-chip" type="button" data-c="" aria-pressed="true"><i class="fa-solid fa-layer-group" aria-hidden="true"></i>Todas <small>{posts.length}</small></button>
+      {CATEGORIES.filter(c => counts[c.id] > 0).map(c => (
+        <button class="nw-chip" type="button" data-c={c.id} aria-pressed="false" style={`--tc:${c.color}`}><i class={`fa-solid ${c.icon}`} aria-hidden="true"></i>{c.label} <small>{counts[c.id]}</small></button>
+      ))}
     </div>
 
-    <div class="news-grid">
-      {posts.map(post => {
-        const variant = post.data.badgeClass.replace('badge-', '');
+    <a class="nw-lead" id="nwLead" data-cat={leadCat.id} href={`/noticias/${lead.id}/`} style={`--tc:${leadCat.color}`}>
+      <div class="nw-meta"><span class="nw-cat"><i class={`fa-solid ${leadCat.icon}`} aria-hidden="true"></i>{leadCat.label}</span><span>{lead.data.date}</span><span>·</span><span>{readMinutes(lead.body)} min</span></div>
+      <h2>{lead.data.cardTitle || lead.data.heroTitle}</h2>
+      <p>{lead.data.summary}</p>
+      <span class="nw-go">Leer la nota <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+    </a>
+
+    <div class="nw-grid" id="nwGrid">
+      {rest.map(post => {
+        const c = catOf(post.data);
         return (
-          <article class={`card news-card card-${variant}`}>
-            <div class="news-meta">
-              <span class={`badge ${post.data.badgeClass}`}><i class={post.data.badgeIcon}></i> {post.data.badgeLabel}</span>
-              <span class="news-date">{post.data.date}</span>
-            </div>
-            <h2 class="news-title">{post.data.cardTitle || post.data.heroTitle}</h2>
-            <p class="news-desc">{post.data.summary}</p>
-            <div class="news-actions">
-              <a class="btn btn-primary" href={`/noticias/${post.id}/`}>Leer nota</a>
-              <span class="news-arrow">Ver más <i class="fa-solid fa-arrow-right"></i></span>
-            </div>
-          </article>
+          <a class="nw-card" data-cat={c.id} href={`/noticias/${post.id}/`} style={`--tc:${c.color}`}>
+            <div class="nw-meta"><span class="nw-cat"><i class={`fa-solid ${c.icon}`} aria-hidden="true"></i>{c.label}</span><span>{post.data.date}</span></div>
+            <h2>{post.data.cardTitle || post.data.heroTitle}</h2>
+            <p>{post.data.summary}</p>
+            {post.data.tags && <div class="nw-tags">{post.data.tags.slice(0, 3).map(t => <span>{t}</span>)}</div>}
+          </a>
         );
       })}
     </div>
-  </section>
-</div>
+    <p class="nw-empty" id="nwEmpty" hidden>Todavía no hay notas en esta área.</p>
 
+    <div class="nw-dc">
+      <div><b>¿Qué opinas? Cuéntanos en el Discord</b><span>El corillo comenta las noticias, pide temas y se junta a jugar.</span></div>
+      <a href={DISCORD_PATH}><i class="fa-brands fa-discord" aria-hidden="true"></i> Entrar al Discord</a>
+    </div>
+    <p class="nw-rss">Sigue las noticias por <a href="/rss.xml">RSS</a>.</p>
+  </main>
+
+  <script is:inline>
+  (function () {
+    var chips = document.querySelectorAll('.nw-chip'), lead = document.getElementById('nwLead'), cards = document.querySelectorAll('.nw-card'), empty = document.getElementById('nwEmpty');
+    function apply(c) {
+      chips.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.c === c)); });
+      var shown = 0;
+      [lead].concat([].slice.call(cards)).forEach(function (el) { var ok = !c || el.dataset.cat === c; el.hidden = !ok; if (ok) shown++; });
+      empty.hidden = shown > 0;
+    }
+    chips.forEach(function (b) { b.addEventListener('click', function () { apply(b.dataset.c); history.replaceState(null, '', b.dataset.c ? '?c=' + b.dataset.c : location.pathname); }); });
+    var q = new URLSearchParams(location.search).get('c'); if (q) apply(q);
+  })();
+  </script>
 </SiteShell>

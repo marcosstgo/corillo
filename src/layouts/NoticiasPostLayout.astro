@@ -1,92 +1,131 @@
 ---
 import SiteShell from './SiteShell.astro';
+import { catOf } from '../data/news';
+import { DISCORD_PATH } from '../data/site';
 
+interface Related { id: string; title: string; date: string; catLabel: string; catIcon: string; catColor: string }
 interface Props {
   title: string;
   description: string;
   canonical: string;
   ogTitle?: string;
   ogDescription?: string;
-  badgeClass: string;        // e.g. "badge-accent"
-  badgeIcon: string;         // e.g. "fa-solid fa-scissors"
-  badgeLabel: string;        // e.g. "Plataforma"
-  date: string;              // e.g. "30 marzo 2026"
+  badgeLabel: string;
+  category?: string;
+  date: string;              // "30 marzo 2026"
   heroTitle: string;
   heroSub: string;
-  wide?: boolean;            // 860px instead of 820px (default false)
+  minutes?: number;
+  tags?: string[];
+  sources?: { name: string; url: string }[];
+  ai?: boolean;
+  related?: Related[];
+  wide?: boolean;            // se conserva por compatibilidad con las notas viejas
 }
 
-const {
-  title,
-  description,
-  canonical,
-  ogTitle,
-  ogDescription,
-  badgeClass,
-  badgeIcon,
-  badgeLabel,
-  date,
-  heroTitle,
-  heroSub,
-  wide = false,
-} = Astro.props;
-
-const maxW = wide ? '860px' : '820px';
+const { title, description, canonical, ogTitle, ogDescription, badgeLabel, category, date, heroTitle, heroSub, minutes = 3, tags = [], sources = [], ai = false, related = [] } = Astro.props;
+const cat = catOf({ category, badgeLabel });
 ---
-<SiteShell
-  pageClass="p-legacy"
-  title={title}
-  description={description}
-  canonical={canonical}
-  ogType="article"
-  ogTitle={ogTitle}
-  ogDescription={ogDescription}
->
+<SiteShell pageClass="p-legacy" title={title} description={description} canonical={canonical} ogType="article" ogTitle={ogTitle} ogDescription={ogDescription}>
   <fragment slot="head">
     <style is:global>
-      .post-wrap{max-width:var(--post-max-w,820px);margin:0 auto;padding:0 20px 72px}
-      @media(max-width:600px){.post-wrap{padding:0 14px 56px}}
-      .post-meta{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
-      .post-body{display:flex;flex-direction:column;gap:24px}
-      .post-body p{margin:0;font-size:var(--crl-base);line-height:1.75;color:rgba(255,255,255,.76)}
-      .post-body h2{margin:8px 0 0;font-family:var(--crl-display);font-size:1.8rem;letter-spacing:2px;line-height:1}
-      .post-body ul{margin:0;padding-left:18px;color:rgba(255,255,255,.74)}
+      .art{--tc:var(--h2-cyan);max-width:1120px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 80px}
+      .art-hd{max-width:820px}
+      .art-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px;color:var(--h2-mute);font:600 .9rem var(--h2-body)}
+      .art-cat{display:inline-flex;align-items:center;gap:9px;height:36px;padding:0 15px 0 9px;border-radius:999px;background:color-mix(in srgb,var(--tc) 18%,transparent);color:var(--tc);font:800 .85rem var(--h2-body);text-decoration:none}
+      .art-cat i{width:22px;height:22px;display:grid;place-items:center;border-radius:8px;background:var(--tc);color:var(--h2-ink);font-size:.7rem}
+      .art-hd h1{margin:0;font:800 clamp(2.1rem,5.4vw,4.1rem)/1.02 var(--h2-display);letter-spacing:-.04em;text-transform:none;text-align:left}
+      .art-sub{margin:20px 0 0;max-width:62ch;color:var(--h2-mute);font:500 clamp(1.05rem,1.8vw,1.3rem)/1.5 var(--h2-body)}
+      .art-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:40px;margin-top:38px}
+      @media(min-width:1000px){.art-grid{grid-template-columns:minmax(0,720px) 300px;gap:56px}}
+      /* cuerpo */
+      .post-body{display:flex;flex-direction:column;gap:22px;min-width:0}
+      .post-body p{margin:0;color:color-mix(in srgb,var(--h2-bone) 88%,transparent);font:400 1.14rem/1.78 var(--h2-body)}
+      .post-body h2{margin:18px 0 0;font:800 clamp(1.5rem,3vw,2rem)/1.1 var(--h2-display);letter-spacing:-.03em;text-transform:none}
+      .post-body h3{margin:10px 0 0;font:800 1.25rem/1.2 var(--h2-display);letter-spacing:-.02em;text-transform:none}
+      .post-body ul,.post-body ol{margin:0;padding-left:22px;color:color-mix(in srgb,var(--h2-bone) 84%,transparent);font:400 1.1rem/1.7 var(--h2-body)}
       .post-body li{margin:0 0 8px}
-      [data-theme="light"] .post-body p,[data-theme="light"] .post-body ul{color:rgba(0,0,0,.68)}
-      .post-cta{margin-top:8px}
-      /* flow steps (reels / vods) */
-      .flow-steps{display:flex;flex-direction:column;gap:14px;margin:0}
-      .flow-step{display:flex;gap:14px;align-items:flex-start;padding:16px;background:rgba(var(--crl-accent-rgb),.04);border:1px solid rgba(var(--crl-accent-rgb),.1);border-radius:12px}
-      .flow-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--crl-accent);color:#000;font-family:var(--crl-mono);font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center}
-      .flow-step p{margin:0;font-size:var(--crl-sm);color:rgba(255,255,255,.76);line-height:1.6}
-      [data-theme="light"] .flow-step p{color:rgba(0,0,0,.65)}
-      [data-theme="light"] .flow-step{background:rgba(var(--crl-accent-rgb),.04);border-color:rgba(var(--crl-accent-rgb),.14)}
-      /* callout (la-fiebre) */
-      .post-callout{padding:18px 18px 16px;border-radius:20px;border:1px solid rgba(var(--crl-accent-rgb),.16);background:linear-gradient(160deg,rgba(var(--crl-accent-rgb),.06),rgba(10,28,82,.72))}
+      .post-body a{color:var(--h2-mag);text-underline-offset:3px}
+      .post-body blockquote{margin:6px 0;padding:6px 0 6px 22px;border-left:4px solid var(--tc);color:var(--h2-bone);font:500 1.25rem/1.55 var(--h2-display);letter-spacing:-.01em}
+      .post-body strong{color:var(--h2-bone)}
+      .post-body code{padding:2px 7px;border-radius:7px;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);font-family:'Space Mono',ui-monospace,monospace;font-size:.92em}
+      .post-body hr{border:0;height:1px;background:var(--h2-line);margin:10px 0}
+      .why{padding:20px 22px;border-radius:24px;background:linear-gradient(140deg,color-mix(in srgb,var(--tc) 16%,transparent),color-mix(in srgb,var(--h2-bone) 5%,transparent));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tc) 30%,transparent)}
+      .why p{font-size:1.08rem}
+      /* componentes de notas viejas */
+      .post-callout{padding:20px 22px;border-radius:24px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
       .post-links{display:flex;gap:10px;flex-wrap:wrap}
-      [data-theme="light"] .post-callout{background:rgba(var(--crl-accent-rgb),.05);border-color:rgba(var(--crl-accent-rgb),.2)}
-    </style>
-    <style define:vars={{ postMaxW: maxW }}>
-      .post-wrap { --post-max-w: var(--postMaxW) }
+      .post-cta{margin-top:8px}
+      .flow-steps{display:flex;flex-direction:column;gap:14px;margin:0}
+      .flow-step{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:20px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .flow-num{flex:none;width:30px;height:30px;border-radius:10px;background:var(--h2-cyan);color:var(--h2-ink);font:800 .85rem var(--h2-display);display:grid;place-items:center}
+      .flow-step p{font-size:1rem}
+      /* lateral: fuentes, etiquetas, aviso */
+      .art-side{display:grid;gap:16px;align-content:start}
+      .box{padding:20px;border-radius:24px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .box h2{margin:0 0 12px;font:800 1.05rem var(--h2-display);letter-spacing:-.02em;text-transform:none}
+      .src{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+      .src a{display:flex;gap:10px;align-items:baseline;color:var(--h2-bone);text-decoration:none;font:600 .95rem/1.3 var(--h2-body)}
+      .src a:hover{color:var(--h2-mag)}
+      .src i{color:var(--h2-mute);font-size:.7rem}
+      .tags{display:flex;gap:7px;flex-wrap:wrap}
+      .tag{padding:6px 12px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 9%,transparent);color:var(--h2-mute);font:700 .8rem var(--h2-body)}
+      .ai-note{display:flex;gap:12px;color:var(--h2-mute);font:500 .86rem/1.5 var(--h2-body)}
+      .ai-note i{flex:none;margin-top:3px;color:var(--h2-mag)}
+      .join{--tc:#8b95ff;display:grid;gap:10px;text-decoration:none;color:inherit}
+      .join b{font:800 1.15rem/1.15 var(--h2-display);letter-spacing:-.02em}
+      .join span{color:var(--h2-mute);font:500 .9rem/1.45 var(--h2-body)}
+      .join em{font-style:normal;display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;border-radius:999px;background:#5865f2;color:#fff;font:800 .92rem var(--h2-body)}
+      /* más notas */
+      .more{margin-top:64px;max-width:1120px}
+      .more h2{margin:0 0 18px;font:800 1.6rem var(--h2-display);letter-spacing:-.03em;text-transform:none}
+      .more-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
+      .more-card{--tc:var(--h2-cyan);display:grid;gap:12px;padding:20px;border-radius:26px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);text-decoration:none;color:inherit;transition:transform .18s,background .18s}
+      .more-card:hover{transform:translateY(-3px);background:color-mix(in srgb,var(--h2-bone) 10%,transparent)}
+      .more-card small{color:var(--tc);font:800 .8rem var(--h2-body)}
+      .more-card b{font:800 1.12rem/1.2 var(--h2-display);letter-spacing:-.02em}
+      .more-card span{color:var(--h2-mute);font:500 .85rem var(--h2-body)}
     </style>
     <slot name="head" />
   </fragment>
 
-  <div class="crl-hero">
-    <div class="post-meta">
-      <span class={`badge ${badgeClass}`}><i class={badgeIcon}></i> {badgeLabel}</span>
-      <span class="crl-xs crl-text-muted crl-mono">{date}</span>
-    </div>
-    <h1 class="crl-hero-title">{heroTitle.toUpperCase()}</h1>
-    <p class="crl-hero-sub">{heroSub}</p>
-  </div>
-  <hr class="crl-divider-fade crl-divider-flush" />
-
-  <div class="post-wrap">
-    <div class="card card-dim">
-      <div class="post-body">
-        <slot />
+  <article class="art" style={`--tc:${cat.color}`}>
+    <header class="art-hd">
+      <div class="art-meta">
+        <a class="art-cat" href={`/noticias/?c=${cat.id}`}><i class={`fa-solid ${cat.icon}`} aria-hidden="true"></i>{cat.label}</a>
+        <time>{date}</time><span>·</span><span>{minutes} min de lectura</span>
       </div>
+      <h1>{heroTitle}</h1>
+      <p class="art-sub">{heroSub}</p>
+    </header>
+
+    <div class="art-grid">
+      <div class="post-body"><slot /></div>
+
+      <aside class="art-side">
+        {sources.length > 0 && (
+          <div class="box">
+            <h2>Fuentes</h2>
+            <ul class="src">{sources.map(s => <li><a href={s.url} target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>{s.name}</a></li>)}</ul>
+          </div>
+        )}
+        {tags.length > 0 && (
+          <div class="box"><h2>Etiquetas</h2><div class="tags">{tags.map(t => <span class="tag">{t}</span>)}</div></div>
+        )}
+        {ai && (
+          <div class="box ai-note"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i><span>Nota redactada por CORILLO con apoyo de IA a partir de las fuentes citadas, y verificada contra ellas antes de publicarse. Si ves un error, avísanos en Discord.</span></div>
+        )}
+        <a class="box join" href={DISCORD_PATH}><b>Comenta esta nota con el corillo</b><span>Nos vemos en el Discord.</span><em><i class="fa-brands fa-discord" aria-hidden="true"></i> Entrar al Discord</em></a>
+      </aside>
     </div>
-  </div>
+
+    {related.length > 0 && (
+      <section class="more">
+        <h2>Más noticias</h2>
+        <div class="more-grid">{related.map(r => (
+          <a class="more-card" href={`/noticias/${r.id}/`} style={`--tc:${r.catColor}`}><small><i class={`fa-solid ${r.catIcon}`} aria-hidden="true"></i> {r.catLabel}</small><b>{r.title}</b><span>{r.date}</span></a>
+        ))}</div>
+      </section>
+    )}
+  </article>
 </SiteShell>
