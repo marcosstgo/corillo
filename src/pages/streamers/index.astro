@@ -8,7 +8,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 >
   <fragment slot="head">
     <meta name="theme-color" content="#06143f" />
-    <link rel="stylesheet" href="/assets/streamers2.css?v=1">
+    <link rel="stylesheet" href="/assets/streamers2.css?v=2">
   </fragment>
 
 <main class="h2-page sr-page">
@@ -39,9 +39,13 @@ import SiteShell from '../../layouts/SiteShell.astro';
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <input id="searchInput" type="search" placeholder="Buscar streamer" aria-label="Buscar streamer" autocomplete="off" spellcheck="false">
     </label>
+    <div class="sr-view" role="group" aria-label="Distribución de la lista">
+      <button type="button" class="sr-view-btn" data-cols="2" aria-pressed="true" title="Dos columnas" aria-label="Dos columnas"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i></button>
+      <button type="button" class="sr-view-btn" data-cols="1" aria-pressed="false" title="Una columna" aria-label="Una columna"><i class="fa-solid fa-list" aria-hidden="true"></i></button>
+    </div>
   </div>
 
-  <div class="sr-list" id="grid">
+  <div class="sr-list" id="grid" data-cols="2">
     <span class="sk-label" role="status">Cargando streamers…</span>
     <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
     <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
@@ -49,6 +53,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
     <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
     <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
   </div>
+<script is:inline>try{if(localStorage.getItem('corillo-streamers-cols')==='1')document.getElementById('grid').dataset.cols='1';}catch(e){}</script>
 </main>
 
 <script>
@@ -218,6 +223,18 @@ import SiteShell from '../../layouts/SiteShell.astro';
       render();
     } catch {}
   }
+
+  /* ── Distribución: 2 columnas (por defecto) o 1; se recuerda la elección ── */
+  (function () {
+    const btns = document.querySelectorAll('.sr-view-btn');
+    const set = (cols, save) => {
+      grid.dataset.cols = cols;
+      btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cols === cols)));
+      if (save) { try { localStorage.setItem('corillo-streamers-cols', cols); } catch (e) {} }
+    };
+    set(grid.dataset.cols === '1' ? '1' : '2', false);
+    btns.forEach(b => b.addEventListener('click', () => set(b.dataset.cols === '1' ? '1' : '2', true)));
+  })();
 
   /* ── Search ── */
   document.getElementById('searchInput').addEventListener('input', e => {
