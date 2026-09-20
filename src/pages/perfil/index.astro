@@ -12,7 +12,7 @@ import { version } from '../../../version.json';
   <title>Mi perfil — CORILLO</title>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#060608">
+  <meta name="theme-color" content="#06143f">
   <link rel="stylesheet" href="/assets/fonts/fonts.css" />
   <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
   <link rel="stylesheet" href={`/assets/corillo.css?v=${version}`}>
@@ -48,7 +48,7 @@ import { version } from '../../../version.json';
       position: sticky; top: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 20px; height: 52px;
-      background: rgba(6,6,8,.88); backdrop-filter: blur(12px);
+      background: rgba(6,20,63,.88); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
     .pf-header-brand { display: flex; align-items: center; }
@@ -71,8 +71,8 @@ import { version } from '../../../version.json';
     .btn:hover { border-color: var(--border-h); background: rgba(255,255,255,.05); }
     .btn.primary { background: var(--accent); color: #000; border-color: transparent; font-weight: 700; }
     .btn.primary:hover { opacity: .88; }
-    .btn.danger { border-color: rgba(223,48,48,.35); color: #e17055; }
-    .btn.danger:hover { background: rgba(223,48,48,.08); }
+    .btn.danger { border-color: rgba(255,45,85,.35); color: #e17055; }
+    .btn.danger:hover { background: rgba(255,45,85,.08); }
     .btn.sm { padding: 4px 10px; font-size: .7rem; }
 
     /* ── Spinner ── */
@@ -95,7 +95,7 @@ import { version } from '../../../version.json';
     }
     #toast.show { transform: translateX(-50%) translateY(0); }
     #toast.ok  { border-color: rgba(0,184,148,.4); color: #00b894; }
-    #toast.err { border-color: rgba(223,48,48,.4); color: #e17055; }
+    #toast.err { border-color: rgba(255,45,85,.4); color: #e17055; }
 
     /* ════════════════════════════════
        LOGIN SCREEN
@@ -288,8 +288,8 @@ import { version } from '../../../version.json';
     .key-warning {
       display: flex; align-items: flex-start; gap: 10px;
       padding: 10px 14px; border-radius: 8px; font-size: .85rem;
-      background: rgba(223,48,48,.07); border: 1px solid rgba(223,48,48,.18);
-      color: rgba(242,239,233,.7); margin-bottom: 14px;
+      background: rgba(255,45,85,.07); border: 1px solid rgba(255,45,85,.18);
+      color: rgba(245,248,255,.7); margin-bottom: 14px;
     }
     .key-warning i { color: #e17055; margin-top: 2px; flex-shrink: 0; }
     .key-warning.neutral { background: rgba(255,255,255,.03); border-color: var(--border); }
@@ -950,7 +950,7 @@ import { version } from '../../../version.json';
         Configuración → Stream → Servicio: <code>Personalizado</code><br>
         Servidor: <code>rtmp://corillo.live/live</code><br>
         Clave: <code id="obsKeyHint">••••••••</code><br>
-        <span style="color:rgba(242,239,233,.35);font-size:.72rem">Formato: <code id="obsKeyFormat" style="color:rgba(242,239,233,.35)">&#123;canal&#125;?secret=••••••••</code></span>
+        <span style="color:rgba(245,248,255,.35);font-size:.72rem">Formato: <code id="obsKeyFormat" style="color:rgba(245,248,255,.35)">&#123;canal&#125;?secret=••••••••</code></span>
       </div>
 
       <!-- Portada del canal -->
@@ -1301,7 +1301,7 @@ function syncThemeUi() {
   const mode = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
   const meta = document.querySelector('meta[name="theme-color"]');
   const btn  = document.getElementById('themeBtn');
-  if (meta) meta.setAttribute('content', mode === 'light' ? '#eef7fb' : '#060608');
+  if (meta) meta.setAttribute('content', mode === 'light' ? '#eef7fb' : '#06143f');
   if (btn) btn.innerHTML = mode === 'light'
     ? '<i class="fa-solid fa-moon"></i>'
     : '<i class="fa-solid fa-circle-half-stroke"></i>';

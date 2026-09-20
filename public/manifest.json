@@ -4,8 +4,8 @@
   "description": "Plataforma de streaming independiente desde Puerto Rico.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#060608",
-  "theme_color": "#060608",
+  "background_color": "#06143f",
+  "theme_color": "#06143f",
   "lang": "es-PR",
   "icons": [
     { "src": "/assets/favicon.png",       "sizes": "32x32",   "type": "image/png" },

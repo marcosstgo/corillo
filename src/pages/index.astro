@@ -52,7 +52,6 @@ import SiteShell from '../layouts/SiteShell.astro';
         </div>
       </div>
 
-      <nav class="h2-roster" id="heroRoster" aria-label="Streamers del corillo"></nav>
       <div class="rotate-bar" id="rotateBar"></div>
       <div class="featured-dots" id="featuredDots" style="display:none"></div>
     </div>
@@ -77,7 +76,16 @@ import SiteShell from '../layouts/SiteShell.astro';
       <a href="/vods/" class="h2-more-link">Ver todos los VODs</a>
     </div>
     <div class="h2-vods" id="vodsCarousel">
-      <p class="h2-empty">Cargando transmisiones…</p>
+      <span class="sk-label" role="status">Cargando transmisiones…</span>
+      <div class="h2-vod is-lead" aria-hidden="true">
+        <div class="sk sk-thumb" style="border-radius:24px"></div>
+        <div class="h2-vod-body"><span class="sk sk-face" style="width:52px;height:52px"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:70%"></span><span class="sk sk-line" style="width:32%"></span></div></div>
+      </div>
+      <div class="h2-vod-list" aria-hidden="true">
+        <div class="h2-vod"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="sk-stack"><span class="sk sk-line" style="width:88%"></span><span class="sk sk-line" style="width:45%"></span></div></div>
+        <div class="h2-vod"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="sk-stack"><span class="sk sk-line" style="width:88%"></span><span class="sk sk-line" style="width:45%"></span></div></div>
+        <div class="h2-vod"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="sk-stack"><span class="sk sk-line" style="width:88%"></span><span class="sk sk-line" style="width:45%"></span></div></div>
+      </div>
     </div>
   </section>
 
@@ -88,7 +96,17 @@ import SiteShell from '../layouts/SiteShell.astro';
       <span class="h2-count"><span id="totalCountEl">0</span> streamers</span>
       <a href="/streamers/" class="h2-more-link">Ver todos</a>
     </div>
-    <div class="h2-people" id="channelGrid"><!-- rendered by JS --></div>
+    <div class="h2-people" id="channelGrid">
+      <span class="sk-label" role="status">Cargando el corillo…</span>
+      <div class="sk sk-person"></div>
+      <div class="sk sk-person"></div>
+      <div class="sk sk-person"></div>
+      <div class="sk sk-person"></div>
+      <div class="sk sk-person"></div>
+      <div class="sk sk-person"></div>
+      <div class="sk sk-person"></div>
+      <div class="sk sk-person"></div>
+    </div>
   </section>
 
   <!-- REELS -->
@@ -677,24 +695,9 @@ function renderLiveSection(live, paths) {
   }).join('');
 }
 
-/* ── El corillo: rostros primero ─────────────────────── */
-function renderHeroRoster(liveSet) {
-  const box = document.getElementById('heroRoster');
-  if (!box) return;
-  const ordered = STREAMERS.filter(s => !s.soon).sort((a, b) => (liveSet.has(b.key) ? 1 : 0) - (liveSet.has(a.key) ? 1 : 0));
-  const shown = ordered.slice(0, 7);
-  box.innerHTML = shown.map(s => {
-    const live = liveSet.has(s.key);
-    return `<a href="/${s.key}/" class="${live ? 'is-live' : ''}" data-name="${s.name}${live ? ' · en vivo' : ''}" aria-label="${s.name}${live ? ', en vivo' : ''}">
-      <span class="h2-face" style="background:${s.color || '#1e3a4a'}">${faceInner(s)}</span></a>`;
-  }).join('') + (ordered.length > shown.length
-    ? `<a href="/streamers/" class="h2-more" aria-label="Ver los ${ordered.length} streamers">+${ordered.length - shown.length}</a>` : '');
-}
-
 function renderChannelGrid(paths) {
   const liveSet = getLiveSet(paths);
   const grid    = document.getElementById('channelGrid');
-  renderHeroRoster(liveSet);
 
   let list = STREAMERS.filter(s => !s.soon);
   if (searchQuery) {

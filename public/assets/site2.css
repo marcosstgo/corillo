@@ -1,20 +1,20 @@
 /* ============================================================================
    SITE 2 — capa de shell para todo el sitio (sep-2026)
-   Cargada por SiteShell. Define los tokens h2-*, quita la sidebar, rehace la
-   topbar y el footer, y fija tipografía/color base. Cada página encima ajusta
+   Cargada por SiteShell. Define los tokens h2-*, el footer y la tipografía/color base.
+   La navegación (barra superior, menú lateral, pestañas móviles) vive en shell.css. Cada página encima ajusta
    su propio contenido (home2.css, vods2.css…).
-   Modo oscuro únicamente: la identidad es negro + cian/magenta.
+   Modo oscuro únicamente. Paleta Cobalto: azul bandera + flamboyán/sol.
    ============================================================================ */
 :root {
-  --h2-ink:   #060608;
-  --h2-panel: #0e0e13;
-  --h2-raise: #16161c;
-  --h2-line:  rgba(242,239,233,.10);
-  --h2-bone:  #f2efe9;
-  --h2-mute:  #9a9ea9;
-  --h2-cyan:  #00f0ff;
-  --h2-mag:   #ff00e5;
-  --h2-live:  #ff3b4f;
+  --h2-ink:   #06143f;
+  --h2-panel: #0d2260;
+  --h2-raise: #173383;
+  --h2-line:  rgba(245,248,255,.10);
+  --h2-bone:  #f5f8ff;
+  --h2-mute:  #a4b6e6;
+  --h2-cyan:  #ff6a3d;
+  --h2-mag:   #ffd23f;
+  --h2-live:  #ff2d55;
   --h2-gutter: clamp(18px, 4vw, 56px);
   --h2-display: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
   --h2-body:    'DM Sans', system-ui, sans-serif;
@@ -22,41 +22,6 @@
 html { color-scheme: dark; }
 body { background: var(--h2-ink); color: var(--h2-bone); font-family: var(--h2-body); }
 body .scanlines, body .grain { display: none; }
-
-/* ── sin sidebar: la navegación vive arriba; los canales, en cada página ── */
-body .left-sidebar { display: none !important; }
-body .page-right   { margin-left: 0 !important; }
-
-/* ── topbar ── */
-body .topbar {
-  position: sticky; top: 0; height: 64px; padding: 0 var(--h2-gutter);
-  background: rgba(6,6,8,.86); border-bottom: 1px solid var(--h2-line);
-  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-}
-@media (min-width: 1100px) {
-  body .topbar-nav   { display: flex !important; gap: 4px; margin-left: 28px; }
-  body .nav-menu-btn { display: none !important; }
-}
-body .topbar-link {
-  padding: 8px 14px; border-radius: 999px; text-transform: none;
-  font: 500 .95rem/1 var(--h2-body); letter-spacing: 0;
-  color: var(--h2-bone); opacity: .78; transition: opacity .15s, background .15s;
-}
-body .topbar-link i { display: none; }
-body .topbar-link:hover { opacity: 1; background: rgba(242,239,233,.08); }
-body .topbar-link.is-current { opacity: 1; background: rgba(242,239,233,.12); }
-body .topbar-search {
-  background: rgba(242,239,233,.07); border: 1px solid transparent; border-radius: 999px;
-  transition: border-color .15s, background .15s;
-}
-body .topbar-search:focus-within { border-color: var(--h2-cyan); background: rgba(242,239,233,.1); box-shadow: none; }
-body .topbar-search .topbar-search-input { background: transparent; border: 0; box-shadow: none; text-transform: none; letter-spacing: 0; font-family: var(--h2-body); }
-body .topbar-search-input::placeholder { font-family: var(--h2-body); text-transform: none; letter-spacing: 0; color: var(--h2-mute); }
-body .top-actions .ghost-btn.primary {
-  border-radius: 999px; padding: 10px 20px;
-  font: 700 .9rem/1 var(--h2-body); letter-spacing: 0; text-transform: none;
-}
-body .theme-btn { display: none; }
 
 /* ── footer ── */
 body .site-footer { background: var(--h2-ink); border-top: 1px solid var(--h2-line); padding-left: var(--h2-gutter); padding-right: var(--h2-gutter); }
@@ -110,5 +75,46 @@ body .page-right .cat-label, body .page-right .plat-tag, body .page-right .app-t
 }
 body .page-right .crl-btn, body .page-right .btn { border-radius: 999px; font-family: var(--h2-body); text-transform: none; letter-spacing: 0; font-weight: 700; }
 body .page-right .crl-btn-primary, body .page-right .btn-primary { background: var(--h2-bone); color: var(--h2-ink); border-color: transparent; }
-body .page-right .crl-btn-primary:hover, body .page-right .btn-primary:hover { filter: none; background: #fff; box-shadow: 0 0 0 4px rgba(0,240,255,.35); }
+body .page-right .crl-btn-primary:hover, body .page-right .btn-primary:hover { filter: none; background: #fff; box-shadow: 0 0 0 4px rgba(255,106,61,.35); }
 body .page-right input:not([type="checkbox"]):not([type="radio"]), body .page-right select, body .page-right textarea { font-family: var(--h2-body); }
+
+/* ═════════ Skeleton de carga ═════════
+   Bloques con la forma del contenido que va a llegar. Las páginas los dejan en el HTML
+   y el JS los reemplaza con innerHTML cuando hay datos. Colores derivados de los tokens h2-*.
+   - Aparece con 120 ms de retraso: si los datos llegan rápido, nunca se ve.
+   - El brillo da 12 pasadas (~20 s) y se detiene: si algo falla no queda animando para siempre. */
+:root {
+  --sk-base: var(--h2-raise);
+  --sk-hi:   color-mix(in srgb, var(--h2-cyan) 9%, var(--h2-raise));
+}
+.sk {
+  display: block; border-radius: 12px;
+  background: linear-gradient(100deg, var(--sk-base) 30%, var(--sk-hi) 50%, var(--sk-base) 70%) 100% 0 / 300% 100%;
+  animation: sk-fade .3s ease .12s both, sk-sweep 1.7s ease-in-out .12s 12;
+}
+@keyframes sk-fade  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes sk-sweep { to { background-position: 0 0; } }
+.sk-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.sk-thumb  { width: 100%; aspect-ratio: 16 / 9; }
+.sk-line   { height: 14px; border-radius: 999px; }
+.sk-line.lg { height: 26px; }
+.sk-face   { flex: none; border-radius: 50%; }
+.sk-stack  { display: grid; gap: 9px; flex: 1; min-width: 0; }
+.sk-person { aspect-ratio: 4 / 5; border-radius: 24px; }
+.sk-pill   { width: 112px; height: 42px; border-radius: 999px; }
+/* fila de streamer: misma rejilla que .sr en streamers2.css */
+.sk-sr {
+  display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: clamp(16px, 3vw, 32px); align-items: center;
+  padding: clamp(18px, 2.4vw, 28px) clamp(8px, 1.5vw, 20px); border-bottom: 1px solid var(--h2-line);
+}
+.sk-sr .sk-face { width: 96px; height: 96px; }
+@media (max-width: 760px) {
+  .sk-sr { grid-template-columns: 64px minmax(0, 1fr); gap: 14px; }
+  .sk-sr .sk-face { width: 64px; height: 64px; }
+  .sk-sr .sk-pill { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+
+/* filas de canal en carga (menú lateral) */
+.sk-row-nv { display: flex; align-items: center; gap: 12px; padding: 8px 12px; }
+.sk-row-nv .sk-stack { gap: 7px; }

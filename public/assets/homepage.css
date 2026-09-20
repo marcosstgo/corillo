@@ -4,7 +4,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  --h: 195;               /* accent hue — cian (Anti-BufferBloat Pro), tweakable */
+  --h: 40;               /* accent hue — cian (Anti-BufferBloat Pro), tweakable */
   --accent: oklch(0.72 0.18 var(--h));
   --accent-dim: oklch(0.55 0.14 var(--h));
   --accent-glow: oklch(0.72 0.18 var(--h) / 0.25);
@@ -704,7 +704,7 @@ body.no-scanlines .scanlines { display: none; }
 .rail-arrow {
   position: absolute; top: 50%; translate: 0 -50%; z-index: 6;
   width: 36px; height: 36px; display: grid; place-items: center;
-  background: rgba(6, 6, 8, .7); backdrop-filter: blur(6px);
+  background: rgba(6,20,63, .7); backdrop-filter: blur(6px);
   border: 1px solid var(--border-h); color: var(--white);
   opacity: 0; visibility: hidden; transition: opacity .2s, border-color .2s, background .2s, transform .15s;
 }

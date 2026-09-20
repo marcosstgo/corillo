@@ -7,7 +7,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   canonical="https://corillo.live/streamers/"
 >
   <fragment slot="head">
-    <meta name="theme-color" content="#060608" />
+    <meta name="theme-color" content="#06143f" />
     <link rel="stylesheet" href="/assets/streamers2.css?v=1">
   </fragment>
 
@@ -41,7 +41,14 @@ import SiteShell from '../../layouts/SiteShell.astro';
     </label>
   </div>
 
-  <div class="sr-list" id="grid"></div>
+  <div class="sr-list" id="grid">
+    <span class="sk-label" role="status">Cargando streamers…</span>
+    <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
+    <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
+    <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
+    <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
+    <div class="sk-sr" aria-hidden="true"><span class="sk sk-face"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:min(340px,62%)"></span><span class="sk sk-line" style="width:min(220px,40%)"></span></div><span class="sk sk-pill"></span></div>
+  </div>
 </main>
 
 <script>
@@ -217,6 +224,14 @@ import SiteShell from '../../layouts/SiteShell.astro';
     searchQ = e.target.value.toLowerCase().trim();
     render();
   });
+  // buscador global del menú: filtra aquí en vivo y también entra con ?q=
+  window.addEventListener('crl-search', e => {
+    searchQ = String(e.detail || '');
+    document.getElementById('searchInput').value = searchQ;
+    render();
+  });
+  const q0 = new URLSearchParams(location.search).get('q');
+  if (q0) { document.getElementById('searchInput').value = q0; searchQ = q0.toLowerCase().trim(); }
 
   /* ── Filters ── */
   document.getElementById('filterRow').addEventListener('click', e => {

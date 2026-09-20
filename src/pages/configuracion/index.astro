@@ -10,14 +10,14 @@ import SiteShell from '../../layouts/SiteShell.astro';
   ogDescription="Guía completa para configurar OBS Studio o Meld Studio y hacer stream a CORILLO desde Puerto Rico."
 >
   <fragment slot="head">
-    <meta name="theme-color" content="#060608" />
+    <meta name="theme-color" content="#06143f" />
     <style>
       .wrap{max-width:860px;margin:0 auto;padding:0 20px}
       @media(max-width:600px){.wrap{padding:0 14px}}
 
       .hero{padding:48px 0 36px;border-bottom:1px solid var(--crl-border)}
       .hero-title{font-family:var(--crl-display);font-size:clamp(2rem,5vw,3.2rem);letter-spacing:2px;line-height:1;margin-bottom:8px}
-      .hero-sub{color:rgba(242,239,233,.6);max-width:64ch;font-size:.9rem}
+      .hero-sub{color:rgba(245,248,255,.6);max-width:64ch;font-size:.9rem}
       [data-theme="light"] .hero-sub{color:rgba(18,18,15,.6)}
 
       .section{padding:32px 0}
@@ -48,7 +48,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
         font-family:var(--crl-display);font-size:2rem;color:rgba(var(--crl-live-rgb),.25);
         letter-spacing:1px;line-height:1;flex-shrink:0;
       }
-      .step-title{font-family:var(--crl-mono);text-transform:uppercase;letter-spacing:2.5px;font-size:11px;color:rgba(242,239,233,.7)}
+      .step-title{font-family:var(--crl-mono);text-transform:uppercase;letter-spacing:2.5px;font-size:11px;color:rgba(245,248,255,.7)}
       .step-path{font-family:var(--crl-mono);font-size:10px;color:var(--crl-muted);letter-spacing:.5px;margin-top:3px}
 
       /* fields */
@@ -56,7 +56,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .field:last-child{margin-bottom:0}
       .field-label{
         font-family:var(--crl-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;
-        color:rgba(242,239,233,.5);margin-bottom:5px;display:block;
+        color:rgba(245,248,255,.5);margin-bottom:5px;display:block;
       }
       .code-wrap{position:relative}
       .code{
@@ -74,7 +74,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       }
       .copy-btn:hover{background:rgba(255,255,255,.12);color:var(--crl-white)}
 
-      .field-note{margin-top:7px;font-size:.92rem;color:rgba(242,239,233,.45);line-height:1.5}
+      .field-note{margin-top:7px;font-size:.92rem;color:rgba(245,248,255,.45);line-height:1.5}
       .field-note a{color:var(--crl-accent);text-decoration:none}
       .field-note a:hover{text-decoration:underline}
       .field-note code{font-family:var(--crl-mono);font-size:10px;color:rgba(var(--crl-live-rgb),.8);
@@ -92,14 +92,14 @@ import SiteShell from '../../layouts/SiteShell.astro';
         font-family:var(--crl-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
         color:rgba(var(--crl-live-rgb),.7);margin-bottom:10px;
       }
-      .note-card p{font-size:.92rem;color:rgba(242,239,233,.5);line-height:1.6;margin:0}
+      .note-card p{font-size:.92rem;color:rgba(245,248,255,.5);line-height:1.6;margin:0}
       .note-card code{font-family:var(--crl-mono);font-size:10px;color:rgba(var(--crl-live-rgb),.8);
         background:rgba(var(--crl-live-rgb),.08);padding:2px 5px;border-radius:4px}
 
       .tshoot{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
-      .tshoot li{display:flex;gap:12px;align-items:flex-start;font-size:.85rem;color:rgba(242,239,233,.65);line-height:1.5}
+      .tshoot li{display:flex;gap:12px;align-items:flex-start;font-size:.85rem;color:rgba(245,248,255,.65);line-height:1.5}
       .tshoot li i{color:rgba(var(--crl-live-rgb),.6);margin-top:2px;flex-shrink:0;width:14px}
-      .tshoot strong{color:rgba(242,239,233,.85)}
+      .tshoot strong{color:rgba(245,248,255,.85)}
 
       .page-footer{
         margin-top:40px;padding:20px 0 60px;border-top:1px solid var(--crl-border);
@@ -304,7 +304,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
           </div>
         </div>
         <div class="field">
-          <div class="field-note" style="font-size:.9rem;color:rgba(242,239,233,.65);">
+          <div class="field-note" style="font-size:.9rem;color:rgba(245,248,255,.65);">
             Dale click a <strong>Iniciar emisión</strong> en OBS. En 5–10 segundos el stream debería aparecer en tu player de CORILLO:
           </div>
         </div>
@@ -416,7 +416,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
           </div>
         </div>
         <div class="field">
-          <div class="field-note" style="font-size:.9rem;color:rgba(242,239,233,.65);">
+          <div class="field-note" style="font-size:.9rem;color:rgba(245,248,255,.65);">
             Asegúrate de que el destino <strong>Custom RTMP</strong> esté activado y dale click a <strong>Go Live</strong>. En 5–10 segundos el stream aparecerá en tu player de CORILLO.
           </div>
         </div>

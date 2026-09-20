@@ -17,7 +17,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   <header class="h2-page-hd">
     <h1>VODs</h1>
     <p>Todas las transmisiones grabadas del corillo, para verlas cuando quieras.</p>
-    <div class="va-stats" id="vaStats"><span>Cargando…</span></div>
+    <div class="va-stats" id="vaStats"><span class="sk-label" role="status">Cargando…</span><span class="sk sk-line" style="width:210px" aria-hidden="true"></span></div>
   </header>
 
   <div class="va-controls">
@@ -30,14 +30,24 @@ import SiteShell from '../../layouts/SiteShell.astro';
     </label>
   </div>
 
-  <div class="va-featured hidden" id="vaFeatured"></div>
+  <div class="va-featured" id="vaFeatured">
+    <div class="va-fcard" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:24px"></div><div class="va-fcard-info"><span class="sk sk-line lg" style="width:75%"></span><span class="sk sk-line" style="width:34%"></span></div></div>
+    <div class="va-side"><div class="va-scard" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="va-scard-body sk-stack"><span class="sk sk-line" style="width:40%"></span><span class="sk sk-line" style="width:85%"></span><span class="sk sk-line" style="width:50%"></span></div></div><div class="va-scard" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="va-scard-body sk-stack"><span class="sk sk-line" style="width:40%"></span><span class="sk sk-line" style="width:85%"></span><span class="sk sk-line" style="width:50%"></span></div></div></div>
+  </div>
 
   <section>
     <div class="va-section-hd" id="vaSecHd">
       <h2>Archivo</h2>
       <span class="va-section-count" id="vaSecCount"></span>
     </div>
-    <div class="va-grid" id="vodGrid"></div>
+    <div class="va-grid" id="vodGrid">
+      <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
+      <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
+      <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
+      <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
+      <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
+      <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
+    </div>
   </section>
 </main>
 
