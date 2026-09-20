@@ -16,6 +16,7 @@ import { version } from '../../../version.json';
   <link rel="stylesheet" href="/assets/fonts/fonts.css" />
   <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css" />
   <link rel="stylesheet" href={`/assets/corillo.css?v=${version}`}>
+  <link rel="stylesheet" href="/assets/legacy-type.css?v=2" />
   <script src="/assets/pocketbase.umd.js" is:inline></script>
   <script is:inline>
     const savedTheme = localStorage.getItem('corillo-theme');
@@ -114,7 +115,7 @@ import { version } from '../../../version.json';
     .login-brand-wrap {
       padding: 14px 18px; border-radius: 16px;
       border: 1px solid var(--border);
-      background: linear-gradient(160deg,rgba(13,28,40,.82),rgba(7,17,24,.64));
+      background: linear-gradient(160deg,rgba(13,28,40,.82),rgba(10,28,82,.64));
       box-shadow: 0 12px 38px rgba(0,0,0,.22);
     }
     .login-brand svg { height: 52px; width: auto; display: block; }
@@ -126,7 +127,7 @@ import { version } from '../../../version.json';
     .login-card {
       background:
         radial-gradient(circle at top left, rgba(var(--crl-accent-rgb),.14), transparent 40%),
-        linear-gradient(160deg, rgba(13,28,40,.92), rgba(7,17,24,.86));
+        linear-gradient(160deg, rgba(13,28,40,.92), rgba(10,28,82,.86));
       border: 1px solid rgba(var(--crl-accent-rgb),.16);
       border-radius: 14px; padding: 32px 36px; width: 100%; max-width: 380px;
       box-shadow: 0 24px 60px rgba(0,0,0,.28);
@@ -139,7 +140,7 @@ import { version } from '../../../version.json';
     }
     .login-card h2 { font-family: var(--display); font-size: 1.8rem; margin-bottom: 6px; letter-spacing: 1px; }
     .login-card > p { color: var(--muted); font-size: .85rem; margin-bottom: 24px; }
-    [data-theme="light"] .login-card > p { color: rgba(5,16,21,.56); }
+    [data-theme="light"] .login-card > p { color: rgba(6,20,63,.56); }
 
     .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
     .field label { font-size: .7rem; font-family: var(--mono); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
@@ -216,7 +217,7 @@ import { version } from '../../../version.json';
     .pf-tabbar {
       position: sticky; top: 52px; z-index: 50;
       display: flex;
-      background: rgba(3,10,14,.92); backdrop-filter: blur(12px);
+      background: rgba(6,20,63,.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 0 32px; overflow-x: auto; scrollbar-width: none;
     }
@@ -759,7 +760,7 @@ import { version } from '../../../version.json';
     [data-theme="light"] .vod-row { background: rgba(255,255,255,.64); }
     [data-theme="light"] .reel-row { background: rgba(255,255,255,.64); }
     [data-theme="light"] .reel-panel { background: rgba(255,255,255,.8); }
-    [data-theme="light"] .key-warning { color: rgba(5,16,21,.7); }
+    [data-theme="light"] .key-warning { color: rgba(6,20,63,.7); }
 
     /* ════════════════════════════════
        MOBILE
@@ -822,7 +823,7 @@ import { version } from '../../../version.json';
     </a>
   </div>
   <div class="login-card" id="loginCard">
-    <h2>MI PERFIL</h2>
+    <h2>Mi perfil</h2>
     <p>Entra con tu cuenta de CORILLO para gestionar tu canal.</p>
     <div class="field">
       <label>Email</label>

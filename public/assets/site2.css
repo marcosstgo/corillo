@@ -118,3 +118,6 @@ body .page-right input:not([type="checkbox"]):not([type="radio"]), body .page-ri
 /* filas de canal en carga (menú lateral) */
 .sk-row-nv { display: flex; align-items: center; gap: 12px; padding: 8px 12px; }
 .sk-row-nv .sk-stack { gap: 7px; }
+
+/* páginas cuyo encabezado va alineado a la izquierda (roadmap) */
+body.p-left .page-right .crl-hero-title, body.p-left .page-right .crl-hero-sub, body.p-left .page-right .crl-hero-eyebrow { text-align: left; margin-left: 0; margin-right: 0; }

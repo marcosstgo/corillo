@@ -1,0 +1,15 @@
+/* ============================================================================
+   Tipografía del rediseño para páginas con layout propio (perfil, reels).
+   Mismo criterio que .p-legacy en site2.css: Bricolage para títulos, DM Sans para
+   todo lo demás, sin MAYÚSCULAS espaciadas. Cargar DESPUÉS de corillo.css.
+   Los bloques de código y stream keys conservan la fuente monoespaciada.
+   ============================================================================ */
+:root {
+  --crl-display: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+  --crl-mono: 'DM Sans', system-ui, sans-serif;
+}
+html:root body:not(.x) :where(*) { text-transform: none; letter-spacing: normal; }
+html:root body:not(.x) :where(h1, h2, h3, h4) { font-weight: 800; letter-spacing: -.02em; }
+html:root body:not(.x) :where(code, pre, kbd, samp, .mono, [class*="code"], [class*="cmd"], [class*="stream-key"], [class*="key-val"], input[readonly]) {
+  font-family: 'Space Mono', ui-monospace, monospace; letter-spacing: 0;
+}
