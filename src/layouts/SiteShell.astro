@@ -64,7 +64,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   <link rel="stylesheet" href="/assets/homepage.css?v=3" />
   <link rel="stylesheet" href={`/assets/senal-home.css?v=${version}`} />
   <link rel="stylesheet" href="/assets/site2.css?v=5" />
-  <link rel="stylesheet" href="/assets/shell.css?v=1" />
+  <link rel="stylesheet" href="/assets/shell.css?v=3" />
   <script is:inline>try{var m=localStorage.getItem('corillo-sb');if(m=='min'||(m!='open'&&innerWidth<1360))document.documentElement.classList.add('nv-min');}catch(e){}</script>
   <!-- Rediseño sep-2026: las páginas del shell son siempre oscuras (identidad negro + cian/magenta).
        Los temas claro y "Verano PR" siguen existiendo en el player; el selector se oculta aquí (site2.css). -->
@@ -196,34 +196,26 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
   </div>
   <div class="nv-side-auth" id="nvSideAuth"></div>
   <nav aria-label="Secciones">
-      <a href="/" class="nv-item" data-nav="/"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Inicio</span></a>
-      <a href="/streamers/" class="nv-item" data-nav="/streamers/"><i class="fa-solid fa-users" aria-hidden="true"></i><span>Streamers</span></a>
-      <a href="/vods/" class="nv-item" data-nav="/vods/"><i class="fa-solid fa-film" aria-hidden="true"></i><span>VODs</span></a>
-      <a href="/reels/" class="nv-item" data-nav="/reels/"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i><span>Reels</span></a>
-      <a href="/multiplayer/" class="nv-item" data-nav="/multiplayer/"><i class="fa-solid fa-table-cells" aria-hidden="true"></i><span>Multiplayer</span></a>
+    <h2 class="nv-h">Explorar</h2>
+      <a href="/" class="nv-item" data-nav="/" style="--tc:var(--h2-cyan)"><span class="nv-tile"><i class="fa-solid fa-house" aria-hidden="true"></i></span><span class="nv-lbl">Inicio</span></a>
+      <a href="/streamers/" class="nv-item" data-nav="/streamers/" style="--tc:var(--h2-mag)"><span class="nv-tile"><i class="fa-solid fa-users" aria-hidden="true"></i></span><span class="nv-lbl">Streamers</span><b class="nv-badge" id="nvLiveN" hidden><i></i><span></span></b></a>
+      <a href="/vods/" class="nv-item" data-nav="/vods/" style="--tc:var(--crl-confirm)"><span class="nv-tile"><i class="fa-solid fa-film" aria-hidden="true"></i></span><span class="nv-lbl">VODs</span></a>
+      <a href="/reels/" class="nv-item" data-nav="/reels/" style="--tc:var(--h2-live)"><span class="nv-tile"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i></span><span class="nv-lbl">Reels</span></a>
+      <a href="/multiplayer/" class="nv-item" data-nav="/multiplayer/" style="--tc:var(--h2-bone)"><span class="nv-tile"><i class="fa-solid fa-table-cells" aria-hidden="true"></i></span><span class="nv-lbl">Multiplayer</span></a>
   </nav>
-  <div class="nv-sep"></div>
-  <section aria-label="Canales">
-    <h2 class="nv-h"><span>Canales</span><b id="nvLiveN"></b></h2>
-    <div id="nvChan">
-      <span class="sk-label" role="status">Cargando canales…</span>
-        <div class="sk-row-nv" aria-hidden="true"><span class="sk sk-face" style="width:36px;height:36px"></span><div class="sk-stack"><span class="sk sk-line" style="width:60%"></span><span class="sk sk-line" style="width:38%;height:11px"></span></div></div>
-        <div class="sk-row-nv" aria-hidden="true"><span class="sk sk-face" style="width:36px;height:36px"></span><div class="sk-stack"><span class="sk sk-line" style="width:60%"></span><span class="sk sk-line" style="width:38%;height:11px"></span></div></div>
-        <div class="sk-row-nv" aria-hidden="true"><span class="sk sk-face" style="width:36px;height:36px"></span><div class="sk-stack"><span class="sk sk-line" style="width:60%"></span><span class="sk sk-line" style="width:38%;height:11px"></span></div></div>
-        <div class="sk-row-nv" aria-hidden="true"><span class="sk sk-face" style="width:36px;height:36px"></span><div class="sk-stack"><span class="sk sk-line" style="width:60%"></span><span class="sk sk-line" style="width:38%;height:11px"></span></div></div>
-        <div class="sk-row-nv" aria-hidden="true"><span class="sk sk-face" style="width:36px;height:36px"></span><div class="sk-stack"><span class="sk sk-line" style="width:60%"></span><span class="sk sk-line" style="width:38%;height:11px"></span></div></div>
-        <div class="sk-row-nv" aria-hidden="true"><span class="sk sk-face" style="width:36px;height:36px"></span><div class="sk-stack"><span class="sk sk-line" style="width:60%"></span><span class="sk sk-line" style="width:38%;height:11px"></span></div></div>
-    </div>
-    <button class="nv-more" id="nvMore" type="button" hidden>Ver más</button>
-  </section>
-  <div class="nv-sep"></div>
-  <nav class="nv-links" aria-label="Más">
-    <a href="/overlay/bf6/">Overlays BF6</a>
-    <a href="/software/">Software</a>
-    <a href="/noticias/">Noticias</a>
-    <a href="/que-es-corillo/">Sobre Corillo</a>
-    <a href="/roadmap/">Roadmap</a>
+  <nav aria-label="Más" class="nv-more-nav">
+    <h2 class="nv-h">Más</h2>
+      <a href="/overlay/bf6/" class="nv-item nv-sm" data-nav="/overlay/bf6/"><span class="nv-tile"><i class="fa-solid fa-crosshairs" aria-hidden="true"></i></span><span class="nv-lbl">Overlays BF6</span></a>
+      <a href="/software/" class="nv-item nv-sm" data-nav="/software/"><span class="nv-tile"><i class="fa-solid fa-cube" aria-hidden="true"></i></span><span class="nv-lbl">Software</span></a>
+      <a href="/noticias/" class="nv-item nv-sm" data-nav="/noticias/"><span class="nv-tile"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></span><span class="nv-lbl">Noticias</span></a>
+      <a href="/que-es-corillo/" class="nv-item nv-sm" data-nav="/que-es-corillo/"><span class="nv-tile"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span><span class="nv-lbl">Sobre Corillo</span></a>
+      <a href="/roadmap/" class="nv-item nv-sm" data-nav="/roadmap/"><span class="nv-tile"><i class="fa-solid fa-route" aria-hidden="true"></i></span><span class="nv-lbl">Roadmap</span></a>
   </nav>
+  <div class="nv-promo" id="nvPromo">
+    <b>¿Tienes algo que transmitir?</b>
+    <span>Sin algoritmos ni baneos arbitrarios.</span>
+    <a class="nv-signup" href="/join/">Crear canal</a>
+  </div>
 </aside>
 
 <!-- BARRA INFERIOR (móvil) -->
@@ -316,10 +308,7 @@ const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
 /* SiteShell — menú, canales y sesión. Auto-contenido. */
 const POLL_MS = 15000;
 const PB_URL  = 'https://pb.corillo.live';
-const MAX_ROWS = 8;
 let STREAMERS: any[] = ((window as any).STREAMERS || []).filter((s: any) => !s.soon);
-let showAll = false;
-let snapshot: { live: any[]; offline: any[]; paths: any[] } = { live: [], offline: STREAMERS, paths: [] };
 
 const $ = (id: string) => document.getElementById(id);
 const esc = (v: any) => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' } as any)[c]);
@@ -347,48 +336,33 @@ function renderAuth() {
     const me = `<a class="nv-me" href="/perfil/" title="Mi perfil">${avaHTML(name, rec.color, img)}<span class="nv-me-n">${esc(name)}</span></a>`;
     if (top) top.innerHTML = me;
     if (side) side.innerHTML = me;
+    const promo = $('nvPromo');
+    if (promo) promo.innerHTML = `<b>Hola, ${esc(name)}</b><span>Administra tu canal, tu stream key y tus VODs.</span><a class="nv-signup" href="/perfil/">Mi canal</a>`;
   } else if (side) {
     side.innerHTML = '<a class="nv-signup" href="/join/">Crear cuenta</a><a class="nv-login" href="/perfil/">Entrar</a>';
   }
 }
 
-/* ── canales: en vivo primero (por audiencia), luego el resto ── */
-function row(s: any, live: boolean, viewers: number) {
-  const sub = live ? (s.stream_title || s.sub || 'En vivo') : (s.sub || 'Sin conexión');
-  return `<a class="nv-ch${live ? ' is-live' : ''}" href="/${esc(s.key)}/" title="${esc(s.name)}${live ? ' · en vivo' : ''}">
-    ${avaHTML(s.name, s.color, s.avatar_url)}
-    <span class="nv-ch-t"><b>${esc(s.name)}</b><small>${esc(sub)}</small></span>
-    ${live ? `<span class="nv-ch-n"><i></i>${viewers}</span>` : ''}
-  </a>`;
-}
-function renderChannels() {
-  const box = $('nvChan'), more = $('nvMore') as HTMLButtonElement | null, badge = $('nvLiveN');
-  if (!box) return;
-  const { live, offline, paths } = snapshot;
-  const viewers = (k: string) => { const p = paths.find((x: any) => x && x.name === 'live/' + k); return p && p.readers ? p.readers.length : 0; };
-  const liveSorted = [...live].sort((a, b) => viewers(b.key) - viewers(a.key));
-  const all = [...liveSorted.map(s => row(s, true, viewers(s.key))), ...offline.map(s => row(s, false, 0))];
-  box.innerHTML = (showAll ? all : all.slice(0, MAX_ROWS)).join('');
-  if (badge) badge.textContent = live.length ? String(live.length) : '';
-  if (more) {
-    more.hidden = all.length <= MAX_ROWS;
-    more.textContent = showAll ? 'Ver menos' : `Ver ${all.length - MAX_ROWS} más`;
-  }
+/* ── "en vivo": solo un contador junto a Streamers (la lista de canales vive en /streamers/) ── */
+function renderLive(n: number) {
+  const el = $('nvLiveN');
+  if (!el) return;
+  el.hidden = n < 1;
+  const t = el.querySelector('span'); if (t) t.textContent = String(n);
 }
 async function poll() {
   let paths: any[] = [];
   try {
     const r = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
     paths = (await r.json()).items || [];
-  } catch { /* sin datos de mediamtx: todos aparecen sin conexión */ }
+  } catch { /* sin datos de mediamtx: no se muestra contador */ }
   const liveKeys = new Set<string>();
   for (const p of paths) {
     if (!p.ready) continue;
     const m = String(p.name).match(/^live\/([^/]+)$/);
     if (m && !/_(low|rtc)$/.test(m[1])) liveKeys.add(m[1]);
   }
-  snapshot = { live: STREAMERS.filter(s => liveKeys.has(s.key)), offline: STREAMERS.filter(s => !liveKeys.has(s.key)), paths };
-  renderChannels();
+  renderLive(STREAMERS.filter(s => liveKeys.has(s.key)).length);
 }
 
 /* ── menú: abrir/cerrar, colapsar, sección activa ── */
@@ -426,7 +400,7 @@ async function loadVersion() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  initFooter(); loadVersion(); markActive(); renderAuth(); renderChannels();
+  initFooter(); loadVersion(); markActive(); renderAuth();
 
   $('nvBurger')?.addEventListener('click', () => {
     const min = document.documentElement.classList.toggle('nv-min');
@@ -438,7 +412,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('nvSide')?.addEventListener('click', e => { if ((e.target as HTMLElement).closest('a')) setOpen(false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { setOpen(false); closeSearch(); } });
   window.addEventListener('resize', () => { if (desktop()) setOpen(false); });
-  $('nvMore')?.addEventListener('click', () => { showAll = !showAll; renderChannels(); });
 
   /* búsqueda: filtra en las páginas que escuchan 'crl-search' (inicio); en las demás, Enter lleva a Streamers */
   const top = $('nvTop'), input = $('nvSearch') as HTMLInputElement | null, clear = $('nvSearchClear') as HTMLButtonElement | null;

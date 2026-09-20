@@ -10,7 +10,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 >
   <fragment slot="head">
     <meta name="theme-color" content="var(--crl-ink)" />
-    <link rel="stylesheet" href="/assets/vods2.css?v=1">
+    <link rel="stylesheet" href="/assets/vods2.css?v=2">
   </fragment>
 
 <main class="h2-page va-page">
@@ -28,6 +28,10 @@ import SiteShell from '../../layouts/SiteShell.astro';
       <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
       <input id="vodSearch" type="search" placeholder="Buscar transmisión" aria-label="Buscar transmisión" autocomplete="off" spellcheck="false">
     </label>
+    <div class="va-view" role="group" aria-label="Distribución de la lista">
+      <button type="button" class="va-view-btn" data-cols="2" aria-pressed="true" title="Dos columnas" aria-label="Dos columnas"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i></button>
+      <button type="button" class="va-view-btn" data-cols="1" aria-pressed="false" title="Una columna" aria-label="Una columna"><i class="fa-solid fa-list" aria-hidden="true"></i></button>
+    </div>
   </div>
 
   <div class="va-featured" id="vaFeatured">
@@ -40,7 +44,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       <h2>Archivo</h2>
       <span class="va-section-count" id="vaSecCount"></span>
     </div>
-    <div class="va-grid" id="vodGrid">
+    <div class="va-grid" id="vodGrid" data-cols="2">
       <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
       <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
       <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
@@ -48,6 +52,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
       <div class="va-card" aria-hidden="true"><div class="sk sk-thumb" style="border-radius:16px"></div><div class="va-card-body"><span class="sk sk-line" style="width:82%"></span><span class="sk sk-line" style="width:46%"></span></div></div>
     </div>
+    <script is:inline>try{if(localStorage.getItem('corillo-vods-cols')==='1')document.getElementById('vodGrid').dataset.cols='1';}catch(e){}</script>
   </section>
 </main>
 
@@ -276,6 +281,19 @@ if (searchEl) {
     renderAll();
   });
 }
+
+/* ── Distribución: 2 columnas (por defecto) o 1; se recuerda la elección ── */
+(function () {
+  const grid = document.getElementById('vodGrid')!;
+  const btns = document.querySelectorAll<HTMLButtonElement>('.va-view-btn');
+  const set = (cols: string, save = false) => {
+    grid.dataset.cols = cols;
+    btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cols === cols)));
+    if (save) { try { localStorage.setItem('corillo-vods-cols', cols); } catch {} }
+  };
+  set(grid.dataset.cols === '1' ? '1' : '2');
+  btns.forEach(b => b.addEventListener('click', () => set(b.dataset.cols === '1' ? '1' : '2', true)));
+})();
 
 loadVods();
 </script>
