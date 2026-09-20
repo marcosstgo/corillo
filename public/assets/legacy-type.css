@@ -10,6 +10,6 @@
 }
 html:root body:not(.x) :where(*) { text-transform: none; letter-spacing: normal; }
 html:root body:not(.x) :where(h1, h2, h3, h4) { font-weight: 800; letter-spacing: -.02em; }
-html:root body:not(.x) :where(code, pre, kbd, samp, .mono, [class*="code"], [class*="cmd"], [class*="stream-key"], [class*="key-val"], input[readonly]) {
+html:root body:not(.x) :where(code, pre, kbd, samp, .mono, [class*="code"]:not([class*="fa-"]), [class*="cmd"]:not([class*="fa-"]), [class*="stream-key"], [class*="key-val"], input[readonly]) {
   font-family: 'Space Mono', ui-monospace, monospace; letter-spacing: 0;
 }
