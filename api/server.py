@@ -398,6 +398,25 @@ async def get_vod_clip(vod_id: str, t: float = 0, dur: float = 30):
     return FileResponse(out, media_type="video/mp4", filename=f"clip_{channel}_{int(t)}s.mp4")
 
 
+
+# ── Versiones livianas de los reels (720p / 480p) para que carguen rápido en el celular ──
+REEL_VARIANTS_SCRIPT = "/var/www/stream/scripts/reel-variants.py"
+
+
+def _spawn_reel_variants(path: str) -> None:
+    """Genera 720p/480p en segundo plano (nice/ionice al mínimo); no bloquea la respuesta ni falla el reel."""
+    try:
+        import subprocess as _sp, sys as _sys
+        _sp.Popen([_sys.executable, REEL_VARIANTS_SCRIPT, path], stdout=_sp.DEVNULL, stderr=_sp.DEVNULL, start_new_session=True)
+    except Exception:
+        pass
+
+
+def _unlink_variants(fp: "Path") -> None:
+    for t in ("720", "480"):
+        Path(fp.parent / f"{fp.stem}_{t}.mp4").unlink(missing_ok=True)
+
+
 @app.post("/reel")
 async def create_reel(request: Request):
     """Genera un reel 9:16 desde un VOD. Requiere auth del streamer propietario."""
@@ -579,6 +598,7 @@ async def create_reel(request: Request):
         raise HTTPException(status_code=500, detail="Error guardando reel en base de datos")
 
     rec = rr.json()
+    _spawn_reel_variants(out)
     return {
         "id":           rec["id"],
         "filename":     f"{ts}.mp4",
@@ -728,6 +748,7 @@ async def upload_reel(
         raise HTTPException(status_code=500, detail="Error guardando reel en base de datos")
 
     rec = rr.json()
+    _spawn_reel_variants(out)
     return {
         "id":           rec["id"],
         "filename":     f"{ts}.mp4",
@@ -752,6 +773,7 @@ async def delete_reel(reel_id: str, request: Request):
     fp = Path(rec.get("filepath", ""))
     fp.unlink(missing_ok=True)
     fp.with_suffix(".jpg").unlink(missing_ok=True)
+    _unlink_variants(fp)
 
     # Borrar registro en PocketBase
     await _http.delete(
@@ -790,6 +812,7 @@ async def delete_vod(vod_id: str, request: Request):
     if str(fp).startswith("/var/vods/live/"):
         fp.unlink(missing_ok=True)
         fp.with_suffix(".jpg").unlink(missing_ok=True)
+        _unlink_variants(fp)
         Path(fp.parent / (fp.stem + "-preview.mp4")).unlink(missing_ok=True)
 
     # Borrar registro en PocketBase
@@ -987,6 +1010,7 @@ async def upload_vod(
             if str(fp).startswith("/var/vods/live/"):
                 fp.unlink(missing_ok=True)
                 fp.with_suffix(".jpg").unlink(missing_ok=True)
+                _unlink_variants(fp)
                 Path(fp.parent / (fp.stem + "-preview.mp4")).unlink(missing_ok=True)
             await _http.delete(
                 f"{PB_URL}/api/collections/vods/records/{old['id']}",

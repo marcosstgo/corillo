@@ -41,6 +41,22 @@ servicios Python/FastAPI · PocketBase · MediaMTX · nginx · Ubuntu 24.04. Sol
 Registro autoservicio: `/join/` → `POST /api/register` (telegram-service :3003, código solo en producción) crea la cuenta en PocketBase (`active:false`) y pide el correo; el enlace lleva a `/verificar/?token=` que llama `confirm-verification`; el hook `pb_hooks/activate_on_verify.pb.js` la activa. Correo por Mailgun (`noreply@mg.corillo.live`, SPF/DKIM ok).
 **BUG ABIERTO (2026-09-20):** las plantillas de la colección `streamers` usan marcadores que PocketBase 0.36.7 no reemplaza (`{{.Token}}`, `{{"{{"}.ActionUrl…}}`; esta versión solo entiende `{TOKEN}`, `{ACTION_URL}`, `{APP_URL}`). Resultado: el correo de verificación y el de reseteo salen con enlace roto; en el log de PB, las 2 confirmaciones registradas fallaron (`Missing email token claim`). Corrección pendiente de aprobar: verificación → `https://corillo.live/verificar/?token={TOKEN}`; reseteo → `https://corillo.live/perfil/reset/?token={TOKEN}`. Respaldar la colección antes.
 
+## Reels, miniaturas y perfil (2026-09-20)
+- **Reels** (`/reels/`, `src/pages/reels/index.astro` + `public/assets/reels2.css`): visor vertical inmersivo (imán vertical, autoplay,
+  progreso con scrub, teclado ↑↓ espacio M, enlace directo `?r=<id>`). Los **directos aparecen primero** en el feed y cada clip lleva a
+  `/vods/v/?id=<vod_id>&t=<start_sec>` (la página de VOD entiende `?t=`). Carga rápida: usa `<nombre>_720.mp4` / `_480.mp4` según la conexión,
+  baja sola a 480p si se traba, precarga el siguiente y cachea la lista en `localStorage rl_cache_v1`. Si no existe la versión liviana cae al original.
+- **Versiones livianas**: `scripts/reel-variants.py` (idempotente). La API (`api/server.py`) lo lanza en segundo plano al crear un reel y borra las
+  variantes al borrarlo. Para reels viejos: `python3 scripts/reel-variants.py`.
+- **Miniaturas/previews**: `scripts/thumb_crop.py` detecta barras negras (solo arriba/abajo) y deja 1280×720 sin deformar. Lo usan `thumb-gen.py` (directos,
+  servicio `corillo-thumbs`) y `vod-process.py` (copia inline; se despliega suelto). `scripts/regen-thumbs.py [--previews]` regenera las existentes.
+  Las miniaturas se sirven 7 días: al cambiar su formato, subir el `?v=N` en las plantillas (hoy `?v=2`).
+- **Perfil** (`/perfil/`): layout de creador con barra lateral en `public/assets/perfil2.css` (cargado tras el CSS propio de la página, que va `is:inline`
+  para conservar el orden). El HTML envuelve hero+pestañas+paneles en `.pf-layout`.
+- **Selector 2/1 columnas** en `/vods/` (`corillo-vods-cols`) y `/streamers/` (`corillo-streamers-cols`).
+- **Overlays** (`/overlay/bf6/`, repo aparte `marcosstgo/corillo-bf6-overlays`, servido desde `/opt/corillo/bf6-proxy/public`): tema `ov-theme.css`,
+  generador nuevo y WARDOGS (ver el CLAUDE.md de ese repo). WARDOGS no tiene API pública de perfiles; el de perfil necesita `STEAM_API_KEY`.
+
 ## Trampas de Astro 7 / player
 - `<script src={expr}>` sin `is:inline` **se descarta en silencio** (el build dice "Complete"). Todos los de `player/index.astro` son `is:inline`.
 - `/{canal}/` lo sirve nginx con `sub_filter '__CHANNEL__'` sobre `player/index.html`: ese HTML debe conservar `__CHANNEL__` y sus 4 scripts externos.
