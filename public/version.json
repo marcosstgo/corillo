@@ -1,7 +1,8 @@
 {
-  "version": "2.2.687",
+  "version": "2.2.688",
   "date": "2026-09-20",
   "changes": [
+    "Registro: la pantalla de confirmación avisa que el correo puede caer en spam y añade un botón para reenviarlo.",
     "Chat: arreglo al ensanchar la ventana tras cerrar el chat en modo móvil — el panel ya no queda como una franja vacía.",
     "Chat: rediseño (mensajes, bot, input) y arreglo — al reabrirlo en móvil ya no queda vacío ni arriba: baja al último mensaje, se reconecta si se cayó y avisa de mensajes nuevos.",
     "Canal: la parte de abajo del video (perfil, botones de Twitch/Instagram, mensaje, estadísticas, paneles, últimas transmisiones y reels) con el diseño nuevo; visible también en móvil.",

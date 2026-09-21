@@ -83,6 +83,12 @@ import SiteShell from '../../layouts/SiteShell.astro';
       }
       .success-title{font-family:var(--crl-display);font-size:1.4rem;letter-spacing:1.5px;margin-bottom:8px}
       .success-sub{font-size:.88rem;color:var(--crl-muted);max-width:360px;margin:0 auto 18px;line-height:1.6}
+      .success-help{font-size:.86rem;color:var(--crl-muted);max-width:380px;margin:14px auto 0;line-height:1.55}
+      .success-help b{color:var(--crl-white,#f5f8ff)}
+      .resend-btn{margin:16px auto 0;display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 20px;border:0;border-radius:999px;background:rgba(245,248,255,.09);color:#f5f8ff;font:700 .9rem 'DM Sans',system-ui,sans-serif;cursor:pointer;transition:background .15s}
+      .resend-btn:hover:not(:disabled){background:rgba(245,248,255,.16)}
+      .resend-btn:disabled{opacity:.55;cursor:default}
+      .resend-msg{min-height:1.2em;margin:10px 0 0;font-size:.85rem;color:var(--crl-muted)}
       .success-pill{
         display:inline-flex;align-items:center;gap:8px;background:rgba(var(--crl-confirm-rgb),.06);
         border:1px solid rgba(var(--crl-confirm-rgb),.2);border-radius:var(--crl-r-md);padding:9px 16px;
@@ -200,7 +206,10 @@ import SiteShell from '../../layouts/SiteShell.astro';
           <div class="check"><i class="fa-solid fa-check"></i></div>
           <div class="success-title">¡Casi listo!</div>
           <p class="success-sub">Te enviamos un correo de confirmación. Haz click en el enlace y tu canal queda activo al instante.</p>
-          <div class="success-pill"><i class="fa-solid fa-envelope"></i> Revisa tu bandeja de entrada</div>
+          <div class="success-pill"><i class="fa-solid fa-envelope"></i> Revisa tu bandeja de entrada y tu spam</div>
+          <p class="success-help">A veces el primer correo cae en <b>spam o correo no deseado</b>. Si lo ves ahí, márcalo como "No es spam" y toca el enlace. Viene de <b>noreply@mg.corillo.live</b>.</p>
+          <button type="button" class="resend-btn" id="resendBtn"><i class="fa-solid fa-rotate-right"></i> Reenviar correo</button>
+          <p class="resend-msg" id="resendMsg" role="status" aria-live="polite"></p>
         </div>
       </div>
 
@@ -371,6 +380,31 @@ joinForm.addEventListener('submit', async e => {
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Crear cuenta';
   }
+});
+
+// Reenviar el correo de verificación (el primero suele caer en spam en remitentes nuevos)
+const resendBtn = document.getElementById('resendBtn') as HTMLButtonElement | null;
+const resendMsg = document.getElementById('resendMsg');
+let resendLeft = 0, resendTimer: any = null;
+function tickResend() {
+  if (!resendBtn) return;
+  if (resendLeft > 0) { resendBtn.disabled = true; resendBtn.innerHTML = `<i class="fa-solid fa-rotate-right"></i> Reenviar en ${resendLeft}s`; resendLeft--; resendTimer = setTimeout(tickResend, 1000); }
+  else { resendBtn.disabled = false; resendBtn.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Reenviar correo'; }
+}
+resendBtn?.addEventListener('click', async () => {
+  if (!resendBtn || resendBtn.disabled) return;
+  const email = fEmail.value.trim();
+  if (!email) return;
+  resendBtn.disabled = true;
+  try {
+    const r = await fetch('https://pb.corillo.live/api/collections/streamers/request-verification', {
+      method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ email }),
+    });
+    if (resendMsg) resendMsg.textContent = r.ok ? 'Listo, te lo enviamos de nuevo. Puede tardar un minuto.' : 'No pudimos reenviarlo ahora. Espera un momento e intenta otra vez.';
+  } catch {
+    if (resendMsg) resendMsg.textContent = 'Sin conexión. Intenta otra vez en un momento.';
+  }
+  resendLeft = 60; clearTimeout(resendTimer); tickResend();
 });
 
 updatePreview();
