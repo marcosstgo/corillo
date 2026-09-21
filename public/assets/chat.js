@@ -35,7 +35,23 @@ function unlockBodyScroll() {
 // el bottom sheet fuera de pantalla no genere scroll fantasma / zona negra en iOS.
 const _chatPanel = document.getElementById('chatCol') || document.querySelector('.crl-chat-panel');
 let _chatHideTimer = null;
+// Al cambiar entre móvil y escritorio (redimensionando la ventana) el display en línea que puso el modo
+// móvil no debe quedarse pegado: en escritorio el panel lo maneja solo el CSS (columna lateral).
+function chatSyncLayout() {
+  if (!_chatPanel) return;
+  if (window.matchMedia('(max-width:960px)').matches) {
+    clearTimeout(_chatHideTimer);
+    _chatPanel.style.display = chatVisible ? 'flex' : 'none';
+  } else {
+    clearTimeout(_chatHideTimer);
+    _chatPanel.style.display = '';
+    unlockBodyScroll();
+  }
+}
+window.matchMedia('(max-width:960px)').addEventListener('change', chatSyncLayout);
+
 function chatPanelShow() {
+  if (_chatPanel && !window.matchMedia('(max-width:960px)').matches) { _chatPanel.style.display = ''; return; }
   if (!_chatPanel || !window.matchMedia('(max-width:960px)').matches) return;
   clearTimeout(_chatHideTimer);
   _chatPanel.style.display = 'flex';
