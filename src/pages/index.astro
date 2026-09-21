@@ -1,5 +1,7 @@
 ---
 import SiteShell from '../layouts/SiteShell.astro';
+import { loadOfertas, fmtDay } from '../data/ofertas';
+const OF = loadOfertas();   // juegos gratis de Epic (los escribe scripts/update-deals.py); si no hay, la franja no se muestra
 ---
 <SiteShell
   title="CORILLO — Stream Platform"
@@ -108,6 +110,25 @@ import SiteShell from '../layouts/SiteShell.astro';
       <div class="sk sk-person"></div>
     </div>
   </section>
+
+  <!-- GRATIS ESTA SEMANA (solo si hay datos reales) -->
+  {OF.free.length > 0 && (
+  <section class="h2-sec" id="gratisStrip" data-free-strip>
+    <div class="h2-sec-hd">
+      <h2>Gratis esta semana</h2>
+      <span class="h2-count">en Epic Games Store</span>
+      <a href="/ofertas/" class="h2-more-link">Ver todas las ofertas</a>
+    </div>
+    <div class="h2-fr">
+      {OF.free.slice(0, 3).map((g) => (
+        <a class="h2-fr-card" href="/ofertas/gratis/" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
+          {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="480" height="270" loading="lazy" />}
+          <span class="h2-fr-body"><b>{g.title}</b><span>Gratis hasta el {fmtDay(g.ends!)}</span></span>
+        </a>
+      ))}
+    </div>
+  </section>
+  )}
 
   <!-- REELS -->
   <section class="h2-sec" id="reelsStrip" style="display:none">
@@ -852,4 +873,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 </script>
 
 
+
+<style is:global>
+  .h2-fr{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px}
+  .h2-fr-card{display:flex;flex-direction:column;overflow:hidden;border-radius:24px;text-decoration:none;color:inherit;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);transition:transform .18s,background .18s}
+  .h2-fr-card:hover{transform:translateY(-3px);background:color-mix(in srgb,var(--h2-bone) 10%,transparent)}
+  .h2-fr-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:#0a1c52}
+  .h2-fr-body{display:grid;gap:4px;padding:14px 18px 16px}
+  .h2-fr-body b{font:800 1.15rem/1.2 var(--h2-display);letter-spacing:-.02em;text-transform:none}
+  .h2-fr-body span{color:var(--crl-confirm,#35e0a1);font:700 .88rem var(--h2-body)}
+  [data-free-strip] [data-hide]{display:none!important}
+</style>
+<script is:inline>
+  // no mostrar un juego gratis que ya venció (la página se regenera cada hora, pero así nunca queda uno viejo)
+  (function(){ var s=document.querySelector('[data-free-strip]'); if(!s) return; var n=Date.now(), vis=0;
+    s.querySelectorAll('.h2-fr-card[data-end]').forEach(function(c){ var e=+c.dataset.end; if(e&&e<=n) c.setAttribute('data-hide',''); else vis++; });
+    if(!vis) s.setAttribute('data-hide',''); })();
+</script>
 </SiteShell>

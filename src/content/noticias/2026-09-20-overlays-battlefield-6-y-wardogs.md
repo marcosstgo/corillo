@@ -40,7 +40,7 @@ Una aclaración honesta: **Bulkhead no ofrece hoy una API pública de perfiles n
 
 ## Cómo usarlos
 
-Entra al [generador de overlays](/overlay/bf6/), elige el juego, escribe tu usuario y copia el enlace en una **Fuente de navegador** de OBS. El fondo ya es transparente.
+Entra al [generador de overlays](/overlay/), elige el juego, escribe tu usuario y copia el enlace en una **Fuente de navegador** de OBS. El fondo ya es transparente.
 
 <div class="why">
 

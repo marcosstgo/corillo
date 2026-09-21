@@ -2,6 +2,9 @@
 # Deploy seguro de corillo: respalda dist, build, y hace rollback si el build falla.
 # Uso: bash scripts/deploy-corillo.sh
 set -euo pipefail
+# Candado: las noticias (7:30) y las ofertas (cada hora) también despliegan; nunca dos builds a la vez.
+exec 9>/tmp/corillo-deploy.lock
+flock -w 900 9 || { echo "✗ Otro despliegue sigue en curso; se cancela este."; exit 1; }
 cd "$(dirname "$0")/.."
 
 TS=$(date +%Y%m%d_%H%M%S)

@@ -1,0 +1,111 @@
+---
+import SiteShell from '../../../layouts/SiteShell.astro';
+import { loadOfertas, fmtDay, fmtStamp, offersJsonLd, type Deal } from '../../../data/ofertas';
+
+const D = loadOfertas();
+const names = D.free.map((g: Deal) => g.title);
+const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' y ' + names[names.length - 1] : names[0] || '';
+const until = D.free.length ? fmtDay(D.free.map((g: Deal) => g.ends!).sort()[0]) : null;
+const title = D.free.length
+  ? `Juegos gratis esta semana en Epic Games Store: ${names.slice(0, 2).join(' y ')} — CORILLO`
+  : 'Juegos gratis esta semana en Epic Games Store — CORILLO';
+const desc = D.free.length
+  ? `Juegos gratis ahora en Epic Games Store: ${list}. Puedes reclamarlos hasta el ${until}. Te explicamos cómo y cuáles vienen después.`
+  : 'Los juegos gratis de la semana en Epic Games Store, con fecha de vencimiento y cómo reclamarlos.';
+const ld = D.free.length ? offersJsonLd(D.free, 'Juegos gratis en Epic Games Store', 'https://corillo.live/ofertas/gratis/') : null;
+---
+<SiteShell title={title} description={desc} canonical="https://corillo.live/ofertas/gratis/">
+  <fragment slot="head">
+    {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    <style is:global>
+      .fr{max-width:1100px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
+      .fr-crumb{color:var(--h2-mute);font:600 .9rem var(--h2-body)} .fr-crumb a{color:var(--h2-mute)} .fr-crumb a:hover{color:var(--h2-bone)}
+      .fr h1{margin:14px 0 0;font:800 clamp(2.6rem,7vw,5.4rem)/.92 var(--h2-display);letter-spacing:-.05em;text-transform:none}
+      .fr .lead{margin:18px 0 0;max-width:62ch;color:var(--h2-mute);font:500 clamp(1.02rem,1.6vw,1.2rem)/1.6 var(--h2-body)}
+      .fr .lead strong{color:var(--h2-bone)}
+      .fr-stamp{margin-top:12px;color:var(--h2-mute);font:600 .88rem var(--h2-body)}
+      .fr-list{display:grid;gap:18px;margin-top:30px}
+      .fr-card{--tc:var(--crl-confirm,#35e0a1);display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden;border-radius:28px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      @media(min-width:760px){.fr-card{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}}
+      .fr-card img{width:100%;height:100%;min-height:200px;object-fit:cover;display:block;background:#0a1c52}
+      .fr-card .b{display:grid;gap:12px;align-content:center;padding:24px 26px}
+      .fr-card h2{margin:0;font:800 clamp(1.6rem,3vw,2.2rem)/1.05 var(--h2-display);letter-spacing:-.035em;text-transform:none}
+      .fr-card .p{display:flex;align-items:baseline;gap:12px}
+      .fr-card .p b{color:var(--tc);font:800 2.2rem/1 var(--h2-display);letter-spacing:-.03em}
+      .fr-card .p s{color:var(--h2-mute);font:600 1rem var(--h2-body)}
+      .fr-card .m{color:var(--h2-mute);font:600 .92rem var(--h2-body)} .fr-card .m b{color:var(--h2-bone)}
+      .fr-go{display:inline-flex;align-items:center;justify-content:center;justify-self:start;height:48px;padding:0 26px;border-radius:14px;background:var(--tc);color:var(--h2-ink);text-decoration:none;font:800 1rem var(--h2-body)}
+      .fr h2.s{margin:clamp(38px,6vw,64px) 0 0;font:800 clamp(1.6rem,3.2vw,2.3rem)/1.05 var(--h2-display);letter-spacing:-.035em;text-transform:none}
+      .fr ol{margin:16px 0 0;padding:0;display:grid;gap:10px;max-width:70ch;counter-reset:s}
+      .fr ol li{list-style:none;counter-increment:s;display:flex;gap:14px;align-items:flex-start;padding:14px 18px;border-radius:16px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);color:var(--h2-mute);font:500 1rem/1.55 var(--h2-body)}
+      .fr ol li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--h2-mag);color:var(--h2-ink);font:800 .9rem var(--h2-display)}
+      .fr ol li strong{color:var(--h2-bone)}
+      .fr-soon{display:grid;gap:10px;margin-top:16px}
+      .fr-soon a{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:14px 18px;border-radius:16px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);color:inherit;text-decoration:none;font:700 1rem var(--h2-body)}
+      .fr-soon a span{color:var(--h2-mute);font:600 .9rem var(--h2-body)}
+      .fr-more{display:inline-flex;align-items:center;height:48px;padding:0 24px;margin-top:28px;border-radius:999px;background:var(--h2-bone);color:var(--h2-ink);text-decoration:none;font:800 .98rem var(--h2-body)}
+      .fr-empty{margin-top:28px;padding:26px 22px;border-radius:20px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);color:var(--h2-mute);font:500 1rem/1.5 var(--h2-body)}
+      .fr-note{margin-top:40px;color:var(--h2-mute);font:500 .9rem/1.6 var(--h2-body);max-width:70ch}
+      [data-hide]{display:none!important}
+    </style>
+  </fragment>
+
+  <main class="fr">
+    <nav class="fr-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / Juegos gratis</nav>
+    <h1>Juegos gratis esta semana</h1>
+    {D.free.length ? (
+      <p class="lead">Ahora mismo puedes reclamar <strong>{list}</strong> gratis en Epic Games Store. La promoción termina el <strong>{until}</strong>. Si lo reclamas a tiempo, el juego se queda en tu biblioteca.</p>
+    ) : (
+      <p class="lead">Ahora mismo no hay juegos gratis en Epic Games Store. Se renuevan cada semana y esta página se actualiza sola.</p>
+    )}
+    {D.updatedAt && <p class="fr-stamp">Actualizado el {fmtStamp(D.updatedAt)} (hora de Puerto Rico).</p>}
+
+    {D.free.length > 0 && (
+      <div class="fr-list">
+        {D.free.map((g: Deal) => (
+          <article class="fr-card" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
+            {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="640" height="360" loading="lazy" />}
+            <div class="b">
+              <h2>{g.title}</h2>
+              <div class="p"><b>Gratis</b>{g.original && <s>{g.original}</s>}</div>
+              <div class="m">Hasta el <b>{fmtDay(g.ends!)}</b> · <span data-cd></span></div>
+              <a class="fr-go" href={g.url} target="_blank" rel="nofollow noopener">Reclamar en Epic Games Store</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
+
+    <h2 class="s">Cómo reclamar un juego gratis</h2>
+    <ol>
+      <li><span>Entra a la página del juego (botón de arriba) con tu cuenta de <strong>Epic Games</strong>. Si no tienes una, crearla es gratis.</span></li>
+      <li><span>Pulsa <strong>Obtener</strong> y completa el pedido. El total es <strong>$0.00</strong>: no se cobra nada.</span></li>
+      <li><span>Listo: el juego queda en tu <strong>biblioteca</strong> y puedes instalarlo cuando quieras con el launcher de Epic.</span></li>
+    </ol>
+
+    {D.soon.length > 0 && (<>
+      <h2 class="s">Lo que viene después</h2>
+      <div class="fr-soon">
+        {D.soon.map((g: Deal) => <a href={g.url} target="_blank" rel="nofollow noopener">{g.title}<span>Gratis desde el {fmtDay(g.starts!)}</span></a>)}
+      </div>
+    </>)}
+
+    <a class="fr-more" href="/ofertas/">Ver también las ofertas en Steam y GOG</a>
+    <p class="fr-note">CORILLO no vende juegos ni tiene relación comercial con Epic Games: tomamos la información de su tienda y te enviamos a ella. Las promociones cambian; confirma en la tienda antes de reclamar.</p>
+  </main>
+
+  <script is:inline>
+    (function(){
+      function tick(){
+        var now=Date.now();
+        document.querySelectorAll('.fr-card[data-end]').forEach(function(c){
+          var end=+c.dataset.end; if(!end) return; var ms=end-now;
+          if(ms<=0){c.setAttribute('data-hide','');return;}
+          var d=Math.floor(ms/864e5), h=Math.floor(ms%864e5/36e5), m=Math.floor(ms%36e5/6e4);
+          var el=c.querySelector('[data-cd]'); if(el) el.textContent='Termina en '+(d?d+' d ':'')+(h||d?h+' h ':'')+(d?'':m+' min');
+        });
+      }
+      tick(); setInterval(tick,60000);
+    })();
+  </script>
+</SiteShell>
