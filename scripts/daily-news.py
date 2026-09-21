@@ -301,10 +301,25 @@ def git_publish(files, msg):
 def make_one(client, items, used_ids, pub, dry):
     recent = '\n'.join('- ' + p['title'] for p in pub[-20:])
     lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in items if i['id'] not in used_ids)
-    sel = llm_json(client, SEL_SYS, f"Notas que CORILLO ya publicó (no repetir tema):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
-    log('selector:', json.dumps(sel, ensure_ascii=False)[:400])
-    if sel['choice_id'] is None or sel['score'] < MIN_SCORE:
-        log(f"nada a la altura (score={sel['score']}): no se publica"); return None
+    STOP = set('para como sobre tras esta este esto pero desde entre hasta cuando donde porque sus los las del una uno con por que the and for with from'.split())
+    def toks(t): return {w for w in norm(t) if len(w) > 3 and w not in STOP}
+    recent_t = [toks(p['title']) for p in pub[-10:]]
+    def repeats(cands):  # ¿mismo tema que algo ya publicado? (solapamiento de palabras clave)
+        c = toks(cands)
+        return any(len(c & r) >= 2 and len(c & r) / max(1, min(len(c), len(r))) >= 0.3 for r in recent_t)
+    sel = None
+    for _try in range(3):
+        avail = [i for i in items if i['id'] not in used_ids]
+        lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in avail)
+        sel = llm_json(client, SEL_SYS, f"Notas que CORILLO ya publicó (NO repetir estos temas ni sus variantes, aunque venga de otra fuente):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
+        log('selector:', json.dumps(sel, ensure_ascii=False)[:400])
+        cid = sel['choice_id']
+        if cid is None or sel['score'] < MIN_SCORE: break
+        it = next((i for i in items if i['id'] == cid), None)
+        if it and repeats(it['title'] + ' ' + sel['angle']):
+            log('tema ya cubierto, se descarta y se vuelve a elegir:', it['title']); used_ids.add(cid); sel = None; continue
+        break
+    if sel is None: log('todo lo elegible repite temas ya publicados: no se publica'); return None
     byid = {i['id']: i for i in items}
     if sel['choice_id'] not in byid: return None
     used_ids.add(sel['choice_id'])
