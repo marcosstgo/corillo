@@ -166,16 +166,18 @@ def canon(d):
 
 def discord_new_free(free, state):
     hook = os.environ.get('DISCORD_DEALS_WEBHOOK')
+    if not hook: return 0                      # sin webhook no se marca nada como avisado: cuando se configure, saldrán los que estén vigentes
     sent = set(state.get('notified', []))
     fresh = [g for g in free if g['id'] not in sent]
     for g in fresh:
         if hook:
             try:
                 end = dt.datetime.fromisoformat(g['ends'].replace('Z', '+00:00')).astimezone(dt.timezone(dt.timedelta(hours=-4)))
-                CLIENT.post(hook, json={'username': 'Corillo Ofertas', 'embeds': [{
+                resp = CLIENT.post(hook, json={'username': 'Corillo Ofertas', 'embeds': [{
                     'title': f"Gratis ahora en Epic: {g['title']}", 'url': g['url'], 'color': 0xFFD23F,
                     'description': f"Normalmente {g['original']}. Gratis hasta el {end.day} de {['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'][end.month-1]}.\nMás ofertas: https://corillo.live/ofertas/",
                     'image': {'url': g['image']} if g.get('image') else {}}]}, timeout=15)
+                resp.raise_for_status()               # solo cuenta como avisado si Discord lo aceptó
                 log('Discord: avisado', g['title'])
             except Exception as e: log('Discord falló:', e); continue
         sent.add(g['id'])
