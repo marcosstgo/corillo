@@ -36,6 +36,7 @@ import { version } from '../../../version.json';
   <script is:inline src={`/assets/hls.min.js?v=${version}`}></script>
   <script is:inline src={`/assets/streamers.js?v=${version}`}></script>
   <link rel="stylesheet" href={`/assets/corillo.css?v=${version}`} />
+  <link rel="stylesheet" href={`/assets/player2.css?v=${version}`} />
 </head>
 <body class="crl-body">
 
@@ -286,6 +287,7 @@ import { version } from '../../../version.json';
         document.getElementById('csHr').textContent = s.total_hours;
         document.getElementById('csAv').textContent = s.avg_duration_min;
         document.getElementById('csPk').textContent = s.peak_viewers || '—';
+        if (!s.peak_viewers) document.getElementById('csPk').closest('.crl-channel-stat').style.display = 'none';  // sin dato, sin tarjeta vacía
         document.getElementById('channelStats').style.display = '';
       }
     }

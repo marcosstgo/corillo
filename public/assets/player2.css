@@ -1,0 +1,166 @@
+/* Canal (player) — parte de abajo del video: perfil, botones, estadísticas, tarjetas, transmisiones y reels.
+   Mismo lenguaje que el resto del sitio (Cobalto): Bricolage/DM Sans, tarjetas redondeadas, sin mayúsculas en mono.
+   Carga DESPUÉS de corillo.css y gana por especificidad (.player-side …). */
+.player-side {
+  --p2-ink: #06143f; --p2-panel: #0d2260; --p2-raise: #173383;
+  --p2-line: rgba(245,248,255,.10); --p2-bone: #f5f8ff; --p2-mute: #a4b6e6;
+  --p2-accent: #ff6a3d; --p2-accent2: #ffd23f; --p2-live: #ff2d55;
+  --p2-display: 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif;
+  --p2-body: 'DM Sans', system-ui, sans-serif;
+  --p2-gutter: clamp(16px, 3vw, 32px);
+  --p2-card: color-mix(in srgb, var(--p2-bone) 6%, transparent);
+}
+
+/* Las listas horizontales no deben ensanchar la columna (si no, el video crece en móvil) */
+.player-side { min-width: 0; max-width: 100%; }
+.player-side .crl-player-vods, .player-side .crl-player-reels, .player-side .crl-player-rail,
+.player-side .crl-player-vods-list, .player-side .crl-player-reels-list { min-width: 0; max-width: 100%; }
+
+/* ── perfil ── */
+.player-side .crl-player-info {
+  display: flex; align-items: center; gap: clamp(14px, 2.4vw, 24px); flex-wrap: nowrap;
+  padding: clamp(20px, 3vw, 32px) var(--p2-gutter) 6px; border: 0; background: none;
+}
+.player-side .ch-ava {
+  flex: none; width: clamp(72px, 9vw, 108px) !important; height: clamp(72px, 9vw, 108px) !important;
+  border-radius: 50%; font: 800 clamp(1.8rem, 3.6vw, 2.8rem) var(--p2-display) !important; color: #fff;
+  display: grid; place-items: center; overflow: hidden;
+  box-shadow: 0 0 0 4px var(--p2-ink), 0 0 0 7px var(--p2-accent), 0 18px 40px -16px rgba(255,106,61,.55);
+}
+.player-side .ch-details { display: grid; gap: 8px; min-width: 0; }
+.player-side .ch-name-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.player-side .ch-name {
+  font: 800 clamp(1.9rem, 4.2vw, 3rem)/1 var(--p2-display) !important; letter-spacing: -.035em !important;
+  text-transform: none; color: var(--p2-bone);
+}
+.player-side .ch-host-tag {
+  height: 26px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px;
+  background: var(--p2-accent2); color: var(--p2-ink); font: 800 .75rem var(--p2-body); letter-spacing: .04em;
+}
+.player-side .ch-sub {
+  font: 600 clamp(.95rem, 1.5vw, 1.1rem)/1.3 var(--p2-body) !important; letter-spacing: 0 !important;
+  text-transform: none !important; color: var(--p2-mute);
+}
+.player-side .ch-stream-title {
+  align-self: start; justify-self: start; margin: 0; padding: 7px 14px; border-radius: 999px;
+  background: color-mix(in srgb, var(--p2-accent) 18%, transparent); color: #ffb9a3;
+  font: 700 .9rem/1.2 var(--p2-body); letter-spacing: 0; text-transform: none;
+}
+.player-side .ch-stream-title::before { content: none; }
+/* el mensaje del streamer (bio) ya no se esconde en móvil */
+.player-side .ch-info-bar .ch-bio:not(:empty) {
+  display: block !important; margin: 2px 0 0; max-width: 62ch;
+  font: 400 clamp(1rem, 1.5vw, 1.1rem)/1.55 var(--p2-body); color: color-mix(in srgb, var(--p2-bone) 82%, transparent);
+}
+/* botones de redes: siempre visibles, más grandes y con el color de cada red */
+.player-side .ch-links.crl-player-links { display: flex !important; flex-wrap: wrap; gap: 10px; margin-top: 6px; grid-template-columns: none; }
+.player-side .crl-player-link {
+  display: inline-flex; align-items: center; gap: 9px; height: 44px; padding: 0 20px; border-radius: 999px; border: 0;
+  background: var(--p2-card); box-shadow: inset 0 0 0 1px var(--p2-line); color: var(--p2-bone);
+  font: 700 .98rem var(--p2-body); letter-spacing: 0; text-transform: none; text-decoration: none;
+  transition: transform .15s, box-shadow .15s, background .15s;
+}
+.player-side .crl-player-link i { font-size: 1.05rem; }
+.player-side .crl-player-link:hover { transform: translateY(-2px); color: #fff; }
+.player-side .crl-player-link.is-twitch { background: rgba(145,71,255,.2); box-shadow: inset 0 0 0 1px rgba(145,71,255,.4); color: #c9adff; }
+.player-side .crl-player-link.is-twitch:hover { background: #9147ff; color: #fff; }
+.player-side .crl-player-link:has(.fa-instagram) { background: rgba(255,45,140,.16); box-shadow: inset 0 0 0 1px rgba(255,45,140,.36); color: #ffb0d3; }
+.player-side .crl-player-link:has(.fa-instagram):hover { background: linear-gradient(45deg,#f9a03f,#e1306c 55%,#833ab4); color: #fff; }
+.player-side .crl-player-link:has(.fa-tiktok):hover { background: #fff; color: #06143f; }
+
+/* ── estadísticas del canal ── */
+.player-side .crl-channel-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px;
+  padding: 18px var(--p2-gutter) 4px; border: 0;
+}
+.player-side .crl-channel-stat {
+  display: grid; gap: 6px; align-content: center; padding: 18px 20px; border: 0; border-radius: 26px;
+  background: var(--p2-card); box-shadow: inset 0 0 0 1px var(--p2-line); text-align: left;
+}
+.player-side .crl-channel-stat-val {
+  font: 800 clamp(1.8rem, 3.4vw, 2.6rem)/1 var(--p2-display) !important; letter-spacing: -.04em; color: var(--p2-bone);
+  font-variant-numeric: tabular-nums;
+}
+.player-side .crl-channel-stat-lbl {
+  font: 700 .85rem var(--p2-body) !important; letter-spacing: 0 !important; text-transform: none !important; color: var(--p2-mute);
+}
+
+/* ── paneles del streamer (Corillo Server, Streamer Pro…) ── */
+.player-side .panels-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; margin: 14px var(--p2-gutter) 6px; }
+.player-side .panel-card {
+  border: 0; border-radius: 28px; background: linear-gradient(150deg, var(--p2-raise), var(--p2-panel));
+  box-shadow: inset 0 0 0 1px var(--p2-line); transition: transform .18s, box-shadow .18s;
+}
+.player-side .panel-card:has(.panel-link):hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px rgba(255,106,61,.5), 0 18px 36px -20px rgba(0,0,0,.6); }
+.player-side .panel-link, .player-side .panel-card:not(:has(.panel-link)) { padding: 22px 24px; gap: 8px; }
+.player-side .panel-title { font: 800 1.3rem/1.15 var(--p2-display) !important; letter-spacing: -.02em !important; text-transform: none !important; color: var(--p2-bone) !important; }
+.player-side .panel-text { font: 400 1rem/1.5 var(--p2-body); color: color-mix(in srgb, var(--p2-bone) 74%, transparent) !important; }
+.player-side .panel-url-lbl { color: var(--p2-accent2); font: 700 .9rem var(--p2-body); }
+
+/* ── encabezados de sección ── */
+.player-side .crl-player-vods, .player-side .crl-player-reels, .player-side .crl-player-rail {
+  padding: clamp(22px, 3vw, 34px) var(--p2-gutter) 6px; border: 0;
+}
+.player-side .crl-player-vods-head, .player-side .crl-player-reels-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.player-side .crl-player-vods-head span, .player-side .crl-player-reels-head span, .player-side .crl-player-rail-title {
+  font: 800 clamp(1.35rem, 2.4vw, 1.8rem)/1 var(--p2-display); letter-spacing: -.03em; text-transform: none; color: var(--p2-bone);
+}
+.player-side .crl-player-vods-link, .player-side .crl-player-reels-link {
+  height: 36px; display: inline-flex; align-items: center; padding: 0 16px; border-radius: 999px; opacity: 1;
+  background: color-mix(in srgb, var(--p2-accent) 16%, transparent); color: #ffb9a3;
+  font: 700 .88rem var(--p2-body); letter-spacing: 0; text-decoration: none; transition: background .15s, color .15s;
+}
+.player-side .crl-player-vods-link:hover, .player-side .crl-player-reels-link:hover { background: var(--p2-accent); color: #fff; }
+
+/* ── últimas transmisiones ── */
+.player-side .crl-player-vods-list { gap: 14px; padding-bottom: 6px; scroll-snap-type: x proximity; }
+.player-side .crl-player-vod-card { flex: none !important; width: clamp(240px, 26vw, 300px); scroll-snap-align: start; }
+.player-side .crl-player-vod-thumb {
+  width: 100%; height: auto; aspect-ratio: 16 / 9; padding: 0; border: 0; border-radius: 24px;
+  background: var(--p2-panel); box-shadow: inset 0 0 0 1px var(--p2-line); transition: box-shadow .18s;
+}
+.player-side .crl-player-vod-card:hover .crl-player-vod-thumb { box-shadow: 0 0 0 3px var(--p2-accent); }
+.player-side .cvod-thumb img, .player-side .cvod-thumb video { border-radius: 0 !important; }
+.player-side .crl-player-vod-thumb > i {
+  width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; font-size: 1rem;
+  background: rgba(6,20,63,.55); color: #fff; backdrop-filter: blur(6px); transition: background .15s, transform .15s;
+}
+.player-side .crl-player-vod-card:hover .crl-player-vod-thumb > i { background: var(--p2-accent); color: #fff; transform: scale(1.08); }
+.player-side .crl-player-vod-duration {
+  right: 10px; bottom: 10px; padding: 4px 10px; border-radius: 999px; background: rgba(6,20,63,.82);
+  font: 700 .8rem var(--p2-body); letter-spacing: 0; color: #fff; z-index: 2;
+}
+.player-side .crl-player-vod-date { margin: 10px 4px 0; text-align: left; font: 600 .92rem var(--p2-body); letter-spacing: 0; color: var(--p2-mute); }
+
+/* ── reels ── */
+.player-side .crl-player-reels-list { gap: 12px; padding-bottom: 6px; scroll-snap-type: x proximity; }
+.player-side .crl-player-reel-card { width: clamp(118px, 13vw, 150px); flex: none; scroll-snap-align: start; }
+.player-side .crl-player-reel-thumb {
+  width: 100%; height: auto; aspect-ratio: 9 / 16; padding: 0; border: 0; border-radius: 22px; overflow: hidden;
+  background: var(--p2-panel); box-shadow: inset 0 0 0 1px var(--p2-line); transition: box-shadow .18s;
+}
+.player-side .crl-player-reel-thumb img { border-radius: 0 !important; }
+.player-side .crl-player-reel-card:hover .crl-player-reel-thumb { box-shadow: 0 0 0 3px var(--p2-accent); }
+.player-side .crl-player-reel-dur {
+  right: 8px; bottom: 8px; padding: 3px 9px; border-radius: 999px; background: rgba(6,20,63,.82);
+  font: 700 .75rem var(--p2-body); letter-spacing: 0; color: #fff;
+}
+.player-side .crl-player-reel-title {
+  margin-top: 9px; font: 600 .88rem/1.25 var(--p2-body); letter-spacing: 0; text-transform: none; text-align: left; color: var(--p2-bone);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+/* ── "Otros en vivo" ── */
+.player-side .crl-player-rail-row { border-radius: 20px; padding: 10px 12px; }
+.player-side .crl-player-rail-name { font: 700 1rem var(--p2-body); letter-spacing: 0; text-transform: none; }
+
+/* ── móvil ── */
+@media (max-width: 767px) {
+  .player-side .crl-player-info { align-items: flex-start; padding-top: 18px; }
+  .player-side .crl-player-vods-list { display: flex !important; overflow-x: auto !important; grid-template-columns: none; }
+  .player-side .crl-player-vod-card { flex: none !important; width: min(74vw, 280px); }
+  .player-side .crl-player-reels-list { display: flex !important; overflow-x: auto !important; grid-template-columns: none; }
+  .player-side .crl-player-reel-card { width: 120px; }
+  .player-side .crl-channel-stats { grid-template-columns: repeat(2, 1fr); }
+  .player-side .crl-player-link { height: 42px; padding: 0 18px; font-size: .95rem; }
+}

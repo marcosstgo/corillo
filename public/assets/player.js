@@ -887,7 +887,7 @@ window.channel = __validFormat ? __rawChannel : '';
     const color   = s.color || '#1a3040';
     if (DOM.chAva)    { DOM.chAva.textContent = initial; DOM.chAva.style.background = color; }
     if (DOM.navChAva) { DOM.navChAva.textContent = initial; DOM.navChAva.style.background = color; }
-    if (DOM.chName)    DOM.chName.textContent = (s.name || s.key).toUpperCase();
+    if (DOM.chName)    DOM.chName.textContent = (s.name || s.key);  // sin forzar mayúsculas: el diseño nuevo usa el nombre tal cual
     if (DOM.navChName) DOM.navChName.textContent = (s.name || s.key).toUpperCase();
     if (DOM.chHostTag && s.host) DOM.chHostTag.style.display = '';
     if (DOM.chSub && s.sub) DOM.chSub.textContent = s.sub;
