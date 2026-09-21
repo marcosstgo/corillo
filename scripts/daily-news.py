@@ -11,7 +11,8 @@ Uso:
   daily-news.py --backfill 3     # publica hasta 3 notas seguidas (para arrancar); ignora el tope diario
   daily-news.py --unpublish SLUG # retira una nota (borra el .md, despliega, commit)
 
-Nunca publica basura: si el selector da menos de MIN_SCORE, o el verificador rechaza dos veces, no publica nada.
+Nunca publica basura, pero tampoco se rinde a la primera: verifica que la noticia sea real ANTES de escribir, escribe solo con hechos verificados,
+y si un tema no se sostiene prueba con otro (hasta MAX_STORIES). Solo no publica si el selector no ve nada (MIN_SCORE) o se agotan los temas.
 """
 import argparse, datetime as dt, difflib, hashlib, html, json, os, re, subprocess, sys, time, unicodedata
 from html.parser import HTMLParser
@@ -195,7 +196,8 @@ Reglas estrictas:
 - Título informativo (máx. 90 caracteres), sin clickbait ni mayúsculas gritonas. No menciones que eres una IA en el texto (el sitio ya lo avisa).
 - El extracto (description) máx. 160 caracteres. summary: 1-2 frases para la tarjeta. heroSub: una frase de apoyo.
 - tags: 3-5 etiquetas cortas. sources_used: índices (empezando en 0) de las fuentes de las que realmente sacaste datos.
-- Si te dan 'problemas' de un intento anterior, corrígelos todos."""
+- Te doy una HOJA DE HECHOS VERIFICADOS: escribe SOLO con esos hechos. No conectes hechos entre sí con causas, motivos o consecuencias que la hoja no diga, y no afirmes nada de la lista NO ESTABLECIDO.
+- Si te dan 'problemas' de un intento anterior, corrígelos todos (quita o reformula la frase problemática; nunca la reemplaces por otra sin respaldo)."""
 WRITE_SCHEMA = {'type': 'object', 'additionalProperties': False,
     'required': ['title', 'description', 'summary', 'heroSub', 'body', 'category', 'tags', 'sources_used'],
     'properties': {k: {'type': 'string'} for k in ('title', 'description', 'summary', 'heroSub', 'body')} | {
@@ -203,13 +205,30 @@ WRITE_SCHEMA = {'type': 'object', 'additionalProperties': False,
         'tags': {'type': 'array', 'items': {'type': 'string'}},
         'sources_used': {'type': 'array', 'items': {'type': 'integer'}}}}
 
-VER_SYS = """Eres verificador de hechos de una redacción. Recibes una nota y los textos de las fuentes. Comprueba:
-1) cada dato concreto (cifras, fechas, nombres, cargos, citas, lanzamientos) está respaldado por alguna fuente;
-2) nada contradice a las fuentes; 3) no hay especulación presentada como hecho; 4) el título no exagera lo que dicen las fuentes;
-5) el tono es informativo y sin clickbait. Sé estricto con los datos, tolerante con el estilo.
-Devuelve ok=false y la lista de problemas concretos si hay algún dato sin respaldo o incorrecto."""
+FACTS_SYS = """Eres el verificador de autenticidad de una redacción. Recibes textos de fuentes sobre un mismo tema. ANTES de que nadie escriba nada,
+decide si es una NOTICIA REAL: un hecho concreto y reportado (anuncio oficial, dato, evento, lanzamiento, resultado, decisión, estudio) y NO un rumor,
+una filtración sin confirmar, sátira, opinión, clickbait, contenido promocional o algo sin sustancia.
+Luego extrae la HOJA DE HECHOS: afirmaciones atómicas que aparecen en las fuentes (cifras, fechas, nombres, cargos, lugares, citas cortas literales),
+cada una con los índices de las fuentes que la respaldan. corroborated=true solo si 2 o más fuentes independientes coinciden en ella.
+Aparte, en not_established, lista las relaciones causales, motivos, consecuencias, comparaciones o especulaciones que las fuentes NO establecen
+y que una nota no debe afirmar como hecho. Sé estricto: copia solo lo que está en los textos."""
+FACTS_SCHEMA = {'type': 'object', 'additionalProperties': False, 'required': ['real', 'kind', 'reason', 'facts', 'not_established'],
+    'properties': {'real': {'type': 'boolean'}, 'kind': {'type': 'string', 'enum': ['oficial', 'confirmado', 'rumor', 'opinion', 'promocional', 'otro']},
+        'reason': {'type': 'string'},
+        'facts': {'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': ['claim', 'sources', 'corroborated'],
+            'properties': {'claim': {'type': 'string'}, 'sources': {'type': 'array', 'items': {'type': 'integer'}}, 'corroborated': {'type': 'boolean'}}}},
+        'not_established': {'type': 'array', 'items': {'type': 'string'}}}}
+
+VER_SYS = """Eres verificador de hechos de una redacción. Recibes una nota y los textos de las fuentes. Clasifica cada problema que encuentres:
+- severity "grave": un dato concreto (cifra, fecha, nombre, cargo, lugar, cita, lanzamiento) que NO está respaldado por ninguna fuente o las contradice;
+  una relación causal, motivo o consecuencia que ninguna fuente establece; o una especulación presentada como hecho.
+- severity "menor": estilo, tono, un título algo enfático, matices de redacción, contexto general obvio que no cambia ningún hecho.
+ok = true si NO hay problemas graves (los menores no bloquean). Sé estricto con los datos y tolerante con el estilo. Cada problema debe ser concreto:
+cita la frase de la nota y explica qué falta o qué dicen realmente las fuentes."""
 VER_SCHEMA = {'type': 'object', 'additionalProperties': False, 'required': ['ok', 'problems'],
-    'properties': {'ok': {'type': 'boolean'}, 'problems': {'type': 'array', 'items': {'type': 'string'}}}}
+    'properties': {'ok': {'type': 'boolean'}, 'problems': {'type': 'array', 'items': {'type': 'object', 'additionalProperties': False,
+        'required': ['text', 'severity'], 'properties': {'text': {'type': 'string'}, 'severity': {'type': 'string', 'enum': ['grave', 'menor']}}}}}}
+MAX_STORIES = 4   # temas que se prueban en un día antes de rendirse (peor caso ~US$0.4)
 
 # ───────────── leer fuentes ─────────────
 class _Text(HTMLParser):
@@ -299,7 +318,8 @@ def git_publish(files, msg):
         log('git falló (no bloquea):', e)
 
 # ───────────── una nota ─────────────
-def make_one(client, items, used_ids, pub, dry):
+def pick_story(client, items, used_ids, pub):
+    """Elige un tema y lee sus fuentes. None = no hay nada elegible (parar); False = este tema no sirve (probar otro)."""
     recent = '\n'.join(f"- [{p['cat']}] {p['title']}" for p in pub[-20:])
     lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in items if i['id'] not in used_ids)
     STOP = set('nuevo nueva nuevos nuevas juego juegos millones anuncia revela lanza lanzamiento tras mil año años primer primera mejor todo todos para como sobre tras esta este esto pero desde entre hasta cuando donde porque sus los las del una uno con por que the and for with from'.split())
@@ -331,29 +351,69 @@ def make_one(client, items, used_ids, pub, dry):
         if len(t) < 500: t = c['title'] + '. ' + c['summary']  # solo el resumen del feed si la página no sirve
         if len(t) > 200: srcs.append(c); texts.append(t)
     full = [t for t in texts if len(t) > 800]
-    if not full: log('ninguna fuente legible con suficiente texto: no se publica'); return None
+    if not full: log('ninguna fuente legible con suficiente texto: se descarta el tema'); return False
     log('fuentes:', [s['source'] for s in srcs])
     block = '\n\n'.join(f"=== FUENTE {i}: {s['source']} — {s['title']} ({s['url']}) ===\n{t}" for i, (s, t) in enumerate(zip(srcs, texts)))
+    return sel, srcs, texts, block, [c['id'] for c in chosen]
+
+def trim_desc(t, n=160):
+    """Recorta el extracto a n caracteres sin dejarlo colgando: prefiere terminar en una frase completa
+    y, si no, en el límite de una palabra que no sea conector ("con", "de", "y"…)."""
+    if len(t) <= n: return t
+    cut = t[:n - 1]
+    m = max(cut.rfind('. '), cut.rfind('; '))
+    if m >= 70: return cut[:m + 1]
+    words = cut.rsplit(' ', 1)[0].split(' ')
+    while len(words) > 3 and words[-1].lower().strip(',;:') in {'con', 'de', 'del', 'y', 'e', 'o', 'a', 'al', 'en', 'el', 'la', 'los', 'las', 'un', 'una', 'que', 'para', 'por', 'su', 'sus', 'tras', 'como', 'se', 'sobre'}:
+        words.pop()
+    return ' '.join(words).rstrip(' ,;:—-') + '…'
+
+def write_story(client, sel, srcs, texts, block):
+    """Verificar primero, escribir después. Devuelve (nota, fuentes) o None si el tema no se sostiene."""
+    facts = llm_json(client, FACTS_SYS, f"Tema: {sel['angle']}\n\n{block}", FACTS_SCHEMA, 12000, think=True)
+    log(f"autenticidad: real={facts['real']} tipo={facts['kind']} hechos={len(facts['facts'])} corroborados={sum(1 for x in facts['facts'] if x['corroborated'])} — {facts['reason'][:220]}")
+    if not (facts['real'] and facts['kind'] in ('oficial', 'confirmado') and len(facts['facts']) >= 4):
+        log('no pasa la verificación de autenticidad: se descarta el tema'); return None
+    sheet = '\n'.join(f"- {x['claim']} [fuentes {','.join(str(i) for i in x['sources'])}]{' (corroborado)' if x['corroborated'] else ''}" for x in facts['facts'])
+    notest = '\n'.join('- ' + x for x in facts['not_established']) or '- (nada en particular)'
     problems, art = [], None
-    for attempt in (1, 2):
-        u = f"Enfoque sugerido por el editor: {sel['angle']}\nCategoría sugerida: {sel['category']}\n\n{block}"
+    for attempt in (1, 2, 3):
+        u = (f"Enfoque sugerido por el editor: {sel['angle']}\nCategoría sugerida: {sel['category']}\n\n"
+             f"HOJA DE HECHOS VERIFICADOS (escribe solo con esto):\n{sheet}\n\nNO ESTABLECIDO (no lo afirmes):\n{notest}\n\nFuentes completas, solo como contexto:\n{block}")
         if problems: u += '\n\nProblemas del intento anterior a corregir:\n' + '\n'.join('- ' + p for p in problems)
         art = llm_json(client, WRITE_SYS, u, WRITE_SCHEMA, 10000)
         ratio = copied_ratio(art['body'], texts)
         words = len(art['body'].split())
         log(f"intento {attempt}: {words} palabras, copia={ratio:.1%}")
-        problems = []
-        if ratio > 0.04: problems.append(f'Copia demasiado texto de las fuentes ({ratio:.0%}); reescribe con tus palabras.')
-        if not 300 <= words <= 800: problems.append(f'Longitud {words} palabras; debe ser 350-550.')
-        if len(art['description']) > 165: problems.append(f"description mide {len(art['description'])} caracteres; máx. 160.")
-        ver = llm_json(client, VER_SYS, f"NOTA:\nTítulo: {art['title']}\n{art['body']}\n\n{block}", VER_SCHEMA, 12000, think=True)
-        if not ver['ok']: problems += ver['problems']
-        if not problems: break
-        log('problemas:', problems)
-    else:
-        log('rechazada dos veces: no se publica'); return None
-    art['category'] = art['category'] if art['category'] in CATS else sel['category']
-    return art, srcs
+        blocking, soft = [], []
+        if ratio > 0.04: blocking.append(f'Copia demasiado texto de las fuentes ({ratio:.0%}); reescribe con tus palabras.')
+        if not 300 <= words <= 800: blocking.append(f'Longitud {words} palabras; debe ser 350-550.')
+        if len(art['description']) > 160:  # cosmético: recortar en límite de palabra en vez de rechazar la nota
+            art['description'] = trim_desc(art['description'])
+        ver = llm_json(client, VER_SYS, f"NOTA:\nTítulo: {art['title']}\n{art['body']}\n\nHOJA DE HECHOS:\n{sheet}\n\n{block}", VER_SCHEMA, 12000, think=True)
+        for p in ver['problems']:
+            t, sev = (p['text'], p['severity']) if isinstance(p, dict) else (str(p), 'grave')
+            (blocking if sev == 'grave' else soft).append(t)
+        if soft: log('reparos menores (no bloquean):', soft)
+        if not blocking:
+            art['category'] = art['category'] if art['category'] in CATS else sel['category']
+            return art, srcs
+        log('problemas graves:', blocking)
+        problems = blocking + soft
+    log('este tema no se pudo redactar sin errores tras 3 intentos'); return None
+
+def make_one(client, items, used_ids, pub, dry):
+    """Prueba temas hasta que uno pase; solo se rinde si se agotan MAX_STORIES temas."""
+    for n in range(1, MAX_STORIES + 1):
+        st = pick_story(client, items, used_ids, pub)
+        if st is None: return None
+        if st is not False:
+            sel, srcs, texts, block, ids = st
+            r = write_story(client, sel, srcs, texts, block)
+            if r: return r
+            used_ids.update(ids)      # tampoco volver a intentar las fuentes relacionadas del mismo hecho
+        log(f'tema descartado ({n}/{MAX_STORIES}); se prueba con otro')
+    log(f'se agotaron los {MAX_STORIES} temas del día: no se publica'); return None
 
 def main():
     ap = argparse.ArgumentParser()
@@ -399,7 +459,9 @@ def main():
         pub.append({'file': fname, 'title': art['title'], 'urls': [s['url'] for s in srcs]})
         for s in srcs: st['seen'][hashlib.md5(s['url'].encode()).hexdigest()] = time.time()
     if a.dry_run or not made:
-        if not made: log('hoy no se publica nada');
+        if not made:
+            log('hoy no se publica nada')
+            if not a.dry_run: telegram('⚠️ Noticias: hoy NO se publicó ninguna nota (el verificador rechazó todos los borradores). Detalle en ~/corillo-news/logs/daily.log')
         save_state(st) if not a.dry_run else None; return
     save_state(st)
     if not deploy():
