@@ -2,7 +2,7 @@
 corillo-bot — Chat en vivo, IA, WebSocket.
 Puerto 3001. Solo responsabilidad: chat.
 """
-import os, time, json, asyncio, random, base64
+import os, re, time, json, asyncio, random, base64
 import httpx, aiosqlite
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -20,20 +20,42 @@ DISCORD_URL   = os.environ.get("DISCORD_URL",   "")
 INSTAGRAM_URL = os.environ.get("INSTAGRAM_URL", "")
 
 GROQ_API_KEY        = os.environ.get("GROQ_API_KEY",   "")
-GROQ_MODEL          = os.environ.get("GROQ_MODEL",    "llama-3.3-70b-versatile")
+GROQ_MODEL          = os.environ.get("GROQ_MODEL",    "openai/gpt-oss-120b")   # llama-3.3-70b-versatile ya no existe en Groq (404)
+DEEPSEEK_API_KEY    = os.environ.get("DEEPSEEK_API_KEY", "")
+DEEPSEEK_MODEL      = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-pro")
 GEMINI_API_KEY      = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_VISION_MODEL = os.environ.get("GEMINI_VISION_MODEL", "gemini-2.5-flash")
 
 
-async def groq(system: str, prompt: str, max_tokens: int = 150) -> str:
+def _clean(t: str) -> str:
+    """El chat no renderiza markdown: quita ** y __ que algunos modelos añaden."""
+    return re.sub(r"\*\*|__", "", t).strip()
+
+
+async def deepseek(system: str, prompt: str, max_tokens: int) -> str:
+    r = await _http.post(
+        "https://api.deepseek.com/chat/completions",
+        json={
+            "model": DEEPSEEK_MODEL, "max_tokens": max_tokens, "thinking": {"type": "disabled"},
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}],
+        },
+        headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
+        timeout=30,
+    )
+    return r.json()["choices"][0]["message"]["content"].strip()
+
+
+async def _groq_call(system: str, prompt: str, max_tokens: int) -> str:
     payload = {
         "model": GROQ_MODEL,
         "messages": [
             {"role": "system", "content": system},
             {"role": "user",   "content": prompt},
         ],
-        "max_tokens": max_tokens,
+        "max_tokens": max_tokens * 3,   # gpt-oss gasta parte en razonamiento
     }
+    if "gpt-oss" in GROQ_MODEL:
+        payload["reasoning_effort"] = "low"
     r = await _http.post(
         "https://api.groq.com/openai/v1/chat/completions",
         json=payload,
@@ -41,6 +63,16 @@ async def groq(system: str, prompt: str, max_tokens: int = 150) -> str:
         timeout=30,
     )
     return r.json()["choices"][0]["message"]["content"].strip()
+
+
+async def groq(system: str, prompt: str, max_tokens: int = 150) -> str:
+    """Nombre histórico. Respuestas de texto: DeepSeek primero, Groq de respaldo."""
+    if DEEPSEEK_API_KEY:
+        try:
+            return _clean(await deepseek(system, prompt, max_tokens))
+        except Exception as e:
+            print(f"[bot] deepseek falló, uso Groq: {type(e).__name__}: {e}", flush=True)
+    return _clean(await _groq_call(system, prompt, max_tokens))
 
 
 async def gemini_vision(system: str, prompt: str, b64: str, max_tokens: int = 60) -> str:
