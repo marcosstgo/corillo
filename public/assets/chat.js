@@ -47,6 +47,23 @@ function chatPanelHideAfterAnim() {
   _chatHideTimer = setTimeout(() => { if (!chatVisible) _chatPanel.style.display = 'none'; }, 360);
 }
 
+// Al abrir el panel: bajar a lo último (los mensajes que llegan con el panel cerrado no mueven el scroll)
+function chatScrollBottom() {
+  const box = $('#chatMsgs'); if (box) box.scrollTop = box.scrollHeight;
+  if ($('#chatJump')) $('#chatJump').hidden = true;
+}
+function chatPlaceholder(text) {
+  const box = $('#chatMsgs'); if (!box || box.querySelector('.chat-msg')) return;
+  let ph = box.querySelector('.chat-empty');
+  if (!ph) { ph = document.createElement('div'); ph.className = 'chat-empty'; box.appendChild(ph); }
+  ph.textContent = text;
+}
+// Si la conexión se cayó mientras el panel estaba cerrado (o el navegador dormía la pestaña), reconecta ya
+// en vez de esperar el backoff (hasta 30 s) — era lo que dejaba el chat vacío al reabrirlo.
+function chatEnsureConnected() {
+  if (!ws || ws.readyState > 1) { _wsRetries = 0; clearTimeout(wsTimer); connectWs(); chatPlaceholder('Conectando con el chat…'); }
+}
+
 function showChat() {
   chatVisible = true;
   localStorage.setItem('corillo_chat', 'visible');
@@ -56,6 +73,8 @@ function showChat() {
   if ($('#railBadge')) $('#railBadge').classList.remove('show');
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
   lockBodyScroll();
+  chatScrollBottom(); requestAnimationFrame(chatScrollBottom); setTimeout(chatScrollBottom, 380);
+  chatEnsureConnected();
 }
 
 function hideChat() {
@@ -107,7 +126,9 @@ function addChatMsg(msg) {
     _lastMsgTs = msg.ts;
   }
   const box = $('#chatMsgs');
-  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 60;
+  const ph = box.querySelector('.chat-empty'); if (ph) ph.remove();
+  // panel cerrado (display:none → altura 0): cuenta como "al fondo" para que al abrir quede en lo último
+  const atBottom = box.clientHeight === 0 || box.scrollHeight - box.scrollTop - box.clientHeight < 60;
   const el = document.createElement('div');
   if (msg.type === 'system') {
     el.className = 'chat-msg is-system';
@@ -119,6 +140,7 @@ function addChatMsg(msg) {
   }
   box.appendChild(el);
   if (atBottom) box.scrollTop = box.scrollHeight;
+  else if ($('#chatJump')) $('#chatJump').hidden = false;   // leyendo arriba: avisa que hay mensajes nuevos
   // Show badge on rail if chat is hidden and it's a real message
   if (!chatVisible && msg.type !== 'system') {
     if ($('#railBadge')) $('#railBadge').classList.add('show');
@@ -148,6 +170,7 @@ function connectWs() {
           localStorage.setItem('corillo_username', msg.user);
           if ($('#chatYou')) $('#chatYou').textContent = msg.user;
         }
+        setTimeout(() => chatPlaceholder('Todavía no hay mensajes. ¡Rompe el hielo!'), 1500);
         return;
       }
       if (msg.type !== 'system' && (typeof msg.user !== 'string' || typeof msg.text !== 'string')) return;
@@ -188,4 +211,14 @@ $('#chatInput').addEventListener('focus', function() {
   setTimeout(() => this.closest('.chat-input-wrap').scrollIntoView({ behavior: 'smooth', block: 'end' }), 350);
 });
 
+// "Ir al último mensaje": aparece si estás leyendo arriba y llegan mensajes nuevos
+if ($('#chatJump')) $('#chatJump').addEventListener('click', chatScrollBottom);
+$('#chatMsgs').addEventListener('scroll', () => {
+  const box = $('#chatMsgs');
+  if ($('#chatJump') && box.scrollHeight - box.scrollTop - box.clientHeight < 60) $('#chatJump').hidden = true;
+}, { passive: true });
+document.addEventListener('visibilitychange', () => { if (!document.hidden) chatEnsureConnected(); });
+window.addEventListener('online', chatEnsureConnected);
+
 connectWs();
+chatPlaceholder('Conectando con el chat…');

@@ -1,7 +1,7 @@
 /* Canal (player) — parte de abajo del video: perfil, botones, estadísticas, tarjetas, transmisiones y reels.
    Mismo lenguaje que el resto del sitio (Cobalto): Bricolage/DM Sans, tarjetas redondeadas, sin mayúsculas en mono.
    Carga DESPUÉS de corillo.css y gana por especificidad (.player-side …). */
-.player-side {
+.player-side, .crl-chat-panel, .crl-chat-backdrop {
   --p2-ink: #06143f; --p2-panel: #0d2260; --p2-raise: #173383;
   --p2-line: rgba(245,248,255,.10); --p2-bone: #f5f8ff; --p2-mute: #a4b6e6;
   --p2-accent: #ff6a3d; --p2-accent2: #ffd23f; --p2-live: #ff2d55;
@@ -163,4 +163,73 @@
   .player-side .crl-player-reel-card { width: 120px; }
   .player-side .crl-channel-stats { grid-template-columns: repeat(2, 1fr); }
   .player-side .crl-player-link { height: 42px; padding: 0 18px; font-size: .95rem; }
+}
+
+/* ══ CHAT ══ */
+.crl-chat-panel { position: relative; background: var(--p2-ink); border-left: 1px solid var(--p2-line); }
+.crl-chat-panel .chat-header, .crl-chat-panel-header {
+  height: 60px; padding: 0 14px 0 18px; background: color-mix(in srgb, var(--p2-bone) 4%, var(--p2-ink)); border-bottom: 1px solid var(--p2-line);
+}
+.crl-chat-panel .chat-title { min-width: 0; white-space: nowrap; display: flex; align-items: center; gap: 10px; font: 800 1.05rem var(--p2-display); letter-spacing: -.01em; text-transform: none; color: var(--p2-bone); }
+.crl-chat-panel .chat-title .dot { flex: none; width: 9px !important; height: 9px !important; border-radius: 50%; background: var(--p2-live); box-shadow: 0 0 0 4px rgba(255,45,85,.22); }
+.crl-chat-panel .chat-title #chatChannelLabel::before { content: 'Chat · '; font-weight: 600; color: var(--p2-mute); }
+.crl-chat-panel .chat-you {
+  max-width: 118px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 6px 12px; border-radius: 999px;
+  background: color-mix(in srgb, var(--p2-accent) 16%, transparent); color: #ffb9a3; font: 700 .8rem var(--p2-body); letter-spacing: 0;
+}
+.crl-chat-panel .chat-you:empty { display: none; }
+.crl-chat-panel #chatCloseBtn { width: 38px !important; height: 38px !important; border-radius: 50%; border: 0; background: color-mix(in srgb, var(--p2-bone) 8%, transparent); color: var(--p2-bone); font-size: .9rem !important; }
+.crl-chat-panel #chatCloseBtn:hover { background: color-mix(in srgb, var(--p2-bone) 16%, transparent); }
+
+.crl-chat-panel .chat-msgs { padding: 12px 10px; gap: 3px; scrollbar-width: thin; scrollbar-color: rgba(245,248,255,.18) transparent; overscroll-behavior: contain; }
+.crl-chat-panel .chat-msg {
+  padding: 7px 12px; border-radius: 16px; font: 400 .97rem/1.45 var(--p2-body); color: color-mix(in srgb, var(--p2-bone) 92%, transparent);
+  transition: background .12s; animation: chatIn .22s ease-out;
+}
+.crl-chat-panel .chat-msg:hover { background: color-mix(in srgb, var(--p2-bone) 6%, transparent); }
+.crl-chat-panel .msg-user { font: 700 .97rem var(--p2-body); margin-right: 4px; }
+.crl-chat-panel .chat-msg.is-bot { background: color-mix(in srgb, #5a7bff 12%, transparent); box-shadow: inset 3px 0 0 #5a7bff; border-radius: 6px 16px 16px 6px; }
+.crl-chat-panel .chat-msg.is-bot .msg-user { color: #9db0ff !important; }
+.crl-chat-panel .chat-msg.is-bot .msg-user::before {
+  content: 'BOT'; display: inline-block; margin-right: 6px; padding: 1px 6px; border-radius: 6px; vertical-align: 1px;
+  background: #5a7bff; color: #fff; font: 800 .62rem var(--p2-body); letter-spacing: .05em;
+}
+.crl-chat-panel .chat-msg.is-system {
+  align-self: center; margin: 6px 0; padding: 4px 14px; border-radius: 999px; background: color-mix(in srgb, var(--p2-bone) 7%, transparent);
+  font: 600 .78rem var(--p2-body); letter-spacing: 0; color: var(--p2-mute); text-align: center;
+}
+.crl-chat-panel .reply-btn {
+  margin-left: 8px; padding: 2px 10px; border-radius: 999px; background: color-mix(in srgb, var(--p2-bone) 10%, transparent);
+  color: var(--p2-bone); font: 700 .74rem var(--p2-body); letter-spacing: 0;
+}
+@media (hover: none) { .crl-chat-panel .chat-msg.is-bot .reply-btn { display: inline-block; } }
+.crl-chat-panel .chat-empty { margin: auto; padding: 28px 20px; text-align: center; color: var(--p2-mute); font: 600 .95rem/1.4 var(--p2-body); }
+.crl-chat-panel .chat-jump {
+  position: absolute; left: 50%; bottom: 84px; transform: translateX(-50%); z-index: 3; display: inline-flex; align-items: center; gap: 8px;
+  height: 38px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--p2-accent); color: #fff; cursor: pointer;
+  font: 800 .85rem var(--p2-body); box-shadow: 0 10px 26px -8px rgba(255,106,61,.7);
+}
+.crl-chat-panel .chat-jump[hidden] { display: none; }
+
+.crl-chat-panel .chat-input-wrap { padding: 12px; gap: 8px; border-top: 1px solid var(--p2-line); background: color-mix(in srgb, var(--p2-bone) 3%, var(--p2-ink)); }
+.crl-chat-panel .chat-input {
+  height: 48px; padding: 0 20px; border: 0; border-radius: 999px; background: color-mix(in srgb, var(--p2-bone) 8%, transparent);
+  box-shadow: inset 0 0 0 1px var(--p2-line); color: var(--p2-bone); font: 500 1rem var(--p2-body); letter-spacing: 0; outline: none; transition: box-shadow .15s, background .15s;
+}
+.crl-chat-panel .chat-input::placeholder { color: var(--p2-mute); }
+.crl-chat-panel .chat-input:focus { background: color-mix(in srgb, var(--p2-bone) 11%, transparent); box-shadow: inset 0 0 0 2px var(--p2-accent); }
+.crl-chat-panel .chat-input.input-error { box-shadow: inset 0 0 0 2px var(--p2-live) !important; }
+.crl-chat-panel .chat-send {
+  flex: none; width: 48px; height: 48px; padding: 0; border: 0; border-radius: 50%; background: var(--p2-accent); color: #fff;
+  display: grid; place-items: center; font-size: 1rem; transition: transform .15s, filter .15s;
+}
+.crl-chat-panel .chat-send:hover { transform: scale(1.06); filter: brightness(1.08); color: #fff; }
+@keyframes chatIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .crl-chat-panel .chat-msg { animation: none; } }
+
+/* hoja inferior en móvil */
+@media (max-width: 960px) {
+  .crl-chat-panel:not(.preview .crl-chat-panel) { border-radius: 28px 28px 0 0; border-left: 0; border-top: 1px solid var(--p2-line); box-shadow: 0 -18px 60px rgba(0,0,0,.65); }
+  .crl-chat-panel .chat-header::before { width: 42px; height: 5px; top: 7px; background: rgba(245,248,255,.28); }
+  .crl-chat-backdrop { background: rgba(3,9,30,.62); backdrop-filter: blur(3px); }
 }

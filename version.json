@@ -1,7 +1,8 @@
 {
-  "version": "2.2.684",
+  "version": "2.2.686",
   "date": "2026-09-20",
   "changes": [
+    "Chat: rediseño (mensajes, bot, input) y arreglo — al reabrirlo en móvil ya no queda vacío ni arriba: baja al último mensaje, se reconecta si se cayó y avisa de mensajes nuevos.",
     "Canal: la parte de abajo del video (perfil, botones de Twitch/Instagram, mensaje, estadísticas, paneles, últimas transmisiones y reels) con el diseño nuevo; visible también en móvil.",
     "Player: la pastilla de calidad es un control (AUTO → 1080p → 720p); estados playing/offline; botón de overlay \"Reintentar\".",
     "Player: máquina de estados (window.__corilloPlayer), fallos clasificados offline/transitorio, stall nativo tolera 10 s, sin recoverMediaError en stalls, guard contra arranques solapados.",
