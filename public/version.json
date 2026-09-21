@@ -1,7 +1,8 @@
 {
-  "version": "2.2.683",
-  "date": "2026-09-02",
+  "version": "2.2.684",
+  "date": "2026-09-20",
   "changes": [
+    "Canal: la parte de abajo del video (perfil, botones de Twitch/Instagram, mensaje, estadísticas, paneles, últimas transmisiones y reels) con el diseño nuevo; visible también en móvil.",
     "Player: la pastilla de calidad es un control (AUTO → 1080p → 720p); estados playing/offline; botón de overlay \"Reintentar\".",
     "Player: máquina de estados (window.__corilloPlayer), fallos clasificados offline/transitorio, stall nativo tolera 10 s, sin recoverMediaError en stalls, guard contra arranques solapados.",
     "Fix: ABR (master.m3u8) solo con hls.js; el HLS nativo (iOS y Chrome 152+) recibe una sola variante — evitaba pantallas negras/\"Sin transmisión\" al cambiar de nivel.",
