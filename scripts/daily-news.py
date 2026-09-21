@@ -68,8 +68,9 @@ def published():
         t = f.read_text()
         title = (re.search(r'^heroTitle:\s*"(.*)"\s*$', t, re.M) or re.search(r'^title:\s*"(.*)"\s*$', t, re.M))
         urls = re.findall(r'^\s+url:\s*"(.*)"\s*$', t, re.M)
-        out.append({'file': f.name, 'title': title.group(1) if title else f.stem, 'urls': urls})
-    return out
+        pd = re.search(r'^pubDate:\s*(\S+)', t, re.M)
+        out.append({'file': f.name, 'title': title.group(1) if title else f.stem, 'urls': urls, 'pd': pd.group(1) if pd else f.name[:10]})
+    return sorted(out, key=lambda x: x['pd'])  # por fecha real (no por nombre de archivo)
 
 def state():
     try: return json.loads(STATE.read_text())
@@ -301,12 +302,12 @@ def git_publish(files, msg):
 def make_one(client, items, used_ids, pub, dry):
     recent = '\n'.join('- ' + p['title'] for p in pub[-20:])
     lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in items if i['id'] not in used_ids)
-    STOP = set('para como sobre tras esta este esto pero desde entre hasta cuando donde porque sus los las del una uno con por que the and for with from'.split())
+    STOP = set('nuevo nueva nuevos nuevas juego juegos millones anuncia revela lanza lanzamiento tras mil año años primer primera mejor todo todos para como sobre tras esta este esto pero desde entre hasta cuando donde porque sus los las del una uno con por que the and for with from'.split())
     def toks(t): return {w for w in norm(t) if len(w) > 3 and w not in STOP}
     recent_t = [toks(p['title']) for p in pub[-10:]]
     def repeats(cands):  # ¿mismo tema que algo ya publicado? (solapamiento de palabras clave)
         c = toks(cands)
-        return any(len(c & r) >= 2 and len(c & r) / max(1, min(len(c), len(r))) >= 0.3 for r in recent_t)
+        return any(len(c & r) >= 2 and len(c & r) / max(1, min(len(c), len(r))) >= 0.2 for r in recent_t)
     sel = None
     for _try in range(3):
         avail = [i for i in items if i['id'] not in used_ids]
