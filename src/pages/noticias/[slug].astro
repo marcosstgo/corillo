@@ -21,9 +21,11 @@ const { post, related } = Astro.props;
 const { Content } = await render(post);
 const canonical = `https://corillo.live/noticias/${post.id}/`;
 const d = post.data;
+// Titular primero, marca al final (Google corta ~60 caracteres): "CORILLO — Noticias · X" -> "X | CORILLO"
+const seoTitle = d.title.startsWith('CORILLO — Noticias · ') ? `${d.title.slice('CORILLO — Noticias · '.length)} | CORILLO` : d.title;
 ---
 <NoticiasPostLayout
-  title={d.title}
+  title={seoTitle}
   description={d.description}
   canonical={canonical}
   ogTitle={d.ogTitle}
@@ -31,6 +33,7 @@ const d = post.data;
   badgeLabel={d.badgeLabel}
   category={d.category}
   date={d.date}
+  pubDate={d.pubDate.toISOString()}
   heroTitle={d.heroTitle}
   heroSub={d.heroSub}
   minutes={readMinutes(post.body)}

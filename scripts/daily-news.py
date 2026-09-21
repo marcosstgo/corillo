@@ -370,7 +370,8 @@ def main():
     now = dt.datetime.now(dt.timezone.utc)
     pub = published()
     today = f'{now:%Y-%m-%d}'
-    if not a.backfill and not a.dry_run and any(p['file'].startswith(dt.datetime.now().strftime('%Y-%m-%d')) and 'auto' in p['file'] for p in pub):
+    hoy = dt.datetime.now().strftime('%Y-%m-%d')
+    if not a.backfill and not a.dry_run and any(p['file'].startswith(hoy) and 'ai: true' in (POSTS / p['file']).read_text() for p in pub):
         log('ya hay nota automática de hoy'); return
     global PROVIDER
     PROVIDER = os.environ.get('NEWS_PROVIDER') or ('deepseek' if os.environ.get('DEEPSEEK_API_KEY') else 'anthropic')
@@ -390,7 +391,7 @@ def main():
         if not r: break
         art, srcs = r
         md = build_md(art, srcs, now + dt.timedelta(minutes=len(made)))
-        fname = f"{dt.datetime.now():%Y-%m-%d}-auto-{slugify(art['title'])}.md"
+        fname = f"{dt.datetime.now():%Y-%m-%d}-{slugify(art['title'])}.md"
         if a.dry_run:
             print('\n' + '=' * 70 + f'\n{fname}\n' + '=' * 70 + f'\n{md}')
             made.append(fname); continue
