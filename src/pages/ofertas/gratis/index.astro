@@ -1,18 +1,22 @@
 ---
 import SiteShell from '../../../layouts/SiteShell.astro';
-import { loadOfertas, fmtDay, fmtStamp, offersJsonLd, type Deal } from '../../../data/ofertas';
+import { loadOfertas, allFree, STORES, fmtDay, fmtStamp, offersJsonLd, type Deal } from '../../../data/ofertas';
 
 const D = loadOfertas();
-const names = D.free.map((g: Deal) => g.title);
+const free = allFree(D);
+const names = free.map((g: Deal) => g.title);
 const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' y ' + names[names.length - 1] : names[0] || '';
-const until = D.free.length ? fmtDay(D.free.map((g: Deal) => g.ends!).sort()[0]) : null;
-const title = D.free.length
-  ? `Juegos gratis esta semana en Epic Games Store: ${names.slice(0, 2).join(' y ')} — CORILLO`
-  : 'Juegos gratis esta semana en Epic Games Store — CORILLO';
-const desc = D.free.length
-  ? `Juegos gratis ahora en Epic Games Store: ${list}. Puedes reclamarlos hasta el ${until}. Te explicamos cómo y cuáles vienen después.`
-  : 'Los juegos gratis de la semana en Epic Games Store, con fecha de vencimiento y cómo reclamarlos.';
-const ld = D.free.length ? offersJsonLd(D.free, 'Juegos gratis en Epic Games Store', 'https://corillo.live/ofertas/gratis/') : null;
+const epicEnds = D.free.map((g: Deal) => g.ends!).filter(Boolean).sort();
+const until = epicEnds.length ? fmtDay(epicEnds[0]) : null;
+const hasSteam = D.freeSteam.length > 0, hasEpic = D.free.length > 0;
+const where = hasEpic && hasSteam ? 'Epic Games Store y Steam' : hasSteam ? 'Steam' : 'Epic Games Store';
+const title = free.length
+  ? `Juegos gratis esta semana en ${where}: ${names.slice(0, 2).join(' y ')} — CORILLO`
+  : 'Juegos gratis esta semana en Epic Games Store y Steam — CORILLO';
+const desc = free.length
+  ? `Juegos gratis ahora en ${where}: ${list}.${until ? ` En Epic puedes reclamarlos hasta el ${until}.` : ''} Te explicamos cómo y cuáles vienen después.`.slice(0, 300)
+  : 'Los juegos gratis de la semana en Epic Games Store y Steam, con fecha de vencimiento y cómo reclamarlos.';
+const ld = free.length ? offersJsonLd(free, 'Juegos gratis', 'https://corillo.live/ofertas/gratis/') : null;
 ---
 <SiteShell title={title} description={desc} canonical="https://corillo.live/ofertas/gratis/">
   <fragment slot="head">
@@ -53,23 +57,23 @@ const ld = D.free.length ? offersJsonLd(D.free, 'Juegos gratis en Epic Games Sto
   <main class="fr">
     <nav class="fr-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / Juegos gratis</nav>
     <h1>Juegos gratis esta semana</h1>
-    {D.free.length ? (
-      <p class="lead">Ahora mismo puedes reclamar <strong>{list}</strong> gratis en Epic Games Store. La promoción termina el <strong>{until}</strong>. Si lo reclamas a tiempo, el juego se queda en tu biblioteca.</p>
+    {free.length ? (
+      <p class="lead">Ahora mismo puedes reclamar <strong>{list}</strong> gratis en {where}.{until && <> La promoción de Epic termina el <strong>{until}</strong>.</>}{hasSteam && <> Steam no publica la fecha de fin de sus juegos gratis: reclámalos cuanto antes.</>} Si lo reclamas a tiempo, el juego se queda en tu biblioteca.</p>
     ) : (
-      <p class="lead">Ahora mismo no hay juegos gratis en Epic Games Store. Se renuevan cada semana y esta página se actualiza sola.</p>
+      <p class="lead">Ahora mismo no hay juegos gratis en Epic Games Store ni en Steam. Se renuevan cada semana y esta página se actualiza sola.</p>
     )}
     {D.updatedAt && <p class="fr-stamp">Actualizado el {fmtStamp(D.updatedAt)} (hora de Puerto Rico).</p>}
 
-    {D.free.length > 0 && (
+    {free.length > 0 && (
       <div class="fr-list">
-        {D.free.map((g: Deal) => (
+        {free.map((g: Deal) => (
           <article class="fr-card" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
             {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="640" height="360" loading="lazy" />}
             <div class="b">
               <h2>{g.title}</h2>
               <div class="p"><b>Gratis</b>{g.original && <s>{g.original}</s>}</div>
-              <div class="m">Hasta el <b>{fmtDay(g.ends!)}</b> · <span data-cd></span></div>
-              <a class="fr-go" href={g.url} target="_blank" rel="nofollow noopener">Reclamar en Epic Games Store</a>
+              <div class="m">{STORES[g.store].label} · {g.ends ? <>hasta el <b>{fmtDay(g.ends)}</b> · <span data-cd></span></> : <b>por tiempo limitado</b>}</div>
+              <a class="fr-go" href={g.url} target="_blank" rel="nofollow noopener">{g.store === 'epic' ? 'Reclamar en Epic Games Store' : 'Reclamar en Steam'}</a>
             </div>
           </article>
         ))}
@@ -78,20 +82,20 @@ const ld = D.free.length ? offersJsonLd(D.free, 'Juegos gratis en Epic Games Sto
 
     <h2 class="s">Cómo reclamar un juego gratis</h2>
     <ol>
-      <li><span>Entra a la página del juego (botón de arriba) con tu cuenta de <strong>Epic Games</strong>. Si no tienes una, crearla es gratis.</span></li>
-      <li><span>Pulsa <strong>Obtener</strong> y completa el pedido. El total es <strong>$0.00</strong>: no se cobra nada.</span></li>
-      <li><span>Listo: el juego queda en tu <strong>biblioteca</strong> y puedes instalarlo cuando quieras con el launcher de Epic.</span></li>
+      <li><span>Entra a la página del juego (botón de arriba) con tu cuenta de <strong>Epic Games</strong> o de <strong>Steam</strong>. Si no tienes una, crearla es gratis.</span></li>
+      <li><span>En Epic pulsa <strong>Obtener</strong> y completa el pedido; en Steam pulsa <strong>Añadir a mi cuenta</strong>. El total es <strong>$0.00</strong>: no se cobra nada.</span></li>
+      <li><span>Listo: el juego queda en tu <strong>biblioteca</strong> y puedes instalarlo cuando quieras.</span></li>
     </ol>
 
     {D.soon.length > 0 && (<>
-      <h2 class="s">Lo que viene después</h2>
+      <h2 class="s">Lo que viene después en Epic</h2>
       <div class="fr-soon">
         {D.soon.map((g: Deal) => <a href={g.url} target="_blank" rel="nofollow noopener">{g.title}<span>Gratis desde el {fmtDay(g.starts!)}</span></a>)}
       </div>
     </>)}
 
-    <a class="fr-more" href="/ofertas/">Ver también las ofertas en Steam y GOG</a>
-    <p class="fr-note">CORILLO no vende juegos ni tiene relación comercial con Epic Games: tomamos la información de su tienda y te enviamos a ella. Las promociones cambian; confirma en la tienda antes de reclamar.</p>
+    <a class="fr-more" href="/ofertas/">Ver también todas las ofertas</a>
+    <p class="fr-note">CORILLO no vende juegos ni tiene relación comercial con Epic Games ni con Valve: tomamos la información de sus tiendas y te enviamos a ellas. Las promociones cambian; confirma en la tienda antes de reclamar.</p>
   </main>
 
   <script is:inline>

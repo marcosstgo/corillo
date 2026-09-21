@@ -1,7 +1,8 @@
 ---
 import SiteShell from '../layouts/SiteShell.astro';
-import { loadOfertas, fmtDay } from '../data/ofertas';
-const OF = loadOfertas();   // juegos gratis de Epic (los escribe scripts/update-deals.py); si no hay, la franja no se muestra
+import { loadOfertas, allFree, fmtDay } from '../data/ofertas';
+const OF = loadOfertas();
+const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/update-deals.py); si no hay, la franja no se muestra
 ---
 <SiteShell
   title="CORILLO — Stream Platform"
@@ -112,18 +113,18 @@ const OF = loadOfertas();   // juegos gratis de Epic (los escribe scripts/update
   </section>
 
   <!-- GRATIS ESTA SEMANA (solo si hay datos reales) -->
-  {OF.free.length > 0 && (
+  {OFREE.length > 0 && (
   <section class="h2-sec" id="gratisStrip" data-free-strip>
     <div class="h2-sec-hd">
       <h2>Gratis esta semana</h2>
-      <span class="h2-count">en Epic Games Store</span>
+      <span class="h2-count">en Epic y Steam</span>
       <a href="/ofertas/" class="h2-more-link">Ver todas las ofertas</a>
     </div>
     <div class="h2-fr">
-      {OF.free.slice(0, 3).map((g) => (
+      {OFREE.slice(0, 3).map((g) => (
         <a class="h2-fr-card" href="/ofertas/gratis/" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
           {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="480" height="270" loading="lazy" />}
-          <span class="h2-fr-body"><b>{g.title}</b><span>Gratis hasta el {fmtDay(g.ends!)}</span></span>
+          <span class="h2-fr-body"><b>{g.title}</b><span>{g.ends ? `Gratis hasta el ${fmtDay(g.ends)}` : 'Gratis por tiempo limitado'}</span></span>
         </a>
       ))}
     </div>

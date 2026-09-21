@@ -1,0 +1,50 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import OfertaCard from '../../components/OfertaCard.astro';
+import { loadOfertas, LISTAS, lista, fmtStamp, offersJsonLd } from '../../data/ofertas';
+
+export function getStaticPaths() { return LISTAS.map(l => ({ params: { lista: l.slug } })); }
+
+const l = lista(Astro.params.lista as string);
+const D = loadOfertas();
+const items = l.items(D);
+const asOf = l.asOfKey && D.asOf[l.asOfKey] ? D.asOf[l.asOfKey] : D.updatedAt;
+const others = LISTAS.filter(x => x.slug !== l.slug).map(x => ({ ...x, n: x.items(D).length })).filter(x => x.n > 0);
+const desc = items.length
+  ? `${l.h1}: ${items.length} ${items.length === 1 ? 'juego' : 'juegos'} con descuento hoy. ${l.blurb}`.slice(0, 300)
+  : l.blurb;
+const cs = !!l.store && l.store !== 'steam' && l.store !== 'gog';
+const ld = items.length ? offersJsonLd(items, l.h1, `https://corillo.live/ofertas/${l.slug}/`) : null;
+---
+<SiteShell title={`${l.title} — CORILLO`} description={desc} canonical={`https://corillo.live/ofertas/${l.slug}/`}>
+  <fragment slot="head">
+    {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    {!items.length && <meta name="robots" content="noindex" />}
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+  </fragment>
+
+  <main class="of">
+    <nav class="of-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / {l.h1}</nav>
+    <header class="of-hd" style="margin-top:14px">
+      <h1 style="font-size:clamp(2.6rem,7vw,5.4rem)">{l.h1}</h1>
+      <p>{l.blurb}</p>
+      {asOf && <p class="of-stamp">Actualizado el {fmtStamp(asOf)} (hora de Puerto Rico). Precios en dólares, de la tienda de EE. UU.</p>}
+    </header>
+
+    {items.length ? (
+      <div class="of-grid" style="margin-top:28px">{items.map(g => <OfertaCard g={g} />)}</div>
+    ) : (
+      <div class="of-empty" style="margin-top:28px">Ahora mismo no hay ofertas en esta lista. Se actualiza sola cada hora; vuelve pronto o mira <a href="/ofertas/" style="color:var(--h2-bone)">todas las ofertas</a>.</div>
+    )}
+
+    <section class="of-sec">
+      <h2>Más ofertas</h2>
+      <div class="of-grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))">
+        <a class="of-tile" href="/ofertas/gratis/"><em>Ahora</em><b>Juegos gratis</b><span>Los que puedes reclamar sin pagar.</span></a>
+        {others.slice(0, 5).map(x => <a class="of-tile" href={`/ofertas/${x.slug}/`}><em>{x.n} {x.n === 1 ? 'juego' : 'juegos'}</em><b>{x.h1}</b></a>)}
+      </div>
+    </section>
+
+    <p class="of-note"><strong>Cómo lo hacemos.</strong> CORILLO no vende juegos: te enviamos a la tienda. {cs ? <>Los precios de esta tienda y el "mínimo histórico" vienen de <a href="https://www.cheapshark.com/" target="_blank" rel="noopener">CheapShark</a>, y los enlaces pasan por CheapShark, que puede recibir una comisión si compras.</> : <>Los precios vienen directamente de la tienda; el "mínimo histórico" viene de <a href="https://www.cheapshark.com/" target="_blank" rel="noopener">CheapShark</a>.</>} Descartamos cualquier oferta cuyo precio no coincida con su descuento. Los precios cambian: confirma siempre el precio final en la tienda antes de comprar.</p>
+  </main>
+</SiteShell>

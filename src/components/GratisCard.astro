@@ -1,0 +1,19 @@
+---
+import { STORES, fmtDay, type Deal } from '../data/ofertas';
+interface Props { g: Deal; }
+const { g } = Astro.props;
+const label = STORES[g.store].label;
+const short = g.store === 'epic' ? 'Epic' : label;
+---
+<article class="of-card of-free" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
+  <a class="of-pic" href={g.url} target="_blank" rel="nofollow noopener" aria-label={`${g.title} en ${label}`}>
+    {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="460" height="215" loading="lazy" />}
+    <span class="of-flag">{label}</span>
+  </a>
+  <div class="of-body">
+    <h3><a href={g.url} target="_blank" rel="nofollow noopener">{g.title}</a></h3>
+    <div class="of-price"><b>Gratis</b>{g.original && <s>{g.original}</s>}</div>
+    <div class="of-meta">{g.ends ? <>Hasta el {fmtDay(g.ends)} · <span class="of-cd" data-cd></span></> : 'Gratis por tiempo limitado'}</div>
+    <a class="of-go" href={g.url} target="_blank" rel="nofollow noopener">Reclamar en {short}</a>
+  </div>
+</article>

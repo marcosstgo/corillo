@@ -1,0 +1,19 @@
+---
+import { STORES, type Deal } from '../data/ofertas';
+interface Props { g: Deal; }
+const { g } = Astro.props;
+const label = STORES[g.store].label;
+---
+<article class="of-card" data-store={g.store}>
+  <a class="of-pic" href={g.url} target="_blank" rel="nofollow noopener" aria-label={`${g.title} en ${label}`}>
+    {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="460" height="215" loading="lazy" />}
+    <span class="of-flag" style={`--tc:${STORES[g.store].color}`}>{label}</span>
+    {g.lowest && <span class="of-low" title="Es el precio más bajo que ha tenido, según CheapShark">Mínimo histórico</span>}
+  </a>
+  <div class="of-body">
+    <h3><a href={g.url} target="_blank" rel="nofollow noopener">{g.title}</a></h3>
+    <div class="of-price"><b>{g.price}</b><s>{g.original}</s><em>-{g.pct}%</em></div>
+    {g.rating && g.rating >= 75 && <div class="of-meta">{g.rating}% de reseñas positivas{g.reviews ? ` (${g.reviews.toLocaleString('en-US')})` : ''}</div>}
+    <a class="of-go" href={g.url} target="_blank" rel="nofollow noopener">Ver en {label}</a>
+  </div>
+</article>

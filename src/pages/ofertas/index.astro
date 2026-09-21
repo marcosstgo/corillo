@@ -1,145 +1,94 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
-import { loadOfertas, STORES, fmtDay, fmtStamp, offersJsonLd, type Deal } from '../../data/ofertas';
+import OfertaCard from '../../components/OfertaCard.astro';
+import GratisCard from '../../components/GratisCard.astro';
+import { loadOfertas, allFree, LISTAS, fmtDay, fmtStamp, offersJsonLd, type Deal } from '../../data/ofertas';
 
 const D = loadOfertas();
-const nFree = D.free.length, nDeals = D.steam.length + D.gog.length;
+const free = allFree(D);
 const stamp = D.updatedAt ? fmtStamp(D.updatedAt) : null;
-const desc = nFree
-  ? `Hoy hay ${nFree} ${nFree === 1 ? 'juego gratis' : 'juegos gratis'} en Epic Games Store y ${nDeals} ofertas reales en Steam y GOG. Precios en dólares, actualizados varias veces al día.`
-  : `Ofertas reales de juegos en Steam y GOG y los juegos gratis de la semana en Epic Games Store. Precios en dólares, actualizados varias veces al día.`;
-const ld = offersJsonLd([...D.free, ...D.steam, ...D.gog], 'Ofertas de juegos', 'https://corillo.live/ofertas/');
+const nAll = D.steam.length + D.gog.length + D.humble.length + D.fanatical.length + D.gmg.length + D.gamersgate.length;
+const desc = free.length
+  ? `Hoy hay ${free.length} ${free.length === 1 ? 'juego gratis' : 'juegos gratis'} y más de ${Math.floor(nAll / 10) * 10} ofertas reales en Steam, GOG, Humble, Fanatical y más. Precios en dólares, actualizados cada hora.`
+  : `Ofertas reales de juegos en Steam, GOG, Humble, Fanatical y más, y los juegos gratis de la semana. Precios en dólares, actualizados cada hora.`;
+const ld = offersJsonLd([...free, ...D.steam.slice(0, 12), ...D.gog.slice(0, 8)], 'Ofertas de juegos', 'https://corillo.live/ofertas/');
+const listas = LISTAS.map(l => ({ ...l, n: l.items(D).length })).filter(l => l.n > 0);
+const tileBlurb: Record<string, string> = {
+  'minimos-historicos': 'Juegos que hoy están en el precio más bajo que han tenido.',
+  'menos-de-5-dolares': 'Buenos juegos por $5 o menos, de varias tiendas.',
+  steam: 'Los mejor reseñados con descuento.', gog: 'Juegos sin DRM con descuento.', humble: 'Juegos de PC en oferta.',
+  fanatical: 'Juegos de PC en oferta.', 'green-man-gaming': 'Juegos de PC en oferta.', gamersgate: 'Juegos de PC en oferta.',
+};
 ---
-<SiteShell title="Ofertas de juegos: gratis de la semana y descuentos en Steam y GOG — CORILLO" description={desc} canonical="https://corillo.live/ofertas/">
+<SiteShell title="Ofertas de juegos: gratis de la semana y descuentos en Steam, GOG, Humble y más — CORILLO" description={desc} canonical="https://corillo.live/ofertas/">
   <fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-    <style is:global>
-      .of{max-width:1500px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
-      .of-hd h1{margin:0;font:800 clamp(3rem,9vw,7rem)/.88 var(--h2-display);letter-spacing:-.05em;text-transform:none}
-      .of-hd p{margin:18px 0 0;max-width:62ch;color:var(--h2-mute);font:500 clamp(1rem,1.6vw,1.25rem)/1.5 var(--h2-body)}
-      .of-stamp{margin-top:14px;color:var(--h2-mute);font:600 .9rem var(--h2-body)}
-      .of-chips{display:flex;gap:8px;flex-wrap:wrap;margin:28px 0 8px}
-      .of-chip{display:inline-flex;align-items:center;height:42px;padding:0 18px;border:0;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 8%,transparent);color:var(--h2-bone);font:700 .92rem var(--h2-body);cursor:pointer;transition:background .15s}
-      .of-chip:hover{background:color-mix(in srgb,var(--h2-bone) 14%,transparent)}
-      .of-chip[aria-pressed="true"]{background:var(--h2-bone);color:var(--h2-ink)}
-      .of-sec{margin-top:clamp(34px,5vw,58px)}
-      .of-sec>h2{margin:0;font:800 clamp(1.7rem,3.4vw,2.6rem)/1.05 var(--h2-display);letter-spacing:-.04em;text-transform:none}
-      .of-sec>p{margin:8px 0 0;max-width:64ch;color:var(--h2-mute);font:500 1rem/1.5 var(--h2-body)}
-      .of-sec>p a{color:var(--h2-bone)}
-      .of-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px;margin-top:20px}
-      .of-grid.big{grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
-      .of-card{--tc:var(--h2-mag);position:relative;display:flex;flex-direction:column;overflow:hidden;border-radius:26px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);transition:transform .18s,background .18s}
-      .of-card:hover{transform:translateY(-3px);background:color-mix(in srgb,var(--h2-bone) 10%,transparent)}
-      .of-pic{position:relative;display:block;aspect-ratio:460/215;background:#0a1c52}
-      .of-pic img{width:100%;height:100%;object-fit:cover;display:block}
-      .of-flag{position:absolute;left:12px;top:12px;display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:999px;background:var(--h2-ink);color:var(--tc);font:800 .78rem var(--h2-body);box-shadow:0 0 0 1px color-mix(in srgb,var(--tc) 50%,transparent)}
-      .of-low{position:absolute;right:12px;top:12px;height:28px;padding:0 12px;display:inline-flex;align-items:center;border-radius:999px;background:var(--h2-mag);color:var(--h2-ink);font:800 .74rem var(--h2-body)}
-      .of-body{display:grid;gap:10px;padding:16px 18px 18px;flex:1;align-content:start}
-      .of-body h3{margin:0;font:800 1.15rem/1.2 var(--h2-display);letter-spacing:-.02em;text-transform:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.4em}
-      .of-body h3 a{color:inherit;text-decoration:none}
-      .of-price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-      .of-price b{font:800 1.9rem/1 var(--h2-display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-      .of-price s{color:var(--h2-mute);font:600 .95rem var(--h2-body)}
-      .of-price em{font-style:normal;padding:3px 9px;border-radius:9px;background:color-mix(in srgb,var(--h2-mag) 22%,transparent);color:var(--h2-mag);font:800 .85rem var(--h2-body)}
-      .of-meta{color:var(--h2-mute);font:600 .84rem var(--h2-body)}
-      .of-go{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 20px;border-radius:14px;background:var(--h2-bone);color:var(--h2-ink);text-decoration:none;font:800 .95rem var(--h2-body);transition:box-shadow .15s}
-      .of-go:hover{box-shadow:0 0 0 4px color-mix(in srgb,var(--h2-bone) 30%,transparent)}
-      .of-free{--tc:var(--crl-confirm,#35e0a1)}
-      .of-free .of-price b{color:var(--tc)}
-      .of-free .of-go{background:var(--tc)}
-      .of-cd{color:var(--h2-bone);font:800 .9rem var(--h2-body)}
-      .of-soon{display:flex;flex-direction:column;gap:8px;margin-top:18px}
-      .of-soon a{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:14px 18px;border-radius:16px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);color:inherit;text-decoration:none;font:700 1rem var(--h2-body)}
-      .of-soon a span{color:var(--h2-mute);font:600 .88rem var(--h2-body)}
-      .of-empty{padding:26px 22px;border-radius:20px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);color:var(--h2-mute);font:500 1rem/1.5 var(--h2-body)}
-      .of-note{margin-top:46px;padding:18px 22px;border-radius:18px;background:rgba(6,20,63,.6);color:var(--h2-mute);font:500 .92rem/1.6 var(--h2-body);max-width:80ch}
-      .of-note strong{color:var(--h2-bone)}.of-note a{color:var(--h2-bone)}
-      [data-hide]{display:none!important}
-    </style>
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
   </fragment>
 
   <main class="of">
     <header class="of-hd">
       <h1>Ofertas de juegos</h1>
-      <p>Los juegos gratis de la semana y las mejores ofertas en Steam y GOG, con precios reales tomados de las tiendas y solo de juegos bien reseñados.</p>
+      <p>Los juegos gratis de la semana y las mejores ofertas de varias tiendas, con precios reales y solo de juegos bien reseñados.</p>
       {stamp && <p class="of-stamp">Actualizado el {stamp} (hora de Puerto Rico). Precios en dólares, de la tienda de EE. UU., la que corresponde a Puerto Rico.</p>}
     </header>
 
-    <div class="of-chips" role="group" aria-label="Filtrar por tienda">
+    <div class="of-chips" role="group" aria-label="Filtrar">
       <button class="of-chip" type="button" data-f="" aria-pressed="true">Todo</button>
       <button class="of-chip" type="button" data-f="free" aria-pressed="false">Gratis</button>
       <button class="of-chip" type="button" data-f="steam" aria-pressed="false">Steam</button>
       <button class="of-chip" type="button" data-f="gog" aria-pressed="false">GOG</button>
+      <button class="of-chip" type="button" data-f="mas" aria-pressed="false">Más tiendas</button>
     </div>
 
     <section class="of-sec" data-sec="free" id="gratis">
       <h2>Gratis ahora</h2>
-      <p>Juegos que puedes reclamar sin pagar en Epic Games Store. Si los reclamas antes de que termine la promoción, se quedan en tu biblioteca. <a href="/ofertas/gratis/">Cómo reclamarlos</a>.</p>
-      {D.free.length ? (
-        <div class="of-grid big">
-          {D.free.map((g: Deal) => (
-            <article class="of-card of-free" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
-              <a class="of-pic" href={g.url} target="_blank" rel="nofollow noopener" aria-label={`${g.title} en Epic Games Store`}>
-                {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="460" height="215" loading="lazy" />}
-                <span class="of-flag">Epic Games Store</span>
-              </a>
-              <div class="of-body">
-                <h3><a href={g.url} target="_blank" rel="nofollow noopener">{g.title}</a></h3>
-                <div class="of-price"><b>Gratis</b>{g.original && <s>{g.original}</s>}</div>
-                <div class="of-meta">Hasta el {fmtDay(g.ends!)} · <span class="of-cd" data-cd></span></div>
-                <a class="of-go" href={g.url} target="_blank" rel="nofollow noopener">Reclamar en Epic</a>
-              </div>
-            </article>
-          ))}
-        </div>
-      ) : <div class="of-empty" style="margin-top:20px">Ahora mismo no hay juegos gratis en Epic. Vuelve pronto: se renuevan cada semana.</div>}
+      <p>Juegos que puedes reclamar sin pagar. Si los reclamas antes de que termine la promoción, se quedan en tu cuenta. <a href="/ofertas/gratis/">Cómo reclamarlos</a>.</p>
+      {free.length ? (
+        <div class="of-grid big">{free.map((g: Deal) => <GratisCard g={g} />)}</div>
+      ) : <div class="of-empty" style="margin-top:20px">Ahora mismo no hay juegos gratis. Vuelve pronto: Epic los renueva cada semana.</div>}
       {D.soon.length > 0 && (
         <div class="of-soon" aria-label="Próximamente gratis">
-          <p style="margin:14px 0 0;color:var(--h2-bone);font:800 1.05rem var(--h2-display)">Próximamente gratis</p>
+          <p style="margin:14px 0 0;color:var(--h2-bone);font:800 1.05rem var(--h2-display)">Próximamente gratis en Epic</p>
           {D.soon.map((g: Deal) => <a href={g.url} target="_blank" rel="nofollow noopener">{g.title}<span>Desde el {fmtDay(g.starts!)}</span></a>)}
         </div>
       )}
     </section>
 
-    {[['steam', 'Steam', D.steam, 'Los juegos con mejor reseña que están en oferta. Solo entran los que tienen al menos 30 % de descuento y 75 % de reseñas positivas.'],
-      ['gog', 'GOG', D.gog, 'Juegos sin DRM. Solo entran los que tienen al menos 30 % de descuento y buenas reseñas.']].map(([id, label, list, blurb]) => (
+    {[['steam', 'Steam', D.steam.slice(0, 12), D.steam.length, 'Los juegos con mejor reseña que están en oferta. Solo entran los que tienen al menos 30 % de descuento y 75 % de reseñas positivas.'],
+      ['gog', 'GOG', D.gog.slice(0, 8), D.gog.length, 'Juegos sin DRM. Solo entran los que tienen al menos 30 % de descuento y buenas reseñas.']].map(([id, label, list, total, blurb]) => (
       <section class="of-sec" data-sec={id as string} id={id as string}>
         <h2>Ofertas en {label as string}</h2>
         <p>{blurb as string}{D.asOf[id as string] ? ` Actualizado el ${fmtStamp(D.asOf[id as string])}.` : ''}</p>
         {(list as Deal[]).length ? (
-          <div class="of-grid">
-            {(list as Deal[]).map((g: Deal) => (
-              <article class="of-card" data-store={g.store}>
-                <a class="of-pic" href={g.url} target="_blank" rel="nofollow noopener" aria-label={`${g.title} en ${label}`}>
-                  {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="460" height="215" loading="lazy" />}
-                  <span class="of-flag" style={`--tc:${STORES[g.store].color}`}>{label as string}</span>
-                  {g.lowest && <span class="of-low" title="Este es el precio más bajo que ha tenido, según CheapShark">Mínimo histórico</span>}
-                </a>
-                <div class="of-body">
-                  <h3><a href={g.url} target="_blank" rel="nofollow noopener">{g.title}</a></h3>
-                  <div class="of-price"><b>{g.price}</b><s>{g.original}</s><em>-{g.pct}%</em></div>
-                  {g.rating && <div class="of-meta">{g.rating}% de reseñas positivas{g.reviews ? ` (${g.reviews.toLocaleString('en-US')})` : ''}</div>}
-                  <a class="of-go" href={g.url} target="_blank" rel="nofollow noopener">Ver en {label as string}</a>
-                </div>
-              </article>
-            ))}
-          </div>
+          <>
+            <div class="of-grid">{(list as Deal[]).map((g: Deal) => <OfertaCard g={g} />)}</div>
+            {(total as number) > (list as Deal[]).length && <a class="of-more" href={`/ofertas/${id}/`}>Ver las {total as number} ofertas de {label as string}</a>}
+          </>
         ) : <div class="of-empty" style="margin-top:20px">No pudimos cargar las ofertas de {label as string} en este momento. Se vuelven a intentar solas.</div>}
       </section>
     ))}
 
-    <p class="of-note"><strong>Cómo lo hacemos.</strong> CORILLO no vende juegos: te enviamos a la tienda. Tomamos los precios directamente de Steam, GOG y Epic Games Store, y descartamos cualquier oferta cuyo precio no coincida con su descuento. El "mínimo histórico" viene de <a href="https://www.cheapshark.com/" target="_blank" rel="noopener">CheapShark</a>. Los precios y las promociones cambian: confirma siempre el precio final en la tienda antes de comprar.</p>
+    <section class="of-sec" data-sec="mas" id="mas">
+      <h2>Más ofertas</h2>
+      <p>Explora por tipo de oferta o por tienda.</p>
+      <div class="of-grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))">
+        {listas.map(l => (
+          <a class="of-tile" href={`/ofertas/${l.slug}/`}><em>{l.n} {l.n === 1 ? 'juego' : 'juegos'}</em><b>{l.h1}</b><span>{tileBlurb[l.slug]}</span></a>
+        ))}
+      </div>
+    </section>
+
+    <p class="of-note"><strong>Cómo lo hacemos.</strong> CORILLO no vende juegos: te enviamos a la tienda. Los precios de Steam, GOG y Epic Games Store vienen directamente de esas tiendas; los de Humble, Fanatical, Green Man Gaming y GamersGate y el "mínimo histórico" vienen de <a href="https://www.cheapshark.com/" target="_blank" rel="noopener">CheapShark</a>, y esos enlaces pasan por CheapShark, que puede recibir una comisión si compras. Descartamos cualquier oferta cuyo precio no coincida con su descuento. Los precios y las promociones cambian: confirma siempre el precio final en la tienda antes de comprar.</p>
   </main>
 
   <script is:inline>
     (function(){
-      // filtros por tienda
       var chips=document.querySelectorAll('.of-chip'), secs=document.querySelectorAll('[data-sec]');
       chips.forEach(function(c){c.addEventListener('click',function(){
         chips.forEach(function(x){x.setAttribute('aria-pressed',String(x===c))});
         var f=c.dataset.f; secs.forEach(function(s){ if(!f||s.dataset.sec===f) s.removeAttribute('data-hide'); else s.setAttribute('data-hide',''); });
       });});
-      // cuenta regresiva y ocultar lo vencido (la página se regenera varias veces al día, pero esto evita mostrar algo ya terminado)
       function tick(){
         var now=Date.now();
         document.querySelectorAll('.of-free[data-end]').forEach(function(card){
