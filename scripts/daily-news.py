@@ -68,8 +68,8 @@ def published():
         t = f.read_text()
         title = (re.search(r'^heroTitle:\s*"(.*)"\s*$', t, re.M) or re.search(r'^title:\s*"(.*)"\s*$', t, re.M))
         urls = re.findall(r'^\s+url:\s*"(.*)"\s*$', t, re.M)
-        pd = re.search(r'^pubDate:\s*(\S+)', t, re.M)
-        out.append({'file': f.name, 'title': title.group(1) if title else f.stem, 'urls': urls, 'pd': pd.group(1) if pd else f.name[:10]})
+        pd = re.search(r'^pubDate:\s*(\S+)', t, re.M); ct = re.search(r'^category:\s*"(\w+)"', t, re.M)
+        out.append({'file': f.name, 'title': title.group(1) if title else f.stem, 'urls': urls, 'pd': pd.group(1) if pd else f.name[:10], 'cat': ct.group(1) if ct else 'corillo'})
     return sorted(out, key=lambda x: x['pd'])  # por fecha real (no por nombre de archivo)
 
 def state():
@@ -177,7 +177,7 @@ cultura geek y entretenimiento (cine, series, anime, cómics); y noticias de Pue
 Tu trabajo: de la lista de titulares recientes, escoger LA noticia que de verdad valga la pena para esa audiencia hispana,
 o ninguna. Criterios: relevancia real para la comunidad, hecho concreto y verificable (no rumor ni clickbait), novedad,
 que se pueda explicar aportando contexto útil. Descarta ofertas/cupones, listas de "mejores X", reseñas de producto,
-política general, crónica roja y notas que ya cubrimos. Prefiere historias con varias fuentes independientes.
+política general, crónica roja y notas que ya cubrimos. Descarta también muertes, enfermedades o tragedias personales (sobre todo de menores), escándalos y chismes de famosos: no somos un medio de sucesos. Busca variedad: si las últimas notas fueron de videojuegos, prefiere cine/series, tecnología/IA, streaming o Puerto Rico cuando haya una historia igual de buena. Prefiere historias con varias fuentes independientes.
 Puntúa 1-10 (10 = imperdible). Si nada llega a 7, devuelve choice_id null."""
 SEL_SCHEMA = {'type': 'object', 'additionalProperties': False,
     'required': ['choice_id', 'score', 'category', 'angle', 'related_ids', 'reason'],
@@ -300,7 +300,7 @@ def git_publish(files, msg):
 
 # ───────────── una nota ─────────────
 def make_one(client, items, used_ids, pub, dry):
-    recent = '\n'.join('- ' + p['title'] for p in pub[-20:])
+    recent = '\n'.join(f"- [{p['cat']}] {p['title']}" for p in pub[-20:])
     lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in items if i['id'] not in used_ids)
     STOP = set('nuevo nueva nuevos nuevas juego juegos millones anuncia revela lanza lanzamiento tras mil año años primer primera mejor todo todos para como sobre tras esta este esto pero desde entre hasta cuando donde porque sus los las del una uno con por que the and for with from'.split())
     def toks(t): return {w for w in norm(t) if len(w) > 3 and w not in STOP}
@@ -344,7 +344,7 @@ def make_one(client, items, used_ids, pub, dry):
         log(f"intento {attempt}: {words} palabras, copia={ratio:.1%}")
         problems = []
         if ratio > 0.04: problems.append(f'Copia demasiado texto de las fuentes ({ratio:.0%}); reescribe con tus palabras.')
-        if not 250 <= words <= 800: problems.append(f'Longitud {words} palabras; debe ser 350-550.')
+        if not 300 <= words <= 800: problems.append(f'Longitud {words} palabras; debe ser 350-550.')
         if len(art['description']) > 165: problems.append(f"description mide {len(art['description'])} caracteres; máx. 160.")
         ver = llm_json(client, VER_SYS, f"NOTA:\nTítulo: {art['title']}\n{art['body']}\n\n{block}", VER_SCHEMA, 12000, think=True)
         if not ver['ok']: problems += ver['problems']
