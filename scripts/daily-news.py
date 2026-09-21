@@ -27,7 +27,9 @@ CFG = json.loads((REPO / 'scripts/news_sources.json').read_text())
 HOME = Path('/home/corillo-adm/corillo-news')
 LOGS = HOME / 'logs'; LOGS.mkdir(parents=True, exist_ok=True)
 STATE = HOME / 'state.json'
+PROVIDER = None  # 'deepseek' | 'anthropic'; se decide en main() según las llaves disponibles (NEWS_PROVIDER lo fuerza)
 MODEL = os.environ.get('NEWS_MODEL', 'claude-opus-5')
+DS_MODEL = os.environ.get('NEWS_DS_MODEL', 'deepseek-v4-pro')
 FALLBACK_MODEL = 'claude-opus-4-8'
 MIN_SCORE = 7
 UA = 'CorilloNewsBot/1.0 (+https://corillo.live/noticias/; hello@marcossantiago.com)'
@@ -46,7 +48,8 @@ def log(*a):
     print(line, flush=True)
 
 def load_env():
-    for f in ('/home/corillo-adm/corillo-bot/.env', '/home/corillo-adm/corillo-telegram/.env'):
+    for f in ('/home/corillo-adm/corillo-news/.env', '/home/corillo-adm/corillo-bot/.env', '/home/corillo-adm/corillo-telegram/.env'):
+        if not Path(f).exists(): continue
         for l in Path(f).read_text().splitlines():
             if '=' in l and not l.startswith('#'):
                 k, v = l.split('=', 1); os.environ.setdefault(k.strip(), v.strip().strip('"\''))
@@ -109,6 +112,46 @@ def discover(exclude_urls):
     return items
 
 # ───────────── Claude ─────────────
+def _check(obj, schema, path='$'):
+    """Validación mínima del esquema (DeepSeek solo garantiza 'JSON válido', no el esquema)."""
+    t = schema.get('type'); ts = t if isinstance(t, list) else [t]
+    ok = {'object': dict, 'array': list, 'string': str, 'integer': int, 'boolean': bool, 'null': type(None)}
+    if not any(isinstance(obj, ok[x]) and not (x == 'integer' and isinstance(obj, bool)) for x in ts): raise ValueError(f'{path}: tipo inválido')
+    if 'enum' in schema and obj not in schema['enum']: raise ValueError(f'{path}: valor fuera de enum')
+    if isinstance(obj, dict):
+        for k in schema.get('required', []):
+            if k not in obj: raise ValueError(f'{path}.{k}: falta')
+        for k, sub in schema.get('properties', {}).items():
+            if k in obj: _check(obj[k], sub, f'{path}.{k}')
+    if isinstance(obj, list) and 'items' in schema:
+        for i, x in enumerate(obj): _check(x, schema['items'], f'{path}[{i}]')
+
+def deepseek_json(system, user, schema, max_tokens=8000, think=False):
+    key = os.environ['DEEPSEEK_API_KEY']
+    sys_p = system + '\n\nResponde SOLO con un objeto json (sin texto extra ni markdown) que cumpla este esquema json:\n' + json.dumps(schema, ensure_ascii=False)
+    last = None
+    for attempt in range(3):  # la API a veces devuelve contenido vacío con json_object
+        try:
+            body = {'model': DS_MODEL, 'max_tokens': max_tokens, 'stream': False, 'response_format': {'type': 'json_object'},
+                    'thinking': {'type': 'enabled' if think else 'disabled'},
+                    'messages': [{'role': 'system', 'content': sys_p}, {'role': 'user', 'content': user}]}
+            if not think: body['temperature'] = 0.4
+            r = httpx.post('https://api.deepseek.com/chat/completions', headers={'Authorization': f'Bearer {key}'}, json=body, timeout=240)
+            r.raise_for_status(); d = r.json(); ch = d['choices'][0]
+            if ch.get('finish_reason') == 'length': raise RuntimeError('respuesta cortada por max_tokens')
+            txt = (ch['message'].get('content') or '').strip()
+            if not txt: raise RuntimeError('contenido vacío')
+            obj = json.loads(txt); _check(obj, schema)
+            u = d.get('usage', {}); log(f"  {DS_MODEL}: in={u.get('prompt_tokens')} out={u.get('completion_tokens')}")
+            return obj
+        except Exception as e:
+            last = e; log(f'  {DS_MODEL} intento {attempt + 1} falló: {type(e).__name__}: {str(e)[:160]}'); time.sleep(3)
+    raise last
+
+def llm_json(client, system, user, schema, max_tokens=8000, think=False):
+    if PROVIDER == 'deepseek': return deepseek_json(system, user, schema, max_tokens, think)
+    return claude_json(client, system, user, schema, max_tokens)
+
 def claude_json(client, system, user, schema, max_tokens=8000):
     last = None
     for model in (MODEL, FALLBACK_MODEL):
@@ -258,7 +301,7 @@ def git_publish(files, msg):
 def make_one(client, items, used_ids, pub, dry):
     recent = '\n'.join('- ' + p['title'] for p in pub[-20:])
     lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in items if i['id'] not in used_ids)
-    sel = claude_json(client, SEL_SYS, f"Notas que CORILLO ya publicó (no repetir tema):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
+    sel = llm_json(client, SEL_SYS, f"Notas que CORILLO ya publicó (no repetir tema):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
     log('selector:', json.dumps(sel, ensure_ascii=False)[:400])
     if sel['choice_id'] is None or sel['score'] < MIN_SCORE:
         log(f"nada a la altura (score={sel['score']}): no se publica"); return None
@@ -279,7 +322,7 @@ def make_one(client, items, used_ids, pub, dry):
     for attempt in (1, 2):
         u = f"Enfoque sugerido por el editor: {sel['angle']}\nCategoría sugerida: {sel['category']}\n\n{block}"
         if problems: u += '\n\nProblemas del intento anterior a corregir:\n' + '\n'.join('- ' + p for p in problems)
-        art = claude_json(client, WRITE_SYS, u, WRITE_SCHEMA, 10000)
+        art = llm_json(client, WRITE_SYS, u, WRITE_SCHEMA, 10000)
         ratio = copied_ratio(art['body'], texts)
         words = len(art['body'].split())
         log(f"intento {attempt}: {words} palabras, copia={ratio:.1%}")
@@ -287,7 +330,7 @@ def make_one(client, items, used_ids, pub, dry):
         if ratio > 0.04: problems.append(f'Copia demasiado texto de las fuentes ({ratio:.0%}); reescribe con tus palabras.')
         if not 250 <= words <= 800: problems.append(f'Longitud {words} palabras; debe ser 350-550.')
         if len(art['description']) > 165: problems.append(f"description mide {len(art['description'])} caracteres; máx. 160.")
-        ver = claude_json(client, VER_SYS, f"NOTA:\nTítulo: {art['title']}\n{art['body']}\n\n{block}", VER_SCHEMA, 8000)
+        ver = llm_json(client, VER_SYS, f"NOTA:\nTítulo: {art['title']}\n{art['body']}\n\n{block}", VER_SCHEMA, 12000, think=True)
         if not ver['ok']: problems += ver['problems']
         if not problems: break
         log('problemas:', problems)
@@ -313,7 +356,10 @@ def main():
     today = f'{now:%Y-%m-%d}'
     if not a.backfill and not a.dry_run and any(p['file'].startswith(dt.datetime.now().strftime('%Y-%m-%d')) and 'auto' in p['file'] for p in pub):
         log('ya hay nota automática de hoy'); return
-    client = anthropic.Anthropic()
+    global PROVIDER
+    PROVIDER = os.environ.get('NEWS_PROVIDER') or ('deepseek' if os.environ.get('DEEPSEEK_API_KEY') else 'anthropic')
+    log('proveedor:', PROVIDER, DS_MODEL if PROVIDER == 'deepseek' else MODEL)
+    client = anthropic.Anthropic() if PROVIDER == 'anthropic' else None
     exclude = {u for p in pub for u in p['urls']}
     items = discover(exclude)
     st = state(); items = [i for i in items if hashlib.md5(i['url'].encode()).hexdigest() not in st['seen']]
