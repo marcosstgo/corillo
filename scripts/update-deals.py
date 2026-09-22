@@ -199,6 +199,30 @@ def lowest(items):
     except Exception as e:
         log('CheapShark no respondió (sin marcas de mínimo histórico):', type(e).__name__)
 
+# ───────────────────── enlaces: solo se publican ofertas cuyo enlace funciona ─────────────────────
+def link_ok(url, state):
+    """Solo descarta por señales claras de enlace muerto (404/410). Un bloqueo o límite de tasa (403/429/5xx,
+    o la conexión falla) no prueba que la oferta no exista: se deja pasar para no descartar ofertas buenas."""
+    cache = state.setdefault('link', {})
+    if url in cache: return cache[url]
+    try:
+        r = CLIENT.head(url, timeout=10, follow_redirects=True)
+        if r.status_code in (405, 501): r = CLIENT.get(url, timeout=10, follow_redirects=True)  # algunas tiendas no permiten HEAD
+        ok = r.status_code not in (404, 410)
+    except Exception: return True
+    cache[url] = ok
+    if len(cache) > 4000: [cache.pop(k) for k in list(cache)[:1000]]
+    return ok
+
+def drop_dead_links(items, state):
+    keep = []
+    for it in items:
+        if link_ok(it['url'], state): keep.append(it)
+        time.sleep(0.1)                             # no golpear las tiendas/CheapShark demasiado rápido
+    dropped = len(items) - len(keep)
+    if dropped: log(f'  {dropped} oferta(s) con enlace muerto (404/410): descartada(s)')
+    return keep
+
 # ───────────────────── imágenes: solo se publican las que existen ─────────────────────
 def img_ok(url, state):
     cache = state.setdefault('img', {})
@@ -293,7 +317,8 @@ def main():
         new[name].sort(key=lambda x: (-score(x), x['id'])); new[name] = new[name][:keep]
 
     for name in ('freeSteam', 'steam', 'gog', 'humble', 'fanatical', 'gmg', 'gamersgate'): fix_images(new[name], state)
-    if not a.dry_run: STATE.write_text(json.dumps(state))          # guarda la caché de imágenes aunque no haya cambios
+    for name in LISTS: new[name] = drop_dead_links(new[name], state)
+    if not a.dry_run: STATE.write_text(json.dumps(state))          # guarda la caché de imágenes/enlaces aunque no haya cambios
 
     if not (new['free'] or new['freeSteam'] or new['steam'] or new['gog']):
         log('sin datos en ninguna fuente: no se publica'); telegram('⚠️ Ofertas: ninguna tienda respondió. Se conserva lo anterior.'); sys.exit(1)

@@ -10,9 +10,13 @@ Uso:
   daily-news.py --dry-run        # hace todo menos escribir/desplegar; imprime el resultado
   daily-news.py --backfill 3     # publica hasta 3 notas seguidas (para arrancar); ignora el tope diario
   daily-news.py --unpublish SLUG # retira una nota (borra el .md, despliega, commit)
+  daily-news.py --force ID           # decisión humana: publica ese candidato aunque el verificador lo rechace
+  daily-news.py --force-query TEXTO  # igual, pero busca el candidato por texto en el título en vez del ID
 
-Nunca publica basura, pero tampoco se rinde a la primera: verifica que la noticia sea real ANTES de escribir, escribe solo con hechos verificados,
-y si un tema no se sostiene prueba con otro (hasta MAX_STORIES). Solo no publica si el selector no ve nada (MIN_SCORE) o se agotan los temas.
+Nunca publica basura, pero tampoco se rinde: verifica que la noticia sea real ANTES de escribir, escribe solo con hechos verificados,
+y si un tema no se sostiene prueba con otro, bajando el umbral en cada intento (hasta MAX_STORIES). Si se agotan los temas normales,
+publica igual el mejor candidato del día pero marcándolo como sin confirmar (mismo criterio honesto que --force): la página no se
+queda sin nota por un día salvo que de verdad no haya candidatos (feeds caídos, <5 titulares).
 """
 import argparse, datetime as dt, difflib, hashlib, html, json, os, re, subprocess, sys, time, unicodedata
 from html.parser import HTMLParser
@@ -179,7 +183,7 @@ Tu trabajo: de la lista de titulares recientes, escoger LA noticia que de verdad
 o ninguna. Criterios: relevancia real para la comunidad, hecho concreto y verificable (no rumor ni clickbait), novedad,
 que se pueda explicar aportando contexto útil. Descarta ofertas/cupones, listas de "mejores X", reseñas de producto,
 política general, crónica roja y notas que ya cubrimos. Descarta también muertes, enfermedades o tragedias personales (sobre todo de menores), escándalos y chismes de famosos: no somos un medio de sucesos. Busca variedad: si las últimas notas fueron de videojuegos, prefiere cine/series, tecnología/IA, streaming o Puerto Rico cuando haya una historia igual de buena. Prefiere historias con varias fuentes independientes.
-Puntúa 1-10 (10 = imperdible). Si nada llega a 7, devuelve choice_id null."""
+Puntúa 1-10 (10 = imperdible). Si nada llega a {threshold}, devuelve choice_id null."""
 SEL_SCHEMA = {'type': 'object', 'additionalProperties': False,
     'required': ['choice_id', 'score', 'category', 'angle', 'related_ids', 'reason'],
     'properties': {'choice_id': {'type': ['integer', 'null']}, 'score': {'type': 'integer'},
@@ -318,8 +322,9 @@ def git_publish(files, msg):
         log('git falló (no bloquea):', e)
 
 # ───────────── una nota ─────────────
-def pick_story(client, items, used_ids, pub):
-    """Elige un tema y lee sus fuentes. None = no hay nada elegible (parar); False = este tema no sirve (probar otro)."""
+def pick_story(client, items, used_ids, pub, min_score=MIN_SCORE):
+    """Elige un tema y lee sus fuentes. None = nada elegible con este umbral (probar otro umbral/intento);
+    False = este tema no sirve (probar otro)."""
     recent = '\n'.join(f"- [{p['cat']}] {p['title']}" for p in pub[-20:])
     lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in items if i['id'] not in used_ids)
     STOP = set('nuevo nueva nuevos nuevas juego juegos millones anuncia revela lanza lanzamiento tras mil año años primer primera mejor todo todos para como sobre tras esta este esto pero desde entre hasta cuando donde porque sus los las del una uno con por que the and for with from'.split())
@@ -332,10 +337,10 @@ def pick_story(client, items, used_ids, pub):
     for _try in range(3):
         avail = [i for i in items if i['id'] not in used_ids]
         lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in avail)
-        sel = llm_json(client, SEL_SYS, f"Notas que CORILLO ya publicó (NO repetir estos temas ni sus variantes, aunque venga de otra fuente):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
+        sel = llm_json(client, SEL_SYS.format(threshold=min_score), f"Notas que CORILLO ya publicó (NO repetir estos temas ni sus variantes, aunque venga de otra fuente):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
         log('selector:', json.dumps(sel, ensure_ascii=False)[:400])
         cid = sel['choice_id']
-        if cid is None or sel['score'] < MIN_SCORE: break
+        if cid is None or sel['score'] < min_score: break
         it = next((i for i in items if i['id'] == cid), None)
         if it and repeats(it['title'] + ' ' + sel['angle']):
             log('tema ya cubierto, se descarta y se vuelve a elegir:', it['title']); used_ids.add(cid); sel = None; continue
@@ -356,6 +361,23 @@ def pick_story(client, items, used_ids, pub):
     block = '\n\n'.join(f"=== FUENTE {i}: {s['source']} — {s['title']} ({s['url']}) ===\n{t}" for i, (s, t) in enumerate(zip(srcs, texts)))
     return sel, srcs, texts, block, [c['id'] for c in chosen]
 
+def force_pick(items, force_id, force_query):
+    """Elige un candidato a mano (decisión humana), sin pasar por el selector ni el filtro de repetidos."""
+    it = None
+    if force_id is not None:
+        it = next((i for i in items if i['id'] == force_id), None)
+    elif force_query:
+        ql = force_query.lower()
+        it = next((i for i in items if ql in i['title'].lower() or ql in i['summary'].lower()), None)
+    if not it: return None
+    t = fetch_text(it['url'])
+    if len(t) < 500: t = it['title'] + '. ' + it['summary']
+    if len(t) <= 200: return None
+    sel = {'choice_id': it['id'], 'score': 10, 'category': it['cat'] if it['cat'] in CATS else 'gaming',
+           'angle': it['title'], 'related_ids': [], 'reason': 'publicación forzada manualmente por el editor humano'}
+    block = f"=== FUENTE 0: {it['source']} — {it['title']} ({it['url']}) ===\n{t}"
+    return sel, [it], [t], block, [it['id']]
+
 def trim_desc(t, n=160):
     """Recorta el extracto a n caracteres sin dejarlo colgando: prefiere terminar en una frase completa
     y, si no, en el límite de una palabra que no sea conector ("con", "de", "y"…)."""
@@ -368,18 +390,33 @@ def trim_desc(t, n=160):
         words.pop()
     return ' '.join(words).rstrip(' ,;:—-') + '…'
 
-def write_story(client, sel, srcs, texts, block):
-    """Verificar primero, escribir después. Devuelve (nota, fuentes) o None si el tema no se sostiene."""
+def write_story(client, sel, srcs, texts, block, force=False):
+    """Verificar primero, escribir después. Devuelve (nota, fuentes) o None si el tema no se sostiene.
+    force=True: decisión humana de publicar pese al veredicto del verificador; igual exige un mínimo de
+    hechos reales para no inventar de la nada, y obliga a la nota a dejar explícito que no está confirmado."""
     facts = llm_json(client, FACTS_SYS, f"Tema: {sel['angle']}\n\n{block}", FACTS_SCHEMA, 12000, think=True)
     log(f"autenticidad: real={facts['real']} tipo={facts['kind']} hechos={len(facts['facts'])} corroborados={sum(1 for x in facts['facts'] if x['corroborated'])} — {facts['reason'][:220]}")
+    unconfirmed = False
     if not (facts['real'] and facts['kind'] in ('oficial', 'confirmado') and len(facts['facts']) >= 4):
-        log('no pasa la verificación de autenticidad: se descarta el tema'); return None
+        if not force:
+            log('no pasa la verificación de autenticidad: se descarta el tema'); return None
+        if len(facts['facts']) < 2:
+            log('FORZADO pero sin hechos suficientes ni para redactar con cautela: se aborta'); return None
+        unconfirmed = True
+        log(f"FORZADO: se publica pese al veredicto del verificador (tipo={facts['kind']}); la nota debe dejarlo explícito")
     sheet = '\n'.join(f"- {x['claim']} [fuentes {','.join(str(i) for i in x['sources'])}]{' (corroborado)' if x['corroborated'] else ''}" for x in facts['facts'])
     notest = '\n'.join('- ' + x for x in facts['not_established']) or '- (nada en particular)'
+    hedge = ''
+    if unconfirmed:
+        hedge = (f"\n\nIMPORTANTE: este tema NO tiene confirmación oficial ni corroboración suficiente "
+                 f"(el verificador lo clasificó como '{facts['kind']}': {facts['reason'][:200]}). El editor humano decidió "
+                 f"publicarlo igual, pero el texto DEBE dejarlo explícito: atribuye cada afirmación a quien la reportó "
+                 f"('según X', 'de acuerdo con Y'), usa condicional donde corresponda ('recortaría', 'se movería'), y agrega "
+                 f"una frase clara de que son reportes sin confirmación oficial de las partes involucradas.")
     problems, art = [], None
     for attempt in (1, 2, 3):
         u = (f"Enfoque sugerido por el editor: {sel['angle']}\nCategoría sugerida: {sel['category']}\n\n"
-             f"HOJA DE HECHOS VERIFICADOS (escribe solo con esto):\n{sheet}\n\nNO ESTABLECIDO (no lo afirmes):\n{notest}\n\nFuentes completas, solo como contexto:\n{block}")
+             f"HOJA DE HECHOS VERIFICADOS (escribe solo con esto):\n{sheet}\n\nNO ESTABLECIDO (no lo afirmes):\n{notest}\n\nFuentes completas, solo como contexto:\n{block}{hedge}")
         if problems: u += '\n\nProblemas del intento anterior a corregir:\n' + '\n'.join('- ' + p for p in problems)
         art = llm_json(client, WRITE_SYS, u, WRITE_SCHEMA, 10000)
         ratio = copied_ratio(art['body'], texts)
@@ -403,22 +440,38 @@ def write_story(client, sel, srcs, texts, block):
     log('este tema no se pudo redactar sin errores tras 3 intentos'); return None
 
 def make_one(client, items, used_ids, pub, dry):
-    """Prueba temas hasta que uno pase; solo se rinde si se agotan MAX_STORIES temas."""
+    """Prueba temas hasta que uno pase. Instrucción explícita del editor humano (2026-09-22): la página NUNCA
+    se queda sin nota por un solo intento del selector — si un tema no sirve, se prueba con otro, bajando el
+    umbral en cada intento; y si se agotan los MAX_STORIES temas normales, se publica igual el mejor candidato
+    visto en el día, marcado como sin confirmar (mismo criterio honesto que --force)."""
+    fallback = None
     for n in range(1, MAX_STORIES + 1):
-        st = pick_story(client, items, used_ids, pub)
-        if st is None: return None
+        min_score = max(4, MIN_SCORE - (n - 1))
+        st = pick_story(client, items, used_ids, pub, min_score)
+        if st is None:
+            log(f'nada elegible en el intento {n}/{MAX_STORIES} (umbral {min_score}); se baja el umbral y se prueba otra vez')
+            continue
         if st is not False:
+            if fallback is None: fallback = st
             sel, srcs, texts, block, ids = st
             r = write_story(client, sel, srcs, texts, block)
             if r: return r
             used_ids.update(ids)      # tampoco volver a intentar las fuentes relacionadas del mismo hecho
         log(f'tema descartado ({n}/{MAX_STORIES}); se prueba con otro')
-    log(f'se agotaron los {MAX_STORIES} temas del día: no se publica'); return None
+    if fallback:
+        log('ÚLTIMO RECURSO: se agotaron los temas normales; se publica el mejor candidato del día marcándolo como sin confirmar (nunca se queda sin nota)')
+        sel, srcs, texts, block, ids = fallback
+        r = write_story(client, sel, srcs, texts, block, force=True)
+        if r: return r
+    log(f'se agotaron los {MAX_STORIES} temas y tampoco se pudo redactar el último recurso: no se publica'); return None
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true'); ap.add_argument('--backfill', type=int, default=0)
-    ap.add_argument('--unpublish'); a = ap.parse_args()
+    ap.add_argument('--unpublish')
+    ap.add_argument('--force', type=int, help='id de candidato: publícalo aunque el verificador lo rechace (decisión humana)')
+    ap.add_argument('--force-query', help='como --force pero busca el candidato por texto en el título/resumen')
+    a = ap.parse_args()
     load_env()
 
     if a.unpublish:
@@ -431,7 +484,8 @@ def main():
     pub = published()
     today = f'{now:%Y-%m-%d}'
     hoy = dt.datetime.now().strftime('%Y-%m-%d')
-    if not a.backfill and not a.dry_run and any(p['file'].startswith(hoy) and 'ai: true' in (POSTS / p['file']).read_text() for p in pub):
+    forcing = a.force is not None or bool(a.force_query)
+    if not a.backfill and not a.dry_run and not forcing and any(p['file'].startswith(hoy) and 'ai: true' in (POSTS / p['file']).read_text() for p in pub):
         log('ya hay nota automática de hoy'); return
     global PROVIDER
     PROVIDER = os.environ.get('NEWS_PROVIDER') or ('deepseek' if os.environ.get('DEEPSEEK_API_KEY') else 'anthropic')
@@ -441,6 +495,30 @@ def main():
     items = discover(exclude)
     st = state(); items = [i for i in items if hashlib.md5(i['url'].encode()).hexdigest() not in st['seen']]
     log(f'{len(items)} candidatos')
+
+    if forcing:
+        picked = force_pick(items, a.force, a.force_query)
+        if not picked:
+            sys.exit('no se encontró ese candidato entre los titulares de las últimas ' + str(WINDOW_H) + ' horas (¿ID de otra corrida? probá --force-query con parte del título)')
+        sel, srcs, texts, block, ids = picked
+        log('FORZADO manualmente por el editor humano:', sel['angle'])
+        r = write_story(client, sel, srcs, texts, block, force=True)
+        if not r: sys.exit('no se pudo redactar ni siquiera en modo forzado (revisá el log para el motivo)')
+        art, srcs2 = r
+        md = build_md(art, srcs2, now)
+        fname = f"{dt.datetime.now():%Y-%m-%d}-{slugify(art['title'])}.md"
+        if a.dry_run:
+            print('\n' + '=' * 70 + f'\n{fname}\n' + '=' * 70 + f'\n{md}'); return
+        (POSTS / fname).write_text(md)
+        for s in srcs2: st['seen'][hashlib.md5(s['url'].encode()).hexdigest()] = time.time()
+        save_state(st)
+        if not deploy():
+            (POSTS / fname).unlink(missing_ok=True)
+            telegram('❌ Noticias: el build falló con la nota forzada; se retiró y el sitio quedó como estaba.'); sys.exit(1)
+        git_publish([POSTS / fname], f'noticias: forzada manualmente — {fname[11:-3]}')
+        telegram(f"📰 Nota publicada en CORILLO (forzada manualmente por el editor):\n{art['title']}\nhttps://corillo.live/noticias/{fname[:-3]}/\n\nRetirar: daily-news.py --unpublish {fname[:-3]}")
+        return
+
     if len(items) < 5: log('muy pocos candidatos'); telegram('⚠️ Noticias: muy pocos candidatos hoy (¿feeds caídos?)'); return
 
     n = max(1, a.backfill); made, used = [], set()
