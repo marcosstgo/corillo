@@ -76,6 +76,7 @@ const tileBlurb: Record<string, string> = {
         {listas.map(l => (
           <a class="of-tile" href={`/ofertas/${l.slug}/`}><em>{l.n} {l.n === 1 ? 'juego' : 'juegos'}</em><b>{l.h1}</b><span>{tileBlurb[l.slug]}</span></a>
         ))}
+        <a class="of-tile" href="/equipo/"><em>Guías de compra</em><b>Equipo recomendado</b><span>Webcams, micrófonos, capture cards y más para streaming.</span></a>
       </div>
     </section>
 

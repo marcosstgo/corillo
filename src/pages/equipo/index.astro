@@ -1,0 +1,66 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import { ITEMS, GUIAS, byId, withTag } from '../../data/equipo';
+
+const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, micrófonos, capture cards, teclados y más, organizado en guías de compra según tu presupuesto.';
+---
+<SiteShell title="Equipo recomendado para streaming y gaming — CORILLO" description={desc} canonical="https://corillo.live/equipo/">
+  <fragment slot="head">
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+  </fragment>
+
+  <main class="of">
+    <header class="of-hd">
+      <h1>Equipo recomendado</h1>
+      <p>Webcams, micrófonos, capture cards y más para streaming y gaming. Productos reales que recomendaríamos, organizados en guías según tu presupuesto.</p>
+    </header>
+
+    {GUIAS.map(guia => (
+      <section class="of-sec" id={guia.slug}>
+        <h2>{guia.title}</h2>
+        <p>{guia.blurb}</p>
+        <div class="of-grid">
+          {guia.itemIds.map(id => {
+            const it = byId(id);
+            return (
+              <article class="of-card eq-card">
+                <div class="of-body">
+                  <span class="eq-cat">{it.category}</span>
+                  <h3><a href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">{it.title}</a></h3>
+                  <p class="eq-why">{it.why}</p>
+                  <a class="of-go" href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">Ver en Amazon</a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+
+    <section class="of-sec" id="todo">
+      <h2>Todo el equipo</h2>
+      <p>La lista completa, por categoría.</p>
+      <div class="of-grid">
+        {ITEMS.map(it => (
+          <article class="of-card eq-card">
+            <div class="of-body">
+              <span class="eq-cat">{it.category}</span>
+              <h3><a href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">{it.title}</a></h3>
+              <p class="eq-why">{it.why}</p>
+              <a class="of-go" href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">Ver en Amazon</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <p class="of-note"><strong>Cómo lo hacemos.</strong> Como Asociado de Amazon, CORILLO gana una comisión por las compras que califiquen hechas a través de estos enlaces, sin costo extra para ti. Elegimos cada producto porque de verdad lo recomendaríamos para streaming o gaming, no por la comisión. Los precios y la disponibilidad los define Amazon y pueden cambiar: confirma siempre el precio final antes de comprar.</p>
+  </main>
+</SiteShell>
+
+<style>
+  .eq-card .of-body { padding: 20px 20px 22px; gap: 10px; }
+  .eq-cat { display: inline-flex; align-self: start; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--h2-mag) 22%, transparent); color: var(--h2-mag); font: 800 .74rem var(--h2-body); }
+  .eq-card h3 { margin: 0; -webkit-line-clamp: unset; min-height: 0; }
+  .eq-why { margin: 0; color: var(--h2-mute); font: 500 .92rem/1.5 var(--h2-body); flex: 1; }
+</style>
