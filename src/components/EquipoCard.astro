@@ -1,0 +1,17 @@
+---
+import { withTag, type EquipoItem } from '../data/equipo';
+interface Props { it: EquipoItem; }
+const { it } = Astro.props;
+const href = withTag(it.url);
+---
+<article class="of-card eq-card">
+  <a class="of-pic" href={href} target="_blank" rel="nofollow noopener sponsored" aria-label={it.title}>
+    <img src={it.image} alt={it.title} width="460" height="215" loading="lazy" />
+    <span class="of-flag" style="--tc:var(--h2-mag)">{it.category}</span>
+  </a>
+  <div class="of-body">
+    <h3><a href={href} target="_blank" rel="nofollow noopener sponsored">{it.title}</a></h3>
+    <p class="eq-why">{it.why}</p>
+    <a class="of-go" href={href} target="_blank" rel="nofollow noopener sponsored">Ver en Amazon</a>
+  </div>
+</article>

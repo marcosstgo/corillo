@@ -1,6 +1,7 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
-import { ITEMS, GUIAS, byId, withTag } from '../../data/equipo';
+import EquipoCard from '../../components/EquipoCard.astro';
+import { ITEMS, GUIAS, byId } from '../../data/equipo';
 
 const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, micrófonos, capture cards, teclados y más, organizado en guías de compra según tu presupuesto.';
 ---
@@ -20,19 +21,7 @@ const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, 
         <h2>{guia.title}</h2>
         <p>{guia.blurb}</p>
         <div class="of-grid">
-          {guia.itemIds.map(id => {
-            const it = byId(id);
-            return (
-              <article class="of-card eq-card">
-                <div class="of-body">
-                  <span class="eq-cat">{it.category}</span>
-                  <h3><a href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">{it.title}</a></h3>
-                  <p class="eq-why">{it.why}</p>
-                  <a class="of-go" href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">Ver en Amazon</a>
-                </div>
-              </article>
-            );
-          })}
+          {guia.itemIds.map(id => <EquipoCard it={byId(id)} />)}
         </div>
       </section>
     ))}
@@ -41,16 +30,7 @@ const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, 
       <h2>Todo el equipo</h2>
       <p>La lista completa, por categoría.</p>
       <div class="of-grid">
-        {ITEMS.map(it => (
-          <article class="of-card eq-card">
-            <div class="of-body">
-              <span class="eq-cat">{it.category}</span>
-              <h3><a href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">{it.title}</a></h3>
-              <p class="eq-why">{it.why}</p>
-              <a class="of-go" href={withTag(it.url)} target="_blank" rel="nofollow noopener sponsored">Ver en Amazon</a>
-            </div>
-          </article>
-        ))}
+        {ITEMS.map(it => <EquipoCard it={it} />)}
       </div>
     </section>
 
@@ -59,8 +39,9 @@ const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, 
 </SiteShell>
 
 <style>
+  .eq-card .of-pic { background: #fff; padding: 14px; box-sizing: border-box; }
+  .eq-card .of-pic img { width: 100%; height: 100%; object-fit: contain; }
   .eq-card .of-body { padding: 20px 20px 22px; gap: 10px; }
-  .eq-cat { display: inline-flex; align-self: start; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--h2-mag) 22%, transparent); color: var(--h2-mag); font: 800 .74rem var(--h2-body); }
   .eq-card h3 { margin: 0; -webkit-line-clamp: unset; min-height: 0; }
   .eq-why { margin: 0; color: var(--h2-mute); font: 500 .92rem/1.5 var(--h2-body); flex: 1; }
 </style>
