@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#06143f;--panel:#0d2260;--raise:#173383;--bone:#f5f8ff;--mute:#a4b6e6;--or:#ff6a3d;--ye:#ffd23f}
+body{background:var(--ink);color:var(--bone);font-family:'DM Sans',sans-serif;overflow:hidden}
+.c{position:relative;overflow:hidden;background:radial-gradient(90% 60% at 85% 105%,rgba(255,106,61,.35),transparent 60%),radial-gradient(70% 50% at 0% 0%,rgba(23,51,131,.9),transparent 70%),var(--ink)}
+.c::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(245,248,255,.09) 1.2px,transparent 1.6px);background-size:26px 26px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
+.logo{display:flex;align-items:center;gap:0;font:400 64px/1 'Bebas Neue';letter-spacing:.01em}
+.logo svg{width:52px;height:52px;margin:0 2px}
+.eye{font:800 22px 'DM Sans';letter-spacing:.2em;text-transform:uppercase;color:var(--ye)}
+h1{font:800 112px/.95 'Bricolage Grotesque';letter-spacing:-.035em}
+h1 em{font-style:normal;color:var(--or)}
+.sub{font:500 32px/1.35 'DM Sans';color:var(--mute)}
+.tile{position:relative;border-radius:24px;background:linear-gradient(160deg,var(--raise),var(--panel) 75%);box-shadow:inset 0 0 0 1.5px rgba(245,248,255,.1);display:flex;align-items:center;gap:26px;padding:32px 34px}
+.tile svg{flex:none;width:112px;height:112px;color:var(--or);filter:drop-shadow(0 6px 16px rgba(255,106,61,.45))}
+.tile b{display:block;font:800 42px/1.1 'Bricolage Grotesque';letter-spacing:-.02em}
+.tile span{display:block;margin-top:6px;font:800 18px 'DM Sans';letter-spacing:.14em;text-transform:uppercase;color:var(--ye)}
+.cta{display:flex;align-items:center;justify-content:space-between;border-radius:999px;background:var(--ye);color:var(--ink);font:800 34px 'DM Sans';padding:26px 44px}
+.cta i{font-style:normal;font-size:40px}
+/* pin */
+.pin{width:1000px;height:1500px;padding:70px 70px 64px;display:flex;flex-direction:column;gap:34px}
+.pin .list{display:flex;flex-direction:column;gap:20px;flex:1;justify-content:center}
+.pin .cta{position:relative}
+.n4 .tile{padding:20px 30px}.n4 .tile svg{width:84px;height:84px}.n4 .tile b{font-size:36px}.n4 h1{font-size:100px}.n4 .list{gap:16px}.pin.n4{gap:28px}
+/* og */
+.og{width:1200px;height:630px;padding:60px 64px;display:grid;grid-template-columns:1fr 430px;gap:40px;align-items:center}
+.og h1{font-size:76px;margin:22px 0 20px}
+.og .sub{font-size:26px}
+.og .logo{font-size:46px}.og .logo svg{width:38px;height:38px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid .sq{aspect-ratio:1;border-radius:20px;background:linear-gradient(160deg,var(--raise),var(--panel) 75%);box-shadow:inset 0 0 0 1.5px rgba(245,248,255,.1);display:grid;place-items:center}
+.grid .sq svg{width:56%;color:var(--or);filter:drop-shadow(0 5px 14px rgba(255,106,61,.45))}
+.grid .sq:nth-child(even) svg{color:var(--ye);filter:drop-shadow(0 5px 14px rgba(255,210,63,.35))}
+.url{font:800 22px 'DM Sans';letter-spacing:.14em;color:var(--mute);margin-top:30px}
+</style></head><body><div id="root"></div>
+<script>
+const I={webcam:'<circle cx="12" cy="10" r="7"/><circle cx="12" cy="10" r="3"/><path d="M12 17v3M8 21h8"/>',
+mic:'<rect x="9" y="2.5" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5v3.5M8.5 21h7"/>',
+capture:'<rect x="2.5" y="7" width="19" height="10" rx="2.5"/><path d="M6.5 12h.01M10 12h7.5M2.5 10.5H1M2.5 13.5H1M23 12h-1.5"/>',
+keyboard:'<rect x="2" y="6" width="20" height="12" rx="2.5"/><path d="M6 10h.01M9.3 10h.01M12.6 10h.01M15.9 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6"/>',
+mouse:'<rect x="6" y="2.5" width="12" height="19" rx="6"/><path d="M12 6.5v4"/>',
+headset:'<path d="M3.5 14v-2a8.5 8.5 0 0 1 17 0v2"/><path d="M20.5 15.5a2.5 2.5 0 0 1-2.5 2.5h-1v-6h1a2.5 2.5 0 0 1 2.5 2.5zM3.5 15.5A2.5 2.5 0 0 0 6 18h1v-6H6a2.5 2.5 0 0 0-2.5 2.5z"/><path d="M18 18v.5a3 3 0 0 1-3 3h-2"/>',
+light:'<rect x="3.5" y="3" width="17" height="11" rx="2.5"/><path d="M7.5 6.8h.01M12 6.8h.01M16.5 6.8h.01M7.5 10.2h.01M12 10.2h.01M16.5 10.2h.01M12 14v4M8.5 21l3.5-3 3.5 3"/>',
+arm:'<path d="M3 21h7M6.5 21l3-8.5 8-4.5"/><circle cx="9.5" cy="12.5" r="1.2"/><rect x="16" y="2.5" width="5" height="8" rx="2.5"/>',
+popfilter:'<circle cx="9.5" cy="9.5" r="6.5"/><path d="M6 7.5h7M4.5 9.5h10M6 11.5h7M14.2 14.2c2.3 2.3 3.3 4.5 3.3 7.3M15 21.5h5"/>',
+cable:'<path d="M4 3.5h8v6l-1.5 2h-5L4 9.5z"/><path d="M8 11.5v2.5a4 4 0 0 0 4 4h4a4 4 0 0 1 4 3.5"/><path d="M6.5 6.5h3"/>',
+hub:'<rect x="2.5" y="9" width="19" height="7.5" rx="2.5"/><path d="M6.5 12.75h2M11 12.75h2M15.5 12.75h2M12 9V3.5M10 3.5h4"/>'};
+const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
+const ring=`<svg viewBox="0 0 88 88"><circle cx="44" cy="44" r="34" stroke="#f5f8ff" stroke-width="9" fill="none"/><circle cx="44" cy="44" r="20" stroke="#ff6a3d" stroke-width="6" fill="none"/><circle cx="44" cy="44" r="8" fill="#ff6a3d"/><circle cx="44" cy="44" r="3.5" fill="#ffd23f"/></svg>`;
+const logo=`<div class="logo">C${ring}RILLO</div>`;
+const P={
+ novato:{eye:'Guía de compra · Streaming',h:'El setup del <em>novato</em>',sub:'Lo mínimo para empezar a transmitir con buena imagen y buen audio, sin gastar de más.',items:[['webcam','Logitech C920S','Webcam'],['mic','Blue Yeti','Micrófono'],['light','Luz LED Newmowa','Iluminación']]},
+ serio:{eye:'Guía de compra · Streaming',h:'El upgrade del streamer <em>serio</em>',sub:'Cuando ya transmites seguido y quieres que se note.',items:[['webcam','Elgato Facecam MK.2','Webcam'],['mic','Shure MV7i','Micrófono'],['keyboard','Corsair Galleon 100 SD','Teclado + Stream Deck']]},
+ nadie:{eye:'Guía de compra · Setup',h:'Accesorios que <em>nadie</em> menciona',sub:'Lo que separa un setup que se ve bien de uno que se ve profesional.',items:[['arm','Brazo para micrófono','NEEWER'],['popfilter','Filtro anti-pop','NEEWER'],['cable','Cable HDMI 2.1 8K','UGREEN'],['hub','Hub USB-C 8-en-1','Anker']]},
+ todo:{eye:'Corillo recomienda',h:'Equipo para <em>streaming</em> y gaming',sub:'Webcams, micrófonos, capture cards, teclados y más. Organizado en guías según tu presupuesto.',items:[['capture','Elgato HD60 S+','Capture card'],['mic','Blue Yeti','Micrófono'],['mouse','Logitech G305','Mouse'],['headset','Turtle Beach Recon 70','Headset']]}};
+const q=new URLSearchParams(location.search),t=q.get('t'),R=document.getElementById('root');
+if(t==='og'){R.innerHTML=`<div class="c og"><div style="position:relative">${logo}<h1>Equipo <em>recomendado</em> para streaming y gaming</h1><div class="sub">Guías de compra: del setup del novato al del streamer serio.</div><div class="url">CORILLO.LIVE/EQUIPO</div></div><div class="grid" style="position:relative">${['webcam','mic','capture','keyboard','headset','light'].map(k=>`<div class="sq">${svg(k)}</div>`).join('')}</div></div>`}
+else{const p=P[t];R.innerHTML=`<div class="c pin ${p.items.length>3?'n4':''}"><div style="position:relative;display:flex;flex-direction:column;gap:34px">${logo}<div class="eye">${p.eye}</div><h1>${p.h}</h1><div class="sub">${p.sub}</div></div><div class="list" style="position:relative">${p.items.map(([k,n,c])=>`<div class="tile">${svg(k)}<div><b>${n}</b><span>${c}</span></div></div>`).join('')}</div><div class="cta">Mira la guía en corillo.live/equipo<i>→</i></div></div>`}
+</script></body></html>

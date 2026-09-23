@@ -13,6 +13,8 @@ interface Props {
   ogTitle?: string;
   ogDescription?: string;
   pageClass?: string;
+  /** Ruta o URL de la imagen para compartir (1200×630); por defecto la general del sitio. */
+  ogImage?: string;
 }
 
 const {
@@ -23,11 +25,12 @@ const {
   ogTitle,
   ogDescription,
   pageClass = '',
+  ogImage,
 } = Astro.props;
 
 const resolvedOgTitle = ogTitle ?? title;
 const resolvedOgDesc  = ogDescription ?? description;
-const OG_IMAGE = 'https://corillo.live/assets/og-image.png';
+const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'https://corillo.live/assets/og-image.png';
 ---
 <!doctype html>
 <html lang="es" data-theme="dark">
