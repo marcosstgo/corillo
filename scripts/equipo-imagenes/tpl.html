@@ -6,8 +6,7 @@
 body{background:var(--ink);color:var(--bone);font-family:'DM Sans',sans-serif;overflow:hidden}
 .c{position:relative;overflow:hidden;background:radial-gradient(90% 60% at 85% 105%,rgba(255,106,61,.35),transparent 60%),radial-gradient(70% 50% at 0% 0%,rgba(23,51,131,.9),transparent 70%),var(--ink)}
 .c::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(245,248,255,.09) 1.2px,transparent 1.6px);background-size:26px 26px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
-.logo{display:flex;align-items:center;gap:0;font:400 64px/1 'Bebas Neue';letter-spacing:.01em}
-.logo svg{width:52px;height:52px;margin:0 2px}
+.logo{display:block;width:200px;height:58px;align-self:flex-start;flex:none}
 .eye{font:800 22px 'DM Sans';letter-spacing:.2em;text-transform:uppercase;color:var(--ye)}
 h1{font:800 112px/.95 'Bricolage Grotesque';letter-spacing:-.035em}
 h1 em{font-style:normal;color:var(--or)}
@@ -27,7 +26,7 @@ h1 em{font-style:normal;color:var(--or)}
 .og{width:1200px;height:630px;padding:60px 64px;display:grid;grid-template-columns:1fr 430px;gap:40px;align-items:center}
 .og h1{font-size:76px;margin:22px 0 20px}
 .og .sub{font-size:26px}
-.og .logo{font-size:46px}.og .logo svg{width:38px;height:38px}
+.og .logo{width:152px;height:44px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .grid .sq{aspect-ratio:1;border-radius:20px;background:linear-gradient(160deg,var(--raise),var(--panel) 75%);box-shadow:inset 0 0 0 1.5px rgba(245,248,255,.1);display:grid;place-items:center}
 .grid .sq svg{width:56%;color:var(--or);filter:drop-shadow(0 5px 14px rgba(255,106,61,.45))}
@@ -47,8 +46,7 @@ popfilter:'<circle cx="9.5" cy="9.5" r="6.5"/><path d="M6 7.5h7M4.5 9.5h10M6 11.
 cable:'<path d="M4 3.5h8v6l-1.5 2h-5L4 9.5z"/><path d="M8 11.5v2.5a4 4 0 0 0 4 4h4a4 4 0 0 1 4 3.5"/><path d="M6.5 6.5h3"/>',
 hub:'<rect x="2.5" y="9" width="19" height="7.5" rx="2.5"/><path d="M6.5 12.75h2M11 12.75h2M15.5 12.75h2M12 9V3.5M10 3.5h4"/>'};
 const svg=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${I[k]}</svg>`;
-const ring=`<svg viewBox="0 0 88 88"><circle cx="44" cy="44" r="34" stroke="#f5f8ff" stroke-width="9" fill="none"/><circle cx="44" cy="44" r="20" stroke="#ff6a3d" stroke-width="6" fill="none"/><circle cx="44" cy="44" r="8" fill="#ff6a3d"/><circle cx="44" cy="44" r="3.5" fill="#ffd23f"/></svg>`;
-const logo=`<div class="logo">C${ring}RILLO</div>`;
+const logo=`<svg class="logo" viewBox="0 0 304 88" fill="none"><defs><radialGradient id="dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff6a3d" stop-opacity="0.18"/><stop offset="100%" stop-color="#ff6a3d" stop-opacity="0"/></radialGradient></defs><text x="0" y="74" font-family="Bebas Neue" font-size="82" fill="#f5f8ff">C</text><circle cx="72" cy="42" r="36" fill="url(#dg)"/><circle cx="72" cy="42" r="34" stroke="#f5f8ff" stroke-width="9"/><circle cx="72" cy="42" r="20" stroke="#ff6a3d" stroke-width="6"/><circle cx="72" cy="42" r="8" fill="#ff6a3d"/><circle cx="72" cy="42" r="3.5" fill="#35e0a1"/><text x="114" y="74" font-family="Bebas Neue" font-size="82" fill="#f5f8ff">RILLO</text></svg>`;
 const P={
  novato:{eye:'Guía de compra · Streaming',h:'El setup del <em>novato</em>',sub:'Lo mínimo para empezar a transmitir con buena imagen y buen audio, sin gastar de más.',items:[['webcam','Logitech C920S','Webcam'],['mic','Blue Yeti','Micrófono'],['light','Luz LED Newmowa','Iluminación']]},
  serio:{eye:'Guía de compra · Streaming',h:'El upgrade del streamer <em>serio</em>',sub:'Cuando ya transmites seguido y quieres que se note.',items:[['webcam','Elgato Facecam MK.2','Webcam'],['mic','Shure MV7i','Micrófono'],['keyboard','Corsair Galleon 100 SD','Teclado + Stream Deck']]},
