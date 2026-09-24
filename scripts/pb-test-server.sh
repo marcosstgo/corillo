@@ -29,4 +29,5 @@ for _ in $(seq 1 50); do
   curl -fs "http://127.0.0.1:$PORT/api/health" >/dev/null && break; sleep 0.2
 done
 curl -fs "http://127.0.0.1:$PORT/api/health" >/dev/null || { cat "$WORK/pb.log"; exit 1; }
-echo "PB_TEST_URL=http://127.0.0.1:$PORT PB_TEST_DIR=$WORK"
+echo "PB_TEST_URL=http://127.0.0.1:$PORT"
+echo "PB_TEST_DIR=$WORK"
