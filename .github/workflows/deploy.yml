@@ -119,7 +119,7 @@ jobs:
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "set -e
              mkdir -p /home/corillo-adm/corillo-api
-             cp /var/www/stream/api/server.py /home/corillo-adm/corillo-api/server.py
+             cp /var/www/stream/api/*.py /home/corillo-adm/corillo-api/
              cp /var/www/stream/api/requirements.txt /home/corillo-adm/corillo-api/requirements.txt
              if [ ! -d /home/corillo-adm/corillo-api/venv ]; then
                python3 -m venv /home/corillo-adm/corillo-api/venv

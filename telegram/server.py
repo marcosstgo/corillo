@@ -86,6 +86,9 @@ RESERVED_HANDLES = {
     'katatonia', 'tea', 'mira_sanganooo', '404', 'elbala', 'marcos',
     'pataecabra', 'streamerpro', 'radblaster', 'elhermanoquiles', 'xxdur3xx',
     'kamikazepr',
+    # rutas del sitio (una cuenta con ese nombre quedaría tapada por la página)
+    'mercado', 'equipo', 'ofertas', 'noticias', 'discord', 'streamers', 'vods', 'reels',
+    'faq', 'software', 'embed', 'overlay', 'que_es_corillo', 'rss',
 }
 
 

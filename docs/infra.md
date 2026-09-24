@@ -120,6 +120,20 @@ Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
 | DELETE | `/api/vod/{id}` | Eliminar VOD (autenticado) |
 | POST | `/api/upload-vod` | Subir VOD (autenticado, hasta 3G) |
 | GET | `/api/health` | Health check |
+| GET | `/api/mercado/meta` | Categorías y municipios del Mercado |
+| GET | `/api/mercado/anuncios` | Anuncios públicos con filtros (`q`, `categoria`, `subcategoria`, `pueblo`, `precio_min/max`, `condicion`, `entrega`, `orden`, `cerca`, `vendidos`, `pagina`) |
+| GET | `/api/mercado/resumen` | Conteo por categoría + anuncios públicos (lo usa el build) |
+| GET | `/api/mercado/anuncios/{id}` | Un anuncio (si no es público, solo dueño/admin) |
+| GET | `/api/mercado/mis-anuncios` | Anuncios del usuario (autenticado) |
+| POST | `/api/mercado/anuncios` | Crear (multipart: `datos` JSON + `fotos`; autenticado y verificado) |
+| PATCH | `/api/mercado/anuncios/{id}` | Editar (dueño/admin) |
+| PUT | `/api/mercado/anuncios/{id}/fotos` | Reemplazar todas las fotos, en ese orden |
+| POST | `/api/mercado/anuncios/{id}/orden-fotos` | Reordenar sin volver a subir |
+| POST | `/api/mercado/anuncios/{id}/estado` | `disponible` / `reservado` / `vendido` |
+| POST | `/api/mercado/anuncios/{id}/pausa` | Pausar / reanudar |
+| DELETE | `/api/mercado/anuncios/{id}` | Borrar (los mensajes se conservan para moderar abuso) |
+
+Código del Mercado: `api/mercado.py` (router montado en `server.py`). Variables: `MERCADO_ADMINS` (keys de cuentas admin, separadas por coma), `MERCADO_MAX_ACTIVOS` (15), `MERCADO_MAX_CREA_HORA` (5), `CORILLO_REPO` (de dónde lee `src/data/categorias.json` y `municipios.json`; por defecto `/var/www/stream`).
 
 ---
 
@@ -131,6 +145,9 @@ Los canales (`/katatonia/`, `/tea/`, etc.) los captura la regex
 | `vods` | `channel`, `filename`, `title`, `duration`, `size`, `thumb`, `date`, `public` |
 | `reels` | `channel`, `filename`, `title`, `duration`, `public` |
 | `push_subscriptions` | `channel`, `endpoint`, `p256dh`, `auth` |
+| `mercado_anuncios`, `mercado_reportes`, `mercado_mensajes`, `mercado_bloqueos` | Mercado. **Todas las reglas en null**: solo se accede vía `/api/mercado/*`. Esquema versionado en `pb/migrations/` |
+
+`streamers.first_live_at`: fecha del primer directo (la marca `/internal/notify`). Sin ella la cuenta es solo "perfil" (vendedor del Mercado) y no sale como canal en `/api/streamers` ni `/api/profile`.
 
 **Admin UI:** `https://pb.corillo.live`
 **Credenciales:** en `/home/corillo-adm/corillo-api/.env`

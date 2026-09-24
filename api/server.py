@@ -104,7 +104,9 @@ async def get_streamers():
             f"{PB_URL}/api/collections/streamers/records",
             headers={"Authorization": token},
             params={
-                "filter": "active=true",
+                # Sin first_live_at = cuenta que nunca ha transmitido (p. ej. solo vende en el
+                # Mercado): no aparece como canal. Ver pb/migrations/1790300000_*.
+                "filter": 'active=true && first_live_at!=""',
                 "fields": "id,key,display_name,sub,bio,color,twitch,instagram,tiktok,avatar,stream_title",
                 "perPage": "200",
             },
@@ -133,7 +135,7 @@ async def get_profile(key: str):
             f"{PB_URL}/api/collections/streamers/records",
             headers={"Authorization": token},
             params={
-                "filter": f'key="{key}" && active=true',
+                "filter": f'key="{key}" && active=true && first_live_at!=""',
                 "fields": "id,key,display_name,sub,bio,color,twitch,instagram,tiktok,avatar,panels,stream_title",
             },
         )
@@ -247,15 +249,42 @@ async def unsubscribe(request: Request):
         raise HTTPException(status_code=500)
 
 
+async def _marcar_primer_directo(channel: str):
+    """La primera vez que un canal sale en vivo queda visible como canal (first_live_at).
+    Nunca lanza: un fallo aquí no puede afectar el aviso ni la transmisión."""
+    try:
+        if not CHANNEL_RE.match(channel):
+            return
+        token = await _admin_token()
+        r = await _http.get(
+            f"{PB_URL}/api/collections/streamers/records",
+            headers={"Authorization": token},
+            params={"filter": f'key="{channel}" && first_live_at=""', "fields": "id", "perPage": 1},
+        )
+        for rec in r.json().get("items", []):
+            await _http.patch(
+                f"{PB_URL}/api/collections/streamers/records/{rec['id']}",
+                headers={"Authorization": token},
+                json={"first_live_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.000Z")},
+            )
+            _streamers_cache["data"] = None
+    except Exception:
+        pass
+
+
 @app.post("/internal/notify")
 async def internal_notify(request: Request):
     if request.client.host not in ("127.0.0.1", "::1"):
         raise HTTPException(status_code=403)
+    try:
+        path = (await request.json()).get("path", "")
+    except Exception:
+        path = ""
+    if path.startswith("live/"):
+        await _marcar_primer_directo(path[5:])
     if not VAPID_PRIVATE_KEY or not VAPID_PUBLIC_KEY:
         raise HTTPException(status_code=503)
     try:
-        data    = await request.json()
-        path    = data.get("path", "")
         if not path.startswith("live/"):
             raise HTTPException(status_code=400)
         channel = path[5:]
@@ -1100,6 +1129,12 @@ async def channel_stats(channel: str):
         "avg_duration_min": avg_min,
         "peak_viewers":     None,
     }
+
+
+# ── Mercado (/api/mercado/*) ──
+import mercado
+mercado.bind(lambda: _http, _admin_token)
+app.include_router(mercado.router)
 
 
 @app.get("/health")
