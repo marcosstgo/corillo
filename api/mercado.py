@@ -15,7 +15,9 @@ from typing import Awaitable, Callable, Literal, Optional
 
 import httpx
 from fastapi import APIRouter, File, Form, Header, HTTPException, Request, UploadFile
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel, EmailStr, Field, ValidationError, field_validator
+
+import turnstile
 
 PB_URL = os.environ.get("PB_URL", "https://pb.corillo.live")
 REPO = Path(os.environ.get("CORILLO_REPO", "/var/www/stream"))
@@ -652,3 +654,126 @@ async def borrar(aid: str, authorization: Optional[str] = Header(None)):
     if r.status_code not in (200, 204):
         raise HTTPException(502, "No se pudo borrar")
     _invalidar()
+
+
+# ── Contacto, WhatsApp y reportes (visitantes sin cuenta, protegidos con Turnstile) ──
+MAX_MSG_IP_HORA = 5          # mensajes por IP en una hora, a cualquier anuncio
+MAX_MSG_IP_ANUNCIO_DIA = 2   # mensajes por IP al mismo anuncio en 24 h
+MAX_WA_IP_HORA = 20
+REPORTES_PARA_OCULTAR = 3
+_wa_log: dict[str, list[float]] = {}
+
+
+def ip_cliente(request: Request) -> str:
+    """IP del visitante. Solo se cree la cabecera X-Real-IP si la petición viene de nginx (localhost);
+    nginx la sobrescribe siempre, así que el navegador no puede falsificarla."""
+    h = request.client.host if request.client else ""
+    if h in ("127.0.0.1", "::1"):
+        return request.headers.get("x-real-ip", "").strip() or h
+    return h
+
+
+def _ts(delta: timedelta) -> str:
+    return (datetime.now(timezone.utc) - delta).strftime("%Y-%m-%d %H:%M:%S")
+
+
+async def _contar(col: str, filtro: str) -> int:
+    r = await _pb("GET", f"{COL}/{col}/records", params={"filter": filtro, "perPage": 1, "fields": "id"})
+    return r.json().get("totalItems", 0) if r.status_code == 200 else 0
+
+
+async def _publico_o_404(aid: str) -> dict:
+    a = await _obtener(aid)
+    if not es_publico(a) or not ((a.get("expand") or {}).get("vendedor") or {}).get("active"):
+        raise HTTPException(404, "Anuncio no encontrado")
+    return a
+
+
+class ContactoIn(BaseModel):
+    nombre: str = Field(..., min_length=2, max_length=80)
+    email: EmailStr
+    mensaje: str = Field(..., min_length=10, max_length=2000)
+    token: str = Field("", max_length=2048)       # cf-turnstile-response
+    website: str = ""                             # honeypot: un humano nunca lo ve ni lo llena
+
+
+@router.post("/anuncios/{aid}/contacto")
+async def contactar(aid: str, request: Request):
+    try:
+        body = ContactoIn(**(await request.json()))
+    except ValidationError as e:
+        raise _error_validacion(e)
+    except ValueError:
+        raise HTTPException(422, "Datos inválidos")
+    ok = {"ok": True, "mensaje": "Mensaje enviado. El vendedor te contestará a tu correo."}
+    if body.website.strip():
+        return ok                                   # bot: fingimos éxito y no hacemos nada
+    ip = ip_cliente(request)
+    if not await turnstile.verificar(_get_http(), body.token, "contacto", ip):
+        raise HTTPException(403, "No pudimos confirmar que eres una persona. Recarga la página e intenta otra vez.")
+    a = await _publico_o_404(aid)
+    if a["estado"] == "vendido":
+        raise HTTPException(409, "Este artículo ya se vendió.")
+    email = body.email.lower()
+    if await _bloqueado("ip", ip) or await _bloqueado("email", email):
+        raise HTTPException(403, "No puedes enviar mensajes en el Mercado.")
+    if await _contar("mercado_mensajes", f'ip="{_esc(ip)}" && created>="{_ts(timedelta(hours=1))}"') >= MAX_MSG_IP_HORA:
+        raise HTTPException(429, "Enviaste varios mensajes seguidos. Espera un rato e intenta de nuevo.")
+    if await _contar("mercado_mensajes", f'ip="{_esc(ip)}" && anuncio="{aid}" && created>="{_ts(timedelta(days=1))}"') >= MAX_MSG_IP_ANUNCIO_DIA:
+        raise HTTPException(429, "Ya le escribiste a este vendedor. Dale tiempo para contestar.")
+    r = await _pb("POST", f"{COL}/mercado_mensajes/records", json={
+        "anuncio": aid, "anuncio_titulo": a["titulo"], "vendedor": a["vendedor"],
+        "nombre": body.nombre.strip(), "email": email, "mensaje": body.mensaje.strip(),
+        "ip": ip, "enviado": False})
+    if r.status_code != 200:
+        raise HTTPException(502, "No se pudo enviar el mensaje. Intenta otra vez.")
+    # PENDIENTE (fase 4): reenviar por correo (Mailgun) al vendedor y marcar enviado=true.
+    return ok
+
+
+class TokenIn(BaseModel):
+    token: str = Field("", max_length=2048)
+
+
+@router.post("/anuncios/{aid}/whatsapp")
+async def ver_whatsapp(aid: str, body: TokenIn, request: Request):
+    """El número nunca va en el HTML ni en los listados: solo sale aquí, tras Turnstile."""
+    ip = ip_cliente(request)
+    ahora = time.time()
+    log = [t for t in _wa_log.get(ip, []) if ahora - t < 3600]
+    if len(log) >= MAX_WA_IP_HORA:
+        raise HTTPException(429, "Demasiadas consultas. Intenta más tarde.")
+    if not await turnstile.verificar(_get_http(), body.token, "whatsapp", ip):
+        raise HTTPException(403, "No pudimos confirmar que eres una persona. Recarga la página e intenta otra vez.")
+    log.append(ahora)
+    _wa_log[ip] = log
+    a = await _publico_o_404(aid)
+    if not a.get("whatsapp") or a["estado"] == "vendido":
+        raise HTTPException(404, "Este anuncio no tiene WhatsApp")
+    return {"whatsapp": a["whatsapp"]}
+
+
+class ReporteIn(BaseModel):
+    motivo: Literal["prohibido", "estafa", "spam", "ofensivo", "vendido", "otro"]
+    detalle: str = Field("", max_length=500)
+    token: str = Field("", max_length=2048)
+
+
+@router.post("/anuncios/{aid}/reporte")
+async def reportar(aid: str, body: ReporteIn, request: Request):
+    ip = ip_cliente(request)
+    if not await turnstile.verificar(_get_http(), body.token, "reporte", ip):
+        raise HTTPException(403, "No pudimos confirmar que eres una persona. Recarga la página e intenta otra vez.")
+    a = await _publico_o_404(aid)
+    r = await _pb("POST", f"{COL}/mercado_reportes/records", json={
+        "anuncio": aid, "motivo": body.motivo, "detalle": body.detalle.strip(), "ip": ip})
+    if r.status_code != 200:
+        # índice único (anuncio, ip): un reporte por persona y anuncio
+        raise HTTPException(409, "Ya reportaste este anuncio. Lo vamos a revisar.")
+    n = await _contar("mercado_reportes", f'anuncio="{aid}" && resuelto=false')
+    cambios: dict = {"reportes": n}
+    if n >= REPORTES_PARA_OCULTAR and a.get("moderacion") == "visible":
+        cambios |= {"moderacion": "oculto", "motivo_oculto": f"Oculto automáticamente: {n} reportes"}
+    await _pb("PATCH", f"{COL}/mercado_anuncios/records/{aid}", json=cambios)
+    _invalidar()
+    return {"ok": True, "mensaje": "Gracias. Vamos a revisar el anuncio."}

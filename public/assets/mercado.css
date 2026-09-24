@@ -49,3 +49,25 @@
 .mk-ava{flex:none;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:color-mix(in srgb,var(--c) 30%,transparent);color:var(--c);font-weight:800}
 .mk-ava img{width:100%;height:100%;object-fit:cover}
 .mk-badge{flex:none;padding:3px 8px;border-radius:8px;background:color-mix(in srgb,var(--h2-cyan) 18%,transparent);color:var(--h2-cyan);font:800 .7rem var(--h2-body)}
+
+/* Diálogos: contactar, WhatsApp, reportar */
+.mk-report{align-self:flex-start;padding:4px 0;border:0;background:none;color:var(--h2-mute);font:600 .85rem var(--h2-body);text-decoration:underline;cursor:pointer}
+.mk-dlg{margin:auto;width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;border:0;border-radius:24px;background:#0b1d57;color:var(--h2-bone);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 0 0 1px var(--h2-line)}
+.mk-dlg::backdrop{background:rgba(3,10,30,.72);backdrop-filter:blur(3px)}
+.mk-dlg form{display:flex;flex-direction:column;gap:14px;padding:22px}
+.mk-dlg header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mk-dlg h2{margin:0;font:800 1.3rem/1.15 var(--h2-display)}
+.mk-x{flex:none;width:40px;height:40px;border:0;border-radius:12px;background:color-mix(in srgb,var(--h2-bone) 8%,transparent);color:var(--h2-bone);font-size:1.5rem;cursor:pointer}
+.mk-safe{margin:0;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--h2-mag) 12%,transparent);color:var(--h2-bone);font:500 .88rem/1.5 var(--h2-body)}
+.mk-safe strong{color:var(--h2-mag)}
+.mk-dlg label{display:flex;flex-direction:column;gap:6px;color:var(--h2-mute);font:700 .82rem var(--h2-body)}
+.mk-dlg input,.mk-dlg textarea,.mk-dlg select{width:100%;padding:12px 14px;border:0;border-radius:12px;background:rgba(3,10,30,.55);color:var(--h2-bone);box-shadow:inset 0 0 0 1px var(--h2-line);font:500 1rem var(--h2-body)}
+.mk-dlg input:focus,.mk-dlg textarea:focus,.mk-dlg select:focus{outline:2px solid var(--h2-cyan);outline-offset:1px}
+.mk-dlg small{color:var(--h2-mute);font-weight:500}
+.mk-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.mk-ts{min-height:65px}
+.mk-out{margin:0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--h2-live) 18%,transparent);font:600 .9rem/1.45 var(--h2-body)}
+.mk-out[data-ok="1"]{background:color-mix(in srgb,var(--crl-confirm,#35e0a1) 18%,transparent)}
+.mk-wa{display:flex;flex-direction:column;gap:12px;margin:0}
+.mk-wa b{font:800 1.8rem var(--h2-display);letter-spacing:-.02em}
+.of-go[disabled]{opacity:.6;cursor:wait}

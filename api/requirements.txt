@@ -5,3 +5,4 @@ python-dotenv
 pywebpush
 python-multipart
 pillow
+email-validator

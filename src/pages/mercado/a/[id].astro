@@ -2,6 +2,7 @@
 import SiteShell from '../../../layouts/SiteShell.astro';
 import MercadoNota from '../../../components/MercadoNota.astro';
 import { categoria } from '../../../data/categorias';
+import { TURNSTILE_SITE_KEY } from '../../../data/site';
 import { loadMercado, CONDICION, ENTREGA, nombrePueblo, precio, type Anuncio } from '../../../data/mercado';
 
 export async function getStaticPaths() {
@@ -27,10 +28,11 @@ const ld = {
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
     {vendido && <meta name="robots" content="noindex" />}
     <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
-    <link rel="stylesheet" href="/assets/mercado.css?v=3" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=5" />
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   </fragment>
 
-  <main class="of">
+  <main class="of" data-anuncio={a.id} data-turnstile={TURNSTILE_SITE_KEY}>
     <nav class="of-crumb" aria-label="Ruta"><a href="/mercado/">Mercado</a> / {cat && <a href={`/mercado/${cat.slug}/`}>{cat.es}</a>}{sub && <> / {sub.es}</>}</nav>
 
     <div class="mk-ad">
@@ -70,9 +72,53 @@ const ld = {
           <span><b>{a.vendedor.nombre}</b><small>{a.vendedor.streamer ? 'Ver su canal en CORILLO' : 'Miembro de CORILLO'}</small></span>
           {a.vendedor.streamer && <span class="mk-badge" style="margin-left:auto">Streamer de CORILLO</span>}
         </a>
+        <button class="mk-report" type="button" data-reportar>Reportar este anuncio</button>
       </aside>
     </div>
 
     <MercadoNota />
+
+    <dialog class="mk-dlg" id="mkContacto" aria-labelledby="mkContactoT">
+      <form method="dialog" novalidate>
+        <header><h2 id="mkContactoT">Escribirle a {a.vendedor.nombre}</h2><button type="button" class="mk-x" data-cerrar aria-label="Cerrar">&times;</button></header>
+        <p class="mk-safe"><strong>Antes de escribir:</strong> CORILLO no participa en la venta. Tu mensaje le llega al vendedor por correo a través de CORILLO, y las respuestas también: ninguno de los dos ve el correo del otro. Encuéntrense de día en un lugar público, revisa el equipo antes de pagar y no envíes dinero por adelantado.</p>
+        <label>Tu nombre<input name="nombre" required minlength="2" maxlength="80" autocomplete="name" /></label>
+        <label>Tu correo<input name="email" type="email" required maxlength="120" autocomplete="email" /><small>Solo para que el vendedor te pueda contestar.</small></label>
+        <label>Mensaje<textarea name="mensaje" required minlength="10" maxlength="2000" rows="4">{`Hola, me interesa: ${a.titulo}. ¿Todavía lo tienes?`}</textarea></label>
+        <div class="mk-hp" aria-hidden="true"><label>No llenes este campo<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <div class="mk-ts"></div>
+        <p class="mk-out" role="status" hidden></p>
+        <button class="of-go" type="submit">Enviar mensaje</button>
+      </form>
+    </dialog>
+
+    <dialog class="mk-dlg" id="mkWhatsapp" aria-labelledby="mkWhatsappT">
+      <form method="dialog">
+        <header><h2 id="mkWhatsappT">WhatsApp del vendedor</h2><button type="button" class="mk-x" data-cerrar aria-label="Cerrar">&times;</button></header>
+        <p class="mk-safe">Encuéntrense de día en un lugar público, revisa el equipo antes de pagar y no envíes dinero por adelantado.</p>
+        <div class="mk-ts"></div>
+        <p class="mk-wa" hidden><b></b><a class="of-go" target="_blank" rel="noopener">Abrir WhatsApp</a></p>
+        <p class="mk-out" role="status" hidden></p>
+      </form>
+    </dialog>
+
+    <dialog class="mk-dlg" id="mkReporte" aria-labelledby="mkReporteT">
+      <form method="dialog">
+        <header><h2 id="mkReporteT">Reportar anuncio</h2><button type="button" class="mk-x" data-cerrar aria-label="Cerrar">&times;</button></header>
+        <label>¿Qué pasa?<select name="motivo" required>
+          <option value="estafa">Parece una estafa</option>
+          <option value="prohibido">Artículo prohibido</option>
+          <option value="vendido">Ya se vendió y sigue publicado</option>
+          <option value="spam">Spam o anuncio repetido</option>
+          <option value="ofensivo">Contenido ofensivo</option>
+          <option value="otro">Otra cosa</option>
+        </select></label>
+        <label>Detalles (opcional)<textarea name="detalle" maxlength="500" rows="3"></textarea></label>
+        <div class="mk-ts"></div>
+        <p class="mk-out" role="status" hidden></p>
+        <button class="of-go" type="submit">Enviar reporte</button>
+      </form>
+    </dialog>
   </main>
+  <script is:inline src="/assets/mercado-anuncio.js?v=1" defer></script>
 </SiteShell>

@@ -214,3 +214,103 @@ def test_reemplazar_fotos_sustituye_las_anteriores(c):
     assert httpx.get(nuevas[0]).status_code == 200
     muchas = [("fotos", ("n.jpg", foto(), "image/jpeg"))] * 11
     assert c.put(f"/mercado/anuncios/{a['id']}/fotos", headers=u["h"], files=muchas).status_code == 422
+
+
+# ── Contacto, WhatsApp y reportes ──
+@pytest.fixture
+def turnstile_falso(monkeypatch):
+    """Simula Cloudflare: 'ok-<acción>-<n>' vale una sola vez para esa acción (como el real)."""
+    import mercado
+    usados = set()
+
+    async def verificar(http, token, accion, ip=""):
+        if not isinstance(token, str) or not token.startswith(f"ok-{accion}-") or token in usados:
+            return False
+        usados.add(token)
+        return True
+    monkeypatch.setattr(mercado.turnstile, "verificar", verificar)
+    monkeypatch.setattr(mercado, "ip_cliente", lambda req: req.headers.get("x-ip-prueba", "9.9.9.9"))
+    n = iter(range(10**6))
+    return lambda accion: f"ok-{accion}-{next(n)}"
+
+
+def _msg(tok, **kw):
+    return {"nombre": "Comprador", "email": "Comprador@Ejemplo.com", "mensaje": "¿Todavía lo tienes? Me interesa.", "token": tok} | kw
+
+
+def test_contacto_exige_turnstile_y_guarda_registro(c, turnstile_falso):
+    import mercado
+    u = cuenta()
+    aid = crear(c, u).json()["id"]
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg("")).status_code == 403
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("reporte"))).status_code == 403
+    tok = turnstile_falso("contacto")
+    ip = {"x-ip-prueba": "10.0.0." + uuid.uuid4().hex[:2]}
+    r = c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(tok), headers=ip)
+    assert r.status_code == 200, r.text
+    assert "@" not in json.dumps(r.json())                       # la respuesta no revela correos
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(tok), headers=ip).status_code == 403   # reutilizado
+    su = {"Authorization": _su()}
+    reg = httpx.get(f"{PB}/api/collections/mercado_mensajes/records", headers=su,
+                    params={"filter": f'anuncio="{aid}"'}).json()["items"]
+    assert len(reg) == 1 and reg[0]["email"] == "comprador@ejemplo.com" and reg[0]["ip"] == ip["x-ip-prueba"]
+    assert reg[0]["vendedor"] == u["id"] and reg[0]["anuncio_titulo"]
+
+
+def test_contacto_honeypot_y_limites(c, turnstile_falso):
+    u = cuenta()
+    aid = crear(c, u).json()["id"]
+    ip = {"x-ip-prueba": "10.1." + uuid.uuid4().hex[:4]}
+    r = c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg("", website="http://spam"), headers=ip)
+    assert r.status_code == 200                                   # el bot cree que funcionó...
+    su = {"Authorization": _su()}
+    cuenta_msgs = lambda: httpx.get(f"{PB}/api/collections/mercado_mensajes/records", headers=su,
+                                    params={"filter": f'anuncio="{aid}"'}).json()["totalItems"]
+    assert cuenta_msgs() == 0                                     # ...pero no se guardó nada
+    for _ in range(2):
+        assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto")), headers=ip).status_code == 200
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto")), headers=ip).status_code == 429
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto")),
+                  headers={"x-ip-prueba": "10.2." + uuid.uuid4().hex[:4]}).status_code == 200   # otra persona sí puede
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto"), email="no-es-correo")).status_code == 422
+
+
+def test_contacto_bloqueado_y_vendido(c, turnstile_falso):
+    u = cuenta()
+    aid = crear(c, u).json()["id"]
+    httpx.post(f"{PB}/api/collections/mercado_bloqueos/records", headers={"Authorization": _su()},
+               json={"tipo": "email", "valor": "malo@ejemplo.com"})
+    r = c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto"), email="MALO@Ejemplo.com"),
+               headers={"x-ip-prueba": "10.3." + uuid.uuid4().hex[:4]})
+    assert r.status_code == 403
+    c.post(f"/mercado/anuncios/{aid}/estado", headers=u["h"], json={"estado": "vendido"})
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto"))).status_code == 409
+
+
+def test_whatsapp_solo_tras_turnstile(c, turnstile_falso):
+    u = cuenta()
+    aid = crear(c, u).json()["id"]
+    assert c.post(f"/mercado/anuncios/{aid}/whatsapp", json={"token": ""}).status_code == 403
+    r = c.post(f"/mercado/anuncios/{aid}/whatsapp", json={"token": turnstile_falso("whatsapp")})
+    assert r.status_code == 200 and r.json()["whatsapp"] == "7875551234"
+    sin = crear(c, u, whatsapp="").json()["id"]
+    assert c.post(f"/mercado/anuncios/{sin}/whatsapp", json={"token": turnstile_falso("whatsapp")}).status_code == 404
+
+
+def test_tres_reportes_ocultan_el_anuncio(c, turnstile_falso):
+    import mercado
+    u = cuenta()
+    unico = "Rp" + uuid.uuid4().hex[:8]
+    aid = crear(c, u, titulo=f"Anuncio {unico}").json()["id"]
+    rep = lambda ip: c.post(f"/mercado/anuncios/{aid}/reporte", json={"motivo": "estafa", "token": turnstile_falso("reporte")},
+                            headers={"x-ip-prueba": ip})
+    assert c.post(f"/mercado/anuncios/{aid}/reporte", json={"motivo": "estafa", "token": ""}).status_code == 403
+    assert rep("1.1.1.1").status_code == 200
+    assert rep("1.1.1.1").status_code == 409                     # uno por persona
+    assert rep("2.2.2.2").status_code == 200
+    mercado._invalidar()
+    assert c.get("/mercado/anuncios", params={"q": unico}).json()["total"] == 1
+    assert rep("3.3.3.3").status_code == 200
+    assert c.get("/mercado/anuncios", params={"q": unico}).json()["total"] == 0   # oculto
+    priv = c.get(f"/mercado/anuncios/{aid}", headers=u["h"]).json()
+    assert priv["moderacion"] == "oculto" and priv["reportes"] == 3 and "3 reportes" in priv["motivo_oculto"]
