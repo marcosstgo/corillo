@@ -1,0 +1,78 @@
+---
+import SiteShell from '../../../layouts/SiteShell.astro';
+import MercadoNota from '../../../components/MercadoNota.astro';
+import { categoria } from '../../../data/categorias';
+import { loadMercado, CONDICION, ENTREGA, nombrePueblo, precio, type Anuncio } from '../../../data/mercado';
+
+export async function getStaticPaths() {
+  const R = await loadMercado();
+  return R.anuncios.map(a => ({ params: { id: a.id }, props: { a } }));
+}
+const { a } = Astro.props as { a: Anuncio };
+const cat = categoria(a.categoria);
+const sub = cat?.sub.find(s => s.slug === a.subcategoria);
+const pueblo = nombrePueblo(a.pueblo);
+const vendido = a.estado === 'vendido';
+const desc = `${precio(a.precio)}${a.negociable ? ' (negociable)' : ''} · ${CONDICION[a.condicion]} · ${pueblo}. ${a.descripcion || (a.incluye.length ? 'Incluye: ' + a.incluye.join(', ') + '.' : '')}`.slice(0, 200);
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Product', name: a.titulo, image: a.fotos, description: a.descripcion || undefined,
+  brand: a.marca ? { '@type': 'Brand', name: a.marca } : undefined, model: a.modelo || undefined,
+  offers: { '@type': 'Offer', price: a.precio, priceCurrency: 'USD', url: `https://corillo.live/mercado/a/${a.id}/`,
+    itemCondition: a.condicion === 'nuevo' ? 'https://schema.org/NewCondition' : a.condicion === 'para-piezas' ? 'https://schema.org/DamagedCondition' : 'https://schema.org/UsedCondition',
+    availability: vendido ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' },
+};
+---
+<SiteShell title={`${a.titulo} — ${precio(a.precio)} en ${pueblo} | Mercado de CORILLO`} description={desc} canonical={`https://corillo.live/mercado/a/${a.id}/`} ogImage={a.og || undefined}>
+  <fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    {vendido && <meta name="robots" content="noindex" />}
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=3" />
+  </fragment>
+
+  <main class="of">
+    <nav class="of-crumb" aria-label="Ruta"><a href="/mercado/">Mercado</a> / {cat && <a href={`/mercado/${cat.slug}/`}>{cat.es}</a>}{sub && <> / {sub.es}</>}</nav>
+
+    <div class="mk-ad">
+      <div class="mk-galw">
+        <div class="mk-gal" tabindex="0" aria-label={`Fotos (${a.fotos.length})`}>
+          {a.fotos.map((f, i) => <img src={f} alt={`${a.titulo}, foto ${i + 1} de ${a.fotos.length}`} width="1200" height="900" loading={i ? 'lazy' : 'eager'} decoding="async" />)}
+        </div>
+        {a.fotos.length > 1 && <p class="mk-dots">{a.fotos.length} fotos · desliza para verlas</p>}
+      </div>
+
+      <div class="mk-info">
+        <div class="mk-lists">
+          {a.incluye.length > 0 && <div class="mk-list mk-in"><h2>Qué incluye</h2><ul>{a.incluye.map(x => <li>{x}</li>)}</ul></div>}
+          {a.falta.length > 0 && <div class="mk-list mk-out"><h2>Qué le falta</h2><ul>{a.falta.map(x => <li>{x}</li>)}</ul></div>}
+        </div>
+        {a.descripcion && <section class="of-sec" style="margin-top:28px"><h2>Descripción</h2><p class="mk-desc">{a.descripcion}</p></section>}
+      </div>
+
+      <aside class="mk-side">
+        {a.estado !== 'disponible' && <span class={`mk-state ${a.estado}`}>{vendido ? 'Vendido' : 'Reservado'}</span>}
+        <h1>{a.titulo}</h1>
+        <div class="of-price"><b>{precio(a.precio)}</b>{a.negociable && !vendido && <em>Negociable</em>}</div>
+        <dl class="mk-facts">
+          <div><dt>Estado</dt><dd>{CONDICION[a.condicion]}</dd></div>
+          <div><dt>Pueblo</dt><dd>{pueblo}</dd></div>
+          <div><dt>Entrega</dt><dd>{ENTREGA[a.entrega]}</dd></div>
+          {(a.marca || a.modelo) && <div><dt>Marca y modelo</dt><dd>{[a.marca, a.modelo].filter(Boolean).join(' ')}</dd></div>}
+        </dl>
+        {!vendido && (
+          <div class="mk-cta">
+            <button class="of-go" type="button" data-contactar>Escribirle al vendedor</button>
+            {a.tiene_whatsapp && <button class="of-go mk-alt" type="button" data-wa>Ver WhatsApp</button>}
+          </div>
+        )}
+        <a class="mk-seller" href={a.vendedor.canal || undefined}>
+          <span class="mk-ava" style={`--c:${a.vendedor.color || 'var(--h2-cyan)'}`}>{a.vendedor.avatar ? <img src={a.vendedor.avatar} alt="" width="44" height="44" /> : a.vendedor.nombre.slice(0, 1)}</span>
+          <span><b>{a.vendedor.nombre}</b><small>{a.vendedor.streamer ? 'Ver su canal en CORILLO' : 'Miembro de CORILLO'}</small></span>
+          {a.vendedor.streamer && <span class="mk-badge" style="margin-left:auto">Streamer de CORILLO</span>}
+        </a>
+      </aside>
+    </div>
+
+    <MercadoNota />
+  </main>
+</SiteShell>

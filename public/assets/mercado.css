@@ -1,0 +1,51 @@
+/* Mercado (/mercado/): SOLO lo que ofertas.css no trae. Tarjetas, chips, rejilla y la caja de
+   transparencia vienen de ofertas.css (clases of-*); la tarjeta de anuncio vive en MercadoCard.astro. */
+.of-chips a.of-chip{text-decoration:none;flex:none}
+/* En móvil las categorías van en UNA fila que se desliza (12 chips en 6 filas empujaban los anuncios fuera de la pantalla) */
+@media (max-width:760px){.mk-cats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;scroll-padding-inline:16px}.mk-cats::-webkit-scrollbar{display:none}}
+.mk-n{margin-left:8px;padding:1px 7px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 14%,transparent);font-size:.78rem}
+.of-chip[aria-pressed="true"] .mk-n{background:color-mix(in srgb,var(--h2-ink) 18%,transparent)}
+.of-hd p:has(.mk-sell){display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.mk-sell{display:inline-flex;padding:6px 14px;border-radius:10px;background:var(--h2-cyan);color:var(--h2-ink);font-weight:800;text-decoration:none}
+
+/* Página de un anuncio */
+/* Móvil: fotos → título/precio/contacto → listas y descripción. Escritorio: dos columnas con la ficha fija a la derecha. */
+.mk-ad{display:grid;gap:22px;margin-top:18px;grid-template-areas:"gal" "side" "info"}
+.mk-galw{grid-area:gal;min-width:0}.mk-side{grid-area:side}.mk-info{grid-area:info;min-width:0}
+@media (min-width:980px){.mk-ad{grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);grid-template-areas:"gal side" "info side";align-items:start;column-gap:32px}}
+.mk-gal{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:26px;scrollbar-width:none}
+.mk-gal::-webkit-scrollbar{display:none}
+.mk-gal img{flex:0 0 100%;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;scroll-snap-align:center;border-radius:26px;background:#0a1c52}
+.mk-dots{display:flex;justify-content:center;gap:6px;margin-top:10px;color:var(--h2-mute);font:700 .8rem var(--h2-body)}
+.mk-side{display:flex;flex-direction:column;gap:16px}
+@media (min-width:980px){.mk-side{position:sticky;top:90px;grid-row:1 / span 2}}
+.mk-ad h1{margin:0;font:800 clamp(1.7rem,4.2vw,2.6rem)/1.05 var(--h2-display);letter-spacing:-.03em;text-transform:none}
+.mk-ad .of-price b{font-size:2.4rem}
+.mk-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0}
+.mk-facts div{padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent)}
+.mk-facts dt{color:var(--h2-mute);font:700 .74rem var(--h2-body);text-transform:uppercase;letter-spacing:.08em}
+.mk-facts dd{margin:4px 0 0;color:var(--h2-bone);font:700 .98rem var(--h2-body)}
+.mk-cta{display:flex;flex-direction:column;gap:10px}
+.mk-cta .of-go{height:52px;font-size:1.02rem;border:0;cursor:pointer}
+.mk-cta .mk-alt{background:transparent;color:var(--h2-bone);box-shadow:inset 0 0 0 1px var(--h2-line)}
+.mk-seller{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;box-shadow:inset 0 0 0 1px var(--h2-line);text-decoration:none;color:inherit}
+.mk-seller .mk-ava{width:44px;height:44px;font-size:1.1rem}
+.mk-seller b{display:block;color:var(--h2-bone);font:800 1rem var(--h2-body)}
+.mk-seller small{color:var(--h2-mute);font:600 .82rem var(--h2-body)}
+.mk-lists{display:grid;gap:14px}
+@media (min-width:640px){.mk-lists{grid-template-columns:1fr 1fr}}
+.mk-list{padding:18px 20px;border-radius:20px;background:color-mix(in srgb,var(--h2-bone) 5%,transparent)}
+.mk-list h2{margin:0 0 10px;font:800 1.05rem var(--h2-display)}
+.mk-list ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.mk-list li{display:grid;grid-template-columns:18px 1fr;gap:8px;color:var(--h2-bone);font:500 .95rem/1.4 var(--h2-body)}
+.mk-list li::before{content:'';width:16px;height:16px;margin-top:2px;border-radius:50%;background:var(--ok) center/10px no-repeat}
+.mk-in{--ok:color-mix(in srgb,var(--crl-confirm,#35e0a1) 70%,transparent)}
+.mk-out{--ok:color-mix(in srgb,var(--h2-live) 60%,transparent)}
+.mk-in li::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306143f' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E")}
+.mk-out li::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M6 12h12'/%3E%3C/svg%3E")}
+.mk-desc{color:var(--h2-bone);font:500 1rem/1.65 var(--h2-body);white-space:pre-line;max-width:70ch}
+.mk-state{display:inline-flex;align-self:flex-start;padding:6px 12px;border-radius:10px;font:800 .85rem var(--h2-body);text-transform:uppercase;letter-spacing:.04em}
+.mk-state.vendido{background:var(--h2-live);color:#fff}.mk-state.reservado{background:var(--h2-mag);color:var(--h2-ink)}
+.mk-ava{flex:none;display:grid;place-items:center;border-radius:50%;overflow:hidden;background:color-mix(in srgb,var(--c) 30%,transparent);color:var(--c);font-weight:800}
+.mk-ava img{width:100%;height:100%;object-fit:cover}
+.mk-badge{flex:none;padding:3px 8px;border-radius:8px;background:color-mix(in srgb,var(--h2-cyan) 18%,transparent);color:var(--h2-cyan);font:800 .7rem var(--h2-body)}

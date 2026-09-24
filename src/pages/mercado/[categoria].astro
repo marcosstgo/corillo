@@ -1,0 +1,55 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import MercadoCard from '../../components/MercadoCard.astro';
+import MercadoNota from '../../components/MercadoNota.astro';
+import EquipoCard from '../../components/EquipoCard.astro';
+import { CATEGORIAS, categoria, categoriaDeKind } from '../../data/categorias';
+import { ITEMS } from '../../data/equipo';
+import { loadMercado, categoriasConAnuncios, hoyHay } from '../../data/mercado';
+
+export function getStaticPaths() { return CATEGORIAS.map(c => ({ params: { categoria: c.slug } })); }
+
+const cat = categoria(Astro.params.categoria as string)!;
+const R = await loadMercado();
+const lista = R.anuncios.filter(a => a.categoria === cat.slug);
+const n = R.por_categoria[cat.slug] ?? 0;
+const nuevos = ITEMS.filter(it => categoriaDeKind(it.kind)?.slug === cat.slug);
+const cats = categoriasConAnuncios(R);
+const desc = `${hoyHay(n)} en la categoría ${cat.es.toLowerCase()}. Compra y vende directo con gente de la comunidad de CORILLO, sin comisiones.`;
+---
+<SiteShell title={`${cat.es} usados en Puerto Rico — Mercado de CORILLO`} description={desc} canonical={`https://corillo.live/mercado/${cat.slug}/`}>
+  <fragment slot="head">
+    {!lista.length && <meta name="robots" content="noindex" />}
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=3" />
+  </fragment>
+
+  <main class="of">
+    <nav class="of-crumb" aria-label="Ruta"><a href="/mercado/">Mercado</a> / {cat.es}</nav>
+    <header class="of-hd" style="margin-top:14px">
+      <h1 style="font-size:clamp(2.6rem,7vw,5.4rem)">{cat.es}</h1>
+      <p>{n ? `${n} ${n === 1 ? 'anuncio disponible' : 'anuncios disponibles'} de gente de la comunidad.` : 'Ahora mismo no hay anuncios en esta categoría.'} <a class="mk-sell" href="/mercado/vender/">Vender algo</a></p>
+    </header>
+
+    <nav class="of-chips mk-cats" aria-label="Categorías">
+      <a class="of-chip" href="/mercado/" aria-pressed="false">Todo</a>
+      {cats.map(c => <a class="of-chip" href={`/mercado/${c.slug}/`} aria-pressed={String(c.slug === cat.slug)} aria-current={c.slug === cat.slug ? 'page' : undefined}>{c.es}{c.n > 0 && <span class="mk-n">{c.n}</span>}</a>)}
+    </nav>
+
+    {lista.length
+      ? <div class="of-grid" style="margin-top:28px">{lista.map(a => <MercadoCard a={a} />)}</div>
+      : <div class="of-empty" style="margin-top:28px">No hay {cat.es.toLowerCase()} a la venta ahora mismo. Vuelve pronto o <a href="/mercado/" style="color:var(--h2-bone)">mira todo el Mercado</a>.</div>}
+
+    {nuevos.length > 0 && (
+      <section class="of-sec">
+        <h2>¿Lo prefieres nuevo?</h2>
+        <p>Lo que recomendamos de esta categoría en nuestras <a href="/equipo/" style="color:var(--h2-bone)">guías de equipo</a>.</p>
+        <div class="of-grid">{nuevos.map(it => <EquipoCard it={it} />)}</div>
+        <p class="of-meta" style="margin-top:14px">Como Asociado de Amazon, CORILLO gana una comisión por las compras que califiquen, sin costo extra para ti.</p>
+      </section>
+    )}
+
+    <MercadoNota />
+  </main>
+</SiteShell>
+
