@@ -234,11 +234,27 @@ def turnstile_falso(monkeypatch):
     return lambda accion: f"ok-{accion}-{next(n)}"
 
 
+@pytest.fixture
+def buzon(monkeypatch):
+    """Sustituye a Mailgun: guarda cada correo que la API intentaría enviar."""
+    import mercado
+    enviados = []
+
+    async def enviar(http, para, asunto, texto, html_="", responder_a="", nombre_remitente=""):
+        enviados.append({"para": para, "asunto": asunto, "texto": texto, "html": html_,
+                         "reply_to": responder_a, "de": nombre_remitente})
+        return True
+    monkeypatch.setenv("MAILGUN_API_KEY", "key-prueba")
+    monkeypatch.setenv("MAILGUN_WEBHOOK_SIGNING_KEY", "firma-prueba")
+    monkeypatch.setattr(mercado.correo, "enviar", enviar)
+    return enviados
+
+
 def _msg(tok, **kw):
     return {"nombre": "Comprador", "email": "Comprador@Ejemplo.com", "mensaje": "¿Todavía lo tienes? Me interesa.", "token": tok} | kw
 
 
-def test_contacto_exige_turnstile_y_guarda_registro(c, turnstile_falso):
+def test_contacto_exige_turnstile_y_guarda_registro(c, turnstile_falso, buzon):
     import mercado
     u = cuenta()
     aid = crear(c, u).json()["id"]
@@ -257,7 +273,7 @@ def test_contacto_exige_turnstile_y_guarda_registro(c, turnstile_falso):
     assert reg[0]["vendedor"] == u["id"] and reg[0]["anuncio_titulo"]
 
 
-def test_contacto_honeypot_y_limites(c, turnstile_falso):
+def test_contacto_honeypot_y_limites(c, turnstile_falso, buzon):
     u = cuenta()
     aid = crear(c, u).json()["id"]
     ip = {"x-ip-prueba": "10.1." + uuid.uuid4().hex[:4]}
@@ -275,7 +291,7 @@ def test_contacto_honeypot_y_limites(c, turnstile_falso):
     assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto"), email="no-es-correo")).status_code == 422
 
 
-def test_contacto_bloqueado_y_vendido(c, turnstile_falso):
+def test_contacto_bloqueado_y_vendido(c, turnstile_falso, buzon):
     u = cuenta()
     aid = crear(c, u).json()["id"]
     httpx.post(f"{PB}/api/collections/mercado_bloqueos/records", headers={"Authorization": _su()},
@@ -314,3 +330,74 @@ def test_tres_reportes_ocultan_el_anuncio(c, turnstile_falso):
     assert c.get("/mercado/anuncios", params={"q": unico}).json()["total"] == 0   # oculto
     priv = c.get(f"/mercado/anuncios/{aid}", headers=u["h"]).json()
     assert priv["moderacion"] == "oculto" and priv["reportes"] == 3 and "3 reportes" in priv["motivo_oculto"]
+
+
+
+def _firmado(**campos):
+    import hashlib, hmac, time
+    ts, tok = str(int(time.time())), uuid.uuid4().hex
+    sig = hmac.new(b"firma-prueba", (ts + tok).encode(), hashlib.sha256).hexdigest()
+    return {"timestamp": ts, "token": tok, "signature": sig} | campos
+
+
+def test_reenvio_ciego_en_ambos_sentidos(c, turnstile_falso, buzon):
+    import mercado
+    u = cuenta()
+    aid = crear(c, u).json()["id"]
+    buzon.clear()
+    r = c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto"), nombre="Pedro\r\nBcc: x@y.com"),
+               headers={"x-ip-prueba": "10.9." + uuid.uuid4().hex[:4]})
+    assert r.status_code == 200, r.text
+    al_vendedor = buzon[-1]
+    assert al_vendedor["para"] == f"{u['key']}@x.test"
+    assert "comprador@ejemplo.com" not in json.dumps(al_vendedor).lower()          # el vendedor no ve el correo del comprador
+    assert "\n" not in al_vendedor["de"] and "Bcc" in al_vendedor["de"] and ":" not in al_vendedor["de"]
+    hilo, lado = mercado.correo.leer_alias(al_vendedor["reply_to"])
+    assert lado == "c"
+    # el vendedor contesta → le llega al comprador, sin el correo del vendedor
+    r = c.post("/mercado/correo-entrante", data=_firmado(recipient=al_vendedor["reply_to"], sender=f"{u['key']}@x.test",
+               **{"stripped-text": "Sí, todavía lo tengo."}))
+    assert r.json()["ok"] is True
+    al_comprador = buzon[-1]
+    assert al_comprador["para"] == "comprador@ejemplo.com" and "Sí, todavía lo tengo." in al_comprador["texto"]
+    assert f"{u['key']}@x.test" not in json.dumps(al_comprador)
+    assert mercado.correo.leer_alias(al_comprador["reply_to"]) == (hilo, "v")
+    # el comprador contesta → le llega al vendedor
+    r = c.post("/mercado/correo-entrante", data=_firmado(recipient=al_comprador["reply_to"], sender="Comprador@Ejemplo.com",
+               **{"stripped-text": "¿Aceptas $350?"}))
+    assert r.json()["ok"] is True and buzon[-1]["para"] == f"{u['key']}@x.test"
+    # un tercero no puede usar el alias
+    n = len(buzon)
+    r = c.post("/mercado/correo-entrante", data=_firmado(recipient=al_comprador["reply_to"], sender="intruso@ejemplo.com",
+               **{"stripped-text": "spam"}))
+    assert r.json()["ok"] is False and len(buzon) == n
+
+
+def test_correo_entrante_exige_firma_valida(c, buzon):
+    base = {"recipient": "r+" + "a" * 24 + ".c@mg.corillo.live", "sender": "x@ejemplo.com", "stripped-text": "hola"}
+    assert c.post("/mercado/correo-entrante", data=base).status_code == 406
+    malo = _firmado(**base) | {"signature": "0" * 64}
+    assert c.post("/mercado/correo-entrante", data=malo).status_code == 406
+    bueno = _firmado(**base)
+    assert c.post("/mercado/correo-entrante", data=bueno).status_code == 200
+    assert c.post("/mercado/correo-entrante", data=bueno).status_code == 406        # replay de la misma firma
+
+
+def test_sin_mailgun_el_contacto_no_finge(c, turnstile_falso, monkeypatch):
+    monkeypatch.delenv("MAILGUN_API_KEY", raising=False)
+    u = cuenta()
+    aid = crear(c, u).json()["id"]
+    assert c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto"))).status_code == 503
+
+
+def test_aviso_de_anuncio_nuevo(c, buzon):
+    import time
+    u = cuenta()
+    a = crear(c, u, titulo="Aviso de prueba " + uuid.uuid4().hex[:6]).json()
+    for _ in range(20):
+        if any(a["titulo"] in m["asunto"] for m in buzon):
+            break
+        time.sleep(0.05)
+        c.get("/health")
+    aviso = [m for m in buzon if a["titulo"] in m["asunto"]]
+    assert aviso and aviso[0]["para"] == "hello@marcossantiago.com" and f"/mercado/a/{a['id']}/" in aviso[0]["texto"]

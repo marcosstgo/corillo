@@ -8,7 +8,7 @@ valida, aplica límites, procesa las fotos (WebP sin EXIF) y nunca devuelve dato
 
 La lógica de filtros, orden y validación son funciones puras (sin red) para poder probarlas.
 """
-import io, json, math, os, re, time, unicodedata
+import asyncio, io, json, math, os, re, secrets, time, unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Awaitable, Callable, Literal, Optional
@@ -17,11 +17,14 @@ import httpx
 from fastapi import APIRouter, File, Form, Header, HTTPException, Request, UploadFile
 from pydantic import BaseModel, EmailStr, Field, ValidationError, field_validator
 
+import correo
 import turnstile
 
 PB_URL = os.environ.get("PB_URL", "https://pb.corillo.live")
 REPO = Path(os.environ.get("CORILLO_REPO", "/var/www/stream"))
 ADMINS = {k.strip() for k in os.environ.get("MERCADO_ADMINS", "").split(",") if k.strip()}
+AVISO_EMAIL = os.environ.get("MERCADO_AVISO_EMAIL", "hello@marcossantiago.com")   # aviso de cada anuncio nuevo
+SITIO = os.environ.get("CORILLO_SITIO", "https://corillo.live")
 
 MAX_ACTIVOS = int(os.environ.get("MERCADO_MAX_ACTIVOS", "15"))   # anuncios no vendidos por vendedor
 MAX_CREA_HORA = int(os.environ.get("MERCADO_MAX_CREA_HORA", "5"))
@@ -563,7 +566,23 @@ async def crear(datos: str = Form(...), fotos: list[UploadFile] = File(default=[
     if r.status_code != 200:
         raise HTTPException(502, "No se pudo guardar el anuncio")
     _invalidar()
-    return serializar(r.json(), privado=True)
+    nuevo = serializar(r.json(), privado=True)
+    asyncio.create_task(_avisar_anuncio_nuevo(nuevo))
+    return nuevo
+
+
+async def _avisar_anuncio_nuevo(a: dict):
+    """Correo a Marcos por cada anuncio nuevo (decisión 2026-09-24, mientras la comunidad es pequeña)."""
+    try:
+        url = f"{SITIO}/mercado/a/{a['id']}/"
+        v = a["vendedor"]
+        texto = (f"Anuncio nuevo en el Mercado:\n\n{a['titulo']}\n${a['precio']:,.2f}"
+                 f"{' (negociable)' if a['negociable'] else ''} · {MUNICIPIOS.get(a['pueblo'], {}).get('nombre', a['pueblo'])}\n"
+                 f"Vendedor: {v['nombre']} (@{v['key']}){' · streamer' if v['streamer'] else ''}\n\n{url}\n"
+                 f"(La página tarda cerca de un minuto en existir mientras se recompila el sitio.)")
+        await correo.enviar(_get_http(), AVISO_EMAIL, f"Mercado: {a['titulo'][:70]}", texto)
+    except Exception:
+        pass
 
 
 @router.patch("/anuncios/{aid}")
@@ -714,6 +733,8 @@ async def contactar(aid: str, request: Request):
     a = await _publico_o_404(aid)
     if a["estado"] == "vendido":
         raise HTTPException(409, "Este artículo ya se vendió.")
+    if not correo.configurado():
+        raise HTTPException(503, "El contacto todavía no está disponible. Intenta más tarde.")
     email = body.email.lower()
     if await _bloqueado("ip", ip) or await _bloqueado("email", email):
         raise HTTPException(403, "No puedes enviar mensajes en el Mercado.")
@@ -721,14 +742,83 @@ async def contactar(aid: str, request: Request):
         raise HTTPException(429, "Enviaste varios mensajes seguidos. Espera un rato e intenta de nuevo.")
     if await _contar("mercado_mensajes", f'ip="{_esc(ip)}" && anuncio="{aid}" && created>="{_ts(timedelta(days=1))}"') >= MAX_MSG_IP_ANUNCIO_DIA:
         raise HTTPException(429, "Ya le escribiste a este vendedor. Dale tiempo para contestar.")
+    hilo = secrets.token_hex(12)
+    nombre = _nombre_limpio(body.nombre)
     r = await _pb("POST", f"{COL}/mercado_mensajes/records", json={
         "anuncio": aid, "anuncio_titulo": a["titulo"], "vendedor": a["vendedor"],
-        "nombre": body.nombre.strip(), "email": email, "mensaje": body.mensaje.strip(),
-        "ip": ip, "enviado": False})
+        "nombre": nombre, "email": email, "mensaje": body.mensaje.strip(),
+        "ip": ip, "enviado": False, "hilo": hilo, "respuestas": 0})
     if r.status_code != 200:
         raise HTTPException(502, "No se pudo enviar el mensaje. Intenta otra vez.")
-    # PENDIENTE (fase 4): reenviar por correo (Mailgun) al vendedor y marcar enviado=true.
+    vend = (a.get("expand") or {}).get("vendedor") or {}
+    url = f"{SITIO}/mercado/a/{aid}/"
+    pie = ("Este mensaje te llegó a través del Mercado de CORILLO. Contesta a este correo y tu respuesta le "
+           "llegará a la persona sin que vea tu dirección (ni tú la suya). CORILLO no participa en la venta: "
+           "encuéntrense de día en un lugar público y no envíen dinero por adelantado.")
+    parrafos = [f"{nombre} te escribió por tu anuncio \"{a['titulo']}\":", body.mensaje.strip(), url]
+    enviado = await correo.enviar(
+        _get_http(), vend.get("email", ""), f"Mercado: {nombre} pregunta por \"{a['titulo'][:60]}\"",
+        "\n\n".join(parrafos) + "\n\n—\n" + pie, correo.html_simple(parrafos, pie),
+        responder_a=correo.alias(hilo, "c"), nombre_remitente=nombre)
+    if not enviado:
+        raise HTTPException(502, "No se pudo enviar el mensaje. Intenta otra vez en unos minutos.")
+    await _pb("PATCH", f"{COL}/mercado_mensajes/records/{r.json()['id']}", json={"enviado": True})
     return ok
+
+
+def _nombre_limpio(n: str) -> str:
+    """Va en el 'From' del correo: sin saltos de línea ni caracteres de cabecera."""
+    return re.sub(r'[\r\n<>"@,;:\\]+', " ", n).strip()[:60] or "Alguien"
+
+
+MAX_RESPUESTAS_HILO = 60
+
+
+@router.post("/correo-entrante")
+async def correo_entrante(request: Request):
+    """Mailgun (Route r+*@mg.corillo.live → forward) manda aquí cada respuesta.
+    Siempre contesta 200 salvo firma inválida, para que Mailgun no reintente correos descartados."""
+    form = await request.form()
+    if not correo.firma_valida(str(form.get("timestamp", "")), str(form.get("token", "")), str(form.get("signature", ""))):
+        raise HTTPException(406, "firma inválida")
+    destino = correo.leer_alias(str(form.get("recipient", "")))
+    if not destino:
+        return {"ok": False, "motivo": "alias"}
+    hilo, lado = destino
+    r = await _pb("GET", f"{COL}/mercado_mensajes/records", params={
+        "filter": f'hilo="{hilo}"', "perPage": 1, "expand": "vendedor"})
+    items = r.json().get("items", []) if r.status_code == 200 else []
+    if not items:
+        return {"ok": False, "motivo": "hilo"}
+    m = items[0]
+    vend = (m.get("expand") or {}).get("vendedor") or {}
+    comprador, vendedor_email = m["email"].lower(), (vend.get("email") or "").lower()
+    remitente = _direccion(str(form.get("sender", ""))) or _direccion(str(form.get("from", "")))
+    # Solo la otra parte del hilo puede usar cada alias.
+    esperado = vendedor_email if lado == "c" else comprador
+    if not remitente or remitente != esperado:
+        return {"ok": False, "motivo": "remitente"}
+    if (m.get("respuestas") or 0) >= MAX_RESPUESTAS_HILO or await _bloqueado("email", remitente):
+        return {"ok": False, "motivo": "limite"}
+    texto = str(form.get("stripped-text") or form.get("body-plain") or "").strip()[:5000]
+    if not texto:
+        return {"ok": False, "motivo": "vacio"}
+    para, responder, nombre = ((comprador, correo.alias(hilo, "v"), vend.get("display_name") or "El vendedor")
+                               if lado == "c" else (vendedor_email, correo.alias(hilo, "c"), m["nombre"]))
+    titulo = m.get("anuncio_titulo", "")
+    pie = "Respuesta reenviada por el Mercado de CORILLO. Contesta a este correo para seguir la conversación; ninguno ve el correo del otro."
+    ok = await correo.enviar(_get_http(), para, f"Re: Mercado: \"{titulo[:60]}\"", texto + "\n\n—\n" + pie,
+                             correo.html_simple([texto], pie), responder_a=responder, nombre_remitente=_nombre_limpio(nombre))
+    if ok:
+        await _pb("PATCH", f"{COL}/mercado_mensajes/records/{m['id']}", json={
+            "respuestas": (m.get("respuestas") or 0) + 1,
+            "ultima_respuesta": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S.000Z")})
+    return {"ok": ok}
+
+
+def _direccion(v: str) -> str:
+    m = re.search(r"[\w.+'-]+@[\w-]+(?:\.[\w-]+)+", v or "")
+    return m.group(0).lower() if m else ""
 
 
 class TokenIn(BaseModel):
