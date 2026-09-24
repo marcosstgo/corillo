@@ -1,0 +1,42 @@
+name: CI
+
+# Solo verifica; NO despliega. El despliegue sigue siendo deploy.yml (push a main).
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build Astro (a un directorio temporal)
+        run: npx astro build --outDir "$RUNNER_TEMP/dist"
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: |
+            api/requirements.txt
+            tests/requirements.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: pip install -r api/requirements.txt -r tests/requirements.txt
+      - name: PocketBase desechable (fixtures + migraciones)
+        run: scripts/pb-test-server.sh 8099 | tee -a "$GITHUB_ENV"
+      - name: Pruebas de la API
+        run: pytest -q tests
+      - name: Pruebas de reglas de PocketBase (como navegador sin privilegios)
+        run: |
+          for f in tests/pb/*.mjs; do [ -e "$f" ] || continue; node "$f"; done
