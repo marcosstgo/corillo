@@ -1,0 +1,58 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import Lista from './Lista.astro';
+import Nota from './Nota.astro';
+import Cabecera from './Cabecera.astro';
+import I18nCliente from './I18nCliente.astro';
+import EquipoCard from '../EquipoCard.astro';
+import { categoria, categoriaDeKind } from '../../data/categorias';
+import { ITEMS } from '../../data/equipo';
+import { loadMercado, categoriasConAnuncios } from '../../data/mercado';
+import { traductor, ruta, alternos, type Lang } from '../../i18n';
+interface Props { lang: Lang; slug: string; }
+const { lang, slug } = Astro.props;
+const t = traductor(lang);
+const cat = categoria(slug)!;
+const nombre = cat[lang];
+const R = await loadMercado();
+const lista = R.anuncios.filter(a => a.categoria === cat.slug);
+const n = R.por_categoria[cat.slug] ?? 0;
+const nuevos = ITEMS.filter(it => categoriaDeKind(it.kind)?.slug === cat.slug);
+const cats = categoriasConAnuncios(R);
+const donde = t('mercado.en_pr');
+const hoy = n ? t('mercado.hoy_hay', { n, donde }) : t('mercado.hoy_hay_cero', { donde });
+const path = `/mercado/${cat.slug}/`;
+---
+<SiteShell lang={lang} alternates={alternos(path)} title={t('mercado.cat_titulo_seo', { cat: nombre })} description={t('mercado.cat_desc_seo', { hoy, cat: nombre.toLowerCase() })} canonical={`https://corillo.live${ruta(lang, path)}`} ogImage="/assets/og-mercado.png">
+  <fragment slot="head">
+    {!lista.length && <meta name="robots" content="noindex" />}
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=6" />
+  </fragment>
+  <main class="of">
+    <nav class="of-crumb" aria-label="Ruta"><a href={ruta(lang, '/mercado/')}>{t('mercado.nombre')}</a> / {nombre}</nav>
+    <header class="of-hd" style="margin-top:14px">
+      <h1 style="font-size:clamp(2.6rem,7vw,5.4rem)">{nombre}</h1>
+      <p>{n ? t('mercado.disponibles_cat', { n }) : t('mercado.vacio_cat')}</p>
+      <Cabecera lang={lang} path={path} />
+    </header>
+    <nav class="of-chips mk-cats" aria-label={t('mercado.categorias')}>
+      <a class="of-chip" href={ruta(lang, '/mercado/')} aria-pressed="false">{t('mercado.todo')}</a>
+      {cats.map(c => <a class="of-chip" href={ruta(lang, `/mercado/${c.slug}/`)} aria-pressed={String(c.slug === cat.slug)} aria-current={c.slug === cat.slug ? 'page' : undefined}>{c[lang]}{c.n > 0 && <span class="mk-n">{c.n}</span>}</a>)}
+    </nav>
+    <section class="of-sec" style="margin-top:22px">
+      <Lista lang={lang} anuncios={lista} categoria={cat.slug} vacio={t('mercado.vacio_cat_largo', { cat: nombre.toLowerCase() })} />
+    </section>
+    {nuevos.length > 0 && (
+      <section class="of-sec">
+        <h2>{t('mercado.prefieres_nuevo')}</h2>
+        <p>{t('mercado.prefieres_nuevo_txt')} <a href="/equipo/" style="color:var(--h2-bone)">/equipo/</a></p>
+        <div class="of-grid">{nuevos.map(it => <EquipoCard it={it} />)}</div>
+        <p class="of-meta" style="margin-top:14px">{t('mercado.afiliado')}</p>
+      </section>
+    )}
+    <Nota lang={lang} />
+  </main>
+  <I18nCliente lang={lang} />
+  <script is:inline>(function(){var c=document.querySelector('.mk-cats [aria-current="page"]');if(c)c.parentElement.scrollLeft=c.offsetLeft-16;})();</script>
+</SiteShell>

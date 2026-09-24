@@ -18,7 +18,7 @@
     tsListo(function () {
       if (widgets[accion] !== undefined) { window.turnstile.reset(widgets[accion]); return; }
       widgets[accion] = window.turnstile.render(el, {
-        sitekey: SITEKEY, action: accion, theme: 'dark', language: 'es',
+        sitekey: SITEKEY, action: accion, theme: 'dark', language: window.LANG || 'es',
         callback: function (tok) { if (alToken) alToken(tok); },
         'expired-callback': function () { window.turnstile.reset(widgets[accion]); },
       });
@@ -31,7 +31,7 @@
   function post(ruta, datos) {
     return fetch(API + ruta, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
-      .catch(function () { return { ok: false, j: { detail: 'Sin conexión. Intenta otra vez.' } }; });
+      .catch(function () { return { ok: false, j: { detail: t('comun.sin_conexion') } }; });
   }
   function aviso(el, texto, bien) { el.textContent = texto; el.hidden = !texto; el.dataset.ok = bien ? '1' : ''; }
   function abrir(dlg) { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); }
@@ -49,13 +49,13 @@
     e.preventDefault();
     var out = fC.querySelector('.mk-out'), btn = fC.querySelector('[type=submit]');
     var tok = token('contacto');
-    if (!tok) return aviso(out, 'Espera a que se complete la verificación de abajo y vuelve a intentar.');
+    if (!tok) return aviso(out, t('mercado.espera_verificacion'));
     btn.disabled = true; aviso(out, '');
     post('/contacto', { nombre: fC.nombre.value, email: fC.email.value, mensaje: fC.mensaje.value, website: fC.website.value, token: tok })
       .then(function (r) {
         btn.disabled = false; reset('contacto');
-        if (r.ok) { fC.reset(); aviso(out, r.j.mensaje || 'Mensaje enviado.', true); }
-        else aviso(out, typeof r.j.detail === 'string' ? r.j.detail : 'Revisa los datos e intenta otra vez.');
+        if (r.ok) { fC.reset(); aviso(out, r.j.mensaje || t('mercado.enviar_mensaje'), true); }
+        else aviso(out, typeof r.j.detail === 'string' ? r.j.detail : t('mercado.error_datos'));
       });
   });
 
@@ -69,9 +69,9 @@
       widget('whatsapp', dW.querySelector('.mk-ts'), function (tok) {
         post('/whatsapp', { token: tok }).then(function (r) {
           reset('whatsapp');
-          if (!r.ok) return aviso(out, r.j.detail || 'No se pudo mostrar el número.');
+          if (!r.ok) return aviso(out, r.j.detail || t('mercado.error_datos'));
           var n = r.j.whatsapp, bonito = '(' + n.slice(0, 3) + ') ' + n.slice(3, 6) + '-' + n.slice(6);
-          var texto = 'Hola, vi tu anuncio en el Mercado de CORILLO: ' + document.title.split(' — ')[0];
+          var texto = t('mercado.whatsapp_texto', { titulo: root.getAttribute('data-titulo') });
           res.querySelector('b').textContent = bonito;
           res.querySelector('a').href = 'https://wa.me/1' + n + '?text=' + encodeURIComponent(texto);
           res.hidden = false;
@@ -91,11 +91,11 @@
     e.preventDefault();
     var out = fR.querySelector('.mk-out'), btn = fR.querySelector('[type=submit]');
     var tok = token('reporte');
-    if (!tok) return aviso(out, 'Espera a que se complete la verificación y vuelve a intentar.');
+    if (!tok) return aviso(out, t('mercado.espera_verificacion'));
     btn.disabled = true;
     post('/reporte', { motivo: fR.motivo.value, detalle: fR.detalle.value, token: tok }).then(function (r) {
       btn.disabled = false; reset('reporte');
-      aviso(out, r.ok ? r.j.mensaje : (r.j.detail || 'No se pudo enviar el reporte.'), r.ok);
+      aviso(out, r.ok ? r.j.mensaje : (r.j.detail || t('mercado.error_datos')), r.ok);
       if (r.ok) fR.reset();
     });
   });

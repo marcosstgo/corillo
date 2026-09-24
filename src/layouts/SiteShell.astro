@@ -15,6 +15,10 @@ interface Props {
   pageClass?: string;
   /** Ruta o URL de la imagen para compartir (1200×630); por defecto la general del sitio. */
   ogImage?: string;
+  /** Idioma de la página (src/i18n). Por defecto español; las páginas en inglés viven bajo /en/. */
+  lang?: 'es' | 'en';
+  /** Versiones en otros idiomas, para <link rel="alternate" hreflang>. */
+  alternates?: { lang: string; href: string }[];
 }
 
 const {
@@ -26,6 +30,8 @@ const {
   ogDescription,
   pageClass = '',
   ogImage,
+  lang = 'es',
+  alternates = [],
 } = Astro.props;
 
 const resolvedOgTitle = ogTitle ?? title;
@@ -33,7 +39,7 @@ const resolvedOgDesc  = ogDescription ?? description;
 const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'https://corillo.live/assets/og-image.png';
 ---
 <!doctype html>
-<html lang="es" data-theme="dark">
+<html lang={lang} data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -47,7 +53,8 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
   <meta property="og:image" content={OG_IMAGE} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:locale" content="es_PR" />
+  <meta property="og:locale" content={lang === 'en' ? 'en_US' : 'es_PR'} />
+  {alternates.map(a => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
   <meta property="og:site_name" content="CORILLO" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content={canonical} />

@@ -1,0 +1,6 @@
+---
+import Categoria from '../../../components/mercado/Categoria.astro';
+import { CATEGORIAS } from '../../../data/categorias';
+export function getStaticPaths() { return CATEGORIAS.map(c => ({ params: { categoria: c.slug } })); }
+---
+<Categoria lang="en" slug={Astro.params.categoria as string} />

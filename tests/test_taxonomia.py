@@ -23,3 +23,19 @@ def test_slugs_validos_y_sin_repetir():
         assert re.fullmatch(r"[a-z0-9-]+", c["slug"]) and c["es"] and c["en"]
         subs = [s["slug"] for s in c["sub"]]
         assert len(subs) == len(set(subs)) and all(s["es"] and s["en"] for s in c["sub"])
+
+
+def test_diccionarios_es_en_tienen_las_mismas_claves():
+    def claves(d, p=""):
+        out = set()
+        for k, v in d.items():
+            out |= claves(v, p + k + ".") if isinstance(v, dict) else {p + k}
+        return out
+    es = json.loads((ROOT / "src/i18n/es.json").read_text())
+    en = json.loads((ROOT / "src/i18n/en.json").read_text())
+    assert claves(es) == claves(en), claves(es) ^ claves(en)
+
+
+def test_ninguna_categoria_choca_con_rutas_del_mercado():
+    fijas = set(re.search(r"RUTAS_FIJAS = \[([^\]]+)\]", (ROOT / "src/data/mercado.ts").read_text()).group(1).replace("'", "").replace(" ", "").split(","))
+    assert fijas and not fijas & {c["slug"] for c in CATS}

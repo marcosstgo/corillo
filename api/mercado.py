@@ -43,9 +43,14 @@ _get_http: Callable[[], httpx.AsyncClient] = lambda: None  # type: ignore
 _admin_token: Callable[[], Awaitable[str]] = None  # type: ignore
 
 
-def bind(get_http, admin_token):
-    global _get_http, _admin_token
+_olvidar_token: Callable[[], None] = lambda: None
+
+
+def bind(get_http, admin_token, olvidar_token=None):
+    global _get_http, _admin_token, _olvidar_token
     _get_http, _admin_token = get_http, admin_token
+    if olvidar_token:
+        _olvidar_token = olvidar_token
 
 
 # ── Datos compartidos con el frontend (una sola fuente) ─────────────────────
@@ -330,13 +335,43 @@ CACHE_TTL = 20
 _crea_log: dict[str, list[float]] = {}
 
 
+REBUILD_CMD = os.environ.get("MERCADO_REBUILD", str(REPO / "scripts" / "mercado-rebuild.sh"))
+REBUILD_ESPERA = 20      # segundos: agrupa varios cambios seguidos en un solo build
+_rebuild: dict = {"tarea": None}
+
+
 def _invalidar():
+    """Tras cualquier cambio: caché fuera y, en unos segundos, recompilar las páginas estáticas."""
     _cache_pub["data"] = None
+    if not REBUILD_CMD:
+        return
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        return
+    if _rebuild["tarea"] is None or _rebuild["tarea"].done():
+        _rebuild["tarea"] = loop.create_task(_recompilar())
+
+
+async def _recompilar():
+    await asyncio.sleep(REBUILD_ESPERA)
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            "bash", REBUILD_CMD, stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL,
+            start_new_session=True)   # si la API se reinicia a mitad, el build termina igual
+        await proc.wait()
+    except Exception:
+        pass
 
 
 async def _pb(method: str, url: str, **kw) -> httpx.Response:
     token = await _admin_token()
-    return await _get_http().request(method, url, headers={"Authorization": token}, **kw)
+    r = await _get_http().request(method, url, headers={"Authorization": token}, **kw)
+    if r.status_code in (401, 403):     # token de superusuario vencido o revocado (PB lo trata como invitado): uno nuevo y reintento
+        _olvidar_token()
+        token = await _admin_token()
+        r = await _get_http().request(method, url, headers={"Authorization": token}, **kw)
+    return r
 
 
 async def _vendedor(auth: Optional[str]) -> dict:
@@ -867,3 +902,68 @@ async def reportar(aid: str, body: ReporteIn, request: Request):
     await _pb("PATCH", f"{COL}/mercado_anuncios/records/{aid}", json=cambios)
     _invalidar()
     return {"ok": True, "mensaje": "Gracias. Vamos a revisar el anuncio."}
+
+
+# ── Moderación (solo MERCADO_ADMINS) ─────────────────────────────────────────
+async def _admin(auth: Optional[str]) -> dict:
+    yo = await _vendedor(auth)
+    if not _es_admin(yo):
+        raise HTTPException(403, "Solo para admins del Mercado")
+    return yo
+
+
+@router.get("/yo")
+async def yo(authorization: Optional[str] = Header(None)):
+    v = await _vendedor(authorization)
+    return {"key": v.get("key"), "nombre": v.get("display_name") or v.get("key"), "admin": _es_admin(v),
+            "streamer": bool(v.get("first_live_at"))}
+
+
+@router.get("/moderacion")
+async def cola_moderacion(authorization: Optional[str] = Header(None)):
+    await _admin(authorization)
+    r = await _pb("GET", f"{COL}/mercado_anuncios/records", params={
+        "filter": 'moderacion="oculto" || reportes>0', "expand": "vendedor", "perPage": 200, "sort": "-reportes,-updated"})
+    pendientes = [serializar(a, privado=True) for a in r.json().get("items", [])]
+    ids = [a["id"] for a in pendientes]
+    reportes: dict[str, list] = {}
+    if ids:
+        filtro = "resuelto=false && (" + " || ".join(f'anuncio="{i}"' for i in ids[:100]) + ")"
+        rr = await _pb("GET", f"{COL}/mercado_reportes/records", params={"filter": filtro, "perPage": 500, "sort": "-created"})
+        for rep in rr.json().get("items", []):
+            reportes.setdefault(rep["anuncio"], []).append({"motivo": rep["motivo"], "detalle": rep.get("detalle", ""), "created": rep["created"]})
+    for a in pendientes:
+        a["lista_reportes"] = reportes.get(a["id"], [])
+    rec = await _pb("GET", f"{COL}/mercado_anuncios/records", params={"expand": "vendedor", "perPage": 30, "sort": "-created"})
+    return {"pendientes": pendientes, "recientes": [serializar(a, privado=True) for a in rec.json().get("items", [])]}
+
+
+class ModeracionIn(BaseModel):
+    accion: Literal["aprobar", "ocultar", "banear"]
+    motivo: str = Field("", max_length=300)
+
+
+@router.post("/moderacion/{aid}")
+async def moderar(aid: str, body: ModeracionIn, authorization: Optional[str] = Header(None)):
+    yo = await _admin(authorization)
+    a = await _obtener(aid)
+    if body.accion == "aprobar":
+        await _pb("PATCH", f"{COL}/mercado_anuncios/records/{aid}", json={"moderacion": "visible", "motivo_oculto": "", "reportes": 0})
+        rr = await _pb("GET", f"{COL}/mercado_reportes/records", params={"filter": f'anuncio="{aid}" && resuelto=false', "perPage": 500, "fields": "id"})
+        for rep in rr.json().get("items", []):
+            await _pb("PATCH", f"{COL}/mercado_reportes/records/{rep['id']}", json={"resuelto": True})
+    elif body.accion == "ocultar":
+        await _pb("PATCH", f"{COL}/mercado_anuncios/records/{aid}", json={
+            "moderacion": "oculto", "motivo_oculto": body.motivo or f"Oculto por @{yo.get('key')}"})
+    else:  # banear al vendedor: no puede publicar y todos sus anuncios se ocultan
+        vid = a["vendedor"]
+        if vid == yo["id"]:
+            raise HTTPException(422, "No te puedes banear a ti mismo")
+        await _pb("POST", f"{COL}/mercado_bloqueos/records", json={
+            "tipo": "vendedor", "valor": vid, "motivo": body.motivo or f"Baneado por @{yo.get('key')} (anuncio {aid})"})
+        rr = await _pb("GET", f"{COL}/mercado_anuncios/records", params={"filter": f'vendedor="{vid}"', "perPage": 500, "fields": "id"})
+        for x in rr.json().get("items", []):
+            await _pb("PATCH", f"{COL}/mercado_anuncios/records/{x['id']}", json={
+                "moderacion": "oculto", "motivo_oculto": "Vendedor baneado del Mercado"})
+    _invalidar()
+    return serializar(await _obtener(aid), privado=True)

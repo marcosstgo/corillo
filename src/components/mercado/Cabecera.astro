@@ -1,0 +1,13 @@
+---
+// Barra común del Mercado: selector de idioma + accesos (vender, mis anuncios).
+import { traductor, ruta, type Lang } from '../../i18n';
+interface Props { lang: Lang; path: string; }   // path SIN prefijo de idioma, p. ej. '/mercado/pc/'
+const { lang, path } = Astro.props;
+const t = traductor(lang);
+const otro: Lang = lang === 'es' ? 'en' : 'es';
+---
+<div class="mk-bar">
+  <a class="mk-sell" href={ruta(lang, '/mercado/vender/')}>{t('mercado.vender')}</a>
+  <a class="mk-link" href={ruta(lang, '/mercado/mis-anuncios/')}>{t('mercado.mis_anuncios')}</a>
+  <a class="mk-lang" href={ruta(otro, path)} hreflang={otro} lang={otro} aria-label={`${t('comun.idioma')}: ${t('comun.cambiar_a')}`}>{otro.toUpperCase()}</a>
+</div>

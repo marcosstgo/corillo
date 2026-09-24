@@ -1,0 +1,27 @@
+---
+import { nombrePueblo, precio, type Anuncio } from '../../data/mercado';
+import { traductor, ruta, type Lang } from '../../i18n';
+interface Props { a: Anuncio; lang?: Lang; }
+const { a, lang = 'es' } = Astro.props;
+const t = traductor(lang);
+const href = ruta(lang, `/mercado/a/${a.id}/`);
+const vendido = a.estado === 'vendido';
+---
+<article class="of-card mk-card" data-estado={a.estado}>
+  <a class="of-pic mk-pic" href={href} aria-label={a.titulo}>
+    {a.fotos[0] && <img src={a.fotos[0]} alt="" width="400" height="300" loading="lazy" decoding="async" />}
+    <span class="of-flag" style="--tc:var(--h2-bone)">{t(`mercado.condicion.${a.condicion}`)}</span>
+    {vendido && <span class="mk-sold">{t('mercado.vendido_marca')}</span>}
+    {a.estado === 'reservado' && <span class="mk-res">{t('mercado.reservado_marca')}</span>}
+  </a>
+  <div class="of-body">
+    <h3><a href={href}>{a.titulo}</a></h3>
+    <div class="of-price"><b>{precio(a.precio, t('mercado.gratis'))}</b>{a.negociable && !vendido && <em>{t('mercado.negociable')}</em>}</div>
+    <div class="of-meta mk-meta"><span>{nombrePueblo(a.pueblo)}</span><span>{t(`mercado.entrega_op.${a.entrega}`)}</span></div>
+    <div class="mk-who">
+      <span class="mk-ava" style={`--c:${a.vendedor.color || 'var(--h2-cyan)'}`}>{a.vendedor.avatar ? <img src={a.vendedor.avatar} alt="" width="24" height="24" loading="lazy" /> : a.vendedor.nombre.slice(0, 1)}</span>
+      <span class="mk-name">{a.vendedor.nombre}</span>
+      {a.vendedor.streamer && <span class="mk-badge" title={t('mercado.streamer_badge_t')}>{t('mercado.streamer_badge')}</span>}
+    </div>
+  </div>
+</article>

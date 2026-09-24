@@ -1,0 +1,121 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import Nota from './Nota.astro';
+import I18nCliente from './I18nCliente.astro';
+import { categoria } from '../../data/categorias';
+import { TURNSTILE_SITE_KEY } from '../../data/site';
+import { nombrePueblo, precio, type Anuncio } from '../../data/mercado';
+import { traductor, ruta, alternos, type Lang } from '../../i18n';
+interface Props { lang: Lang; a: Anuncio; }
+const { lang, a } = Astro.props;
+const t = traductor(lang);
+const cat = categoria(a.categoria);
+const sub = cat?.sub.find(s => s.slug === a.subcategoria);
+const pueblo = nombrePueblo(a.pueblo);
+const vendido = a.estado === 'vendido';
+const $ = precio(a.precio, t('mercado.gratis'));
+const path = `/mercado/a/${a.id}/`;
+const desc = `${$}${a.negociable ? ` (${t('mercado.negociable').toLowerCase()})` : ''} · ${t(`mercado.condicion.${a.condicion}`)} · ${pueblo}. ${a.descripcion || (a.incluye.length ? t('mercado.incluye') + ': ' + a.incluye.join(', ') + '.' : '')}`.slice(0, 200);
+const ld = {
+  '@context': 'https://schema.org', '@type': 'Product', name: a.titulo, image: a.fotos, description: a.descripcion || undefined,
+  brand: a.marca ? { '@type': 'Brand', name: a.marca } : undefined, model: a.modelo || undefined,
+  offers: { '@type': 'Offer', price: a.precio, priceCurrency: 'USD', url: `https://corillo.live${path}`,
+    itemCondition: a.condicion === 'nuevo' ? 'https://schema.org/NewCondition' : a.condicion === 'para-piezas' ? 'https://schema.org/DamagedCondition' : 'https://schema.org/UsedCondition',
+    availability: vendido ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock' },
+};
+---
+<SiteShell lang={lang} alternates={alternos(path)} title={`${a.titulo} — ${$} · ${pueblo} | ${t('mercado.nombre')} CORILLO`} description={desc} canonical={`https://corillo.live${ruta(lang, path)}`} ogImage={a.og || undefined} ogType="product">
+  <fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    {vendido && <meta name="robots" content="noindex" />}
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=6" />
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+  </fragment>
+
+  <main class="of" data-anuncio={a.id} data-turnstile={TURNSTILE_SITE_KEY} data-titulo={a.titulo}>
+    <nav class="of-crumb" aria-label="Ruta"><a href={ruta(lang, '/mercado/')}>{t('mercado.nombre')}</a>{cat && <> / <a href={ruta(lang, `/mercado/${cat.slug}/`)}>{cat[lang]}</a></>}{sub && <> / {sub[lang]}</>}</nav>
+
+    <div class="mk-ad">
+      <div class="mk-galw">
+        <div class="mk-gal" tabindex="0" aria-label={t('mercado.f_fotos')}>
+          {a.fotos.map((f, i) => <img src={f} alt={t('mercado.foto_de', { titulo: a.titulo, i: i + 1, n: a.fotos.length })} width="1200" height="900" loading={i ? 'lazy' : 'eager'} decoding="async" />)}
+        </div>
+        {a.fotos.length > 1 && <p class="mk-dots">{t('mercado.fotos_n', { n: a.fotos.length })}</p>}
+      </div>
+
+      <div class="mk-info">
+        <div class="mk-lists">
+          {a.incluye.length > 0 && <div class="mk-list mk-in"><h2>{t('mercado.incluye')}</h2><ul>{a.incluye.map(x => <li>{x}</li>)}</ul></div>}
+          {a.falta.length > 0 && <div class="mk-list mk-out"><h2>{t('mercado.falta')}</h2><ul>{a.falta.map(x => <li>{x}</li>)}</ul></div>}
+        </div>
+        {a.descripcion && <section class="of-sec" style="margin-top:28px"><h2>{t('mercado.descripcion')}</h2><p class="mk-desc">{a.descripcion}</p></section>}
+      </div>
+
+      <aside class="mk-side">
+        {a.estado !== 'disponible' && <span class={`mk-state ${a.estado}`}>{t(`mercado.estado.${a.estado}`)}</span>}
+        <h1>{a.titulo}</h1>
+        <div class="of-price"><b>{$}</b>{a.negociable && !vendido && <em>{t('mercado.negociable')}</em>}</div>
+        <dl class="mk-facts">
+          <div><dt>{t('mercado.estado_articulo')}</dt><dd>{t(`mercado.condicion.${a.condicion}`)}</dd></div>
+          <div><dt>{t('mercado.pueblo')}</dt><dd>{pueblo}</dd></div>
+          <div><dt>{t('mercado.entrega')}</dt><dd>{t(`mercado.entrega_op.${a.entrega}`)}</dd></div>
+          {(a.marca || a.modelo) && <div><dt>{t('mercado.marca_modelo')}</dt><dd>{[a.marca, a.modelo].filter(Boolean).join(' ')}</dd></div>}
+        </dl>
+        {!vendido && (
+          <div class="mk-cta">
+            <button class="of-go" type="button" data-contactar>{t('mercado.contactar')}</button>
+            {a.tiene_whatsapp && <button class="of-go mk-alt" type="button" data-wa>{t('mercado.ver_whatsapp')}</button>}
+          </div>
+        )}
+        <a class="mk-seller" href={a.vendedor.canal || undefined}>
+          <span class="mk-ava" style={`--c:${a.vendedor.color || 'var(--h2-cyan)'}`}>{a.vendedor.avatar ? <img src={a.vendedor.avatar} alt="" width="44" height="44" /> : a.vendedor.nombre.slice(0, 1)}</span>
+          <span><b>{a.vendedor.nombre}</b><small>{a.vendedor.streamer ? t('mercado.ver_canal') : t('mercado.miembro')}</small></span>
+          {a.vendedor.streamer && <span class="mk-badge" style="margin-left:auto">{t('mercado.streamer_badge')}</span>}
+        </a>
+        <button class="mk-report" type="button" data-reportar>{t('mercado.reportar')}</button>
+      </aside>
+    </div>
+
+    <Nota lang={lang} />
+
+    <dialog class="mk-dlg" id="mkContacto" aria-labelledby="mkContactoT">
+      <form method="dialog" novalidate>
+        <header><h2 id="mkContactoT">{t('mercado.contactar_a', { nombre: a.vendedor.nombre })}</h2><button type="button" class="mk-x" data-cerrar aria-label={t('comun.cerrar')}>&times;</button></header>
+        <p class="mk-safe"><strong>{t('mercado.aviso_antes')}</strong> {t('mercado.aviso_seguridad')}</p>
+        <label>{t('mercado.tu_nombre')}<input name="nombre" required minlength="2" maxlength="80" autocomplete="name" /></label>
+        <label>{t('mercado.tu_correo')}<input name="email" type="email" required maxlength="120" autocomplete="email" /><small>{t('mercado.tu_correo_ayuda')}</small></label>
+        <label>{t('mercado.mensaje')}<textarea name="mensaje" required minlength="10" maxlength="2000" rows="4">{t('mercado.mensaje_inicial', { titulo: a.titulo })}</textarea></label>
+        <div class="mk-hp" aria-hidden="true"><label>{t('mercado.honeypot')}<input name="website" tabindex="-1" autocomplete="off" /></label></div>
+        <div class="mk-ts"></div>
+        <p class="mk-out" role="status" hidden></p>
+        <button class="of-go" type="submit">{t('mercado.enviar_mensaje')}</button>
+      </form>
+    </dialog>
+
+    <dialog class="mk-dlg" id="mkWhatsapp" aria-labelledby="mkWhatsappT">
+      <form method="dialog">
+        <header><h2 id="mkWhatsappT">{t('mercado.whatsapp_titulo')}</h2><button type="button" class="mk-x" data-cerrar aria-label={t('comun.cerrar')}>&times;</button></header>
+        <p class="mk-safe">{t('mercado.aviso_corto')}</p>
+        <div class="mk-ts"></div>
+        <p class="mk-wa" hidden><b></b><a class="of-go" target="_blank" rel="noopener">{t('mercado.abrir_whatsapp')}</a></p>
+        <p class="mk-out" role="status" hidden></p>
+      </form>
+    </dialog>
+
+    <dialog class="mk-dlg" id="mkReporte" aria-labelledby="mkReporteT">
+      <form method="dialog">
+        <header><h2 id="mkReporteT">{t('mercado.reporte_titulo')}</h2><button type="button" class="mk-x" data-cerrar aria-label={t('comun.cerrar')}>&times;</button></header>
+        <label>{t('mercado.reporte_que')}<select name="motivo" required>
+          {['estafa', 'prohibido', 'vendido', 'spam', 'ofensivo', 'otro'].map(m => <option value={m}>{t(`mercado.motivo.${m}`)}</option>)}
+        </select></label>
+        <label>{t('mercado.reporte_detalle')}<textarea name="detalle" maxlength="500" rows="3"></textarea></label>
+        <div class="mk-ts"></div>
+        <p class="mk-out" role="status" hidden></p>
+        <button class="of-go" type="submit">{t('mercado.enviar_reporte')}</button>
+      </form>
+    </dialog>
+  </main>
+  <I18nCliente lang={lang} />
+  <script is:inline src="/assets/mercado-anuncio.js?v=2" defer></script>
+</SiteShell>

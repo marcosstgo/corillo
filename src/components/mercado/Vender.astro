@@ -1,0 +1,84 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import Cabecera from './Cabecera.astro';
+import I18nCliente from './I18nCliente.astro';
+import { CATEGORIAS, MUNICIPIOS } from '../../data/categorias';
+import { traductor, ruta, alternos, type Lang } from '../../i18n';
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+const t = traductor(lang);
+const path = '/mercado/vender/';
+const cats = CATEGORIAS.map(c => ({ slug: c.slug, nombre: c[lang], sub: c.sub.map(s => ({ slug: s.slug, nombre: s[lang] })) }));
+---
+<SiteShell lang={lang} alternates={alternos(path)} title={`${t('mercado.vender_titulo')} — ${t('mercado.nombre')} CORILLO`} description={t('mercado.vender_lema')} canonical={`https://corillo.live${ruta(lang, path)}`}>
+  <fragment slot="head">
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=6" />
+  </fragment>
+  <main class="of mk-narrow" data-vender data-lang={lang}>
+    <nav class="of-crumb" aria-label="Ruta"><a href={ruta(lang, '/mercado/')}>{t('mercado.nombre')}</a> / <span data-crumb>{t('mercado.vender_titulo')}</span></nav>
+    <header class="of-hd" style="margin-top:14px">
+      <h1 style="font-size:clamp(2.4rem,7vw,4.6rem)" data-h1>{t('mercado.vender_titulo')}</h1>
+      <p>{t('mercado.vender_lema')}</p>
+      <Cabecera lang={lang} path={path} />
+    </header>
+
+    <section class="mk-panel" data-login hidden>
+      <h2>{t('mercado.login_titulo')}</h2>
+      <p>{t('mercado.login_txt')}</p>
+      <form class="mk-form" novalidate>
+        <label>{t('mercado.email')}<input name="email" type="email" required autocomplete="email" /></label>
+        <label>{t('mercado.password')}<input name="password" type="password" required autocomplete="current-password" /></label>
+        <p class="mk-out" role="status" hidden></p>
+        <button class="of-go" type="submit">{t('comun.entrar')}</button>
+        <p class="of-meta">{t('mercado.sin_cuenta')} <a href={`/join/?para=mercado&lang=${lang}`} style="color:var(--h2-bone)">{t('comun.crear_cuenta')}</a> · <a href="/perfil/reset/" style="color:var(--h2-bone)">{t('mercado.olvide')}</a></p>
+      </form>
+    </section>
+
+    <form class="mk-form mk-panel" data-form novalidate hidden>
+      <fieldset class="mk-fotos">
+        <legend>{t('mercado.f_fotos')}</legend>
+        <p class="of-meta">{t('mercado.f_fotos_ayuda')}</p>
+        <ol class="mk-thumbs" data-thumbs></ol>
+        <label class="mk-add"><input type="file" accept="image/*" multiple data-files /><span>{t('mercado.f_fotos_add')}</span></label>
+      </fieldset>
+      <label>{t('mercado.f_titulo')}<input name="titulo" required minlength="5" maxlength="90" placeholder={t('mercado.f_titulo_ph')} /></label>
+      <div class="mk-2">
+        <label>{t('mercado.f_categoria')}<select name="categoria" required><option value="">{t('mercado.f_elige')}</option>{cats.map(c => <option value={c.slug}>{c.nombre}</option>)}</select></label>
+        <label data-sub hidden>{t('mercado.f_subcategoria')}<select name="subcategoria"></select></label>
+      </div>
+      <div class="mk-2">
+        <label>{t('mercado.f_marca')}<input name="marca" maxlength="60" /></label>
+        <label>{t('mercado.f_modelo')}<input name="modelo" maxlength="80" /></label>
+      </div>
+      <fieldset class="mk-conds"><legend>{t('mercado.f_estado')}</legend>
+        {(['nuevo', 'como-nuevo', 'buen-estado', 'para-piezas'] as const).map(c => <label class="mk-chk"><input type="radio" name="condicion" value={c} required /><span>{t(`mercado.condicion.${c}`)}</span></label>)}
+      </fieldset>
+      <div class="mk-2">
+        <label>{t('mercado.f_precio')}<input name="precio" type="number" min="0" max="100000" step="1" inputmode="decimal" required /></label>
+        <label class="mk-check"><input name="negociable" type="checkbox" /> {t('mercado.f_negociable')}</label>
+      </div>
+      <label>{t('mercado.f_descripcion')}<textarea name="descripcion" maxlength="3000" rows="5" placeholder={t('mercado.f_descripcion_ph')}></textarea></label>
+      <div class="mk-2">
+        <label>{t('mercado.f_incluye')}<textarea name="incluye" rows="4"></textarea><small>{t('mercado.f_lista_ayuda')}</small></label>
+        <label>{t('mercado.f_falta')}<textarea name="falta" rows="4"></textarea><small>{t('mercado.f_lista_ayuda')}</small></label>
+      </div>
+      <div class="mk-2">
+        <label>{t('mercado.f_pueblo')}<select name="pueblo" required><option value="">{t('mercado.f_elige')}</option>{MUNICIPIOS.map(m => <option value={m.slug}>{m.nombre}</option>)}</select></label>
+        <label>{t('mercado.f_entrega')}<select name="entrega" required>
+          <option value="persona">{t('mercado.entrega_op.persona')}</option><option value="envio">{t('mercado.entrega_op.envio')}</option><option value="ambos">{t('mercado.entrega_op.ambos')}</option>
+        </select></label>
+      </div>
+      <label>{t('mercado.f_whatsapp')}<input name="whatsapp" type="tel" inputmode="tel" maxlength="20" placeholder="787-555-1234" autocomplete="tel-national" /><small>{t('mercado.f_whatsapp_ayuda')}</small></label>
+      <p class="of-meta">{t('mercado.f_acepto')} <a href={`${ruta(lang, '/legal/')}#mercado`} style="color:var(--h2-bone)">{t('mercado.terminos')}</a></p>
+      <p class="mk-out" role="status" hidden></p>
+      <button class="of-go mk-submit" type="submit" data-submit>{t('mercado.f_publicar')}</button>
+    </form>
+    <p class="of-empty" data-cargando>{t('comun.cargando')}</p>
+  </main>
+  <script type="application/json" id="mkCats" set:html={JSON.stringify(cats)} />
+  <I18nCliente lang={lang} />
+  <script is:inline src="/assets/mercado-cuenta.js?v=1"></script>
+  <script is:inline src="/assets/mercado-vender.js?v=1" defer></script>
+</SiteShell>

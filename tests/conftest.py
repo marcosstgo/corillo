@@ -15,3 +15,4 @@ os.environ["CORILLO_REPO"] = str(ROOT)
 os.environ["MERCADO_ADMINS"] = "admin_test"
 os.environ["MERCADO_MAX_ACTIVOS"] = "3"
 os.environ["MERCADO_MAX_CREA_HORA"] = "50"
+os.environ["MERCADO_REBUILD"] = ""          # las pruebas nunca recompilan el sitio

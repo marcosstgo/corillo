@@ -1,0 +1,8 @@
+---
+// Deja el diccionario de las secciones pedidas en la página para /assets/i18n.js (window.t).
+import { paraCliente, type Lang } from '../../i18n';
+interface Props { lang: Lang; secciones?: string[]; }
+const { lang, secciones = ['comun', 'mercado'] } = Astro.props;
+---
+<script type="application/json" id="i18n" set:html={JSON.stringify(paraCliente(lang, secciones))} />
+<script is:inline src="/assets/i18n.js?v=1"></script>

@@ -1,10 +1,10 @@
 ---
-import Anuncio from '../../../components/mercado/Anuncio.astro';
-import { loadMercado, type Anuncio as A } from '../../../data/mercado';
+import Anuncio from '../../../../components/mercado/Anuncio.astro';
+import { loadMercado, type Anuncio as A } from '../../../../data/mercado';
 export async function getStaticPaths() {
   const R = await loadMercado();
   return R.anuncios.map(a => ({ params: { id: a.id }, props: { a } }));
 }
 const { a } = Astro.props as { a: A };
 ---
-<Anuncio lang="es" a={a} />
+<Anuncio lang="en" a={a} />

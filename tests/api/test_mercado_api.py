@@ -401,3 +401,40 @@ def test_aviso_de_anuncio_nuevo(c, buzon):
         c.get("/health")
     aviso = [m for m in buzon if a["titulo"] in m["asunto"]]
     assert aviso and aviso[0]["para"] == "hello@marcossantiago.com" and f"/mercado/a/{a['id']}/" in aviso[0]["texto"]
+
+
+def test_moderacion_solo_admin_y_acciones(c, turnstile_falso):
+    import mercado
+    dueno, admin, cualquiera = cuenta(), cuenta(), cuenta()
+    mercado.ADMINS.add(admin["key"])
+    assert c.get("/mercado/yo", headers=admin["h"]).json()["admin"] is True
+    assert c.get("/mercado/yo", headers=cualquiera["h"]).json()["admin"] is False
+    unico = "Md" + uuid.uuid4().hex[:8]
+    aid = crear(c, dueno, titulo=f"Moderar {unico}").json()["id"]
+    otro = crear(c, dueno, titulo=f"Otro {unico}").json()["id"]
+    assert c.get("/mercado/moderacion", headers=cualquiera["h"]).status_code == 403
+    assert c.post(f"/mercado/moderacion/{aid}", headers=dueno["h"], json={"accion": "ocultar"}).status_code == 403
+    for ip in ("4.4.4.1", "4.4.4.2", "4.4.4.3"):
+        c.post(f"/mercado/anuncios/{aid}/reporte", json={"motivo": "spam", "token": turnstile_falso("reporte")}, headers={"x-ip-prueba": ip})
+    cola = c.get("/mercado/moderacion", headers=admin["h"]).json()
+    item = next(x for x in cola["pendientes"] if x["id"] == aid)
+    assert item["moderacion"] == "oculto" and len(item["lista_reportes"]) == 3
+    r = c.post(f"/mercado/moderacion/{aid}", headers=admin["h"], json={"accion": "aprobar"})
+    assert r.json()["moderacion"] == "visible" and r.json()["reportes"] == 0
+    assert c.get("/mercado/anuncios", params={"q": unico}).json()["total"] == 2
+    assert aid not in {x["id"] for x in c.get("/mercado/moderacion", headers=admin["h"]).json()["pendientes"]}
+    # banear: oculta todos sus anuncios y no puede publicar más
+    r = c.post(f"/mercado/moderacion/{aid}", headers=admin["h"], json={"accion": "banear"})
+    assert r.status_code == 200
+    assert c.get("/mercado/anuncios", params={"q": unico}).json()["total"] == 0
+    assert crear(c, dueno).status_code == 403
+    assert c.post(f"/mercado/moderacion/{otro}", headers=admin["h"], json={"accion": "borrar"}).status_code == 422
+
+
+def test_token_de_superusuario_vencido_se_renueva(c):
+    import server, mercado
+    c.get("/mercado/meta")
+    server._pb_token.update({"token": "token-viejo-invalido", "ts": 10**12})
+    mercado._invalidar()
+    assert c.get("/mercado/resumen").status_code == 200
+    assert server._pb_token["token"] != "token-viejo-invalido"

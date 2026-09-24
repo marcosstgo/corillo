@@ -1133,7 +1133,7 @@ async def channel_stats(channel: str):
 
 # ── Mercado (/api/mercado/*) ──
 import mercado
-mercado.bind(lambda: _http, _admin_token)
+mercado.bind(lambda: _http, _admin_token, lambda: _pb_token.update({"token": "", "ts": 0.0}))
 app.include_router(mercado.router)
 
 

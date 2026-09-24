@@ -1,0 +1,8 @@
+---
+// "Cómo funciona el Mercado": la versión del Mercado de la caja "Cómo lo hacemos" de /ofertas/ y /equipo/.
+import { traductor, ruta, type Lang } from '../../i18n';
+interface Props { lang?: Lang; }
+const { lang = 'es' } = Astro.props;
+const t = traductor(lang);
+---
+<p class="of-note"><strong>{t('mercado.como_funciona_t')}</strong> {t('mercado.como_funciona')} <a href={`${ruta(lang, '/legal/')}#mercado`}>{t('mercado.terminos')}</a>.</p>

@@ -1,0 +1,44 @@
+---
+// Buscador + filtros + resultados. El HTML inicial trae los anuncios (bueno para SEO y sin JS);
+// al filtrar, /assets/mercado-lista.js consulta /api/mercado/anuncios y redibuja con la misma tarjeta.
+import Card from './Card.astro';
+import { MUNICIPIOS } from '../../data/categorias';
+import type { Anuncio } from '../../data/mercado';
+import { traductor, type Lang } from '../../i18n';
+interface Props { lang: Lang; anuncios: Anuncio[]; categoria?: string; vacio: string; }
+const { lang, anuncios, categoria = '', vacio } = Astro.props;
+const t = traductor(lang);
+const pueblos = MUNICIPIOS.map(m => ({ slug: m.slug, nombre: m.nombre }));
+---
+<form class="mk-find" role="search" data-lista data-categoria={categoria} data-lang={lang}>
+  <div class="mk-q">
+    <label class="mk-sr" for="mkQ">{t('mercado.buscar')}</label>
+    <input id="mkQ" name="q" type="search" maxlength="80" placeholder={t('mercado.buscar_ph')} autocomplete="off" enterkeyhint="search" />
+    <button class="of-go" type="submit">{t('mercado.buscar')}</button>
+  </div>
+  <details class="mk-fil">
+    <summary>{t('mercado.filtros')}<span class="mk-fil-n" hidden></span></summary>
+    <div class="mk-fil-grid">
+      <label>{t('mercado.pueblo')}<select name="pueblo"><option value="">{t('mercado.cualquier_pueblo')}</option>{pueblos.map(p => <option value={p.slug}>{p.nombre}</option>)}</select></label>
+      <label>{t('mercado.precio_min')}<input name="precio_min" type="number" min="0" step="1" inputmode="numeric" placeholder="$0" /></label>
+      <label>{t('mercado.precio_max')}<input name="precio_max" type="number" min="0" step="1" inputmode="numeric" placeholder="$" /></label>
+      <label>{t('mercado.entrega')}<select name="entrega"><option value="">{t('mercado.todo')}</option><option value="persona">{t('mercado.entrega_op.persona')}</option><option value="envio">{t('mercado.entrega_op.envio')}</option></select></label>
+      <fieldset class="mk-conds"><legend>{t('mercado.estado_articulo')}</legend>
+        {(['nuevo', 'como-nuevo', 'buen-estado', 'para-piezas'] as const).map(c => <label class="mk-chk"><input type="checkbox" name="condicion" value={c} /><span>{t(`mercado.condicion.${c}`)}</span></label>)}
+      </fieldset>
+      <label>{t('mercado.orden')}<select name="orden">
+        <option value="recientes">{t('mercado.orden_recientes')}</option><option value="precio_asc">{t('mercado.orden_precio_asc')}</option>
+        <option value="precio_desc">{t('mercado.orden_precio_desc')}</option><option value="cercania">{t('mercado.orden_cercania')}</option>
+      </select></label>
+      <label data-cerca hidden>{t('mercado.cerca_de')}<select name="cerca"><option value="">{t('mercado.f_elige')}</option>{pueblos.map(p => <option value={p.slug}>{p.nombre}</option>)}</select></label>
+      <button class="mk-link" type="reset">{t('mercado.limpiar')}</button>
+    </div>
+  </details>
+</form>
+
+<p class="of-meta mk-count" data-count aria-live="polite"></p>
+<div class="of-grid" data-grid>{anuncios.map(a => <Card a={a} lang={lang} />)}</div>
+<div class="of-empty" data-empty style="margin-top:20px" hidden={anuncios.length > 0}>{vacio}</div>
+<button class="of-more mk-more" type="button" data-more hidden>{t('mercado.mas')}</button>
+<script type="application/json" id="mkPueblos" set:html={JSON.stringify(Object.fromEntries(pueblos.map(p => [p.slug, p.nombre])))} />
+<script is:inline src="/assets/mercado-lista.js?v=1" defer></script>
