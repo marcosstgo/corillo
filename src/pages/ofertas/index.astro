@@ -3,8 +3,12 @@ import SiteShell from '../../layouts/SiteShell.astro';
 import OfertaCard from '../../components/OfertaCard.astro';
 import GratisCard from '../../components/GratisCard.astro';
 import { loadOfertas, allFree, LISTAS, fmtDay, fmtStamp, offersJsonLd, type Deal } from '../../data/ofertas';
+import { loadMercado } from '../../data/mercado';
+import { traductor } from '../../i18n';
 
 const D = loadOfertas();
+const M = await loadMercado();
+const tm = traductor('es');
 const free = allFree(D);
 const stamp = D.updatedAt ? fmtStamp(D.updatedAt) : null;
 const nAll = D.steam.length + D.gog.length + D.humble.length + D.fanatical.length + D.gmg.length + D.gamersgate.length;
@@ -77,6 +81,7 @@ const tileBlurb: Record<string, string> = {
           <a class="of-tile" href={`/ofertas/${l.slug}/`}><em>{l.n} {l.n === 1 ? 'juego' : 'juegos'}</em><b>{l.h1}</b><span>{tileBlurb[l.slug]}</span></a>
         ))}
         <a class="of-tile" href="/equipo/"><em>Guías de compra</em><b>Equipo recomendado</b><span>Webcams, micrófonos, capture cards y más para streaming.</span></a>
+        <a class="of-tile" href="/mercado/"><em>{M.total ? tm('mercado.tile_em', { n: M.total }) : tm('mercado.tile_em_cero')}</em><b>Mercado</b><span>{tm('mercado.tile')}</span></a>
       </div>
     </section>
 

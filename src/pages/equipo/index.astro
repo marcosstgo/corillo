@@ -1,7 +1,17 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
 import EquipoCard from '../../components/EquipoCard.astro';
-import { ITEMS, GUIAS, byId } from '../../data/equipo';
+import { ITEMS, GUIAS, byId, type EquipoItem } from '../../data/equipo';
+import { categoriaDeKind } from '../../data/categorias';
+import { loadMercado } from '../../data/mercado';
+
+// "Ver usados en el Mercado": solo si esa categoría tiene anuncios disponibles ahora.
+const M = await loadMercado();
+const usados = (it: EquipoItem) => {
+  const c = categoriaDeKind(it.kind);
+  const n = c ? M.por_categoria[c.slug] ?? 0 : 0;
+  return n && c ? { n, href: `/mercado/${c.slug}/` } : null;
+};
 
 const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, micrófonos, capture cards, teclados y más, organizado en guías de compra según tu presupuesto.';
 ---
@@ -21,7 +31,7 @@ const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, 
         <h2>{guia.title}</h2>
         <p>{guia.blurb}</p>
         <div class="of-grid">
-          {guia.itemIds.map(id => <EquipoCard it={byId(id)} />)}
+          {guia.itemIds.map(id => <EquipoCard it={byId(id)} usados={usados(byId(id))} />)}
         </div>
       </section>
     ))}
@@ -30,7 +40,7 @@ const desc = 'Equipo de streaming y gaming que recomendamos de verdad: webcams, 
       <h2>Todo el equipo</h2>
       <p>La lista completa, por categoría.</p>
       <div class="of-grid">
-        {ITEMS.map(it => <EquipoCard it={it} />)}
+        {ITEMS.map(it => <EquipoCard it={it} usados={usados(it)} />)}
       </div>
     </section>
 

@@ -213,6 +213,7 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
       <a href="/reels/" class="nv-item" data-nav="/reels/" style="--tc:var(--h2-live)"><span class="nv-tile"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i></span><span class="nv-lbl">Reels</span></a>
       <a href="/multiplayer/" class="nv-item" data-nav="/multiplayer/" style="--tc:var(--h2-bone)"><span class="nv-tile"><i class="fa-solid fa-table-cells" aria-hidden="true"></i></span><span class="nv-lbl">Multiplayer</span></a>
       <a href="/ofertas/" class="nv-item" data-nav="/ofertas/" style="--tc:var(--h2-mag)"><span class="nv-tile"><i class="fa-solid fa-tags" aria-hidden="true"></i></span><span class="nv-lbl">Ofertas</span></a>
+      <a href="/mercado/" class="nv-item" data-nav="/mercado/" style="--tc:var(--crl-confirm)"><span class="nv-tile"><i class="fa-solid fa-store" aria-hidden="true"></i></span><span class="nv-lbl">Mercado</span></a>
   </nav>
   <nav aria-label="Más" class="nv-more-nav">
     <h2 class="nv-h">Más</h2>
@@ -388,7 +389,7 @@ function markActive() {
   const path = location.pathname;
   document.querySelectorAll('[data-nav]').forEach(a => {
     const h = a.getAttribute('data-nav') || '';
-    const on = h === '/' ? path === '/' : path.startsWith(h);
+    const on = h === '/' ? path === '/' : path.startsWith(h) || path.startsWith('/en' + h);
     a.classList.toggle('is-on', on);
     if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });

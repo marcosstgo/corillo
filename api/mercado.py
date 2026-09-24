@@ -967,3 +967,27 @@ async def moderar(aid: str, body: ModeracionIn, authorization: Optional[str] = H
                 "moderacion": "oculto", "motivo_oculto": "Vendedor baneado del Mercado"})
     _invalidar()
     return serializar(await _obtener(aid), privado=True)
+
+
+# ── Limpieza (cron diario, solo desde el propio servidor) ────────────────────
+RETENCION_DIAS = 365   # prometido en /legal/ (Política de privacidad): mensajes y reportes se borran a los 12 meses
+
+
+@router.post("/internal/limpieza")
+async def limpieza(request: Request):
+    if (request.client.host if request.client else "") not in ("127.0.0.1", "::1"):
+        raise HTTPException(403)
+    limite = _ts(timedelta(days=RETENCION_DIAS))
+    borrados = {}
+    for col in ("mercado_mensajes", "mercado_reportes"):
+        n = 0
+        while True:
+            r = await _pb("GET", f"{COL}/{col}/records", params={"filter": f'created<"{limite}"', "perPage": 200, "fields": "id"})
+            items = r.json().get("items", []) if r.status_code == 200 else []
+            if not items:
+                break
+            for it in items:
+                await _pb("DELETE", f"{COL}/{col}/records/{it['id']}")
+                n += 1
+        borrados[col] = n
+    return borrados

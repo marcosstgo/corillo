@@ -438,3 +438,20 @@ def test_token_de_superusuario_vencido_se_renueva(c):
     mercado._invalidar()
     assert c.get("/mercado/resumen").status_code == 200
     assert server._pb_token["token"] != "token-viejo-invalido"
+
+
+def test_limpieza_borra_solo_lo_viejo_y_solo_desde_el_servidor(c, turnstile_falso, buzon, monkeypatch):
+    import mercado
+    u = cuenta()
+    aid = crear(c, u).json()["id"]
+    c.post(f"/mercado/anuncios/{aid}/contacto", json=_msg(turnstile_falso("contacto")), headers={"x-ip-prueba": "7.7." + uuid.uuid4().hex[:4]})
+    assert c.post("/mercado/internal/limpieza").status_code == 403            # TestClient no es localhost
+    monkeypatch.setattr(mercado, "RETENCION_DIAS", -1)                   # "viejo" = todo lo de hasta mañana
+
+    class Req:  # simula una llamada desde 127.0.0.1 (el cron)
+        client = type("C", (), {"host": "127.0.0.1"})()
+    antes = httpx.get(f"{PB}/api/collections/mercado_mensajes/records", headers={"Authorization": _su()}, params={"filter": f'anuncio="{aid}"'}).json()["totalItems"]
+    assert antes == 1
+    res = c.portal.call(mercado.limpieza, Req())
+    assert res["mercado_mensajes"] >= 1
+    assert httpx.get(f"{PB}/api/collections/mercado_mensajes/records", headers={"Authorization": _su()}, params={"filter": f'anuncio="{aid}"'}).json()["totalItems"] == 0

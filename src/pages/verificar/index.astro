@@ -89,6 +89,17 @@ async function confirm() {
     loadingState.style.display = 'none';
     if (res.ok) {
       successState.style.display = 'block';
+      // Si la cuenta se creó desde el Mercado, llevarla a publicar (no al panel de streaming).
+      try {
+        const destino = localStorage.getItem('corillo-destino');
+        if (destino && /^\/(en\/)?mercado\/vender\/$/.test(destino)) {
+          localStorage.removeItem('corillo-destino');
+          successState.querySelector('p')!.textContent = 'Tu correo fue confirmado. Ya puedes entrar y publicar en el Mercado.';
+          const b = successState.querySelector('a')!;
+          b.setAttribute('href', destino);
+          b.lastChild!.textContent = ' Ir a vender';
+        }
+      } catch {}
     } else {
       invalidState.style.display = 'block';
     }

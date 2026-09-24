@@ -260,6 +260,30 @@ import SiteShell from '../../layouts/SiteShell.astro';
   </div>
 </section>
 
+<script is:inline>
+/* Registro desde el Mercado (/join/?para=mercado): la misma cuenta de siempre (crea el canal por dentro,
+   oculto hasta que transmita), pero se presenta como "tu cuenta" y sin las preguntas de streaming. */
+(function () {
+  var q = new URLSearchParams(location.search);
+  if (q.get('para') !== 'mercado') return;
+  var en = q.get('lang') === 'en';
+  var $ = function (s) { return document.querySelector(s); };
+  var txt = function (s, v) { var el = $(s); if (el) el.textContent = v; };
+  document.title = 'CORILLO — Crea tu cuenta';
+  txt('.hero-title', 'Crea tu cuenta');
+  txt('.hero-eyebrow', 'Para vender en el Mercado · Puerto Rico');
+  txt('.hero-desc', 'Con tu cuenta de CORILLO puedes publicar en el Mercado. Elige tu nombre de usuario y tu contraseña, y confirma tu correo. Si algún día quieres transmitir, la misma cuenta te sirve.');
+  txt('label[for=f-handle]', 'Nombre de usuario *');
+  var hint = $('#f-handle') && $('#f-handle').parentElement.querySelector('.crl-hint');
+  if (hint) hint.textContent = 'Solo: a-z, 0-9, _ · 3–24 caracteres. Es la dirección de tu perfil.';
+  // Los campos de streaming no aplican: se ocultan y "tipo de contenido" va fijo.
+  ['#f-contenido', '#f-plataforma', '#f-mensaje'].forEach(function (s) { var el = $(s); if (el) el.closest('.field').hidden = true; });
+  if ($('#f-contenido')) $('#f-contenido').value = 'Mercado';
+  var grid = $('.panel-grid'); if (grid) { grid.style.gridTemplateColumns = '1fr'; [].forEach.call(grid.children, function (c) { if (!c.classList.contains('form-card')) c.hidden = true; }); }
+  txt('.success-sub', 'Te enviamos un correo de confirmación. Haz click en el enlace y ya puedes publicar en el Mercado.');
+  try { localStorage.setItem('corillo-destino', en ? '/en/mercado/vender/' : '/mercado/vender/'); } catch (e) {}
+})();
+</script>
 <script>
 const REGISTER_URL = '/api/register';
 const RESERVED_H = new Set([

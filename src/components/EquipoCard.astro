@@ -1,7 +1,8 @@
 ---
 import { withTag, type EquipoItem, type EquipoKind } from '../data/equipo';
-interface Props { it: EquipoItem; }
-const { it } = Astro.props;
+// usados: anuncios disponibles en el Mercado de la misma categoría (0 = no se muestra el enlace).
+interface Props { it: EquipoItem; usados?: { n: number; href: string } | null; }
+const { it, usados = null } = Astro.props;
 const href = withTag(it.url);
 
 // Íconos de línea propios (viewBox 24), uno por tipo de equipo.
@@ -29,6 +30,7 @@ const ICONS: Record<EquipoKind, string> = {
     <h3><a href={href} target="_blank" rel="nofollow noopener sponsored">{it.title}</a></h3>
     <p class="eq-why">{it.why}</p>
     <a class="of-go" href={href} target="_blank" rel="nofollow noopener sponsored">Ver en Amazon</a>
+    {usados && usados.n > 0 && <a class="eq-used" href={usados.href}>Ver usados en el Mercado ({usados.n})</a>}
   </div>
 </article>
 
@@ -45,5 +47,6 @@ const ICONS: Record<EquipoKind, string> = {
   .eq-card .of-body { padding: 20px 20px 22px; gap: 10px; }
   .eq-card h3 { margin: 0; -webkit-line-clamp: unset; min-height: 0; }
   .eq-why { margin: 0; color: var(--h2-mute); font: 500 .92rem/1.5 var(--h2-body); flex: 1; }
+  .eq-used { align-self: center; color: var(--h2-bone); font: 700 .88rem var(--h2-body); text-decoration: underline; text-underline-offset: 3px; }
   @media (prefers-reduced-motion: reduce) { .eq-ico { transition: none; } }
 </style>

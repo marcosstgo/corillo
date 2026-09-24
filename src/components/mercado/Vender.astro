@@ -71,7 +71,7 @@ const cats = CATEGORIAS.map(c => ({ slug: c.slug, nombre: c[lang], sub: c.sub.ma
         </select></label>
       </div>
       <label>{t('mercado.f_whatsapp')}<input name="whatsapp" type="tel" inputmode="tel" maxlength="20" placeholder="787-555-1234" autocomplete="tel-national" /><small>{t('mercado.f_whatsapp_ayuda')}</small></label>
-      <p class="of-meta">{t('mercado.f_acepto')} <a href={`${ruta(lang, '/legal/')}#mercado`} style="color:var(--h2-bone)">{t('mercado.terminos')}</a></p>
+      <p class="of-meta">{t('mercado.f_acepto')} <a href={lang === 'en' ? '/legal/#market' : '/legal/#mercado'} style="color:var(--h2-bone)">{t('mercado.terminos')}</a></p>
       <p class="mk-out" role="status" hidden></p>
       <button class="of-go mk-submit" type="submit" data-submit>{t('mercado.f_publicar')}</button>
     </form>
