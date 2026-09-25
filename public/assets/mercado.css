@@ -1,5 +1,7 @@
 /* Mercado (/mercado/): SOLO lo que ofertas.css no trae. Tarjetas, chips, rejilla y la caja de
    transparencia vienen de ofertas.css (clases of-*); la tarjeta de anuncio vive en MercadoCard.astro. */
+/* El atributo hidden SIEMPRE gana: sin esto, reglas como .of-go{display:inline-flex} lo anulan. */
+.of [hidden],.mk-dlg [hidden]{display:none!important}
 .of-chips a.of-chip{text-decoration:none;flex:none}
 /* En móvil las categorías van en UNA fila que se desliza (12 chips en 6 filas empujaban los anuncios fuera de la pantalla) */
 @media (max-width:760px){.mk-cats{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;scroll-padding-inline:16px}.mk-cats::-webkit-scrollbar{display:none}}
