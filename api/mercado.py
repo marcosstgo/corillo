@@ -977,7 +977,8 @@ RETENCION_DIAS = 365   # prometido en /legal/ (Política de privacidad): mensaje
 
 @router.post("/internal/limpieza")
 async def limpieza(request: Request):
-    if (request.client.host if request.client else "") not in ("127.0.0.1", "::1"):
+    host = request.client.host if request.client else ""
+    if host not in ("127.0.0.1", "::1") or "x-real-ip" in request.headers:   # por nginx siempre viene X-Real-IP
         raise HTTPException(403)
     limite = _ts(timedelta(days=RETENCION_DIAS))
     borrados = {}

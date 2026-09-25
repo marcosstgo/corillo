@@ -272,9 +272,16 @@ async def _marcar_primer_directo(channel: str):
         pass
 
 
+def _es_llamada_interna(request: Request) -> bool:
+    """Solo scripts del propio servidor hablando directo con :3004. Lo que entra por nginx también
+    llega desde 127.0.0.1, pero nginx siempre añade X-Real-IP: así se distingue."""
+    host = request.client.host if request.client else ""
+    return host in ("127.0.0.1", "::1") and "x-real-ip" not in request.headers
+
+
 @app.post("/internal/notify")
 async def internal_notify(request: Request):
-    if request.client.host not in ("127.0.0.1", "::1"):
+    if not _es_llamada_interna(request):
         raise HTTPException(status_code=403)
     try:
         path = (await request.json()).get("path", "")

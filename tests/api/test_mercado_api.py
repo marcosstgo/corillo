@@ -448,10 +448,26 @@ def test_limpieza_borra_solo_lo_viejo_y_solo_desde_el_servidor(c, turnstile_fals
     assert c.post("/mercado/internal/limpieza").status_code == 403            # TestClient no es localhost
     monkeypatch.setattr(mercado, "RETENCION_DIAS", -1)                   # "viejo" = todo lo de hasta mañana
 
-    class Req:  # simula una llamada desde 127.0.0.1 (el cron)
+    class Req:  # simula una llamada desde 127.0.0.1 (el cron, sin pasar por nginx)
         client = type("C", (), {"host": "127.0.0.1"})()
+        headers: dict = {}
     antes = httpx.get(f"{PB}/api/collections/mercado_mensajes/records", headers={"Authorization": _su()}, params={"filter": f'anuncio="{aid}"'}).json()["totalItems"]
     assert antes == 1
     res = c.portal.call(mercado.limpieza, Req())
     assert res["mercado_mensajes"] >= 1
     assert httpx.get(f"{PB}/api/collections/mercado_mensajes/records", headers={"Authorization": _su()}, params={"filter": f'anuncio="{aid}"'}).json()["totalItems"] == 0
+
+
+def test_rutas_internas_no_aceptan_trafico_que_viene_de_nginx(c):
+    """nginx llega desde 127.0.0.1 pero siempre añade X-Real-IP: eso NO es una llamada interna."""
+    import server, mercado
+
+    class Req:
+        def __init__(self, cabeceras):
+            self.client = type("C", (), {"host": "127.0.0.1"})()
+            self.headers = cabeceras
+    assert server._es_llamada_interna(Req({})) is True                       # script local (curl a :3004)
+    assert server._es_llamada_interna(Req({"x-real-ip": "1.2.3.4"})) is False   # visitante vía nginx
+    import pytest as _pt
+    with _pt.raises(Exception):
+        c.portal.call(mercado.limpieza, Req({"x-real-ip": "1.2.3.4"}))
