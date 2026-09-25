@@ -93,3 +93,19 @@ Material suelto que había en la raíz (capturas, zips, PDFs, propuestas) se arc
   - `--dry-run` (no escribe), `--backfill N` (varias seguidas), `--unpublish SLUG` (retira). Modelo `claude-opus-5`, respaldo `claude-opus-4-8`. La API key sale de `corillo-bot/.env`.
   - Categorías/colores en `src/data/news.ts` (espejo `CATS` en el script).
 - **Discord**: invitación permanente en `src/data/site.ts` (`DISCORD_INVITE`); página propia `/discord/` con miembros en línea leídos de `public/assets/discord-live.js` (widget público del servidor `240118405116461056`, caché 5 min, bots filtrados).
+
+## Mercado (2026-09-24) — compra/venta de equipo usado
+- **Páginas**: `src/components/mercado/*.astro` (reciben `lang`); rutas finas en `src/pages/mercado/` y `src/pages/en/mercado/`.
+  Estáticas: inicio, categorías (`/mercado/<slug>/`), anuncio (`/mercado/a/<id>/`). En el navegador: vender/editar, mis anuncios,
+  moderación y `anuncio/` (respaldo que nginx sirve para `/mercado/a/<id>/` aún sin compilar; se recarga sola).
+- **Datos al compilar**: `src/data/mercado.ts` lee `/mercado/resumen` de la API; si falla usa la última copia buena
+  (`~/.cache/corillo-mercado-snapshot.json`). Tras cada cambio la API corre `scripts/mercado-rebuild.sh` (20 s de espera,
+  solo compila si cambió; usa `deploy-corillo.sh`). Cron de respaldo cada 10 min + limpieza diaria (`/mercado/internal/limpieza`).
+- **API**: `api/mercado.py` (router), `api/turnstile.py` (siteverify: success + acción + hostname), `api/correo.py` (Mailgun,
+  reenvío ciego `r+<hilo>.<c|v>@mg.corillo.live`). Colecciones `mercado_*` con TODAS las reglas en null: solo vía API.
+  Esquema en `pb/migrations/` (se copian a `~/pocketbase/pb_migrations/`). `streamers.first_live_at`: sin ella la cuenta no sale como canal.
+- **Taxonomía única** `src/data/categorias.json` (la usan /equipo/ y /mercado/; hay prueba de que no quedan huecos). Municipios: `municipios.json` (Census 2024).
+- **Traducciones** `src/i18n/` (es/en por sección, `t()` en servidor y `window.t` en navegador): reutilizable para el resto del sitio.
+- **Pruebas**: `scripts/pb-test-server.sh` (PocketBase desechable) + `pytest tests` (61). CI de PRs: `.github/workflows/ci.yml` (no despliega).
+- **Variables** (`~/corillo-api/.env`): `TURNSTILE_SECRET`, `TURNSTILE_HOSTNAMES=corillo.live`, `MERCADO_ADMINS`, `MAILGUN_API_KEY`,
+  `MAILGUN_WEBHOOK_SIGNING_KEY`, opcionales `MERCADO_AVISO_EMAIL`, `MERCADO_MAX_ACTIVOS`.

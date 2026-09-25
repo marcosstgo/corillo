@@ -14,7 +14,7 @@ const cats = CATEGORIAS.map(c => ({ slug: c.slug, nombre: c[lang], sub: c.sub.ma
   <fragment slot="head">
     <meta name="robots" content="noindex" />
     <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
-    <link rel="stylesheet" href="/assets/mercado.css?v=6" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=7" />
   </fragment>
   <main class="of mk-narrow" data-vender data-lang={lang}>
     <nav class="of-crumb" aria-label="Ruta"><a href={ruta(lang, '/mercado/')}>{t('mercado.nombre')}</a> / <span data-crumb>{t('mercado.vender_titulo')}</span></nav>

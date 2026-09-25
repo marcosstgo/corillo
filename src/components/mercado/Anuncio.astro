@@ -26,10 +26,10 @@ const ld = {
 ---
 <SiteShell lang={lang} alternates={alternos(path)} title={`${a.titulo} — ${$} · ${pueblo} | ${t('mercado.nombre')} CORILLO`} description={desc} canonical={`https://corillo.live${ruta(lang, path)}`} ogImage={a.og || undefined} ogType="product">
   <fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <script type="application/ld+json" set:html={JSON.stringify(ld).replace(/</g, '\\u003c')} />
     {vendido && <meta name="robots" content="noindex" />}
     <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
-    <link rel="stylesheet" href="/assets/mercado.css?v=6" />
+    <link rel="stylesheet" href="/assets/mercado.css?v=7" />
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
   </fragment>
 
@@ -117,5 +117,5 @@ const ld = {
     </dialog>
   </main>
   <I18nCliente lang={lang} />
-  <script is:inline src="/assets/mercado-anuncio.js?v=2" defer></script>
+  <script is:inline src="/assets/mercado-anuncio.js?v=3" defer></script>
 </SiteShell>

@@ -1,7 +1,7 @@
 /* Sesión de CORILLO para las páginas del Mercado, sin cargar el SDK de PocketBase.
    Usa el mismo lugar que el SDK (localStorage.pocketbase_auth), así la sesión es la misma en todo el sitio. */
 (function () {
-  var PB = 'https://pb.corillo.live';
+  var PB = window.MK_PB || 'https://pb.corillo.live';   // MK_PB solo lo cambian las pruebas locales
   function leer() {
     try {
       var a = JSON.parse(localStorage.getItem('pocketbase_auth') || 'null');

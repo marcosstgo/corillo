@@ -501,7 +501,8 @@ async def _leer_fotos(files: list[UploadFile]) -> list[bytes]:
     for f in files:
         raw = await f.read(FOTO_MAX_BYTES + 1)
         try:
-            out.append(procesar_foto(raw))
+            # Pillow es CPU puro: en un hilo aparte para no congelar la API (roster, avisos de directo…).
+            out.append(await asyncio.to_thread(procesar_foto, raw))
         except ValueError as e:
             raise HTTPException(422, f"{f.filename or 'foto'}: {e}")
     return out
@@ -521,7 +522,8 @@ def _multipart(campos: dict, fotos: list[bytes], og: Optional[bytes]) -> tuple[d
 async def meta():
     """Categorías y municipios (el formulario y los filtros los usan)."""
     return {"categorias": list(CATEGORIAS.values()),
-            "municipios": [{"slug": m["slug"], "nombre": m["nombre"]} for m in MUNICIPIOS.values()]}
+            "municipios": [{"slug": m["slug"], "nombre": m["nombre"]} for m in MUNICIPIOS.values()],
+            "contacto": correo.configurado()}
 
 
 @router.get("/anuncios")
@@ -596,7 +598,7 @@ async def crear(datos: str = Form(...), fotos: list[UploadFile] = File(default=[
     webps = await _leer_fotos(fotos)
     campos = inp.model_dump() | {"vendedor": yo["id"], "estado": "disponible", "moderacion": "visible",
                                   "pausado": False, "reportes": 0}
-    data, files = _multipart(campos, webps, imagen_og(webps[0]))
+    data, files = _multipart(campos, webps, await asyncio.to_thread(imagen_og, webps[0]))
     r = await _pb("POST", f"{COL}/mercado_anuncios/records", data=data, files=files, params={"expand": "vendedor"})
     if r.status_code != 200:
         raise HTTPException(502, "No se pudo guardar el anuncio")
@@ -647,7 +649,7 @@ async def reemplazar_fotos(aid: str, fotos: list[UploadFile] = File(...), author
     if not fotos:
         raise HTTPException(422, "Añade al menos una foto")
     webps = await _leer_fotos(fotos)
-    data, files = _multipart({}, webps, imagen_og(webps[0]))
+    data, files = _multipart({}, webps, await asyncio.to_thread(imagen_og, webps[0]))
     # En PocketBase, subir archivos con la clave 'fotos' (sin '+') SUSTITUYE los anteriores.
     r = await _pb("PATCH", f"{COL}/mercado_anuncios/records/{aid}", data=data, files=files, params={"expand": "vendedor"})
     if r.status_code != 200:
