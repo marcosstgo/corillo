@@ -1,0 +1,76 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import { STOAT_INVITE, DISCORD_PATH } from '../../data/site';
+// Lo que hay en el servidor. Si se crean/borran canales en Stoat, actualizar aquí.
+const GROUPS = [
+  { t: 'Corillo', i: 'fa-comments', c: ['general', 'clips-y-capturas', 'memes', 'mercado'] },
+  { t: 'Juegos', i: 'fa-gamepad', c: ['wardogs', 'battlefield-6', 'call-of-duty', 'buscar-partida'] },
+  { t: 'Streaming', i: 'fa-tower-broadcast', c: ['en-vivo', 'setup-y-ayuda'] },
+  { t: 'Voz', i: 'fa-headset', c: ['Lobby', 'Partida 1', 'Partida 2', 'WARDOGS', 'Battlefield 6', 'Stream'] },
+];
+---
+<SiteShell
+  title="CORILLO en Stoat — La alternativa a Discord"
+  description="¿Prefieres no usar Discord? El corillo también está en Stoat: los mismos canales por juego, salas de voz y avisos cuando alguien sale en vivo."
+  canonical="https://corillo.live/stoat/"
+>
+  <fragment slot="head">
+    <style is:global>
+      .st{max-width:1400px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
+      .st-hero{display:grid;gap:24px;padding:clamp(26px,4vw,52px);border-radius:38px;background:radial-gradient(90% 120% at 100% 0%,color-mix(in srgb,var(--h2-cyan) 30%,transparent),transparent 65%),color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .st-ico{width:72px;height:72px;border-radius:22px;display:grid;place-items:center;background:var(--h2-cyan);color:var(--h2-ink);font-size:2rem;box-shadow:0 18px 44px -14px var(--h2-cyan)}
+      .st-hero h1{margin:0;font:800 clamp(2.4rem,6.5vw,5rem)/.92 var(--h2-display);letter-spacing:-.045em;text-transform:none;max-width:15ch}
+      .st-hero p{margin:0;max-width:60ch;color:color-mix(in srgb,var(--h2-bone) 80%,transparent);font:500 clamp(1.05rem,1.6vw,1.22rem)/1.55 var(--h2-body)}
+      .st-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+      .st-go{display:inline-flex;align-items:center;gap:12px;height:58px;padding:0 32px;border-radius:999px;background:var(--h2-cyan);color:var(--h2-ink);text-decoration:none;font:800 1.08rem var(--h2-body);transition:box-shadow .15s,transform .15s}
+      .st-go:hover{box-shadow:0 0 0 5px color-mix(in srgb,var(--h2-cyan) 40%,transparent);transform:translateY(-1px)}
+      .st-alt{display:inline-flex;align-items:center;gap:10px;height:58px;padding:0 26px;border-radius:999px;color:var(--h2-bone);text-decoration:none;font:700 1rem var(--h2-body);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .st-alt:hover{background:color-mix(in srgb,var(--h2-bone) 8%,transparent)}
+      .st-sec{margin-top:44px}
+      .st-sec h2{margin:0 0 6px;font:800 clamp(1.6rem,3vw,2.2rem)/1 var(--h2-display);letter-spacing:-.035em;text-transform:none}
+      .st-sec>p{margin:0 0 20px;color:var(--h2-mute);font:500 1rem var(--h2-body)}
+      .st-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px}
+      .st-card{padding:18px 20px;border-radius:24px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .st-card b{display:flex;align-items:center;gap:10px;font:800 1.05rem/1.2 var(--h2-display);letter-spacing:-.02em}
+      .st-card b i{width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:color-mix(in srgb,var(--h2-cyan) 22%,transparent);color:var(--h2-cyan);font-size:.8rem}
+      .st-card ul{margin:12px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+      .st-card li{padding:5px 11px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 7%,transparent);color:color-mix(in srgb,var(--h2-bone) 85%,transparent);font:600 .84rem var(--h2-body)}
+      .st-why{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+      .st-why div{padding:18px 20px;border-radius:24px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);color:var(--h2-mute);font:500 .95rem/1.5 var(--h2-body)}
+      .st-why b{display:block;margin-bottom:4px;color:var(--h2-bone);font:800 1.02rem var(--h2-body)}
+    </style>
+  </fragment>
+
+  <main class="st">
+    <section class="st-hero">
+      <div class="st-ico"><i class="fa-solid fa-comments" aria-hidden="true"></i></div>
+      <h1>El corillo también está en Stoat</h1>
+      <p>¿Prefieres no usar Discord? En Stoat tienes el mismo corillo: canales por juego, salas de voz y aviso automático cuando alguien sale en vivo en Corillo. Es gratis, de código abierto y funciona en el navegador, la computadora y el celular.</p>
+      <div class="st-row">
+        <a class="st-go" href={STOAT_INVITE} target="_blank" rel="noopener"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i> Entrar en Stoat</a>
+        <a class="st-alt" href={DISCORD_PATH}><i class="fa-brands fa-discord" aria-hidden="true"></i> Prefiero Discord</a>
+      </div>
+    </section>
+
+    <section class="st-sec">
+      <h2>Lo que hay adentro</h2>
+      <p>Los canales del servidor «Corillo (Puerto Rico)».</p>
+      <div class="st-grid">
+        {GROUPS.map(g => (
+          <div class="st-card"><b><i class={`fa-solid ${g.i}`} aria-hidden="true"></i>{g.t}</b>
+            <ul>{g.c.map(c => <li>{g.t === 'Voz' ? c : `#${c}`}</li>)}</ul></div>
+        ))}
+      </div>
+    </section>
+
+    <section class="st-sec">
+      <h2>¿Por qué dos?</h2>
+      <p>Discord sigue siendo la casa principal. Stoat es la alternativa.</p>
+      <div class="st-why">
+        <div><b>Tú escoges</b>Hay gente que no quiere o no puede usar Discord. Aquí también tienen su sitio.</div>
+        <div><b>Siempre al día</b>Los avisos de en vivo y la noticia del día de Corillo llegan solos a los dos.</div>
+        <div><b>Plan B listo</b>Si Discord cambia sus reglas o se cae, el corillo ya tiene adónde ir.</div>
+      </div>
+    </section>
+  </main>
+</SiteShell>

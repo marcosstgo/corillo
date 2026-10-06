@@ -1,6 +1,6 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
-import { DISCORD_INVITE } from '../../data/site';
+import { DISCORD_INVITE, STOAT_PATH } from '../../data/site';
 const CODE = DISCORD_INVITE.split('/').pop();
 ---
 <SiteShell
@@ -44,6 +44,8 @@ const CODE = DISCORD_INVITE.split('/').pop();
       .dc-room b span.live{color:var(--crl-confirm,#35e0a1)}
       .dc-room small{display:block;margin-top:8px;color:var(--h2-mute);font:500 .86rem/1.4 var(--h2-body)}
       .dc-err{padding:26px;border-radius:24px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);color:var(--h2-mute);font:500 1rem var(--h2-body)}
+      .dc-alt{margin:0;color:var(--h2-mute);font:600 .95rem var(--h2-body)}
+      .dc-alt a{color:var(--h2-bone);text-underline-offset:3px}
       .dc-note{margin-top:30px;color:var(--h2-mute);font:500 .86rem/1.5 var(--h2-body)}
     </style>
   </fragment>
@@ -60,6 +62,7 @@ const CODE = DISCORD_INVITE.split('/').pop();
           <div><b id="dcTot">—</b><small>miembros</small></div>
         </div>
       </div>
+      <p class="dc-alt">¿Prefieres no usar Discord? <a href={STOAT_PATH}>También estamos en Stoat</a>.</p>
     </section>
 
     <section class="dc-sec" id="dcGamesSec" hidden>
