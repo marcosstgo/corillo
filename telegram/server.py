@@ -4,7 +4,7 @@ Puerto 3003. Independiente del bot de chat.
 """
 import os, re, time, json, asyncio, random, base64, secrets
 import httpx, aiosqlite
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
@@ -455,6 +455,33 @@ def health():
     return {"status": "ok"}
 
 
+# ── Stoat (servidor de la comunidad) ──────────────────────────────
+STOAT_ENV = "/home/corillo-adm/corillo-stoat/.env"  # token del bot + ids de canales, fuera del repo
+
+
+async def _stoat_live(ch: str, name: str):
+    cfg = dotenv_values(STOAT_ENV)
+    tok, chan = cfg.get("STOAT_BOT_TOKEN"), cfg.get("STOAT_CH_ENVIVO")
+    if not tok or not chan:
+        return
+    title = ""
+    try:
+        r = await _http.get("http://127.0.0.1:3004/streamers")
+        rec = next((x for x in r.json() if x.get("key") == ch), {})
+        name, title = rec.get("name") or name, rec.get("stream_title") or ""
+    except Exception:
+        pass
+    try:
+        await _http.post(
+            f"https://api.stoat.chat/channels/{chan}/messages",
+            headers={"x-bot-token": tok},
+            json={"content": f"🔴 **{name}** está en vivo" + (f" — {title}" if title else "")
+                             + f"\nhttps://corillo.live/{ch}/"},
+        )
+    except Exception:
+        pass
+
+
 # ── Notificaciones en vivo ────────────────────────────────────────
 _prev_live: set = set()
 _notified_at: dict = {}
@@ -466,19 +493,21 @@ async def live_monitor():
     await asyncio.sleep(25)
     try:
         live = await get_live()
-        _prev_live = {p["name"].removeprefix("live/") for p in live}
+        _prev_live = {n for p in live if not (n := p["name"].removeprefix("live/")).endswith(("_low", "_rtc"))}
     except:
         pass
     while True:
         try:
             live = await get_live()
-            current = {p["name"].removeprefix("live/") for p in live}
+            # _low/_rtc son variantes del mismo canal, no streams aparte
+            current = {n for p in live if not (n := p["name"].removeprefix("live/")).endswith(("_low", "_rtc"))}
             for ch in current - _prev_live:
                 now = time.time()
                 if now - _notified_at.get(ch, 0) > NOTIFY_COOLDOWN:
                     _notified_at[ch] = now
                     name = STREAMER_NAMES.get(ch, ch.upper())
                     asyncio.create_task(_tg([f"🔴 *{name} está en vivo*", f"corillo.live/{ch}"]))
+                    asyncio.create_task(_stoat_live(ch, name))
             _prev_live = current
         except:
             pass
