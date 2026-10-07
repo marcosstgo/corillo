@@ -463,7 +463,7 @@ async def _stoat_live(ch: str, name: str):
     cfg = dotenv_values(STOAT_ENV)
     tok, chan = cfg.get("STOAT_BOT_TOKEN"), cfg.get("STOAT_CH_ENVIVO")
     if not tok or not chan:
-        return
+        return await _discord_live(ch, name)
     title = ""
     try:
         r = await _http.get("http://127.0.0.1:3004/streamers")
@@ -471,10 +471,30 @@ async def _stoat_live(ch: str, name: str):
         name, title = rec.get("name") or name, rec.get("stream_title") or ""
     except Exception:
         pass
+    asyncio.create_task(_discord_live(ch, name, title))
     try:
         await _http.post(
             f"https://api.stoat.chat/channels/{chan}/messages",
             headers={"x-bot-token": tok},
+            json={"content": f"🔴 **{name}** está en vivo" + (f" — {title}" if title else "")
+                             + f"\nhttps://corillo.live/{ch}/"},
+        )
+    except Exception:
+        pass
+
+
+DISCORD_ENV = "/home/corillo-adm/corillo-stoat/.env.discord"  # token de Corillo-Bot (Discord) + ids de canales
+
+
+async def _discord_live(ch: str, name: str, title: str = ""):
+    cfg = dotenv_values(DISCORD_ENV)
+    tok, chan = cfg.get("DISCORD_BOT_TOKEN"), cfg.get("DISCORD_CH_ENVIVO")
+    if not tok or not chan:
+        return
+    try:
+        await _http.post(
+            f"https://discord.com/api/v10/channels/{chan}/messages",
+            headers={"Authorization": f"Bot {tok}", "User-Agent": "DiscordBot (corillo, 1.0)"},
             json={"content": f"🔴 **{name}** está en vivo" + (f" — {title}" if title else "")
                              + f"\nhttps://corillo.live/{ch}/"},
         )

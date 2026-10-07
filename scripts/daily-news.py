@@ -54,7 +54,7 @@ def log(*a):
 
 def load_env():
     for f in ('/home/corillo-adm/corillo-news/.env', '/home/corillo-adm/corillo-bot/.env', '/home/corillo-adm/corillo-telegram/.env',
-              '/home/corillo-adm/corillo-stoat/.env'):
+              '/home/corillo-adm/corillo-stoat/.env', '/home/corillo-adm/corillo-stoat/.env.discord'):
         if not Path(f).exists(): continue
         for l in Path(f).read_text().splitlines():
             if '=' in l and not l.startswith('#'):
@@ -75,6 +75,16 @@ def stoat(msg):
                    headers={'x-bot-token': os.environ['STOAT_BOT_TOKEN']}, json={'content': msg}, timeout=15).raise_for_status()
     except Exception as e:
         log('stoat falló:', e)
+
+def discord(msg):
+    """Publica en 📰┆noticias del Discord de Corillo con Corillo-Bot (token y canal en ~/corillo-stoat/.env.discord)."""
+    if not os.environ.get('DISCORD_BOT_TOKEN') or not os.environ.get('DISCORD_CH_NOTICIAS'): return
+    try:
+        httpx.post(f"https://discord.com/api/v10/channels/{os.environ['DISCORD_CH_NOTICIAS']}/messages",
+                   headers={'Authorization': f"Bot {os.environ['DISCORD_BOT_TOKEN']}", 'User-Agent': 'DiscordBot (corillo, 1.0)'},
+                   json={'content': msg}, timeout=15).raise_for_status()
+    except Exception as e:
+        log('discord falló:', e)
 
 # ───────────── estado / publicadas ─────────────
 def published():
@@ -560,6 +570,7 @@ def main():
         t = re.search(r'^heroTitle: "(.*)"', (POSTS / f).read_text(), re.M).group(1)
         telegram(f"📰 Nota publicada en CORILLO:\n{t}\nhttps://corillo.live/noticias/{f[:-3]}/\n\nRetirar: daily-news.py --unpublish {f[:-3]}")
         stoat(f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
+        discord(f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
 
 if __name__ == '__main__':
     main()
