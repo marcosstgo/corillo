@@ -1,0 +1,76 @@
+---
+// Página de una oferta de equipo o de consola: es la que se comparte por WhatsApp, Telegram, X o Discord.
+// Las ofertas que ya terminaron siguen aquí ~30 días (marcadas como terminadas) para que un enlace compartido no dé 404.
+import SiteShell from '../../../layouts/SiteShell.astro';
+import ShareBar from '../../../components/ShareBar.astro';
+import HwCard from '../../../components/HwCard.astro';
+import { loadOfertas, hwOg, hwJsonLd, shareText, fmtStamp, type HwDeal } from '../../../data/ofertas';
+
+export function getStaticPaths() {
+  const D = loadOfertas();
+  const live = [...D.equipo, ...D.consola];
+  const ids = new Set(live.map(d => d.id));
+  return [...live.map(d => ({ params: { slug: d.slug }, props: { d, live: true } })),
+          ...D.archivo.filter(d => !ids.has(d.id)).map(d => ({ params: { slug: d.slug }, props: { d, live: false } }))];
+}
+interface Props { d: HwDeal; live: boolean; }
+const { d, live } = Astro.props;
+const D = loadOfertas();
+const url = `https://corillo.live/ofertas/o/${d.slug}/`;
+const listSlug = d.list === 'equipo' ? 'equipo' : 'consolas';
+const listName = d.list === 'equipo' ? 'Equipo gamer' : 'Juegos de consola';
+const more = D[d.list].filter(x => x.id !== d.id && (live ? x.cat === d.cat : true)).slice(0, 4);
+const title = live ? `${d.title} a ${d.price} en ${d.retailer}` : `${d.title} (oferta terminada)`;
+const desc = live
+  ? `${d.catLabel} en oferta: ${d.title} a ${d.price} en ${d.retailer}${d.save ? `, ahorras ${d.save}` : ''}. Tienda que envía a Puerto Rico.`
+  : `Esta oferta de ${d.title} ya terminó. Mira las ofertas de ${listName.toLowerCase()} que siguen vigentes.`;
+---
+<SiteShell title={`${title} — CORILLO`} description={desc} canonical={url} ogImage={hwOg(d)}>
+  <fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(hwJsonLd(d, live))} />
+    {!live && <meta name="robots" content="noindex" />}
+    <link rel="stylesheet" href="/assets/ofertas.css?v=3" />
+  </fragment>
+
+  <main class="of">
+    <nav class="of-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / <a href={`/ofertas/${listSlug}/`}>{listName}</a> / {d.catLabel}</nav>
+
+    <article class="hw-one">
+      <div class="hw-one-pic">
+        {d.image && <img src={d.image} alt={d.title} width="600" height="600" />}
+      </div>
+      <div class="hw-one-body">
+        <span class="hw-one-cat">{d.catLabel}{d.staff ? ' · Destacada' : ''}</span>
+        <h1>{d.title}</h1>
+        {live ? (
+          <>
+            <div class="of-price hw-one-price"><b>{d.price}</b>{d.save && <em>Ahorras {d.save}</em>}</div>
+            <p class="hw-one-meta">en <strong>{d.retailer}</strong>{d.prime ? ' · precio con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}</p>
+            {d.summary && <p class="hw-one-sum" lang="en">{d.summary}</p>}
+            <a class="of-go hw-one-go" href={d.url} target="_blank" rel="nofollow noopener">Ver la oferta en {d.retailer} <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            <p class="hw-one-fine">Te llevamos a la ficha de dealnews, que enlaza a {d.retailer}. Precio en dólares de EE. UU., reportado el {fmtStamp(d.posted)}. Confirma el precio final y el envío a Puerto Rico antes de comprar.</p>
+          </>
+        ) : (
+          <>
+            <div class="hw-one-ended">Esta oferta ya terminó. Era {d.price} en {d.retailer}.</div>
+            <a class="of-go hw-one-go" href={`/ofertas/${listSlug}/`}>Ver ofertas vigentes de {listName.toLowerCase()}</a>
+          </>
+        )}
+        <div class="hw-one-share">
+          <p>Compártela con tu corillo</p>
+          <ShareBar url={url} text={live ? shareText(d) : `${d.title}: mira las ofertas de ${listName.toLowerCase()} en CORILLO`} />
+        </div>
+      </div>
+    </article>
+
+    {more.length > 0 && (
+      <section class="of-sec">
+        <h2>{live ? `Más ofertas de ${d.catLabel.toLowerCase()}` : `Ofertas vigentes de ${listName.toLowerCase()}`}</h2>
+        <div class="of-grid">{more.map(x => <HwCard d={x} />)}</div>
+        <a class="of-more" href={`/ofertas/${listSlug}/`}>Ver todas</a>
+      </section>
+    )}
+
+    <p class="of-note"><strong>¿Quieres que te avisemos?</strong> En el <a href="/discord/">Discord del Corillo</a> puedes activar alertas de ofertas por categoría (monitores, tarjetas gráficas, controles, PlayStation…) y te mencionamos solo cuando sale una de lo que te interesa.</p>
+  </main>
+</SiteShell>

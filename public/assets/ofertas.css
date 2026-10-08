@@ -48,3 +48,30 @@
 .of-crumb{color:var(--h2-mute);font:600 .9rem var(--h2-body)} .of-crumb a{color:var(--h2-mute)} .of-crumb a:hover{color:var(--h2-bone)}
 
 .of-more{display:inline-flex;align-items:center;height:48px;padding:0 24px;margin-top:22px;border-radius:999px;background:var(--h2-bone);color:var(--h2-ink);text-decoration:none;font:800 .95rem var(--h2-body)}
+
+/* equipo y consolas: tarjetas, página de una oferta y botones de compartir */
+.hw-pic{position:relative;display:grid;place-items:center;aspect-ratio:4/3;background:#fff}
+.hw-pic img{width:84%;height:84%;object-fit:contain;display:block}
+.hw-one{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(22px,4vw,56px);margin-top:22px;align-items:start}
+.hw-one-pic{display:grid;place-items:center;aspect-ratio:1;border-radius:30px;background:#fff;overflow:hidden}
+.hw-one-pic img{width:86%;height:86%;object-fit:contain}
+.hw-one-cat{display:inline-flex;height:30px;align-items:center;padding:0 14px;border-radius:999px;background:var(--h2-cyan);color:var(--h2-ink);font:800 .82rem var(--h2-body);text-transform:uppercase;letter-spacing:.04em}
+.hw-one h1{margin:14px 0 0;font:800 clamp(1.8rem,4vw,3.1rem)/1.05 var(--h2-display);letter-spacing:-.035em;text-transform:none}
+.hw-one-price{margin-top:18px}.hw-one-price b{font-size:clamp(3rem,7vw,4.6rem);color:var(--h2-mag)}
+.hw-one-meta{margin:8px 0 0;color:var(--h2-bone);font:600 1.05rem var(--h2-body)}
+.hw-one-sum{margin:14px 0 0;color:var(--h2-mute);font:500 .98rem/1.55 var(--h2-body);max-width:58ch}
+.hw-one-go{margin-top:22px;height:54px;padding:0 26px;font-size:1.02rem;gap:10px}
+.hw-one-fine{margin:12px 0 0;color:var(--h2-mute);font:500 .86rem/1.5 var(--h2-body);max-width:58ch}
+.hw-one-ended{margin-top:18px;padding:16px 18px;border-radius:16px;background:color-mix(in srgb,var(--h2-cyan) 18%,transparent);color:var(--h2-bone);font:700 1rem var(--h2-body)}
+.hw-one-share{margin-top:28px;padding-top:22px;border-top:1px solid var(--h2-line)}
+.hw-one-share p{margin:0 0 12px;font:800 1rem var(--h2-body)}
+@media (max-width:760px){.hw-one{grid-template-columns:1fr}.hw-one-pic{max-width:420px;width:100%;margin:0 auto}}
+.sh{display:flex;flex-wrap:wrap;gap:8px}
+.sh-btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px;border:0;border-radius:12px;background:color-mix(in srgb,var(--h2-bone) 9%,transparent);color:var(--h2-bone);text-decoration:none;font:700 .92rem var(--h2-body);cursor:pointer;transition:background .15s,transform .15s}
+.sh-btn:hover{background:color-mix(in srgb,var(--h2-bone) 16%,transparent);transform:translateY(-1px)}
+.sh-btn i{font-size:1.1rem}
+.sh-whatsapp{background:#25d366;color:#06143f}.sh-whatsapp:hover{background:#3ee07a}
+.sh-native{background:var(--h2-bone);color:var(--h2-ink)}
+.sh-compact .sh-btn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sh-compact .sh-btn{width:44px;justify-content:center;padding:0}
+.sh-btn[hidden]{display:none}

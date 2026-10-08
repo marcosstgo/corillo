@@ -10,10 +10,16 @@ export interface Deal {
   price?: string; priceNum?: number; original?: string | null; pct?: number; rating?: number | null; reviews?: number; lowest?: boolean;
   starts?: string; ends?: string;
 }
-export interface Ofertas { updatedAt: string | null; free: Deal[]; freeSteam: Deal[]; soon: Deal[]; steam: Deal[]; gog: Deal[]; humble: Deal[]; fanatical: Deal[]; gmg: Deal[]; gamersgate: Deal[]; asOf: Record<string, string>; }
+/** Equipo y juegos de consola (vienen de dealnews; ver scripts/update-deals.py). */
+export interface HwDeal {
+  id: string; slug: string; title: string; cat: string; catLabel: string; list: 'equipo' | 'consola';
+  retailer: string; url: string; image: string | null; price: string; priceNum: number; save: string | null;
+  prime: boolean; freeShip: boolean; staff: boolean; expires: string | null; posted: string; summary: string | null; endedAt?: string;
+}
+export interface Ofertas { updatedAt: string | null; free: Deal[]; freeSteam: Deal[]; soon: Deal[]; steam: Deal[]; gog: Deal[]; humble: Deal[]; fanatical: Deal[]; gmg: Deal[]; gamersgate: Deal[]; equipo: HwDeal[]; consola: HwDeal[]; archivo: HwDeal[]; asOf: Record<string, string>; }
 
 export function loadOfertas(): Ofertas {
-  const empty: Ofertas = { updatedAt: null, free: [], freeSteam: [], soon: [], steam: [], gog: [], humble: [], fanatical: [], gmg: [], gamersgate: [], asOf: {} };
+  const empty: Ofertas = { updatedAt: null, free: [], freeSteam: [], soon: [], steam: [], gog: [], humble: [], fanatical: [], gmg: [], gamersgate: [], equipo: [], consola: [], archivo: [], asOf: {} };
   try { return { ...empty, ...JSON.parse(fs.readFileSync(FILE, 'utf8')) }; } catch { return empty; }
 }
 
@@ -85,5 +91,25 @@ export function offersJsonLd(items: Deal[], name: string, url: string) {
         },
       },
     })),
+  };
+}
+
+/** Categorías de equipo y consola, en el orden en que salen los filtros. */
+export const HW_CATS: Record<'equipo' | 'consola', { key: string; label: string }[]> = {
+  equipo: [{ key: 'monitores', label: 'Monitores' }, { key: 'graficas', label: 'Tarjetas gráficas' }, { key: 'laptops', label: 'Laptops gamer' },
+           { key: 'audio', label: 'Audífonos' }, { key: 'perifericos', label: 'Teclados, ratones y controles' }],
+  consola: [{ key: 'ps5', label: 'PlayStation' }, { key: 'xbox', label: 'Xbox' }, { key: 'switch', label: 'Nintendo' }],
+};
+export const hwPage = (d: HwDeal) => `/ofertas/o/${d.slug}/`;
+export const hwOg = (d: HwDeal) => `/ofertas/og/${d.slug}.png`;
+export const shareText = (d: HwDeal) => `${d.title} a ${d.price} en ${d.retailer}`;
+
+/** Datos estructurados de una oferta suelta. */
+export function hwJsonLd(d: HwDeal, live: boolean) {
+  return {
+    '@context': 'https://schema.org', '@type': 'Product', name: d.title, ...(d.image ? { image: d.image } : {}),
+    offers: { '@type': 'Offer', url: `https://corillo.live${hwPage(d)}`, priceCurrency: 'USD', price: d.priceNum.toFixed(2),
+      availability: live ? 'https://schema.org/InStock' : 'https://schema.org/Discontinued',
+      ...(d.expires ? { priceValidUntil: d.expires.slice(0, 10) } : {}), seller: { '@type': 'Organization', name: d.retailer } },
   };
 }

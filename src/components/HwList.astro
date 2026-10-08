@@ -1,0 +1,59 @@
+---
+// Página de lista de equipo o de juegos de consola, con filtros por categoría.
+import SiteShell from '../layouts/SiteShell.astro';
+import HwCard from './HwCard.astro';
+import { loadOfertas, HW_CATS, fmtStamp } from '../data/ofertas';
+
+interface Props { list: 'equipo' | 'consola'; slug: string; h1: string; title: string; blurb: string; }
+const { list, slug, h1, title, blurb } = Astro.props;
+const D = loadOfertas();
+const items = D[list];
+const cats = HW_CATS[list].map(c => ({ ...c, n: items.filter(x => x.cat === c.key).length })).filter(c => c.n > 0);
+const asOf = D.asOf[list] || D.updatedAt;
+const desc = items.length ? `${items.length} ofertas de ${h1.toLowerCase()} que se pueden enviar a Puerto Rico. ${blurb}`.slice(0, 300) : blurb;
+const ld = items.length ? {
+  '@context': 'https://schema.org', '@type': 'ItemList', name: h1, url: `https://corillo.live/ofertas/${slug}/`,
+  itemListElement: items.slice(0, 40).map((d, i) => ({ '@type': 'ListItem', position: i + 1, url: `https://corillo.live/ofertas/o/${d.slug}/`, name: d.title })),
+} : null;
+---
+<SiteShell title={`${title} — CORILLO`} description={desc} canonical={`https://corillo.live/ofertas/${slug}/`}>
+  <fragment slot="head">
+    {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
+    {!items.length && <meta name="robots" content="noindex" />}
+    <link rel="stylesheet" href="/assets/ofertas.css?v=3" />
+  </fragment>
+
+  <main class="of">
+    <nav class="of-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / {h1}</nav>
+    <header class="of-hd" style="margin-top:14px">
+      <h1 style="font-size:clamp(2.6rem,7vw,5.4rem)">{h1}</h1>
+      <p>{blurb}</p>
+      {asOf && <p class="of-stamp">Actualizado el {fmtStamp(asOf)} (hora de Puerto Rico). Precios en dólares, solo de tiendas que envían a Puerto Rico.</p>}
+    </header>
+
+    {cats.length > 1 && (
+      <div class="of-chips" role="group" aria-label="Filtrar por categoría">
+        <button class="of-chip" type="button" data-f="" aria-pressed="true">Todo ({items.length})</button>
+        {cats.map(c => <button class="of-chip" type="button" data-f={c.key} aria-pressed="false">{c.label} ({c.n})</button>)}
+      </div>
+    )}
+
+    {items.length ? (
+      <div class="of-grid" style="margin-top:22px">{items.map(d => <HwCard d={d} />)}</div>
+    ) : (
+      <div class="of-empty" style="margin-top:28px">Ahora mismo no hay ofertas en esta lista. Se actualiza sola cada hora; vuelve pronto o mira <a href="/ofertas/" style="color:var(--h2-bone)">todas las ofertas</a>.</div>
+    )}
+
+    <p class="of-note"><strong>Cómo lo hacemos.</strong> CORILLO no vende nada: estas ofertas las seleccionan los editores de <a href="https://www.dealnews.com/" target="_blank" rel="noopener">dealnews</a> y nosotros nos quedamos solo con las de gaming y de tiendas que envían a Puerto Rico (Amazon, Newegg, eBay, B&amp;H, Dell, Lenovo, HP y las tiendas digitales de PlayStation, Xbox y Nintendo). Algunos productos de Newegg, eBay y otras tiendas no se envían a PR: confírmalo en la tienda. Los precios cambian rápido; mira siempre el precio final antes de comprar.</p>
+  </main>
+
+  <script is:inline>
+    (function(){
+      var chips=document.querySelectorAll('.of-chip'), cards=document.querySelectorAll('.hw-card');
+      chips.forEach(function(c){c.addEventListener('click',function(){
+        chips.forEach(function(x){x.setAttribute('aria-pressed',String(x===c))});
+        var f=c.dataset.f; cards.forEach(function(k){ if(!f||k.dataset.cat===f) k.removeAttribute('data-hide'); else k.setAttribute('data-hide',''); });
+      });});
+    })();
+  </script>
+</SiteShell>

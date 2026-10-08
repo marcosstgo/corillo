@@ -1,0 +1,42 @@
+---
+// Botones para compartir una página: WhatsApp, Telegram, X, Facebook, copiar enlace y el menú nativo del teléfono.
+interface Props { url: string; text: string; compact?: boolean; }
+const { url, text, compact = false } = Astro.props;
+const u = encodeURIComponent(url), t = encodeURIComponent(text);
+const links = [
+  { k: 'whatsapp', label: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}` },
+  { k: 'telegram', label: 'Telegram', icon: 'fa-brands fa-telegram', href: `https://t.me/share/url?url=${u}&text=${t}` },
+  { k: 'x', label: 'X', icon: 'fa-brands fa-x-twitter', href: `https://twitter.com/intent/tweet?url=${u}&text=${t}` },
+  { k: 'facebook', label: 'Facebook', icon: 'fa-brands fa-facebook-f', href: `https://www.facebook.com/sharer/sharer.php?u=${u}` },
+];
+---
+<div class:list={['sh', { 'sh-compact': compact }]} data-share-url={url} data-share-text={text}>
+  <button class="sh-btn sh-native" type="button" data-native hidden><i class="fa-solid fa-share-nodes" aria-hidden="true"></i><span>Compartir</span></button>
+  {links.map(l => (
+    <a class={`sh-btn sh-${l.k}`} href={l.href} target="_blank" rel="noopener" aria-label={`Compartir en ${l.label}`}>
+      <i class={l.icon} aria-hidden="true"></i><span>{l.label}</span>
+    </a>
+  ))}
+  <button class="sh-btn sh-copy" type="button" data-copy aria-label="Copiar enlace"><i class="fa-solid fa-link" aria-hidden="true"></i><span>Copiar enlace</span></button>
+</div>
+
+<script is:inline>
+  (function(){
+    document.querySelectorAll('.sh').forEach(function(bar){
+      if (bar.dataset.ready) return; bar.dataset.ready = '1';
+      var url = bar.dataset.shareUrl, text = bar.dataset.shareText;
+      var nat = bar.querySelector('[data-native]');
+      if (navigator.share && matchMedia('(pointer:coarse)').matches) {
+        nat.hidden = false;
+        nat.addEventListener('click', function(){ navigator.share({ title: text, text: text, url: url }).catch(function(){}); });
+      }
+      var cp = bar.querySelector('[data-copy]');
+      cp.addEventListener('click', function(){
+        var done = function(){ var s = cp.querySelector('span'), i = cp.querySelector('i'); s.textContent = 'Copiado'; i.className = 'fa-solid fa-check';
+          setTimeout(function(){ s.textContent = 'Copiar enlace'; i.className = 'fa-solid fa-link'; }, 1800); };
+        if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, function(){ prompt('Copia el enlace:', url); });
+        else prompt('Copia el enlace:', url);
+      });
+    });
+  })();
+</script>

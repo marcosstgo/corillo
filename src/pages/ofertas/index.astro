@@ -2,6 +2,7 @@
 import SiteShell from '../../layouts/SiteShell.astro';
 import OfertaCard from '../../components/OfertaCard.astro';
 import GratisCard from '../../components/GratisCard.astro';
+import HwCard from '../../components/HwCard.astro';
 import { loadOfertas, allFree, LISTAS, fmtDay, fmtStamp, offersJsonLd, type Deal } from '../../data/ofertas';
 import { loadMercado } from '../../data/mercado';
 import { traductor } from '../../i18n';
@@ -27,7 +28,7 @@ const tileBlurb: Record<string, string> = {
 <SiteShell title="Ofertas de juegos: gratis de la semana y descuentos en Steam, GOG, Humble y más — CORILLO" description={desc} canonical="https://corillo.live/ofertas/">
   <fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-    <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
+    <link rel="stylesheet" href="/assets/ofertas.css?v=3" />
   </fragment>
 
   <main class="of">
@@ -42,6 +43,8 @@ const tileBlurb: Record<string, string> = {
       <button class="of-chip" type="button" data-f="free" aria-pressed="false">Gratis</button>
       <button class="of-chip" type="button" data-f="steam" aria-pressed="false">Steam</button>
       <button class="of-chip" type="button" data-f="gog" aria-pressed="false">GOG</button>
+      {D.equipo.length > 0 && <button class="of-chip" type="button" data-f="equipo" aria-pressed="false">Equipo</button>}
+      {D.consola.length > 0 && <button class="of-chip" type="button" data-f="consola" aria-pressed="false">Consolas</button>}
       <button class="of-chip" type="button" data-f="mas" aria-pressed="false">Más tiendas</button>
     </div>
 
@@ -73,6 +76,16 @@ const tileBlurb: Record<string, string> = {
       </section>
     ))}
 
+    {[['equipo', 'Equipo gamer en oferta', D.equipo, 'equipo', 'Monitores, tarjetas gráficas, laptops gamer, audífonos y controles, solo de tiendas que envían a Puerto Rico.'],
+      ['consola', 'Juegos de consola en oferta', D.consola, 'consolas', 'PlayStation, Xbox y Nintendo Switch, solo de tiendas que envían a Puerto Rico.']].map(([id, h, list, slug, blurb]) => (list as any[]).length > 0 && (
+      <section class="of-sec" data-sec={id as string} id={id as string}>
+        <h2>{h as string}</h2>
+        <p>{blurb as string}</p>
+        <div class="of-grid">{(list as any[]).slice(0, 8).map(d => <HwCard d={d} />)}</div>
+        {(list as any[]).length > 8 && <a class="of-more" href={`/ofertas/${slug}/`}>Ver las {(list as any[]).length} ofertas</a>}
+      </section>
+    ))}
+
     <section class="of-sec" data-sec="mas" id="mas">
       <h2>Más ofertas</h2>
       <p>Explora por tipo de oferta o por tienda.</p>
@@ -80,6 +93,8 @@ const tileBlurb: Record<string, string> = {
         {listas.map(l => (
           <a class="of-tile" href={`/ofertas/${l.slug}/`}><em>{l.n} {l.n === 1 ? 'juego' : 'juegos'}</em><b>{l.h1}</b><span>{tileBlurb[l.slug]}</span></a>
         ))}
+        {D.equipo.length > 0 && <a class="of-tile" href="/ofertas/equipo/"><em>{D.equipo.length} ofertas</em><b>Equipo gamer</b><span>Monitores, gráficas, laptops y controles que llegan a PR.</span></a>}
+        {D.consola.length > 0 && <a class="of-tile" href="/ofertas/consolas/"><em>{D.consola.length} ofertas</em><b>Juegos de consola</b><span>PlayStation, Xbox y Nintendo Switch.</span></a>}
         <a class="of-tile" href="/equipo/"><em>Guías de compra</em><b>Equipo recomendado</b><span>Webcams, micrófonos, capture cards y más para streaming.</span></a>
         <a class="of-tile" href="/mercado/"><em>{M.total ? tm('mercado.tile_em', { n: M.total }) : tm('mercado.tile_em_cero')}</em><b>Mercado</b><span>{tm('mercado.tile')}</span></a>
       </div>

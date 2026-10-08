@@ -20,3 +20,6 @@ pueblospr/
 ruta-preview-hub/
 assets/kick/
 __pycache__/
+
+# Tarjetas para compartir de ofertas: las genera scripts/update-deals.py
+public/ofertas/og/

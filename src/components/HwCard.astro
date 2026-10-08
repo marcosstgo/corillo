@@ -1,0 +1,19 @@
+---
+import { hwPage, type HwDeal } from '../data/ofertas';
+interface Props { d: HwDeal; }
+const { d } = Astro.props;
+const href = hwPage(d);
+---
+<article class="of-card hw-card" data-cat={d.cat}>
+  <a class="hw-pic" href={href} aria-label={d.title}>
+    {d.image && <img src={d.image} alt={d.title} width="300" height="300" loading="lazy" />}
+    <span class="of-flag" style="--tc:var(--h2-cyan)">{d.catLabel}</span>
+    {d.staff && <span class="of-low" title="Recomendada por los editores de dealnews">Destacada</span>}
+  </a>
+  <div class="of-body">
+    <h3><a href={href}>{d.title}</a></h3>
+    <div class="of-price"><b>{d.price}</b>{d.save && <em>Ahorras {d.save}</em>}</div>
+    <div class="of-meta">en {d.retailer}{d.prime ? ' · con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}</div>
+    <a class="of-go" href={href}>Ver oferta</a>
+  </div>
+</article>

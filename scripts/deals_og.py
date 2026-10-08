@@ -1,0 +1,83 @@
+"""Tarjetas para compartir (1200x630) de las ofertas de equipo y consolas.
+
+Las genera scripts/update-deals.py en public/ofertas/og/<slug>.png: son la vista previa que sale en
+WhatsApp, Telegram, X y Discord cuando alguien comparte la página de una oferta.
+"""
+import io, textwrap
+from pathlib import Path
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
+
+FONTS = Path.home() / 'corillo-deals' / 'fonts'
+W, H = 1200, 630
+INK, BONE, MUTE, MAG, ORANGE = (6, 20, 63), (245, 248, 255), (164, 182, 230), (255, 210, 63), (255, 106, 61)
+
+
+def _font(name, size, weight):
+    f = ImageFont.truetype(str(FONTS / name), size)
+    try: f.set_variation_by_axes([size, weight] if name == 'bricolage.ttf' else [weight])
+    except Exception: pass
+    return f
+
+
+def _fit_lines(draw, text, font, width, max_lines):
+    """Parte el título en líneas que caben en `width`; corta con … si no cabe en max_lines."""
+    words, lines, cur = text.split(), [], ''
+    for w in words:
+        t = (cur + ' ' + w).strip()
+        if draw.textlength(t, font=font) <= width: cur = t
+        else:
+            if cur: lines.append(cur)
+            cur = w
+    if cur: lines.append(cur)
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        while draw.textlength(lines[-1] + '…', font=font) > width and ' ' in lines[-1]: lines[-1] = lines[-1].rsplit(' ', 1)[0]
+        lines[-1] += '…'
+    return lines
+
+
+def card(deal, product_jpeg, out_path, cat_label):
+    """deal: dict con title, price, retailer, save (opcional). product_jpeg: bytes de la imagen o None."""
+    img = Image.new('RGB', (W, H), INK)
+    # resplandor de fondo con los colores del sitio
+    glow = Image.new('RGB', (W, H), INK); g = ImageDraw.Draw(glow)
+    g.ellipse((700, -260, 1400, 380), fill=(70, 40, 20)); g.ellipse((-200, 380, 500, 900), fill=(20, 50, 110))
+    img = Image.blend(img, glow.filter(ImageFilter.GaussianBlur(120)), 0.9)
+    d = ImageDraw.Draw(img)
+
+    # producto sobre un panel claro (las fotos de tienda casi siempre traen fondo blanco)
+    px, py, ps = 48, 55, 520
+    d.rounded_rectangle((px, py, px + ps, py + ps), radius=36, fill=(255, 255, 255))
+    if product_jpeg:
+        try:
+            p = Image.open(io.BytesIO(product_jpeg)).convert('RGB')
+            p.thumbnail((ps - 60, ps - 60), Image.LANCZOS)
+            img.paste(p, (px + (ps - p.width) // 2, py + (ps - p.height) // 2))
+        except Exception: pass
+
+    x, right = 620, W - 56
+    chip_f = _font('dmsans.ttf', 24, 800)
+    chip = cat_label.upper()
+    cw = d.textlength(chip, font=chip_f) + 36
+    d.rounded_rectangle((x, 62, x + cw, 104), radius=21, fill=ORANGE)
+    d.text((x + 18, 83), chip, font=chip_f, fill=INK, anchor='lm')
+
+    title_f = _font('bricolage.ttf', 44, 800)
+    y = 136
+    for line in _fit_lines(d, deal['title'], title_f, right - x, 3):
+        d.text((x, y), line, font=title_f, fill=BONE); y += 54
+
+    price_f = _font('bricolage.ttf', 118, 800)
+    d.text((x - 4, 455), deal['price'], font=price_f, fill=MAG, anchor='ls')
+    info_f = _font('dmsans.ttf', 30, 700)
+    sub = f"en {deal['retailer']}" + (f"  ·  Ahorras {deal['save']}" if deal.get('save') else '')
+    d.text((x, 500), sub, font=info_f, fill=BONE)
+
+    foot_f = _font('dmsans.ttf', 26, 700)
+    d.line((x, 556, right, 556), fill=(40, 60, 120), width=2)
+    d.text((x, 590), 'CORILLO', font=_font('bricolage.ttf', 34, 800), fill=BONE, anchor='lm')
+    d.text((right, 590), 'corillo.live/ofertas', font=foot_f, fill=MUTE, anchor='rm')
+
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = out_path.with_suffix('.tmp.png')
+    img.save(tmp, 'PNG', optimize=True); tmp.replace(out_path)
