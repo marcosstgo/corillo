@@ -108,3 +108,44 @@ def news_card(title, label, out_path):
     d.text((right, 588), 'corillo.live/noticias', font=_font('dmsans.ttf', 26, 700), fill=MUTE, anchor='rm')
     out_path.parent.mkdir(parents=True, exist_ok=True)
     img.save(out_path, 'PNG', optimize=True)
+
+
+def free_week_card(games, label, out_path):
+    """Tarjeta de los juegos gratis de la semana en Epic para WhatsApp. games: [(título, bytes de la portada o None)], hasta 3."""
+    img = Image.new('RGB', (W, H), INK)
+    glow = Image.new('RGB', (W, H), INK); g = ImageDraw.Draw(glow)
+    g.ellipse((700, -320, 1450, 360), fill=(95, 75, 10)); g.ellipse((-250, 360, 550, 980), fill=(20, 50, 120))
+    img = Image.blend(img, glow.filter(ImageFilter.GaussianBlur(130)), 0.9)
+    d = ImageDraw.Draw(img)
+    x, right = 64, W - 64
+    chip_f = _font('dmsans.ttf', 26, 800)
+    chip = 'GRATIS EN EPIC'
+    cw = d.textlength(chip, font=chip_f) + 40
+    d.rounded_rectangle((x, 56, x + cw, 102), radius=23, fill=MAG)
+    d.text((x + 20, 79), chip, font=chip_f, fill=INK, anchor='lm')
+    d.text((x + cw + 20, 79), label, font=_font('dmsans.ttf', 28, 700), fill=BONE, anchor='lm')
+    games = games[:3]; n = len(games); gap = 28
+    cw = (right - x - gap * (n - 1)) // n if n else 0
+    ch = min(int(cw * 9 / 16), 300)
+    top = 140 if n > 1 else 130
+    tf = _font('bricolage.ttf', 34 if n > 1 else 46, 800)
+    for i, (title, jpeg) in enumerate(games):
+        cx = x + i * (cw + gap)
+        box = Image.new('RGB', (cw, ch), (20, 40, 95))
+        if jpeg:
+            try:
+                p = Image.open(io.BytesIO(jpeg)).convert('RGB')
+                s = max(cw / p.width, ch / p.height)                   # recorta para llenar la caja sin deformar
+                p = p.resize((max(cw, int(p.width * s)), max(ch, int(p.height * s))), Image.LANCZOS)
+                box.paste(p.crop(((p.width - cw) // 2, (p.height - ch) // 2, (p.width - cw) // 2 + cw, (p.height - ch) // 2 + ch)))
+            except Exception: pass
+        mask = Image.new('L', (cw, ch), 0); ImageDraw.Draw(mask).rounded_rectangle((0, 0, cw, ch), radius=22, fill=255)
+        img.paste(box, (cx, top), mask)
+        y = top + ch + 18
+        for line in _fit_lines(d, title, tf, cw, 2):
+            d.text((cx, y), line, font=tf, fill=BONE); y += int(tf.size * 1.1)
+    d.line((x, 548, right, 548), fill=(40, 60, 120), width=2)
+    d.text((x, 588), 'CORILLO', font=_font('bricolage.ttf', 36, 800), fill=BONE, anchor='lm')
+    d.text((right, 588), 'corillo.live/ofertas/gratis', font=_font('dmsans.ttf', 26, 700), fill=MUTE, anchor='rm')
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out_path, 'PNG', optimize=True)

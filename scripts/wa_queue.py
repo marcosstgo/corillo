@@ -6,7 +6,7 @@ Las noticias (daily-news.py), las ofertas y juegos gratis (update-deals.py) y lo
 los manda de a uno y repartidos en el día, para que el grupo no reciba todo de golpe.
 
 Reglas: solo de 9 a. m. a 9 p. m. (hora de PR), mínimo GAP_MIN minutos entre mensajes, tope diario total
-y por tipo, y gana la prioridad (en vivo > noticia > juego gratis > oferta). Lo vencido se descarta.
+y por tipo, y gana la prioridad (en vivo > noticia > gratis de Epic de la semana > gratis de Steam > oferta). Lo vencido se descarta.
 Apagado si WHATSAPP_GROUP no está en ~/corillo-wa/.env.
 """
 import datetime as dt, fcntl, json, os, re, sqlite3, subprocess, sys
@@ -20,7 +20,7 @@ HOURS = (9, 21)
 GAP_MIN = 75
 DAILY_MAX = 6
 KINDS = {  # tipo -> (prioridad, máximo al día, horas de vida por defecto)
-    'envivo': (40, 2, 1), 'noticia': (30, 1, 14), 'gratis': (20, 1, 48), 'oferta': (10, 3, 24),
+    'envivo': (40, 2, 1), 'noticia': (30, 1, 14), 'epic': (25, 1, 72), 'gratis': (20, 1, 48), 'oferta': (10, 3, 24),
 }
 
 

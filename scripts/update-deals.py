@@ -533,6 +533,7 @@ def whatsapp_group(items, state):
     for k in [k for k, v in done.items() if v < (dt.date.today() - dt.timedelta(days=30)).isoformat()]: done.pop(k)
 
 def whatsapp_free(g):
+    if g['store'] == 'epic': return                     # los de Epic salen juntos una vez por semana (whatsapp_epic_week)
     import wa_queue
     when = ''
     if g.get('ends'):
@@ -542,6 +543,40 @@ def whatsapp_free(g):
     label = 'Epic' if g['store'] == 'epic' else 'Steam'
     wa_queue.enqueue('gratis', g['id'], f"🎁 *Gratis en {label}{when}:* {g['title']} (normalmente {g['original']})\nCómo reclamarlo: https://corillo.live/ofertas/gratis/",
                      media=g.get('image'), hours=min(hours, 72))
+
+def whatsapp_epic_week(free, soon, state):
+    """Un solo mensaje por semana con todos los gratis de Epic (cambian los jueves) y los que vienen.
+    La clave es la fecha de fin de la tanda: aunque Epic a veces omita un juego por un rato, nunca sale doble.
+    Se espera a verla en dos corridas seguidas (~1 h) y se juntan los juegos vistos, para no mandarla a medias."""
+    epic = [g for g in free if g['store'] == 'epic' and g.get('ends')]
+    if not epic: return
+    import wa_queue, deals_og
+    end = min(g['ends'] for g in epic); key = 'epicweek:' + end[:10]
+    weeks = state.setdefault('epic_week', {})
+    b = weeks.setdefault(key, {'first': time.time(), 'games': {}})
+    for g in epic: b['games'].setdefault(g['id'], {'title': g['title'], 'original': g.get('original'), 'image': g.get('image')})
+    for k in sorted(weeks)[:-4]: weeks.pop(k)                                   # solo las últimas semanas
+    if b.get('queued') or time.time() - b['first'] < 50 * 60: return
+    end_dt = dt.datetime.fromisoformat(end.replace('Z', '+00:00'))
+    end_pr = end_dt.astimezone(dt.timezone(dt.timedelta(hours=-4)))
+    hours = (end_dt - dt.datetime.now(dt.timezone.utc)).total_seconds() / 3600 - 2
+    if hours < 3: b['queued'] = True; return                                     # ya casi se acaba: no vale la pena avisar
+    games = list(b['games'].values())
+    label = f"hasta el {end_pr.day} de {MESES[end_pr.month - 1]}"
+    text = f"🎮 *Gratis esta semana en Epic* ({label}):\n" + '\n'.join(
+        f"• {g['title']}" + (f" (normalmente {g['original']})" if g.get('original') else '') for g in games)
+    nxt = [x['title'] for x in soon if x.get('store') == 'epic' and x['id'] not in b['games']]
+    if nxt: text += '\n\n🔜 *La próxima semana:* ' + ', '.join(nxt)
+    text += '\n\nCómo reclamarlos: https://corillo.live/ofertas/gratis/'
+    pics = []
+    for g in games[:3]:
+        try: pics.append((g['title'], CLIENT.get(g['image']).content if g.get('image') else None))
+        except Exception: pics.append((g['title'], None))
+    card = wa_queue.HOME / 'cards' / f"{key.replace(':', '-')}.png"
+    try: deals_og.free_week_card(pics, label, card)
+    except Exception as e: log('tarjeta de Epic falló:', e); card = None
+    wa_queue.enqueue('epic', key, text, media=str(card) if card else None, hours=min(hours, 72))
+    b['queued'] = True; log('WhatsApp: gratis de la semana en Epic a la fila', key)
 
 # ───────────────────────── principal ─────────────────────────
 def score(x): return x['pct'] + ((x.get('rating') or 75) - 75) + (25 if x.get('lowest') else 0)
@@ -657,6 +692,9 @@ def main():
     if not a.no_deploy:                                                  # los avisos enlazan a páginas del sitio: solo después de un deploy bueno
         discord_hardware(out['equipo'] + out['consola'], state); STATE.write_text(json.dumps(state))
         whatsapp_group(out['equipo'] + out['consola'], state); STATE.write_text(json.dumps(state))
+        try: whatsapp_epic_week(out['free'], out.get('soon', []), state)
+        except Exception as e: log('fila de WhatsApp (Epic semanal) falló:', e)
+        STATE.write_text(json.dumps(state))
     if len(errors) >= 3: telegram('⚠️ Ofertas: varias fuentes fallaron: ' + '; '.join(errors))
 
 if __name__ == '__main__':
