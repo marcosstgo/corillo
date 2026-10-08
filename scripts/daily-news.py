@@ -571,6 +571,21 @@ def main():
         telegram(f"📰 Nota publicada en CORILLO:\n{t}\nhttps://corillo.live/noticias/{f[:-3]}/\n\nRetirar: daily-news.py --unpublish {f[:-3]}")
         stoat(f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
         discord(f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
+        whatsapp(f[:-3], t, (POSTS / f).read_text())
+
+
+def whatsapp(slug, title, md):
+    """Deja la noticia en la fila del grupo de WhatsApp (scripts/wa_queue.py la reparte), con su tarjeta."""
+    try:
+        import deals_og, wa_queue
+        label = (re.search(r'^badgeLabel: "(.*)"', md, re.M) or re.search(r'(Gaming)', 'Gaming')).group(1)
+        summ = (re.search(r'^summary: "(.*)"', md, re.M) or re.search(r'()', '')).group(1)
+        card = wa_queue.HOME / 'cards' / f'{slug}.png'
+        deals_og.news_card(title, label, card)
+        text = f"📰 *Noticia del día:* {title}" + (f"\n{summ}" if summ else '') + f"\nhttps://corillo.live/noticias/{slug}/"
+        wa_queue.enqueue('noticia', 'news:' + slug, text, media=str(card))
+    except Exception as e:
+        log('fila de WhatsApp (noticia) falló:', type(e).__name__, e)
 
 if __name__ == '__main__':
     main()

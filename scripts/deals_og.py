@@ -81,3 +81,30 @@ def card(deal, product_jpeg, out_path, cat_label):
     out_path.parent.mkdir(parents=True, exist_ok=True)
     tmp = out_path.with_suffix('.tmp.png')
     img.save(tmp, 'PNG', optimize=True); tmp.replace(out_path)
+
+
+def news_card(title, label, out_path):
+    """Tarjeta de la noticia del día para WhatsApp: el titular grande con la categoría."""
+    img = Image.new('RGB', (W, H), INK)
+    glow = Image.new('RGB', (W, H), INK); g = ImageDraw.Draw(glow)
+    g.ellipse((650, -300, 1450, 400), fill=(90, 40, 20)); g.ellipse((-250, 330, 550, 950), fill=(20, 50, 120))
+    img = Image.blend(img, glow.filter(ImageFilter.GaussianBlur(130)), 0.9)
+    d = ImageDraw.Draw(img)
+    x, right = 72, W - 72
+    chip_f = _font('dmsans.ttf', 26, 800)
+    chip = ('Noticia · ' + label).upper()
+    cw = d.textlength(chip, font=chip_f) + 40
+    d.rounded_rectangle((x, 72, x + cw, 118), radius=23, fill=ORANGE)
+    d.text((x + 20, 95), chip, font=chip_f, fill=INK, anchor='lm')
+    for size in (76, 66, 58, 50):                                   # el titular más grande que quepa en 4 líneas
+        f = _font('bricolage.ttf', size, 800)
+        lines = _fit_lines(d, title, f, right - x, 4)
+        if not lines[-1].endswith('…'): break
+    y = 160
+    for line in lines:
+        d.text((x, y), line, font=f, fill=BONE); y += int(size * 1.12)
+    d.line((x, 548, right, 548), fill=(40, 60, 120), width=2)
+    d.text((x, 588), 'CORILLO', font=_font('bricolage.ttf', 36, 800), fill=BONE, anchor='lm')
+    d.text((right, 588), 'corillo.live/noticias', font=_font('dmsans.ttf', 26, 700), fill=MUTE, anchor='rm')
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    img.save(out_path, 'PNG', optimize=True)

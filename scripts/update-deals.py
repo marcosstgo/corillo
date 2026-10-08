@@ -516,34 +516,32 @@ def discord_hardware(items, state):
     if len(sent) > 2000:
         for k in list(sent)[:500]: sent.pop(k)
 
-# ───────────────────── grupo de WhatsApp (vía OpenClaw, que está vinculado al WhatsApp de Marcos) ─────────────────────
-WA_DAILY_MAX = 3                                  # el grupo es de amigos: pocas y buenas
-
+# ───────────────────── grupo de WhatsApp: se deja en la fila de scripts/wa_queue.py, que reparte durante el día ─────────────────────
 def whatsapp_group(items, state):
-    """Publica en el grupo las ofertas que acaban de salir en Discord. Apagado si WHATSAPP_DEALS_GROUP no está en ~/corillo-deals/.env."""
-    group = os.environ.get('WHATSAPP_DEALS_GROUP')
-    if not group or not 9 <= dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).hour < 21: return   # el grupo es de gente: solo de 9 a. m. a 9 p. m.
-    sent = state.setdefault('wa_sent', {})
+    """Las ofertas que hoy salieron en Discord pasan a la fila de WhatsApp (el repartidor decide cuándo y cuántas)."""
+    import wa_queue
     today = dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).date().isoformat()
-    n_today = sum(1 for v in sent.values() if v == today)
-    disc = state.get('hw_notified', {})
-    fresh = [it for it in items if it['id'] not in sent and str(disc.get(it['id'], '')).startswith(today)]   # solo lo que hoy salió en Discord
-    fresh.sort(key=lambda x: -x.get('score', 0))
-    for it in fresh:
-        if n_today >= WA_DAILY_MAX: break
+    disc, done = state.get('hw_notified', {}), state.setdefault('wa_sent', {})
+    for it in items:
+        if it['id'] in done or not str(disc.get(it['id'], '')).startswith(today): continue
         page, _ = share_links(it)
-        lines = [f"*{it['title']}*", f"{it['price']} en {it['retailer']}" + (f" · ahorras {it['save']}" if it.get('save') else '') + (' · con Prime' if it.get('prime') else ''), page]
-        cmd = ['/usr/bin/openclaw', 'message', 'send', '--channel', 'whatsapp', '--target', group, '--message', '\n'.join(lines), '--json']
+        price = f"{it['price']} en {it['retailer']}" + (f" (-{it['pct']}%)" if it.get('pct') else '')
+        text = f"🛒 *Oferta:* {it['title']}\n{price}\n{page}"
         og = REPO / 'public' / 'ofertas' / 'og' / f"{it['slug']}.png"
-        if og.exists(): cmd += ['--media', str(og)]
-        try:
-            r = subprocess.run(cmd, capture_output=True, text=True, timeout=90)
-            if r.returncode != 0: raise RuntimeError((r.stdout + r.stderr)[-200:])
-            sent[it['id']] = today; n_today += 1
-            log('WhatsApp: publicado', it['title'][:60])
-        except Exception as e:
-            log('WhatsApp falló:', str(e)[:200]); break                     # si OpenClaw o WhatsApp están caídos, se reintenta la próxima hora
-    for k in [k for k, v in sent.items() if v < (dt.date.today() - dt.timedelta(days=30)).isoformat()]: sent.pop(k)
+        wa_queue.enqueue('oferta', it['id'], text, media=str(og) if og.exists() else None, score=it.get('score', 0))
+        done[it['id']] = today
+    for k in [k for k, v in done.items() if v < (dt.date.today() - dt.timedelta(days=30)).isoformat()]: done.pop(k)
+
+def whatsapp_free(g):
+    import wa_queue
+    when = ''
+    if g.get('ends'):
+        end = dt.datetime.fromisoformat(g['ends'].replace('Z', '+00:00')).astimezone(dt.timezone(dt.timedelta(hours=-4)))
+        when = f" hasta el {end.day} de {MESES[end.month - 1]}"
+    hours = max(1, (dt.datetime.fromisoformat(g['ends'].replace('Z', '+00:00')) - dt.datetime.now(dt.timezone.utc)).total_seconds() / 3600 - 2) if g.get('ends') else 48
+    label = 'Epic' if g['store'] == 'epic' else 'Steam'
+    wa_queue.enqueue('gratis', g['id'], f"🎁 *Gratis en {label}{when}:* {g['title']} (normalmente {g['original']})\nCómo reclamarlo: https://corillo.live/ofertas/gratis/",
+                     media=g.get('image'), hours=min(hours, 72))
 
 # ───────────────────────── principal ─────────────────────────
 def score(x): return x['pct'] + ((x.get('rating') or 75) - 75) + (25 if x.get('lowest') else 0)
@@ -577,6 +575,8 @@ def discord_new_free(free, state):
                 'image': {'url': g['image']} if g.get('image') else {}}]}, timeout=15)
             resp.raise_for_status()               # solo cuenta como avisado si Discord lo aceptó
             log('Discord: avisado', g['title'])
+            try: whatsapp_free(g)
+            except Exception as e: log('fila de WhatsApp (gratis) falló:', e)
         except Exception as e: log('Discord falló:', e); continue
         sent.add(g['id'])
     state['notified'] = sorted(sent)[-80:]
