@@ -55,13 +55,16 @@ def _group():
         if l.startswith('WHATSAPP_GROUP='): return l.split('=', 1)[1].strip() or None
 
 
+def _wa_up():
+    st = subprocess.run(['/usr/bin/openclaw', 'channels', 'status'], capture_output=True, text=True, timeout=60).stdout
+    line = next((l for l in st.splitlines() if 'WhatsApp' in l), '')
+    return 'stopped' not in line and 'disconnected' not in line
+
+
 def _revive(stamp):
     """Si el canal de WhatsApp quedó parado (p. ej. tras un corte de DNS, 8-oct), reinicia el gateway; máx 1 vez/hora."""
     mark = HOME / '.last_restart'
     if mark.exists() and mark.stat().st_mtime > _now().timestamp() - 3600: return
-    st = subprocess.run(['/usr/bin/openclaw', 'channels', 'status'], capture_output=True, text=True, timeout=60).stdout
-    line = next((l for l in st.splitlines() if 'WhatsApp' in l), '')
-    if 'stopped' not in line and 'disconnected' not in line: return
     mark.touch()
     r = subprocess.run(['sudo', '-n', 'systemctl', 'restart', 'openclaw'], capture_output=True, text=True, timeout=60)
     print(stamp, 'canal de WhatsApp parado; reinicio del gateway:', 'OK' if r.returncode == 0 else r.stderr.strip()[-200:])
@@ -91,11 +94,14 @@ def dispatch(dry=False):
         cmd = ['/usr/bin/openclaw', 'message', 'send', '--channel', 'whatsapp', '--target', group, '--message', it['text'], '--json']
         if it.get('media'): cmd += ['--media', it['media']]
         if dry: cmd.append('--dry-run')
-        r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
         stamp = now.strftime('%Y-%m-%d %H:%M')
+        # Con el canal caído no se manda: OpenClaw guarda el intento y lo reenvía al reconectar,
+        # y como aquí también se reintenta, el grupo recibía el mismo mensaje repetido (8-oct).
+        if not dry and not _wa_up():
+            print(stamp, 'WhatsApp desconectado; no se envía (se reintenta en 10 min)'); _revive(stamp); return
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
         if r.returncode != 0:
-            print(stamp, 'WhatsApp falló (se reintenta en 10 min):', (r.stdout + r.stderr)[-200:].replace('\n', ' '))
-            _revive(stamp); return
+            print(stamp, 'WhatsApp falló (se reintenta en 10 min):', (r.stdout + r.stderr)[-200:].replace('\n', ' ')); return
         print(stamp, 'enviado' if not dry else 'prueba OK', it['kind'], it['key'])
         if not dry:
             q['pending'].remove(it)
