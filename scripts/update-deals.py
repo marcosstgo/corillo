@@ -478,7 +478,7 @@ def share_links(it):
 def discord_hardware(items, state):
     token, roles_raw = os.environ.get('DISCORD_BOT_TOKEN'), os.environ.get('DISCORD_DEALS_ROLES', '')
     chans = {'equipo': os.environ.get('DISCORD_CH_OFERTAS_EQUIPO'), 'consola': os.environ.get('DISCORD_CH_OFERTAS')}
-    if not token: return
+    if not token or not 8 <= dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).hour < 23: return   # nada de pings de madrugada (8 a. m. a 11 p. m.)
     roles = dict(x.split(':', 1) for x in roles_raw.split(',') if ':' in x)      # cat:role_id
     sent = state.setdefault('hw_notified', {})                                     # id -> fecha de aviso (ISO)
     today = dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).date().isoformat()
@@ -522,12 +522,13 @@ WA_DAILY_MAX = 3                                  # el grupo es de amigos: pocas
 def whatsapp_group(items, state):
     """Publica en el grupo las ofertas que acaban de salir en Discord. Apagado si WHATSAPP_DEALS_GROUP no está en ~/corillo-deals/.env."""
     group = os.environ.get('WHATSAPP_DEALS_GROUP')
-    if not group: return
+    if not group or not 9 <= dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).hour < 21: return   # el grupo es de gente: solo de 9 a. m. a 9 p. m.
     sent = state.setdefault('wa_sent', {})
     today = dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).date().isoformat()
     n_today = sum(1 for v in sent.values() if v == today)
     disc = state.get('hw_notified', {})
     fresh = [it for it in items if it['id'] not in sent and str(disc.get(it['id'], '')).startswith(today)]   # solo lo que hoy salió en Discord
+    fresh.sort(key=lambda x: -x.get('score', 0))
     for it in fresh:
         if n_today >= WA_DAILY_MAX: break
         page, _ = share_links(it)
