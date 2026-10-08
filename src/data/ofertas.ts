@@ -14,7 +14,7 @@ export interface Deal {
 export interface HwDeal {
   id: string; slug: string; title: string; cat: string; catLabel: string; list: 'equipo' | 'consola';
   retailer: string; url: string; image: string | null; price: string; priceNum: number; save: string | null;
-  prime: boolean; freeShip: boolean; staff: boolean; hot?: boolean; score?: number; pct?: number; expires: string | null; posted: string; summary: string | null; endedAt?: string;
+  prime: boolean; freeShip: boolean; staff: boolean; hot?: boolean; score?: number; pct?: number; brandStore?: boolean; lowest30?: boolean; expires: string | null; posted: string; summary: string | null; endedAt?: string;
 }
 export interface Ofertas { updatedAt: string | null; free: Deal[]; freeSteam: Deal[]; soon: Deal[]; steam: Deal[]; gog: Deal[]; humble: Deal[]; fanatical: Deal[]; gmg: Deal[]; gamersgate: Deal[]; equipo: HwDeal[]; consola: HwDeal[]; archivo: HwDeal[]; asOf: Record<string, string>; }
 

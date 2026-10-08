@@ -8,7 +8,8 @@ const href = hwPage(d);
   <a class="hw-pic" href={href} aria-label={d.title}>
     {d.image && <img src={d.image} alt={d.title} width="300" height="300" loading="lazy" />}
     <span class="of-flag" style="--tc:var(--h2-cyan)">{d.catLabel}</span>
-    {d.hot ? <span class="of-low hw-hot" title="Una de las ofertas más populares ahora mismo">Popular</span>
+    {d.lowest30 ? <span class="of-low hw-hot" title="El precio más bajo que hemos visto en esta tienda">Precio más bajo</span>
+     : d.hot ? <span class="of-low hw-hot" title="Una de las ofertas más populares ahora mismo">Popular</span>
            : d.staff && <span class="of-low" title="Recomendada por los editores de dealnews">Destacada</span>}
   </a>
   <div class="of-body">

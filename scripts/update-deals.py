@@ -337,10 +337,82 @@ def dealnews(lista):
     uniq.sort(key=lambda x: (-x['score'], x['posted']))
     return uniq[:60]
 
+# ───────────────────── tiendas de marca (Shopify): IEMs, DACs, teclados y ratones "chinos buenos" ─────────────────────
+# Estas marcas casi nunca salen en dealnews. Sus tiendas (Shopify) publican /products.json con precio y "precio de antes".
+# dominio -> (nombre, categoría, infla_precio_de_antes). Las que "inflan" tienen casi todo rebajado siempre:
+# ahí solo cuenta una rebaja fuerte o una bajada real que hayamos visto nosotros (historial de precios).
+BRAND_STORES = {
+    'hifigo.com': ('HiFiGo', 'audio', False), 'linsoul.com': ('Linsoul', 'audio', False),
+    'kiwiears.com': ('Kiwi Ears', 'audio', False), 'fosiaudio.com': ('Fosi Audio', 'audio', False),
+    'attackshark.com': ('Attack Shark', 'perifericos', False), 'mchose.store': ('MCHOSE', 'perifericos', False),
+    'keychron.com': ('Keychron', 'perifericos', True), 'epomaker.com': ('Epomaker', 'perifericos', True),
+}
+BRAND_JUNK = r'\bplate\b|plush|mascot|\bpcb\b|stabili[sz]er|\bknob\b|\biso\b|russian|\(ru\b|\bjis\b|\buk layout|german|nordic|french|clearance|combination|only ship|open box|riser|\bdesk\b|subwoofer|phono|preamp|power amp|speaker|turntable|switch (?:benefit|pack|set)|\(\d+ ?pieces\)|cable|ear ?tips?|eartip|\bcase\b|pouch|adapter|filter|foam|sticker|gift ?card|warranty|replacement|spare|dust ?cover|wrist ?rest|keycap puller|lanyard|bundle sale|mystery'
+PER_STORE = 4
+
+def brand_stores(state):
+    hist = state.setdefault('px', {})                 # historial: id -> {"d": primera vez visto (ISO), "p": [[fecha, precio], ...]}
+    today = dt.date.today().isoformat()
+    out = []
+    for dom, (name, cat, inflated) in BRAND_STORES.items():
+        try:
+            prods = []
+            for page in (1, 2):
+                r = CLIENT.get(f'https://{dom}/products.json', params={'limit': 250, 'page': page}, headers=DN_UA, timeout=25)
+                r.raise_for_status(); ps = r.json().get('products', [])
+                prods += ps
+                if len(ps) < 250: break
+                time.sleep(1)
+        except Exception as e:
+            log(f'  tienda {name} no respondió:', type(e).__name__); continue
+        cand = []
+        for p in prods:
+            title = html.unescape(p.get('title') or '').strip()
+            text = ' '.join([title, p.get('product_type') or '', ' '.join(p.get('tags') or [])])
+            if not title or re.search(BRAND_JUNK, title + ' ' + (p.get('product_type') or ''), re.I): continue
+            if cat == 'audio' and not re.search(r'iem|in ?-?ear|earphone|earbud|headphone|headset|\bdac\b|\bamp\b|amplifier|\btws\b|wireless', text, re.I): continue
+            vs = [v for v in p.get('variants', []) if v.get('available')]
+            if not vs or not p.get('images'): continue
+            v = min(vs, key=lambda v: float(v['price']))                 # la variante más barata disponible
+            price, before = float(v['price']), float(v.get('compare_at_price') or 0)
+            if not 15 <= price <= 400: continue
+            key = f"sh:{dom}:{p['id']}"
+            h = hist.setdefault(key, {'d': today, 'p': []})
+            if not h['p'] or h['p'][-1][1] != price: h['p'] = (h['p'] + [[today, price]])[-20:]
+            seen = [x[1] for x in h['p']]
+            dropped = len(h['p']) > 1 and (dt.date.fromisoformat(today) - dt.date.fromisoformat(h['d'])).days >= 7 and price < max(seen) * 0.9
+            pct = round((1 - price / before) * 100) if before > price else 0
+            if pct > 70: continue                                         # "70 % menos" en tienda de marca casi siempre es un precio de antes inventado
+            if not (dropped or pct >= (30 if inflated else 15)): continue
+            img = p['images'][0]['src']; img += ('&' if '?' in img else '?') + 'width=600'
+            cand.append({'id': key, 'slug': f"{slugify(title)}-{p['id']}", 'title': title, 'cat': cat, 'catLabel': DN_LABEL[cat], 'list': 'equipo',
+                         'retailer': name, 'url': f"https://{dom}/products/{p['handle']}", 'image': img,
+                         'price': f'${price:,.2f}'.replace('.00', ''), 'priceNum': price,
+                         'save': f'${before - price:,.2f}'.replace('.00', '') if pct else None, 'pct': pct or None,
+                         'prime': False, 'freeShip': False, 'staff': False, 'brandStore': True, 'lowest30': dropped and price <= min(seen),
+                         'expires': None, 'posted': (p.get('published_at') or dt.datetime.now(dt.timezone.utc).isoformat())[:25],
+                         'summary': f"Tienda oficial: {name}." + (f" Marca: {p['vendor']}." if p.get('vendor') and p['vendor'] != name else '')})
+        for x in cand: x['score'] = hw_score(x) + (12 if x['lowest30'] else 0)
+        cand.sort(key=lambda x: -x['score'])
+        names = {re.sub(r'[^a-z0-9]', '', x['title'].lower()): x for x in out}
+        keep = []
+        for x in cand:                                                    # el mismo producto en dos tiendas: se queda el más barato
+            k = re.sub(r'[^a-z0-9]', '', x['title'].lower())
+            if k in names:
+                if x['priceNum'] < names[k]['priceNum']: out.remove(names[k]); names[k] = x; keep.append(x)
+                continue
+            names[k] = x; keep.append(x)
+        out += keep[:PER_STORE]
+        log(f'  {name}: {len(prods)} productos, {len(cand)} rebajas que pasan el filtro')
+        time.sleep(1)
+    cutoff = (dt.date.today() - dt.timedelta(days=60)).isoformat()      # el historial se poda solo
+    for k in [k for k, v in hist.items() if v['p'] and v['p'][-1][0] < cutoff]: hist.pop(k)
+    return out
+
 # Criterio de selección: lo que más compra un gamer (periféricos y audio), marcas con buena fama,
 # descuento real, precio razonable y lo que está popular. Las reacondicionadas y lo muy caro bajan.
 CAT_W = {'perifericos': 30, 'audio': 26, 'portatiles': 22, 'monitores': 18, 'graficas': 14, 'laptops': 8, 'ps5': 12, 'xbox': 10, 'switch': 12}
-GOOD_BRANDS = r'logitech|razer|steelseries|hyperx|corsair|8bitdo|keychron|wooting|glorious|pulsar|lamzu|redragon|soundcore|\bsony\b|\bjbl\b|sennheiser|moondrop|truthear|apple|samsung|\basus\b|\brog\b|\bmsi\b|\blg\b|alienware|gigabyte|aorus|nvidia|geforce|radeon|nintendo|playstation|xbox|backbone|gamesir|turtle beach|astro'
+GOOD_BRANDS = r'moondrop|truthear|letshuoer|7hz|kiwi ears|tanchjim|simgot|fiio|fosi|topping|shanling|dunu|attack shark|keychron|epomaker|mchose|angry miao|akko|monsgeek|vxe|darmoshark|aula|logitech|razer|steelseries|hyperx|corsair|8bitdo|keychron|wooting|glorious|pulsar|lamzu|redragon|soundcore|\bsony\b|\bjbl\b|sennheiser|moondrop|truthear|apple|samsung|\basus\b|\brog\b|\bmsi\b|\blg\b|alienware|gigabyte|aorus|nvidia|geforce|radeon|nintendo|playstation|xbox|backbone|gamesir|turtle beach|astro'
 
 def hw_score(x):
     sc = CAT_W.get(x['cat'], 10)
@@ -552,6 +624,12 @@ def main():
         if r is None: continue
         if not r: errors.append(f'{name}: lista vacía'); log(f'{name}: lista vacía (se conserva la anterior)'); continue
         new[name] = r; log(f'{name}: {len(r)} válidas')
+
+    r = attempt('marcas', lambda: brand_stores(state))                   # IEMs, DACs, teclados y ratones de tiendas de marca
+    if r:
+        seen = {x['id'] for x in new['equipo']}
+        new['equipo'] = sorted(new['equipo'] + [x for x in r if x['id'] not in seen], key=lambda x: -x.get('score', 0))[:80]
+        log(f'marcas: {len(r)} añadidas a equipo')
 
     for name in ('freeSteam', 'steam', 'gog', 'humble', 'fanatical', 'gmg', 'gamersgate'): fix_images(new[name], state)
     for name in LISTS: new[name] = drop_dead_links(new[name], state)
