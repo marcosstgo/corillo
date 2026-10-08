@@ -29,7 +29,7 @@ const desc = live
   <fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(hwJsonLd(d, live))} />
     {!live && <meta name="robots" content="noindex" />}
-    <link rel="stylesheet" href="/assets/ofertas.css?v=3" />
+    <link rel="stylesheet" href="/assets/ofertas.css?v=5" />
   </fragment>
 
   <main class="of">
@@ -40,11 +40,11 @@ const desc = live
         {d.image && <img src={d.image} alt={d.title} width="600" height="600" />}
       </div>
       <div class="hw-one-body">
-        <span class="hw-one-cat">{d.catLabel}{d.staff ? ' · Destacada' : ''}</span>
+        <span class="hw-one-cat">{d.catLabel}{d.hot ? ' · Popular' : d.staff ? ' · Destacada' : ''}</span>
         <h1>{d.title}</h1>
         {live ? (
           <>
-            <div class="of-price hw-one-price"><b>{d.price}</b>{d.save && <em>Ahorras {d.save}</em>}</div>
+            <div class="of-price hw-one-price"><b>{d.price}</b>{d.save && <em>Ahorras {d.save}{d.pct ? ` (-${d.pct}%)` : ''}</em>}</div>
             <p class="hw-one-meta">en <strong>{d.retailer}</strong>{d.prime ? ' · precio con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}</p>
             {d.summary && <p class="hw-one-sum" lang="en">{d.summary}</p>}
             <a class="of-go hw-one-go" href={d.url} target="_blank" rel="nofollow noopener">Ver la oferta en {d.retailer} <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>

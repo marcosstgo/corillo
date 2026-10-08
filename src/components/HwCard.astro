@@ -8,11 +8,12 @@ const href = hwPage(d);
   <a class="hw-pic" href={href} aria-label={d.title}>
     {d.image && <img src={d.image} alt={d.title} width="300" height="300" loading="lazy" />}
     <span class="of-flag" style="--tc:var(--h2-cyan)">{d.catLabel}</span>
-    {d.staff && <span class="of-low" title="Recomendada por los editores de dealnews">Destacada</span>}
+    {d.hot ? <span class="of-low hw-hot" title="Una de las ofertas más populares ahora mismo">Popular</span>
+           : d.staff && <span class="of-low" title="Recomendada por los editores de dealnews">Destacada</span>}
   </a>
   <div class="of-body">
     <h3><a href={href}>{d.title}</a></h3>
-    <div class="of-price"><b>{d.price}</b>{d.save && <em>Ahorras {d.save}</em>}</div>
+    <div class="of-price"><b>{d.price}</b>{d.save && <em>{d.pct ? `-${d.pct}%` : `Ahorras ${d.save}`}</em>}</div>
     <div class="of-meta">en {d.retailer}{d.prime ? ' · con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}</div>
     <a class="of-go" href={href}>Ver oferta</a>
   </div>

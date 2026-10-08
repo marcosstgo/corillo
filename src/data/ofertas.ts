@@ -14,7 +14,7 @@ export interface Deal {
 export interface HwDeal {
   id: string; slug: string; title: string; cat: string; catLabel: string; list: 'equipo' | 'consola';
   retailer: string; url: string; image: string | null; price: string; priceNum: number; save: string | null;
-  prime: boolean; freeShip: boolean; staff: boolean; expires: string | null; posted: string; summary: string | null; endedAt?: string;
+  prime: boolean; freeShip: boolean; staff: boolean; hot?: boolean; score?: number; pct?: number; expires: string | null; posted: string; summary: string | null; endedAt?: string;
 }
 export interface Ofertas { updatedAt: string | null; free: Deal[]; freeSteam: Deal[]; soon: Deal[]; steam: Deal[]; gog: Deal[]; humble: Deal[]; fanatical: Deal[]; gmg: Deal[]; gamersgate: Deal[]; equipo: HwDeal[]; consola: HwDeal[]; archivo: HwDeal[]; asOf: Record<string, string>; }
 
@@ -96,8 +96,9 @@ export function offersJsonLd(items: Deal[], name: string, url: string) {
 
 /** Categorías de equipo y consola, en el orden en que salen los filtros. */
 export const HW_CATS: Record<'equipo' | 'consola', { key: string; label: string }[]> = {
-  equipo: [{ key: 'monitores', label: 'Monitores' }, { key: 'graficas', label: 'Tarjetas gráficas' }, { key: 'laptops', label: 'Laptops gamer' },
-           { key: 'audio', label: 'Audífonos' }, { key: 'perifericos', label: 'Teclados, ratones y controles' }],
+  equipo: [{ key: 'perifericos', label: 'Teclados, ratones y controles' }, { key: 'audio', label: 'Audífonos' },
+           { key: 'portatiles', label: 'Consolas portátiles y controles' }, { key: 'monitores', label: 'Monitores' },
+           { key: 'graficas', label: 'Tarjetas gráficas' }, { key: 'laptops', label: 'Laptops gamer' }],
   consola: [{ key: 'ps5', label: 'PlayStation' }, { key: 'xbox', label: 'Xbox' }, { key: 'switch', label: 'Nintendo' }],
 };
 export const hwPage = (d: HwDeal) => `/ofertas/o/${d.slug}/`;

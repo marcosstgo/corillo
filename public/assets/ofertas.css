@@ -75,3 +75,5 @@
 .sh-compact .sh-btn span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .sh-compact .sh-btn{width:44px;justify-content:center;padding:0}
 .sh-btn[hidden]{display:none}
+.hw-hot{background:var(--h2-cyan);color:var(--h2-ink)}
+.hw-pic{display:block}.hw-pic img{position:absolute;inset:8%;width:84%;height:84%;object-fit:contain}

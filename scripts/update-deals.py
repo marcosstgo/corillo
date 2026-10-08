@@ -255,8 +255,9 @@ DN_CATS = {
         'monitores': ('/c75/Computers/Peripherals/Monitors/', r'gaming|\b1[2-9]\dhz|\b[2-9]\d\dhz|\boled\b|ultragear|odyssey|predator|\brog\b|alienware|aorus|\bmsi\b|nitro|\btuf\b'),
         'graficas': ('/c113/Computers/Upgrades-Components/Video-Cards/', r'rtx|radeon|\brx ?\d|geforce|\barc\b'),
         'laptops': ('/c49/Computers/Laptops/f31/Gaming/', r'gaming|rtx|radeon|legion|\brog\b|\btuf\b|omen|victus|nitro|predator|alienware|katana|\bloq\b'),
-        'audio': ('/c155/Electronics/Audio-Components/Headphones/', r'gaming|headset|hyperx|steelseries|razer|astro|turtle beach|logitech g|corsair|arctis|kraken|pulse'),
-        'perifericos': ('/c70/Computers/Peripherals/Input-Devices/', r'gaming|mechanical|controller|gamepad|razer|steelseries|logitech g\b|logitech g[0-9 ]|hyperx|corsair|8bitdo|dualsense|xbox|wooting|keychron'),
+        'audio': ('/c155/Electronics/Audio-Components/Headphones/', r'gaming|headset|earbud|in-ear|\biem\b|airpods|galaxy buds|soundcore|\bjbl\b|\bsony\b|jlab|beats|sennheiser|moondrop|truthear|\bkz\b|7hz|hyperx|steelseries|razer|astro|turtle beach|logitech g|corsair|arctis|kraken|pulse'),
+        'perifericos': ('/c70/Computers/Peripherals/Input-Devices/', r'gaming|mechanical|keycap|\bpbt\b|hall effect|controller|gamepad|razer|steelseries|logitech g\b|logitech g[0-9 ]|hyperx|corsair|8bitdo|dualsense|xbox|wooting|keychron|redragon|glorious|pulsar|lamzu|melgeek|ajazz|epomaker|akko'),
+        'portatiles': ('/c191/Gaming-Toys/Video-Games/', r'handheld|controller|steam deck|\brog ally\b|legion go|retroid|anbernic|backbone|gamesir|8bitdo|dualsense|headset|console bundle|playstation portal'),
     },
     'consola': {
         'ps5': ('/c191/Gaming-Toys/Video-Games/f1915/Play-Station-5/', None),
@@ -265,7 +266,7 @@ DN_CATS = {
     },
 }
 DN_LABEL = {'monitores': 'Monitor', 'graficas': 'Tarjeta gráfica', 'laptops': 'Laptop gamer', 'audio': 'Audífonos',
-            'perifericos': 'Teclado, ratón o control', 'ps5': 'PlayStation', 'xbox': 'Xbox', 'switch': 'Nintendo'}
+            'perifericos': 'Teclado, ratón o control', 'portatiles': 'Consola, portátil o control', 'ps5': 'PlayStation', 'xbox': 'Xbox', 'switch': 'Nintendo'}
 # Solo tiendas que envían a Puerto Rico (o venden en digital). Best Buy, Target, Walmart.com y Woot no envían a PR.
 # Newegg, Dell, Lenovo, HP y eBay envían a PR en la mayoría de los productos, pero no en todos: la página lo advierte.
 PR_OK = {'Amazon', 'Newegg', 'eBay', 'B&H Photo Video', 'Dell Technologies', 'Lenovo', 'HP',
@@ -296,6 +297,7 @@ def dealnews(lista):
             if re.search(r'\b(up to|from|deals at|sale|coupon)\b', name, re.I): continue
             if rx and not re.search(rx, name, re.I): continue
             if re.search(DN_JUNK, name, re.I): continue
+            if lista == 'consola' and re.search(DN_CATS['equipo']['portatiles'][1], name, re.I): continue   # controles y portátiles van en equipo
             try: price = float(pe.text)
             except (TypeError, ValueError): continue
             if price <= 0 or abs(price - float(m.group(2).replace(',', ''))) > 0.01: continue        # el precio del título debe cuadrar con el del dato
@@ -326,7 +328,35 @@ def dealnews(lista):
         k2 = (x['retailer'], x['priceNum'], x['cat'])
         if k in names or k2 in names: continue
         names.update((k, k2)); uniq.append(x)
+    try:                                                                        # "Popular": lo que dealnews pone en su portada es lo que más se mueve
+        hot = set(re.findall(r'/(\d+)\.html', CLIENT.get(DN + '/', params={'rss': 1}, headers=DN_UA).text))
+    except Exception: hot = set()
+    for x in uniq:
+        x['hot'] = x['id'][3:] in hot
+        x['score'] = hw_score(x)
+    uniq.sort(key=lambda x: (-x['score'], x['posted']))
     return uniq[:60]
+
+# Criterio de selección: lo que más compra un gamer (periféricos y audio), marcas con buena fama,
+# descuento real, precio razonable y lo que está popular. Las reacondicionadas y lo muy caro bajan.
+CAT_W = {'perifericos': 30, 'audio': 26, 'portatiles': 22, 'monitores': 18, 'graficas': 14, 'laptops': 8, 'ps5': 12, 'xbox': 10, 'switch': 12}
+GOOD_BRANDS = r'logitech|razer|steelseries|hyperx|corsair|8bitdo|keychron|wooting|glorious|pulsar|lamzu|redragon|soundcore|\bsony\b|\bjbl\b|sennheiser|moondrop|truthear|apple|samsung|\basus\b|\brog\b|\bmsi\b|\blg\b|alienware|gigabyte|aorus|nvidia|geforce|radeon|nintendo|playstation|xbox|backbone|gamesir|turtle beach|astro'
+
+def hw_score(x):
+    sc = CAT_W.get(x['cat'], 10)
+    if x.get('staff'): sc += 15
+    if x.get('hot'): sc += 20
+    if re.search(GOOD_BRANDS, x['title'], re.I): sc += 10
+    if x.get('save'):
+        sv = float(x['save'].strip('$').replace(',', ''))
+        pct = sv / (sv + x['priceNum']) * 100
+        x['pct'] = round(pct)
+        sc += min(pct, 60) * 0.6                                          # hasta +36 por descuento
+    if re.search(r'all-time low|lowest|best price', x.get('summary') or '', re.I): sc += 12
+    if x['priceNum'] <= 150: sc += 8                                      # lo que un gamer compra sin pensarlo mucho
+    elif x['priceNum'] > 800: sc -= 10
+    if re.search(r'\brefurb|open-box|renewed', x['title'], re.I): sc -= 12
+    return round(sc, 1)
 
 def og_cards(items, state):
     """Genera la tarjeta para compartir de cada oferta nueva (una sola vez por oferta)."""
@@ -385,8 +415,7 @@ def discord_hardware(items, state):
         state['hw_seeded'] = True
     count = {l: sum(1 for v in sent.values() if v == today + ':' + l) for l in DAILY_MAX}
     run = 0
-    ordered = sorted(items, key=lambda x: x['posted'], reverse=True)
-    for it in sorted(ordered, key=lambda x: not x['staff']):             # primero las recomendadas, y dentro de cada grupo la más nueva
+    for it in sorted(items, key=lambda x: -x.get('score', 0)):              # primero las mejores según el criterio (hw_score)
         if it['id'] in sent or run >= RUN_MAX: continue
         l = it['list']
         if not chans.get(l) or count[l] >= DAILY_MAX[l]: continue
@@ -395,10 +424,10 @@ def discord_hardware(items, state):
         if it.get('save'): bits.append(f"Ahorras {it['save']}")
         if it.get('prime'): bits.append('con Prime')
         if it.get('freeShip'): bits.append('envío gratis')
-        role = roles.get(it['cat'])
+        role = roles.get(it['cat']) or roles.get({'portatiles': 'perifericos'}.get(it['cat'], ''))
         body = {'content': f"<@&{role}>" if role else '', 'allowed_mentions': {'roles': [role] if role else []},
                 'embeds': [{'title': it['title'][:250], 'url': page, 'color': 0xFF6A3D if l == 'equipo' else 0xFFD23F,
-                            'description': ' · '.join(bits) + ('\n⭐ Recomendada por los editores de dealnews' if it.get('staff') else ''),
+                            'description': ' · '.join(bits) + ('\n🔥 Popular ahora mismo' if it.get('hot') else '') + ('\n⭐ Recomendada por los editores de dealnews' if it.get('staff') else ''),
                             'author': {'name': it['catLabel']},
                             'image': {'url': f"https://corillo.live/ofertas/og/{it['slug']}.png"},
                             'footer': {'text': 'Precio de EE. UU., la tienda envía a PR. Confirma el precio final antes de comprar.'}}],
