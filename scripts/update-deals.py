@@ -349,6 +349,33 @@ BRAND_STORES = {
 }
 BRAND_JUNK = r'\bplate\b|plush|mascot|\bpcb\b|stabili[sz]er|\bknob\b|\biso\b|russian|\(ru\b|\bjis\b|\buk layout|german|nordic|french|clearance|combination|only ship|open box|riser|\bdesk\b|subwoofer|phono|preamp|power amp|speaker|turntable|switch (?:benefit|pack|set)|\(\d+ ?pieces\)|cable|ear ?tips?|eartip|\bcase\b|pouch|adapter|filter|foam|sticker|gift ?card|warranty|replacement|spare|dust ?cover|wrist ?rest|keycap puller|lanyard|bundle sale|mystery'
 PER_STORE = 4
+PR_ZIP = '00705'                                     # Aibonito: el envío real a Puerto Rico, no el de EE. UU.
+SHIP_MAX = lambda price: max(8.0, price * 0.15)       # más que esto de envío y la «oferta» deja de serlo (8-oct: $50 + $53)
+
+def pr_shipping(dom, handle, state):
+    """Envío más barato de la tienda a Puerto Rico para ese producto (carrito de Shopify + tarifas).
+    None = no envía a PR. Se guarda 3 días por producto; si la tienda no envía a PR, se recuerda por tienda."""
+    cache = state.setdefault('ship_pr', {}); today = dt.date.today()
+    hit = cache.get(f'{dom}/{handle}') or cache.get(dom)
+    if hit and (today - dt.date.fromisoformat(hit[0])).days < 3: return hit[1]
+    params = {'shipping_address[zip]': PR_ZIP, 'shipping_address[country]': 'United States', 'shipping_address[province]': 'PR'}
+    with httpx.Client(headers={**DN_UA, 'Accept': 'application/json'}, timeout=20, follow_redirects=True) as c:
+        p = c.get(f'https://{dom}/products/{handle}.js').json()
+        v = next((v for v in p['variants'] if v.get('available')), None)
+        if not v: return None
+        c.post(f'https://{dom}/cart/add.js', json={'id': v['id'], 'quantity': 1}).raise_for_status()
+        rates = c.get(f'https://{dom}/cart/shipping_rates.json', params=params).json().get('shipping_rates')
+        if not rates:                                                   # algunas tiendas calculan las tarifas aparte
+            c.post(f'https://{dom}/cart/prepare_shipping_rates.json', params=params)
+            for _ in range(6):
+                time.sleep(1.5); a = c.get(f'https://{dom}/cart/async_shipping_rates.json', params=params)
+                if a.status_code == 200 and a.json().get('shipping_rates') is not None: rates = a.json()['shipping_rates']; break
+    cost = min((float(r['price']) for r in rates or []), default=None)
+    cache[f'{dom}/{handle}'] = [today.isoformat(), cost]
+    if cost is None: cache[dom] = [today.isoformat(), None]                # no envía a PR: no se vuelve a probar en 3 días
+    else: cache.pop(dom, None)
+    for k in [k for k, v in cache.items() if (today - dt.date.fromisoformat(v[0])).days >= 3]: cache.pop(k)
+    return cost
 
 def brand_stores(state):
     hist = state.setdefault('px', {})                 # historial: id -> {"d": primera vez visto (ISO), "p": [[fecha, precio], ...]}
@@ -391,19 +418,32 @@ def brand_stores(state):
                          'save': f'${before - price:,.2f}'.replace('.00', '') if pct else None, 'pct': pct or None,
                          'prime': False, 'freeShip': False, 'staff': False, 'brandStore': True, 'lowest30': dropped and price <= min(seen),
                          'expires': None, 'posted': (p.get('published_at') or dt.datetime.now(dt.timezone.utc).isoformat())[:25],
+                         'handle': p['handle'],
                          'summary': f"Tienda oficial: {name}." + (f" Marca: {p['vendor']}." if p.get('vendor') and p['vendor'] != name else '')})
         for x in cand: x['score'] = hw_score(x) + (12 if x['lowest30'] else 0)
         cand.sort(key=lambda x: -x['score'])
         names = {re.sub(r'[^a-z0-9]', '', x['title'].lower()): x for x in out}
-        keep = []
+        keep, checked = [], 0
         for x in cand:                                                    # el mismo producto en dos tiendas: se queda el más barato
+            if len(keep) >= PER_STORE or checked >= 8: break
+            try:
+                checked += 1; ship = pr_shipping(dom, x.pop('handle'), state)
+            except Exception as e:
+                log(f'  {name}: no pude ver el envío a PR ({type(e).__name__}); fuera'); continue
+            if ship is None:
+                log(f'  {name}: no envía a Puerto Rico; fuera'); break
+            if ship > SHIP_MAX(x['priceNum']):
+                log(f"  {name}: {x['title'][:40]} cuesta ${x['priceNum']:g} + ${ship:g} de envío a PR; fuera"); continue
+            x['shipPR'] = ship; x['freeShip'] = ship == 0
+            if ship: x['summary'] += f" Envío a Puerto Rico: ${ship:,.2f} (total ${x['priceNum'] + ship:,.2f})."
             k = re.sub(r'[^a-z0-9]', '', x['title'].lower())
             if k in names:
                 if x['priceNum'] < names[k]['priceNum']: out.remove(names[k]); names[k] = x; keep.append(x)
                 continue
             names[k] = x; keep.append(x)
+        for x in cand: x.pop('handle', None)
         out += keep[:PER_STORE]
-        log(f'  {name}: {len(prods)} productos, {len(cand)} rebajas que pasan el filtro')
+        log(f'  {name}: {len(prods)} productos, {len(cand)} rebajas, {len(keep[:PER_STORE])} con envío razonable a PR')
         time.sleep(1)
     cutoff = (dt.date.today() - dt.timedelta(days=60)).isoformat()      # el historial se poda solo
     for k in [k for k, v in hist.items() if v['p'] and v['p'][-1][0] < cutoff]: hist.pop(k)
@@ -495,7 +535,8 @@ def discord_hardware(items, state):
         bits = [f"**{it['price']}** en {it['retailer']}"]
         if it.get('save'): bits.append(f"Ahorras {it['save']}")
         if it.get('prime'): bits.append('con Prime')
-        if it.get('freeShip'): bits.append('envío gratis')
+        if it.get('freeShip'): bits.append('envío gratis' + (' a PR' if it.get('brandStore') else ''))
+        elif it.get('shipPR'): bits.append(f"+ ${it['shipPR']:,.2f} de envío a PR")
         role = roles.get(it['cat']) or roles.get({'portatiles': 'perifericos'}.get(it['cat'], ''))
         body = {'content': f"<@&{role}>" if role else '', 'allowed_mentions': {'roles': [role] if role else []},
                 'embeds': [{'title': it['title'][:250], 'url': page, 'color': 0xFF6A3D if l == 'equipo' else 0xFFD23F,
@@ -526,6 +567,8 @@ def whatsapp_group(items, state):
         if it['id'] in done or not str(disc.get(it['id'], '')).startswith(today): continue
         page, _ = share_links(it)
         price = f"{it['price']} en {it['retailer']}" + (f" (-{it['pct']}%)" if it.get('pct') else '')
+        if it.get('shipPR'): price += f" + ${it['shipPR']:,.2f} de envío a PR"
+        elif it.get('brandStore') and it.get('freeShip'): price += ' · envío gratis a PR'
         text = f"🛒 *Oferta:* {it['title']}\n{price}\n{page}"
         og = REPO / 'public' / 'ofertas' / 'og' / f"{it['slug']}.png"
         wa_queue.enqueue('oferta', it['id'], text, media=str(og) if og.exists() else None, score=it.get('score', 0))

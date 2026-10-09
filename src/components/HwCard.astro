@@ -15,7 +15,7 @@ const href = hwPage(d);
   <div class="of-body">
     <h3><a href={href}>{d.title}</a></h3>
     <div class="of-price"><b>{d.price}</b>{d.save && <em>{d.pct ? `-${d.pct}%` : `Ahorras ${d.save}`}</em>}</div>
-    <div class="of-meta">en {d.retailer}{d.prime ? ' · con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}</div>
+    <div class="of-meta">en {d.retailer}{d.prime ? ' · con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}{d.shipPR ? ` · + $${d.shipPR.toFixed(2)} envío a PR` : ''}</div>
     <a class="of-go" href={href}>Ver oferta</a>
   </div>
 </article>

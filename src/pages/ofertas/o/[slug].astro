@@ -45,7 +45,7 @@ const desc = live
         {live ? (
           <>
             <div class="of-price hw-one-price"><b>{d.price}</b>{d.save && <em>Ahorras {d.save}{d.pct ? ` (-${d.pct}%)` : ''}</em>}</div>
-            <p class="hw-one-meta">en <strong>{d.retailer}</strong>{d.prime ? ' · precio con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}</p>
+            <p class="hw-one-meta">en <strong>{d.retailer}</strong>{d.prime ? ' · precio con Prime' : ''}{d.freeShip ? ' · envío gratis' : ''}{d.shipPR ? <> · <strong>+ ${d.shipPR.toFixed(2)} de envío a Puerto Rico</strong> (total ${(d.priceNum + d.shipPR).toFixed(2)})</> : ''}</p>
             {d.summary && <p class="hw-one-sum" lang="en">{d.summary}</p>}
             <a class="of-go hw-one-go" href={d.url} target="_blank" rel="nofollow noopener">Ver la oferta en {d.retailer} <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
             <p class="hw-one-fine">{d.brandStore ? <>Te llevamos directo a la tienda oficial de {d.retailer}. El descuento se calcula con el precio de antes que muestra la tienda, y vigilamos su historial para no publicar rebajas infladas.</> : <>Te llevamos a la ficha de dealnews, que enlaza a {d.retailer}.</>} Precio en dólares de EE. UU., reportado el {fmtStamp(d.posted)}. Confirma el precio final y el envío a Puerto Rico antes de comprar.</p>
