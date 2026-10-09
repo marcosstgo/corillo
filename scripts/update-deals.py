@@ -268,8 +268,9 @@ DN_CATS = {
 DN_LABEL = {'monitores': 'Monitor', 'graficas': 'Tarjeta gráfica', 'laptops': 'Laptop gamer', 'audio': 'Audífonos',
             'perifericos': 'Teclado, ratón o control', 'portatiles': 'Consola, portátil o control', 'ps5': 'PlayStation', 'xbox': 'Xbox', 'switch': 'Nintendo'}
 # Solo tiendas que envían a Puerto Rico (o venden en digital). Best Buy, Target, Walmart.com y Woot no envían a PR.
-# Newegg, Dell, Lenovo, HP y eBay envían a PR en la mayoría de los productos, pero no en todos: la página lo advierte.
-PR_OK = {'Amazon', 'Newegg', 'eBay', 'B&H Photo Video', 'Dell Technologies', 'Lenovo', 'HP',
+# Newegg, Dell, Lenovo y HP envían a PR en la mayoría de los productos, pero no en todos: la página lo advierte.
+# eBay fuera (9-oct): el envío a PR depende de cada vendedor y abundan los reacondicionados.
+PR_OK = {'Amazon', 'Newegg', 'B&H Photo Video', 'Dell Technologies', 'Lenovo', 'HP',
          'PlayStation Store', 'Xbox Store', 'Microsoft Store', 'Nintendo', 'Steam'}
 DN_JUNK = r'screen protector|replacement|radiator|cooler for|bracket|riser|cable|adapter|\bskin\b|decal|charging (?:dock|station|stand)|carrying case|thumb grips'   # accesorios sueltos: no son "equipo"
 ARCHIVE_DAYS = 30                      # una oferta compartida sigue abriendo (como "terminada") este tiempo
@@ -334,8 +335,19 @@ def dealnews(lista):
     for x in uniq:
         x['hot'] = x['id'][3:] in hot
         x['score'] = hw_score(x)
+    uniq = [x for x in uniq if good_deal(x)]
     uniq.sort(key=lambda x: (-x['score'], x['posted']))
     return uniq[:60]
+
+GOOD_MIN = {'equipo': 40, 'consola': 0}
+def good_deal(x):
+    """Solo ofertas que valen la pena (9-oct, Marcos: «que sean buenas y lleguen a PR»): algo real a favor
+    (descuento de 15 %+, recomendada por dealnews, popular o precio más bajo) y nota mínima. Fuera reacondicionados
+    y equipo viejo (se colaban GTX 1060 a $399 o una laptop de 2013 en Newegg)."""
+    if re.search(r'\brefurb|open-box|renewed|\bused\b', x['title'], re.I): return False
+    if re.search(r'\bgtx\b|quadro|\brx ?[45]\d0\b', x['title'], re.I): return False
+    plus = (x.get('pct') or 0) >= 15 or x.get('staff') or x.get('hot') or re.search(r'all-time low|lowest|best price', x.get('summary') or '', re.I)
+    return bool(plus) and x.get('score', 0) >= GOOD_MIN.get(x.get('list'), 40)
 
 # ───────────────────── tiendas de marca (Shopify): IEMs, DACs, teclados y ratones "chinos buenos" ─────────────────────
 # Estas marcas casi nunca salen en dealnews. Sus tiendas (Shopify) publican /products.json con precio y "precio de antes".
