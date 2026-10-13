@@ -101,7 +101,7 @@ const FAQ = [
       .bc{--bc:#ff6b3d;--bc-v:#35e0a1;max-width:1400px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
       .bc-hero{display:grid;grid-template-columns:auto 1fr;gap:clamp(20px,4vw,48px);align-items:center;padding:clamp(26px,4vw,56px);border-radius:38px;
         background:radial-gradient(90% 130% at 100% 0%,color-mix(in srgb,var(--bc) 26%,transparent),transparent 62%),color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
-      .bc-ico{width:clamp(110px,16vw,190px);aspect-ratio:1;border-radius:32%;box-shadow:0 24px 60px -18px var(--bc)}
+      .bc-ico{width:clamp(110px,16vw,190px);height:auto;aspect-ratio:1;object-fit:cover;border-radius:32%;box-shadow:0 24px 60px -18px var(--bc)}
       .bc-hero h1{margin:0 0 14px;font:800 clamp(2.4rem,6.5vw,5rem)/.92 var(--h2-display);letter-spacing:-.045em;text-transform:none}
       .bc-hero h1 span{color:var(--bc)}
       .bc-hero p{margin:0 0 22px;max-width:60ch;color:color-mix(in srgb,var(--h2-bone) 80%,transparent);font:500 clamp(1.05rem,1.6vw,1.22rem)/1.55 var(--h2-body)}
@@ -160,6 +160,7 @@ const FAQ = [
       @media (max-width:980px){.bc-road{grid-template-columns:1fr}}
       @media (max-width:640px){
         .bc-hero{grid-template-columns:1fr;text-align:left}
+        .bc-ico{width:96px}
         .bc-cmd div{grid-template-columns:1fr;gap:4px}
         .bc-go,.bc-alt{width:100%;justify-content:center}
       }
