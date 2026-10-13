@@ -1,0 +1,289 @@
+---
+// El Bochinchero (13-oct-2026): guía de uso y vitrina del bot de voz. Si cambian comandos o ajustes del bot
+// (~/corillo-stoat/bochinchero/bot.py), actualizar aquí también.
+import SiteShell from '../../layouts/SiteShell.astro';
+import { DISCORD_PATH } from '../../data/site';
+
+const INVITAR = 'https://discord.com/oauth2/authorize?client_id=1559650132683653130&permissions=3148800&scope=bot%20applications.commands';
+
+const MUESTRAS = [
+  { f: 'acho', t: 'Su frase de cabecera', d: '«¡Ah, cho, cabrón! Puerto Rico es otra cosa.»' },
+  { f: 'saludo', t: 'Saludo con puya propia', d: '«Llegó el Chef. Hoy se cocina… pero a nosotros, en la partida.»' },
+  { f: 'sala-llena', t: 'Visita a una sala llena', d: '«¡Diablo, qué chorro de cabrones hay aquí! Pónganse a jugar…»' },
+  { f: 'madrugada', t: 'Entraste de madrugada', d: '«Kata, son las tantas de la madrugada. ¿Tú no trabajas mañana?»' },
+];
+
+const HACE = [
+  { i: 'fa-hand', t: 'Te saluda al entrar', d: 'Cuando entras a una sala de voz con gente, te tira una puya con tu nombre. Una vez cada 4 horas, para que no canse.' },
+  { i: 'fa-door-open', t: 'Se despide a veces', d: '«Se fue Kata. Ahora sí podemos ganar.» No siempre: de vez en cuando, y solo si queda gente.' },
+  { i: 'fa-dice', t: 'Visitas sorpresa', d: 'Cada cierto rato cae a la sala con más gente y suelta algo. Si la sala está llena, tiene frases especiales.' },
+  { i: 'fa-clock', t: 'Momentos especiales', d: 'Sabe si entraste de madrugada, si volviste después de días perdío o si llevas una racha de días corridos.' },
+  { i: 'fa-gamepad', t: 'Sabe qué juegas', d: 'Si Discord enseña que estás jugando algo, te puede vacilar por eso: «¿Otra vez Battlefield? ¿Y la vida?»' },
+  { i: 'fa-wand-magic-sparkles', t: 'Escribe puyas solo', d: 'Al que no tiene puyas propias le escribe unas con IA, usando sus roles de juegos. Todas pasan por el filtro.' },
+  { i: 'fa-trophy', t: 'Ranking semanal', d: 'Cada domingo a las 8 p. m. publica quién pasó más tiempo en las salas de voz. El primero se lleva su puya.' },
+  { i: 'fa-microphone-lines', t: 'Lo pones a hablar', d: 'Con /decir escribes algo y él lo dice en tu sala, con su voz boricua.' },
+];
+
+const TODOS = [
+  ['/bochinche', 'Tu menú con botones: probar tu saludo, apagarlo o prenderlo, cómo dice tu nombre, hacerlo hablar, sugerir una puya, ranking y ayuda.'],
+  ['/decir', 'Dice en tu sala de voz lo que escribas (hasta 180 letras). Hay que esperar 30 segundos entre una y otra.'],
+  ['/puya agregar', 'Sugiere una puya para un pana. Les llega a los admins para que la aprueben.'],
+  ['/apodo', 'Cómo dice la voz tu nombre. Ej.: si te llamas «404_NOT_FOUND», que diga «cuatro cero cuatro».'],
+  ['/ranking', 'Los más pegaos a las salas de voz esta semana.'],
+  ['/bochinche-ayuda', 'El resumen de todo esto, dentro de Discord.'],
+];
+const ADMINS = [
+  ['/bochinche-ajustes', 'El panel de control del server (abajo te explicamos cada opción).'],
+  ['/puya agregar', 'Si eres admin, la puya entra directo, sin aprobación.'],
+  ['/puya ver', 'Ver todas las puyas de alguien y borrar las que no te gusten.'],
+  ['/apodo @persona', 'Cambiar cómo dice el nombre de cualquiera.'],
+];
+
+const AJUSTES = [
+  { i: 'fa-pepper-hot', t: 'Nivel de picante', d: 'Suave: sin malas palabras, ideal para servers con menores. Normal: puyas de pana. Picante: boricua sin filtro (se vale «cabrón»), pero sin insultos de verdad.' },
+  { i: 'fa-toggle-on', t: 'Qué hace', d: 'Prende o apaga cada cosa por separado: saludos, despedidas, visitas, momentos, juegos, /decir, puyas con IA y ranking semanal.' },
+  { i: 'fa-bullhorn', t: 'Canal de avisos', d: 'Un canal de texto donde llegan las puyas que sugiere la gente (con botones Aprobar/Rechazar) y el ranking de los domingos.' },
+  { i: 'fa-volume-xmark', t: 'Salas donde no hablo', d: 'Escoge salas donde nunca debe hablar (ej. la de reuniones). Las privadas y la de AFK las respeta siempre.' },
+  { i: 'fa-user-shield', t: 'Rol que me maneja', d: 'Además de quien tiene «Gestionar servidor», un rol (ej. Moderador) puede aprobar puyas y cambiar ajustes.' },
+  { i: 'fa-sliders', t: 'Ritmo y nombre del grupo', d: 'Cómo llama al grupo en voz («el corillo»), cada cuántas horas saluda a la misma persona, cada cuánto hace visitas, en qué horario y desde cuánta gente una sala está «llena».' },
+  { i: 'fa-stethoscope', t: 'Diagnóstico', d: 'Revisa si le falta permiso para entrar o hablar en alguna sala, si hay canal de avisos y si la voz está lista.' },
+];
+
+// Roadmap: mover de columna cuando algo salga. «hecho» = ya funciona en el bot.
+const ROADMAP = [
+  { k: 'hecho', t: 'Ya está', i: 'fa-circle-check', items: [
+    ['Saludos con puyas propias', 'Por persona, con el nombre bien dicho.'],
+    ['Despedidas y visitas sorpresa', 'Con frases especiales para salas llenas.'],
+    ['Momentos especiales', 'Madrugada, regresos después de días y rachas.'],
+    ['Puyas escritas por IA', 'Para el que no tiene, con filtro.'],
+    ['Puyas por el juego que juegas', 'Cuando Discord lo deja ver.'],
+    ['/decir', 'Lo pones a hablar en tu sala.'],
+    ['Sugerir y aprobar puyas', 'La gente sugiere, los admins aprueban con un botón.'],
+    ['Ranking semanal de voz', 'Los domingos, en el canal de avisos.'],
+    ['Ajustes por server', 'Nivel, funciones, salas, horario, rol y diagnóstico.'],
+    ['Baja la música cuando habla', 'Junto con Corillo-Bot.'],
+    ['Filtro de contenido', 'Nada de insultos de verdad, política ni religión.'],
+  ]},
+  { k: 'proximo', t: 'Lo próximo', i: 'fa-person-digging', items: [
+    ['Avisos informativos', 'Los admins escriben avisos que dice en voz: a los nuevos («si quieres música, escribe /play»), cada cierto tiempo, a una hora fija o al entrar a una sala.'],
+    ['Panel web', 'Entras con tu cuenta de Discord y manejas todo desde el navegador: personas, puyas, avisos, horario y estadísticas.'],
+    ['Escuchar antes de guardar', 'Oír cómo suena una puya antes de aprobarla.'],
+    ['Saludos especiales', 'Además de puyas: saludo de VIP, de cumpleaños o ninguno, escogido por persona.'],
+  ]},
+  { k: 'ideas', t: 'Ideas para después', i: 'fa-lightbulb', items: [
+    ['Noticias y ofertas por voz', 'La noticia gamer del día, juegos gratis y ofertas, dichos en la sala.'],
+    ['Aviso de «en vivo»', 'Cuando alguien del server sale en vivo, lo anuncia en las salas.'],
+    ['Cumpleaños', 'Le canta (a su manera) al cumpleañero cuando entre.'],
+    ['Recordatorio de eventos', '«En 10 minutos empieza el torneo de Warzone.»'],
+    ['Varias voces', 'Escoger entre voces distintas para cada server.'],
+    ['Trivia por voz', 'Preguntas de juegos en la sala, con puntos.'],
+    ['Estadísticas más finas', 'Horas pico, salas más usadas y quién juega con quién.'],
+  ]},
+];
+
+const FAQ = [
+  ['No quiero que me salude. ¿Cómo lo apago?', 'Escribe /bochinche y dale a «Apagar mi saludo». Solo te afecta a ti, y lo vuelves a prender igual.'],
+  ['¿Va a tapar la música?', 'No. Si Corillo-Bot está tocando música en la sala, la música baja sola mientras el Bochinchero habla y después vuelve a donde estaba.'],
+  ['¿Qué no dice nunca?', 'Insultos de verdad (homofóbicos, racistas), cosas sexuales, amenazas, política, religión ni enlaces. El filtro lo para en /decir, en las puyas sugeridas y en las que escribe la IA.'],
+  ['¿Qué datos guarda?', 'Tu id de Discord, el nombre que ves en el server, cuándo entras y sales de las salas de voz (para el ranking y los momentos) y las puyas. No escucha ni graba lo que hablan: entra sordo, habla y se va.'],
+  ['¿Qué permisos pide?', 'Ver canales, mandar mensajes, conectarse a las salas y hablar. Nada de administrador.'],
+  ['¿Lo puedo poner en mi server?', 'Sí. Dale a «Añadir a mi server», escoge tu server y abre /bochinche-ajustes. Llega con una bienvenida que te lleva paso a paso.'],
+];
+---
+<SiteShell
+  title="El Bochinchero — el bot de voz boricua para Discord"
+  description="Saluda con puyas al que entra a la sala, cae de visita sorpresa, sabe qué juegas y publica el ranking de los más pegaos. Hecho en Puerto Rico."
+  canonical="https://corillo.live/bochinchero/"
+  ogImage="/bochinchero/og.png"
+>
+  <fragment slot="head">
+    <style is:global>
+      .bc{--bc:#ff6b3d;--bc-v:#35e0a1;max-width:1400px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
+      .bc-hero{display:grid;grid-template-columns:auto 1fr;gap:clamp(20px,4vw,48px);align-items:center;padding:clamp(26px,4vw,56px);border-radius:38px;
+        background:radial-gradient(90% 130% at 100% 0%,color-mix(in srgb,var(--bc) 26%,transparent),transparent 62%),color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bc-ico{width:clamp(110px,16vw,190px);aspect-ratio:1;border-radius:32%;box-shadow:0 24px 60px -18px var(--bc)}
+      .bc-hero h1{margin:0 0 14px;font:800 clamp(2.4rem,6.5vw,5rem)/.92 var(--h2-display);letter-spacing:-.045em;text-transform:none}
+      .bc-hero h1 span{color:var(--bc)}
+      .bc-hero p{margin:0 0 22px;max-width:60ch;color:color-mix(in srgb,var(--h2-bone) 80%,transparent);font:500 clamp(1.05rem,1.6vw,1.22rem)/1.55 var(--h2-body)}
+      .bc-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+      .bc-go{display:inline-flex;align-items:center;gap:12px;height:58px;padding:0 30px;border-radius:999px;background:var(--bc);color:#13173d;text-decoration:none;font:800 1.08rem var(--h2-body);transition:box-shadow .15s,transform .15s}
+      .bc-go:hover{box-shadow:0 0 0 5px color-mix(in srgb,var(--bc) 40%,transparent);transform:translateY(-1px)}
+      .bc-alt{display:inline-flex;align-items:center;gap:10px;height:58px;padding:0 24px;border-radius:999px;color:var(--h2-bone);text-decoration:none;font:700 1rem var(--h2-body);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bc-alt:hover{background:color-mix(in srgb,var(--h2-bone) 8%,transparent)}
+      .bc-nav{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 0}
+      .bc-nav a{padding:8px 15px;border-radius:999px;color:var(--h2-mute);text-decoration:none;font:700 .9rem var(--h2-body);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bc-nav a:hover{color:var(--h2-bone);background:color-mix(in srgb,var(--h2-bone) 7%,transparent)}
+      .bc-sec{margin-top:56px;scroll-margin-top:90px}
+      .bc-sec h2{margin:0 0 6px;font:800 clamp(1.6rem,3vw,2.3rem)/1 var(--h2-display);letter-spacing:-.035em;text-transform:none}
+      .bc-sec>p{margin:0 0 20px;color:var(--h2-mute);font:500 1rem/1.5 var(--h2-body);max-width:70ch}
+      .bc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px}
+      .bc-card{padding:20px 22px;border-radius:24px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);color:var(--h2-mute);font:500 .95rem/1.5 var(--h2-body)}
+      .bc-card b{display:flex;align-items:center;gap:10px;margin-bottom:8px;color:var(--h2-bone);font:800 1.05rem/1.2 var(--h2-display);letter-spacing:-.02em}
+      .bc-card b i{flex:none;width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:color-mix(in srgb,var(--bc) 20%,transparent);color:var(--bc);font-size:.85rem}
+      .bc-oye{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,235px),1fr));gap:12px}
+      .bc-play{display:flex;gap:14px;align-items:center;width:100%;padding:16px 18px;border:0;border-radius:24px;cursor:pointer;text-align:left;
+        background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);color:var(--h2-bone);font:inherit;transition:background .15s}
+      .bc-play:hover{background:color-mix(in srgb,var(--bc) 12%,transparent)}
+      .bc-play .bt{flex:none;width:48px;height:48px;display:grid;place-items:center;border-radius:50%;background:var(--bc);color:#13173d;font-size:1rem}
+      .bc-play.on .bt{background:var(--bc-v)}
+      .bc-play strong{display:block;font:800 1rem var(--h2-body)}
+      .bc-play small{display:block;margin-top:3px;color:var(--h2-mute);font:500 .88rem/1.4 var(--h2-body)}
+      .bc-pasos{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;counter-reset:p}
+      .bc-pasos .bc-card{position:relative;padding-top:58px}
+      .bc-pasos .bc-card::before{counter-increment:p;content:counter(p);position:absolute;top:18px;left:22px;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:var(--bc);color:#13173d;font:800 .95rem var(--h2-body)}
+      .bc-cmd{display:grid;gap:8px}
+      .bc-cmd div{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:14px;align-items:baseline;padding:14px 18px;border-radius:18px;background:color-mix(in srgb,var(--h2-bone) 5%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);color:var(--h2-mute);font:500 .95rem/1.5 var(--h2-body)}
+      .bc-cmd code{color:var(--bc);font:700 .98rem ui-monospace,SFMono-Regular,Menlo,monospace}
+      .bc-h3{margin:26px 0 10px;font:800 1.1rem var(--h2-body);color:var(--h2-bone)}
+      .bc-faq{display:grid;gap:10px}
+      .bc-faq details{padding:16px 20px;border-radius:20px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bc-faq summary{cursor:pointer;font:800 1.02rem/1.35 var(--h2-body);color:var(--h2-bone);list-style:none;display:flex;justify-content:space-between;gap:12px}
+      .bc-faq summary::-webkit-details-marker{display:none}
+      .bc-faq summary::after{content:'+';color:var(--bc);font-weight:800}
+      .bc-faq details[open] summary::after{content:'–'}
+      .bc-faq p{margin:10px 0 0;color:var(--h2-mute);font:500 .97rem/1.55 var(--h2-body)}
+      .bc-fin{margin-top:56px;padding:clamp(24px,4vw,44px);border-radius:32px;text-align:center;background:radial-gradient(80% 140% at 50% 0%,color-mix(in srgb,var(--bc) 22%,transparent),transparent 70%),color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bc-fin h2{margin:0 0 10px;font:800 clamp(1.6rem,3.4vw,2.4rem)/1.05 var(--h2-display);letter-spacing:-.035em;text-transform:none}
+      .bc-fin p{margin:0 auto 20px;max-width:56ch;color:var(--h2-mute);font:500 1rem/1.5 var(--h2-body)}
+      .bc-fin .bc-row{justify-content:center}
+      .bc-road{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+      .bc-col{padding:20px;border-radius:26px;background:color-mix(in srgb,var(--h2-bone) 5%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bc-col h3{display:flex;align-items:center;gap:10px;margin:0 0 14px;font:800 1.15rem var(--h2-display);letter-spacing:-.02em}
+      .bc-col h3 span{margin-left:auto;padding:2px 10px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 9%,transparent);color:var(--h2-mute);font:700 .8rem var(--h2-body)}
+      .bc-hecho h3 i{color:var(--bc-v)} .bc-proximo h3 i{color:var(--bc)} .bc-ideas h3 i{color:#ffd166}
+      .bc-hecho{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bc-v) 35%,transparent)}
+      .bc-proximo{box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bc) 40%,transparent)}
+      .bc-col ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+      .bc-col li{padding:11px 14px;border-radius:16px;background:color-mix(in srgb,var(--h2-bone) 5%,transparent)}
+      .bc-col li strong{display:block;color:var(--h2-bone);font:700 .95rem/1.3 var(--h2-body)}
+      .bc-col li small{display:block;margin-top:3px;color:var(--h2-mute);font:500 .86rem/1.45 var(--h2-body)}
+      @media (max-width:980px){.bc-road{grid-template-columns:1fr}}
+      @media (max-width:640px){
+        .bc-hero{grid-template-columns:1fr;text-align:left}
+        .bc-cmd div{grid-template-columns:1fr;gap:4px}
+        .bc-go,.bc-alt{width:100%;justify-content:center}
+      }
+    </style>
+  </fragment>
+
+  <main class="bc">
+    <section class="bc-hero">
+      <img class="bc-ico" src="/bochinchero/icono-256.png" alt="Ícono del Bochinchero: un globo de diálogo con una bocina" width="190" height="190" />
+      <div>
+        <h1>El Bochin<span>chero</span></h1>
+        <p>El bot de voz boricua para Discord. Cuando entras a una sala, te saluda con una puya. Cae de visita sorpresa, sabe qué juegas, se despide cuando te vas y cada domingo dice quién fue el más pegao. Vive en el corillo y lo puedes poner en tu server.</p>
+        <div class="bc-row">
+          <a class="bc-go" href={INVITAR} target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i> Añadir a mi server</a>
+          <a class="bc-alt" href={DISCORD_PATH}><i class="fa-solid fa-headset" aria-hidden="true"></i> Oírlo en el corillo</a>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bc-nav" aria-label="En esta página">
+      <a href="#oyelo">Óyelo</a><a href="#que-hace">Qué hace</a><a href="#instalar">Instalarlo</a>
+      <a href="#comandos">Comandos</a><a href="#ajustes">Ajustes</a><a href="#puyas">Puyas</a><a href="#roadmap">Lo que viene</a><a href="#preguntas">Preguntas</a>
+    </nav>
+
+    <section class="bc-sec" id="oyelo">
+      <h2>Óyelo</h2>
+      <p>Así suena en las salas de voz. Dale play.</p>
+      <div class="bc-oye">
+        {MUESTRAS.map(m => (
+          <button class="bc-play" type="button" data-src={`/bochinchero/${m.f}.mp3`}>
+            <span class="bt"><i class="fa-solid fa-play" aria-hidden="true"></i></span>
+            <span><strong>{m.t}</strong><small>{m.d}</small></span>
+          </button>
+        ))}
+      </div>
+    </section>
+
+    <section class="bc-sec" id="que-hace">
+      <h2>Qué hace</h2>
+      <p>Todo se puede prender o apagar por separado desde los ajustes del server.</p>
+      <div class="bc-grid">
+        {HACE.map(h => <div class="bc-card"><b><i class={`fa-solid ${h.i}`} aria-hidden="true"></i>{h.t}</b>{h.d}</div>)}
+      </div>
+    </section>
+
+    <section class="bc-sec" id="instalar">
+      <h2>Instalarlo en tu server</h2>
+      <p>Toma dos minutos. Tienes que ser admin del server (o tener «Gestionar servidor»).</p>
+      <div class="bc-pasos">
+        <div class="bc-card"><b>Invítalo</b>Dale a <a href={INVITAR} target="_blank" rel="noopener">Añadir a mi server</a>, escoge tu server y autoriza. Pide solo lo necesario: ver canales, escribir, conectarse y hablar.</div>
+        <div class="bc-card"><b>Configúralo</b>Llega con un mensaje de bienvenida. Dale a <strong>Configurar</strong> (o escribe <code>/bochinche-ajustes</code>): escoge el nivel de picante y un canal de avisos.</div>
+        <div class="bc-card"><b>Ponle puyas</b>Con <code>/puya agregar</code> le das puyas personales a la gente. A los que no tengan, el Bochinchero les escribe unas solo.</div>
+      </div>
+    </section>
+
+    <section class="bc-sec" id="comandos">
+      <h2>Comandos</h2>
+      <p>Escribe <code>/</code> en cualquier canal y busca el ícono del Bochinchero. Las respuestas las ves solo tú.</p>
+      <h3 class="bc-h3">Para todo el mundo</h3>
+      <div class="bc-cmd">{TODOS.map(([c, d]) => <div><code>{c}</code><span>{d}</span></div>)}</div>
+      <h3 class="bc-h3">Para los admins</h3>
+      <div class="bc-cmd">{ADMINS.map(([c, d]) => <div><code>{c}</code><span>{d}</span></div>)}</div>
+    </section>
+
+    <section class="bc-sec" id="ajustes">
+      <h2>Los ajustes, uno por uno</h2>
+      <p>En <code>/bochinche-ajustes</code>. Todo se cambia con menús y se guarda al instante, sin reiniciar nada.</p>
+      <div class="bc-grid">
+        {AJUSTES.map(a => <div class="bc-card"><b><i class={`fa-solid ${a.i}`} aria-hidden="true"></i>{a.t}</b>{a.d}</div>)}
+      </div>
+    </section>
+
+    <section class="bc-sec" id="puyas">
+      <h2>Cómo se alimenta de puyas</h2>
+      <p>Mientras más sepa de la gente, más gracioso es. Hay cuatro maneras de enseñarle:</p>
+      <div class="bc-grid">
+        <div class="bc-card"><b><i class="fa-solid fa-user-shield" aria-hidden="true"></i>Los admins</b>Con <code>/puya agregar</code> la puya entra directo. Lo que mejor funciona: algo que el corillo sepa de esa persona («el que estrella los helicópteros», «el que cocina de verdad»).</div>
+        <div class="bc-card"><b><i class="fa-solid fa-comment-dots" aria-hidden="true"></i>La gente</b>Cualquiera sugiere una puya para un pana con <code>/puya agregar</code> o desde <code>/bochinche</code>. Les llega a los admins al canal de avisos con botones para aprobarla o rechazarla.</div>
+        <div class="bc-card"><b><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>La IA</b>Al que tiene menos de 3 puyas, le escribe unas usando solo lo que Discord enseña: su nombre, sus roles de juegos y lo que está jugando. Nada personal.</div>
+        <div class="bc-card"><b><i class="fa-solid fa-comment" aria-hidden="true"></i>El nombre bien dicho</b>Con <code>/apodo</code> cada uno escoge cómo la voz dice su nombre, para que «PATAECABRA» suene como tiene que sonar.</div>
+      </div>
+    </section>
+
+    <section class="bc-sec" id="roadmap">
+      <h2>Lo que hay y lo que viene</h2>
+      <p>El Bochinchero sigue creciendo. Esto es lo que ya funciona y lo que le vamos a poner.</p>
+      <div class="bc-road">
+        {ROADMAP.map(c => (
+          <div class={`bc-col bc-${c.k}`}>
+            <h3><i class={`fa-solid ${c.i}`} aria-hidden="true"></i>{c.t}<span>{c.items.length}</span></h3>
+            <ul>{c.items.map(([t, d]) => <li><strong>{t}</strong><small>{d}</small></li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="bc-sec" id="preguntas">
+      <h2>Preguntas</h2>
+      <div class="bc-faq">
+        {FAQ.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}
+      </div>
+    </section>
+
+    <section class="bc-fin">
+      <h2>¿Lo quieres en tu server?</h2>
+      <p>Hecho en Puerto Rico para las comunidades gaming de aquí. Si tienes preguntas, búscanos en el Discord del corillo.</p>
+      <div class="bc-row">
+        <a class="bc-go" href={INVITAR} target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i> Añadir a mi server</a>
+        <a class="bc-alt" href={DISCORD_PATH}><i class="fa-solid fa-comments" aria-hidden="true"></i> Entrar al corillo</a>
+      </div>
+    </section>
+  </main>
+
+  <script is:inline>
+    (() => {
+      let audio = null, actual = null;
+      const icono = (b, on) => { b.classList.toggle('on', on); b.querySelector('i').className = on ? 'fa-solid fa-stop' : 'fa-solid fa-play'; };
+      document.querySelectorAll('.bc-play').forEach(b => b.addEventListener('click', () => {
+        if (audio) { audio.pause(); icono(actual, false); }
+        if (actual === b) { audio = actual = null; return; }
+        audio = new Audio(b.dataset.src); actual = b; icono(b, true);
+        audio.onended = () => { icono(b, false); audio = actual = null; };
+        audio.play().catch(() => icono(b, false));
+      }));
+    })();
+  </script>
+</SiteShell>
