@@ -87,6 +87,8 @@ const ROADMAP = [
 
 const FAQ = [
   ['No quiero que me salude. ¿Cómo lo apago?', 'Escribe /bochinche y dale a «Apagar mi saludo». Solo te afecta a ti, y lo vuelves a prender igual.'],
+  ['¿Por qué no me saludó?', 'Saluda solo si hay alguien más en la sala, una vez cada 4 horas por persona (los admins lo cambian), y no en salas privadas, de AFK o que los admins apagaron. Si apagaste tu saludo en /bochinche, préndelo ahí mismo.'],
+  ['¿Cómo escribo un buen aviso?', 'Corto y claro, como lo dirías en voz: una o dos oraciones. Para comandos escribe «barra play» en vez de «/play», que así lo lee bien. Pruébalo con /aviso ver antes de dejarlo.'],
   ['¿Va a tapar la música?', 'No. Si Corillo-Bot está tocando música en la sala, la música baja sola mientras el Bochinchero habla y después vuelve a donde estaba.'],
   ['¿Qué no dice nunca?', 'Insultos de verdad (homofóbicos, racistas), cosas sexuales, amenazas, política, religión ni enlaces. El filtro lo para en /decir, en las puyas sugeridas y en las que escribe la IA.'],
   ['¿Qué datos guarda?', 'Tu id de Discord, el nombre que ves en el server, cuándo entras y sales de las salas de voz (para el ranking y los momentos) y las puyas. No escucha ni graba lo que hablan: entra sordo, habla y se va.'],
@@ -123,6 +125,7 @@ const FAQ = [
       .bc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px}
       .bc-card{padding:20px 22px;border-radius:24px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);color:var(--h2-mute);font:500 .95rem/1.5 var(--h2-body)}
       .bc-card b{display:flex;align-items:center;gap:10px;margin-bottom:8px;color:var(--h2-bone);font:800 1.05rem/1.2 var(--h2-display);letter-spacing:-.02em}
+      .bc-card em{display:block;margin-top:8px;color:var(--h2-bone);font-style:italic}
       .bc-card b i{flex:none;width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:color-mix(in srgb,var(--bc) 20%,transparent);color:var(--bc);font-size:.85rem}
       .bc-oye{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,235px),1fr));gap:12px}
       .bc-play{display:flex;gap:14px;align-items:center;width:100%;padding:16px 18px;border:0;border-radius:24px;cursor:pointer;text-align:left;
@@ -133,6 +136,9 @@ const FAQ = [
       .bc-play strong{display:block;font:800 1rem var(--h2-body)}
       .bc-play small{display:block;margin-top:3px;color:var(--h2-mute);font:500 .88rem/1.4 var(--h2-body)}
       .bc-pasos{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px;counter-reset:p}
+      .bc-pasos.c4{grid-template-columns:repeat(4,1fr)}
+      @media (max-width:1100px){.bc-pasos.c4{grid-template-columns:repeat(2,1fr)}}
+      @media (max-width:640px){.bc-pasos.c4{grid-template-columns:1fr}}
       .bc-pasos .bc-card{position:relative;padding-top:58px}
       .bc-pasos .bc-card::before{counter-increment:p;content:counter(p);position:absolute;top:18px;left:22px;width:30px;height:30px;display:grid;place-items:center;border-radius:50%;background:var(--bc);color:#13173d;font:800 .95rem var(--h2-body)}
       .bc-cmd{display:grid;gap:8px}
@@ -176,7 +182,7 @@ const FAQ = [
       <img class="bc-ico" src="/bochinchero/icono-256.png" alt="Ícono del Bochinchero: un globo de diálogo con una bocina" width="190" height="190" />
       <div>
         <h1>El Bochin<span>chero</span></h1>
-        <p>El bot de voz boricua para Discord. Cuando entras a una sala, te saluda con una puya. Cae de visita sorpresa, sabe qué juegas, se despide cuando te vas y cada domingo dice quién fue el más pegao. Vive en el corillo y lo puedes poner en tu server.</p>
+        <p>El bot de voz boricua para Discord. Cuando entras a una sala, te saluda con una puya. Cae de visita sorpresa, sabe qué juegas, se despide cuando te vas, da los avisos del server en voz y cada domingo dice quién fue el más pegao. Vive en el corillo y lo puedes poner en tu server.</p>
         <div class="bc-row">
           <a class="bc-go" href={INVITAR} target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i> Añadir a mi server</a>
           <a class="bc-alt" href={DISCORD_PATH}><i class="fa-solid fa-headset" aria-hidden="true"></i> Oírlo en el corillo</a>
@@ -185,8 +191,8 @@ const FAQ = [
     </section>
 
     <nav class="bc-nav" aria-label="En esta página">
-      <a href="#oyelo">Óyelo</a><a href="#que-hace">Qué hace</a><a href="#instalar">Instalarlo</a>
-      <a href="#comandos">Comandos</a><a href="#ajustes">Ajustes</a><a href="#puyas">Puyas</a><a href="#roadmap">Lo que viene</a><a href="#preguntas">Preguntas</a>
+      <a href="#oyelo">Óyelo</a><a href="#que-hace">Qué hace</a><a href="#como-se-usa">Cómo se usa</a><a href="#instalar">Instalarlo</a>
+      <a href="#comandos">Comandos</a><a href="#ajustes">Ajustes</a><a href="#avisos">Avisos</a><a href="#puyas">Puyas</a><a href="#roadmap">Lo que viene</a><a href="#preguntas">Preguntas</a>
     </nav>
 
     <section class="bc-sec" id="oyelo">
@@ -207,6 +213,25 @@ const FAQ = [
       <p>Todo se puede prender o apagar por separado desde los ajustes del server.</p>
       <div class="bc-grid">
         {HACE.map(h => <div class="bc-card"><b><i class={`fa-solid ${h.i}`} aria-hidden="true"></i>{h.t}</b>{h.d}</div>)}
+      </div>
+    </section>
+
+    <section class="bc-sec" id="como-se-usa">
+      <h2>Cómo se usa</h2>
+      <p>No hay que aprenderse nada: entras a una sala de voz y él hace lo suyo. Pero si quieres sacarle el jugo, esto es lo que puedes hacer.</p>
+      <h3 class="bc-h3">Si eres del server</h3>
+      <div class="bc-pasos c4">
+        <div class="bc-card"><b>Entra a una sala con gente</b>Cuando entras a una sala de voz donde ya hay alguien, el Bochinchero entra, te tira una puya con tu nombre y se va. Si estás solo no te saluda: no tiene gracia sin público.</div>
+        <div class="bc-card"><b>Abre tu menú</b>Escribe <code>/bochinche</code> en cualquier canal. Ahí pruebas tu saludo, lo apagas si no lo quieres, ves el ranking y lo pones a hablar. Lo que sale ahí lo ves solo tú.</div>
+        <div class="bc-card"><b>Arregla tu nombre</b>Si la voz dice mal tu nombre, escribe <code>/apodo</code> y ponlo como suena. Ej.: «404_NOT_FOUND» → «cuatro cero cuatro», «xX_Pedro_Xx» → «Pedrito».</div>
+        <div class="bc-card"><b>Ponlo a hablar</b>Con <code>/decir</code> escribes algo y lo dice en tu sala. Y con <code>/puya agregar</code> le sugieres una puya a un pana; los admins la aprueban y desde ahí se la dice cuando entre.</div>
+      </div>
+      <h3 class="bc-h3">Si eres admin</h3>
+      <div class="bc-pasos c4">
+        <div class="bc-card"><b>Escoge los canales</b>En <code>/bochinche-ajustes</code>: el canal del ranking (público) y, con el botón «Canal de moderación», el canal donde llegan las puyas para aprobar.</div>
+        <div class="bc-card"><b>Dale puyas a la gente</b>Con <code>/puya agregar</code> la puya entra directo. Mientras más sepa de cada uno, más gracioso. Con <code>/puya ver</code> borras las que no sirvan.</div>
+        <div class="bc-card"><b>Pon avisos</b>Con <code>/aviso nuevo</code> le enseñas qué decir a los nuevos, en una sala o a una hora. Más abajo hay ejemplos.</div>
+        <div class="bc-card"><b>Revisa que todo esté bien</b>En <code>/bochinche-ajustes</code> dale a <strong>Diagnóstico</strong>: te dice si le falta permiso en alguna sala o algún canal.</div>
       </div>
     </section>
 
@@ -234,6 +259,17 @@ const FAQ = [
       <p>En <code>/bochinche-ajustes</code>. Todo se cambia con menús y se guarda al instante, sin reiniciar nada.</p>
       <div class="bc-grid">
         {AJUSTES.map(a => <div class="bc-card"><b><i class={`fa-solid ${a.i}`} aria-hidden="true"></i>{a.t}</b>{a.d}</div>)}
+      </div>
+    </section>
+
+    <section class="bc-sec" id="avisos">
+      <h2>Avisos en voz</h2>
+      <p>Los admins escriben el aviso una vez con <code>/aviso nuevo</code>, escogen cuándo se dice, y el Bochinchero se encarga. Con <code>/aviso ver</code> los pruebas en tu sala o los borras. Hasta 15 por server, y todos pasan por el filtro.</p>
+      <div class="bc-grid">
+        <div class="bc-card"><b><i class="fa-solid fa-seedling" aria-hidden="true"></i>A los nuevos</b>A quien entra a voz por primera vez y se unió al server hace poco.<br /><em>«¡Bienvenido al corillo! Si quieres música, escribe barra play.»</em></div>
+        <div class="bc-card"><b><i class="fa-solid fa-door-open" aria-hidden="true"></i>Al entrar a una sala</b>A cada persona que entra a esa sala, una vez al día (o cada cuanto tú digas).<br /><em>«Esta es la sala de Warzone: aquí se juega en serio, sin música.»</em></div>
+        <div class="bc-card"><b><i class="fa-solid fa-clock" aria-hidden="true"></i>A una hora fija</b>Todos los días a la hora que escojas, en la sala con más gente.<br /><em>«Son las nueve: en diez minutos empieza el torneo.»</em></div>
+        <div class="bc-card"><b><i class="fa-solid fa-rotate" aria-hidden="true"></i>Cada cierto tiempo</b>Cada tantas horas, en la sala con más gente, dentro del horario de visitas.<br /><em>«Recuerden: marquen sus juegos en Canales y roles.»</em></div>
       </div>
     </section>
 
