@@ -713,6 +713,10 @@ import { version } from '../../../version.json';
     }
     .vod-upload-progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width .3s; border-radius: 2px; }
     .vod-upload-status { font-family: var(--mono); font-size: .7rem; color: var(--muted); margin-bottom: 10px; }
+    .vod-row.pend .vod-row-thumb { color: var(--accent); font-size: 1.1rem; }
+    .vod-row.pend.err { border-color: rgba(225,112,85,.4); }
+    .vod-row.pend.err .vod-row-thumb { color: #e17055; }
+    .vod-row-x { background: none; border: 0; color: var(--muted); cursor: pointer; padding: 6px; font-size: .8rem; }
 
     /* ── Paneles ── */
     .panel-row {
@@ -1108,7 +1112,7 @@ import { version } from '../../../version.json';
             <input type="file" id="vodFileInput" accept="video/*">
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <div>Arrastra tu video aquí o toca para seleccionar</div>
-            <div style="font-size:.65rem;margin-top:6px;opacity:.6">Máx 2 GB · Cualquier duración</div>
+            <div style="font-size:.65rem;margin-top:6px;opacity:.6">Máx 6 GB · Cualquier duración</div>
           </div>
 
           <div id="vodUploadFileMeta" style="display:none;font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-bottom:12px"></div>
@@ -1128,6 +1132,8 @@ import { version } from '../../../version.json';
             <button class="btn" id="vodUploadCancel" style="font-size:.7rem">Cancelar</button>
           </div>
         </div>
+
+        <div class="vod-rows" id="vodPendientes" style="margin-bottom:8px"></div>
 
         <div id="vodsCard" style="display:none">
           <div class="vod-rows" id="vodsList"></div>
@@ -2774,7 +2780,55 @@ resetBtn.addEventListener('click', async () => {
 })();
 
 // ── VOD Upload ──
+const VOD_MAX_GB = 6;
+const VOD_MAX_BYTES = VOD_MAX_GB * 1024 ** 3;
+
+// Subidas que el servidor está convirtiendo (fila en corillo-api, en memoria).
+const vodJobsVistos = {};
+const vodJobsOcultos = new Set();
+let vodPendTimer = null;
+async function pollVodPendientes() {
+  clearTimeout(vodPendTimer);
+  const box = document.getElementById('vodPendientes');
+  let jobs = [];
+  try {
+    const r = await fetch('/api/upload-vod/pendientes', { headers: { Authorization: pb.authStore.token } });
+    if (r.ok) jobs = (await r.json()).jobs || [];
+  } catch {}
+  let recargar = false;
+  for (const j of jobs) {
+    const antes = vodJobsVistos[j.job];
+    if (antes && antes !== 'listo' && j.estado === 'listo') { recargar = true; showToast('Tu video ya está listo.'); }
+    if (antes && antes !== 'error' && j.estado === 'error') showToast('No se pudo procesar tu video.', 'err');
+    vodJobsVistos[j.job] = j.estado;
+  }
+  if (recargar && currentRecord) loadMyVods(currentRecord.key);
+  const visibles = jobs.filter(j => j.estado !== 'listo' && !vodJobsOcultos.has(j.job));
+  box.innerHTML = visibles.map(j => {
+    const err = j.estado === 'error';
+    const txt = err ? esc(j.error || 'No se pudo procesar el video')
+      : j.estado === 'en_fila' ? 'En fila para procesar…'
+      : 'Procesando… aparece en tu lista cuando termine';
+    return `<div class="vod-row pend${err ? ' err' : ''}">
+      <div class="vod-row-thumb"><i class="fa-solid ${err ? 'fa-triangle-exclamation' : 'fa-spinner fa-spin'}"></i></div>
+      <div class="vod-row-info">
+        <div class="vod-row-title">${esc(j.title) || 'Video subido'}</div>
+        <div class="vod-row-date">${txt}</div>
+        <div class="vod-row-meta">${[fmtDur(j.duration), fmtMB(j.size)].filter(Boolean).join(' · ')}</div>
+      </div>
+      ${err ? `<button class="vod-row-x" data-job="${esc(j.job)}" title="Quitar"><i class="fa-solid fa-xmark"></i></button>` : ''}
+    </div>`;
+  }).join('');
+  box.querySelectorAll('.vod-row-x').forEach(b => b.addEventListener('click', () => {
+    vodJobsOcultos.add(b.dataset.job); b.closest('.vod-row').remove();
+  }));
+  if (jobs.some(j => j.estado === 'en_fila' || j.estado === 'procesando')) {
+    vodPendTimer = setTimeout(pollVodPendientes, 15000);
+  }
+}
+
 function initVodUpload() {
+  pollVodPendientes();
   const btnOpen   = document.getElementById('btnOpenVodUpload');
   const panel     = document.getElementById('vodUploadPanel');
   const dropZone  = document.getElementById('vodDropZone');
@@ -2810,6 +2864,13 @@ function initVodUpload() {
   cancelBtn.addEventListener('click', () => { panel.style.display = 'none'; reset(); });
 
   function onFileSelected(f) {
+    if (f.size > VOD_MAX_BYTES) {
+      status.textContent = `El video pesa ${fmtMB(f.size)}; el máximo es ${VOD_MAX_GB} GB.`;
+      status.style.display = 'block';
+      fileInput.value = '';
+      return;
+    }
+    status.style.display = 'none';
     selectedFile = f;
     const mb = (f.size / 1024 / 1024).toFixed(1);
     fileMeta.textContent = `${f.name} · ${mb} MB`;
@@ -2849,10 +2910,11 @@ function initVodUpload() {
           if (e.lengthComputable) {
             const pct = Math.round((e.loaded / e.total) * 100);
             bar.style.width = pct + '%';
+            status.textContent = `${fmtMB(e.loaded) || '0 MB'} de ${fmtMB(e.total)} · ${pct}%`;
+            status.style.display = 'block';
             if (pct === 100) {
-              submitBtn.innerHTML = '<span class="spinner"></span> Procesando…';
-              status.textContent = 'Procesando video…';
-              status.style.display = 'block';
+              submitBtn.innerHTML = '<span class="spinner"></span> Verificando…';
+              status.textContent = 'Verificando el video…';
             }
           }
         });
@@ -2865,17 +2927,17 @@ function initVodUpload() {
             reject(new Error(msg));
           }
         });
-        xhr.addEventListener('error', () => reject(new Error('Error de red.')));
+        xhr.addEventListener('error', () => reject(new Error('Se cortó la conexión. Intenta de nuevo.')));
         xhr.send(fd);
       });
 
-      showToast('¡Video subido!');
+      showToast('¡Video subido! Lo estamos procesando.');
       panel.style.display = 'none';
       reset();
       // Mostrar VODs si no estaban visibles
       document.getElementById('vodsDisabled').style.display = 'none';
       document.getElementById('vodsCard').style.display = '';
-      loadMyVods(currentRecord.key);
+      pollVodPendientes();
 
     } catch(e) {
       status.textContent = (e && e.message) || 'Error. Intenta de nuevo.';
