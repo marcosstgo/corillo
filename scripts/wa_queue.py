@@ -75,8 +75,21 @@ def _oc_pending(group):
     except Exception: return None
 
 
+def _logged_out():
+    """True si WhatsApp cerró la sesión vinculada (16-oct): reiniciar no sirve, hay que volver a escanear el QR."""
+    try: st = subprocess.run(['/usr/bin/openclaw', 'channels', 'status'], capture_output=True, text=True, timeout=60).stdout
+    except Exception: return False
+    return 'logged-out' in next((l for l in st.splitlines() if 'WhatsApp' in l), '')
+
+
 def _revive(stamp):
     """Si el canal de WhatsApp quedó parado (p. ej. tras un corte de DNS, 8-oct), reinicia el gateway; máx 1 vez/hora."""
+    if _logged_out():
+        mark = HOME / '.last_logout_note'
+        if not (mark.exists() and mark.stat().st_mtime > _now().timestamp() - 86400):
+            mark.touch()
+            print(stamp, 'WhatsApp DESLOGUEADO: no se reinicia; Marcos debe correr `openclaw channels login --channel whatsapp` y escanear el QR')
+        return
     mark = HOME / '.last_restart'
     if mark.exists() and mark.stat().st_mtime > _now().timestamp() - 3600: return
     mark.touch()
