@@ -21,6 +21,7 @@ const HACE = [
   { i: 'fa-gamepad', t: 'Sabe qué juegas', d: 'Si Discord enseña lo que juegas, te vacila por eso, al entrar o cuando prendes el juego estando en la sala: «Kata se fue pa\' DMZ. Apuesten cuánto dura antes de quedar MIA.» Conoce Battlefield, Call of Duty, DMZ, Delta Force, PUBG, ARC Raiders y más.' },
   { i: 'fa-user-secret', t: '«Ese usa hacks»', d: 'En los shooters te acusa de usar hacks, de chiste: «Este Kata, además de jugar malo, usa hacks. Yo vi la pantalla y los muñequitos se veían marcaos en rojo.» Se apaga aparte en los ajustes.' },
   { i: 'fa-people-group', t: 'Ve al escuadrón', d: 'Si 3 o más en la sala juegan lo mismo, se lo dice al grupo. Y si el server tiene sala de ese juego, les dice que se muden: «Escuadrón completo de DMZ aquí. ¿Y por qué no se mudan a la sala de DMZ?»' },
+  { i: 'fa-face-sad-tear', t: 'No deja a nadie solo', d: 'Si llevas 15 minutos solo en una sala, entra y te dice algo: a veces ánimo, a veces puya. «Oye, Kata, ¿y tus panas? Ah, verdad, que no tienes. Mentira, ahorita llega alguien.»' },
   { i: 'fa-cake-candles', t: 'Felicita cumpleaños', d: 'Cada uno pone su cumpleaños con /cumple. Ese día lo anuncia en el chat y, cuando entras a voz, te felicita: «¡Contra, Kata! Te felicito, que hoy cumples años. Que cumplas muchos más.»' },
   { i: 'fa-wand-magic-sparkles', t: 'Escribe puyas solo', d: 'Al que no tiene puyas propias le escribe unas con IA, usando sus roles de juegos. Todas pasan por el filtro.' },
   { i: 'fa-trophy', t: 'Ranking semanal', d: 'Cada domingo a las 8 p. m. publica quién pasó más tiempo en las salas de voz. El primero se lleva su puya.' },
@@ -50,7 +51,7 @@ const ADMINS = [
 
 const AJUSTES = [
   { i: 'fa-pepper-hot', t: 'Nivel de picante', d: 'Suave: sin malas palabras, ideal para servers con menores. Normal: puyas de pana. Picante: boricua sin filtro (se vale «cabrón»), pero sin insultos de verdad.' },
-  { i: 'fa-toggle-on', t: 'Qué hace', d: 'Prende o apaga cada cosa por separado: saludos, despedidas, visitas, momentos, juegos, el chiste de «usa hacks», cumpleaños, /decir, puyas con IA, ranking semanal y avisos.' },
+  { i: 'fa-toggle-on', t: 'Qué hace', d: 'Prende o apaga cada cosa por separado: saludos, despedidas, visitas, momentos, juegos, el chiste de «usa hacks», cumpleaños, la puya al que está solo, /decir, puyas con IA, ranking semanal y avisos.' },
   { i: 'fa-trophy', t: 'Canal del ranking', d: 'Un canal de texto público donde sale el ranking de los domingos.' },
   { i: 'fa-lock', t: 'Canal de moderación', d: 'Un canal solo de admins donde llegan las puyas que sugiere la gente, con botones Aprobar/Rechazar. Si no escoges uno, llegan al del ranking.' },
   { i: 'fa-volume-xmark', t: 'Salas donde no hablo', d: 'Escoge salas donde nunca debe hablar (ej. la de reuniones). Las privadas y la de AFK las respeta siempre.' },
@@ -70,6 +71,8 @@ const ROADMAP = [
     ['«Ese usa hacks»', 'El chiste de los shooters, con su propio interruptor.'],
     ['Ve al escuadrón', 'Si 3 juegan lo mismo, los vacila o los manda a la sala de ese juego.'],
     ['Cumpleaños', 'Con /cumple: lo anuncia en el chat y te felicita en voz.'],
+    ['No deja a nadie solo', 'Tras 15 minutos solo en una sala, entra con ánimo o con puya.'],
+    ['Planes Gratis y Premium', '14 días de Premium para cada server nuevo.'],
     ['/decir', 'Lo pones a hablar en tu sala.'],
     ['Sugerir y aprobar puyas', 'La gente sugiere, los admins aprueban con un botón.'],
     ['Ranking semanal de voz', 'Los domingos, en el canal del ranking.'],
@@ -82,7 +85,7 @@ const ROADMAP = [
     ['Panel web', 'Entras con tu cuenta de Discord y manejas todo desde el navegador: personas, puyas, avisos, horario y estadísticas.'],
     ['Escuchar antes de guardar', 'Oír cómo suena una puya antes de aprobarla.'],
     ['Saludos especiales', 'Además de puyas: saludo de VIP o ninguno, escogido por persona.'],
-    ['Plan Premium', 'Lo básico gratis y las funciones de IA en un plan pago. Ver «Planes» más arriba.'],
+    ['Pago dentro de Discord', 'El botón «Hazte Premium» para pagar sin salir de Discord.'],
   ]},
   { k: 'ideas', t: 'Ideas para después', i: 'fa-lightbulb', items: [
     ['Noticias y ofertas por voz', 'La noticia gamer del día, juegos gratis y ofertas, dichos en la sala.'],
@@ -344,7 +347,7 @@ const LD = [
           <ul>
             <li>Saludos, despedidas y visitas sorpresa</li>
             <li>Puyas por juego, «ese usa hacks» y el escuadrón</li>
-            <li>Cumpleaños y ranking semanal</li>
+            <li>Cumpleaños, ranking semanal y la puya al que está solo</li>
             <li>Puyas que ponen los admins</li>
             <li>2 avisos en voz</li>
             <li>5 voces nuevas al día (después repite las que ya tiene)</li>
