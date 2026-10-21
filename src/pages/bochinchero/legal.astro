@@ -1,0 +1,100 @@
+---
+// El Bochinchero (21-oct-2026): Condiciones del Servicio y Política de Privacidad, enlazadas desde el portal de
+// desarrolladores de Discord (requisito para verificar y cobrar). Si el bot empieza a guardar algo nuevo
+// (~/corillo-stoat/bochinchero/datos.py) o usa otro servicio, actualizar aquí.
+import SiteShell from '../../layouts/SiteShell.astro';
+const FECHA = '21 de octubre de 2026';
+const CORREO = 'hello@marcossantiago.com';
+---
+<SiteShell
+  title="El Bochinchero — Condiciones y Privacidad"
+  description="Condiciones del Servicio y Política de Privacidad del bot de voz El Bochinchero para Discord."
+  canonical="https://corillo.live/bochinchero/legal/"
+  ogImage="/bochinchero/og.png"
+>
+  <fragment slot="head">
+    <style is:global>
+      .bl{--bc:#ff6b3d;max-width:860px;margin:0 auto;padding:clamp(28px,5vw,56px) var(--h2-gutter) 90px;color:color-mix(in srgb,var(--h2-bone) 85%,transparent);font:500 1rem/1.65 var(--h2-body)}
+      .bl h1{margin:0 0 8px;color:var(--h2-bone);font:800 clamp(2rem,5vw,3.2rem)/1 var(--h2-display);letter-spacing:-.04em;text-transform:none}
+      .bl h1 span{color:var(--bc)}
+      .bl .meta{color:var(--h2-mute);font-size:.9rem}
+      .bl nav{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 8px}
+      .bl nav a{padding:8px 15px;border-radius:999px;color:var(--h2-mute);text-decoration:none;font:700 .9rem var(--h2-body);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bl nav a:hover{color:var(--h2-bone);background:color-mix(in srgb,var(--h2-bone) 7%,transparent)}
+      .bl h2{margin:48px 0 4px;color:var(--h2-bone);font:800 clamp(1.5rem,3vw,2rem)/1.1 var(--h2-display);letter-spacing:-.03em;text-transform:none;scroll-margin-top:90px}
+      .bl h3{margin:26px 0 6px;color:var(--h2-bone);font:800 1.08rem var(--h2-body)}
+      .bl ul{padding-left:20px}
+      .bl li{margin:5px 0}
+      .bl a{color:var(--bc)}
+      .bl .en{margin-top:64px;padding-top:28px;border-top:1px solid var(--h2-line)}
+    </style>
+  </fragment>
+
+  <main class="bl">
+    <h1>El Bochin<span>chero</span>: condiciones y privacidad</h1>
+    <p class="meta">Última actualización: {FECHA} · Marcos Santiago, Puerto Rico</p>
+    <nav aria-label="En esta página">
+      <a href="#terminos">Condiciones del Servicio</a><a href="#privacidad">Política de Privacidad</a><a href="#english">English</a>
+    </nav>
+
+    <h2 id="terminos">Condiciones del Servicio</h2>
+    <p>El Bochinchero («el bot») es un bot de voz para Discord operado por Marcos Santiago desde Puerto Rico como parte de CORILLO (<a href="https://corillo.live">corillo.live</a>). Al añadirlo a un server o usarlo, aceptas estas condiciones y las <a href="https://discord.com/terms" target="_blank" rel="noopener">Condiciones del Servicio de Discord</a>.</p>
+    <h3>Qué hace</h3>
+    <p>Entra a las salas de voz para decir puyas, saludos, avisos y felicitaciones de cumpleaños con una voz generada por inteligencia artificial, y luego se va. Lo que dice y cuándo lo dice se explica en la <a href="/bochinchero/">guía</a>.</p>
+    <h3>Uso aceptable</h3>
+    <ul>
+      <li>Las puyas son de chiste entre panas. No uses el bot para acosar, amenazar o humillar a nadie.</li>
+      <li>No intentes que diga insultos de verdad (racistas, homofóbicos, sexuales), amenazas, política, religión ni enlaces. El bot tiene un filtro, pero quien escribe un texto con <code>/decir</code>, <code>/puya</code> o <code>/aviso</code> es responsable de lo que escribe.</li>
+      <li>Los admins de cada server deciden qué hace el bot ahí, y pueden borrar puyas y apagar funciones.</li>
+      <li>Podemos limitar o quitar el bot de un server que lo use para dañar a otros o que viole las reglas de Discord.</li>
+    </ul>
+    <h3>Planes y pagos</h3>
+    <p>Hoy el bot es gratis mientras está en prueba. Cuando haya un plan Premium, se pagará con las herramientas de Discord (o con otro método que se anuncie en la guía) y los cobros, cancelaciones y reembolsos seguirán las reglas de ese método. Los precios y lo que incluye cada plan se publicarán en la <a href="/bochinchero/#planes">guía</a> antes de cobrar.</p>
+    <h3>Sin garantías</h3>
+    <p>El bot se ofrece «tal cual». Depende de Discord y de servicios de inteligencia artificial de terceros, y puede fallar, callarse o dejar de estar disponible. Marcos Santiago no es responsable por daños que salgan del uso del bot ni de lo que escriban sus usuarios.</p>
+    <h3>Cambios</h3>
+    <p>Podemos cambiar estas condiciones. La fecha de arriba dice cuándo fue el último cambio. Seguir usando el bot significa que aceptas la versión nueva. Estas condiciones se rigen por las leyes de Puerto Rico y de los Estados Unidos.</p>
+
+    <h2 id="privacidad">Política de Privacidad</h2>
+    <h3>Qué guardamos</h3>
+    <ul>
+      <li>Tu id de Discord y el nombre que se ve en el server.</li>
+      <li>Cuándo entras y sales de las salas de voz y en qué sala (para el ranking semanal, las rachas y los saludos).</li>
+      <li>Las puyas que los admins, los miembros o la IA escriben para ti, y cómo dice la voz tu nombre (<code>/apodo</code>).</li>
+      <li>Tu cumpleaños (solo día y mes), si tú o un admin lo ponen con <code>/cumple</code>.</li>
+      <li>Si apagaste tu saludo, los ajustes de cada server y los avisos que escriben sus admins.</li>
+      <li>Los audios que genera la voz, para no tener que generarlos otra vez.</li>
+    </ul>
+    <h3>Qué NO guardamos</h3>
+    <ul>
+      <li>El bot <strong>no escucha ni graba</strong> lo que se habla: entra a la sala sordo, dice lo suyo y se va.</li>
+      <li>No lee los mensajes del chat. Solo recibe lo que le mandas con sus comandos.</li>
+      <li>Lo que estás jugando (según Discord) se usa en el momento para la puya y no se guarda.</li>
+      <li>No vendemos ni compartimos tus datos para anuncios.</li>
+    </ul>
+    <h3>Servicios que usamos</h3>
+    <ul>
+      <li><strong>Discord</strong>, donde vive el bot.</li>
+      <li><strong>Google (Gemini)</strong>: convierte en voz el texto que va a decir (que incluye tu nombre) y escribe puyas a partir de tu nombre en el server, tus roles y el juego que estás jugando.</li>
+      <li><strong>Groq</strong>: escucha el audio que generó el bot (no a las personas) para comprobar que salió bien.</li>
+    </ul>
+    <h3>Dónde y por cuánto tiempo</h3>
+    <p>Los datos están en un servidor en Puerto Rico. Se guardan mientras el bot esté en tu server o hasta que pidas que se borren.</p>
+    <h3>Tus opciones</h3>
+    <ul>
+      <li>Apaga tu saludo con <code>/bochinche</code> y borra tu cumpleaños con <code>/cumple borrar</code>.</li>
+      <li>Para ver o borrar todos tus datos, escribe a <a href={`mailto:${CORREO}`}>{CORREO}</a> con tu nombre de usuario de Discord.</li>
+      <li>Si un admin saca el bot de su server, puede pedir que se borren los datos de ese server al mismo correo.</li>
+    </ul>
+    <h3>Menores</h3>
+    <p>Discord exige tener por lo menos 13 años (o la edad mínima de tu país). El bot no está hecho para menores de esa edad. Los servers con menores deben usar el nivel «Suave».</p>
+
+    <section class="en" id="english">
+      <h2>English summary</h2>
+      <h3>Terms of Service</h3>
+      <p>El Bochinchero is a Discord voice bot operated by Marcos Santiago (Puerto Rico) as part of CORILLO. By adding or using it you agree to these terms and to Discord's Terms of Service. It joins voice channels to say jokes, greetings, announcements and birthday wishes with an AI-generated voice, then leaves. Don't use it to harass, threaten or humiliate anyone; whoever writes a text through its commands is responsible for it, and server admins control what it does. We may limit or remove it from servers that misuse it. It is free while in testing; any future Premium plan will be paid through Discord's tools (or another method announced on the guide), following that method's billing and refund rules, with prices published before charging. It is provided "as is", without warranties. Governed by the laws of Puerto Rico and the United States.</p>
+      <h3>Privacy Policy</h3>
+      <p>We store your Discord ID and server display name, when you join and leave voice channels, the jokes written for you, how your name is pronounced, your birthday (day and month, only if set with /cumple), your greeting preference, server settings, admin announcements and the generated audio files. The bot does not listen to or record voice, does not read chat messages, and does not store what you are playing. Google (Gemini) turns the bot's text into speech and writes jokes from your display name, roles and current game; Groq checks the bot's own generated audio. Data is kept on a server in Puerto Rico while the bot is in your server or until you ask us to delete it. We do not sell your data. To access or delete your data, email <a href={`mailto:${CORREO}`}>{CORREO}</a>. Discord requires users to be at least 13.</p>
+    </section>
+  </main>
+</SiteShell>
