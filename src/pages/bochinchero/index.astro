@@ -18,7 +18,10 @@ const HACE = [
   { i: 'fa-door-open', t: 'Se despide a veces', d: '«Se fue Kata. Ahora sí podemos ganar.» No siempre: de vez en cuando, y solo si queda gente.' },
   { i: 'fa-dice', t: 'Visitas sorpresa', d: 'Cada cierto rato cae a la sala con más gente y suelta algo. Si la sala está llena, tiene frases especiales.' },
   { i: 'fa-clock', t: 'Momentos especiales', d: 'Sabe si entraste de madrugada, si volviste después de días perdío o si llevas una racha de días corridos.' },
-  { i: 'fa-gamepad', t: 'Sabe qué juegas', d: 'Si Discord enseña que estás jugando algo, te puede vacilar por eso: «¿Otra vez Battlefield? ¿Y la vida?»' },
+  { i: 'fa-gamepad', t: 'Sabe qué juegas', d: 'Si Discord enseña lo que juegas, te vacila por eso, al entrar o cuando prendes el juego estando en la sala: «Kata se fue pa\' DMZ. Apuesten cuánto dura antes de quedar MIA.» Conoce Battlefield, Call of Duty, DMZ, Delta Force, PUBG, ARC Raiders y más.' },
+  { i: 'fa-user-secret', t: '«Ese usa hacks»', d: 'En los shooters te acusa de usar hacks, de chiste: «Este Kata, además de jugar malo, usa hacks. Yo vi la pantalla y los muñequitos se veían marcaos en rojo.» Se apaga aparte en los ajustes.' },
+  { i: 'fa-people-group', t: 'Ve al escuadrón', d: 'Si 3 o más en la sala juegan lo mismo, se lo dice al grupo. Y si el server tiene sala de ese juego, les dice que se muden: «Escuadrón completo de DMZ aquí. ¿Y por qué no se mudan a la sala de DMZ?»' },
+  { i: 'fa-cake-candles', t: 'Felicita cumpleaños', d: 'Cada uno pone su cumpleaños con /cumple. Ese día lo anuncia en el chat y, cuando entras a voz, te felicita: «¡Contra, Kata! Te felicito, que hoy cumples años. Que cumplas muchos más.»' },
   { i: 'fa-wand-magic-sparkles', t: 'Escribe puyas solo', d: 'Al que no tiene puyas propias le escribe unas con IA, usando sus roles de juegos. Todas pasan por el filtro.' },
   { i: 'fa-trophy', t: 'Ranking semanal', d: 'Cada domingo a las 8 p. m. publica quién pasó más tiempo en las salas de voz. El primero se lleva su puya.' },
   { i: 'fa-microphone-lines', t: 'Lo pones a hablar', d: 'Con /decir escribes algo y él lo dice en tu sala, con su voz boricua.' },
@@ -31,6 +34,8 @@ const TODOS = [
   ['/puya agregar', 'Sugiere una puya para un pana. Les llega a los admins para que la aprueben.'],
   ['/apodo', 'Cómo dice la voz tu nombre. Ej.: si te llamas «404_NOT_FOUND», que diga «cuatro cero cuatro».'],
   ['/ranking', 'Los más pegaos a las salas de voz esta semana.'],
+  ['/cumple poner', 'Tu cumpleaños (solo día y mes). Ese día te felicita en voz y lo anuncia en el chat. /cumple borrar lo quita.'],
+  ['/cumple ver', 'Los próximos cumpleaños del server.'],
   ['/bochinche-ayuda', 'El resumen de todo esto, dentro de Discord.'],
 ];
 const ADMINS = [
@@ -38,13 +43,14 @@ const ADMINS = [
   ['/puya agregar', 'Si eres admin, la puya entra directo, sin aprobación.'],
   ['/puya ver', 'Ver todas las puyas de alguien y borrar las que no te gusten.'],
   ['/apodo @persona', 'Cambiar cómo dice el nombre de cualquiera.'],
+  ['/cumple poner @persona', 'Ponerle el cumpleaños a otro.'],
   ['/aviso nuevo', 'Un aviso que dice en voz: a los nuevos, al entrar a una sala, a una hora fija o cada X horas. Pasa por el filtro y queda grabado.'],
   ['/aviso ver', 'Todos los avisos del server: probarlos en tu sala o borrarlos.'],
 ];
 
 const AJUSTES = [
   { i: 'fa-pepper-hot', t: 'Nivel de picante', d: 'Suave: sin malas palabras, ideal para servers con menores. Normal: puyas de pana. Picante: boricua sin filtro (se vale «cabrón»), pero sin insultos de verdad.' },
-  { i: 'fa-toggle-on', t: 'Qué hace', d: 'Prende o apaga cada cosa por separado: saludos, despedidas, visitas, momentos, juegos, /decir, puyas con IA, ranking semanal y avisos.' },
+  { i: 'fa-toggle-on', t: 'Qué hace', d: 'Prende o apaga cada cosa por separado: saludos, despedidas, visitas, momentos, juegos, el chiste de «usa hacks», cumpleaños, /decir, puyas con IA, ranking semanal y avisos.' },
   { i: 'fa-trophy', t: 'Canal del ranking', d: 'Un canal de texto público donde sale el ranking de los domingos.' },
   { i: 'fa-lock', t: 'Canal de moderación', d: 'Un canal solo de admins donde llegan las puyas que sugiere la gente, con botones Aprobar/Rechazar. Si no escoges uno, llegan al del ranking.' },
   { i: 'fa-volume-xmark', t: 'Salas donde no hablo', d: 'Escoge salas donde nunca debe hablar (ej. la de reuniones). Las privadas y la de AFK las respeta siempre.' },
@@ -60,7 +66,10 @@ const ROADMAP = [
     ['Despedidas y visitas sorpresa', 'Con frases especiales para salas llenas.'],
     ['Momentos especiales', 'Madrugada, regresos después de días y rachas.'],
     ['Puyas escritas por IA', 'Para el que no tiene, con filtro.'],
-    ['Puyas por el juego que juegas', 'Cuando Discord lo deja ver.'],
+    ['Puyas por el juego que juegas', 'Al entrar o cuando lo prendes en la sala, con puyas de cada juego.'],
+    ['«Ese usa hacks»', 'El chiste de los shooters, con su propio interruptor.'],
+    ['Ve al escuadrón', 'Si 3 juegan lo mismo, los vacila o los manda a la sala de ese juego.'],
+    ['Cumpleaños', 'Con /cumple: lo anuncia en el chat y te felicita en voz.'],
     ['/decir', 'Lo pones a hablar en tu sala.'],
     ['Sugerir y aprobar puyas', 'La gente sugiere, los admins aprueban con un botón.'],
     ['Ranking semanal de voz', 'Los domingos, en el canal del ranking.'],
@@ -72,12 +81,12 @@ const ROADMAP = [
   { k: 'proximo', t: 'Lo próximo', i: 'fa-person-digging', items: [
     ['Panel web', 'Entras con tu cuenta de Discord y manejas todo desde el navegador: personas, puyas, avisos, horario y estadísticas.'],
     ['Escuchar antes de guardar', 'Oír cómo suena una puya antes de aprobarla.'],
-    ['Saludos especiales', 'Además de puyas: saludo de VIP, de cumpleaños o ninguno, escogido por persona.'],
+    ['Saludos especiales', 'Además de puyas: saludo de VIP o ninguno, escogido por persona.'],
+    ['Plan Premium', 'Lo básico gratis y las funciones de IA en un plan pago. Ver «Planes» más arriba.'],
   ]},
   { k: 'ideas', t: 'Ideas para después', i: 'fa-lightbulb', items: [
     ['Noticias y ofertas por voz', 'La noticia gamer del día, juegos gratis y ofertas, dichos en la sala.'],
     ['Aviso de «en vivo»', 'Cuando alguien del server sale en vivo, lo anuncia en las salas.'],
-    ['Cumpleaños', 'Le canta (a su manera) al cumpleañero cuando entre.'],
     ['Recordatorio de eventos', '«En 10 minutos empieza el torneo de Warzone.»'],
     ['Varias voces', 'Escoger entre voces distintas para cada server.'],
     ['Trivia por voz', 'Preguntas de juegos en la sala, con puntos.'],
@@ -91,7 +100,9 @@ const FAQ = [
   ['¿Cómo escribo un buen aviso?', 'Corto y claro, como lo dirías en voz: una o dos oraciones. Para comandos escribe «barra play» en vez de «/play», que así lo lee bien. Pruébalo con /aviso ver antes de dejarlo.'],
   ['¿Va a tapar la música?', 'No. Si Corillo-Bot está tocando música en la sala, la música baja sola mientras el Bochinchero habla y después vuelve a donde estaba.'],
   ['¿Qué no dice nunca?', 'Insultos de verdad (homofóbicos, racistas), cosas sexuales, amenazas, política, religión ni enlaces. El filtro lo para en /decir, en las puyas sugeridas y en las que escribe la IA.'],
-  ['¿Qué datos guarda?', 'Tu id de Discord, el nombre que ves en el server, cuándo entras y sales de las salas de voz (para el ranking y los momentos) y las puyas. No escucha ni graba lo que hablan: entra sordo, habla y se va.'],
+  ['¿Por qué no me vacila por el juego?', 'Solo ve lo que Discord enseña en tu perfil («Jugando a…»). En PC sale casi siempre; en PlayStation o Xbox tienes que conectar tu cuenta a Discord y compartir tu actividad. Y te vacila por el juego una vez cada 2 horas como máximo, para que no canse.'],
+  ['¿Cómo sabe mi cumpleaños?', 'Discord no se lo da a ningún bot. Lo pones tú con /cumple poner, solo día y mes (sin el año). Lo borras cuando quieras con /cumple borrar.'],
+  ['¿Qué datos guarda?', 'Tu id de Discord, el nombre que ves en el server, cuándo entras y sales de las salas de voz (para el ranking y los momentos), las puyas y tu cumpleaños si lo pusiste. No escucha ni graba lo que hablan: entra sordo, habla y se va.'],
   ['¿Qué permisos pide?', 'Ver canales, mandar mensajes, conectarse a las salas y hablar. Nada de administrador.'],
   ['¿Lo puedo poner en mi server?', 'Sí. Dale a «Añadir a mi server», escoge tu server y abre /bochinche-ajustes. Llega con una bienvenida que te lleva paso a paso.'],
 ];
@@ -192,7 +203,7 @@ const FAQ = [
 
     <nav class="bc-nav" aria-label="En esta página">
       <a href="#oyelo">Óyelo</a><a href="#que-hace">Qué hace</a><a href="#como-se-usa">Cómo se usa</a><a href="#instalar">Instalarlo</a>
-      <a href="#comandos">Comandos</a><a href="#ajustes">Ajustes</a><a href="#avisos">Avisos</a><a href="#puyas">Puyas</a><a href="#roadmap">Lo que viene</a><a href="#preguntas">Preguntas</a>
+      <a href="#comandos">Comandos</a><a href="#ajustes">Ajustes</a><a href="#avisos">Avisos</a><a href="#puyas">Puyas</a><a href="#roadmap">Lo que viene</a><a href="#planes">Planes</a><a href="#preguntas">Preguntas</a>
     </nav>
 
     <section class="bc-sec" id="oyelo">
@@ -294,6 +305,16 @@ const FAQ = [
             <ul>{c.items.map(([t, d]) => <li><strong>{t}</strong><small>{d}</small></li>)}</ul>
           </div>
         ))}
+      </div>
+    </section>
+
+    <section class="bc-sec" id="planes">
+      <h2>Planes</h2>
+      <p>El Bochinchero es un bot avanzado: usa inteligencia artificial para hablar con voz propia y para escribir puyas. Cada voz nueva y cada puya que escribe la IA cuesta, así que eventualmente tendrá un costo.</p>
+      <div class="bc-grid">
+        <div class="bc-card"><b><i class="fa-solid fa-flask" aria-hidden="true"></i>Hoy: gratis en prueba</b>Mientras lo probamos en el corillo y en los primeros servers, todo está prendido y no cuesta nada.</div>
+        <div class="bc-card"><b><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Después: plan gratis</b>Un plan sin costo con lo básico, para que cualquier server lo pueda tener.</div>
+        <div class="bc-card"><b><i class="fa-solid fa-crown" aria-hidden="true"></i>Después: Premium</b>Las funciones de IA y el panel para manejar el bot desde el navegador. Lo podrá pagar el dueño del server o los mismos miembros. Los precios se anuncian aquí.</div>
       </div>
     </section>
 
