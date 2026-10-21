@@ -104,16 +104,34 @@ const FAQ = [
   ['¿Cómo sabe mi cumpleaños?', 'Discord no se lo da a ningún bot. Lo pones tú con /cumple poner, solo día y mes (sin el año). Lo borras cuando quieras con /cumple borrar.'],
   ['¿Qué datos guarda?', 'Tu id de Discord, el nombre que ves en el server, cuándo entras y sales de las salas de voz (para el ranking y los momentos), las puyas y tu cumpleaños si lo pusiste. No escucha ni graba lo que hablan: entra sordo, habla y se va.'],
   ['¿Qué permisos pide?', 'Ver canales, mandar mensajes, conectarse a las salas y hablar. Nada de administrador.'],
+  ['¿Cuánto cuesta?', 'El plan Gratis no cuesta nada: saludos, despedidas, visitas, juegos, cumpleaños, ranking y 2 avisos. Premium cuesta $4.99 al mes por server y añade las puyas escritas con IA, /decir, hasta 15 avisos y más voces nuevas al día. Cada server nuevo tiene 14 días de Premium gratis.'],
+  ['¿Quién paga el Premium?', 'Cualquier miembro del server, no tiene que ser el dueño. Lo paga una persona y queda para todo el server.'],
   ['¿Lo puedo poner en mi server?', 'Sí. Dale a «Añadir a mi server», escoge tu server y abre /bochinche-ajustes. Llega con una bienvenida que te lleva paso a paso.'],
+];
+const LD = [
+  { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'El Bochinchero',
+    description: 'Bot de voz para Discord en español: saluda con puyas al que entra a la sala de voz, sabe qué juegas, felicita cumpleaños, da avisos en voz y publica el ranking semanal.',
+    url: 'https://corillo.live/bochinchero/', image: 'https://corillo.live/bochinchero/og.png',
+    applicationCategory: 'EntertainmentApplication', applicationSubCategory: 'Bot de Discord', operatingSystem: 'Discord',
+    inLanguage: 'es', countriesSupported: 'PR', installUrl: INVITAR,
+    author: { '@type': 'Organization', name: 'CORILLO', url: 'https://corillo.live/' },
+    offers: [
+      { '@type': 'Offer', name: 'Gratis', price: '0', priceCurrency: 'USD' },
+      { '@type': 'Offer', name: 'Premium', price: '4.99', priceCurrency: 'USD',
+        priceSpecification: { '@type': 'UnitPriceSpecification', price: '4.99', priceCurrency: 'USD', billingDuration: 'P1M' } },
+    ] },
+  { '@context': 'https://schema.org', '@type': 'FAQPage',
+    mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
 ];
 ---
 <SiteShell
-  title="El Bochinchero — el bot de voz boricua para Discord"
-  description="Saluda con puyas al que entra a la sala, cae de visita sorpresa, sabe qué juegas y publica el ranking de los más pegaos. Hecho en Puerto Rico."
+  title="El Bochinchero: bot de voz para Discord en español, hecho en Puerto Rico"
+  description="Bot de Discord en español que habla en las salas de voz: saluda con puyas, sabe qué juegas, felicita cumpleaños y publica el ranking de los más pegaos. Gratis, con Premium a $4.99."
   canonical="https://corillo.live/bochinchero/"
   ogImage="/bochinchero/og.png"
 >
   <fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(LD)} />
     <style is:global>
       .bc{--bc:#ff6b3d;--bc-v:#35e0a1;max-width:1400px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
       .bc-hero{display:grid;grid-template-columns:auto 1fr;gap:clamp(20px,4vw,48px);align-items:center;padding:clamp(26px,4vw,56px);border-radius:38px;
@@ -156,6 +174,13 @@ const FAQ = [
       .bc-cmd div{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:14px;align-items:baseline;padding:14px 18px;border-radius:18px;background:color-mix(in srgb,var(--h2-bone) 5%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);color:var(--h2-mute);font:500 .95rem/1.5 var(--h2-body)}
       .bc-cmd code{color:var(--bc);font:700 .98rem ui-monospace,SFMono-Regular,Menlo,monospace}
       .bc-h3{margin:26px 0 10px;font:800 1.1rem var(--h2-body);color:var(--h2-bone)}
+      .bc-planes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px}
+      .bc-plan ul{margin:10px 0 0;padding-left:18px}
+      .bc-plan li{margin:4px 0}
+      .bc-precio{color:var(--h2-bone);font:800 2rem/1.1 var(--h2-display);letter-spacing:-.03em;margin:2px 0 4px}
+      .bc-precio small{font:600 .9rem var(--h2-body);color:var(--h2-mute);letter-spacing:0}
+      .bc-plan-pro{box-shadow:inset 0 0 0 2px var(--bc)}
+      .bc-kicker{display:inline-block;margin:0 0 12px;color:var(--bc);font:800 .85rem var(--h2-body);letter-spacing:.08em;text-transform:uppercase}
       .bc-faq{display:grid;gap:10px}
       .bc-faq details{padding:16px 20px;border-radius:20px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
       .bc-faq summary{cursor:pointer;font:800 1.02rem/1.35 var(--h2-body);color:var(--h2-bone);list-style:none;display:flex;justify-content:space-between;gap:12px}
@@ -192,6 +217,7 @@ const FAQ = [
     <section class="bc-hero">
       <img class="bc-ico" src="/bochinchero/icono-256.png" alt="Ícono del Bochinchero: un globo de diálogo con una bocina" width="190" height="190" />
       <div>
+        <span class="bc-kicker">Bot de voz para Discord · en español · hecho en Puerto Rico</span>
         <h1>El Bochin<span>chero</span></h1>
         <p>El bot de voz boricua para Discord. Cuando entras a una sala, te saluda con una puya. Cae de visita sorpresa, sabe qué juegas, se despide cuando te vas, da los avisos del server en voz y cada domingo dice quién fue el más pegao. Vive en el corillo y lo puedes poner en tu server.</p>
         <div class="bc-row">
@@ -310,11 +336,37 @@ const FAQ = [
 
     <section class="bc-sec" id="planes">
       <h2>Planes</h2>
-      <p>El Bochinchero es un bot avanzado: usa inteligencia artificial para hablar con voz propia y para escribir puyas. Cada voz nueva y cada puya que escribe la IA cuesta, así que eventualmente tendrá un costo.</p>
-      <div class="bc-grid">
-        <div class="bc-card"><b><i class="fa-solid fa-flask" aria-hidden="true"></i>Hoy: gratis en prueba</b>Mientras lo probamos en el corillo y en los primeros servers, todo está prendido y no cuesta nada.</div>
-        <div class="bc-card"><b><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Después: plan gratis</b>Un plan sin costo con lo básico, para que cualquier server lo pueda tener.</div>
-        <div class="bc-card"><b><i class="fa-solid fa-crown" aria-hidden="true"></i>Después: Premium</b>Las funciones de IA y el panel para manejar el bot desde el navegador. Lo podrá pagar el dueño del server o los mismos miembros. Los precios se anuncian aquí.</div>
+      <p>El Bochinchero es un bot avanzado: usa inteligencia artificial para hablar con voz propia y para escribir puyas, y cada voz nueva cuesta. Por eso hay un plan gratis con lo que hace reír y un Premium con lo que más usa la IA.</p>
+      <div class="bc-planes">
+        <div class="bc-card bc-plan">
+          <b><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>Gratis</b>
+          <div class="bc-precio">$0</div>
+          <ul>
+            <li>Saludos, despedidas y visitas sorpresa</li>
+            <li>Puyas por juego, «ese usa hacks» y el escuadrón</li>
+            <li>Cumpleaños y ranking semanal</li>
+            <li>Puyas que ponen los admins</li>
+            <li>2 avisos en voz</li>
+            <li>5 voces nuevas al día (después repite las que ya tiene)</li>
+          </ul>
+        </div>
+        <div class="bc-card bc-plan bc-plan-pro">
+          <b><i class="fa-solid fa-crown" aria-hidden="true"></i>Premium</b>
+          <div class="bc-precio">$4.99 <small>al mes por server</small></div>
+          <ul>
+            <li>Todo lo del plan Gratis</li>
+            <li>Puyas escritas con IA para cada persona</li>
+            <li><code>/decir</code>: lo pones a hablar en tu sala</li>
+            <li>Hasta 15 avisos en voz</li>
+            <li>40 voces nuevas al día</li>
+            <li>El panel web, cuando salga</li>
+          </ul>
+        </div>
+        <div class="bc-card bc-plan">
+          <b><i class="fa-solid fa-gift" aria-hidden="true"></i>14 días gratis</b>
+          Cada server nuevo empieza con 14 días de Premium, sin tarjeta. Al terminar se queda en Gratis, y sigue saludando.
+          <em>El Premium lo puede pagar cualquier miembro, no tiene que ser el dueño: lo paga uno y queda para todo el server. El pago dentro de Discord se activa en los próximos días.</em>
+        </div>
       </div>
     </section>
 
