@@ -89,9 +89,9 @@ async def mtx_auth(request: Request):
     if action in ("read", "playback"):
         return Response(status_code=200)
 
-    # API interna — solo localhost
+    # API interna — solo localhost y corillo-vps por el túnel WireGuard (10.77.0.1)
     if action in ("api", "metrics", "pprof"):
-        if ip in ("127.0.0.1", "::1"):
+        if ip in ("127.0.0.1", "::1", "10.77.0.1"):
             return Response(status_code=200)
         return Response(status_code=401)
 
