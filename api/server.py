@@ -273,10 +273,11 @@ async def _marcar_primer_directo(channel: str):
 
 
 def _es_llamada_interna(request: Request) -> bool:
-    """Solo scripts del propio servidor hablando directo con :3004. Lo que entra por nginx también
-    llega desde 127.0.0.1, pero nginx siempre añade X-Real-IP: así se distingue."""
+    """Solo scripts del propio servidor (o de corillo-server por el túnel WireGuard, 10.77.0.2) hablando
+    directo con :3004. Lo que entra por nginx también llega desde 127.0.0.1, pero nginx siempre añade
+    X-Real-IP: así se distingue. El puerto 3004 no está abierto en el firewall de Linode."""
     host = request.client.host if request.client else ""
-    return host in ("127.0.0.1", "::1") and "x-real-ip" not in request.headers
+    return host in ("127.0.0.1", "::1", "10.77.0.2") and "x-real-ip" not in request.headers
 
 
 @app.post("/internal/notify")
@@ -335,7 +336,8 @@ async def internal_notify(request: Request):
                     vapid_claims={"sub": f"mailto:{VAPID_MAILTO}"},
                 )
             except WebPushException as ex:
-                if ex.response and ex.response.status_code in (404, 410):
+                # 403: la suscripción se hizo con otras llaves VAPID (las viejas se perdieron con el disco)
+                if ex.response is not None and ex.response.status_code in (403, 404, 410):
                     stale.append(item["id"])
             except Exception:
                 pass

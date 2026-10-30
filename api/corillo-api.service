@@ -1,13 +1,15 @@
 [Unit]
 Description=Corillo API — perfiles públicos y stream key management
-After=network.target
+After=network.target wg-quick@wg0.service
+Wants=wg-quick@wg0.service
 
 [Service]
 Type=simple
 User=corillo-adm
 WorkingDirectory=/home/corillo-adm/corillo-api
 EnvironmentFile=/home/corillo-adm/corillo-api/.env
-ExecStart=/home/corillo-adm/corillo-api/venv/bin/uvicorn server:app --host 127.0.0.1 --port 3004
+# 0.0.0.0: nginx (127.0.0.1) y corillo-server por el túnel (10.77.0.1). El firewall de Linode no abre el 3004.
+ExecStart=/home/corillo-adm/corillo-api/venv/bin/uvicorn server:app --host 0.0.0.0 --port 3004
 Restart=always
 RestartSec=3
 
