@@ -20,7 +20,7 @@ sources:
   - name: "Ars Technica"
     url: "https://arstechnica.com/gaming/2026/10/switch-2-jailbreak-gives-hackers-new-ways-to-run-homebrew-and-mod-games/"
 image: "/noticias/portadas/2026-10-24-retiran-smilebasic-4-de-la-eshop-tras-jailbreak-de-switch-2-con.jpg"
-imageCredit: "Portada de Corillo"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 La seguridad de la Nintendo Switch 2 recibió un golpe esta semana. El investigador Sammy Hajhamid, conocido como pepsipu, publicó un jailbreak por software que aprovecha una vulnerabilidad en SmileBASIC 4, un entorno de programación originalmente lanzado para la Switch original y compatible con la nueva consola. El exploit funciona en el firmware 23.0.1 y, según el investigador, es el primero de su tipo para la Switch 2.

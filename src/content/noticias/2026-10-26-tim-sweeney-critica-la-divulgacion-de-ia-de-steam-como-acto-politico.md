@@ -20,7 +20,7 @@ sources:
   - name: "PC Gamer"
     url: "https://www.pcgamer.com/gaming-industry/steam-week-in-review-ai-disclosures-enter-the-discourse-again-as-epic-ceo-calls-them-just-as-partisan-as-mandatory-political-essays/"
 image: "/noticias/portadas/2026-10-26-tim-sweeney-critica-la-divulgacion-de-ia-de-steam-como-acto-politico.jpg"
-imageCredit: "Portada de Corillo"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Tim Sweeney, CEO de Epic Games, arremetió contra Valve por su política de divulgación de contenido generado por IA en Steam. En publicaciones en X, Sweeney calificó el requisito de Valve como un "acto político" y lo comparó con obligar a los desarrolladores a revelar su afiliación política o historial de votación.

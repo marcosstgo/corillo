@@ -73,13 +73,23 @@ def steam(candidatos):
     return None
 
 
+def _sin_marcas(s):
+    """Sin números ni marcas: el modelo los dibuja como texto o como logos ("VI" de GTA, la X de Xbox…)."""
+    s = re.sub(r'[0-9]+', '', s)
+    marcas = r'(?:GTA|Xbox|Sony|Nintendo|Switch|Steam|Rockstar|EA|BioWare|Epic|PlayStation|eShop|Mario|Kart|Miku|Hatsune)'
+    s = re.sub(r'(?<![A-Za-z])' + marcas + r'(?![A-Za-z])', '', s)
+    s = re.sub(r'(?<![A-Za-z])[A-Za-z]*[A-Z][a-z]*[A-Z][A-Za-z]*(?![A-Za-z])', '', s)  # SmileBASIC, eShop…
+    return re.sub(r'\s+', ' ', s).strip()
+
+
 def ia(meta):
     """Ilustración con Gemini. Sin caras de personas reales, sin texto, sin logos de marcas."""
     key = os.environ.get('GEMINI_API_KEY')
     if not key: return None
-    prompt = (f"Editorial illustration for a gaming news site, 16:9, no text, no letters, no logos, no real people's faces "
+    prompt = (f"Editorial illustration for a gaming news site, 16:9. ABSOLUTELY NO text, letters, numbers, dates, roman numerals, titles or logos of any kind (no game logos, no company logos), and no real people's faces "
               f"(use silhouettes, objects or scenery instead). Bold, modern, dark navy background (#06143f) with warm orange "
-              f"(#ff6a3d) and yellow (#ffd23f) light accents. Topic: {meta['titulo']}. Context: {meta['resumen']}")
+              f"(#ff6a3d) and yellow (#ffd23f) light accents. Topic (illustrate the idea, never write it): {_sin_marcas(meta['titulo'])}. "
+              f"Context: {_sin_marcas(meta['resumen'])}")
     r = HTTP.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
                   params={'key': key}, json={'contents': [{'parts': [{'text': prompt}]}],
                                              'generationConfig': {'responseModalities': ['IMAGE'], 'imageConfig': {'aspectRatio': '16:9'}}},
