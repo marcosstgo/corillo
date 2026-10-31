@@ -1,171 +1,153 @@
 #!/usr/bin/env python3
 """
-thumb-gen.py — Genera thumbnails y previews en tiempo real de streams en vivo.
+thumb-gen.py — miniaturas de los canales en vivo (servicio corillo-thumbs, en corillo-server). Reescrito 31-oct-2026.
 
-Corre como daemon, revisa la API de MediaMTX cada INTERVAL segundos,
-captura un JPEG y un clip MP4 de 4s de cada stream activo con ffmpeg.
+Pedido de Marcos: la tarjeta "En vivo ahora" tiene que mostrar una imagen clara del stream, nunca negra.
 
-Archivos generados:
-  {THUMB_DIR}/{key}.jpg          — thumbnail estático (actualizado cada ciclo)
-  {THUMB_DIR}/{key}-preview.mp4  — preview de hover (4s, muted, faststart)
+Por cada canal en vivo, cada INTERVAL segundos:
+  1. Graba MUESTRA segundos del RTSP interno de mediamtx y saca un cuadro por segundo (PNG sin pérdida) más una copia
+     chiquita en gris (384x216) para medir.
+  2. Califica cada cuadro: brillo medio, contraste y nitidez (diferencia entre píxeles vecinos). Se descartan los
+     oscuros (menús, pantallas de carga), los planos (fundidos, pantallas de un color) y gana el más nítido.
+  3. Barras negras: filas casi negras pegadas arriba/abajo, en TODOS los cuadros buenos a la vez (una escena oscura
+     no es una barra). Solo se recortan si suman >= 3 % del alto y queda al menos el 55 % de la imagen.
+  4. Recorta, lleva a 1280x720 (cover, lanczos) y guarda <canal>.jpg de forma atómica.
+Si ningún cuadro sirve se deja la miniatura anterior. Un canal nuevo tiene miniatura a los ~15 s de salir en vivo.
 
-Variables de entorno:
-  MEDIAMTX_API    — URL base de la API de MediaMTX  (default: http://127.0.0.1:9997)
-  SRC_BASE        — de dónde se lee el stream        (default: rtsp://127.0.0.1:8554)
-                    31-oct-2026: antes era HLS (:8888), pero mediamtx 1.21 pide sesión en el HLS; el RTSP interno no.
-  THUMB_DIR       — Directorio de salida             (default: /var/www/stream/assets/thumbs)
-  THUMB_INTERVAL  — Segundos entre capturas          (default: 60)
+Sale en https://media.corillo.live/assets/thumbs/<canal>.jpg (portada, /streamers, /reels, og:image del canal).
+
+Variables: MEDIAMTX_API (http://127.0.0.1:9997), SRC_BASE (rtsp://127.0.0.1:8554),
+           THUMB_DIR (/var/www/stream/assets/thumbs), THUMB_INTERVAL (60).
 """
-import os, subprocess, time, logging, sys
+import json, logging, os, shutil, subprocess, sys, tempfile, time, urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-import httpx
-
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import thumb_crop as tc   # recorte de barras negras + salida 1280x720
-
 MEDIAMTX_API = os.environ.get("MEDIAMTX_API", "http://127.0.0.1:9997")
-SRC_BASE     = os.environ.get("SRC_BASE",     "rtsp://127.0.0.1:8554")
+SRC_BASE     = os.environ.get("SRC_BASE", "rtsp://127.0.0.1:8554")   # el HLS de mediamtx 1.21 pide sesión; el RTSP interno no
 THUMB_DIR    = Path(os.environ.get("THUMB_DIR", "/var/www/stream/assets/thumbs"))
 INTERVAL     = int(os.environ.get("THUMB_INTERVAL", "60"))
+REVISAR      = 15          # cada cuánto se mira quién está en vivo (para que un canal nuevo no espere un minuto)
+MUESTRA      = 6           # segundos de video que se miran → 6 cuadros candidatos
+SALIDA       = (1280, 720)
+GW, GH       = 384, 216    # tamaño de la copia en gris para medir
+MIN_BRILLO   = 35          # 0-255: menos que esto es una escena oscura
+MIN_CONTRASTE = 18         # desviación estándar: menos es un fundido o una pantalla de un solo color
+NEGRO        = 16          # una fila con brillo medio menor es "barra"
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [thumbs] %(levelname)s %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-    ],
-)
-log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [thumbs] %(levelname)s %(message)s", stream=sys.stdout)
+log = logging.getLogger("thumbs")
 
 
-def get_live_keys() -> list[str]:
+def en_vivo() -> list[str]:
     try:
-        r = httpx.get(f"{MEDIAMTX_API}/v3/paths/list", timeout=5)
-        items = r.json().get("items", [])
-        return [
-            item["name"].removeprefix("live/")
-            for item in items
-            if item.get("ready")
-            and item["name"].startswith("live/")
-            and not item["name"].endswith(("_rtc", "_low"))  # _rtc es solo audio Opus; _low es la copia 720p del mismo canal
-        ]
+        with urllib.request.urlopen(f"{MEDIAMTX_API}/v3/paths/list", timeout=5) as r:
+            items = json.load(r).get("items", [])
     except Exception as e:
-        log.warning(f"API error: {e}")
+        log.warning(f"API de mediamtx: {e}")
         return []
+    return [i["name"].removeprefix("live/") for i in items
+            if i.get("ready") and i["name"].startswith("live/")
+            and not i["name"].endswith(("_rtc", "_low"))]   # _rtc es solo audio; _low es la copia 720p del mismo canal
 
 
-BLACK_THRESHOLD = 35   # 0-255; frames con brillo medio < umbral se descartan (pedido de Marcos: que se vea claro,
-                       # nunca negro). Si los 3 intentos salen oscuros se deja la miniatura anterior.
-MAX_RETRIES     = 3
-CROP_TTL        = 600  # las barras de un canal no cambian a cada rato: se re-detectan cada 10 min
-_crop_cache: dict = {}
+def medir(gris: bytes) -> dict:
+    """Brillo, contraste, nitidez y barras de un cuadro en gris GWxGH."""
+    filas = [gris[y * GW:(y + 1) * GW] for y in range(GH)]
+    medias = [sum(f) / GW for f in filas]
+    arriba = 0
+    while arriba < GH // 2 and medias[arriba] < NEGRO:
+        arriba += 1
+    abajo = 0
+    while abajo < GH // 2 and medias[GH - 1 - abajo] < NEGRO:
+        abajo += 1
+    # Lo demás se mide solo en el contenido (sin las barras), saltando de 2 en 2 píxeles: sobra para comparar.
+    zona = range(arriba, GH - abajo)
+    vals, nitidez = [], 0
+    for y in zona:
+        f = filas[y]
+        vals.extend(f[::2])
+        nitidez += sum(abs(f[x] - f[x + 2]) for x in range(0, GW - 2, 2))
+        if y + 2 < GH - abajo:
+            g = filas[y + 2]
+            nitidez += sum(abs(f[x] - g[x]) for x in range(0, GW, 2))
+    n = max(1, len(vals))
+    brillo = sum(vals) / n
+    contraste = (sum((v - brillo) ** 2 for v in vals) / n) ** 0.5
+    return {"brillo": brillo, "contraste": contraste, "nitidez": nitidez / n, "arriba": arriba, "abajo": abajo}
 
 
-def crop_for(key: str, url: str):
-    now = time.time()
-    hit = _crop_cache.get(key)
-    if hit and now - hit[0] < CROP_TTL:
-        return hit[1]
-    crop = tc.detect_crop(url, frames=4, timeout=25)
-    _crop_cache[key] = (now, crop)
-    if crop:
-        log.info(f"Barras negras en {key}: recorte {crop}")
-    return crop
-RETRY_DELAY     = 6    # segundos entre reintentos cuando el frame es negro
-
-
-def mean_brightness(path: Path) -> int:
-    """Retorna el brillo medio (0-255) de una imagen usando ffmpeg scale=1x1."""
+def capturar(key: str) -> bool:
+    tmp = Path(tempfile.mkdtemp(prefix=f"thumb-{key}-"))
     try:
         r = subprocess.run(
-            ["ffmpeg", "-i", str(path),
-             "-vf", "scale=1:1,format=gray",
-             "-frames:v", "1", "-f", "rawvideo", "pipe:1"],
-            capture_output=True, timeout=5,
-        )
-        if r.returncode == 0 and r.stdout:
-            return r.stdout[0]
-    except Exception:
-        pass
-    return 128  # asumir OK si no se puede medir
+            ["ffmpeg", "-hide_banner", "-loglevel", "error", "-rtsp_transport", "tcp", "-i", f"{SRC_BASE}/live/{key}",
+             "-t", str(MUESTRA), "-an",
+             "-filter_complex", f"fps=1,split=2[a][b];[b]scale={GW}:{GH}:flags=area,format=gray[g]",
+             "-map", "[a]", "-frames:v", str(MUESTRA), str(tmp / "c%02d.png"),
+             "-map", "[g]", "-frames:v", str(MUESTRA), "-f", "rawvideo", str(tmp / "gris.raw")],
+            capture_output=True, timeout=MUESTRA + 30)
+        cuadros = sorted(tmp.glob("c*.png"))
+        crudo = (tmp / "gris.raw").read_bytes() if (tmp / "gris.raw").exists() else b""
+        if r.returncode != 0 or not cuadros:
+            log.warning(f"{key}: ffmpeg no sacó cuadros ({r.stderr.decode(errors='replace').strip()[-200:]})")
+            return False
+        medidas = [medir(crudo[i * GW * GH:(i + 1) * GW * GH]) for i in range(min(len(cuadros), len(crudo) // (GW * GH)))]
+        buenos = [(m, cuadros[i]) for i, m in enumerate(medidas)
+                  if m["brillo"] >= MIN_BRILLO and m["contraste"] >= MIN_CONTRASTE]
+        if not buenos:
+            resumen = ", ".join(f"{m['brillo']:.0f}/{m['contraste']:.0f}" for m in medidas)
+            log.info(f"{key}: ningún cuadro claro (brillo/contraste: {resumen}); se deja la miniatura anterior")
+            return False
+        m, mejor = max(buenos, key=lambda b: b[0]["nitidez"])
 
-
-def capture_thumb(key: str) -> bool:
-    url = f"{SRC_BASE}/live/{key}"
-    out = THUMB_DIR / f"{key}.jpg"
-    tmp = THUMB_DIR / f"{key}.tmp.jpg"
-
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            crop = crop_for(key, url)
-            ok = tc.make_jpeg(url, str(tmp), crop=crop, width=1280, height=720, q=2, timeout=25)
-            if not ok or not tmp.exists():
-                tmp.unlink(missing_ok=True)
-                log.warning(f"thumb failed for {key} attempt {attempt}")
-                break
-
-            brightness = mean_brightness(tmp)
-            if brightness >= BLACK_THRESHOLD:
-                tmp.replace(out)
-                if attempt > 1:
-                    log.info(f"Thumb OK (brightness={brightness}) for {key} on attempt {attempt}")
-                return True
-
-            log.warning(f"Black frame for {key} (brightness={brightness}) attempt {attempt}/{MAX_RETRIES} — retrying in {RETRY_DELAY}s")
-            tmp.unlink(missing_ok=True)
-            if attempt < MAX_RETRIES:
-                time.sleep(RETRY_DELAY)
-
-        except Exception as e:
-            log.warning(f"capture_thumb {key} attempt {attempt}: {e}")
-            tmp.unlink(missing_ok=True)
-            break
-
-    log.warning(f"Thumb gave up for {key} after {MAX_RETRIES} attempts")
-    return False
-
-
-def capture_preview(key: str) -> bool:
-    url = f"{SRC_BASE}/live/{key}"
-    out = THUMB_DIR / f"{key}-preview.mp4"
-    tmp = THUMB_DIR / f"{key}-preview.tmp.mp4"
-    try:
+        # Barras: las que están en TODOS los cuadros buenos.
+        arriba = min(b[0]["arriba"] for b in buenos)
+        abajo = min(b[0]["abajo"] for b in buenos)
+        recorte = ""
+        if arriba + abajo >= 0.03 * GH and GH - arriba - abajo >= 0.55 * GH:
+            # +1 fila de margen para no dejar el borde gris de la barra
+            recorte = (f"crop=iw:ih*{(GH - arriba - abajo - 2) / GH:.5f}:0:ih*{(arriba + 1) / GH:.5f},")
+        W, H = SALIDA
+        tmp_jpg = THUMB_DIR / f".{key}.tmp.jpg"
         r = subprocess.run(
-            ["ffmpeg", "-y", *tc.entrada(url), "-i", url,
-             "-t", "4",
-             "-c:v", "libx264", "-profile:v", "baseline", "-level:v", "3.1",
-             "-preset", "ultrafast", "-crf", "29",
-             "-vf", f"{tc.crop_vf(crop_for(key, url))}scale=960:540:force_original_aspect_ratio=increase,crop=960:540",
-             "-an",
-             "-movflags", "+faststart",
-             str(tmp)],
-            capture_output=True, timeout=60,
-        )
-        if r.returncode == 0 and tmp.exists():
-            tmp.replace(out)
-            return True
-        tmp.unlink(missing_ok=True)
-        log.warning(f"preview failed for {key} (rc={r.returncode})")
+            ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", str(mejor), "-vf",
+             f"{recorte}scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}",
+             "-q:v", "2", "-map_metadata", "-1", str(tmp_jpg)],
+            capture_output=True, timeout=30)
+        if r.returncode != 0 or not tmp_jpg.exists():
+            log.warning(f"{key}: no se pudo guardar el JPEG ({r.stderr.decode(errors='replace').strip()[-200:]})")
+            return False
+        tmp_jpg.replace(THUMB_DIR / f"{key}.jpg")
+        barras = f", barras {arriba * 100 // GH}%+{abajo * 100 // GH}% recortadas" if recorte else ""
+        log.info(f"{key}: miniatura lista (cuadro {mejor.stem[1:]} de {len(medidas)}, {len(buenos)} claros, "
+                 f"brillo {m['brillo']:.0f}, contraste {m['contraste']:.0f}, nitidez {m['nitidez']:.1f}{barras})")
+        return True
     except Exception as e:
-        log.warning(f"capture_preview {key}: {e}")
-        tmp.unlink(missing_ok=True)
-    return False
+        log.warning(f"{key}: {e}")
+        return False
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
 
 
 def run():
     THUMB_DIR.mkdir(parents=True, exist_ok=True)
-    log.info(f"Starting thumb-gen — interval={INTERVAL}s dir={THUMB_DIR}")
-    while True:
-        keys = get_live_keys()
-        if keys:
-            log.info(f"Live: {keys}")
-        for key in keys:
-            if capture_thumb(key):
-                log.info(f"Thumb OK: {key}")
-            if capture_preview(key):
-                log.info(f"Preview OK: {key}")
-        time.sleep(INTERVAL)
+    for viejo in THUMB_DIR.glob("*-preview*.mp4"):   # el generador anterior hacía videos de muestra que nadie usa
+        viejo.unlink(missing_ok=True)
+    log.info(f"corillo-thumbs: cada {INTERVAL}s, {MUESTRA} cuadros por canal → {THUMB_DIR}")
+    ultima: dict[str, float] = {}
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        while True:
+            ahora = time.time()
+            vivos = en_vivo()
+            toca = [k for k in vivos if ahora - ultima.get(k, 0) >= INTERVAL]
+            for k in toca:
+                ultima[k] = ahora
+            list(pool.map(capturar, toca))
+            for k in list(ultima):
+                if k not in vivos:
+                    del ultima[k]          # si vuelve a salir en vivo, miniatura nueva enseguida
+            time.sleep(REVISAR)
 
 
 if __name__ == "__main__":
