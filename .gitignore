@@ -24,3 +24,6 @@ __pycache__/
 # Tarjetas para compartir de ofertas: las genera scripts/update-deals.py
 public/ofertas/og/
 .datos-build/
+
+# Overlays de OBS: los copia publicar_corillo.sh desde el repo corillo-bf6-overlays
+public/overlay/
