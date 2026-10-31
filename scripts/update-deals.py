@@ -17,8 +17,9 @@ import argparse, datetime as dt, hashlib, html, json, os, re, subprocess, sys, t
 from pathlib import Path
 import httpx
 
-REPO = Path('/var/www/stream')
-HOME = Path('/home/corillo-adm/corillo-deals'); HOME.mkdir(parents=True, exist_ok=True)
+REPO = Path(os.environ.get('CORILLO_REPO', Path.home() / 'Corillo/web'))
+SERVER = Path.home() / 'Corillo/server/scripts/server'   # publicar_corillo.sh y avisar.sh (repo corillo-server)
+HOME = Path.home() / 'corillo-deals'; HOME.mkdir(parents=True, exist_ok=True)
 DATA = HOME / 'ofertas.json'; STATE = HOME / 'state.json'; LOGF = HOME / 'update.log'
 UA = 'CorilloDeals/1.0 (+https://corillo.live/ofertas/; hello@marcossantiago.com)'
 CLIENT = httpx.Client(headers={'User-Agent': UA, 'Accept-Language': 'es-US,es;q=0.9'}, timeout=25, follow_redirects=True)
@@ -28,17 +29,27 @@ def log(*a):
     print(line, flush=True)
 
 def load_env():
-    for f in (HOME / '.env', Path('/home/corillo-adm/corillo-telegram/.env'), Path('/home/corillo-adm/corillo-stoat/.env.discord')):
+    for f in (Path.home() / '.config/corillo/tokens.env', HOME / '.env'):
         if not f.exists(): continue
         for l in f.read_text().splitlines():
             if '=' in l and not l.lstrip().startswith('#'):
                 k, v = l.split('=', 1); os.environ.setdefault(k.strip(), v.strip().strip('"\''))
 
-def telegram(msg):
+def avisar(msg, canal=None):
+    """DM a Marcos (o mensaje a un canal del Discord del Corillo) por el Bochinchero; ver scripts/vps/avisar.py en corillo-server."""
     try:
-        CLIENT.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
-                    data={'chat_id': os.environ['TELEGRAM_CHAT_ID'], 'text': msg, 'disable_web_page_preview': 'true'})
-    except Exception as e: log('telegram falló:', e)
+        cmd = ['bash', str(SERVER / 'avisar.sh')] + (['--canal', canal] if canal else []) + [msg]
+        r = subprocess.run(cmd, text=True, capture_output=True, timeout=60)
+        if r.returncode: log('aviso falló:', (r.stdout + r.stderr)[-300:])
+    except Exception as e: log('aviso falló:', e)
+
+def discord_post(canal, body):
+    """Mensaje con embeds al canal del Discord del Corillo (lo manda el Bochinchero). Lanza excepción si no salió."""
+    r = subprocess.run(['bash', str(SERVER / 'avisar.sh'), '--canal', canal, '--json'], input=json.dumps(body),
+                       text=True, capture_output=True, timeout=60)
+    if r.returncode: raise RuntimeError((r.stdout + r.stderr)[-200:])
+
+telegram = avisar   # los avisos a Marcos iban por Telegram; desde oct-2026 van por DM de Discord
 
 def get_json(url, tries=3, **kw):
     last = None
@@ -528,9 +539,9 @@ def share_links(it):
                   'telegram': f"https://t.me/share/url?url={quote(page)}&text={quote(msg)}"}
 
 def discord_hardware(items, state):
-    token, roles_raw = os.environ.get('DISCORD_BOT_TOKEN'), os.environ.get('DISCORD_DEALS_ROLES', '')
-    chans = {'equipo': os.environ.get('DISCORD_CH_OFERTAS_EQUIPO'), 'consola': os.environ.get('DISCORD_CH_OFERTAS')}
-    if not token or not 8 <= dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).hour < 23: return   # nada de pings de madrugada (8 a. m. a 11 p. m.)
+    roles_raw = os.environ.get('DISCORD_DEALS_ROLES', '')
+    chans = {'equipo': 'ofertas-equipo', 'consola': 'ofertas'}           # nombres de canal (el Bochinchero los busca)
+    if os.environ.get('CORILLO_SIN_DISCORD') or not 8 <= dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).hour < 23: return   # nada de pings de madrugada (8 a. m. a 11 p. m.)
     roles = dict(x.split(':', 1) for x in roles_raw.split(',') if ':' in x)      # cat:role_id
     sent = state.setdefault('hw_notified', {})                                     # id -> fecha de aviso (ISO)
     today = dt.datetime.now(dt.timezone(dt.timedelta(hours=-4))).date().isoformat()
@@ -561,8 +572,7 @@ def discord_hardware(items, state):
                     {'type': 2, 'style': 5, 'label': 'WhatsApp', 'url': sh['whatsapp']},
                     {'type': 2, 'style': 5, 'label': 'Telegram', 'url': sh['telegram']}]}]}
         try:
-            r = CLIENT.post(f"{DISCORD_API}/channels/{chans[l]}/messages", json=body, headers={'Authorization': 'Bot ' + token}, timeout=15)
-            r.raise_for_status()
+            discord_post(chans[l], body)
             sent[it['id']] = today + ':' + l; count[l] += 1; run += 1
             log('Discord (bot): avisado', it['title'][:60])
         except Exception as e: log('Discord (bot) falló:', type(e).__name__, str(e)[:160])
@@ -646,8 +656,7 @@ def canon(d):
 
 MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
 def discord_new_free(free, state):
-    hook = os.environ.get('DISCORD_DEALS_WEBHOOK')
-    if not hook: return 0                      # sin webhook no se marca nada como avisado: cuando se configure, saldrán los que estén vigentes
+    if os.environ.get('CORILLO_SIN_DISCORD'): return 0
     sent = set(state.get('notified', []))
     fresh = [g for g in free if g['id'] not in sent]
     for g in fresh:
@@ -658,12 +667,11 @@ def discord_new_free(free, state):
                 when = f"Gratis hasta el {end.day} de {MESES[end.month - 1]}."
             else: when = 'Gratis por tiempo limitado: reclámalo cuanto antes.'
             role = os.environ.get('DISCORD_ROLE_GRATIS')                    # quien escogió 🔔 Juegos gratis recibe la mención
-            resp = CLIENT.post(hook, json={'username': 'Corillo Ofertas', 'content': f'<@&{role}>' if role else '',
+            discord_post('ofertas', {'content': f'<@&{role}>' if role else '',
                                            'allowed_mentions': {'roles': [role] if role else []}, 'embeds': [{
                 'title': f"Gratis ahora en {label}: {g['title']}", 'url': g['url'], 'color': 0xFFD23F,
                 'description': f"Normalmente {g['original']}. {when}\nMás ofertas: https://corillo.live/ofertas/gratis/",
-                'image': {'url': g['image']} if g.get('image') else {}}]}, timeout=15)
-            resp.raise_for_status()               # solo cuenta como avisado si Discord lo aceptó
+                'image': {'url': g['image']} if g.get('image') else {}}]})   # solo cuenta como avisado si Discord lo aceptó
             log('Discord: avisado', g['title'])
             try: whatsapp_free(g)
             except Exception as e: log('fila de WhatsApp (gratis) falló:', e)
@@ -741,7 +749,7 @@ def main():
         tmp = DATA.with_suffix('.tmp'); tmp.write_text(json.dumps(out, ensure_ascii=False)); tmp.replace(DATA)
         discord_new_free(out['free'] + out['freeSteam'], state); STATE.write_text(json.dumps(state))
         if not a.no_deploy:
-            r = subprocess.run(['bash', 'scripts/deploy-corillo.sh'], cwd=REPO, text=True, capture_output=True)
+            r = subprocess.run(['bash', str(SERVER / 'publicar_corillo.sh'), 'main'], cwd=REPO, text=True, capture_output=True, timeout=1800)
             log('deploy', 'OK' if r.returncode == 0 else 'FALLÓ')
             if r.returncode: telegram('❌ Ofertas: el build falló con los datos nuevos (el sitio sigue como estaba).\n' + (r.stdout + r.stderr)[-400:]); sys.exit(1)
     if not a.no_deploy:                                                  # los avisos enlazan a páginas del sitio: solo después de un deploy bueno

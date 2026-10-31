@@ -26,7 +26,8 @@ from urllib.parse import urlparse
 
 import anthropic, feedparser, httpx
 
-REPO = Path('/var/www/stream')
+REPO = Path(os.environ.get('CORILLO_REPO', Path.home() / 'Corillo/web'))
+SERVER = Path.home() / 'Corillo/server/scripts/server'   # publicar_corillo.sh y avisar.sh (repo corillo-server)
 POSTS = REPO / 'src/content/noticias'
 CFG = json.loads((REPO / 'scripts/news_sources.json').read_text())
 HOME = Path('/home/corillo-adm/corillo-news')
@@ -53,38 +54,27 @@ def log(*a):
     print(line, flush=True)
 
 def load_env():
-    for f in ('/home/corillo-adm/corillo-news/.env', '/home/corillo-adm/corillo-bot/.env', '/home/corillo-adm/corillo-telegram/.env',
-              '/home/corillo-adm/corillo-stoat/.env', '/home/corillo-adm/corillo-stoat/.env.discord'):
-        if not Path(f).exists(): continue
-        for l in Path(f).read_text().splitlines():
-            if '=' in l and not l.startswith('#'):
+    """Llaves de ~/.config/corillo/tokens.env (corillo-server) y, si existe, ~/corillo-news/.env."""
+    for f in (Path.home() / '.config/corillo/tokens.env', HOME / '.env'):
+        if not f.exists(): continue
+        for l in f.read_text().splitlines():
+            if '=' in l and not l.lstrip().startswith('#'):
                 k, v = l.split('=', 1); os.environ.setdefault(k.strip(), v.strip().strip('"\''))
 
-def telegram(msg):
+def avisar(msg, canal=None):
+    """DM a Marcos (o mensaje a un canal del Discord del Corillo) por el Bochinchero; ver scripts/vps/avisar.py en corillo-server."""
     try:
-        httpx.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
-                   data={'chat_id': os.environ['TELEGRAM_CHAT_ID'], 'text': msg, 'disable_web_page_preview': 'true'}, timeout=15)
+        cmd = ['bash', str(SERVER / 'avisar.sh')] + (['--canal', canal] if canal else []) + [msg]
+        r = subprocess.run(cmd, text=True, capture_output=True, timeout=60)
+        if r.returncode: log('aviso falló:', (r.stdout + r.stderr)[-300:])
     except Exception as e:
-        log('telegram falló:', e)
+        log('aviso falló:', e)
 
-def stoat(msg):
-    """Publica en #anuncios del servidor de Corillo en Stoat (bot y canal en ~/corillo-stoat/.env)."""
-    if not os.environ.get('STOAT_BOT_TOKEN') or not os.environ.get('STOAT_CH_ANUNCIOS'): return
-    try:
-        httpx.post(f"https://api.stoat.chat/channels/{os.environ['STOAT_CH_ANUNCIOS']}/messages",
-                   headers={'x-bot-token': os.environ['STOAT_BOT_TOKEN']}, json={'content': msg}, timeout=15).raise_for_status()
-    except Exception as e:
-        log('stoat falló:', e)
+telegram = avisar   # los avisos a Marcos iban por Telegram; desde oct-2026 van por DM de Discord
 
 def discord(msg):
-    """Publica en 📰┆noticias del Discord de Corillo con Corillo-Bot (token y canal en ~/corillo-stoat/.env.discord)."""
-    if not os.environ.get('DISCORD_BOT_TOKEN') or not os.environ.get('DISCORD_CH_NOTICIAS'): return
-    try:
-        httpx.post(f"https://discord.com/api/v10/channels/{os.environ['DISCORD_CH_NOTICIAS']}/messages",
-                   headers={'Authorization': f"Bot {os.environ['DISCORD_BOT_TOKEN']}", 'User-Agent': 'DiscordBot (corillo, 1.0)'},
-                   json={'content': msg}, timeout=15).raise_for_status()
-    except Exception as e:
-        log('discord falló:', e)
+    """Publica en 🗞️︱noticias del Discord de Corillo (lo manda el Bochinchero)."""
+    avisar(msg, canal='noticias')
 
 # ───────────── estado / publicadas ─────────────
 def published():
@@ -327,7 +317,8 @@ def sh(cmd, **kw):
     return subprocess.run(cmd, cwd=REPO, text=True, capture_output=True, **kw)
 
 def deploy():
-    r = sh(['bash', 'scripts/deploy-corillo.sh'])
+    # Build + subida a Cloudflare Pages (producción). Falla de verdad si algo sale mal y no publica nada.
+    r = sh(['bash', str(SERVER / 'publicar_corillo.sh'), 'main'], timeout=1800)
     log('deploy', 'OK' if r.returncode == 0 else 'FALLÓ');
     if r.returncode: log(r.stdout[-800:], r.stderr[-800:])
     return r.returncode == 0
@@ -576,9 +567,7 @@ def main():
     for f in made:
         t = re.search(r'^heroTitle: "(.*)"', (POSTS / f).read_text(), re.M).group(1)
         telegram(f"📰 Nota publicada en CORILLO:\n{t}\nhttps://corillo.live/noticias/{f[:-3]}/\n\nRetirar: daily-news.py --unpublish {f[:-3]}")
-        stoat(f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
         discord(f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
-        whatsapp(f[:-3], t, (POSTS / f).read_text())
 
 
 def whatsapp(slug, title, md):
