@@ -11,7 +11,8 @@ Archivos generados:
 
 Variables de entorno:
   MEDIAMTX_API    — URL base de la API de MediaMTX  (default: http://127.0.0.1:9997)
-  HLS_BASE        — URL base del servidor HLS        (default: http://127.0.0.1:8888)
+  SRC_BASE        — de dónde se lee el stream        (default: rtsp://127.0.0.1:8554)
+                    31-oct-2026: antes era HLS (:8888), pero mediamtx 1.21 pide sesión en el HLS; el RTSP interno no.
   THUMB_DIR       — Directorio de salida             (default: /var/www/stream/assets/thumbs)
   THUMB_INTERVAL  — Segundos entre capturas          (default: 60)
 """
@@ -24,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import thumb_crop as tc   # recorte de barras negras + salida 1280x720
 
 MEDIAMTX_API = os.environ.get("MEDIAMTX_API", "http://127.0.0.1:9997")
-HLS_BASE     = os.environ.get("HLS_BASE",     "http://127.0.0.1:8888")
+SRC_BASE     = os.environ.get("SRC_BASE",     "rtsp://127.0.0.1:8554")
 THUMB_DIR    = Path(os.environ.get("THUMB_DIR", "/var/www/stream/assets/thumbs"))
 INTERVAL     = int(os.environ.get("THUMB_INTERVAL", "60"))
 
@@ -33,7 +34,6 @@ logging.basicConfig(
     format="%(asctime)s [thumbs] %(levelname)s %(message)s",
     handlers=[
         logging.StreamHandler(sys.stdout),
-        logging.FileHandler("/var/log/corillo-thumbs.log", encoding="utf-8"),
     ],
 )
 log = logging.getLogger(__name__)
@@ -48,14 +48,15 @@ def get_live_keys() -> list[str]:
             for item in items
             if item.get("ready")
             and item["name"].startswith("live/")
-            and not item["name"].endswith("_rtc")  # Opus-only (WebRTC); HLS/ffmpeg no lo puede miniaturizar
+            and not item["name"].endswith(("_rtc", "_low"))  # _rtc es solo audio Opus; _low es la copia 720p del mismo canal
         ]
     except Exception as e:
         log.warning(f"API error: {e}")
         return []
 
 
-BLACK_THRESHOLD = 18   # 0-255; frames con brillo medio < umbral se descartan
+BLACK_THRESHOLD = 35   # 0-255; frames con brillo medio < umbral se descartan (pedido de Marcos: que se vea claro,
+                       # nunca negro). Si los 3 intentos salen oscuros se deja la miniatura anterior.
 MAX_RETRIES     = 3
 CROP_TTL        = 600  # las barras de un canal no cambian a cada rato: se re-detectan cada 10 min
 _crop_cache: dict = {}
@@ -91,7 +92,7 @@ def mean_brightness(path: Path) -> int:
 
 
 def capture_thumb(key: str) -> bool:
-    url = f"{HLS_BASE}/live/{key}/index.m3u8"
+    url = f"{SRC_BASE}/live/{key}"
     out = THUMB_DIR / f"{key}.jpg"
     tmp = THUMB_DIR / f"{key}.tmp.jpg"
 
@@ -126,12 +127,12 @@ def capture_thumb(key: str) -> bool:
 
 
 def capture_preview(key: str) -> bool:
-    url = f"{HLS_BASE}/live/{key}/index.m3u8"
+    url = f"{SRC_BASE}/live/{key}"
     out = THUMB_DIR / f"{key}-preview.mp4"
     tmp = THUMB_DIR / f"{key}-preview.tmp.mp4"
     try:
         r = subprocess.run(
-            ["ffmpeg", "-y", "-i", url,
+            ["ffmpeg", "-y", *tc.entrada(url), "-i", url,
              "-t", "4",
              "-c:v", "libx264", "-profile:v", "baseline", "-level:v", "3.1",
              "-preset", "ultrafast", "-crf", "29",

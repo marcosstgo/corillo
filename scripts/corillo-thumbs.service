@@ -5,10 +5,11 @@ After=network.target mediamtx.service
 [Service]
 Type=simple
 User=corillo-adm
-ExecStart=/usr/bin/python3 /var/www/stream/scripts/thumb-gen.py
+ExecStart=/usr/bin/python3 /home/corillo-adm/Corillo/web/scripts/thumb-gen.py
 Restart=always
 RestartSec=10
 Environment=THUMB_INTERVAL=60
+Environment=THUMB_DIR=/var/www/stream/assets/thumbs
 
 [Install]
 WantedBy=multi-user.target

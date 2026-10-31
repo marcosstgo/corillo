@@ -17,8 +17,13 @@ import re, subprocess
 _CROP = re.compile(r"crop=(\d+):(\d+):(\d+):(\d+)")
 
 
+def entrada(src: str) -> list:
+    """Opciones de entrada según la fuente: el RTSP interno de mediamtx va por TCP (por UDP se pierden paquetes)."""
+    return ["-rtsp_transport", "tcp"] if src.startswith("rtsp://") else []
+
+
 def _probe(src: str, seek: float = 0):
-    r = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+    r = subprocess.run(["ffprobe", "-v", "error", *entrada(src), "-select_streams", "v:0", "-show_entries", "stream=width,height",
                         "-of", "csv=p=0:s=x", src], capture_output=True, text=True, timeout=20)
     try:
         w, h = r.stdout.strip().splitlines()[0].split("x")[:2]   # en HLS ffprobe repite la línea por segmento
@@ -36,7 +41,7 @@ def detect_crop(src: str, seek: float = 0, frames: int = 5, timeout: int = 45):
     cmd = ["ffmpeg", "-hide_banner", "-nostats"]
     if seek:
         cmd += ["-ss", str(seek)]
-    cmd += ["-i", src, "-vf", "fps=1,cropdetect=limit=24:round=2:reset=0", "-frames:v", str(frames), "-f", "null", "-"]
+    cmd += [*entrada(src), "-i", src, "-vf", "fps=1,cropdetect=limit=24:round=2:reset=0", "-frames:v", str(frames), "-f", "null", "-"]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
     except Exception:
@@ -64,7 +69,7 @@ def make_jpeg(src: str, out: str, seek: float = 0, crop=None, width: int = 1280,
     cmd = ["ffmpeg", "-y", "-hide_banner", "-loglevel", "error"]
     if seek:
         cmd += ["-ss", str(seek)]
-    cmd += ["-i", src, "-vframes", "1", "-vf", vf, "-q:v", str(q), out]
+    cmd += [*entrada(src), "-i", src, "-vframes", "1", "-vf", vf, "-q:v", str(q), out]
     try:
         r = subprocess.run(cmd, capture_output=True, timeout=timeout)
         return r.returncode == 0
