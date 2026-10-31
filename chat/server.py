@@ -7,14 +7,39 @@ import httpx, aiosqlite
 from dotenv import load_dotenv
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 from system_prompt import SYSTEM
 
 load_dotenv()
 
-MEDIAMTX_HOST = os.environ.get("MEDIAMTX_HOST", "https://corillo.live/mediamtx-api")
-THUMBS_HOST   = os.environ.get("THUMBS_HOST",   "https://corillo.live")
-DB_PATH       = os.environ.get("DB_PATH", "/home/corillo-adm/corillo-bot/chat.db")
+MEDIAMTX_HOST = os.environ.get("MEDIAMTX_HOST", "http://10.77.0.2:9997")        # corillo-server por el túnel WireGuard
+THUMBS_HOST   = os.environ.get("THUMBS_HOST",   "https://media.corillo.live")
+DB_PATH       = os.environ.get("DB_PATH", "/home/corillo-adm/corillo-chat/chat.db")
+
+# Seguridad (auditoría 31-oct-2026)
+ORIGENES_WS  = re.compile(r"^https://((www\.)?corillo\.live|[a-z0-9-]+\.corillo\.pages\.dev)$|^http://localhost(:\d+)?$")
+CANAL_RE     = re.compile(r"^[a-z0-9][a-z0-9_-]{0,39}$")
+USUARIO_RE   = re.compile(r"^[A-Za-z0-9_]{3,24}$")
+MAX_SALAS    = 200          # salas en memoria (antes cualquier nombre de canal creaba una)
+MAX_EN_SALA  = 500
+BOT_PAUSA    = 8.0          # segundos mínimos entre respuestas del bot en una sala
+BOT_MAX_DIA  = 400          # tope diario de llamadas a la IA por @bot (gasta DeepSeek/Groq)
+_bot_uso     = {"dia": "", "n": 0}
+
+
+def _es_nombre_del_bot(nombre: str) -> bool:
+    """Nadie puede llamarse como el bot (antes 'CORILLO BOT' con un espacio raro pasaba)."""
+    plano = re.sub(r"[^a-z]", "", nombre.lower())
+    return "corillobot" in plano or plano in ("bot", "corillo", "admin", "moderador")
+
+
+def _bot_puede() -> bool:
+    hoy = time.strftime("%Y-%m-%d")
+    if _bot_uso["dia"] != hoy:
+        _bot_uso.update({"dia": hoy, "n": 0})
+    if _bot_uso["n"] >= BOT_MAX_DIA:
+        return False
+    _bot_uso["n"] += 1
+    return True
 
 DISCORD_URL   = os.environ.get("DISCORD_URL",   "")
 INSTAGRAM_URL = os.environ.get("INSTAGRAM_URL", "")
@@ -132,17 +157,16 @@ STREAMER_NAMES = {
 }
 
 
-class Msg(BaseModel):
-    message: str
-
-
 async def get_live():
     now = time.time()
     if now - _live_cache["ts"] < LIVE_CACHE_TTL:
         return _live_cache["data"]
     try:
         r = await _http.get(f"{MEDIAMTX_HOST}/v3/paths/list")
-        result = [p for p in r.json().get("items", []) if p.get("ready")]
+        # Sin las variantes internas (_low 720p, _rtc WebRTC): no son streams aparte (antes el bot las
+        # contaba como canales y saludaba a "katatonia_low").
+        result = [p for p in r.json().get("items", [])
+                  if p.get("ready") and not p["name"].endswith(("_low", "_rtc"))]
         _live_cache.update({"data": result, "ts": now})
         return result
     except:
@@ -191,43 +215,6 @@ async def db_history(channel: str, limit: int = 50) -> list:
     ]
 
 
-@app.post("/message")
-async def chat(body: Msg):
-    live = await get_live()
-    status = ("En vivo ahora:\n" + "\n".join(
-        f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live
-    )) if live else "Sin streams en vivo."
-    reply = await groq(SYSTEM + f"\n\n{status}", body.message, max_tokens=512)
-    return {"reply": reply}
-
-
-_digest = {"text": "", "ts": 0}
-DIGEST_TTL = 120
-
-
-@app.get("/digest")
-async def digest():
-    if time.time() - _digest["ts"] < DIGEST_TTL and _digest["text"]:
-        return {"digest": _digest["text"]}
-    live = await get_live()
-    if live:
-        lines = "\n".join(f"- {p['name']}: {len(p.get('readers', []))} viewers" for p in live)
-        prompt = (
-            f"Estado actual de CORILLO:\n{lines}\n\n"
-            "Escribe UNA sola frase corta y casual sobre quién está en vivo ahora. "
-            "Sin saludos, sin hashtags, sin emojis. Solo la frase."
-        )
-    else:
-        prompt = (
-            "No hay streams en vivo en CORILLO ahora mismo. "
-            "Escribe UNA sola frase corta y casual al estilo boricua para invitar a la gente a conectarse más tarde. "
-            "Sin saludos, sin hashtags, sin emojis. Solo la frase."
-        )
-    _digest["text"] = await groq(SYSTEM, prompt, max_tokens=80)
-    _digest["ts"] = time.time()
-    return {"digest": _digest["text"]}
-
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
@@ -248,7 +235,7 @@ class Room:
 
     async def join(self, ws: WebSocket, requested: str = "") -> str:
         await ws.accept()
-        if requested and 3 <= len(requested) <= 40 and ' ' not in requested:
+        if USUARIO_RE.match(requested) and not _es_nombre_del_bot(requested):
             username = requested
         else:
             username = random.choice(NAMES) + "_" + str(random.randint(10, 99))
@@ -292,7 +279,17 @@ def get_room(channel: str) -> Room:
 
 @app.websocket("/ws/{channel}")
 async def ws_chat(ws: WebSocket, channel: str):
+    origen = ws.headers.get("origin", "")
+    if not ORIGENES_WS.match(origen) or not CANAL_RE.match(channel):
+        await ws.close(code=1008)
+        return
+    if channel not in rooms and len(rooms) >= MAX_SALAS:
+        await ws.close(code=1013)
+        return
     room = get_room(channel)
+    if len(room.clients) >= MAX_EN_SALA:
+        await ws.close(code=1013)
+        return
     requested = ws.query_params.get("user", "").strip()[:40]
     username = await room.join(ws, requested)
 
@@ -321,6 +318,9 @@ async def ws_chat(ws: WebSocket, channel: str):
             if text.startswith("!"):
                 asyncio.create_task(handle_command(room, channel, text))
             elif "@bot" in text.lower():
+                if time.time() - room._last_bot_reply < BOT_PAUSA or not _bot_puede():
+                    continue
+                room._last_bot_reply = time.time()
                 query = text.lower().split("@bot", 1)[-1].strip() or "hola"
                 asyncio.create_task(bot_reply(room, query, channel))
     except WebSocketDisconnect:

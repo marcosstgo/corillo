@@ -23,6 +23,12 @@ PB_ADMIN_PASS  = os.environ.get("PB_ADMIN_PASS", "")
 MEDIAMTX_URL = os.environ.get("MEDIAMTX_URL", "http://127.0.0.1:9997")
 CHANNEL_RE   = re.compile(r"^[a-z0-9_-]+$")
 
+
+def _q(v) -> str:
+    """Valor entre comillas y escapado para un filtro de PocketBase. Sin esto, un endpoint o canal con comillas
+    cambiaba el filtro (y la API lo corre con token de superusuario). Auditoría 31-oct-2026."""
+    return '"' + str(v).replace("\\", "\\\\").replace('"', '\\"') + '"'
+
 VAPID_PUBLIC_KEY  = os.environ.get("VAPID_PUBLIC_KEY", "")
 VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY", "")
 VAPID_MAILTO      = os.environ.get("VAPID_MAILTO", "hello@corillo.live")
@@ -141,7 +147,7 @@ async def get_profile(key: str):
             f"{PB_URL}/api/collections/streamers/records",
             headers={"Authorization": token},
             params={
-                "filter": f'key="{key}" && active=true && first_live_at!=""',
+                "filter": f'key={_q(key)} && active=true && first_live_at!=""',
                 "fields": "id,key,display_name,sub,bio,color,twitch,instagram,tiktok,avatar,panels,stream_title",
             },
         )
@@ -213,7 +219,7 @@ async def subscribe(request: Request):
         r = await _http.get(
             f"{PB_URL}/api/collections/push_subscriptions/records",
             headers={"Authorization": token},
-            params={"filter": f'endpoint="{endpoint}" && channel="{channel}"', "perPage": 1},
+            params={"filter": f'endpoint={_q(endpoint)} && channel={_q(channel)}', "perPage": 1},
         )
         if not r.json().get("items"):
             await _http.post(
@@ -240,7 +246,7 @@ async def unsubscribe(request: Request):
         r = await _http.get(
             f"{PB_URL}/api/collections/push_subscriptions/records",
             headers={"Authorization": token},
-            params={"filter": f'endpoint="{endpoint}" && channel="{channel}"', "perPage": 1},
+            params={"filter": f'endpoint={_q(endpoint)} && channel={_q(channel)}', "perPage": 1},
         )
         items = r.json().get("items", [])
         if items:
@@ -265,7 +271,7 @@ async def _marcar_primer_directo(channel: str):
         r = await _http.get(
             f"{PB_URL}/api/collections/streamers/records",
             headers={"Authorization": token},
-            params={"filter": f'key="{channel}" && first_live_at=""', "fields": "id", "perPage": 1},
+            params={"filter": f'key={_q(channel)} && first_live_at=""', "fields": "id", "perPage": 1},
         )
         for rec in r.json().get("items", []):
             await _http.patch(
@@ -276,6 +282,10 @@ async def _marcar_primer_directo(channel: str):
             _streamers_cache["data"] = None
     except Exception:
         pass
+
+
+_ULTIMO_AVISO: dict = {}   # path → hora del último push "está en vivo"
+AVISO_PAUSA = 600
 
 
 def _es_llamada_interna(request: Request) -> bool:
@@ -296,6 +306,11 @@ async def internal_notify(request: Request):
         path = ""
     if path.startswith("live/"):
         await _marcar_primer_directo(path[5:])
+    # Si OBS se reconecta (internet que parpadea), mediamtx vuelve a llamar: no repetir el push en 10 min.
+    ahora = time.time()
+    if ahora - _ULTIMO_AVISO.get(path, 0) < AVISO_PAUSA:
+        return {"sent": 0, "stale": 0, "repetido": True}
+    _ULTIMO_AVISO[path] = ahora
     if not VAPID_PRIVATE_KEY or not VAPID_PUBLIC_KEY:
         raise HTTPException(status_code=503)
     try:
@@ -309,7 +324,7 @@ async def internal_notify(request: Request):
         r = await _http.get(
             f"{PB_URL}/api/collections/push_subscriptions/records",
             headers={"Authorization": token},
-            params={"filter": f'channel="{channel}"', "perPage": 500},
+            params={"filter": f'channel={_q(channel)}', "perPage": 500},
         )
         items = r.json().get("items", [])
         if not items:
@@ -319,7 +334,7 @@ async def internal_notify(request: Request):
         sr = await _http.get(
             f"{PB_URL}/api/collections/streamers/records",
             headers={"Authorization": token},
-            params={"filter": f'key="{channel}"', "fields": "display_name", "perPage": 1},
+            params={"filter": f'key={_q(channel)}', "fields": "display_name", "perPage": 1},
         )
         name = (sr.json().get("items") or [{}])[0].get("display_name", channel.upper())
 
@@ -330,8 +345,8 @@ async def internal_notify(request: Request):
             "channel": channel,
         })
 
-        stale = []
-        for item in items:
+        # webpush() es síncrono: en un hilo y todos a la vez (antes bloqueaba la API con cada suscripción).
+        def enviar(item):
             try:
                 raw = item["subscription"]
                 sub = raw if isinstance(raw, dict) else json.loads(raw)
@@ -340,13 +355,18 @@ async def internal_notify(request: Request):
                     data=payload,
                     vapid_private_key=VAPID_PRIVATE_KEY,
                     vapid_claims={"sub": f"mailto:{VAPID_MAILTO}"},
+                    timeout=10,
                 )
             except WebPushException as ex:
                 # 403: la suscripción se hizo con otras llaves VAPID (las viejas se perdieron con el disco)
                 if ex.response is not None and ex.response.status_code in (403, 404, 410):
-                    stale.append(item["id"])
+                    return item["id"]
             except Exception:
                 pass
+            return None
+
+        resultados = await asyncio.gather(*(asyncio.to_thread(enviar, it) for it in items))
+        stale = [r for r in resultados if r]
 
         for rec_id in stale:
             await _http.delete(
@@ -361,10 +381,20 @@ async def internal_notify(request: Request):
         raise HTTPException(status_code=500)
 
 
+_CLIPS = asyncio.Semaphore(2)   # máximo 2 ffmpeg de clips a la vez (antes: uno por petición, sin límite)
+
+
 @app.get("/clip/{channel}")
 async def get_clip(channel: str):
-    if not channel or '/' in channel or '..' in channel:
+    if not CHANNEL_RE.match(channel or ""):
         raise HTTPException(status_code=400)
+    if _CLIPS.locked():
+        raise HTTPException(status_code=429, detail="Hay otros clips en proceso, intenta en unos segundos")
+    async with _CLIPS:
+        return await _clip_canal(channel)
+
+
+async def _clip_canal(channel: str):
     files = sorted(glob.glob(f"/var/vods/live/{channel}/*.mp4"), key=os.path.getmtime)
     if not files:
         raise HTTPException(status_code=404, detail="Sin grabación activa")
@@ -401,11 +431,20 @@ async def get_vod_clip(vod_id: str, t: float = 0, dur: float = 30):
     r = await _http.get(
         f"{PB_URL}/api/collections/vods/records/{vod_id}",
         headers={"Authorization": token},
-        params={"fields": "channel,filename"},
+        params={"fields": "channel,filename,public"},
     )
     if r.status_code != 200:
         raise HTTPException(status_code=404)
     vod = r.json()
+    if not vod.get("public"):
+        raise HTTPException(status_code=404)   # VOD privado: antes se podían sacar clips igual
+    if _CLIPS.locked():
+        raise HTTPException(status_code=429, detail="Hay otros clips en proceso, intenta en unos segundos")
+    async with _CLIPS:
+        return await _clip_vod(vod, vod_id, t, dur)
+
+
+async def _clip_vod(vod: dict, vod_id: str, t: float, dur: float):
     channel  = vod.get("channel", "")
     filename = vod.get("filename", "")
     if not channel or '/' in channel or '..' in channel:
@@ -909,7 +948,7 @@ async def upload_vod(
     sr = await _http.get(
         f"{PB_URL}/api/collections/streamers/records",
         headers={"Authorization": token},
-        params={"filter": f'key="{channel}"', "fields": "upload_enabled,vod_plan", "perPage": 1},
+        params={"filter": f'key={_q(channel)}', "fields": "upload_enabled,vod_plan", "perPage": 1},
     )
     items = sr.json().get("items", [])
     if not items or not items[0].get("upload_enabled"):
@@ -1046,7 +1085,7 @@ async def upload_vod(
         rv_list = await _http.get(
             f"{PB_URL}/api/collections/vods/records",
             headers={"Authorization": token},
-            params={"filter": f'channel="{channel}"', "sort": "-date", "perPage": 200, "fields": "id,filepath"},
+            params={"filter": f'channel={_q(channel)}', "sort": "-date", "perPage": 200, "fields": "id,filepath"},
         )
         all_vods = rv_list.json().get("items", [])
         for old in all_vods[keep:]:
@@ -1125,7 +1164,7 @@ async def channel_stats(channel: str):
         f"{PB_URL}/api/collections/vods/records",
         headers={"Authorization": token},
         params={
-            "filter": f'channel="{channel}"',
+            "filter": f'channel={_q(channel)}',
             "fields": "duration",
             "perPage": 500,
         },
