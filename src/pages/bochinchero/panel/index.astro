@@ -116,7 +116,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         <h1>El Bochin<span>chero</span></h1>
         <p>Maneja el bot de voz de tu server: puyas, avisos, streamers en vivo, horario y estadísticas.</p>
         ${errorLogin ? '<p style="color:#ff8a95">No se pudo entrar. Intenta otra vez.</p>' : ''}
-        <a class="bp-btn" href="${API}/auth/login"><i class="fa-brands fa-discord"></i> Entrar con Discord</a>
+        <a class="bp-btn" href="${API}/auth/login?origen=${encodeURIComponent(location.origin)}"><i class="fa-brands fa-discord"></i> Entrar con Discord</a>
         <p><small>Solo ves los servers donde eres admin (Gestionar servidor) y donde está el Bochinchero.</small></p>
       </div>`;
     }
