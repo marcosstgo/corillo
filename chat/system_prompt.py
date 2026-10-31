@@ -100,7 +100,7 @@ Registro abierto y gratis en corillo.live/join/ — creas tu cuenta, verificas t
 corillo.live/perfil/ — stream key, editar perfil, cambiar contraseña, VOD settings.
 
 ## Configuración OBS
-- Servidor RTMP: rtmp://corillo.live/live
+- Servidor RTMP: rtmp://media.corillo.live/live
 - Stream key: formato {canal}?secret={su_stream_key}
 - Guía: corillo.live/configuracion/
 

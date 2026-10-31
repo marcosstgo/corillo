@@ -1,0 +1,16 @@
+[Unit]
+Description=Corillo Chat — chat en vivo de los canales (WebSocket) con bot IA
+After=network.target wg-quick@wg0.service
+Wants=wg-quick@wg0.service
+
+[Service]
+Type=simple
+User=corillo-adm
+WorkingDirectory=/home/corillo-adm/corillo-chat
+EnvironmentFile=/home/corillo-adm/corillo-chat/.env
+ExecStart=/home/corillo-adm/corillo-chat/venv/bin/uvicorn server:app --host 127.0.0.1 --port 3001
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
