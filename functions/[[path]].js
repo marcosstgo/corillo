@@ -4,10 +4,14 @@
 //   /mercado/a/<id>/   → anuncio recién publicado que aún no tiene página estática (lo muestra desde la API)
 const CANAL = /^\/([a-z0-9][a-z0-9_]*)\/?$/;
 
+// Canales cuyo nombre choca con archivos especiales de Pages (404.html se sirve en /404/): van directo al player.
+const CHOCAN = new Set(['404']);
+
 export async function onRequest({ request, env }) {
-  const res = await env.ASSETS.fetch(request);
-  if (res.status !== 404) return res;
   const url = new URL(request.url);
+  const directo = url.pathname.match(CANAL);
+  const res = directo && CHOCAN.has(directo[1]) ? new Response(null, { status: 404 }) : await env.ASSETS.fetch(request);
+  if (res.status !== 404) return res;
 
   const anuncio = url.pathname.match(/^(\/en)?\/mercado\/a\/[^/]+\/?$/);
   if (anuncio) return env.ASSETS.fetch(new URL(`${anuncio[1] || ''}/mercado/anuncio/`, url));

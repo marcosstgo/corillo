@@ -571,16 +571,18 @@ function showFeaturedOfflineStatic() {
   const sim = document.getElementById('simStream');
   sim.className = 'sim-stream offline';
   sim.style.backgroundImage = '';
-  document.getElementById('simTitle').textContent = 'Sin transmisión';
-  document.getElementById('simSub').textContent = 'Todos los canales están fuera de línea';
+  // Mientras llega la portada nueva (docs/rediseno-2026.md): sin VODs, no gritar "SIN TRANSMISIÓN" a pantalla completa.
+  document.getElementById('simTitle').textContent = 'Corillo';
+  document.getElementById('simSub').textContent = 'Nadie está en vivo ahora mismo. Ponte al día con las noticias y las ofertas.';
   document.getElementById('featuredTopLeft').innerHTML =
     '<span class="live-badge offline">Sin transmisión</span>';
   document.getElementById('featuredAva').style.background = '#1e3a4a';
   document.getElementById('featuredAva').textContent = 'C';
   document.getElementById('featuredNameEl').textContent = 'Corillo';
-  document.getElementById('featuredSubEl').textContent = 'Puerto Rico · Sin stream activo';
+  document.getElementById('featuredSubEl').textContent = 'Hecho en Puerto Rico';
   document.getElementById('featuredActions').innerHTML = `
-    <a href="/streamers/" class="play-btn">Ver streamers</a>
+    <a href="/noticias/" class="play-btn">Noticias</a>
+    <a href="/ofertas/" class="play-btn" style="background:transparent;color:inherit;box-shadow:inset 0 0 0 1px rgba(245,248,255,.35)">Ofertas</a>
     <a href="/join/" class="icon-btn" title="Crear canal"><i class="fa-solid fa-plus"></i></a>
   `;
 }
