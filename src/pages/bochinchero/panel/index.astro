@@ -1,0 +1,356 @@
+---
+// Panel de control de El Bochinchero (31-oct-2026). Pedido de Marcos: «que este bot tenga su propia página web como un
+// panel de control donde esté todo ahí bien organizado y donde tú puedas manejarlo».
+// La API vive en corillo-vps (repo bochinchero, bochinchero/panel.py) en https://api.corillo.live/bochinchero/.
+// Sesión: «Entrar con Discord» → la API devuelve un token firmado en #t=… → localStorage → header Authorization.
+// Todo lo que viene de Discord o de la base se escapa (esc) antes de meterlo en el HTML.
+import SiteShell from '../../../layouts/SiteShell.astro';
+---
+<SiteShell
+  title="Panel de El Bochinchero"
+  description="Maneja El Bochinchero en tu server de Discord: ajustes, puyas, avisos en voz, streamers en vivo y estadísticas."
+  canonical="https://corillo.live/bochinchero/panel/"
+  ogImage="/bochinchero/og.png"
+>
+  <fragment slot="head">
+    <meta name="robots" content="noindex" />
+    <style is:global>
+      .bp{--bc:#ff6b3d;--ok:#3ddc97;max-width:1180px;margin:0 auto;padding:clamp(20px,4vw,44px) var(--h2-gutter) 90px;color:var(--h2-bone);font:500 1rem/1.5 var(--h2-body)}
+      .bp h1{margin:0;font:800 clamp(1.8rem,4vw,2.6rem)/1 var(--h2-display);letter-spacing:-.04em;text-transform:none}
+      .bp h1 span{color:var(--bc)}
+      .bp h2{margin:0 0 14px;font:800 1.35rem var(--h2-display);letter-spacing:-.02em;text-transform:none}
+      .bp h3{margin:18px 0 8px;font:800 1rem var(--h2-body)}
+      .bp-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+      .bp-top .yo{margin-left:auto;display:flex;align-items:center;gap:10px;color:var(--h2-mute);font-size:.92rem}
+      .bp-top .yo img{width:32px;height:32px;border-radius:50%}
+      .bp-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:0;border-radius:999px;background:var(--bc);color:#13173d;font:800 .95rem var(--h2-body);cursor:pointer;text-decoration:none}
+      .bp-btn.sec{background:color-mix(in srgb,var(--h2-bone) 9%,transparent);color:var(--h2-bone)}
+      .bp-btn.peq{padding:6px 12px;font-size:.85rem}
+      .bp-btn.mal{background:#ff5d6c22;color:#ff8a95}
+      .bp-btn:disabled{opacity:.5;cursor:default}
+      .bp-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 20px;padding:0;list-style:none}
+      .bp-tabs button{padding:9px 16px;border:0;border-radius:999px;background:transparent;color:var(--h2-mute);font:700 .92rem var(--h2-body);cursor:pointer;box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bp-tabs button.on{background:var(--bc);color:#13173d;box-shadow:none}
+      .bp-tabs .n{margin-left:6px;padding:1px 7px;border-radius:999px;background:#ff5d6c;color:#fff;font-size:.75rem}
+      .bp-card{padding:20px 22px;border-radius:22px;background:color-mix(in srgb,var(--h2-bone) 5%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);margin-bottom:16px}
+      .bp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+      .bp-stat b{display:block;font:800 1.9rem var(--h2-display)}
+      .bp-stat small{color:var(--h2-mute)}
+      .bp label{display:block;margin:12px 0 5px;color:var(--h2-mute);font:700 .85rem var(--h2-body)}
+      .bp input,.bp select,.bp textarea{width:100%;padding:10px 12px;border:0;border-radius:12px;background:color-mix(in srgb,var(--h2-bone) 8%,transparent);color:var(--h2-bone);font:500 .95rem var(--h2-body);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bp select[multiple]{min-height:140px}
+      .bp textarea{min-height:76px;resize:vertical}
+      .bp-fila{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+      .bp-fila>*{flex:1 1 160px}
+      .bp-chk{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+      .bp-chk label{display:flex;gap:8px;align-items:center;margin:0;padding:9px 12px;border-radius:12px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);color:var(--h2-bone);font-weight:600;cursor:pointer}
+      .bp-chk input{width:auto}
+      .bp-lista{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+      .bp-lista li{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--h2-bone) 5%,transparent)}
+      .bp-lista li .t{flex:1 1 300px}
+      .bp-lista small{display:block;color:var(--h2-mute)}
+      .bp-tag{padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);color:var(--h2-mute);font:700 .75rem var(--h2-body)}
+      .bp-tag.vivo{background:#ff5d6c;color:#fff}
+      .bp-barras{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;align-items:end;height:110px}
+      .bp-barras div{background:var(--bc);border-radius:4px 4px 0 0;min-height:2px}
+      .bp-horas{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;color:var(--h2-mute);font-size:.68rem;text-align:center}
+      .bp-msg{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:12px 20px;border-radius:14px;background:#13173d;color:#fff;font-weight:700;box-shadow:0 10px 30px #0008;z-index:50}
+      .bp-msg.mal{background:#7a1f2b}
+      .bp-vacio{color:var(--h2-mute)}
+      .bp-entrar{max-width:560px;margin:40px auto;text-align:center}
+      .bp-entrar p{color:var(--h2-mute)}
+      .bp-guardar{position:sticky;bottom:16px;display:flex;justify-content:flex-end;margin-top:12px}
+    </style>
+  </fragment>
+
+  <main class="bp" id="app">
+    <div class="bp-top"><h1>El Bochin<span>chero</span> · panel</h1></div>
+    <p class="bp-vacio">Cargando…</p>
+  </main>
+
+  <script is:inline>
+  (() => {
+    const API = 'https://api.corillo.live/bochinchero';
+    const app = document.getElementById('app');
+    const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    const $ = s => app.querySelector(s);
+    const st = { yo: null, gid: localStorage.getItem('boch_server'), tab: 'resumen', ajustes: null };
+
+    // Token que manda la API al volver de Discord (#t=…). Se guarda y se quita de la barra.
+    const h = new URLSearchParams(location.hash.slice(1));
+    if (h.get('t')) { localStorage.setItem('boch_t', h.get('t')); history.replaceState(null, '', location.pathname); }
+    const errorLogin = h.get('error');
+    const token = () => localStorage.getItem('boch_t');
+
+    function aviso(texto, mal) {
+      const d = document.createElement('div');
+      d.className = 'bp-msg' + (mal ? ' mal' : ''); d.textContent = texto;
+      document.body.appendChild(d); setTimeout(() => d.remove(), 3200);
+    }
+
+    async function api(metodo, ruta, cuerpo) {
+      const r = await fetch(API + ruta, { method: metodo, headers: { Authorization: 'Bearer ' + token(), 'Content-Type': 'application/json' },
+                                          body: cuerpo ? JSON.stringify(cuerpo) : undefined });
+      if (r.status === 401) { localStorage.removeItem('boch_t'); pintarEntrar(); throw new Error('sesión'); }
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) {
+        const d = Array.isArray(j.detail) ? 'Revisa los datos.' : (j.detail || 'Algo falló.');
+        aviso(d, true); throw new Error(d);
+      }
+      return j;
+    }
+    const S = ruta => `/s/${st.gid}${ruta}`;
+
+    let audio = null;
+    async function escuchar(texto, boton) {
+      if (boton) boton.disabled = true;
+      try {
+        const r = await api('POST', S('/escuchar'), { texto });
+        if (audio) audio.pause();
+        audio = new Audio(API.replace('/bochinchero', '') + r.audio); audio.play();
+      } catch (e) {} finally { if (boton) boton.disabled = false; }
+    }
+
+    function pintarEntrar() {
+      app.innerHTML = `<div class="bp-entrar bp-card">
+        <h1>El Bochin<span>chero</span></h1>
+        <p>Maneja el bot de voz de tu server: puyas, avisos, streamers en vivo, horario y estadísticas.</p>
+        ${errorLogin ? '<p style="color:#ff8a95">No se pudo entrar. Intenta otra vez.</p>' : ''}
+        <a class="bp-btn" href="${API}/auth/login"><i class="fa-brands fa-discord"></i> Entrar con Discord</a>
+        <p><small>Solo ves los servers donde eres admin (Gestionar servidor) y donde está el Bochinchero.</small></p>
+      </div>`;
+    }
+
+    const TABS = [['resumen', 'Resumen'], ['ajustes', 'Ajustes'], ['personas', 'Personas'], ['puyas', 'Puyas'],
+                  ['avisos', 'Avisos en voz'], ['envivo', 'Streamers en vivo'], ['estadisticas', 'Estadísticas']];
+
+    async function pintarApp() {
+      const yo = st.yo;
+      if (!yo.servers.length) {
+        app.innerHTML = `<div class="bp-entrar bp-card"><h2>No tienes servers con el Bochinchero</h2>
+          <p>Necesitas ser admin (Gestionar servidor) de un server donde esté el bot.</p>
+          <a class="bp-btn" href="${esc(yo.invitar)}" target="_blank" rel="noopener">Añadir a mi server</a>
+          <p><button class="bp-btn sec peq" id="salir">Salir</button></p></div>`;
+        $('#salir').onclick = salir; return;
+      }
+      if (!yo.servers.some(s => s.id === st.gid)) st.gid = yo.servers[0].id;
+      const av = yo.avatar ? `<img src="https://cdn.discordapp.com/avatars/${esc(yo.id)}/${esc(yo.avatar)}.png?size=64" alt="">` : '';
+      app.innerHTML = `
+        <div class="bp-top"><h1>El Bochin<span>chero</span> · panel</h1>
+          <select id="server" style="width:auto">${yo.servers.map(s => `<option value="${esc(s.id)}" ${s.id === st.gid ? 'selected' : ''}>${esc(s.nombre)}</option>`).join('')}</select>
+          <div class="yo">${av}${esc(yo.nombre)} <button class="bp-btn sec peq" id="salir">Salir</button></div></div>
+        <ul class="bp-tabs">${TABS.map(([k, t]) => `<li><button data-tab="${k}" class="${k === st.tab ? 'on' : ''}">${t}<span class="n" id="n-${k}" hidden></span></button></li>`).join('')}</ul>
+        <section id="vista"><p class="bp-vacio">Cargando…</p></section>`;
+      $('#server').onchange = e => { st.gid = e.target.value; localStorage.setItem('boch_server', st.gid); pintarApp(); };
+      $('#salir').onclick = salir;
+      app.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { st.tab = b.dataset.tab; pintarApp(); });
+      try { await VISTAS[st.tab]($('#vista')); } catch (e) { if (e.message !== 'sesión') $('#vista').innerHTML = '<p class="bp-vacio">No se pudo cargar.</p>'; }
+    }
+
+    function salir() { localStorage.removeItem('boch_t'); location.reload(); }
+
+    const hace = ts => {
+      if (!ts) return 'nunca';
+      const m = Math.round((Date.now() / 1000 - ts) / 60);
+      return m < 60 ? `hace ${m} min` : m < 1440 ? `hace ${Math.round(m / 60)} h` : `hace ${Math.round(m / 1440)} días`;
+    };
+    const horas = min => min >= 60 ? `${Math.floor(min / 60)} h ${min % 60} min` : `${min} min`;
+
+    const VISTAS = {
+      async resumen(v) {
+        const r = await api('GET', S('/resumen'));
+        if (r.pendientes) { const n = $('#n-puyas'); n.textContent = r.pendientes; n.hidden = false; }
+        const vivo = r.vivo.al_dia
+          ? (r.vivo.en_voz?.length ? `<ul class="bp-lista">${r.vivo.en_voz.map(p => `<li><div class="t"><b>${esc(p.nombre)}</b><small>${esc(p.sala)}</small></div>${p.juego ? `<span class="bp-tag">🎮 ${esc(p.juego)}</span>` : ''}</li>`).join('')}</ul>` : '<p class="bp-vacio">Nadie en las salas de voz ahora mismo.</p>')
+          : '<p class="bp-vacio">El bot no ha reportado en los últimos minutos.</p>';
+        v.innerHTML = `
+          <div class="bp-grid">
+            <div class="bp-card bp-stat"><small>Plan</small><b style="font-size:1.2rem">${esc(r.plan)}</b></div>
+            <div class="bp-card bp-stat"><small>Voces nuevas hoy</small><b>${r.voces_hoy}${r.voces_tope != null ? ' / ' + r.voces_tope : ''}</b></div>
+            <div class="bp-card bp-stat"><small>Avisos en voz</small><b>${r.avisos} / ${r.avisos_tope}</b></div>
+            <div class="bp-card bp-stat"><small>Puyas por aprobar</small><b>${r.pendientes}</b></div>
+          </div>
+          <div class="bp-grid">
+            <div class="bp-card"><h2>En voz ahora</h2>${vivo}</div>
+            <div class="bp-card"><h2>Los más pegaos (7 días)</h2>${r.ranking.length ? `<ul class="bp-lista">${r.ranking.map((p, i) => `<li><div class="t"><b>${['🥇', '🥈', '🥉'][i] || (i + 1) + '.'} ${esc(p.nombre)}</b></div><span>${horas(p.minutos)}</span></li>`).join('')}</ul>` : '<p class="bp-vacio">Todavía no hay datos.</p>'}</div>
+          </div>`;
+      },
+
+      async ajustes(v) {
+        const d = await api('GET', S('/ajustes'));
+        const a = d.ajustes;
+        const opc = (lista, sel) => `<option value="">— ninguno —</option>` + lista.map(c => `<option value="${esc(c.id)}" ${c.id === sel ? 'selected' : ''}>${esc(c.nombre)}</option>`).join('');
+        v.innerHTML = `
+          <div class="bp-card"><h2>Personalidad</h2>
+            <div class="bp-fila">
+              <div><label>Nivel de picante</label><select id="nivel">
+                <option value="suave" ${a.nivel === 'suave' ? 'selected' : ''}>Suave — sin malas palabras</option>
+                <option value="normal" ${a.nivel === 'normal' ? 'selected' : ''}>Normal — puyas de pana</option>
+                <option value="picante" ${a.nivel === 'picante' ? 'selected' : ''}>Picante — boricua sin filtro</option></select></div>
+              <div><label>Cómo llama al grupo en voz</label><input id="grupo" maxlength="30" value="${esc(a.grupo)}"></div>
+            </div>
+            <h3>Qué hace</h3>
+            <div class="bp-chk">${Object.entries(d.nombres_funciones).map(([f, n]) => `<label><input type="checkbox" data-f="${f}" ${a.funciones[f] ? 'checked' : ''}> ${esc(n)}</label>`).join('')}</div>
+          </div>
+          <div class="bp-card"><h2>Canales</h2>
+            <div class="bp-fila">
+              <div><label>Ranking semanal (público)</label><select id="canal_avisos">${opc(d.texto, a.canal_avisos)}</select></div>
+              <div><label>Moderación (puyas sugeridas)</label><select id="canal_moderacion">${opc(d.texto, a.canal_moderacion)}</select></div>
+              <div><label>Cumpleaños</label><select id="canal_cumples">${opc(d.texto, a.canal_cumples)}</select></div>
+              <div><label>Rol que maneja el bot</label><select id="rol_admin">${opc(d.roles, a.rol_admin)}</select></div>
+            </div>
+            <label>Salas donde no habla (Ctrl/Cmd para escoger varias; las privadas y la de AFK las respeta siempre)</label>
+            <select id="salas_ignoradas" multiple>${d.voz.map(c => `<option value="${esc(c.id)}" ${a.salas_ignoradas.includes(c.id) ? 'selected' : ''}>${esc(c.nombre)}</option>`).join('')}</select>
+          </div>
+          <div class="bp-card"><h2>Ritmo y horario</h2>
+            <div class="bp-fila">
+              <div><label>Horas entre saludos a la misma persona</label><input id="saludo_horas" type="number" min="0.5" max="48" step="0.5" value="${a.saludo_horas}"></div>
+              <div><label>Minutos entre visitas sorpresa</label><input id="visita_min" type="number" min="20" max="1440" value="${a.visita_min}"></div>
+              <div><label>Sala «llena» desde</label><input id="sala_llena" type="number" min="3" max="50" value="${a.sala_llena}"></div>
+              <div><label>Horario: desde (0-23)</label><input id="horario_desde" type="number" min="0" max="23" value="${a.horario_desde}"></div>
+              <div><label>Horario: hasta (0-23)</label><input id="horario_hasta" type="number" min="0" max="23" value="${a.horario_hasta}"></div>
+            </div>
+          </div>
+          <div class="bp-guardar"><button class="bp-btn" id="guardar">Guardar cambios</button></div>`;
+        $('#guardar').onclick = async () => {
+          const val = id => $('#' + id).value;
+          const cuerpo = {
+            nivel: val('nivel'), grupo: val('grupo').trim(),
+            funciones: Object.fromEntries([...v.querySelectorAll('[data-f]')].map(c => [c.dataset.f, c.checked])),
+            canal_avisos: val('canal_avisos') || null, canal_moderacion: val('canal_moderacion') || null,
+            canal_cumples: val('canal_cumples') || null, rol_admin: val('rol_admin') || null,
+            salas_ignoradas: [...$('#salas_ignoradas').selectedOptions].map(o => o.value),
+            saludo_horas: +val('saludo_horas'), visita_min: +val('visita_min'), sala_llena: +val('sala_llena'),
+            horario_desde: +val('horario_desde'), horario_hasta: +val('horario_hasta'),
+          };
+          try { await api('PATCH', S('/ajustes'), cuerpo); aviso('Guardado. El bot ya lo está usando.'); } catch (e) {}
+        };
+      },
+
+      async personas(v) {
+        const lista = await api('GET', S('/personas'));
+        v.innerHTML = `<div class="bp-card"><h2>Personas</h2>
+          <p class="bp-vacio">Aparecen cuando entran a una sala de voz. Aquí les pones cómo se dice su nombre, su cumpleaños y si los saluda.</p>
+          ${lista.length ? `<ul class="bp-lista">${lista.map(p => `<li data-id="${esc(p.id)}">
+              <div class="t"><b>${esc(p.nombre)}</b><small>La voz dice «${esc(p.voz)}» · ${p.puyas} puyas · racha ${p.racha} días · última vez ${hace(p.ultima_vez)}</small></div>
+              <input class="apodo" placeholder="Cómo se dice (apodo)" maxlength="40" value="${esc(p.apodo || '')}" style="flex:0 1 210px">
+              <input class="cumple" placeholder="Cumple MM-DD" maxlength="5" value="${esc(p.cumple || '')}" style="flex:0 1 130px">
+              <label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" class="saludo" ${p.saludo_on ? 'checked' : ''} style="width:auto"> Saludar</label>
+              <button class="bp-btn sec peq oir">▶</button>
+              <button class="bp-btn peq guardar">Guardar</button></li>`).join('')}</ul>` : '<p class="bp-vacio">Todavía nadie.</p>'}</div>`;
+        v.querySelectorAll('li[data-id]').forEach(li => {
+          const id = li.dataset.id;
+          li.querySelector('.oir').onclick = e => escuchar(li.querySelector('.apodo').value.trim() || lista.find(p => p.id === id).voz, e.currentTarget);
+          li.querySelector('.guardar').onclick = async () => {
+            try {
+              await api('PATCH', S('/personas/' + id), { apodo: li.querySelector('.apodo').value.trim(), cumple: li.querySelector('.cumple').value.trim(),
+                                                         saludo_on: li.querySelector('.saludo').checked });
+              aviso('Guardado.');
+            } catch (e) {}
+          };
+        });
+      },
+
+      async puyas(v) {
+        const [pendientes, aprobadas, gente] = await Promise.all([api('GET', S('/puyas?estado=pendiente')), api('GET', S('/puyas')), api('GET', S('/personas'))]);
+        const fila = (p, pend) => `<li data-id="${p.id}"><div class="t">${esc(p.frase)}<small>Para ${esc(p.nombre || p.persona)}${p.origen === 'ia' ? ' · escrita por IA' : ''}${pend ? '' : ' · usada ' + p.usada}</small></div>
+            <button class="bp-btn sec peq oir">▶ Escuchar</button>
+            ${pend ? '<button class="bp-btn peq si">Aprobar</button><button class="bp-btn mal peq no">Rechazar</button>' : '<button class="bp-btn mal peq borrar">Borrar</button>'}</li>`;
+        v.innerHTML = `
+          ${pendientes.length ? `<div class="bp-card"><h2>Por aprobar</h2><ul class="bp-lista">${pendientes.map(p => fila(p, true)).join('')}</ul></div>` : ''}
+          <div class="bp-card"><h2>Nueva puya</h2>
+            <div class="bp-fila"><div style="flex:0 1 240px"><label>Para</label><select id="para">${gente.map(p => `<option value="${esc(p.id)}">${esc(p.nombre)}</option>`).join('')}</select></div>
+              <div style="flex:3 1 340px"><label>La puya (usa {n} donde va el nombre)</label><input id="texto" maxlength="200" placeholder="Llegó {n}, el que se queja del lag"></div></div>
+            <div class="bp-fila" style="margin-top:10px;justify-content:flex-end"><button class="bp-btn sec" id="probar" style="flex:0 0 auto">▶ Escuchar antes de guardar</button><button class="bp-btn" id="nueva" style="flex:0 0 auto">Guardar</button></div></div>
+          <div class="bp-card"><h2>Puyas (${aprobadas.length})</h2>${aprobadas.length ? `<ul class="bp-lista">${aprobadas.map(p => fila(p, false)).join('')}</ul>` : '<p class="bp-vacio">Todavía no hay.</p>'}</div>`;
+        const todas = [...pendientes, ...aprobadas];
+        const llenar = () => {
+          const p = gente.find(x => x.id === $('#para').value);
+          const t = $('#texto').value.trim();
+          return (t.includes('{n}') ? t : '{n}, ' + t).replaceAll('{n}', p ? p.voz : 'pana');
+        };
+        $('#probar').onclick = e => $('#texto').value.trim() && escuchar(llenar(), e.currentTarget);
+        $('#nueva').onclick = async () => {
+          if (!$('#texto').value.trim()) return;
+          try { await api('POST', S('/puyas'), { persona: $('#para').value, texto: $('#texto').value }); aviso('Puya guardada.'); VISTAS.puyas(v); } catch (e) {}
+        };
+        v.querySelectorAll('li[data-id]').forEach(li => {
+          const p = todas.find(x => String(x.id) === li.dataset.id);
+          li.querySelector('.oir').onclick = e => escuchar(p.frase, e.currentTarget);
+          const accion = async (metodo, cuerpo, msg) => { try { await api(metodo, S('/puyas/' + p.id), cuerpo); aviso(msg); VISTAS.puyas(v); } catch (e) {} };
+          li.querySelector('.si')?.addEventListener('click', () => accion('PATCH', { estado: 'aprobada' }, 'Aprobada.'));
+          li.querySelector('.no')?.addEventListener('click', () => accion('PATCH', { estado: 'rechazada' }, 'Rechazada.'));
+          li.querySelector('.borrar')?.addEventListener('click', () => accion('DELETE', null, 'Borrada.'));
+        });
+      },
+
+      async avisos(v) {
+        const lista = await api('GET', S('/avisos'));
+        const tipos = { nuevos: 'A los nuevos (su primera vez en voz)', entrar: 'Al entrar a una sala', hora: 'A una hora fija', cada: 'Cada X horas' };
+        v.innerHTML = `
+          <div class="bp-card"><h2>Nuevo aviso en voz</h2>
+            <label>Lo que va a decir (corto y como se dice: «barra play» en vez de «/play»)</label><textarea id="texto" maxlength="250"></textarea>
+            <div class="bp-fila"><div><label>Cuándo</label><select id="tipo">${Object.entries(tipos).map(([k, t]) => `<option value="${k}">${t}</option>`).join('')}</select></div>
+              <div><label>Hora (para «a una hora fija»)</label><input id="hora" type="time"></div>
+              <div><label>Cada cuántas horas (para «cada X» o «al entrar»)</label><input id="cada" type="number" min="1" max="168" placeholder="20"></div></div>
+            <div class="bp-fila" style="margin-top:10px;justify-content:flex-end"><button class="bp-btn sec" id="probar" style="flex:0 0 auto">▶ Escuchar</button><button class="bp-btn" id="crear" style="flex:0 0 auto">Crear aviso</button></div></div>
+          <div class="bp-card"><h2>Avisos (${lista.length})</h2>${lista.length ? `<ul class="bp-lista">${lista.map(a => `<li data-id="${a.id}"><div class="t">${esc(a.texto)}<small>${tipos[a.tipo]}${a.hora ? ' · ' + esc(a.hora) : ''}${a.cada_horas ? ' · cada ' + a.cada_horas + ' h' : ''}</small></div>
+              <button class="bp-btn sec peq oir">▶</button><button class="bp-btn mal peq borrar">Borrar</button></li>`).join('')}</ul>` : '<p class="bp-vacio">No hay avisos.</p>'}</div>`;
+        $('#probar').onclick = e => $('#texto').value.trim() && escuchar($('#texto').value.trim(), e.currentTarget);
+        $('#crear').onclick = async () => {
+          const cuerpo = { texto: $('#texto').value.trim(), tipo: $('#tipo').value, hora: $('#hora').value || null, cada_horas: +$('#cada').value || null };
+          try { await api('POST', S('/avisos'), cuerpo); aviso('Aviso creado y grabado.'); VISTAS.avisos(v); } catch (e) {}
+        };
+        v.querySelectorAll('li[data-id]').forEach(li => {
+          const a = lista.find(x => String(x.id) === li.dataset.id);
+          li.querySelector('.oir').onclick = e => escuchar(a.texto, e.currentTarget);
+          li.querySelector('.borrar').onclick = async () => { try { await api('DELETE', S('/avisos/' + a.id)); aviso('Borrado.'); VISTAS.avisos(v); } catch (e) {} };
+        });
+      },
+
+      async envivo(v) {
+        const lista = await api('GET', S('/envivo'));
+        v.innerHTML = `
+          <div class="bp-card"><h2>Streamers que anuncia en voz</h2>
+            <p class="bp-vacio">Cuando salen en vivo, el Bochinchero entra a la sala con más gente y lo dice. Una vez por stream, dentro del horario.</p>
+            <div class="bp-fila"><div><label>Cómo lo dice la voz</label><input id="nombre" maxlength="40" placeholder="Capitán Matojo"></div>
+              <div><label>Canal de YouTube</label><input id="youtube" placeholder="https://www.youtube.com/@CaptMatojo07"></div>
+              <div><label>Usuario de Twitch</label><input id="twitch" placeholder="captmatojo07"></div></div>
+            <div class="bp-fila" style="margin-top:10px;justify-content:flex-end"><button class="bp-btn" id="agregar" style="flex:0 0 auto">Agregar</button></div></div>
+          <div class="bp-card">${lista.length ? `<ul class="bp-lista">${lista.map(s => `<li data-id="${s.id}"><div class="t"><b>${esc(s.nombre)}</b>
+              <small>${s.youtube ? 'YouTube' : ''}${s.youtube && s.twitch ? ' · ' : ''}${s.twitch ? 'Twitch: ' + esc(s.twitch) : ''}${s.ultimo_ts ? ' · último aviso ' + hace(s.ultimo_ts) : ''}</small></div>
+              ${s.en_vivo ? '<span class="bp-tag vivo">● EN VIVO</span>' : '<span class="bp-tag">fuera de línea</span>'}
+              <button class="bp-btn mal peq borrar">Quitar</button></li>`).join('')}</ul>` : '<p class="bp-vacio">No hay streamers todavía.</p>'}</div>`;
+        $('#agregar').onclick = async () => {
+          const cuerpo = { nombre: $('#nombre').value.trim(), youtube: $('#youtube').value.trim() || null, twitch: $('#twitch').value.trim() || null };
+          try { await api('POST', S('/envivo'), cuerpo); aviso('Agregado.'); VISTAS.envivo(v); } catch (e) {}
+        };
+        v.querySelectorAll('li[data-id]').forEach(li => {
+          li.querySelector('.borrar').onclick = async () => { try { await api('DELETE', S('/envivo/' + li.dataset.id)); aviso('Quitado.'); VISTAS.envivo(v); } catch (e) {} };
+        });
+      },
+
+      async estadisticas(v) {
+        const e = await api('GET', S('/estadisticas?dias=30'));
+        const max = Math.max(1, ...e.por_hora);
+        const nombresDijo = { saludo: 'Saludos', grupo: 'Saludos al grupo', visita: 'Visitas', despedida: 'Despedidas', juego: 'Puyas por juego',
+                              hacks: '«Usa hacks»', solito: 'Al que estaba solo', decir: '/decir', aviso: 'Avisos', en_vivo: 'Streamers en vivo',
+                              evento: 'Eventos', cumple: 'Cumpleaños', puya: 'Puyas propias', prueba: 'Pruebas', nombre: 'Nombres' };
+        v.innerHTML = `
+          <div class="bp-grid">
+            <div class="bp-card"><h2>Los más pegaos (${e.dias} días)</h2>${e.top.length ? `<ul class="bp-lista">${e.top.map((p, i) => `<li><div class="t"><b>${i + 1}. ${esc(p.nombre)}</b></div><span>${horas(p.minutos)}</span></li>`).join('')}</ul>` : '<p class="bp-vacio">Sin datos todavía.</p>'}</div>
+            <div class="bp-card"><h2>Lo que ha dicho</h2>${Object.keys(e.dijo).length ? `<ul class="bp-lista">${Object.entries(e.dijo).sort((a, b) => b[1] - a[1]).map(([k, n]) => `<li><div class="t">${esc(nombresDijo[k] || k)}</div><b>${n}</b></li>`).join('')}</ul>` : '<p class="bp-vacio">Todavía nada.</p>'}</div>
+          </div>
+          <div class="bp-card"><h2>A qué hora entra la gente a voz</h2>
+            <div class="bp-barras">${e.por_hora.map(n => `<div style="height:${Math.round(n / max * 100)}%" title="${n}"></div>`).join('')}</div>
+            <div class="bp-horas">${e.por_hora.map((_, h) => `<span>${h}</span>`).join('')}</div></div>`;
+      },
+    };
+
+    (async () => {
+      if (!token()) return pintarEntrar();
+      try { st.yo = await api('GET', '/yo'); pintarApp(); } catch (e) {}
+    })();
+  })();
+  </script>
+</SiteShell>
