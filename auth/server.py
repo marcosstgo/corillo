@@ -3,7 +3,7 @@ corillo-auth — servicio minimalista de autenticación RTMP para MediaMTX.
 Solo hace una cosa: validar stream keys contra PocketBase.
 Puerto 3002. Sin dependencias del bot de chat.
 """
-import os, time
+import hmac, os, re, time
 from urllib.parse import parse_qs
 import httpx
 from dotenv import load_dotenv
@@ -25,6 +25,10 @@ PB_TOKEN_TTL = 86400  # 24h
 
 _key_cache: dict = {}  # canal → {"stream_key": str, "ts": float}
 KEY_CACHE_TTL = 60     # segundos
+
+CANAL_RE   = re.compile(r"^[a-z0-9][a-z0-9_-]{0,39}$")   # nombre de canal válido (y seguro para el filtro de PocketBase)
+INTERNA_RE = re.compile(r"^live/[a-z0-9_-]+_(low|rtc)$")  # variantes que genera el propio server (720p y WebRTC)
+LOCAL      = ("127.0.0.1", "::1")
 
 
 @app.on_event("startup")
@@ -55,7 +59,7 @@ async def _validate(channel: str, secret: str) -> bool:
     now = time.time()
     cached = _key_cache.get(channel)
     if cached and now - cached["ts"] < KEY_CACHE_TTL:
-        return cached["stream_key"] == secret
+        return hmac.compare_digest(cached["stream_key"], secret)
     try:
         token = await _admin_token()
         r = await _http.get(
@@ -68,7 +72,7 @@ async def _validate(channel: str, secret: str) -> bool:
             return False
         sk = items[0].get("stream_key", "")
         _key_cache[channel] = {"stream_key": sk, "ts": now}
-        return sk == secret
+        return bool(sk) and hmac.compare_digest(sk, secret)
     except Exception:
         return False
 
@@ -95,6 +99,12 @@ async def mtx_auth(request: Request):
             return Response(status_code=200)
         return Response(status_code=401)
 
+    # Publish de las variantes _low/_rtc: solo los ffmpeg del propio corillo-server (31-oct-2026).
+    # Antes mediamtx las excluía de la auth y cualquiera en internet podía publicar ahí y reemplazar
+    # el 720p o el WebRTC de un canal (overridePublisher: yes).
+    if action == "publish" and INTERNA_RE.match(path):
+        return Response(status_code=200 if ip in LOCAL else 401)
+
     # Publish — validar stream key
     if action == "publish":
         params  = parse_qs(query.lstrip("?"))
@@ -102,6 +112,8 @@ async def mtx_auth(request: Request):
         if not secret:
             return Response(status_code=401)
         channel = path.removeprefix("live/").split("?")[0]
+        if not CANAL_RE.match(channel):
+            return Response(status_code=401)
         valid   = await _validate(channel, secret)
         return Response(status_code=200 if valid else 401)
 
