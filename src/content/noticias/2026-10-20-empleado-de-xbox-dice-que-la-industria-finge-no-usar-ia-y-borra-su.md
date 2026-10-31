@@ -23,6 +23,8 @@ sources:
     url: "https://www.ign.com/articles/steam-fans-are-begging-for-a-no-ai-filter-as-steam-next-fest-is-filled-with-slop"
   - name: "Eurogamer"
     url: "https://www.eurogamer.net/steam-next-fest-2026-over-double"
+image: "/noticias/portadas/2026-10-20-empleado-de-xbox-dice-que-la-industria-finge-no-usar-ia-y-borra-su.jpg"
+imageCredit: "Portada de Corillo"
 ---
 
 Brandon Stirrup, senior business strategy manager de Xbox, encendió la conversación sobre IA en la industria de los videojuegos con una serie de publicaciones en X que comenzaron el 18 de octubre. Stirrup afirmó que usó IA para crear un 'little bad game' con aproximadamente tres horas de trabajo activo, y a partir de ahí lanzó una crítica directa: "gaming is the only industry pretending not to use AI".

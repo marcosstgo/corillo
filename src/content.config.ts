@@ -21,6 +21,9 @@ const noticias = defineCollection({
     // — línea editorial (opcionales: las notas viejas no los tienen) —
     category: z.enum(['gaming', 'tech', 'streaming', 'geek', 'pr', 'corillo']).optional(),
     tags: z.array(z.string()).optional(),
+    game: z.string().optional(),        // juego del que trata la nota (para buscar su arte oficial)
+    image: z.string().optional(),       // portada 16:9 (scripts/news_cover.py): /noticias/portadas/<slug>.jpg
+    imageCredit: z.string().optional(), // "Arte oficial: X (Steam)", "Ilustración generada para Corillo" o "Portada de Corillo"
     sources: z.array(z.object({ name: z.string(), url: z.string().url() })).optional(),
     ai: z.boolean().optional(),   // redactada con apoyo de IA a partir de las fuentes citadas (se avisa al lector)
   }),

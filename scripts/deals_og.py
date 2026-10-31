@@ -7,14 +7,14 @@ import io, textwrap
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-FONTS = Path.home() / 'corillo-deals' / 'fonts'
+FONTS = Path(__file__).resolve().parent / 'fonts'  # en el repo (OFL); antes ~/corillo-deals/fonts, que murió con el disco
 W, H = 1200, 630
 INK, BONE, MUTE, MAG, ORANGE = (6, 20, 63), (245, 248, 255), (164, 182, 230), (255, 210, 63), (255, 106, 61)
 
 
 def _font(name, size, weight):
     f = ImageFont.truetype(str(FONTS / name), size)
-    try: f.set_variation_by_axes([size, weight] if name == 'bricolage.ttf' else [weight])
+    try: f.set_variation_by_axes([min(size, 96), weight, 100] if name == 'bricolage.ttf' else [min(size, 40), weight])  # ejes: opsz, wght[, wdth]
     except Exception: pass
     return f
 

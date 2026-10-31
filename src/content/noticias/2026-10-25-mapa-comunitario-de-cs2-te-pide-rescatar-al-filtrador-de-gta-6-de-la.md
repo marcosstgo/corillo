@@ -13,10 +13,13 @@ heroSub: "La cultura gamer se cruza con el fenómeno GTA 6 en un mapa que ya es 
 summary: "Un nuevo mapa de Counter-Strike 2 recrea la mansión de Rockstar y pide rescatar a Cyberleek, el filtrador de GTA 6. La comunidad lo celebra con más de 45,000 suscriptores."
 category: "gaming"
 tags: ["CS2", "GTA6", "Cyberleek", "Steam Workshop", "mapa comunitario"]
+game: "Counter-Strike 2"
 ai: true
 sources:
   - name: "Dexerto"
     url: "https://www.dexerto.com/counter-strike-2/gta-6-inspired-cs2-map-makes-you-save-leaker-cyberleek-from-rockstar-mansion-3421409/"
+image: "/noticias/portadas/2026-10-25-mapa-comunitario-de-cs2-te-pide-rescatar-al-filtrador-de-gta-6-de-la.jpg"
+imageCredit: "Arte oficial: Counter-Strike 2 (Steam)"
 ---
 
 La comunidad de Counter-Strike 2 tiene un nuevo mapa que mezcla la acción táctica con la polémica en torno a GTA 6. Se llama The Vice Heist y su premisa es directa: rescatar a Cyberleek, el filtrador anónimo que ha estado publicando supuesto gameplay de GTA 6 desde agosto de 2026, de una mansión que supuestamente pertenece a Rockstar Games.

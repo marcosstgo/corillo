@@ -23,6 +23,8 @@ sources:
     url: "https://www.pcgamer.com/games/grand-theft-auto/rockstar-will-hold-union-vote-right-on-top-of-grand-theft-auto-6-release/"
   - name: "Eurogamer"
     url: "https://www.eurogamer.net/rockstar-union-vote-november"
+image: "/noticias/portadas/2026-10-28-trabajadores-de-rockstar-votaran-sobre-sindicato-durante-el.jpg"
+imageCredit: "Portada de Corillo"
 ---
 
 Los trabajadores de Rockstar Games en Reino Unido tendrán la oportunidad de decidir si reconocen formalmente a un sindicato, justo cuando el estudio lanza Grand Theft Auto 6. La votación, organizada por el sindicato IWGB Rockstar Game Workers Union, se llevará a cabo del 12 al 26 de noviembre, fechas que enmarcan el lanzamiento del juego el 19 de noviembre.

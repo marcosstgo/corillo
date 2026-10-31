@@ -13,6 +13,7 @@ heroSub: "El estudio detrás de Dragon Age y Mass Effect cierra sus puertas tras
 summary: "EA cierra BioWare y cancela Mass Effect 5. La decisión afecta a unas 400 personas, incluidas 50 en BioWare, y llega tras la adquisición de EA por $55,000 millones."
 category: "gaming"
 tags: ["BioWare", "Mass Effect", "EA", "despidos", "industria"]
+game: "Mass Effect Legendary Edition"
 ai: true
 sources:
   - name: "El Nuevo Día"
@@ -23,6 +24,8 @@ sources:
     url: "https://www.gamespot.com/articles/ea-shuts-down-dragon-age-mass-effect-studio-bioware/"
   - name: "IGN"
     url: "https://www.ign.com/articles/we-were-working-on-a-great-game-former-mass-effect-5-writers-speak-out-after-ea-shuts-down-bioware"
+image: "/noticias/portadas/2026-10-22-ea-cierra-bioware-y-cancela-el-proximo-mass-effect.jpg"
+imageCredit: "Arte oficial: Mass Effect™ Legendary Edition (Steam)"
 ---
 
 Electronic Arts (EA) cerrará BioWare, el estudio responsable de sagas como Mass Effect, Dragon Age y Baldur's Gate. La noticia fue confirmada por el propio estudio en redes sociales y por EA en una carta abierta publicada el 21 de octubre de 2026. El próximo juego de Mass Effect, que estaba en desarrollo temprano, ha sido cancelado.

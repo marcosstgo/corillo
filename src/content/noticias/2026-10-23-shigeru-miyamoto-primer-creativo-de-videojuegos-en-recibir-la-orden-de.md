@@ -19,6 +19,8 @@ sources:
     url: "https://www.dexerto.com/gaming/nintendos-shigeru-miyamoto-makes-gaming-history-with-japanese-government-honor-3421197/"
   - name: "Hobby Consolas"
     url: "https://www.hobbyconsolas.com/videojuegos/shigeru-miyamoto-recibe-galardon-mas-prestigioso-japon-orden-cultura-este-premio-es-resultado-haber-creado-juegos-junto-con-mucha-gente_7052421_0.html"
+image: "/noticias/portadas/2026-10-23-shigeru-miyamoto-primer-creativo-de-videojuegos-en-recibir-la-orden-de.jpg"
+imageCredit: "Portada de Corillo"
 ---
 
 Shigeru Miyamoto, el creador de Mario y una de las figuras más influyentes de los videojuegos, ha sido seleccionado para recibir la Orden de la Cultura de Japón. Es la primera persona de la industria del gaming en obtener este honor, que reconoce contribuciones excepcionales a las artes y las ciencias.

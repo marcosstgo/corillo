@@ -23,6 +23,8 @@ sources:
     url: "https://www.ign.com/articles/xbox-game-pass-reportedly-getting-major-overhaul-will-feature-la-carte-options"
   - name: "Eurogamer"
     url: "https://www.eurogamer.net/microsoft-next-gen-xbox-helix-date-price"
+image: "/noticias/portadas/2026-10-21-sony-ceo-la-creatividad-es-humana-no-de-ia-xbox-prepara-consola-de.jpg"
+imageCredit: "Portada de Corillo"
 ---
 
 En el Paley International Summit, Hiroki Totoki, presidente y CEO de Sony Group, habló sobre el futuro de los videojuegos y el papel de la inteligencia artificial. Totoki expresó que la creatividad es una cualidad humana y que las tecnologías de IA no reemplazarán a las personas en el desarrollo de juegos. "Creativity is for humans, not AI", dijo, según reportó IGN. En el mismo evento, Strauss Zelnick, jefe de Take-Two, también comentó sobre el futuro del gaming.

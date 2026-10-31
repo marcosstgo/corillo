@@ -219,12 +219,13 @@ Reglas estrictas:
 - Longitud del cuerpo: 350-550 palabras. Markdown: párrafos, 2-3 subtítulos ## como máximo, sin H1, sin listas de relleno, sin emoji.
 - Título informativo (máx. 90 caracteres), sin clickbait ni mayúsculas gritonas. No menciones que eres una IA en el texto (el sitio ya lo avisa).
 - El extracto (description) máx. 160 caracteres. summary: 1-2 frases para la tarjeta. heroSub: una frase de apoyo.
+- game: nombre oficial exacto del videojuego del que trata la nota tal como aparece en su tienda (ej. "Counter-Strike 2", "Mass Effect Legendary Edition"); cadena vacía si la nota no es sobre un juego concreto (empresas, consolas, personas, industria). Se usa para buscar su arte oficial.
 - tags: 3-5 etiquetas cortas. sources_used: índices (empezando en 0) de las fuentes de las que realmente sacaste datos.
 - Te doy una HOJA DE HECHOS VERIFICADOS: escribe SOLO con esos hechos. No conectes hechos entre sí con causas, motivos o consecuencias que la hoja no diga, y no afirmes nada de la lista NO ESTABLECIDO.
 - Si te dan 'problemas' de un intento anterior, corrígelos todos (quita o reformula la frase problemática; nunca la reemplaces por otra sin respaldo)."""
 WRITE_SCHEMA = {'type': 'object', 'additionalProperties': False,
-    'required': ['title', 'description', 'summary', 'heroSub', 'body', 'category', 'tags', 'sources_used'],
-    'properties': {k: {'type': 'string'} for k in ('title', 'description', 'summary', 'heroSub', 'body')} | {
+    'required': ['title', 'description', 'summary', 'heroSub', 'body', 'category', 'tags', 'game', 'sources_used'],
+    'properties': {k: {'type': 'string'} for k in ('title', 'description', 'summary', 'heroSub', 'body', 'game')} | {
         'category': {'type': 'string', 'enum': list(CATS)},
         'tags': {'type': 'array', 'items': {'type': 'string'}},
         'sources_used': {'type': 'array', 'items': {'type': 'integer'}}}}
@@ -317,7 +318,7 @@ def build_md(a, srcs, now):
           f"ogTitle: {yq(a['title'])}", f"ogDescription: {yq(a['description'])}", f'badgeClass: "{badge}"', f'badgeIcon: "{icon}"',
           f'badgeLabel: {yq(label)}', f'date: "{now.day} {MESES[now.month - 1]} {now.year}"', f'pubDate: {now:%Y-%m-%dT%H:%M:%SZ}',
           f"heroTitle: {yq(a['title'])}", f"heroSub: {yq(a['heroSub'])}", f"summary: {yq(a['summary'])}", f'category: "{cat}"',
-          f"tags: {json.dumps(a['tags'][:5], ensure_ascii=False)}", 'ai: true', 'sources:']
+          f"tags: {json.dumps(a['tags'][:5], ensure_ascii=False)}", f"game: {yq(a.get('game', ''))}", 'ai: true', 'sources:']
     for s in used: fm += [f"  - name: {yq(s['source'])}", f"    url: {yq(s['url'])}"]
     fm.append('---')
     return '\n'.join(fm) + '\n\n' + a['body'].strip() + '\n'
@@ -562,10 +563,16 @@ def main():
             if not a.dry_run: telegram('⚠️ Noticias: hoy NO se publicó ninguna nota (el verificador rechazó todos los borradores). Detalle en ~/corillo-news/logs/daily.log')
         save_state(st) if not a.dry_run else None; return
     save_state(st)
+    try:  # portada de cada nota: arte oficial del juego (Steam) → ilustración IA → portada de diseño (scripts/news_cover.py)
+        import news_cover
+        for f in made: log('portada:', news_cover.portada(POSTS / f))
+    except Exception as e:
+        log('portada falló (la nota sale sin imagen):', type(e).__name__, e)
     if not deploy():
         for f in made: (POSTS / f).unlink(missing_ok=True)
         telegram('❌ Noticias: el build falló con la nota nueva; se retiró y el sitio quedó como estaba.'); sys.exit(1)
-    git_publish([POSTS / f for f in made], 'noticias: ' + ', '.join(m[11:-3] for m in made)[:100])
+    portadas = [p for p in (REPO / 'public' / 'noticias' / 'portadas' / (f[:-3] + '.jpg') for f in made) if p.exists()]
+    git_publish([POSTS / f for f in made] + portadas, 'noticias: ' + ', '.join(m[11:-3] for m in made)[:100])
     for f in made:
         t = re.search(r'^heroTitle: "(.*)"', (POSTS / f).read_text(), re.M).group(1)
         telegram(f"📰 Nota publicada en CORILLO:\n{t}\nhttps://corillo.live/noticias/{f[:-3]}/\n\nRetirar: daily-news.py --unpublish {f[:-3]}")

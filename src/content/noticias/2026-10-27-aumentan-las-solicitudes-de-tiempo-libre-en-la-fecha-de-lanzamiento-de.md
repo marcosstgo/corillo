@@ -23,6 +23,8 @@ sources:
     url: "https://www.dexerto.com/gta/gta-6-fans-are-reselling-rare-merch-for-crazy-amounts-of-money-3421830/"
   - name: "3DJuegos"
     url: "https://www.3djuegos.com/juegos/grand-theft-auto-vi/noticias/a-supuesta-actriz-gta-6-le-han-hecho-parecido-a-interrogatorio-policial-instagram-ella-solo-queria-hablar-su-vida"
+image: "/noticias/portadas/2026-10-27-aumentan-las-solicitudes-de-tiempo-libre-en-la-fecha-de-lanzamiento-de.jpg"
+imageCredit: "Portada de Corillo"
 ---
 
 Un nuevo informe de BambooHR, citado por IGN, revela un aumento de entre el 9% y el 17% en las solicitudes de tiempo libre para el 19 de noviembre, en comparación con las solicitudes normales para el tercer jueves de noviembre. Ese día es la fecha de lanzamiento de GTA 6 para PS5 y Xbox Series X|S.
