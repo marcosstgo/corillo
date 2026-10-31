@@ -44,6 +44,9 @@ const counts = Object.fromEntries(CATEGORIES.map(c => [c.id, posts.filter(p => c
       .nw-card p{margin:0;color:var(--h2-mute);font:500 .98rem/1.55 var(--h2-body);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
       .nw-tags{display:flex;gap:6px;flex-wrap:wrap}
       .nw-tags span{padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 8%,transparent);color:var(--h2-mute);font:700 .74rem var(--h2-body)}
+      /* Portadas de las notas (scripts/news_cover.py) */
+      .nw-img{display:block;width:calc(100% + 48px);max-width:none;height:auto;aspect-ratio:16/9;object-fit:cover;margin:-24px -24px 4px;border-radius:30px 30px 0 0}
+      .nw-img-lead{width:100%;margin:0 0 6px;border-radius:24px}
       .nw-empty{padding:60px 0;color:var(--h2-mute);font:500 1.1rem var(--h2-body)}
       .nw-dc{--tc:#8b95ff;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:44px;padding:26px 30px;border-radius:30px;background:radial-gradient(80% 140% at 0% 0%,rgba(88,101,242,.4),transparent 70%),color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
       .nw-dc b{display:block;font:800 1.4rem var(--h2-display);letter-spacing:-.03em}
@@ -67,6 +70,7 @@ const counts = Object.fromEntries(CATEGORIES.map(c => [c.id, posts.filter(p => c
     </div>
 
     <a class="nw-lead" id="nwLead" data-cat={leadCat.id} href={`/noticias/${lead.id}/`} style={`--tc:${leadCat.color}`}>
+      {lead.data.image && <img class="nw-img nw-img-lead" src={lead.data.image} alt="" width="1600" height="900" fetchpriority="high" />}
       <div class="nw-meta"><span class="nw-cat"><i class={`fa-solid ${leadCat.icon}`} aria-hidden="true"></i>{leadCat.label}</span><span>{lead.data.date}</span><span>·</span><span>{readMinutes(lead.body)} min</span></div>
       <h2>{lead.data.cardTitle || lead.data.heroTitle}</h2>
       <p>{lead.data.summary}</p>
@@ -78,6 +82,7 @@ const counts = Object.fromEntries(CATEGORIES.map(c => [c.id, posts.filter(p => c
         const c = catOf(post.data);
         return (
           <a class="nw-card" data-cat={c.id} href={`/noticias/${post.id}/`} style={`--tc:${c.color}`}>
+            {post.data.image && <img class="nw-img" src={post.data.image} alt="" width="1600" height="900" loading="lazy" decoding="async" />}
             <div class="nw-meta"><span class="nw-cat"><i class={`fa-solid ${c.icon}`} aria-hidden="true"></i>{c.label}</span><span>{post.data.date}</span></div>
             <h2>{post.data.cardTitle || post.data.heroTitle}</h2>
             <p>{post.data.summary}</p>
