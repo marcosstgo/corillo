@@ -9,8 +9,6 @@ for (const e of fs.readdirSync('dist', { withFileTypes: true })) {
   if (e.name.startsWith('_routes') || e.name === '404.html' || PASAN.has(e.name)) continue;
   exclude.push(e.isDirectory() ? `/${e.name}/*` : `/${e.name}`);
 }
-// Sin barra final, /overlay caería en la función como si fuera el canal "overlay": se sirve directo y Pages redirige a /overlay/.
-if (fs.existsSync('dist/overlay')) exclude.push('/overlay', '/overlay/bf6', '/overlay/wardogs');
 exclude.push('/');
 if (exclude.length > 99) throw new Error(`_routes.json: ${exclude.length} reglas, Cloudflare acepta 100`);
 // Sin dist/404.html, Pages responde la portada (modo SPA) a cualquier ruta desconocida y la función nunca ve el 404.
