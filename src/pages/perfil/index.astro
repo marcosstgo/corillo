@@ -1576,7 +1576,7 @@ async function loadMyVods(channel) {
     if (!items.length) { empty.style.display = ''; return; }
 
     list.innerHTML = items.map(v => {
-      const vidSrc = v.filename ? `/vods/${channel}/${v.filename}` : '';
+      const vidSrc = v.filename ? `https://media.corillo.live/vods/${channel}/${v.filename}` : '';
       return `
       <div>
         <div class="vod-row" id="vrow-${v.id}">
@@ -2179,7 +2179,7 @@ async function deleteVod(id) {
   const btn = document.querySelector(`#vrow-${id} .vod-row-del`);
   if (btn) btn.classList.add('loading');
   try {
-    const res = await fetch(`https://api.corillo.live/api/vod/${id}`, {
+    const res = await fetch(`https://media.corillo.live/api/vod/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': pb.authStore.token },
     });
@@ -2792,7 +2792,7 @@ async function pollVodPendientes() {
   const box = document.getElementById('vodPendientes');
   let jobs = [];
   try {
-    const r = await fetch('https://api.corillo.live/api/upload-vod/pendientes', { headers: { Authorization: pb.authStore.token } });
+    const r = await fetch('https://media.corillo.live/api/upload-vod/pendientes', { headers: { Authorization: pb.authStore.token } });
     if (r.ok) jobs = (await r.json()).jobs || [];
   } catch {}
   let recargar = false;
@@ -2903,7 +2903,7 @@ function initVodUpload() {
     try {
       await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'https://api.corillo.live/api/upload-vod');
+        xhr.open('POST', 'https://media.corillo.live/api/upload-vod');
         xhr.setRequestHeader('Authorization', pb.authStore.token);
 
         xhr.upload.addEventListener('progress', e => {
