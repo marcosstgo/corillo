@@ -176,7 +176,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       const viewers = viewersMap[s.key] || 0;
       return `<a class="sr-live" href="/${s.key}/">
         <div class="sr-live-thumb" style="background:${s.color || '#1e3a4a'}">
-          <img src="/assets/thumbs/${s.key}.jpg?t=${thumbTick}" onerror="this.style.display='none'" alt="">
+          <img src="https://media.corillo.live/assets/thumbs/${s.key}.jpg?t=${thumbTick}" onerror="this.style.display='none'" alt="">
           <span class="sr-chip live">En vivo</span>
           <span class="sr-chip n">${viewers} viendo</span>
         </div>
@@ -189,7 +189,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   /* ── Poll ── */
   async function poll() {
     try {
-      const res   = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(5000) });
+      const res   = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(5000) });
       // Variantes derivadas (_low 720p ABR, _rtc WebRTC) no son streamers.
       const items = ((await res.json()).items || []).filter(p => !/_(low|rtc)$/.test(p.name));
       liveSet     = new Set(items.filter(p => p.ready).map(p => p.name.replace('live/', '')));
@@ -262,7 +262,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   /* ── Init ── */
   async function init() {
     try {
-      const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
+      const r = await fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(5000) });
       streamers = r.ok ? await r.json() : (window.STREAMERS || []).filter(s => s.key && !s.soon);
     } catch {
       streamers = (window.STREAMERS || []).filter(s => s.key && !s.soon);

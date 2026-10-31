@@ -110,8 +110,8 @@ async function loadAll() {
   try {
     const [rr, sr, pr] = await Promise.allSettled([
       fetch(`${PB}/api/collections/reels/records?filter=${encodeURIComponent('public=true')}&sort=-date&perPage=100`, { signal: AbortSignal.timeout(8000) }).then(r => r.json()),
-      fetch('/api/streamers', { signal: AbortSignal.timeout(5000) }).then(r => r.json()),
-      fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) }).then(r => r.json()),
+      fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(5000) }).then(r => r.json()),
+      fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) }).then(r => r.json()),
     ]);
     if (rr.status !== 'fulfilled') throw new Error('reels');
     reels = rr.value.items || [];
@@ -185,11 +185,11 @@ function reelHTML(r: any, i: number) {
 }
 function liveHTML(l: any, i: number) {
   const s = people[l.key] || {};
-  const bg = `background-image:url('/assets/thumbs/${esc(l.key)}.jpg?t=${Math.floor(Date.now() / 60000)}')`;
+  const bg = `background-image:url('https://media.corillo.live/assets/thumbs/${esc(l.key)}.jpg?t=${Math.floor(Date.now() / 60000)}')`;
   return `<article class="rl-item rl-live" data-i="${i}" data-live="${esc(l.key)}" aria-label="${esc(nameOf(l.key))} está en vivo">
     <div class="rl-ambient" style="${bg}"></div>
     <div class="rl-stage rl-shimmer">
-      <img class="rl-poster" src="/assets/thumbs/${esc(l.key)}.jpg?t=${Math.floor(Date.now() / 60000)}" alt="" decoding="async" onload="this.classList.add('ok')" onerror="this.remove()">
+      <img class="rl-poster" src="https://media.corillo.live/assets/thumbs/${esc(l.key)}.jpg?t=${Math.floor(Date.now() / 60000)}" alt="" decoding="async" onload="this.classList.add('ok')" onerror="this.remove()">
       <div class="rl-shade"></div>
       <span class="rl-live-pill">EN VIVO</span>
       <span class="rl-viewers"><i class="fa-solid fa-eye" aria-hidden="true"></i> ${l.viewers}</span>

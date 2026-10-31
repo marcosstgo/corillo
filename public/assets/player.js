@@ -17,7 +17,7 @@ if (!__validFormat) {
   location.replace('/_404/');
 } else if (!__inStaticList) {
   // Canal no en la lista estática — verificar via API (streamers nuevos en PocketBase)
-  fetch('/api/profile/' + encodeURIComponent(__rawChannel), { signal: AbortSignal.timeout(5000) })
+  fetch('https://api.corillo.live/api/profile/' + encodeURIComponent(__rawChannel), { signal: AbortSignal.timeout(5000) })
     .then(r => { if (!r.ok) location.replace('/_404/'); })
     .catch(() => {});
 }
@@ -201,7 +201,7 @@ window.channel = __validFormat ? __rawChannel : '';
 
   async function pollViewers() {
     try {
-      const r = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+      const r = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
       if (!r.ok) return;
       const j = await r.json();
       const path = (j.items || []).find(p => p.name === `live/${App.channel}`);
@@ -498,7 +498,7 @@ window.channel = __validFormat ? __rawChannel : '';
 
     App.watchTimer = setInterval(async () => {
       try {
-        const r    = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
+        const r    = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
         const data = await r.json();
         const live = (data.items || []).find(p => p.name === 'live/' + App.channel && p.ready);
         if (live) { stopWatch(); App.retries = 0; startPlayer(); }
@@ -717,7 +717,7 @@ window.channel = __validFormat ? __rawChannel : '';
         new Promise(resolve => setTimeout(resolve, 4000)),
       ]);
 
-      const whepUrl = '/webrtc/live/' + encodeURIComponent(App.channel) + '_rtc/whep';
+      const whepUrl = 'https://media.corillo.live/webrtc/live/' + encodeURIComponent(App.channel) + '_rtc/whep';
       const resp = await fetch(whepUrl, { method: 'POST', headers: { 'Content-Type': 'application/sdp' }, body: pc.localDescription.sdp, signal: AbortSignal.timeout(10000) });
       if (!resp.ok) throw new Error('WHEP response not OK');
       await pc.setRemoteDescription({ type: 'answer', sdp: await resp.text() });
@@ -807,7 +807,7 @@ window.channel = __validFormat ? __rawChannel : '';
     // Skips 4 retry cycles (~8s) when channel is known offline.
     if (App.retries === 0) {
       try {
-        const r     = await fetch('/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
+        const r     = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(3000) });
         const data  = await r.json();
         if (seq !== App.startSeq) return;
         const items = data.items || [];
@@ -834,12 +834,12 @@ window.channel = __validFormat ? __rawChannel : '';
 
     let url;
     if (useHlsJs && App.mode !== 'vertical' && App.quality === 'auto' && App.lowReady) {
-      url = '/live/' + encodeURIComponent(basePath) + '/master.m3u8';
+      url = 'https://media.corillo.live/live/' + encodeURIComponent(basePath) + '/master.m3u8';
     } else {
       // Nativo en auto: 720p en pantallas pequeñas, 1080p en el resto (una sola variante, sin cambios).
       const smallScreen = window.matchMedia('(max-width: 768px)').matches;
       const wantLow = App.quality === 'low' || (App.quality === 'auto' && App.lowReady && !useHlsJs && smallScreen);
-      url = '/live/' + encodeURIComponent(wantLow ? basePath + '_low' : basePath) + '/index.m3u8';
+      url = 'https://media.corillo.live/live/' + encodeURIComponent(wantLow ? basePath + '_low' : basePath) + '/index.m3u8';
     }
     DOM.hlsTxt.textContent = qualityBadge(0);
     showOverlay('Cargando', 'Iniciando stream…');
@@ -895,7 +895,7 @@ window.channel = __validFormat ? __rawChannel : '';
 
   function loadProfile() {
     initChannelUI();
-    fetch('/api/profile/' + App.channel, { signal: AbortSignal.timeout(5000) })
+    fetch('https://api.corillo.live/api/profile/' + App.channel, { signal: AbortSignal.timeout(5000) })
       .then(r => r.ok ? r.json() : null)
       .then(data => {
         if (!data) return;
@@ -952,7 +952,7 @@ window.channel = __validFormat ? __rawChannel : '';
     const sec  = DOM.otherLiveSection;
     const list = DOM.otherLiveList;
     if (!sec || !list) return;
-    fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(5000) })
+    fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(5000) })
       .then(r => r.ok ? r.json() : null)
       .then(j => {
         if (!j) return;
@@ -994,7 +994,7 @@ window.channel = __validFormat ? __rawChannel : '';
 
     // Meta tags
     const chUpper  = App.channel.toUpperCase();
-    const thumbUrl = 'https://corillo.live/assets/thumbs/' + App.channel + '.jpg';
+    const thumbUrl = 'https://media.corillo.live/assets/thumbs/' + App.channel + '.jpg';
     const pageUrl  = 'https://corillo.live/' + App.channel + '/';
     const desc     = 'Stream en vivo de ' + chUpper + ' en CORILLO — plataforma independiente desde Puerto Rico.';
     document.title = 'CORILLO — ' + chUpper;
@@ -1015,7 +1015,7 @@ window.channel = __validFormat ? __rawChannel : '';
       App.thumbReady = true;
       if (DOM.overlay.classList.contains('show')) App.offlineThumb.classList.add('visible');
     };
-    App.offlineThumb.src = '/assets/thumbs/' + App.channel + '.jpg';
+    App.offlineThumb.src = 'https://media.corillo.live/assets/thumbs/' + App.channel + '.jpg';
     DOM.playerWrap.insertBefore(App.offlineThumb, DOM.playerWrap.firstChild);
 
     // Kick banner
@@ -1202,7 +1202,7 @@ window.channel = __validFormat ? __rawChannel : '';
         clipBtn.disabled = true;
         clipBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando…';
         try {
-          const r = await fetch(`/api/clip/${App.channel}`, { signal: AbortSignal.timeout(30000) });
+          const r = await fetch(`https://api.corillo.live/api/clip/${App.channel}`, { signal: AbortSignal.timeout(30000) });
           if (!r.ok) throw new Error(r.status);
           const blob = await r.blob();
           const a = document.createElement('a');

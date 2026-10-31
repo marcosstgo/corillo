@@ -35,7 +35,7 @@
       var s = leer(), h = opts.headers || {};
       if (s) h.Authorization = s.token;
       if (opts.json !== undefined) { h['Content-Type'] = 'application/json'; opts.body = JSON.stringify(opts.json); }
-      return fetch('/api/mercado' + ruta, { method: opts.method || 'GET', headers: h, body: opts.body })
+      return fetch('https://api.corillo.live/api/mercado' + ruta, { method: opts.method || 'GET', headers: h, body: opts.body })
         .then(function (r) {
           if (r.status === 401) window.MkCuenta.salir();
           if (r.status === 204) return { ok: true, status: 204, j: {} };

@@ -371,7 +371,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   <div class="poll-bar"><div class="poll-progress" id="pollBar"></div></div>
 
   <script>
-const API            = '/mediamtx-api/v3/paths/list';
+const API            = 'https://media.corillo.live/mediamtx-api/v3/paths/list';
 const POLL_MS        = 15000;
 const CACHE_MS       = 8000;
 const API_TIMEOUT_MS = 5000;
@@ -413,7 +413,7 @@ function destroyHls(key: string) {
 }
 
 function playVideoHLS(video: HTMLVideoElement, key: string) {
-  const url = `/live/${encodeURIComponent(key)}/index.m3u8`;
+  const url = `https://media.corillo.live/live/${encodeURIComponent(key)}/index.m3u8`;
   if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = url; video.play().catch(() => {}); return;
   }
@@ -434,7 +434,7 @@ function playVideoHLS(video: HTMLVideoElement, key: string) {
 }
 
 async function playVideoWebRTC(video: HTMLVideoElement, key: string) {
-  const whepUrl = `/webrtc/live/${encodeURIComponent(key)}_rtc/whep`;
+  const whepUrl = `https://media.corillo.live/webrtc/live/${encodeURIComponent(key)}_rtc/whep`;
   const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
   pcMap[key] = pc;
   pc.addTransceiver('video', { direction: 'recvonly' });
@@ -769,7 +769,7 @@ document.addEventListener('visibilitychange', () => {
 
 // Cargar roster desde API antes del primer poll
 let streamerList: any[] = (window as any).STREAMERS?.filter((s: any) => s.key && !s.soon) || [];
-fetch('/api/streamers', { signal: AbortSignal.timeout(5000) })
+fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(5000) })
   .then(r => r.ok ? r.json() : null)
   .then(data => { if (data) streamerList = data; })
   .catch(() => {})

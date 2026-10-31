@@ -931,7 +931,7 @@ import { version } from '../../../version.json';
       <div class="key-hero">
         <div class="key-label">Servidor RTMP</div>
         <div class="key-value-wrap" style="margin-bottom:14px">
-          <span class="key-value">rtmp://corillo.live/live</span>
+          <span class="key-value">rtmp://media.corillo.live/live</span>
           <div class="key-actions">
             <button class="icon-btn" id="copyServer" title="Copiar"><i class="fa-regular fa-copy"></i></button>
           </div>
@@ -955,7 +955,7 @@ import { version } from '../../../version.json';
       <div class="obs-hint">
         <strong>En OBS / Meld Studio</strong><br>
         Configuración → Stream → Servicio: <code>Personalizado</code><br>
-        Servidor: <code>rtmp://corillo.live/live</code><br>
+        Servidor: <code>rtmp://media.corillo.live/live</code><br>
         Clave: <code id="obsKeyHint">••••••••</code><br>
         <span style="color:rgba(245,248,255,.35);font-size:.72rem">Formato: <code id="obsKeyFormat" style="color:rgba(245,248,255,.35)">&#123;canal&#125;?secret=••••••••</code></span>
       </div>
@@ -1369,7 +1369,7 @@ function populateDashboard(rec) {
   // Portada
   const thumbPreview = document.getElementById('thumbPreview');
   if (thumbPreview && rec.key) {
-    thumbPreview.src = `/assets/thumbs/${rec.key}.jpg?t=${Date.now()}`;
+    thumbPreview.src = `https://media.corillo.live/assets/thumbs/${rec.key}.jpg?t=${Date.now()}`;
     thumbPreview.style.opacity = '1';
   }
   if (pfSideAva) updateHeroAva(rec, pfSideAva);
@@ -1430,7 +1430,7 @@ function populateDashboard(rec) {
 
   // Stats históricas
   if (rec.key) {
-    fetch(`/api/stats/${encodeURIComponent(rec.key)}`, { signal: AbortSignal.timeout(6000) })
+    fetch(`https://api.corillo.live/api/stats/${encodeURIComponent(rec.key)}`, { signal: AbortSignal.timeout(6000) })
       .then(r => r.ok ? r.json() : null)
       .then(s => {
         if (!s || !s.streams) return;
@@ -2135,7 +2135,7 @@ async function generateReel(vodId) {
   result.className = 'reel-result'; result.innerHTML = '';
 
   try {
-    const res = await fetch('/api/reel', {
+    const res = await fetch('https://api.corillo.live/api/reel', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
       body: JSON.stringify({ vod_id: vodId, record_id: currentRecord.id, start, end, public: pub, crop_x, ...faceParams }),
@@ -2179,7 +2179,7 @@ async function deleteVod(id) {
   const btn = document.querySelector(`#vrow-${id} .vod-row-del`);
   if (btn) btn.classList.add('loading');
   try {
-    const res = await fetch(`/api/vod/${id}`, {
+    const res = await fetch(`https://api.corillo.live/api/vod/${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': pb.authStore.token },
     });
@@ -2239,7 +2239,7 @@ async function toggleReelPublic(id, channel) {
   const isPublic = btn.classList.contains('is-pub');
   btn.classList.add('loading');
   try {
-    const res = await fetch(`/api/reel/${id}/visibility`, {
+    const res = await fetch(`https://api.corillo.live/api/reel/${id}/visibility`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
       body: JSON.stringify({ public: !isPublic }),
@@ -2265,7 +2265,7 @@ async function deleteReel(id, channel) {
   const btn = document.querySelector(`#rrow-${id} .reel-row-del`);
   if (btn) btn.classList.add('loading');
   try {
-    const res = await fetch(`/api/reel/${id}`, { method: 'DELETE', headers: { 'Authorization': pb.authStore.token } });
+    const res = await fetch(`https://api.corillo.live/api/reel/${id}`, { method: 'DELETE', headers: { 'Authorization': pb.authStore.token } });
     if (!res.ok) throw new Error();
     document.getElementById(`rrow-${id}`)?.remove();
     if (!document.querySelector('.reel-row')) document.getElementById('reelsEmpty').style.display = '';
@@ -2313,7 +2313,7 @@ toggleKey.addEventListener('click', () => {
   document.getElementById('obsKeyFormat').textContent = keyVisible ? full : `${currentRecord?.key}?secret=••••••••`;
 });
 copyKey.addEventListener('click',    () => copyText(`${currentRecord?.key}?secret=${currentRecord?.stream_key}`, copyKey));
-copyServer.addEventListener('click', () => copyText('rtmp://corillo.live/live', copyServer));
+copyServer.addEventListener('click', () => copyText('rtmp://media.corillo.live/live', copyServer));
 
 async function copyText(text, btn) {
   if (!text) return;
@@ -2372,7 +2372,7 @@ function thumbSetStatus(msg, ok) {
 
 function thumbRefresh() {
   if (thumbPreviewEl && currentRecord && currentRecord.key) {
-    thumbPreviewEl.src = '/assets/thumbs/' + currentRecord.key + '.jpg?t=' + Date.now();
+    thumbPreviewEl.src = 'https://media.corillo.live/assets/thumbs/' + currentRecord.key + '.jpg?t=' + Date.now();
     thumbPreviewEl.style.opacity = '1';
   }
 }
@@ -2388,7 +2388,7 @@ if (thumbFile) thumbFile.addEventListener('change', async function() {
   try {
     const fd = new FormData();
     fd.append('file', file);
-    const r = await fetch('/api/upload-thumb', {
+    const r = await fetch('https://api.corillo.live/api/upload-thumb', {
       method: 'POST',
       headers: { 'Authorization': pb.authStore.token },
       body: fd,
@@ -2458,7 +2458,7 @@ if (thumbCaptureBtn) thumbCaptureBtn.addEventListener('click', async function() 
   thumbCaptureBtn.innerHTML = '<span class="spinner"></span> Capturando…';
   thumbSetStatus('');
   try {
-    const r = await fetch('/api/capture-thumb', {
+    const r = await fetch('https://api.corillo.live/api/capture-thumb', {
       method: 'POST',
       headers: { 'Authorization': pb.authStore.token, 'Content-Type': 'application/json' },
       body: JSON.stringify({ vod_id: opt.value, time: parseInt(thumbVodSeek.value) }),
@@ -2574,7 +2574,7 @@ document.getElementById('regenKeyBtn').addEventListener('click', async () => {
   const btn = document.getElementById('regenKeyBtn');
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
   try {
-    const res = await fetch('/api/regen-stream-key', {
+    const res = await fetch('https://api.corillo.live/api/regen-stream-key', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
       body: JSON.stringify({ record_id: currentRecord.id }),
@@ -2749,7 +2749,7 @@ resetBtn.addEventListener('click', async () => {
     try {
       const result = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/api/reel/upload');
+        xhr.open('POST', 'https://api.corillo.live/api/reel/upload');
         xhr.setRequestHeader('Authorization', pb.authStore.token);
         xhr.upload.addEventListener('progress', (e) => {
           if (e.lengthComputable) bar.style.width = Math.round((e.loaded / e.total) * 80) + '%';
@@ -2792,7 +2792,7 @@ async function pollVodPendientes() {
   const box = document.getElementById('vodPendientes');
   let jobs = [];
   try {
-    const r = await fetch('/api/upload-vod/pendientes', { headers: { Authorization: pb.authStore.token } });
+    const r = await fetch('https://api.corillo.live/api/upload-vod/pendientes', { headers: { Authorization: pb.authStore.token } });
     if (r.ok) jobs = (await r.json()).jobs || [];
   } catch {}
   let recargar = false;
@@ -2903,7 +2903,7 @@ function initVodUpload() {
     try {
       await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', '/api/upload-vod');
+        xhr.open('POST', 'https://api.corillo.live/api/upload-vod');
         xhr.setRequestHeader('Authorization', pb.authStore.token);
 
         xhr.upload.addEventListener('progress', e => {

@@ -10,7 +10,8 @@
     "prebuild": "node scripts/sync-version.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "postbuild": "node scripts/pages-routes.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",

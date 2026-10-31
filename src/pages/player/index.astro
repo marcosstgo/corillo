@@ -15,7 +15,7 @@ import { version } from '../../../version.json';
   <meta property="og:url" content="https://corillo.live/__CHANNEL__/" />
   <meta property="og:title" content="__CHANNEL__ — corillo" />
   <meta property="og:description" content="__CHANNEL__ en vivo en corillo — plataforma independiente desde Puerto Rico." />
-  <meta property="og:image" content="https://corillo.live/assets/thumbs/__CHANNEL__.jpg" />
+  <meta property="og:image" content="https://media.corillo.live/assets/thumbs/__CHANNEL__.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="__CHANNEL__ en corillo" />
@@ -24,7 +24,7 @@ import { version } from '../../../version.json';
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="__CHANNEL__ — corillo" />
   <meta name="twitter:description" content="__CHANNEL__ en vivo en corillo — plataforma independiente desde Puerto Rico." />
-  <meta name="twitter:image" content="https://corillo.live/assets/thumbs/__CHANNEL__.jpg" />
+  <meta name="twitter:image" content="https://media.corillo.live/assets/thumbs/__CHANNEL__.jpg" />
   <meta name="twitter:image:alt" content="__CHANNEL__ en corillo" />
   <link rel="canonical" href="https://corillo.live/__CHANNEL__/" />
   <link rel="manifest" href="/manifest.json" />
@@ -280,7 +280,7 @@ import { version } from '../../../version.json';
   const ch = location.pathname.split('/').filter(Boolean)[0] || '';
   if (!ch) return;
   try {
-    const r = await fetch(`/api/stats/${encodeURIComponent(ch)}`, { signal: AbortSignal.timeout(6000) });
+    const r = await fetch(`https://api.corillo.live/api/stats/${encodeURIComponent(ch)}`, { signal: AbortSignal.timeout(6000) });
     if (r.ok) {
       const s = await r.json();
       if (s.streams > 0) {
@@ -341,7 +341,7 @@ import { version } from '../../../version.json';
   let reg, vapidKey;
   try {
     reg = await navigator.serviceWorker.register('/sw.js');
-    const r = await fetch('/api/push-config');
+    const r = await fetch('https://api.corillo.live/api/push-config');
     if (!r.ok) return;
     vapidKey = (await r.json()).public_key;
   } catch(e) { return; }
@@ -368,7 +368,7 @@ import { version } from '../../../version.json';
       const sub = await reg.pushManager.getSubscription();
       if (sub) {
         await sub.unsubscribe();
-        await fetch('/api/subscribe', {
+        await fetch('https://api.corillo.live/api/subscribe', {
           method: 'DELETE',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ channel: ch, endpoint: sub.endpoint }),
@@ -380,7 +380,7 @@ import { version } from '../../../version.json';
           userVisibleOnly: true,
           applicationServerKey: urlB64ToUint8Array(vapidKey),
         });
-        await fetch('/api/subscribe', {
+        await fetch('https://api.corillo.live/api/subscribe', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({ channel: ch, subscription: newSub.toJSON() }),

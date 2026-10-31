@@ -7,7 +7,7 @@
   if (!root) return;
   var ID = root.getAttribute('data-anuncio');
   var SITEKEY = root.getAttribute('data-turnstile');
-  var API = '/api/mercado/anuncios/' + encodeURIComponent(ID);
+  var API = 'https://api.corillo.live/api/mercado/anuncios/' + encodeURIComponent(ID);
   var widgets = {};
 
   function tsListo(cb) {
@@ -41,7 +41,7 @@
 
   // ── Contactar ──
   // Si el correo del Mercado aún no está configurado, el botón no se ofrece (en vez de fallar al enviar).
-  fetch('/api/mercado/meta').then(function (r) { return r.json(); }).then(function (m) {
+  fetch('https://api.corillo.live/api/mercado/meta').then(function (r) { return r.json(); }).then(function (m) {
     if (m && m.contacto === false) document.querySelectorAll('[data-contactar]').forEach(function (b) { b.hidden = true; });
   }).catch(function () {});
   var dC = document.getElementById('mkContacto');

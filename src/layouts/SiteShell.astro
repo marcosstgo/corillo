@@ -209,9 +209,8 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
     <h2 class="nv-h">Explorar</h2>
       <a href="/" class="nv-item" data-nav="/" style="--tc:var(--h2-cyan)"><span class="nv-tile"><i class="fa-solid fa-house" aria-hidden="true"></i></span><span class="nv-lbl">Inicio</span></a>
       <a href="/streamers/" class="nv-item" data-nav="/streamers/" style="--tc:var(--h2-mag)"><span class="nv-tile"><i class="fa-solid fa-users" aria-hidden="true"></i></span><span class="nv-lbl">Streamers</span><b class="nv-badge" id="nvLiveN" hidden><i></i><span></span></b></a>
-      <a href="/vods/" class="nv-item" data-nav="/vods/" style="--tc:var(--crl-confirm)"><span class="nv-tile"><i class="fa-solid fa-film" aria-hidden="true"></i></span><span class="nv-lbl">VODs</span></a>
-      <a href="/reels/" class="nv-item" data-nav="/reels/" style="--tc:var(--h2-live)"><span class="nv-tile"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i></span><span class="nv-lbl">Reels</span></a>
-      <a href="/multiplayer/" class="nv-item" data-nav="/multiplayer/" style="--tc:var(--h2-bone)"><span class="nv-tile"><i class="fa-solid fa-table-cells" aria-hidden="true"></i></span><span class="nv-lbl">Multiplayer</span></a>
+      <!-- VODs, Reels y Multiplayer fuera del menú desde el 30-oct-2026: los videos murieron con el disco. Vuelven cuando haya material. -->
+      <a href="/noticias/" class="nv-item" data-nav="/noticias/" style="--tc:var(--h2-live)"><span class="nv-tile"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></span><span class="nv-lbl">Noticias</span></a>
       <a href="/ofertas/" class="nv-item" data-nav="/ofertas/" style="--tc:var(--h2-mag)"><span class="nv-tile"><i class="fa-solid fa-tags" aria-hidden="true"></i></span><span class="nv-lbl">Ofertas</span></a>
       <a href="/mercado/" class="nv-item" data-nav="/mercado/" style="--tc:var(--crl-confirm)"><span class="nv-tile"><i class="fa-solid fa-store" aria-hidden="true"></i></span><span class="nv-lbl">Mercado</span></a>
   </nav>
@@ -220,7 +219,6 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
       <a href="/overlay/" class="nv-item nv-sm" data-nav="/overlay/"><span class="nv-tile"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></span><span class="nv-lbl">Overlays</span></a>
       <a href="/bochinchero/" class="nv-item nv-sm" data-nav="/bochinchero/" style="--tc:#ff6b3d"><span class="nv-tile"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i></span><span class="nv-lbl">Bochinchero</span></a>
       <a href="/software/" class="nv-item nv-sm" data-nav="/software/"><span class="nv-tile"><i class="fa-solid fa-cube" aria-hidden="true"></i></span><span class="nv-lbl">Software</span></a>
-      <a href="/noticias/" class="nv-item nv-sm" data-nav="/noticias/"><span class="nv-tile"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></span><span class="nv-lbl">Noticias</span></a>
       <a href="/que-es-corillo/" class="nv-item nv-sm" data-nav="/que-es-corillo/"><span class="nv-tile"><i class="fa-solid fa-circle-info" aria-hidden="true"></i></span><span class="nv-lbl">Sobre Corillo</span></a>
       <a href="/roadmap/" class="nv-item nv-sm" data-nav="/roadmap/"><span class="nv-tile"><i class="fa-solid fa-route" aria-hidden="true"></i></span><span class="nv-lbl">Roadmap</span></a>
     <a href="/discord/" class="nv-item nv-sm" data-nav="/discord/" style="--tc:#8b95ff"><span class="nv-tile"><i class="fa-brands fa-discord" aria-hidden="true"></i></span><span class="nv-lbl">Discord</span></a>
@@ -236,8 +234,8 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
 <nav class="nv-tabs" aria-label="Navegación">
   <a href="/" class="nv-tab" data-nav="/"><i class="fa-solid fa-house" aria-hidden="true"></i><span>Inicio</span></a>
   <a href="/streamers/" class="nv-tab" data-nav="/streamers/"><i class="fa-solid fa-users" aria-hidden="true"></i><span>Streamers</span></a>
-  <a href="/vods/" class="nv-tab" data-nav="/vods/"><i class="fa-solid fa-film" aria-hidden="true"></i><span>VODs</span></a>
-  <a href="/reels/" class="nv-tab" data-nav="/reels/"><i class="fa-solid fa-clapperboard" aria-hidden="true"></i><span>Reels</span></a>
+  <a href="/noticias/" class="nv-tab" data-nav="/noticias/"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Noticias</span></a>
+  <a href="/ofertas/" class="nv-tab" data-nav="/ofertas/"><i class="fa-solid fa-tags" aria-hidden="true"></i><span>Ofertas</span></a>
   <button class="nv-tab" id="nvMoreTab" type="button" aria-controls="nvSide"><i class="fa-solid fa-bars" aria-hidden="true"></i><span>Más</span></button>
 </nav>
 
@@ -267,9 +265,6 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
       <div class="foot-col-title" data-foot-toggle><span class="rdot"></span>Plataforma<i class="fa-solid fa-chevron-down foot-chev"></i></div>
       <div class="foot-col-links"><div>
         <a href="/">Inicio</a>
-        <a href="/multiplayer/">Multiplayer</a>
-        <a href="/vods/">VODs</a>
-        <a href="/reels/">Reels</a>
         <a href="/streamers/">Streamers</a>
         <a href="/overlay/">Overlays</a>
         <a href="/ofertas/">Ofertas de juegos</a>
@@ -368,7 +363,7 @@ function renderLive(n: number) {
 async function poll() {
   let paths: any[] = [];
   try {
-    const r = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
+    const r = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
     paths = (await r.json()).items || [];
   } catch { /* sin datos de mediamtx: no se muestra contador */ }
   const liveKeys = new Set<string>();
@@ -440,7 +435,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (location.pathname === '/' || location.pathname.startsWith('/streamers')) e.preventDefault();
   });
 
-  try { const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) }); if (r.ok) STREAMERS = (await r.json()).filter((s: any) => !s.soon); } catch {}
+  try { const r = await fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(5000) }); if (r.ok) STREAMERS = (await r.json()).filter((s: any) => !s.soon); } catch {}
   await poll();
   setInterval(poll, POLL_MS);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) poll(); });

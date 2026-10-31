@@ -131,7 +131,7 @@ function fmtDate(iso: string) {
 
 const _streamerMap: Record<string, any> = {};
 for (const s of ((window as any).STREAMERS || [])) { if (s.key) _streamerMap[s.key] = s; }
-fetch('/api/streamers', { signal: AbortSignal.timeout(5000) })
+fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(5000) })
   .then(r => r.ok ? r.json() : null)
   .then((list: any[] | null) => { if (list) { for (const s of list) _streamerMap[s.key] = s; } })
   .catch(() => {});
@@ -311,7 +311,7 @@ async function init() {
     clipGenBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando…';
     try {
       const timeout = Math.min(dur * 2 + 15, 70) * 1000;
-      const r = await fetch(`/api/clip/vod/${vod.id}?t=${t}&dur=${dur}`, { signal: AbortSignal.timeout(timeout) });
+      const r = await fetch(`https://api.corillo.live/api/clip/vod/${vod.id}?t=${t}&dur=${dur}`, { signal: AbortSignal.timeout(timeout) });
       if (!r.ok) throw new Error();
       const blob = await r.blob();
       const a = document.createElement('a');
@@ -364,7 +364,7 @@ function liveCard(s: any, viewers: number) {
   const t = Math.floor(Date.now() / 60000);
   return `<a href="/${s.key}/" class="rel-card">
     <div class="rel-card-thumb">
-      <img src="/assets/thumbs/${s.key}.jpg?t=${t}" alt="" loading="lazy" onerror="this.style.display='none'">
+      <img src="https://media.corillo.live/assets/thumbs/${s.key}.jpg?t=${t}" alt="" loading="lazy" onerror="this.style.display='none'">
       <span class="rel-live-pill">EN VIVO</span>
       ${viewers > 0 ? `<span class="rel-viewers"><i class="fa-solid fa-eye"></i> ${viewers}</span>` : ''}
     </div>
@@ -392,7 +392,7 @@ async function loadRelated(channel: string, currentId: string) {
 
   // 1. Live now
   try {
-    const r = await fetch('/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
+    const r = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(4000) });
     const j = await r.json();
     const items = (j.items || []) as any[];
     const livePathMap: Record<string, any> = {};

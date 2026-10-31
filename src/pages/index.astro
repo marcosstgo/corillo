@@ -49,7 +49,7 @@ const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/updat
             </div>
           </div>
           <div class="featured-actions" id="featuredActions">
-            <a href="/vods/" class="play-btn">Ver VODs</a>
+            <a href="/streamers/" class="play-btn">Ver streamers</a>
             <a href="/join/" class="icon-btn" title="Crear canal"><i class="fa-solid fa-plus"></i></a>
           </div>
         </div>
@@ -73,7 +73,8 @@ const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/updat
   </section>
 
   <!-- PONTE AL DÍA -->
-  <section class="h2-sec" id="vodsSection">
+  <!-- Oculta desde el 30-oct-2026: los VODs murieron con el disco. Quitar hidden cuando vuelva a haber VODs. -->
+  <section class="h2-sec" id="vodsSection" hidden>
     <div class="h2-sec-hd">
       <h2>Ponte al día</h2>
       <a href="/vods/" class="h2-more-link">Ver todos los VODs</a>
@@ -259,7 +260,7 @@ async function fetchPaths() {
   const ctrl = new AbortController();
   const tid  = setTimeout(() => ctrl.abort(), API_TIMEOUT);
   try {
-    const r = await fetch('/mediamtx-api/v3/paths/list', { signal: ctrl.signal });
+    const r = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { signal: ctrl.signal });
     clearTimeout(tid);
     const j = await r.json();
     cache = { t: now, data: j.items || [] };
@@ -447,7 +448,7 @@ function setFeaturedLive(key, paths) {
   const sim = document.getElementById('simStream');
   sim.className = 'sim-stream';
   // miniatura en vivo mientras el video carga (evita el hueco negro)
-  sim.style.backgroundImage = `url('/assets/thumbs/${key}.jpg?t=${Math.floor(Date.now() / 60000)}')`;
+  sim.style.backgroundImage = `url('https://media.corillo.live/assets/thumbs/${key}.jpg?t=${Math.floor(Date.now() / 60000)}')`;
   document.getElementById('simTitle').textContent = s.name.split('_')[0];
   document.getElementById('simSub').textContent = s.stream_title || '';
 
@@ -579,7 +580,7 @@ function showFeaturedOfflineStatic() {
   document.getElementById('featuredNameEl').textContent = 'Corillo';
   document.getElementById('featuredSubEl').textContent = 'Puerto Rico · Sin stream activo';
   document.getElementById('featuredActions').innerHTML = `
-    <a href="/vods/" class="play-btn">Ver VODs</a>
+    <a href="/streamers/" class="play-btn">Ver streamers</a>
     <a href="/join/" class="icon-btn" title="Crear canal"><i class="fa-solid fa-plus"></i></a>
   `;
 }
@@ -593,7 +594,7 @@ function setupHls(key) {
   if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
   wrap.classList.remove('playing');
 
-  const url = `/live/${encodeURIComponent(key)}/index.m3u8`;
+  const url = `https://media.corillo.live/live/${encodeURIComponent(key)}/index.m3u8`;
 
   if (vid.canPlayType('application/vnd.apple.mpegurl')) {
     vid.src = url;
@@ -706,7 +707,7 @@ function renderLiveSection(live, paths) {
     const viewers = getViewers(paths, s.key);
     return `<a class="h2-live" href="/${s.key}/">
       <div class="h2-live-thumb" style="background:${s.color || '#1e3a4a'}">
-        <img src="/assets/thumbs/${s.key}.jpg?t=${t}" alt="" onerror="this.style.display='none'">
+        <img src="https://media.corillo.live/assets/thumbs/${s.key}.jpg?t=${t}" alt="" onerror="this.style.display='none'">
         <span class="h2-chip live">En vivo</span>
         <span class="h2-chip viewers"><i class="fa-solid fa-eye"></i> ${viewers}</span>
       </div>
@@ -843,7 +844,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Cargar roster completo desde PocketBase — fuente de verdad única
   try {
-    const r = await fetch('/api/streamers', { signal: AbortSignal.timeout(5000) });
+    const r = await fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(5000) });
     if (r.ok) {
       const fresh = await r.json();
       const soonEntries = (window.STREAMERS || []).filter(s => s.soon);

@@ -88,10 +88,14 @@ async def gemini_vision(system: str, prompt: str, b64: str, max_tokens: int = 60
     r = await _http.post(url, json=payload, timeout=30)
     return r.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
 
+# Orígenes que pueden llamar a esta API desde el navegador (la página vive en Cloudflare Pages, otro dominio).
+ORIGENES = ["https://corillo.live", "https://www.corillo.live", "http://localhost:4321", "http://localhost:8080"] + \
+    [o.strip() for o in os.environ.get("CORS_EXTRA", "").split(",") if o.strip()]
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://corillo.live", "http://localhost:8080"],
+    allow_origins=ORIGENES,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )

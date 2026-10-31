@@ -30,10 +30,14 @@ STREAMER_COLORS = [
     "linear-gradient(135deg,#ff9f43,#e06010)",
 ]
 
+# Orígenes que pueden llamar a esta API desde el navegador (la página vive en Cloudflare Pages, otro dominio).
+ORIGENES = ["https://corillo.live", "https://www.corillo.live", "http://localhost:4321", "http://localhost:8080"] + \
+    [o.strip() for o in os.environ.get("CORS_EXTRA", "").split(",") if o.strip()]
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://corillo.live", "https://www.corillo.live", "http://localhost:8080"],
+    allow_origins=ORIGENES,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )

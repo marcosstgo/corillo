@@ -1,0 +1,13 @@
+# Cache en Cloudflare Pages (lo mismo que tenía nginx en el server viejo)
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/fonts/*
+  Cache-Control: public, max-age=15552000
+/assets/fontawesome/*
+  Cache-Control: public, max-age=15552000
+/manifest.json
+  Cache-Control: public, max-age=60
+/version.json
+  Cache-Control: public, max-age=60

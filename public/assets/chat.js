@@ -121,7 +121,7 @@ if ($('#chatBackdrop'))  $('#chatBackdrop').addEventListener('click', hideChat);
 // ── WEBSOCKET CHAT ──
 const WS_BASE = location.protocol === 'https:' ? 'wss:' : 'ws:';
 const _savedUser = localStorage.getItem('corillo_username') || '';
-const WS_URL  = `${WS_BASE}//${location.host}/chat-api/ws/${channel}${_savedUser ? '?user=' + encodeURIComponent(_savedUser) : ''}`;
+const WS_URL  = `wss://api.corillo.live/chat-api/ws/${channel}${_savedUser ? '?user=' + encodeURIComponent(_savedUser) : ''}`;
 
 let ws = null, wsTimer = null, _wsRetries = 0, _lastMsgTs = 0;
 
