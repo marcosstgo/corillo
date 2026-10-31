@@ -198,14 +198,6 @@ import { version } from '../../../version.json';
       <div class="cvods-list crl-player-vods-list" id="cvodsList"></div>
     </div>
 
-    <!-- Reels del canal -->
-    <div class="crl-player-reels" id="channelReels" style="display:none">
-      <div class="crl-player-reels-head">
-        <span>Reels</span>
-        <a class="crl-player-reels-link" id="reelsAll" href="/reels/">Ver todos</a>
-      </div>
-      <div class="crl-player-reels-list" id="reelsList"></div>
-    </div>
   </div>
 
   <!-- CHAT SIDE -->
@@ -293,37 +285,6 @@ import { version } from '../../../version.json';
         document.getElementById('channelStats').style.display = '';
       }
     }
-  } catch(e) {}
-})();
-</script>
-<script is:inline>
-(async () => {
-  const ch = location.pathname.split('/').filter(Boolean)[0] || '';
-  if (!ch) return;
-  try {
-    const r = await fetch(
-      `https://pb.corillo.live/api/collections/reels/records?filter=${encodeURIComponent(`channel="${ch}"&&public=true`)}&sort=-date&perPage=8&fields=id,channel,title,thumb,duration`,
-      { signal: AbortSignal.timeout(6000) }
-    );
-    if (!r.ok) return;
-    const { items = [] } = await r.json();
-    if (!items.length) return;
-    const allLink = document.getElementById('reelsAll');
-    if (allLink) allLink.href = `/reels/?ch=${ch}`;
-    const list = document.getElementById('reelsList');
-    list.innerHTML = items.map(reel => {
-      const s = reel.duration || 0;
-      const dur = s >= 60 ? Math.floor(s / 60) + 'm' : s + 's';
-      const thumb = reel.thumb
-        ? `<img src="${reel.thumb}" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.style.display='none'" loading="lazy">`
-        : '';
-      const label = reel.title || dur;
-      return `<a class="crl-player-reel-card" href="/reels/v/?id=${reel.id}" target="_blank" rel="noopener">
-        <div class="crl-player-reel-thumb">${thumb}<i class="fa-solid fa-scissors"></i><span class="crl-player-reel-dur">${dur}</span></div>
-        <div class="crl-player-reel-title">${label}</div>
-      </a>`;
-    }).join('');
-    document.getElementById('channelReels').style.display = '';
   } catch(e) {}
 })();
 </script>

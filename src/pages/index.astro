@@ -195,14 +195,6 @@ const VITRINA: Slide[] = [
   </section>
   )}
 
-  <!-- REELS -->
-  <section class="h2-sec" id="reelsStrip" style="display:none">
-    <div class="h2-sec-hd">
-      <h2>Reels</h2>
-      <a href="/reels/" class="h2-more-link">Ver todos</a>
-    </div>
-    <div class="h2-reels" id="reelsTrack"></div>
-  </section>
 
   <!-- INVITACIÓN -->
   <section class="h2-join">
@@ -976,28 +968,6 @@ async function poll() {
   }
 }
 
-/* ── Reels strip ─────────────────────────────────────── */
-async function loadReelsStrip() {
-  try {
-    const res  = await fetch(`${PB_URL}/api/collections/reels/records?filter=${encodeURIComponent('public=true')}&sort=-date&perPage=6`);
-    const data = await res.json();
-    const items = data.items || [];
-    if (!items.length) return;
-    const strip = document.getElementById('reelsStrip');
-    const track = document.getElementById('reelsTrack');
-    items.forEach(r => {
-      const dur = r.duration ? fmtDuration(r.duration) : '';
-      const a = document.createElement('a');
-      a.className = 'h2-reel';
-      a.href = `/reels/?start=${r.id}`;
-      if (r.thumb) a.style.backgroundImage = `url('${r.thumb}')`;
-      a.innerHTML = `${dur ? `<em>${dur}</em>` : ''}<span>${streamerOf(r.channel).name}</span>`;
-      track.appendChild(a);
-    });
-    strip.style.display = '';
-  } catch {}
-}
-
 /* ── Init ────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
   const onScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 40);
@@ -1023,8 +993,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch {}
 
   await poll();
-
-  loadReelsStrip();
 
   setInterval(poll, POLL_MS);
 

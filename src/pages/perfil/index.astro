@@ -383,6 +383,10 @@ import { version } from '../../../version.json';
     .vod-row-reel.active { border-color: var(--accent); color: var(--accent); background: rgba(var(--crl-accent-rgb),.08); }
     .vod-row-del.loading { opacity: .4; pointer-events: none; }
 
+    /* Reels fuera por el momento (Marcos, 31-oct-2026): se esconden la pestaña, el contador y «crear reel» de cada VOD.
+       El código se queda; para volver, borrar esta regla y la línea REELS_OFF de abajo. */
+    [data-ctpanel="ct-reels"], #ct-reels, #pfStatReelsBtn, .vod-row-reel, .reel-panel { display: none !important; }
+
     /* ── Reel panel ── */
     .reel-panel {
       display: none; margin-top: 6px; margin-bottom: 8px;
@@ -1426,7 +1430,7 @@ function populateDashboard(rec) {
     document.getElementById('vodUploadBtnWrap').style.display = '';
     initVodUpload();
   }
-  loadMyReels(rec.key);
+  // REELS_OFF: loadMyReels(rec.key);   (reels fuera por el momento, ver la regla CSS de arriba)
 
   // Stats históricas
   if (rec.key) {
