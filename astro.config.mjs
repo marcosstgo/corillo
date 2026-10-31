@@ -14,5 +14,6 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: 'hover',
   },
-  integrations: [sitemap()],
+  // Fuera del sitemap: páginas sin contenido propio o con noindex (31-oct-2026).
+  integrations: [sitemap({ filter: (u) => !/\/(roadmap|player|embed|bochinchero\/panel)\//.test(u) })],
 });
