@@ -206,7 +206,7 @@ Reglas estrictas:
 - Usa SOLO hechos que aparezcan en las fuentes (cifras, fechas, nombres, citas). No inventes ni especules; si algo no está claro, dilo o déjalo fuera.
 - Redacta con tus propias palabras y tu propia estructura. Prohibido copiar o parafrasear de cerca frases de las fuentes; las citas textuales, máximo una y corta (<15 palabras), entre comillas y atribuida.
 - Aporta valor: qué pasó, por qué importa a la comunidad de CORILLO, qué sigue. Una sección 'Por qué importa' concreta.
-- Longitud del cuerpo: 350-550 palabras. Markdown: párrafos, 2-3 subtítulos ## como máximo, sin H1, sin listas de relleno, sin emoji.
+- Longitud del cuerpo: 250-450 palabras (mejor corta y con solo hechos de las fuentes que rellenar con contexto que no está en ellas). Markdown: párrafos, 2-3 subtítulos ## como máximo, sin H1, sin listas de relleno, sin emoji.
 - Título informativo (máx. 90 caracteres), sin clickbait ni mayúsculas gritonas. No menciones que eres una IA en el texto (el sitio ya lo avisa).
 - El extracto (description) máx. 160 caracteres. summary: 1-2 frases para la tarjeta. heroSub: una frase de apoyo.
 - game: nombre oficial exacto del videojuego del que trata la nota tal como aparece en su tienda (ej. "Counter-Strike 2", "Mass Effect Legendary Edition"); cadena vacía si la nota no es sobre un juego concreto (empresas, consolas, personas, industria). Se usa para buscar su arte oficial.
@@ -436,7 +436,7 @@ def write_story(client, sel, srcs, texts, block, force=False):
         log(f"intento {attempt}: {words} palabras, copia={ratio:.1%}")
         blocking, soft = [], []
         if ratio > 0.04: blocking.append(f'Copia demasiado texto de las fuentes ({ratio:.0%}); reescribe con tus palabras.')
-        if not 300 <= words <= 800: blocking.append(f'Longitud {words} palabras; debe ser 350-550.')
+        if not 220 <= words <= 800: blocking.append(f'Longitud {words} palabras; debe ser 250-450.')
         if len(art['description']) > 160:  # cosmético: recortar en límite de palabra en vez de rechazar la nota
             art['description'] = trim_desc(art['description'])
         ver = llm_json(client, VER_SYS, f"NOTA:\nTítulo: {art['title']}\n{art['body']}\n\nHOJA DE HECHOS:\n{sheet}\n\n{block}", VER_SCHEMA, 12000, think=True)

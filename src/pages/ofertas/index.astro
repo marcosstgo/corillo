@@ -14,8 +14,8 @@ const free = allFree(D);
 const stamp = D.updatedAt ? fmtStamp(D.updatedAt) : null;
 const nAll = D.steam.length + D.gog.length + D.humble.length + D.fanatical.length + D.gmg.length + D.gamersgate.length;
 const desc = free.length
-  ? `Hoy hay ${free.length} ${free.length === 1 ? 'juego gratis' : 'juegos gratis'} y más de ${Math.floor(nAll / 10) * 10} ofertas reales en Steam, GOG, Humble, Fanatical y más. Precios en dólares, actualizados cada hora.`
-  : `Ofertas reales de juegos en Steam, GOG, Humble, Fanatical y más, y los juegos gratis de la semana. Precios en dólares, actualizados cada hora.`;
+  ? `Hoy hay ${free.length} ${free.length === 1 ? 'juego gratis' : 'juegos gratis'} y más de ${Math.floor(nAll / 10) * 10} ofertas reales en Steam, GOG, Humble, Fanatical y más. Precios en dólares, actualizados varias veces al día.`
+  : `Ofertas reales de juegos en Steam, GOG, Humble, Fanatical y más, y los juegos gratis de la semana. Precios en dólares, actualizados varias veces al día.`;
 const ld = offersJsonLd([...free, ...D.steam.slice(0, 12), ...D.gog.slice(0, 8)], 'Ofertas de juegos', 'https://corillo.live/ofertas/');
 const listas = LISTAS.map(l => ({ ...l, n: l.items(D).length })).filter(l => l.n > 0);
 const tileBlurb: Record<string, string> = {
