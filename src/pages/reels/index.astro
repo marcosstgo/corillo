@@ -119,7 +119,7 @@ async function loadAll() {
     const paths = pr.status === 'fulfilled' ? (pr.value.items || []) : [];
     const keys = new Set<string>();
     for (const p of paths) { const m = String(p.name).match(/^live\/([^/]+)$/); if (p.ready && m && !/_(low|rtc)$/.test(m[1])) keys.add(m[1]); }
-    liveNow = [...keys].map(k => ({ key: k, viewers: (paths.find((p: any) => p.name === 'live/' + k)?.readers || []).length })).sort((a, b) => b.viewers - a.viewers);
+    liveNow = [...keys].map(k => ({ key: k, viewers: (window as any).corilloEspectadores(paths, k) })).sort((a, b) => b.viewers - a.viewers);
     // solo se vuelve a pintar si algo cambió (no interrumpe el video que ya está sonando)
     if (!shown || sig() !== shownSig) { const keep = items[active]?.dataset.id || ''; buildFilters(); render(!shown, keep); }
     // transmisión de origen de cada clip: se añade sobre lo ya pintado

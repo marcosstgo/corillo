@@ -191,12 +191,13 @@ import SiteShell from '../../layouts/SiteShell.astro';
     try {
       const res   = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { signal: AbortSignal.timeout(5000) });
       // Variantes derivadas (_low 720p ABR, _rtc WebRTC) no son streamers.
-      const items = ((await res.json()).items || []).filter(p => !/_(low|rtc)$/.test(p.name));
+      const todos = (await res.json()).items || [];
+      const items = todos.filter(p => !/_(low|rtc)$/.test(p.name));
       liveSet     = new Set(items.filter(p => p.ready).map(p => p.name.replace('live/', '')));
       viewersMap  = {};
       for (const p of items) {
         const m = p.name.match(/^live\/(.+)$/);
-        if (m) viewersMap[m[1]] = p.readers?.length || 0;
+        if (m) viewersMap[m[1]] = window.corilloEspectadores(todos, m[1]);
       }
       thumbTick = Math.floor(Date.now() / 60000);
       updateStats();

@@ -204,8 +204,7 @@ window.channel = __validFormat ? __rawChannel : '';
       const r = await fetch('https://media.corillo.live/mediamtx-api/v3/paths/list', { cache: 'no-store', signal: AbortSignal.timeout(5000) });
       if (!r.ok) return;
       const j = await r.json();
-      const path = (j.items || []).find(p => p.name === `live/${App.channel}`);
-      const count = path ? (path.readers?.length ?? 0) : 0;
+      const count = window.corilloEspectadores(j.items || [], App.channel);
       if (DOM.liveViewers) {
         DOM.liveViewers.textContent = ` · ${count}`;
         DOM.liveViewers.style.display = '';
@@ -832,13 +831,17 @@ window.channel = __validFormat ? __rawChannel : '';
     const useHlsJs = !isIOS && !!(window.Hls && Hls.isSupported());
     const canNative = !!DOM.video.canPlayType('application/vnd.apple.mpegurl');
 
+    // ABR con master.m3u8 APAGADO (31-oct-2026): mediamtx v1.21 pide sesión (cookie o ?session=) para
+    // main_stream.m3u8 y el master sintético de corillo-api apunta directo ahí → 401 y el player no arranca.
+    // Mientras se rehace el ABR: una sola variante por index.m3u8 (720p en pantallas pequeñas, 1080p en el resto).
+    const ABR_MASTER = false;
     let url;
-    if (useHlsJs && App.mode !== 'vertical' && App.quality === 'auto' && App.lowReady) {
+    if (ABR_MASTER && useHlsJs && App.mode !== 'vertical' && App.quality === 'auto' && App.lowReady) {
       url = 'https://media.corillo.live/live/' + encodeURIComponent(basePath) + '/master.m3u8';
     } else {
-      // Nativo en auto: 720p en pantallas pequeñas, 1080p en el resto (una sola variante, sin cambios).
+      // Auto: 720p en pantallas pequeñas, 1080p en el resto (una sola variante, sin cambios).
       const smallScreen = window.matchMedia('(max-width: 768px)').matches;
-      const wantLow = App.quality === 'low' || (App.quality === 'auto' && App.lowReady && !useHlsJs && smallScreen);
+      const wantLow = App.quality === 'low' || (App.quality === 'auto' && App.lowReady && smallScreen);
       url = 'https://media.corillo.live/live/' + encodeURIComponent(wantLow ? basePath + '_low' : basePath) + '/index.m3u8';
     }
     DOM.hlsTxt.textContent = qualityBadge(0);
@@ -959,7 +962,7 @@ window.channel = __validFormat ? __rawChannel : '';
         const paths   = j.items || [];
         const liveMap = {};
         paths.filter(p => p.ready).forEach(p => {
-          liveMap[p.name.replace('live/', '')] = p.readers ? p.readers.length : 0;
+          liveMap[p.name.replace('live/', '')] = window.corilloEspectadores(paths, p.name.replace('live/', ''));
         });
         const others = (window.STREAMERS || [])
           .filter(s => !s.soon && s.key !== App.channel && liveMap[s.key] !== undefined);

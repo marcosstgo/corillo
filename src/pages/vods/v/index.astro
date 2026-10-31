@@ -400,7 +400,7 @@ async function loadRelated(channel: string, currentId: string) {
     for (const p of items) { const m = p.name?.match(/^live\/(.+)$/); if (m && p.ready && !/_(low|rtc)$/.test(m[1])) livePathMap[m[1]] = p; }
     const liveStreamers = Object.entries(livePathMap).map(([key, p]: [string, any]) => ({
       ...(_streamerMap[key] || { key, name: key.toUpperCase(), color: 'var(--crl-accent)', ava: key[0]?.toUpperCase() }),
-      _viewers: p.readers?.length ?? 0,
+      _viewers: (window as any).corilloEspectadores(items, key),
     }));
     if (liveStreamers.length) {
       const cards = liveStreamers.map((s: any) => liveCard(s, s._viewers)).join('');

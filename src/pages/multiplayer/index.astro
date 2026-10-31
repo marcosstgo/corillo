@@ -755,7 +755,7 @@ async function refresh() {
     }
     const apiStreamers = streamerList
       .filter((s: any) => s.key && livePathMap[s.key])
-      .map((s: any) => ({ ...s, viewers: (livePathMap[s.key].readers || []).length }));
+      .map((s: any) => ({ ...s, viewers: (window as any).corilloEspectadores(Object.values(livePathMap), s.key) }));
     updateLiveState(apiStreamers);
   } catch {}
   animatePollBar();

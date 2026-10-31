@@ -209,8 +209,7 @@ function getLiveSet(paths) {
 }
 
 function getViewers(paths, key) {
-  const p = paths.find(p => p.name === 'live/' + key);
-  return p ? (p.readers?.length ?? 0) : 0;
+  return window.corilloEspectadores(paths, key);
 }
 
 function getReadyTime(paths, key) {
