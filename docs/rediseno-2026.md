@@ -23,8 +23,8 @@ entra a ver qué está pasando hoy. Tres pulsos, en este orden de importancia:
 
 1. **En vivo** — el corazón. Cuando alguien prende, se apodera de la portada como hoy (eso no cambia).
 2. **Hoy** — información: la noticia del día, juegos gratis, ofertas que valen la pena, equipo con envío a PR.
-3. **El corillo** — la gente: los panas (streamers), quién está en el Discord ahora y en qué sala, el Bochinchero,
-   el Mercado entre boricuas.
+3. **El corillo** — la gente: quién está en el Discord ahora y en qué sala, el Bochinchero, el Mercado entre boricuas.
+   Los streamers viven en su página ("En vivo"); en la portada aparecen cuando prenden.
 
 La portada nunca dice "no hay nada". Si nadie está en vivo, abre con la noticia del día y con lo que está pasando en
 el Discord (que es actividad real, de personas reales, ahora mismo).
@@ -45,12 +45,15 @@ el Discord (que es actividad real, de personas reales, ahora mismo).
 | # | Sección | Con alguien en vivo | Sin nadie en vivo |
 |---|---|---|---|
 | 1 | **Arriba** | El stream a sangre con el nombre gigante (como hoy) + "también en vivo" | **Portada del día**: fecha, la noticia del día a tamaño titular, y al lado la tarjeta **"El corillo ahora"** (gente en el Discord, salas activas y a qué juegan, último en vivo) |
-| 2 | **Los panas** | Rostros; los que están en vivo primero con el aro de en vivo | Rostros con su línea ("Design · Corillo DEV") y "Crear tu canal" al final |
-| 3 | **Hoy en Corillo** | Noticias: una grande + tres + lista corta. Tarjetas tipográficas con el color de su categoría (no hay fotos, y no hacen falta) | igual |
-| 4 | **Gratis y a precio de pana** | Juegos gratis (con cuánto falta para que se acaben) + las mejores rebajas + equipo con envío a PR | igual |
-| 5 | **El Bochinchero** | Banda propia: qué es, botones para oír sus voces (los mp3 reales), "Añádelo a tu server" | igual |
-| 6 | **Mercado** | Últimos anuncios; si no hay, invitación a vender ("véndele tu equipo a otro boricua") | igual |
-| 7 | **¿Tienes algo que transmitir?** | CTA para crear canal (como hoy) | igual |
+| 2 | **Hoy en Corillo** | Noticias: una grande + tres + lista corta. Tarjetas tipográficas con el color de su categoría (no hay fotos, y no hacen falta) | igual |
+| 3 | **Gratis y a precio de pana** | Juegos gratis (con cuánto falta para que se acaben) + las mejores rebajas + equipo con envío a PR | igual |
+| 4 | **El Bochinchero** | Banda propia: qué es, botones para oír sus voces (los mp3 reales), "Añádelo a tu server" | igual |
+| 5 | **Mercado** | Últimos anuncios; si no hay, invitación a vender ("véndele tu equipo a otro boricua") | igual |
+| 6 | **¿Tienes algo que transmitir?** | CTA para crear canal (como hoy) | igual |
+
+Decisiones de Marcos sobre el prototipo (30-oct):
+- **Sin la sección "Los panas"** en la portada.
+- **Más simple**: "haría una mejor distribución de las noticias y de la información… que se viera más sencillo". Se quitaron las tarjetas con borde y las pastillas de categoría repetidas: las noticias son una lista en dos columnas (categoría como texto de color + fecha), las ofertas una sola fila de 4 con atajos, el Discord solo lo esencial, el Bochinchero una banda corta y el cierre dos accesos (Mercado / Tu canal).
 
 ### 4.2 Navegación
 
