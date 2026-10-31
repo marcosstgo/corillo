@@ -23,6 +23,8 @@ sources:
     url: "https://www.ign.com/articles/minecraft-confirms-ice-caves-as-next-game-drop-adds-frozen-zombies-ice-balls-and-more"
   - name: "IGN"
     url: "https://www.ign.com/articles/minecraft-live-september-2026-everything-announced"
+image: "/noticias/portadas/2026-09-27-minecraft-anuncia-the-sift-su-primera-nueva-dimension-en-mas-de-una.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Minecraft Live 2026 dejó a la comunidad con varias sorpresas. La más grande: The Sift, una nueva dimensión que llegará a Minecraft Java y Bedrock Edition en 2027. Es la primera dimensión nueva en más de una década, y se une al Overworld, el Nether y el End como la cuarta dimensión oficial del juego.

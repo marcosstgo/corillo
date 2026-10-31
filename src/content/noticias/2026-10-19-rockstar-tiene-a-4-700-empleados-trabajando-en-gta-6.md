@@ -21,6 +21,8 @@ sources:
     url: "https://vandal.elespanol.com/noticia/2026291009/gta-6-permitira-cambiar-de-personaje-mientras-conduces-y-podras-relajarte-como-copiloto/"
   - name: "Vandal"
     url: "https://vandal.elespanol.com/noticia/2026291001/rockstar-explica-en-que-consiste-el-perfil-criminal-de-gta-6-es-diferente-al-sistema-de-honor-de-rdr-2/"
+image: "/noticias/portadas/2026-10-19-rockstar-tiene-a-4-700-empleados-trabajando-en-gta-6.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Rockstar Games está volcando recursos sin precedentes en Grand Theft Auto VI. Según cifras oficiales citadas por Xataka, el estudio contaba con 4.711 empleados en agosto de este año, repartidos en 12 oficinas. Para ponerlo en perspectiva, cuando lanzó Red Dead Redemption II en 2018, la plantilla era de 2.441 personas. Ese crecimiento se da en un contexto de despidos masivos en la industria, aunque la matriz Take-Two también anunció en abril de 2024 un recorte del 5% de su plantilla para ahorrar más de 165 millones de dólares al año.

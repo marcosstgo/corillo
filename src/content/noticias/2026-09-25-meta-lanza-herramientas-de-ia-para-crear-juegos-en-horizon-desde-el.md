@@ -17,6 +17,8 @@ ai: true
 sources:
   - name: "The Verge"
     url: "https://www.theverge.com/games/999972/meta-horizon-create-studio-ai-games"
+image: "/noticias/portadas/2026-09-25-meta-lanza-herramientas-de-ia-para-crear-juegos-en-horizon-desde-el.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Meta quiere que cualquiera pueda crear juegos para Horizon, su plataforma social, usando inteligencia artificial. La compañía anunció dos nuevas herramientas: Horizon Create, una aplicación móvil, y Horizon Studio, una app de navegador con controles más granulares. Ambas estarán disponibles en acceso anticipado y los interesados pueden inscribirse en una lista de espera.

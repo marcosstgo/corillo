@@ -23,6 +23,8 @@ sources:
     url: "https://www.eurogamer.net/the-blood-of-dawnwalker-lead-actor-will-de-renzy-martin-ai-voiceover"
   - name: "Xataka"
     url: "https://www.xataka.com/cine-y-tv/ben-affleck-tiene-nueva-pelicula-que-ha-utilizado-ia-para-muchas-cosas-no-te-va-a-decir-cuales"
+image: "/noticias/portadas/2026-10-12-nicolas-cage-rechaza-firmar-exencion-de-ia-para-spider-noir-y-dice-que.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Nicolas Cage dejó clara su postura sobre la inteligencia artificial durante un panel en la New York Comic Con 2026. El actor afirmó que "probablemente no volverá a trabajar" con Amazon después de negarse a firmar una exención para usar IA en la serie Spider-Noir, cancelada el mes pasado. "Amazon es una compañía muy amigable con la IA, al punto de invertir $50 mil millones en OpenAI. Yo no soy un actor amigable con la IA", dijo Cage, según reportó IGN.

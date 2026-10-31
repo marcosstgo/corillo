@@ -17,6 +17,8 @@ ai: true
 sources:
   - name: "IGN"
     url: "https://www.ign.com/articles/capcom-announces-plans-to-transform-the-re-engine-into-an-ai-generation-game-engine-our-goal-is-a-future-where-we-create-games-together-with-ai"
+image: "/noticias/portadas/2026-10-03-capcom-transformara-el-re-engine-en-un-motor-de-generacion-por-ia.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Capcom dio a conocer sus planes para evolucionar el RE Engine, el motor detrás de franquicias como Resident Evil y Street Fighter, hacia un motor de generación por IA. El anuncio se realizó durante la 'Capcom Open Conference RE: 2026', celebrada el 2 de octubre.

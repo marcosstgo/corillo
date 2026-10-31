@@ -17,6 +17,8 @@ ai: true
 sources:
   - name: "Vandal"
     url: "https://vandal.elespanol.com/noticia/2026269003/mas-del-85-de-los-desarrolladores-de-videojuegos-japoneses-usan-ia-generativa-un-34-mas-que-el-ano-pasado/"
+image: "/noticias/portadas/2026-09-26-el-85-8-de-los-desarrolladores-japoneses-ya-usa-ia-generativa-segun.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 La industria japonesa del videojuego está adoptando la IA generativa a un ritmo acelerado. Según el informe anual de la Computer Entertainment Supplier's Association (CESA), presentado durante el Tokyo Game Show 2026, el 85,8 % de los desarrolladores del país utiliza estas herramientas en sus proyectos. El dato contrasta con el 51 % registrado el año anterior, lo que supone una diferencia de 34,8 puntos porcentuales.

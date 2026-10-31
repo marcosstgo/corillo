@@ -23,6 +23,8 @@ sources:
     url: "https://www.ign.com/articles/xbox-reportedly-secures-exclusive-cloud-streaming-rights-to-gta-6-could-make-game-playable-on-pc-at-launch"
   - name: "Eurogamer"
     url: "https://www.eurogamer.net/xbox-cloud-gta-6-streaming-rights"
+image: "/noticias/portadas/2026-10-07-xbox-aclara-que-gta-6-no-se-transmitira-a-pc-pero-asegura-derechos-de.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Un reporte de The Verge encendió las redes al afirmar que Xbox había asegurado derechos exclusivos de transmisión para GTA 6. Según esa versión, el acuerdo permitiría jugar el título en PC a través de Xbox Cloud Gaming desde el lanzamiento. La noticia generó expectativa entre quienes no tienen consola, pero Microsoft salió a aclarar los hechos.

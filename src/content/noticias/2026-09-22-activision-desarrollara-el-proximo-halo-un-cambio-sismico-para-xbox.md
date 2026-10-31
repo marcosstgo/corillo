@@ -21,6 +21,8 @@ sources:
     url: "https://www.ign.com/articles/confirmed-microsoft-hands-halo-to-call-of-duty-developer-activision-as-part-of-huge-xbox-studios-shakeup"
   - name: "Eurogamer"
     url: "https://www.eurogamer.net/xbox-layoffs-activision-rare-halo-ninja-theory"
+image: "/noticias/portadas/2026-09-22-activision-desarrollara-el-proximo-halo-un-cambio-sismico-para-xbox.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Microsoft ha confirmado oficialmente que Activision desarrollará el próximo juego de Halo. La noticia llega acompañada de una reestructuración profunda de los estudios de Xbox, que incluye 268 despidos adicionales y cambios en la organización de varios equipos first-party.

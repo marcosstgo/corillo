@@ -23,6 +23,8 @@ sources:
     url: "https://www.3djuegos.com/xbox-series-xs/noticias/pon-pequena-parte-xbox-tus-manos-microsoft-anuncia-nuevo-mando-xbox-quiza-no-que-esperabas"
   - name: "Engadget"
     url: "https://www.engadget.com/2286791/xbox-has-a-teeny-new-gamepad/"
+image: "/noticias/portadas/2026-10-15-xbox-anuncia-el-nano-controller-su-mando-mas-pequeno-por-49-99.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Microsoft presentó oficialmente el Xbox Nano Controller el 14 de octubre. Se trata del mando más pequeño que ha lanzado la compañía hasta ahora: mide poco más de 12.7 centímetros de largo y pesa 99 gramos, menos que la mayoría de los smartphones modernos.

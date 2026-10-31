@@ -19,6 +19,8 @@ sources:
     url: "https://www.dexerto.com/gaming/steam-predicted-to-make-over-20-billion-this-year-for-first-time-ever-3414952/"
   - name: "Vandal"
     url: "https://vandal.elespanol.com/noticia/2026275017/steam-hara-cambios-en-la-seccion-descuentos-y-eventos-y-prometen-recomendaciones-dinamicas-y-personalizadas/"
+image: "/noticias/portadas/2026-10-04-steam-encamina-a-superar-los-20-mil-millones-anuales-por-primera-vez.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Steam, la plataforma de distribución de videojuegos para PC de Valve, está en camino de superar por primera vez los 20.000 millones de dólares en ingresos anuales, según estimaciones de Alinea Analytics. La cifra se apoya en un septiembre y un tercer trimestre récord para la compañía.

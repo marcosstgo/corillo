@@ -19,6 +19,8 @@ sources:
     url: "https://www.dexerto.com/entertainment/ai-developer-uses-gpt-6-astra-to-crack-108-year-old-ww1-code-3410483/"
   - name: "Vandal"
     url: "https://vandal.elespanol.com/noticia/2026262007/se-gasta-600-dolares-en-tokens-ia-para-que-gpt6-astra-consiga-pasarse-portal-en-24-horas/"
+image: "/noticias/portadas/2026-09-20-desarrollador-usa-gpt-6-astra-para-descifrar-mensaje-cifrado-aleman-de.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Un desarrollador de inteligencia artificial conocido como Prinz logró descifrar un mensaje de radio cifrado alemán de la Primera Guerra Mundial que llevaba 108 años sin resolver, utilizando el modelo GPT-6 Astra de OpenAI. El mensaje, fechado en 1918, fue tomado de una lista de cincuenta cifrados sin resolver publicada en el portal científico alemán Scienceblogs.de.

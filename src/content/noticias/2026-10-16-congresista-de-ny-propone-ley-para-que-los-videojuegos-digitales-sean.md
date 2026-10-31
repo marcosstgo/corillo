@@ -23,6 +23,8 @@ sources:
     url: "https://www.3djuegos.com/pc/noticias/hoy-dia-compras-juego-pueden-quitartelo-cuando-quieran-politico-estadounidense-quiere-acabar-eso"
   - name: "Engadget"
     url: "https://www.engadget.com/2288193/ny-congressman-to-introduce-bill-protecting-video-game-ownership/"
+image: "/noticias/portadas/2026-10-16-congresista-de-ny-propone-ley-para-que-los-videojuegos-digitales-sean.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 El congresista demócrata Ritchie Torres (Nueva York) anunció la 'Power to the Players Act', un proyecto de ley que busca garantizar que los consumidores realmente posean los videojuegos digitales que compran, en lugar de adquirir licencias revocables. La propuesta ordenaría a la Comisión Federal de Comercio (FTC) crear regulaciones para proteger la capacidad de los jugadores de conservar, jugar y transferir los títulos adquiridos. Además, exigiría que los juegos en línea tengan funcionalidad offline cuando se apaguen los servidores.

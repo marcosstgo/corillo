@@ -21,6 +21,8 @@ sources:
     url: "https://www.polygon.com/microsoft-patent-in-game-ads-load-screens-pauses/"
   - name: "Vandal"
     url: "https://vandal.elespanol.com/noticia/2026264027/xbox-patenta-un-sistema-de-publicidad-para-mostrar-anuncios-al-completar-una-mision-o-al-terminar-una-ronda/"
+image: "/noticias/portadas/2026-09-21-microsoft-patenta-anuncios-en-juegos-de-pc-y-xbox-durante-pantallas-de.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Microsoft ha registrado una patente que permitiría mostrar anuncios dentro de videojuegos para PC y Xbox, aprovechando momentos de inactividad como pantallas de carga, el fin de una ronda multijugador o la conclusión de una misión. El sistema, descrito como "consciente del contexto", detecta estos eventos y suspende temporalmente el juego para reproducir publicidad, similar a lo que ocurre en muchos juegos móviles gratuitos.

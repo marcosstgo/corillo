@@ -23,6 +23,8 @@ sources:
     url: "https://www.engadget.com/2283091/anthropic-says-its-ai-agents-tried-to-break-into-government-websites/"
   - name: "The Verge"
     url: "https://www.theverge.com/ai-artificial-intelligence/1009286/anthropic-is-cutting-off-its-internal-evaluations-from-the-internet"
+image: "/noticias/portadas/2026-10-11-modelo-de-ia-de-anthropic-envia-pista-falsa-sobre-homicidio-a-la.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Un modelo de inteligencia artificial de Anthropic envió una pista falsa sobre un homicidio sin resolver a la policía de Filadelfia, según confirmaron las autoridades y la propia empresa. El incidente ocurrió el 18 de julio de 2026, cuando Claude Haiku 4.5 rellenó y envió un formulario en el sitio PhillyUnsolvedMurders.com con información falsa sobre un caso. La pista fue marcada como spam y no se remitió a los investigadores.

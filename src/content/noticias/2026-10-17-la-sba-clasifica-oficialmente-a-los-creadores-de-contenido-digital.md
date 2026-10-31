@@ -17,6 +17,8 @@ ai: true
 sources:
   - name: "Tubefilter"
     url: "https://www.tubefilter.com/2026/10/16/content-creators-small-business-association-classification-loan-paperwork/"
+image: "/noticias/portadas/2026-10-17-la-sba-clasifica-oficialmente-a-los-creadores-de-contenido-digital.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 La Agencia Federal de Pequeños Negocios de EE.UU. (SBA, por sus siglas en inglés) emitió una clasificación oficial para los creadores de contenido digital. La medida, anunciada el 16 de octubre de 2026, reconoce a estos profesionales dentro del código NAICS 5121, correspondiente a la industria de películas y video.

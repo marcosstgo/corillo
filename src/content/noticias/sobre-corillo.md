@@ -11,6 +11,8 @@ pubDate: 2026-03-29T12:00:00Z
 heroTitle: "Sobre Corillo ya tiene su espacio"
 heroSub: "La plataforma tiene una página que explica qué es Corillo, para quién es y cómo funciona."
 summary: "La nueva página explica qué es CORILLO, cómo funciona y para quién es, sin rodeos."
+image: "/noticias/portadas/sobre-corillo.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 <h2>Qué cubre la página</h2>

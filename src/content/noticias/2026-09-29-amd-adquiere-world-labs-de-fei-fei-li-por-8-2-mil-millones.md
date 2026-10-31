@@ -21,6 +21,8 @@ sources:
     url: "https://techcrunch.com/2026/09/28/amd-will-acquire-fei-fei-lis-world-labs-for-8-2-billion/"
   - name: "Xataka"
     url: "https://www.xataka.com/empresas-y-economia/amd-mueve-ficha-frente-a-nvidia-compra-empresa-grandes-pioneras-ia-8-200-millones-dolares"
+image: "/noticias/portadas/2026-09-29-amd-adquiere-world-labs-de-fei-fei-li-por-8-2-mil-millones.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 AMD anunció la adquisición de World Labs, la startup de inteligencia artificial cofundada por la reconocida investigadora Fei-Fei Li, en un acuerdo valorado en aproximadamente 8.200 millones de dólares. La operación, que se realizará en acciones, se espera que cierre antes de fin de año, sujeta a aprobación regulatoria.

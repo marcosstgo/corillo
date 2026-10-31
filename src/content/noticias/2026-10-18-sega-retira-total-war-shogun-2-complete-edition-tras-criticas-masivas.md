@@ -17,6 +17,8 @@ ai: true
 sources:
   - name: "Eurogamer"
     url: "https://www.eurogamer.net/total-war-shogun-2-complete-edition-pulled-from-sale"
+image: "/noticias/portadas/2026-10-18-sega-retira-total-war-shogun-2-complete-edition-tras-criticas-masivas.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Sega y Creative Assembly han retirado temporalmente Total War: Shogun 2 - Complete Edition de la venta, apenas días después de su lanzamiento el 13 de octubre. La decisión llega tras una avalancha de críticas negativas en Steam, donde el juego acumuló una calificación de "abrumadoramente negativo" con solo un 15% de reseñas positivas entre más de 4,000 comentarios.

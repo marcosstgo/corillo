@@ -21,6 +21,8 @@ sources:
     url: "https://vandal.elespanol.com/noticia/2026281004/google-presenta-playground-una-ia-que-permite-crear-videojuegos-en-minutos-sin-saber-programar/"
   - name: "TechCrunch"
     url: "https://techcrunch.com/2026/10/07/google-experiments-with-an-ai-powered-gaming-platform/"
+image: "/noticias/portadas/2026-10-08-google-lanza-playground-crea-videojuegos-con-ia-sin-programar.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Google acaba de lanzar Playground, una plataforma experimental que permite crear videojuegos simplemente describiéndolos con texto. Desarrollada por Google Labs, la herramienta ya está disponible en Estados Unidos desde el 7 de octubre para usuarios mayores de 18 años, y funciona directamente en el navegador, tanto en teléfonos como en ordenadores.

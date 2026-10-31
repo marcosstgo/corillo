@@ -19,6 +19,8 @@ sources:
     url: "https://www.ign.com/articles/gta-6-research-gang-members"
   - name: "PC Gamer"
     url: "https://www.pcgamer.com/games/grand-theft-auto/grand-theft-auto-6-features-detailed-decapitation-and-frequent-and-prominent-drug-use-according-to-hastily-deleted-pegi-rating/"
+image: "/noticias/portadas/2026-10-05-rockstar-revela-su-proceso-de-investigacion-para-gta-6-viajes-con.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Una entrevista exclusiva con Rockstar Games publicada por Love Magazine arroja luz sobre el proceso de investigación detrás de GTA 6. El equipo pasó tiempo inmerso en la cultura y el paisaje de Miami y sus alrededores para capturar la esencia de Florida. Aaron Garbut, jefe de desarrollo, explicó que los viajes de investigación comienzan con un grupo pequeño que explora los lugares más interesantes, y luego se suman más miembros del equipo en viajes posteriores.

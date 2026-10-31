@@ -21,6 +21,8 @@ sources:
     url: "https://techcrunch.com/2026/09/22/discords-age-verification-era-is-upon-us-despite-community-backlash/"
   - name: "Engadget"
     url: "https://www.engadget.com/2265924/discord-rolls-out-its-revised-age-verification-policy/"
+image: "/noticias/portadas/2026-09-23-discord-activa-verificacion-de-edad-global-asi-cambia-tu-cuenta.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Discord empieza a implementar esta semana su sistema de verificación de edad a nivel global. La plataforma clasificará automáticamente a los usuarios en tres grupos: Adulto (18+), Adolescente (13-17) y Sin confirmar. Según la compañía, más del 90% de los usuarios no tendrá que confirmar su edad manualmente.

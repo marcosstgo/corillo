@@ -23,6 +23,8 @@ sources:
     url: "https://ixbt.games/en/news/2026/09/14/435671-wardogs-unictozaet-konkurentov-v-steam-onlain-prevysil-428-tysiac-igrokov.html"
   - name: "Recharge — Wardogs Steam Player Count 2026"
     url: "https://www.recharge.com/blog/en-gb/wardogs-steam-player-count-2026-stats-population"
+image: "/noticias/portadas/2026-09-20-overlays-battlefield-6-y-wardogs.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Si transmites Battlefield 6, seguramente conoces los overlays de Corillo: unas tarjetas para OBS que muestran tus kills, tu K/D o tus mejores armas en tiempo real. Hoy **estrenan diseño**, con el mismo azul Cobalto del resto del sitio, y traemos algo nuevo: **WARDOGS**.

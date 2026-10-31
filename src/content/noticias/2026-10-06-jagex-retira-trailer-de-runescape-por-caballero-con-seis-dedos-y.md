@@ -21,6 +21,8 @@ sources:
     url: "https://www.pcgamer.com/games/mmo/runescape-dev-apologises-after-runefest-debut-of-an-ai-generated-six-fingered-character-thats-pretty-hard-to-explain-away/"
   - name: "Eurogamer"
     url: "https://www.eurogamer.net/runescape-dragon-slayer-2-trailer-generative-ai"
+image: "/noticias/portadas/2026-10-06-jagex-retira-trailer-de-runescape-por-caballero-con-seis-dedos-y.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 El fin de semana de RuneFest 2026 dejó un sabor agridulce para los jugadores de RuneScape. Jagex retiró de sus canales oficiales el tráiler de la nueva quest Dragon Slayer 2 para RuneScape 3, luego de que los fans señalaran algo extraño: un caballero con seis dedos en una mano. Las capturas circularon rápido en redes y avivaron las acusaciones de que el video fue creado con IA generativa.

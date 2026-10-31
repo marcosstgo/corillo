@@ -21,6 +21,8 @@ sources:
     url: "https://www.dexerto.com/entertainment/apple-reveals-homeview-smart-home-display-with-facial-recognition-and-major-siri-upgrade-3418528/"
   - name: "Ars Technica"
     url: "https://arstechnica.com/apple/2026/10/apple-homeview-smart-home-hub-opens-for-preorders-at-299/"
+image: "/noticias/portadas/2026-10-14-apple-lanza-homeview-pantalla-inteligente-con-ia-para-el-hogar-a-299.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Apple ha presentado HomeView, su primera pantalla inteligente con IA para el hogar. El dispositivo cuenta con una pantalla Liquid Retina de 7 pulgadas y un precio de 299 dólares. Estará disponible a partir del 13 de noviembre, con pedidos anticipados desde el 13 de octubre.

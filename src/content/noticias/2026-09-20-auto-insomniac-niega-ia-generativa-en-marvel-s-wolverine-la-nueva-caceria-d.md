@@ -23,6 +23,8 @@ sources:
     url: "https://vandal.elespanol.com/noticia/2026262012/el-trofeo-mas-extrano-de-marvel-lobezno-te-obliga-a-interactuar-con-un-vater-para-provocar-un-beso-de-poseidon/"
   - name: "GameSpot"
     url: "https://www.gamespot.com/articles/indie-dev-says-ai-voice-in-his-game-was-actually-his-wife/"
+image: "/noticias/portadas/2026-09-20-auto-insomniac-niega-ia-generativa-en-marvel-s-wolverine-la-nueva-caceria-d.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Todo empezó con un letrero de baño. Un usuario de TikTok, SmoothMango, publicó un clip de un minuto mostrando dos señales dentro de Marvel's Wolverine en las que las figuras aparecían derretidas, fundidas una con la otra. El detalle saltó a X/Twitter de la mano del usuario Rock Solid y, en cuestión de horas, media internet daba por hecho que Insomniac había metido arte generado por inteligencia artificial en su exclusivo de PS5, lanzado el 15 de septiembre.

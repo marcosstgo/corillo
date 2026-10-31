@@ -13,6 +13,8 @@ heroSub: "Azul Cobalto, un menú lateral pensado para explorar, un panel de crea
 summary: "Rediseño completo: nueva identidad azul Cobalto, menú lateral, panel de creador, vistas de 2 columnas en VODs y Streamers y un sitio que carga bastante más rápido en el celular."
 category: "corillo"
 tags: ["Rediseño", "Plataforma", "Creadores"]
+image: "/noticias/portadas/2026-09-20-nueva-cara-de-corillo.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Hicimos algo que teníamos pendiente: **darle a Corillo una cara propia**. Si entras hoy vas a notar el cambio de inmediato.

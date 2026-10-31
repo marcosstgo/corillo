@@ -11,6 +11,8 @@ pubDate: 2026-03-29T16:00:00Z
 heroTitle: "Corillo CSS entra en v1.4"
 heroSub: "El framework del proyecto sigue creciendo con componentes que ya no viven solo en demos, sino dentro del producto real."
 summary: "El framework del proyecto sigue creciendo con componentes reales del player, nueva documentación y una base más sólida para seguir migrando páginas grandes."
+image: "/noticias/portadas/corillo-css-v1-4.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 <h2>Qué cambió</h2>

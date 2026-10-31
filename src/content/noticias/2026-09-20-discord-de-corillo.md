@@ -13,6 +13,8 @@ heroSub: "Ahora lo encuentras en el menú, en el pie de página y en corillo.liv
 summary: "El servidor de Discord de Corillo ahora está a un toque en el menú y en corillo.live/discord, con una invitación que no expira."
 category: "corillo"
 tags: ["Discord", "Comunidad"]
+image: "/noticias/portadas/2026-09-20-discord-de-corillo.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 El corillo lleva tiempo juntándose en Discord, pero el enlace estaba escondido y la invitación se había caído. **Lo arreglamos.**

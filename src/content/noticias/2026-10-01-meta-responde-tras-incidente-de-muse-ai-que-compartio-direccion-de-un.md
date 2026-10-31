@@ -19,6 +19,8 @@ sources:
     url: "https://www.dexerto.com/youtube/meta-responds-after-muse-ai-gave-stranger-youtubers-home-address-on-facebook-marketplace-3414057/"
   - name: "TechCrunch"
     url: "https://techcrunch.com/2026/09/30/meta-disputes-claim-that-muse-read-a-users-private-messages-without-permission/"
+image: "/noticias/portadas/2026-10-01-meta-responde-tras-incidente-de-muse-ai-que-compartio-direccion-de-un.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 El asistente de inteligencia artificial Muse de Meta está en el centro de una controversia después de que el YouTuber y creador tecnológico Matt Robb denunciara que gestionó mal una venta en Facebook Marketplace, lo que llevó a que su dirección fuera compartida y un comprador se presentara en su casa.

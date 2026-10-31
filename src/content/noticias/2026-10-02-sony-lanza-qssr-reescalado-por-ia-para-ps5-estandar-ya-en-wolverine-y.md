@@ -21,6 +21,8 @@ sources:
     url: "https://www.eurogamer.net/ps5-ai-upscaling-qssr-marvels-wolverine-ghost-yotei"
   - name: "Vandal"
     url: "https://vandal.elespanol.com/noticia/2026275012/analizan-qssr-el-nuevo-reescalado-por-ia-para-todas-las-ps5-la-calidad-de-la-imagen-es-mucho-mayor/"
+image: "/noticias/portadas/2026-10-02-sony-lanza-qssr-reescalado-por-ia-para-ps5-estandar-ya-en-wolverine-y.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Sony ha lanzado Quick Spectral Super Resolution (QSSR), una tecnología de reescalado por IA diseñada específicamente para la PS5 estándar. Es el resultado del trabajo de Sony en Project Amethyst con AMD, y se presenta como una versión más ligera de PlayStation Spectral Super Resolution (PSSR), que Sony describe como el "gold standard" en PS5 Pro.

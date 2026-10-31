@@ -23,6 +23,8 @@ sources:
     url: "https://www.eurogamer.net/epic-games-delays-star-wars-marvel-shooter-ai-development"
   - name: "Dexerto"
     url: "https://www.dexerto.com/gaming/epic-orders-devs-to-use-more-ai-after-delaying-marvel-x-star-wars-extraction-shooter-report-3418370/"
+image: "/noticias/portadas/2026-10-13-epic-retrasa-su-shooter-de-star-wars-y-marvel-y-adopta-desarrollo-ai.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Epic Games retrasó su shooter crossover de Star Wars y Marvel, un proyecto no anunciado que estaba previsto para marzo de 2027, según un informe de Bloomberg que cita fuentes anónimas. No se ha comunicado una nueva fecha de lanzamiento.

@@ -23,6 +23,8 @@ sources:
     url: "https://www.ign.com/articles/zach-cregger-suggests-theres-no-cregger-cut-of-resident-evil-as-fans-hope-to-see-trimmed-jokes"
   - name: "IGN"
     url: "https://www.ign.com/articles/resident-evil-fans-will-feel-seen-after-the-movie-says-director-zach-cregger"
+image: "/noticias/portadas/2026-09-20-auto-resident-evil-de-cregger-abre-con-108-3m-y-rompe-el-record-de-la-saga.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 El reboot de *Resident Evil* dirigido por Zach Cregger llegó a las salas con una parte del fandom en contra y salió del primer fin de semana con $108.3 millones a nivel global: $60 millones en Estados Unidos y $48.3 millones en el resto del mundo. Las proyecciones más optimistas hablaban de un debut doméstico entre $40 y $50 millones, así que el número final no solo superó expectativas, sino que se convirtió en el mejor estreno en la historia de la franquicia en pantalla grande.

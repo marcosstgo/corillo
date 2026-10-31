@@ -19,6 +19,8 @@ sources:
     url: "https://www.ign.com/articles/78-year-old-fortnite-streaming-grandmother-now-holds-a-world-record"
   - name: "Dexerto"
     url: "https://www.dexerto.com/gaming/78-year-old-grandma-becomes-worlds-oldest-female-fortnite-streamer-3412809/"
+image: "/noticias/portadas/2026-09-28-abuela-escocesa-de-78-anos-rompe-record-mundial-como-la-streamer-de.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Cath Bowie, una abuela escocesa de 78 años, acaba de entrar en los libros de récords. Guinness World Records la reconoció oficialmente como la streamer de Fortnite más longeva del mundo. Conocida en línea como Grumpygran1948, Bowie comenzó a jugar en 2017, durante la semana de lanzamiento del battle royale, y hoy cuenta con más de 24,000 seguidores en sus transmisiones diarias por YouTube y Twitch.

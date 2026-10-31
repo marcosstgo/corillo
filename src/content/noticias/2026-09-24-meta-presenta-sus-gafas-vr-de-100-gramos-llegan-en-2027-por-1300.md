@@ -21,6 +21,8 @@ sources:
     url: "https://www.ign.com/articles/metas-new-vr-glasses-to-entice-casual-viewers-with-3d-and-full-frame-imax"
   - name: "IGN"
     url: "https://www.ign.com/articles/meta-connect-2026-everything-announced"
+image: "/noticias/portadas/2026-09-24-meta-presenta-sus-gafas-vr-de-100-gramos-llegan-en-2027-por-1300.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Meta presentó oficialmente Meta VR Glasses, un dispositivo de realidad virtual que se aleja del formato tradicional de visor. Las gafas llegarán en primavera de 2027 con un precio de 1299,99 dólares y un peso de alrededor de 100 gramos, aproximadamente una quinta parte de las Meta Quest 3.

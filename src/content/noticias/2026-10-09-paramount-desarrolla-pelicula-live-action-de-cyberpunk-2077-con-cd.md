@@ -23,6 +23,8 @@ sources:
     url: "https://www.eurogamer.net/cyberpunk-2077-live-action-film-paramount-cd-projekt-red"
   - name: "3DJuegos"
     url: "https://www.3djuegos.com/tv-series/noticias/cyberpunk-2077-tendra-pelicula-sera-productor-peores-cintas-jamas-hechas-quien-lleve-a-cabo"
+image: "/noticias/portadas/2026-10-09-paramount-desarrolla-pelicula-live-action-de-cyberpunk-2077-con-cd.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Paramount está desarrollando una adaptación cinematográfica live-action de Cyberpunk 2077, con CD Projekt Red como productor. La noticia fue reportada por Deadline y confirmada por el co-CEO de CD Projekt, Michał Nowakowski, quien declaró: "We're excited about Paramount as a future partner who shares our creative ambitions for the Cyberpunk franchise."

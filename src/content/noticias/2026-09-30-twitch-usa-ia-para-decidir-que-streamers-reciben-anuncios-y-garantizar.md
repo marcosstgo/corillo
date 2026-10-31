@@ -19,6 +19,8 @@ sources:
     url: "https://www.dexerto.com/twitch/twitch-ceo-reveals-they-use-ai-to-decide-which-streamers-get-certain-ads-3413773/"
   - name: "Tubefilter"
     url: "https://www.tubefilter.com/2026/09/29/twitch-using-ai-to-scan-streamer-brand-safety-dan-clancy/"
+image: "/noticias/portadas/2026-09-30-twitch-usa-ia-para-decidir-que-streamers-reciben-anuncios-y-garantizar.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Twitch, propiedad de Amazon, está usando inteligencia artificial para decidir qué streamers reciben anuncios y para asegurar que los broadcasts sean brand-safe. Así lo reveló su CEO, Dan Clancy, en una entrevista con The Snarketing Podcast el 22 de septiembre.

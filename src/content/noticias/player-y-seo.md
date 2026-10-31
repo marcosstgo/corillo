@@ -11,6 +11,8 @@ pubDate: 2026-03-29T08:00:00Z
 heroTitle: "Mejoras en player, theme y SEO"
 heroSub: "Seguimos cerrando detalles que quizá no siempre se ven como una gran feature, pero sí hacen que el site se sienta más sólido."
 summary: "Se siguió puliendo el player, se mejoró el tema claro en varias páginas y el site quedó mejor preparado para descubrimiento en buscadores."
+image: "/noticias/portadas/player-y-seo.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 <h2>Player más alineado con el framework</h2>

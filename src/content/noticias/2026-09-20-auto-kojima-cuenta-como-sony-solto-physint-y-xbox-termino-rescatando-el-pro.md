@@ -23,6 +23,8 @@ sources:
     url: "https://www.dexerto.com/gaming/kojima-productions-says-sony-relationship-remains-strong-after-physint-split-3410510/"
   - name: "3DJuegos"
     url: "https://www.3djuegos.com/juegos/physint/noticias/estaba-shock-hideo-kojima-se-sincera-afirma-que-recibio-peor-noticia-su-carrera-simple-videollamada-sony"
+image: "/noticias/portadas/2026-09-20-auto-kojima-cuenta-como-sony-solto-physint-y-xbox-termino-rescatando-el-pro.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Hideo Kojima presentó Physint en enero de 2024 como un juego de acción y espionaje pensado como sucesor espiritual de Metal Gear Solid, exclusivo de PlayStation y con un reparto que incluía a Bill Skarsgård, Charlee Fraser, Ma Dong-seok y Minami Hamabe. Año y medio después, el proyecto cambió de dueño. En entrevista con IGN Japan, el creador contó cómo se enteró.

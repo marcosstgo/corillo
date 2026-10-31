@@ -87,8 +87,10 @@ def ia(meta):
     key = os.environ.get('GEMINI_API_KEY')
     if not key: return None
     prompt = (f"Editorial illustration for a gaming news site, 16:9. ABSOLUTELY NO text, letters, numbers, dates, roman numerals, titles or logos of any kind (no game logos, no company logos), and no real people's faces "
-              f"(use silhouettes, objects or scenery instead). Bold, modern, dark navy background (#06143f) with warm orange "
-              f"(#ff6a3d) and yellow (#ffd23f) light accents. Topic (illustrate the idea, never write it): {_sin_marcas(meta['titulo'])}. "
+              f"(use silhouettes, objects or scenery instead). A full-bleed illustration, not a screenshot, poster or user interface. "
+              # Colores con palabras: con códigos (#06143f) el modelo a veces los escribía en la imagen
+              f"Bold, modern style: deep dark navy blue background with glowing warm orange and sunny yellow light accents. "
+              f"Topic (illustrate the idea, never write it): {_sin_marcas(meta['titulo'])}. "
               f"Context: {_sin_marcas(meta['resumen'])}")
     r = HTTP.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
                   params={'key': key}, json={'contents': [{'parts': [{'text': prompt}]}],

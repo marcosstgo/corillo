@@ -12,6 +12,8 @@ heroTitle: "La Fiebre: Puerto Rico pone la cultura de autos boricua al frente"
 heroSub: "Fiebru Studios está trabajando un juego de carreras en mundo abierto inspirado en Puerto Rico, con drag racing, personalización profunda y multiplayer."
 wide: true
 summary: "Fiebru Studios está trabajando un juego de carreras en mundo abierto inspirado en Puerto Rico, con drag racing, personalización, multiplayer y una vibra que se siente de aquí."
+image: "/noticias/portadas/la-fiebre-puerto-rico.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 <h2>De qué trata</h2>

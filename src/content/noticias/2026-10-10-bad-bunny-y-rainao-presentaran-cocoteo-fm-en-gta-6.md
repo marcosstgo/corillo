@@ -23,6 +23,8 @@ sources:
     url: "https://www.dexerto.com/gta/gta-6-radio-stations-revealed-and-you-can-listen-to-them-now-3417185/"
   - name: "3DJuegos"
     url: "https://www.3djuegos.com/juegos/grand-theft-auto-vi/noticias/solo-rockstar-puede-reunir-a-bad-bunny-travis-scott-lana-rey-para-banda-sonora-gta-6-canciones-artistas-confirmados"
+image: "/noticias/portadas/2026-10-10-bad-bunny-y-rainao-presentaran-cocoteo-fm-en-gta-6.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Rockstar Games confirmó las primeras emisoras de radio de GTA 6, y entre ellas destaca Cocoteo FM, una estación de música latina presentada por Bad Bunny y RaiNao. El anuncio incluye seis emisoras que abarcan géneros como pop, metal, country, música africana y hip-hop sureño.
