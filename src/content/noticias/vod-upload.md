@@ -12,6 +12,8 @@ heroTitle: "Sube tus videos a CORILLO — y ponlos en cualquier lado"
 heroSub: "Ya no necesitas YouTube para alojar un tutorial, un video de comunidad o cualquier contenido que hagas. Súbelo directo desde tu perfil, ponle título y tendrás un link para verlo y un código para embebarlo en cualquier sitio."
 cardTitle: "Sube tus videos — sin stream, sin YouTube"
 summary: "Upload directo desde el perfil, título personalizado y código embed para poner tu video en cualquier sitio. Sin depender de plataformas externas."
+image: "/noticias/portadas/vod-upload.jpg"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 <h2>Sin stream, sin YouTube</h2>
