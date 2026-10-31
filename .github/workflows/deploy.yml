@@ -1,9 +1,10 @@
 name: Deploy to Pi
 
+# APAGADO el 30-oct-2026: desplegaba por SSH al server viejo (disco muerto). corillo.live pasa a
+# Cloudflare Pages y las APIs a corillo-vps (ver marcosstgo/corillo-server). Queda solo manual
+# como referencia hasta que se reemplace.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
