@@ -1,10 +1,12 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
+// Reescrita el 30-oct-2026 a pedido de Marcos: información seria y actual, sin repeticiones ni frases de relleno.
+// Si cambia lo que ofrece la plataforma (p. ej. vuelven los VODs), actualizar "Lo que ofrece".
 ---
 <SiteShell
   pageClass="p-legacy"
   title="CORILLO — Sobre Corillo"
-  description="Conoce qué es CORILLO, un proyecto de streaming nacido en Aibonito, Puerto Rico, con referencias, lenguaje y prioridades nuestras."
+  description="Corillo es una plataforma de streaming y comunidad gamer hecha en Aibonito, Puerto Rico: transmisiones en vivo, noticias, ofertas y mercado de equipo, en español."
   canonical="https://corillo.live/que-es-corillo/"
 >
 <fragment slot="head">
@@ -26,163 +28,86 @@ import SiteShell from '../../layouts/SiteShell.astro';
       <text class="crl-brand-word" x="114" y="74" font-family="Bebas Neue, cursive" font-size="82">RILLO</text>
     </svg>
   </div>
-  <p class="crl-hero-eyebrow">Aibonito, Puerto Rico · Independiente · Hecho aquí</p>
+  <p class="crl-hero-eyebrow">Aibonito, Puerto Rico · Independiente</p>
   <h1 class="crl-hero-title">¿Qué es Corillo?</h1>
-  <p class="crl-hero-sub">Corillo es una plataforma de streaming hecha en Aibonito, Puerto Rico. Para streamers boricuas que quieren un espacio propio, con herramientas reales y sin depender de Twitch ni YouTube para existir.</p>
+  <p class="crl-hero-sub">Corillo es una plataforma de streaming y comunidad gamer hecha en Puerto Rico. Aquí puedes transmitir en vivo, ver a streamers boricuas, enterarte de las noticias del gaming y la tecnología, encontrar ofertas y comprar o vender equipo, todo en español.</p>
   <div class="crl-hero-actions">
-    <a class="btn btn-primary" href="/join/"><i class="fa-solid fa-arrow-right"></i> Únete</a>
-    <a class="btn" href="/roadmap/"><i class="fa-solid fa-map"></i> Ver roadmap</a>
-  </div>
-  <div class="card card-dim" style="max-width:620px;margin:24px auto 0;padding:14px 16px">
-    <div class="crl-flex crl-items-center crl-gap-md crl-wrap" style="justify-content:center">
-      <svg viewBox="0 0 1063 708.66" aria-label="Bandera de Puerto Rico" role="img" style="width:118px;height:auto;border-radius:8px;border:1px solid var(--crl-border);box-shadow:0 12px 30px rgba(0,0,0,.18)">
-        <rect width="1063" height="708.66" fill="#ed0000"></rect>
-        <rect y="141.73" width="1063" height="141.73" fill="#ffffff"></rect>
-        <rect y="425.2" width="1063" height="141.73" fill="#ffffff"></rect>
-        <path d="M0 0L609.96 353.88L0 707.3V0Z" fill="#0050f0"></path>
-        <path d="M266.19 534.45L255.78 527.02L245.42 534.52L249.27 522.33L238.94 514.8L251.72 514.69L255.69 502.53L259.74 514.66L272.53 514.68L262.25 522.28L266.19 534.45Z" transform="matrix(6.3097 0 0 6.5987 -1411.4 -3076.2)" fill="#ffffff"></path>
-      </svg>
-      <p class="crl-sm crl-text-muted" style="margin:0;max-width:34ch;text-align:left">Un proyecto nacido en Puerto Rico, con referencias, lenguaje y prioridades nuestras. La bandera aquí no es adorno: es contexto.</p>
-    </div>
+    <a class="btn btn-primary" href="/join/"><i class="fa-solid fa-arrow-right"></i> Crear mi canal</a>
+    <a class="btn" href="/streamers/"><i class="fa-solid fa-users"></i> Ver streamers</a>
   </div>
 </div>
 <hr class="crl-divider-fade crl-divider-flush">
 
 <div class="crl-container-narrow">
-  <p class="crl-section-label">Lo Que Tiene Hoy</p>
+  <p class="crl-section-label">Lo que ofrece</p>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px" class="qec-features">
-    <div class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+    <a href="/streamers/" class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
       <i class="fa-solid fa-tower-broadcast" style="font-size:1.6rem;color:var(--crl-accent)"></i>
       <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Streaming en vivo</div>
-      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Desde PC o celular, directo al servidor</div>
-    </div>
-    <div class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
-      <i class="fa-solid fa-film" style="font-size:1.6rem;color:var(--crl-accent)"></i>
-      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">VODs automáticos</div>
-      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Cada stream queda grabado sin hacer nada</div>
-    </div>
-    <div class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
-      <i class="fa-solid fa-scissors" style="font-size:1.6rem;color:var(--crl-accent)"></i>
-      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Reels 9:16</div>
-      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Clips verticales listos para TikTok e Instagram</div>
-    </div>
-    <div class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
-      <i class="fa-solid fa-comments" style="font-size:1.6rem;color:var(--crl-accent)"></i>
-      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Chat en tiempo real</div>
-      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Con bot AI integrado al stream</div>
-    </div>
-    <div class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Hasta 1080p a 60 fps desde OBS o Meld, con una versión más liviana para el celular</div>
+    </a>
+    <a href="/join/" class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
       <i class="fa-solid fa-user" style="font-size:1.6rem;color:var(--crl-accent)"></i>
-      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Perfil propio</div>
-      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Bio, links, panels y dashboard del streamer</div>
-    </div>
-    <div class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
-      <i class="fa-solid fa-mobile-screen" style="font-size:1.6rem;color:var(--crl-accent)"></i>
-      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Desde cualquier sitio</div>
-      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">PC, celular, WiFi o datos móviles</div>
-    </div>
+      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Canal propio</div>
+      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Perfil con tu bio y tus redes, chat, y aviso a tus seguidores cuando sales en vivo</div>
+    </a>
+    <a href="/noticias/" class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+      <i class="fa-solid fa-newspaper" style="font-size:1.6rem;color:var(--crl-accent)"></i>
+      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Noticias</div>
+      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Una nota al día de gaming, tecnología y streaming, en español y con sus fuentes</div>
+    </a>
+    <a href="/ofertas/" class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+      <i class="fa-solid fa-tags" style="font-size:1.6rem;color:var(--crl-accent)"></i>
+      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Ofertas</div>
+      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Juegos gratis, rebajas de varias tiendas y equipo con envío a Puerto Rico</div>
+    </a>
+    <a href="/mercado/" class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+      <i class="fa-solid fa-store" style="font-size:1.6rem;color:var(--crl-accent)"></i>
+      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Mercado</div>
+      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">Compra y venta de equipo usado entre personas en Puerto Rico, por pueblo</div>
+    </a>
+    <a href="/discord/" class="card card-dim" style="padding:20px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+      <i class="fa-brands fa-discord" style="font-size:1.6rem;color:var(--crl-accent)"></i>
+      <div style="font-family:var(--crl-mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--crl-white)">Comunidad</div>
+      <div style="font-size:var(--crl-xs);color:var(--crl-muted);line-height:1.5">El Discord de Corillo y El Bochinchero, nuestro bot de voz para Discord</div>
+    </a>
   </div>
 
-  <p class="crl-section-label">En Una Línea</p>
+  <p class="crl-section-label">Cómo funciona</p>
   <div class="card crl-card-stack card-accent">
     <div class="crl-card-head">
       <div>
-        <div class="crl-card-title">Un lugar nuestro en internet</div>
-        <div class="crl-card-desc">Un proyecto hecho aquí, con identidad propia y pensado para nuestra realidad.</div>
+        <div class="crl-card-title">Para ver no hace falta cuenta. Para transmitir, es gratis.</div>
+        <div class="crl-card-desc">Cualquier persona puede entrar y ver los canales. Abrir un canal toma unos minutos.</div>
       </div>
-      <span class="badge badge-accent"><i class="fa-solid fa-house-signal"></i> Hecho aquí</span>
+      <span class="badge badge-accent"><i class="fa-solid fa-play"></i> Empezar</span>
     </div>
     <ul class="crl-feature-list">
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Nace aquí y se sigue construyendo aquí.</li>
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Pensado para streamers y viewers de Puerto Rico, sin disfrazarlo.</li>
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Independiente, sin depender de una plataforma ajena para existir.</li>
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Diseñado con cultura, lenguaje y sensibilidad boricua.</li>
+      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Crea tu cuenta en <a href="/join/">corillo.live/join</a> y confirma tu correo.</li>
+      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> En tu perfil copias tu clave de transmisión.</li>
+      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> En OBS o Meld pones el servidor <code>rtmp://media.corillo.live/live</code> y tu clave. La <a href="/configuracion/">guía de configuración</a> tiene los ajustes recomendados.</li>
+      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Tu canal queda en <code>corillo.live/tu-nombre</code>.</li>
     </ul>
   </div>
 
-  <p class="crl-section-label">La Idea</p>
+  <p class="crl-section-label">Cómo trabajamos</p>
   <div class="card crl-card-stack card-confirm">
     <div class="crl-card-head">
       <div>
-        <div class="crl-card-title">De aquí, con identidad propia</div>
-        <div class="crl-card-desc">No intenta imitar a nadie. Tiene sus propias referencias y no le pide permiso a ninguna plataforma para existir.</div>
+        <div class="crl-card-title">Independiente y pensada para Puerto Rico</div>
+        <div class="crl-card-desc">Corillo se desarrolla en Aibonito, sin inversionistas, y crece según lo que pide su comunidad.</div>
       </div>
-      <span class="badge badge-confirm"><i class="fa-solid fa-seedling"></i> Identidad</span>
+      <span class="badge badge-confirm"><i class="fa-solid fa-flag"></i> Hecho en PR</span>
     </div>
     <ul class="crl-feature-list">
-      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> No es un clon de Twitch ni de YouTube. Tiene su propio diseño, su propio stack y sus propias decisiones.</li>
-      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> Nace en Aibonito, Puerto Rico, y eso se nota en el lenguaje, el diseño y en cómo están hechas las cosas.</li>
-      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> Pequeño por ahora, pero funcional y creciendo — sin prisa y sin fingir que es más grande de lo que es.</li>
-      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> Como el coquí: no necesita explicarse. Si eres de aquí, lo reconoces de una.</li>
+      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> <strong>En español y con contexto local:</strong> noticias escritas para el público de aquí, ofertas con envío real a Puerto Rico y un mercado organizado por pueblos.</li>
+      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> <strong>Transparencia:</strong> cada noticia cita sus fuentes y avisa cuando se redactó con apoyo de inteligencia artificial; las ofertas muestran el precio real.</li>
+      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> <strong>Infraestructura propia:</strong> el video se procesa en servidores de Corillo, no depende de otra plataforma de streaming.</li>
+      <li><i class="fa-solid fa-circle-dot crl-feature-ico crl-text-confirm"></i> <strong>En desarrollo continuo:</strong> lo que viene está en el <a href="/roadmap/">roadmap</a>.</li>
     </ul>
-  </div>
-
-  <p class="crl-section-label">Qué Lo Hace Diferente</p>
-  <div class="card crl-card-stack crl-card-cool">
-    <div class="crl-card-head">
-      <div>
-        <div class="crl-card-title">No es solo prender cámara y ya</div>
-        <div class="crl-card-desc">Aquí hay producto real: chat, VODs, perfiles, reels, notificaciones. Todo en el mismo lugar, sin salir del ecosistema.</div>
-      </div>
-      <span class="badge crl-badge-cool"><i class="fa-solid fa-star"></i> Diferente</span>
-    </div>
-    <ul class="crl-feature-list">
-      <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Chat en vivo, perfiles, VODs, clips y notificaciones sin salir del ecosistema.</li>
-      <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Bot inteligente integrado al chat del stream.</li>
-      <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Multiplayer — ve todos los streamers en vivo desde una sola pantalla.</li>
-      <li><i class="fa-solid fa-star crl-feature-ico crl-ico-cool"></i> Un producto local que cuida tanto la identidad como la calidad técnica.</li>
-    </ul>
-  </div>
-
-  <p class="crl-section-label">Para Quién Es</p>
-  <div class="card crl-card-stack card-dim">
-    <div class="crl-card-head">
-      <div>
-        <div class="crl-card-title">Para gente que quiere algo más cercano y más real</div>
-        <div class="crl-card-desc">Si quieres descubrir streamers de aquí o hacer stream en un lugar propio, este es el sitio.</div>
-      </div>
-      <span class="badge badge-dim"><i class="fa-regular fa-compass"></i> Comunidad</span>
-    </div>
-    <ul class="crl-feature-list">
-      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Para viewers que quieren descubrir streamers boricuas sin tener que buscarlos en Twitch.</li>
-      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Para streamers que quieren una plataforma propia, con herramientas reales y sin intermediarios.</li>
-      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Por ahora, entrar a Corillo es por invitación y aprobación manual.</li>
-      <li><i class="fa-solid fa-arrow-right crl-feature-ico crl-text-muted"></i> Para gente que prefiere apoyar algo hecho aquí en vez de darle más números a una plataforma de afuera.</li>
-    </ul>
-  </div>
-
-  <p class="crl-section-label">Hoy</p>
-  <div class="card crl-card-stack card-accent">
-    <div class="crl-card-head">
-      <div>
-        <div class="crl-card-title">Esto ya es real</div>
-        <div class="crl-card-desc">No es una idea en papel. Ya existe, ya sirve y ya sigue creciendo.</div>
-      </div>
-      <span class="badge badge-accent"><i class="fa-solid fa-bolt"></i> En vivo</span>
-    </div>
-    <ul class="crl-feature-list">
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Canales en vivo y directorio de streamers.</li>
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> VODs, clips, previews y perfil público por canal.</li>
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Onboarding, dashboard, stream keys y herramientas operacionales.</li>
-      <li><i class="fa-solid fa-check crl-feature-ico crl-text-accent"></i> Roadmap activo porque esto se sigue construyendo todos los días.</li>
-    </ul>
-  </div>
-
-  <p class="crl-section-label">Cierre</p>
-  <div class="card crl-card-stack card-confirm">
-    <div class="crl-card-head">
-      <div>
-        <div class="crl-card-title">Corillo existe porque alguien decidió hacerlo aquí</div>
-        <div class="crl-card-desc">Y eso, honestamente, es lo más importante.</div>
-      </div>
-      <span class="badge badge-confirm"><i class="fa-solid fa-flag"></i> Nuestro</span>
-    </div>
-    <p class="crl-base crl-text-muted">
-      No hay inversionistas detrás ni un equipo de 50 personas. Hay un proyecto hecho en Puerto Rico que funciona, que sigue creciendo y que no le debe explicaciones a nadie. Eso es suficiente.
-    </p>
     <div class="crl-flex crl-wrap crl-gap-sm" style="margin-top:24px">
-      <a class="btn btn-primary" href="/streamers/"><i class="fa-solid fa-users"></i> Ver streamers</a>
-      <a class="btn" href="/join/"><i class="fa-solid fa-plus"></i> Crear canal</a>
+      <a class="btn btn-primary" href="/join/"><i class="fa-solid fa-plus"></i> Crear mi canal</a>
+      <a class="btn" href="/discord/"><i class="fa-brands fa-discord"></i> Entrar al Discord</a>
     </div>
   </div>
 </div>
