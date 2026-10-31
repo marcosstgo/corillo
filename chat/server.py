@@ -18,7 +18,7 @@ DB_PATH       = os.environ.get("DB_PATH", "/home/corillo-adm/corillo-chat/chat.d
 # Seguridad (auditoría 31-oct-2026)
 ORIGENES_WS  = re.compile(r"^https://((www\.)?corillo\.live|[a-z0-9-]+\.corillo\.pages\.dev)$|^http://localhost(:\d+)?$")
 CANAL_RE     = re.compile(r"^[a-z0-9][a-z0-9_-]{0,39}$")
-USUARIO_RE   = re.compile(r"^w{3,24}$")    # w acepta tildes y ñ (Lechón_81)
+USUARIO_RE   = re.compile(r"^\w{3,24}$")   # \w acepta tildes y ñ (Lechón_81)
 MAX_SALAS    = 200          # salas en memoria (antes cualquier nombre de canal creaba una)
 MAX_EN_SALA  = 500
 BOT_PAUSA    = 8.0          # segundos mínimos entre respuestas del bot en una sala
