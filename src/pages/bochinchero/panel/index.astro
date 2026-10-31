@@ -59,6 +59,9 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       .bp-vacio{color:var(--h2-mute)}
       .bp-entrar{max-width:560px;margin:40px auto;text-align:center}
       .bp-entrar p{color:var(--h2-mute)}
+      .bp-per{display:grid;grid-template-columns:minmax(260px,360px) 1fr;gap:16px;align-items:start}
+      @media (max-width:860px){.bp-per{grid-template-columns:1fr}}
+      .bp-miembros{max-height:560px;overflow:auto}
       .bp-guardar{position:sticky;bottom:16px;display:flex;justify-content:flex-end;margin-top:12px}
     </style>
   </fragment>
@@ -228,27 +231,77 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       },
 
       async personas(v) {
-        const lista = await api('GET', S('/personas'));
-        v.innerHTML = `<div class="bp-card"><h2>Personas</h2>
-          <p class="bp-vacio">Aparecen cuando entran a una sala de voz. Aquí les pones cómo se dice su nombre, su cumpleaños y si los saluda.</p>
-          ${lista.length ? `<ul class="bp-lista">${lista.map(p => `<li data-id="${esc(p.id)}">
-              <div class="t"><b>${esc(p.nombre)}</b><small>La voz dice «${esc(p.voz)}» · ${p.puyas} puyas · racha ${p.racha} días · última vez ${hace(p.ultima_vez)}</small></div>
-              <input class="apodo" placeholder="Cómo se dice (apodo)" maxlength="40" value="${esc(p.apodo || '')}" style="flex:0 1 210px">
-              <input class="cumple" placeholder="Cumple MM-DD" maxlength="5" value="${esc(p.cumple || '')}" style="flex:0 1 130px">
-              <label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" class="saludo" ${p.saludo_on ? 'checked' : ''} style="width:auto"> Saludar</label>
-              <button class="bp-btn sec peq oir">▶</button>
-              <button class="bp-btn peq guardar">Guardar</button></li>`).join('')}</ul>` : '<p class="bp-vacio">Todavía nadie.</p>'}</div>`;
-        v.querySelectorAll('li[data-id]').forEach(li => {
-          const id = li.dataset.id;
-          li.querySelector('.oir').onclick = e => escuchar(li.querySelector('.apodo').value.trim() || lista.find(p => p.id === id).voz, e.currentTarget);
-          li.querySelector('.guardar').onclick = async () => {
-            try {
-              await api('PATCH', S('/personas/' + id), { apodo: li.querySelector('.apodo').value.trim(), cumple: li.querySelector('.cumple').value.trim(),
-                                                         saludo_on: li.querySelector('.saludo').checked });
-              aviso('Guardado.');
-            } catch (e) {}
+        // Izquierda: buscar a cualquier miembro del server. Derecha: su ficha (apodo, cumple, notas, puyas con sus notas).
+        v.innerHTML = `<div class="bp-per">
+          <div class="bp-card"><h2>Miembros</h2>
+            <input id="buscar" placeholder="Buscar por nombre…" autocomplete="off">
+            <ul class="bp-lista bp-miembros" id="miembros" style="margin-top:10px"><li class="bp-vacio">Cargando…</li></ul></div>
+          <div class="bp-card" id="ficha"><h2>Escoge a alguien</h2>
+            <p class="bp-vacio">Búscalo a la izquierda. Le puedes poner cómo se dice su nombre, su cumpleaños y <b>notas</b>
+            («le encantan los hot dogs», «siempre dice que tiene lag»): el Bochinchero las usa para vacilarlo.</p></div></div>`;
+        const pintarMiembros = lista => {
+          $('#miembros').innerHTML = lista.length ? lista.map(m => `<li data-id="${esc(m.id)}" data-nombre="${esc(m.nombre)}" style="cursor:pointer">
+            ${m.avatar ? `<img src="${esc(m.avatar)}" alt="" style="width:30px;height:30px;border-radius:50%">` : ''}
+            <div class="t"><b>${esc(m.nombre)}</b><small>@${esc(m.usuario)}${m.notas ? ` · ${m.notas} nota${m.notas > 1 ? 's' : ''}` : ''}</small></div></li>`).join('')
+            : '<li class="bp-vacio">Nadie con ese nombre.</li>';
+          $('#miembros').querySelectorAll('li[data-id]').forEach(li => li.onclick = () => ficha(li.dataset.id, li.dataset.nombre));
+        };
+        let espera;
+        $('#buscar').oninput = e => { clearTimeout(espera); espera = setTimeout(async () => pintarMiembros(await api('GET', S('/miembros?q=' + encodeURIComponent(e.target.value)))), 300); };
+        pintarMiembros(await api('GET', S('/miembros')));
+
+        async function ficha(id, nombreServer) {
+          const f = $('#ficha');
+          f.innerHTML = '<p class="bp-vacio">Cargando…</p>';
+          const [gente, notas] = await Promise.all([api('GET', S('/personas')), api('GET', S(`/personas/${id}/notas`))]);
+          const p = gente.find(x => x.id === id) || { id, nombre: nombreServer, apodo: '', cumple: '', saludo_on: true, voz: nombreServer, puyas: 0, racha: 0 };
+          f.innerHTML = `<h2>${esc(p.nombre || nombreServer)}</h2>
+            <div class="bp-fila">
+              <div><label>Cómo se dice (la voz dice «${esc(p.voz)}»)</label><input id="apodo" maxlength="40" value="${esc(p.apodo || '')}" placeholder="Ej.: cuatro cero cuatro"></div>
+              <div style="flex:0 1 140px"><label>Cumple (MM-DD)</label><input id="cumple" maxlength="5" value="${esc(p.cumple || '')}" placeholder="10-31"></div>
+            </div>
+            <div class="bp-fila" style="margin-top:10px">
+              <label style="margin:0;display:flex;gap:6px;align-items:center;flex:0 0 auto"><input type="checkbox" id="saludo" ${p.saludo_on ? 'checked' : ''} style="width:auto"> Saludarlo al entrar</label>
+              <button class="bp-btn sec peq" id="oir" style="flex:0 0 auto">▶ Oír su nombre</button>
+              <button class="bp-btn peq" id="guardar" style="flex:0 0 auto">Guardar</button></div>
+            <h3>Notas para vacilarlo</h3>
+            <p class="bp-vacio" style="margin:0 0 8px">Cosas que el bot puede usar en sus puyas. Solo las ven los admins aquí.</p>
+            <ul class="bp-lista" id="notas">${notas.length ? notas.map(n => `<li data-id="${n.id}"><div class="t">${esc(n.texto)}</div><button class="bp-btn mal peq borrar">Quitar</button></li>`).join('') : '<li class="bp-vacio">Todavía no tiene notas.</li>'}</ul>
+            <div class="bp-fila" style="margin-top:8px"><input id="nota" maxlength="140" placeholder="Ej.: le encantan los hot dogs" style="flex:3 1 260px">
+              <button class="bp-btn" id="anotar" style="flex:0 0 auto">Añadir nota</button></div>
+            <h3>Puyas con sus notas</h3>
+            <p class="bp-vacio" style="margin:0 0 8px">La IA escribe varias usando las notas. Escúchalas y guarda las que te gusten. Tiene ${p.puyas} guardadas.</p>
+            <button class="bp-btn sec" id="sugerir" ${notas.length ? '' : 'disabled'}>✨ Escribir puyas con sus notas</button>
+            <ul class="bp-lista" id="sugeridas" style="margin-top:10px"></ul>`;
+          $('#oir').onclick = e => escuchar($('#apodo').value.trim() || p.voz || nombreServer, e.currentTarget);
+          $('#guardar').onclick = async () => {
+            try { await api('PATCH', S('/personas/' + id), { apodo: $('#apodo').value.trim(), cumple: $('#cumple').value.trim(), saludo_on: $('#saludo').checked }); aviso('Guardado.'); } catch (e) {}
           };
-        });
+          const anotar = async () => {
+            const texto = $('#nota').value.trim(); if (!texto) return;
+            try { await api('POST', S(`/personas/${id}/notas`), { texto, nombre: p.nombre || nombreServer }); aviso('Nota añadida.'); ficha(id, nombreServer); } catch (e) {}
+          };
+          $('#anotar').onclick = anotar;
+          $('#nota').onkeydown = e => { if (e.key === 'Enter') anotar(); };
+          f.querySelectorAll('#notas li[data-id]').forEach(li => li.querySelector('.borrar').onclick = async () => {
+            try { await api('DELETE', S('/notas/' + li.dataset.id)); ficha(id, nombreServer); } catch (e) {}
+          });
+          $('#sugerir').onclick = async e => {
+            const b = e.currentTarget; b.disabled = true; b.textContent = '✨ Escribiendo…';
+            try {
+              const lista = await api('POST', S(`/personas/${id}/sugerir`));
+              $('#sugeridas').innerHTML = lista.map((s, i) => `<li data-i="${i}"><div class="t">${esc(s.frase)}</div>
+                <button class="bp-btn sec peq oir">▶</button><button class="bp-btn peq guardarla">Guardar</button></li>`).join('');
+              $('#sugeridas').querySelectorAll('li').forEach(li => {
+                const s = lista[+li.dataset.i];
+                li.querySelector('.oir').onclick = ev => escuchar(s.frase, ev.currentTarget);
+                li.querySelector('.guardarla').onclick = async ev => {
+                  try { await api('POST', S('/puyas'), { persona: id, texto: s.texto }); ev.currentTarget.textContent = '✓ Guardada'; ev.currentTarget.disabled = true; } catch (er) {}
+                };
+              });
+            } catch (er) {} finally { b.disabled = false; b.textContent = '✨ Escribir otras'; }
+          };
+        }
       },
 
       async puyas(v) {
