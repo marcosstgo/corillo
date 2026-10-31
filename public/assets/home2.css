@@ -330,3 +330,82 @@ body.page-home .site-footer a { font-family: var(--h2-body); }
 body.page-home .theme-btn { display: none; }
 body.page-home .site-footer .foot-col-title { font-size: .95rem; font-weight: 700; }
 body.page-home .site-footer .foot-tagline { font-size: .85rem; line-height: 1.5; color: var(--h2-mute); }
+
+/* ═════════ VITRINA DEL HERO (sin nadie en vivo: noticia, gratis, equipo) — 31-oct-2026 ═════════ */
+.h2-vitrina { position: absolute; inset: 0; z-index: 3; display: none; }
+.h2-stage .featured-video.is-vitrina .h2-vitrina { display: block; }
+.h2-stage .featured-video.is-vitrina .h2-hero,
+.h2-stage .featured-video.is-vitrina .rotate-bar { display: none; }
+.h2-stage .featured-video.is-vitrina .h2-scrim { display: none; }   /* cada slide trae su propio oscurecido, debajo del texto */
+.h2-vt { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .9s ease, visibility 0s linear .9s; }
+.h2-vt.on { opacity: 1; visibility: visible; transition: opacity .9s ease; z-index: 1; }
+.h2-vt-bg { position: absolute; inset: 0; overflow: hidden; background: var(--h2-ink); }
+.h2-vt-bg::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(to top, rgba(6,20,63,.97) 0%, rgba(6,20,63,.6) 30%, rgba(6,20,63,0) 60%),
+    linear-gradient(to right, rgba(6,20,63,.88) 0%, rgba(6,20,63,.5) 40%, rgba(6,20,63,0) 70%),
+    linear-gradient(to bottom, rgba(6,20,63,.5) 0%, rgba(6,20,63,0) 20%);
+}
+.h2-vt-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; transform-origin: 60% 40%; }
+.h2-vt.on .h2-vt-bg img { animation: h2-vt-zoom 9s ease-out both; }
+@keyframes h2-vt-zoom { from { transform: scale(1.12); } to { transform: scale(1.02); } }
+/* equipo: la foto del producto es cuadrada y con fondo blanco → de fondo, borrosa; al frente, en una tarjeta */
+.h2-vt--equipo .h2-vt-bg img { filter: blur(38px) saturate(1.4) brightness(.55); transform: scale(1.3); }
+.h2-vt--equipo.on .h2-vt-bg img { animation: none; }
+.h2-vt-prod {
+  position: absolute; z-index: 4; right: clamp(24px, 9vw, 160px); top: 50%; transform: translateY(-50%) rotate(-2deg);
+  width: clamp(220px, 30vw, 440px); aspect-ratio: 1; border-radius: 28px; background: #fff; padding: 6%;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.4);
+}
+.h2-vt--equipo.on .h2-vt-prod { animation: h2-vt-pop .9s cubic-bezier(.2,.9,.3,1.2) both; }
+@keyframes h2-vt-pop { from { opacity: 0; transform: translateY(-44%) rotate(4deg) scale(.92); } to { opacity: 1; transform: translateY(-50%) rotate(-2deg); } }
+.h2-vt-prod img { width: 100%; height: 100%; object-fit: contain; }
+.h2-vt-txt {
+  position: absolute; z-index: 5; left: var(--h2-gutter); right: var(--h2-gutter); bottom: clamp(56px, 9vh, 96px);
+  display: grid; gap: 14px; justify-items: start; max-width: min(920px, 62vw);
+}
+.h2-vt.on .h2-vt-txt > * { animation: h2-vt-in .7s cubic-bezier(.2,.8,.2,1) both; }
+.h2-vt.on .h2-vt-txt > :nth-child(2) { animation-delay: .08s; }
+.h2-vt.on .h2-vt-txt > :nth-child(3) { animation-delay: .16s; }
+.h2-vt.on .h2-vt-txt > :nth-child(4) { animation-delay: .24s; }
+@keyframes h2-vt-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.h2-vt--gratis .live-badge.offline { background: var(--h2-orange, #ff6a3d); color: #fff; }
+.h2-vt-title {
+  margin: 0; font-family: var(--h2-display); font-weight: 800; color: var(--h2-bone);
+  font-size: clamp(2.3rem, 5.6vw, 5.4rem); line-height: .92; letter-spacing: -.03em; font-variation-settings: 'opsz' 96;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-wrap: balance;
+}
+.h2-vt-title a { color: inherit; text-decoration: none; }
+.h2-vt--equipo .h2-vt-txt { max-width: min(640px, calc(100% - clamp(220px, 30vw, 440px) - clamp(24px, 9vw, 160px) - 48px)); }
+.h2-vt--equipo .h2-vt-title { font-size: clamp(2rem, 3.6vw, 3.6rem); line-height: .98; }
+.h2-vt-sub {
+  margin: 0; font: 500 clamp(1rem, 1.5vw, 1.3rem)/1.35 var(--h2-body); color: var(--h2-bone); opacity: .85; max-width: 60ch;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.h2-vt-txt .featured-actions { margin-top: 8px; }
+/* barras tipo historia: la activa se llena mientras dura */
+.h2-vt-nav { position: absolute; z-index: 6; left: var(--h2-gutter); bottom: clamp(24px, 4vh, 40px); display: flex; gap: 8px; }
+.h2-vt-dot { width: 46px; height: 22px; padding: 9px 0; border: 0; background: none; cursor: pointer; }
+.h2-vt-dot span { display: block; height: 4px; border-radius: 4px; background: rgba(245,248,255,.28); overflow: hidden; position: relative; }
+.h2-vt-dot span::after { content: ''; position: absolute; inset: 0; background: var(--h2-bone); transform: scaleX(0); transform-origin: left; }
+.h2-vt-dot.on span::after { animation: h2-vt-fill var(--vt-ms, 7000ms) linear both; }
+.h2-vitrina:hover .h2-vt-dot.on span::after { animation-play-state: paused; }
+.h2-vt-dot:hover span { background: rgba(245,248,255,.5); }
+.h2-vt-dot:focus-visible { outline: 2px solid var(--h2-bone); outline-offset: 2px; border-radius: 4px; }
+@keyframes h2-vt-fill { to { transform: scaleX(1); } }
+@media (max-width: 760px) {
+  .h2-vt-txt { max-width: none; bottom: 64px; gap: 10px; }
+  .h2-vt-title { font-size: clamp(2rem, 9vw, 3rem); }
+  .h2-vt--equipo .h2-vt-txt { max-width: none; }
+  .h2-vt--equipo .h2-vt-title { font-size: clamp(1.6rem, 7vw, 2.2rem); -webkit-line-clamp: 2; }
+  .h2-vt-prod { top: 14%; right: 50%; transform: translateX(50%) rotate(-2deg); width: min(52vw, 230px); border-radius: 22px; }
+  @keyframes h2-vt-pop { from { opacity: 0; transform: translateX(50%) translateY(10px) rotate(4deg) scale(.92); } to { opacity: 1; transform: translateX(50%) rotate(-2deg); } }
+  .h2-vt-nav { bottom: 22px; }
+  .h2-vt-dot { width: 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .h2-vt, .h2-vt.on { transition: none; }
+  .h2-vt.on .h2-vt-bg img, .h2-vt.on .h2-vt-txt > *, .h2-vt--equipo.on .h2-vt-prod { animation: none; }
+  .h2-vt-dot.on span::after { animation: none; transform: scaleX(1); }
+}

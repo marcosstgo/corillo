@@ -3,6 +3,42 @@ import SiteShell from '../layouts/SiteShell.astro';
 import { loadOfertas, allFree, fmtDay } from '../data/ofertas';
 const OF = loadOfertas();
 const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/update-deals.py); si no hay, la franja no se muestra
+
+/* ── Vitrina del hero (idea de Marcos, 31-oct-2026) ──
+   Cuando nadie está en vivo, el hero rota lo más reciente del Corillo: la noticia nueva, los juegos gratis y la mejor
+   oferta de equipo, cada uno con su imagen. Si alguien sale en vivo, el stream la reemplaza (ver startVitrina/stopVitrina). */
+import { getCollection } from 'astro:content';
+type Slide = { kind: 'nota' | 'gratis' | 'equipo'; kicker: string; title: string; sub: string; href: string; cta: string; img: string; img2?: string; meta?: string };
+const NOTAS = (await getCollection('noticias')).filter(p => p.data.image).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const hace = (d: Date) => {
+  const dias = Math.floor((Date.now() - d.valueOf()) / 864e5);
+  return dias <= 0 ? 'Hoy' : dias === 1 ? 'Ayer' : d.toLocaleDateString('es-PR', { day: 'numeric', month: 'long', timeZone: 'America/Puerto_Rico' });
+};
+const nota = (p: typeof NOTAS[number]): Slide => ({
+  kind: 'nota', kicker: p.data.badgeLabel, title: p.data.heroTitle, sub: p.data.heroSub || p.data.summary || '',
+  href: `/noticias/${p.id}/`, cta: 'Leer la nota', img: p.data.image!, meta: hace(p.data.pubDate),
+});
+const grande = (g: typeof OFREE[number]) => {      // la imagen de la tienda en alta resolución (con la normal de respaldo)
+  const m = g.image?.match(/steam\/apps\/(\d+)\//);
+  if (m) return { img: `https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/${m[1]}/library_hero.jpg`, img2: g.image! };
+  if (g.image?.includes('epicgames.com')) return { img: g.image.replace(/h=\d+/, 'h=900').replace(/w=\d+/, 'w=1600'), img2: g.image };
+  return { img: g.image! };
+};
+const gratis = (g: typeof OFREE[number]): Slide => ({
+  kind: 'gratis', kicker: `Gratis en ${g.store === 'epic' ? 'Epic Games' : 'Steam'}`, title: g.title,
+  sub: [g.original ? `Normalmente ${g.original}` : '', g.ends ? `gratis hasta el ${fmtDay(g.ends)}` : 'gratis por tiempo limitado'].filter(Boolean).join(' · '),
+  href: '/ofertas/gratis/', cta: 'Reclámalo gratis', ...grande(g), meta: 'Juego gratis',
+});
+const EQUIPO = [...OF.equipo].filter(x => x.image).sort((a, b) => (b.score || 0) - (a.score || 0));
+const equipo = (x: typeof EQUIPO[number]): Slide => ({
+  kind: 'equipo', kicker: `${x.catLabel} en oferta`, title: x.title.length > 72 ? x.title.slice(0, 70).replace(/\s+\S*$/, '') + '…' : x.title,
+  sub: [`${x.price} en ${x.retailer}`, x.save ? `ahorras ${x.save}` : '', x.freeShip ? 'envío gratis' : ''].filter(Boolean).join(' · '),
+  href: `/ofertas/o/${x.slug}/`, cta: 'Ver la oferta', img: x.image!, meta: 'Envía a Puerto Rico',
+});
+const VITRINA: Slide[] = [
+  NOTAS[0] && nota(NOTAS[0]), OFREE[0]?.image && gratis(OFREE[0]), EQUIPO[0] && equipo(EQUIPO[0]),
+  OFREE[1]?.image && gratis(OFREE[1]), NOTAS[1] && nota(NOTAS[1]),
+].filter(Boolean) as Slide[];
 ---
 <SiteShell
   title="CORILLO — Stream Platform"
@@ -14,7 +50,7 @@ const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/updat
 >
   <fragment slot="head">
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/assets/home2.css?v=1">
+    <link rel="stylesheet" href="/assets/home2.css?v=3">
     <script is:inline>document.documentElement.setAttribute('data-theme','dark');</script>
   </fragment>
 
@@ -29,9 +65,36 @@ const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/updat
 <!-- HERO: a sangre, el nombre es el titular -->
 <section class="h2-stage" aria-label="Destacado">
   <div class="featured">
-    <div class="featured-video" id="featuredVideoWrap">
+    <div class={`featured-video${VITRINA.length ? ' is-vitrina' : ''}`} id="featuredVideoWrap">
       <video id="featuredVideo" autoplay muted playsinline></video>
       <div class="sim-stream offline" id="simStream"></div>
+      {VITRINA.length > 0 && (
+      <div class="h2-vitrina" id="vitrina" aria-roledescription="carrusel" aria-label="Lo nuevo en Corillo">
+        {VITRINA.map((v, i) => (
+          <article class={`h2-vt h2-vt--${v.kind}${i === 0 ? ' on' : ''}`} aria-hidden={i === 0 ? 'false' : 'true'} aria-roledescription="slide" aria-label={`${i + 1} de ${VITRINA.length}`}>
+            <div class="h2-vt-bg">
+              <img src={v.img} alt="" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} decoding="async"
+                   data-img2={v.img2} onerror="if(this.dataset.img2&&this.src!==this.dataset.img2){this.src=this.dataset.img2}" />
+            </div>
+            {v.kind === 'equipo' && <div class="h2-vt-prod"><img src={v.img} alt={v.title} loading="lazy" decoding="async" /></div>}
+            <div class="h2-vt-txt">
+              <div class="h2-status"><span class="live-badge offline">{v.kicker}</span>{v.meta && <span class="featured-meta">{v.meta}</span>}</div>
+              <h2 class="h2-vt-title"><a href={v.href} tabindex={i === 0 ? 0 : -1}>{v.title}</a></h2>
+              {v.sub && <p class="h2-vt-sub">{v.sub}</p>}
+              <div class="featured-actions">
+                <a href={v.href} class="play-btn" tabindex={i === 0 ? 0 : -1}>{v.cta}</a>
+                <a href="/streamers/" class="icon-btn" title="Ver streamers" tabindex={i === 0 ? 0 : -1}><i class="fa-solid fa-tower-broadcast"></i></a>
+              </div>
+            </div>
+          </article>
+        ))}
+        {VITRINA.length > 1 && (
+        <div class="h2-vt-nav" role="tablist" aria-label="Cambiar destacado">
+          {VITRINA.map((v, i) => <button type="button" class={`h2-vt-dot${i === 0 ? ' on' : ''}`} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={`${i + 1}: ${v.title}`}><span></span></button>)}
+        </div>
+        )}
+      </div>
+      )}
       <div class="h2-scrim"></div>
 
       <div class="h2-hero">
@@ -439,6 +502,7 @@ function setFeaturedLive(key, paths) {
 
   featuredKey = key;
   statsBase.viewers = viewers;
+  stopVitrina();
 
   updateChatLabel(key);
   updateFeaturedDots(key);
@@ -487,6 +551,49 @@ function setFeaturedLive(key, paths) {
   startStatsAnimation(viewers, paths);
 }
 
+/* ── Vitrina (hero sin nadie en vivo): rota noticia, gratis y equipo; se pausa con el mouse encima o con la pestaña oculta ── */
+const VT_MS = 7000;
+const vt = { idx: 0, timer: null, el: document.getElementById('vitrina') };
+function vtShow(i) {
+  if (!vt.el) return;
+  const slides = vt.el.querySelectorAll('.h2-vt'), dots = vt.el.querySelectorAll('.h2-vt-dot');
+  vt.idx = (i + slides.length) % slides.length;
+  slides.forEach((sl, k) => {
+    const on = k === vt.idx;
+    sl.classList.toggle('on', on); sl.setAttribute('aria-hidden', on ? 'false' : 'true');
+    sl.querySelectorAll('a').forEach(a => a.tabIndex = on ? 0 : -1);
+    if (on) { const im = sl.querySelector('.h2-vt-bg img'); if (im) { im.loading = 'eager'; im.style.animation = 'none'; void im.offsetWidth; im.style.animation = ''; } }
+  });
+  dots.forEach((d, k) => { d.classList.toggle('on', k === vt.idx); d.setAttribute('aria-selected', k === vt.idx ? 'true' : 'false'); d.style.setProperty('--vt-ms', VT_MS + 'ms'); });
+  // la siguiente ya cargando, para que no aparezca en blanco
+  const next = slides[(vt.idx + 1) % slides.length]?.querySelector('img'); if (next) next.loading = 'eager';
+}
+function vtArm() {
+  clearInterval(vt.timer);
+  if (!vt.el || vt.el.querySelectorAll('.h2-vt').length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  vt.timer = setInterval(() => { if (!document.hidden && !vt.el.matches(':hover')) vtShow(vt.idx + 1); }, VT_MS);
+}
+function startVitrina() {
+  if (!vt.el) return false;
+  document.getElementById('featuredVideoWrap').classList.add('is-vitrina');
+  vtShow(vt.idx); vtArm();
+  return true;
+}
+function stopVitrina() {
+  clearInterval(vt.timer); vt.timer = null;
+  document.getElementById('featuredVideoWrap').classList.remove('is-vitrina');
+}
+if (vt.el) {
+  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => d.addEventListener('click', () => { vtShow(k); vtArm(); }));
+  let x0 = null;                                                     // deslizar con el dedo en el celular
+  vt.el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+  vt.el.addEventListener('touchend', e => {
+    if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) { vtShow(vt.idx + (dx < 0 ? 1 : -1)); vtArm(); }
+  });
+  vtShow(0); vtArm();
+}
+
 async function setFeaturedOffline() {
   featuredKey = null;
   renderFeaturedDots([]);
@@ -503,6 +610,9 @@ async function setFeaturedOffline() {
   vodRotateIdx   = 0;
 
   updateChatLabel(null);
+
+  // Sin nadie en vivo: la vitrina (noticias, gratis, equipo). Los VODs volverán a entrar aquí cuando existan otra vez.
+  if (startVitrina()) return;
 
   // Load VODs if not cached yet
   if (!vodList.length) {
