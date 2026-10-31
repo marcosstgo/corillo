@@ -1,6 +1,6 @@
 ---
 // El Bochinchero (13-oct-2026): guía de uso y vitrina del bot de voz. Si cambian comandos o ajustes del bot
-// (~/corillo-stoat/bochinchero/bot.py), actualizar aquí también.
+// (repo marcosstgo/bochinchero, reescrito el 31-oct-2026), actualizar aquí también.
 import SiteShell from '../../layouts/SiteShell.astro';
 import { DISCORD_PATH } from '../../data/site';
 
@@ -26,6 +26,9 @@ const HACE = [
   { i: 'fa-wand-magic-sparkles', t: 'Escribe puyas solo', d: 'Al que no tiene puyas propias le escribe unas con IA, usando sus roles de juegos. Todas pasan por el filtro.' },
   { i: 'fa-trophy', t: 'Ranking semanal', d: 'Cada domingo a las 8 p. m. publica quién pasó más tiempo en las salas de voz. El primero se lleva su puya.' },
   { i: 'fa-microphone-lines', t: 'Lo pones a hablar', d: 'Con /decir escribes algo y él lo dice en tu sala, con su voz boricua.' },
+  { i: 'fa-users', t: 'Saluda al grupo', d: 'Cuando se juntan dos o más en una sala, entra y los saluda a todos por nombre, con una frase escrita en el momento sobre lo que está jugando cada uno: «¡Wepa, Kata y Tea! ¿Cómo están? Espero que bien, porque yo estoy mejor que ustedes.»' },
+  { i: 'fa-tower-broadcast', t: 'Avisa quién está en vivo', d: 'Pon los canales de YouTube y Twitch de los streamers que le gustan al server y, cuando salen en vivo, entra a la sala y lo anuncia: «Oigan, muchachos, ¿sabían que Capitán Matojo está en vivo dándole a Battlefield?» Una vez por stream.' },
+  { i: 'fa-calendar-check', t: 'Recuerda los eventos', d: 'Lee los eventos programados del server (torneos, noches de juego) y diez minutos antes lo dice en voz: «En diez minutos empieza la Noche de GTA. Vayan preparándose.»' },
   { i: 'fa-bullhorn', t: 'Avisos informativos', d: 'Los admins escriben avisos y él los dice en voz: a los nuevos («si quieres música, escribe /play»), al entrar a una sala, a una hora fija o cada cierto tiempo.' },
 ];
 
@@ -78,19 +81,21 @@ const ROADMAP = [
     ['Ranking semanal de voz', 'Los domingos, en el canal del ranking.'],
     ['Avisos informativos', 'A los nuevos, al entrar a una sala, a una hora fija o cada X horas, con /aviso.'],
     ['Ajustes por server', 'Nivel, funciones, salas, horario, rol y diagnóstico.'],
-    ['Baja la música cuando habla', 'Junto con Corillo-Bot.'],
+    ['Panel web', 'Entras con Discord y manejas todo desde el navegador: ajustes, personas, puyas, avisos, streamers y estadísticas.'],
+    ['Escuchar antes de guardar', 'En el panel oyes cada puya y cada aviso antes de guardarlo.'],
+    ['Saluda al grupo', 'Por nombre, con frases escritas en el momento.'],
+    ['Streamers en vivo', 'Anuncia en voz cuando salen en vivo en YouTube o Twitch.'],
+    ['Eventos del server', 'Diez minutos antes de un torneo o una noche de juego.'],
     ['Filtro de contenido', 'Nada de insultos de verdad, política ni religión.'],
   ]},
   { k: 'proximo', t: 'Lo próximo', i: 'fa-person-digging', items: [
-    ['Panel web', 'Entras con tu cuenta de Discord y manejas todo desde el navegador: personas, puyas, avisos, horario y estadísticas.'],
-    ['Escuchar antes de guardar', 'Oír cómo suena una puya antes de aprobarla.'],
+    ['Baja la música cuando habla', 'Junto con el nuevo Corillo-Bot.'],
+    ['Memoria de cada uno', 'Puyas con lo que de verdad pasa: noches seguidas en un juego, a qué hora te fuiste ayer, con quién juegas siempre.'],
     ['Saludos especiales', 'Además de puyas: saludo de VIP o ninguno, escogido por persona.'],
     ['Pago dentro de Discord', 'El botón «Hazte Premium» para pagar sin salir de Discord.'],
   ]},
   { k: 'ideas', t: 'Ideas para después', i: 'fa-lightbulb', items: [
     ['Noticias y ofertas por voz', 'La noticia gamer del día, juegos gratis y ofertas, dichos en la sala.'],
-    ['Aviso de «en vivo»', 'Cuando alguien del server sale en vivo, lo anuncia en las salas.'],
-    ['Recordatorio de eventos', '«En 10 minutos empieza el torneo de Warzone.»'],
     ['Varias voces', 'Escoger entre voces distintas para cada server.'],
     ['Trivia por voz', 'Preguntas de juegos en la sala, con puntos.'],
     ['Estadísticas más finas', 'Horas pico, salas más usadas y quién juega con quién.'],
@@ -101,7 +106,7 @@ const FAQ = [
   ['No quiero que me salude. ¿Cómo lo apago?', 'Escribe /bochinche y dale a «Apagar mi saludo». Solo te afecta a ti, y lo vuelves a prender igual.'],
   ['¿Por qué no me saludó?', 'Saluda solo si hay alguien más en la sala, una vez cada 4 horas por persona (los admins lo cambian), y no en salas privadas, de AFK o que los admins apagaron. Si apagaste tu saludo en /bochinche, préndelo ahí mismo.'],
   ['¿Cómo escribo un buen aviso?', 'Corto y claro, como lo dirías en voz: una o dos oraciones. Para comandos escribe «barra play» en vez de «/play», que así lo lee bien. Pruébalo con /aviso ver antes de dejarlo.'],
-  ['¿Va a tapar la música?', 'No. Si Corillo-Bot está tocando música en la sala, la música baja sola mientras el Bochinchero habla y después vuelve a donde estaba.'],
+  ['¿Dónde lo configuro?', 'En el panel: corillo.live/bochinchero/panel/. Entras con tu cuenta de Discord y ves los servers donde eres admin. También se puede desde Discord con /bochinche-ajustes.'],
   ['¿Qué no dice nunca?', 'Insultos de verdad (homofóbicos, racistas), cosas sexuales, amenazas, política, religión ni enlaces. El filtro lo para en /decir, en las puyas sugeridas y en las que escribe la IA.'],
   ['¿Por qué no me vacila por el juego?', 'Solo ve lo que Discord enseña en tu perfil («Jugando a…»). En PC sale casi siempre; en PlayStation o Xbox tienes que conectar tu cuenta a Discord y compartir tu actividad. Y te vacila por el juego una vez cada 2 horas como máximo, para que no canse.'],
   ['¿Cómo sabe mi cumpleaños?', 'Discord no se lo da a ningún bot. Lo pones tú con /cumple poner, solo día y mes (sin el año). Lo borras cuando quieras con /cumple borrar.'],
@@ -225,6 +230,7 @@ const LD = [
         <p>El bot de voz boricua para Discord. Cuando entras a una sala, te saluda con una puya. Cae de visita sorpresa, sabe qué juegas, se despide cuando te vas, da los avisos del server en voz y cada domingo dice quién fue el más pegao. Vive en el corillo y lo puedes poner en tu server.</p>
         <div class="bc-row">
           <a class="bc-go" href={INVITAR} target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i> Añadir a mi server</a>
+          <a class="bc-alt" href="/bochinchero/panel/"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Panel de control</a>
           <a class="bc-alt" href={DISCORD_PATH}><i class="fa-solid fa-headset" aria-hidden="true"></i> Oírlo en el corillo</a>
         </div>
       </div>
@@ -385,6 +391,7 @@ const LD = [
       <p>Hecho en Puerto Rico para las comunidades gaming de aquí. Si tienes preguntas, búscanos en el Discord del corillo. <a href="/bochinchero/legal/" style="color:var(--h2-mute)">Condiciones y privacidad</a></p>
       <div class="bc-row">
         <a class="bc-go" href={INVITAR} target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i> Añadir a mi server</a>
+        <a class="bc-alt" href="/bochinchero/panel/"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Panel de control</a>
         <a class="bc-alt" href={DISCORD_PATH}><i class="fa-solid fa-comments" aria-hidden="true"></i> Entrar al corillo</a>
       </div>
     </section>
