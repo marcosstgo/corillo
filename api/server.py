@@ -15,6 +15,8 @@ from pywebpush import webpush, WebPushException
 load_dotenv()
 
 PB_URL         = os.environ.get("PB_URL", "https://pb.corillo.live")
+# Links que ve el público (avatares). PB_URL puede ser interno (http://127.0.0.1:8090).
+PB_PUBLIC_URL  = os.environ.get("PB_PUBLIC_URL", PB_URL)
 PB_ADMIN_EMAIL = os.environ.get("PB_ADMIN_EMAIL", "")
 PB_ADMIN_PASS  = os.environ.get("PB_ADMIN_PASS", "")
 
@@ -116,7 +118,7 @@ async def get_streamers():
             rec["name"] = rec.pop("display_name", "") or rec.get("key", "")
             rec["ava"]  = (rec["name"][0] if rec["name"] else "?").upper()
             if rec.get("avatar"):
-                rec["avatar_url"] = f"{PB_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
+                rec["avatar_url"] = f"{PB_PUBLIC_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
         _streamers_cache.update({"data": items, "ts": now})
         return items
     except Exception:
@@ -144,7 +146,7 @@ async def get_profile(key: str):
             raise HTTPException(status_code=404)
         rec = items[0]
         if rec.get("avatar"):
-            rec["avatar_url"] = f"{PB_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
+            rec["avatar_url"] = f"{PB_PUBLIC_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
         return rec
     except HTTPException:
         raise

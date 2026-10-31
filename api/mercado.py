@@ -21,6 +21,7 @@ import correo
 import turnstile
 
 PB_URL = os.environ.get("PB_URL", "https://pb.corillo.live")
+PB_PUBLIC_URL = os.environ.get("PB_PUBLIC_URL", PB_URL)  # links de archivos que ve el público
 REPO = Path(os.environ.get("CORILLO_REPO", "/var/www/stream"))
 ADMINS = {k.strip() for k in os.environ.get("MERCADO_ADMINS", "").split(",") if k.strip()}
 AVISO_EMAIL = os.environ.get("MERCADO_AVISO_EMAIL", "hello@marcossantiago.com")   # aviso de cada anuncio nuevo
@@ -402,7 +403,7 @@ def _esc(v: str) -> str:
 
 
 def _foto_url(a: dict, nombre: str) -> str:
-    return f"{PB_URL}/api/files/{a['collectionId']}/{a['id']}/{nombre}"
+    return f"{PB_PUBLIC_URL}/api/files/{a['collectionId']}/{a['id']}/{nombre}"
 
 
 def serializar(a: dict, privado: bool = False) -> dict:
@@ -425,7 +426,7 @@ def serializar(a: dict, privado: bool = False) -> dict:
         "vendedor": {
             "key": v.get("key", ""), "nombre": v.get("display_name", "") or v.get("key", ""),
             "color": v.get("color", ""),
-            "avatar": f"{PB_URL}/api/files/streamers/{v['id']}/{v['avatar']}" if v.get("avatar") else "",
+            "avatar": f"{PB_PUBLIC_URL}/api/files/streamers/{v['id']}/{v['avatar']}" if v.get("avatar") else "",
             "streamer": streamer,
             "canal": f"/{v['key']}/" if streamer and v.get("key") else "",
         },
