@@ -1,7 +1,10 @@
 {
-  "version": "2.2.688",
-  "date": "2026-09-20",
+  "version": "2.3.0",
+  "date": "2026-10-31",
   "changes": [
+    "Corillo vuelve tras la caída del servidor (28-oct): página en Cloudflare Pages, APIs en corillo-vps, video en media.corillo.live.",
+    "Noticias con portada (arte oficial de Steam o ilustración propia); Sobre Corillo reescrita.",
+    "Player: sin master.m3u8 mientras se rehace el ABR (mediamtx nuevo exige sesión); contador de espectadores sin los procesos internos.",
     "Registro: la pantalla de confirmación avisa que el correo puede caer en spam y añade un botón para reenviarlo.",
     "Chat: arreglo al ensanchar la ventana tras cerrar el chat en modo móvil — el panel ya no queda como una franja vacía.",
     "Chat: rediseño (mensajes, bot, input) y arreglo — al reabrirlo en móvil ya no queda vacío ni arriba: baja al último mensaje, se reconecta si se cayó y avisa de mensajes nuevos.",
