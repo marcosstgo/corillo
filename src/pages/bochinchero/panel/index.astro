@@ -132,8 +132,16 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       if (!yo.servers.length) {
         app.innerHTML = `<div class="bp-entrar bp-card"><h2>No tienes servers con el Bochinchero</h2>
           <p>Necesitas ser admin (Gestionar servidor) de un server donde esté el bot.</p>
-          <a class="bp-btn" href="${esc(yo.invitar)}" target="_blank" rel="noopener">Añadir a mi server</a>
-          <p><button class="bp-btn sec peq" id="salir">Salir</button></p></div>`;
+          <a class="bp-btn" id="invitar" href="${esc(yo.invitar)}" target="_blank" rel="noopener">Añadir a mi server</a>
+          <p><button class="bp-btn sec peq" id="refrescar">Ya lo añadí · actualizar</button> <button class="bp-btn sec peq" id="salir">Salir</button></p></div>`;
+        // La lista de servers se arma al entrar con Discord. Si el bot se añade DESPUÉS, hay que volver a pedirla:
+        // al regresar a esta pestaña (o con el botón) se repite el login, que con prompt=none es instantáneo (1-nov-2026).
+        const refrescar = () => { location.href = `${API}/auth/login?origen=${encodeURIComponent(location.origin)}`; };
+        $('#refrescar').onclick = refrescar;
+        $('#invitar').addEventListener('click', () => {
+          const volver = () => { if (document.visibilityState === 'visible') { document.removeEventListener('visibilitychange', volver); refrescar(); } };
+          setTimeout(() => document.addEventListener('visibilitychange', volver), 500);
+        });
         $('#salir').onclick = salir; return;
       }
       if (!yo.servers.some(s => s.id === st.gid)) st.gid = yo.servers[0].id;
