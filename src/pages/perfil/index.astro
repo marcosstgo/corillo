@@ -1580,7 +1580,7 @@ async function loadMyVods(channel) {
     if (!items.length) { empty.style.display = ''; return; }
 
     list.innerHTML = items.map(v => {
-      const vidSrc = v.filename ? `https://media.corillo.live/vods/${channel}/${v.filename}` : '';
+      const vidSrc = v.filename ? `https://vods.corillo.live/${channel}/${v.filename}` : '';   // R2 (1-nov-2026)
       return `
       <div>
         <div class="vod-row" id="vrow-${v.id}">
