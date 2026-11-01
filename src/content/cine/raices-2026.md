@@ -12,6 +12,9 @@ guion: ["Roger Delmont"]
 reparto: ["Mari Carmen Sánchez", "Ana Torrent", "Miquel Fernández", "Alberto Jiménez", "Mariangelie Vélez", "Marcelo Otaño", "Jorge Luis Ramos", "Yamaris Latorre", "Eric Yamil Cruz", "José Brocco"]
 productora: ["Estudio Creativo PR"]
 resumen: "Tras sobrevivir a un accidente en las montañas, los hermanos Alex y Raquel quedan en manos de una comunidad aislada que esconde algo perturbador. Estrena el 12 de noviembre en los cines de Puerto Rico."
+afiche: "/assets/cine/raices-afiche.jpg"
+fondo: "/assets/cine/raices-fondo.jpg"
+imagenCredito: "Afiche oficial: Estudio Creativo PR"
 description: "Raíces, película puertorriqueña de Gustavo Ramos Perales: suspenso y supervivencia en las montañas. Estreno el 12 de noviembre de 2026 en Caribbean Cinemas."
 enlaces:
   - { name: "Estudio Creativo PR (Instagram)", url: "https://www.instagram.com/estudiocreativopr/" }
@@ -24,6 +27,7 @@ fuentes:
   - { name: "Caribbean Cinemas", url: "https://home.caribbeancinemas.com/plaza-guaynabo/movie/races/" }
   - { name: "Criticologos", url: "https://criticologos.substack.com/p/se-revela-el-trailer-de-la-peicula" }
   - { name: "Gustavo Ramos Perales (sitio oficial)", url: "https://www.gustavoramosperales.com/bio/" }
+  - { name: "Criticologos: lanzamiento del afiche oficial", url: "https://criticologos.substack.com/p/lanzamiento-poster-oficial-de-raices" }
 actualizado: 2026-11-01
 ---
 
