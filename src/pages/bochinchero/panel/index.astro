@@ -52,6 +52,8 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       .bp-tag{padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);color:var(--h2-mute);font:700 .75rem var(--h2-body)}
       .bp-envoz{color:#3ddc84;font-weight:700}
       .bp-nopuedo{display:block;margin-top:3px;color:#ffb454}
+      .bp-cat{margin:16px 0 6px;font:800 .8rem var(--h2-body);text-transform:uppercase;letter-spacing:.06em;color:var(--h2-mute)}
+      .bp-salas .bp-tag{white-space:nowrap}
       .bp-ahora{border-color:color-mix(in srgb,#3ddc84 45%,transparent)}
       .bp-ahora h2 small{font:500 .8rem var(--h2-body);color:var(--h2-mute)}
       .bp-btn[disabled]{opacity:.45;cursor:not-allowed}
@@ -130,7 +132,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
     }
 
     const TABS = [['resumen', 'Resumen'], ['ajustes', 'Ajustes'], ['personas', 'Personas'], ['puyas', 'Puyas'],
-                  ['avisos', 'Avisos en voz'], ['envivo', 'Streamers en vivo'], ['estadisticas', 'Estadísticas']];
+                  ['avisos', 'Avisos en voz'], ['envivo', 'Streamers en vivo'], ['salas', 'Salas'], ['estadisticas', 'Estadísticas']];
 
     async function pintarApp() {
       const yo = st.yo;
@@ -407,6 +409,26 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         v.querySelectorAll('li[data-id]').forEach(li => {
           li.querySelector('.borrar').onclick = async () => { try { await api('DELETE', S('/envivo/' + li.dataset.id)); aviso('Quitado.'); VISTAS.envivo(v); } catch (e) {} };
         });
+      },
+
+      // Diagnóstico de salas (1-nov-2026): lo calcula el bot cada minuto con los permisos reales de Discord.
+      async salas(v) {
+        let d;
+        try { d = await api('GET', S('/salas')); } catch (e) { v.innerHTML = '<div class="bp-card"><p class="bp-vacio">El bot todavía no tiene el diagnóstico (hay que instalar la versión nueva).</p></div>'; return; }
+        if (!d.salas.length) { v.innerHTML = `<div class="bp-card"><p class="bp-vacio">${d.al_dia ? 'Este server no tiene salas de voz.' : 'El bot no ha mandado datos en los últimos 3 minutos (¿está prendido?).'}</p></div>`; return; }
+        const si = '<span class="bp-ok">✅</span>', no = '<span class="bp-no">❌</span>';
+        const grupos = {};
+        d.salas.forEach(x => (grupos[x.categoria || 'Sin categoría'] ||= []).push(x));
+        const nAuto = d.salas.filter(x => !x.auto).length, nPanel = d.salas.filter(x => !x.panel).length;
+        v.innerHTML = `
+          <div class="bp-card"><h2>Dónde puedo hablar</h2>
+            <p class="bp-vacio" style="margin:0 0 10px">Hablo solo (saludos, puyas al entrar, avisos) en <b>${nAuto}</b> de ${d.salas.length} salas, y por pedido del panel («Tirarla ahora») en <b>${nPanel}</b>. En las salas privadas no hablo solo, por privacidad; desde el panel sí, si me dieron permiso.${d.al_dia ? '' : ' ⚠️ Datos viejos: el bot no ha actualizado en 3 minutos.'}</p>
+            ${Object.entries(grupos).map(([cat, l]) => `<h3 class="bp-cat">${esc(cat)}</h3>
+              <ul class="bp-lista bp-salas">${l.map(x => `<li><div class="t"><b>${esc(x.nombre)}</b>
+                <small>${x.privada ? '🔐 privada · ' : ''}${x.tipo === 'escenario' ? 'escenario · ' : ''}${x.limite ? `límite ${x.limite} · ` : ''}${x.gente ? `${x.gente} en la sala` : 'vacía'}</small>
+                ${x.panel || x.auto ? `<small class="bp-nopuedo">${esc(x.panel || x.auto)}</small>` : ''}</div>
+                <span class="bp-tag">Solo ${x.auto ? no : si}</span><span class="bp-tag">Panel ${x.panel ? no : si}</span></li>`).join('')}</ul>`).join('')}
+          </div>`;
       },
 
       async estadisticas(v) {
