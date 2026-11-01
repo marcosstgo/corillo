@@ -50,7 +50,7 @@ const VITRINA: Slide[] = [
 >
   <fragment slot="head">
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/assets/home2.css?v=4">
+    <link rel="stylesheet" href="/assets/home2.css?v=5">
     <script is:inline>document.documentElement.setAttribute('data-theme','dark');</script>
   </fragment>
 
@@ -135,27 +135,6 @@ const VITRINA: Slide[] = [
     <div class="h2-live-rail" id="liveRail"><!-- rendered by JS --></div>
   </section>
 
-  <!-- PONTE AL DÍA -->
-  <!-- Sale sola cuando hay VODs (renderVodsRow); sin VODs no se enseña (desde el 31-oct-2026, VODs en la casa). -->
-  <section class="h2-sec" id="vodsSection" hidden>
-    <div class="h2-sec-hd">
-      <h2>Ponte al día</h2>
-      <a href="/vods/" class="h2-more-link">Ver todos los VODs</a>
-    </div>
-    <div class="h2-vods" id="vodsCarousel">
-      <span class="sk-label" role="status">Cargando transmisiones…</span>
-      <div class="h2-vod is-lead" aria-hidden="true">
-        <div class="sk sk-thumb" style="border-radius:24px"></div>
-        <div class="h2-vod-body"><span class="sk sk-face" style="width:52px;height:52px"></span><div class="sk-stack"><span class="sk sk-line lg" style="width:70%"></span><span class="sk sk-line" style="width:32%"></span></div></div>
-      </div>
-      <div class="h2-vod-list" aria-hidden="true">
-        <div class="h2-vod"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="sk-stack"><span class="sk sk-line" style="width:88%"></span><span class="sk sk-line" style="width:45%"></span></div></div>
-        <div class="h2-vod"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="sk-stack"><span class="sk sk-line" style="width:88%"></span><span class="sk sk-line" style="width:45%"></span></div></div>
-        <div class="h2-vod"><div class="sk sk-thumb" style="border-radius:12px"></div><div class="sk-stack"><span class="sk sk-line" style="width:88%"></span><span class="sk sk-line" style="width:45%"></span></div></div>
-      </div>
-    </div>
-  </section>
-
   <!-- EL CORILLO -->
   <section class="h2-sec">
     <div class="h2-sec-hd">
@@ -210,7 +189,6 @@ const POLL_MS     = 15000;
 const API_TIMEOUT = 5000;
 const CACHE_MS    = 8000;
 const ROTATE_MS   = 6000;
-const VOD_TTL     = 120000;
 const PB_URL      = 'https://pb.corillo.live';
 
 const STREAMERS = (window.STREAMERS || []).filter(s => !s.soon);
@@ -247,9 +225,6 @@ let vodRotateIdx = 0;
 let vodRotateTimer = null;
 let cardBitrates = {}; // key → stable bitrate for card display
 
-let _recentVods     = [];
-let _vodThumbMap = {};
-let _vodLoadedAt    = 0;
 let _gridState      = null;
 
 /* ── Utils ────────────────────────────────────────────── */
@@ -335,33 +310,6 @@ async function fetchRecentVods(limit) {
   } catch { return []; }
 }
 
-async function loadVodData() {
-  // Fetch ligero de todos los VODs para el mapa de thumbnails (solo channel+thumb)
-  const thumbFetch = fetch(
-    `${PB_URL}/api/collections/vods/records?sort=-date&perPage=500&fields=channel,thumb`,
-    { signal: AbortSignal.timeout(6000) }
-  ).then(r => r.json()).then(j => j.items || []).catch(() => []);
-
-  // Fetch con todos los campos para el carousel de recientes
-  const [thumbItems, recentVods] = await Promise.all([thumbFetch, fetchRecentVods(50)]);
-
-  // Mapa completo: un thumb por canal, usando el VOD más reciente de cada uno
-  _vodThumbMap = {};
-  for (const v of thumbItems) {
-    if (v.thumb && !_vodThumbMap[v.channel]) _vodThumbMap[v.channel] = v.thumb;
-  }
-
-  // Carousel: deduplicado por canal, máx 6
-  const seen = new Set();
-  _recentVods = recentVods.filter(v => {
-    if (seen.has(v.channel)) return false;
-    seen.add(v.channel);
-    return true;
-  }).slice(0, 6);
-
-  _vodLoadedAt = Date.now();
-}
-
 /* Rostro redondo: foto si hay, inicial sobre el color del canal si no */
 function faceInner(s) {
   return s.avatar_url
@@ -373,46 +321,6 @@ function streamerOf(channel) {
     key: channel, name: channel.toUpperCase(),
     color: 'linear-gradient(135deg,#1a2a3a,#0a1c52)', ava: channel[0].toUpperCase()
   };
-}
-
-/* VODs: el más reciente va grande; el resto, en cola a la derecha */
-function vodCard(vod, lead) {
-  const s   = streamerOf(vod.channel);
-  const dur = vod.duration ? fmtDuration(vod.duration) : '';
-  const preview = _hover && vod.preview
-    ? `<video class="h2-preview" src="${vod.preview}?v=2" muted playsinline preload="none" loop></video>` : '';
-  return `<a href="/vods/v/?id=${vod.id}" class="h2-vod${lead ? ' is-lead' : ''}">
-    <div class="h2-vod-thumb">
-      ${vod.thumb
-        ? `<img src="${vod.thumb}?v=2" alt="" loading="${lead ? 'eager' : 'lazy'}" onerror="this.style.display='none'">`
-        : `<div class="h2-vod-initial" style="background:${s.color || '#1e3a4a'}">${s.ava || s.name[0]}</div>`}
-      ${preview}
-      ${dur ? `<span class="h2-dur">${dur}</span>` : ''}
-    </div>
-    <div class="h2-vod-body">
-      <span class="h2-mini-face" style="background:${s.color || '#1e3a4a'}">${faceInner(s)}</span>
-      <div><strong>${s.name}</strong><small>${relativeTime(vod.date)}</small></div>
-    </div>
-  </a>`;
-}
-function vodCards(vods) {
-  const box = document.getElementById('vodsCarousel');
-  const even = vods.length <= 3;                 // pocos VODs: cuadrícula pareja
-  box.classList.toggle('is-even', even);
-  box.style.setProperty('--n', vods.length);
-  if (even) return vods.map(v => vodCard(v, false)).join('');
-  const [lead, ...rest] = vods;                  // 4+: uno grande + cola
-  return vodCard(lead, true) + `<div class="h2-vod-list">${rest.map(v => vodCard(v, false)).join('')}</div>`;
-}
-
-function attachPreviewListeners(container) {
-  if (!_hover) return;
-  container.querySelectorAll('.h2-preview').forEach(vid => {
-    const card = vid.closest('.h2-vod');
-    if (!card) return;
-    card.addEventListener('mouseenter', () => vid.play().catch(() => { vid.style.display = 'none'; }));
-    card.addEventListener('mouseleave', () => { vid.pause(); vid.currentTime = 0; });
-  });
 }
 
 /* ── Chat label ──────────────────────────────────────── */
@@ -576,13 +484,64 @@ function stopVitrina() {
   document.getElementById('featuredVideoWrap').classList.remove('is-vitrina');
 }
 if (vt.el) {
-  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => d.addEventListener('click', () => { vtShow(k); vtArm(); }));
+  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => { d.onclick = () => { vtShow(k); vtArm(); }; });
   let x0 = null;                                                     // deslizar con el dedo en el celular
   vt.el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   vt.el.addEventListener('touchend', e => {
     if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
     if (Math.abs(dx) > 50) { vtShow(vt.idx + (dx < 0 ? 1 : -1)); vtArm(); }
   });
+  vtShow(0); vtArm();
+  vtTransmisiones();
+}
+
+/* La última transmisión grabada (VOD de los últimos 14 días) entra de PRIMERA en la vitrina, con la mejor imagen del
+   video (portada.py en corillo-media), el título, quién la hizo y cuánto dura. Hasta 2, de canales distintos. */
+async function vtTransmisiones() {
+  const desde = new Date(Date.now() - 14 * 864e5).toISOString().replace('T', ' ');
+  let items = [];
+  try {
+    const r = await fetch(`${PB_URL}/api/collections/vods/records?sort=-date&perPage=10&filter=${encodeURIComponent(`date>="${desde}"`)}&fields=id,channel,title,thumb,duration,date`,
+                          { signal: AbortSignal.timeout(5000) });
+    items = (await r.json()).items || [];
+  } catch { return; }
+  const vistos = new Set();
+  items = items.filter(v => v.thumb && !vistos.has(v.channel) && vistos.add(v.channel)).slice(0, 2);
+  if (!items.length || !vt.el) return;
+  const e = x => String(x ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nav = vt.el.querySelector('.h2-vt-nav');
+  for (const v of items.reverse()) {
+    const s = streamerOf(v.channel), nombre = s.name;
+    const cara = s.avatar_url ? `<img src="${e(s.avatar_url)}" alt="" onerror="this.remove()">` : e(s.ava || nombre[0]);
+    const href = `/vods/v/?id=${encodeURIComponent(v.id)}`;
+    const art = document.createElement('article');
+    art.className = 'h2-vt h2-vt--vod';
+    art.setAttribute('aria-roledescription', 'slide');
+    art.innerHTML = `
+      <div class="h2-vt-bg"><img src="${e(v.thumb)}" alt="" decoding="async"></div>
+      <a class="h2-vt-play" href="${href}" tabindex="-1" aria-hidden="true"><i class="fa-solid fa-play"></i></a>
+      <div class="h2-vt-txt">
+        <div class="h2-status"><span class="live-badge offline"><i class="fa-solid fa-tower-broadcast"></i> Transmisión</span>
+          <span class="featured-meta">${e(relativeTime(v.date))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
+        <a class="h2-vt-who" href="/${e(v.channel)}/" tabindex="-1"><span class="h2-vt-face" style="background:${e(s.color || '#1e3a4a')}">${cara}</span><b>${e(nombre)}</b></a>
+        <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `${nombre} en vivo`)}</a></h2>
+        <p class="h2-vt-sub">Lo que te perdiste del stream de ${e(nombre)}. Velo completo cuando quieras.</p>
+        <div class="featured-actions">
+          <a href="${href}" class="play-btn" tabindex="-1"><i class="fa-solid fa-play"></i> Ver la transmisión</a>
+          <a href="/${e(v.channel)}/" class="icon-btn" title="Canal de ${e(nombre)}" tabindex="-1"><i class="fa-solid fa-user"></i></a>
+        </div>
+      </div>`;
+    vt.el.insertBefore(art, vt.el.querySelector('.h2-vt'));
+    if (nav) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'h2-vt-dot'; b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', `Transmisión de ${nombre}`); b.innerHTML = '<span></span>';
+      nav.prepend(b);
+    }
+  }
+  const slides = vt.el.querySelectorAll('.h2-vt');
+  slides.forEach((sl, k) => sl.setAttribute('aria-label', `${k + 1} de ${slides.length}`));
+  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => { d.onclick = () => { vtShow(k); vtArm(); }; });
   vtShow(0); vtArm();
 }
 
@@ -914,22 +873,9 @@ function renderChannelGrid(paths) {
   grid.innerHTML = list.map(person).join('');
 }
 
-function renderVodsRow() {
-  const box = document.getElementById('vodsCarousel');
-  if (!box) return;
-  document.getElementById('vodsSection').hidden = !_recentVods.length;
-  if (!_recentVods.length) return;
-  box.innerHTML = vodCards(_recentVods);
-  attachPreviewListeners(box);
-}
-
 async function poll() {
   const now    = Date.now();
-  const needVods = now - _vodLoadedAt > VOD_TTL;
-  const tasks  = [fetchPaths()];
-  if (needVods) tasks.push(loadVodData());
-  const [paths] = await Promise.all(tasks);
-  if (needVods) renderVodsRow();
+  const paths  = await fetchPaths();
   lastPaths    = paths;
   const liveSet = getLiveSet(paths);
   const live    = STREAMERS.filter(s => liveSet.has(s.key));

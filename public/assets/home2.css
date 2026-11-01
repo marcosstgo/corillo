@@ -409,3 +409,31 @@ body.page-home .site-footer .foot-tagline { font-size: .85rem; line-height: 1.5;
   .h2-vt.on .h2-vt-bg img, .h2-vt.on .h2-vt-txt > *, .h2-vt--equipo.on .h2-vt-prod { animation: none; }
   .h2-vt-dot.on span::after { animation: none; transform: scaleX(1); }
 }
+
+/* ── Vitrina: la última transmisión (VOD) — 31-oct-2026 ── */
+.h2-vt--vod .live-badge.offline { background: var(--h2-live, #ff2e4d); color: #fff; display: inline-flex; align-items: center; gap: 7px; }
+.h2-vt--vod .live-badge.offline i { font-size: .85em; }
+.h2-vt--vod .h2-vt-bg img { object-position: center 45%; }
+.h2-vt-who { display: inline-flex; align-items: center; gap: 12px; color: var(--h2-bone); text-decoration: none; }
+.h2-vt-who b { font: 700 clamp(1.05rem, 1.6vw, 1.35rem)/1 var(--h2-body); letter-spacing: .01em; }
+.h2-vt-face {
+  width: clamp(40px, 3.6vw, 52px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; display: grid; place-items: center;
+  font: 800 1.1rem/1 var(--h2-display); color: #fff; box-shadow: 0 0 0 3px var(--h2-live, #ff2e4d), 0 8px 24px rgba(0,0,0,.45);
+}
+.h2-vt-face img { width: 100%; height: 100%; object-fit: cover; }
+.h2-vt-play {
+  position: absolute; z-index: 4; right: clamp(32px, 9vw, 170px); top: 44%; transform: translate(0, -50%);
+  width: clamp(76px, 7.5vw, 112px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(6,20,63,.42); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(245,248,255,.7); color: #fff; font-size: clamp(1.6rem, 2.4vw, 2.4rem); text-decoration: none;
+  box-shadow: 0 24px 60px -12px rgba(0,0,0,.6); transition: transform .25s ease, background .25s ease;
+}
+.h2-vt-play i { margin-left: 6%; }
+.h2-vt-play:hover { transform: translate(0, -50%) scale(1.08); background: var(--h2-live, #ff2e4d); border-color: transparent; }
+.h2-vt--vod.on .h2-vt-play { animation: h2-vt-in .8s .2s cubic-bezier(.2,.8,.2,1) both; }
+@media (max-width: 760px) {
+  .h2-vt-play { top: 26%; right: 50%; transform: translate(50%, -50%); width: 72px; }
+  .h2-vt-play:hover { transform: translate(50%, -50%) scale(1.08); }
+  .h2-vt--vod .h2-vt-sub { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .h2-vt--vod.on .h2-vt-play { animation: none; } }
