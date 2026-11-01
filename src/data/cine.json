@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-01T06:12:36",
+ "actualizado": "2026-11-01T18:12:36",
  "pegao": [
   {
    "tmdb": 1283515,
@@ -24,7 +24,7 @@
     "Josh Hartnett",
     "Brady Wagner",
     "Ismael Cruz Cordova",
-    "Ирина Дворовенко",
+    "Ірина Дворовенко",
     "Sienna Kulovitz",
     "K.K. Moggie"
    ],
@@ -64,6 +64,46 @@
    "trailer": "cmzVY1goqwQ",
    "dondeVer": [],
    "popularidad": 188.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1507696,
+   "title": "Apocalipsis Z: Nuevo mundo",
+   "original": "Apocalipsis Z: Nuevo mundo",
+   "estreno": "2026-10-30",
+   "clasificacion": "R",
+   "duracion": 96,
+   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
+   "generos": [
+    "Acción",
+    "Suspense",
+    "Terror"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
+   "direccion": [
+    "Carles Torrens"
+   ],
+   "reparto": [
+    "Carlos Alcaide",
+    "José María Yázpik",
+    "Julia Martínez",
+    "Mónica López",
+    "Tamara Casellas",
+    "Berta Vázquez",
+    "Santiago Vaca Narvaja",
+    "Mario Mayo"
+   ],
+   "trailer": "BIEzwpyawtw",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 228.0,
    "pr": false
   },
   {
@@ -136,86 +176,6 @@
    "pr": false
   },
   {
-   "tmdb": 1507696,
-   "title": "Apocalipsis Z: Nuevo mundo",
-   "original": "Apocalipsis Z: Nuevo mundo",
-   "estreno": "2026-10-30",
-   "clasificacion": "R",
-   "duracion": 96,
-   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
-   "generos": [
-    "Acción",
-    "Suspense",
-    "Terror"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
-   "direccion": [
-    "Carles Torrens"
-   ],
-   "reparto": [
-    "Carlos Alcaide",
-    "José María Yázpik",
-    "Julia Martínez",
-    "Mónica López",
-    "Tamara Casellas",
-    "Berta Vázquez",
-    "Santiago Vaca Narvaja",
-    "Mario Mayo"
-   ],
-   "trailer": "BIEzwpyawtw",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
-   ],
-   "popularidad": 228.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1571955,
-   "title": "Colisión",
-   "original": "Colisión",
-   "estreno": "2026-10-30",
-   "clasificacion": "R",
-   "duracion": 122,
-   "resumen": "En plena crisis económica, un grupo de atracadores asalta un banco de Madrid y desencadena una serie de acontecimientos imprevisibles. Lo que al principio parece un robo más se convierte en un juego de engaños, miedo y supervivencia, donde cada decisión cuenta, cada gesto esconde algo y todos buscan evitar algo más que ir la cárcel.",
-   "generos": [
-    "Drama",
-    "Acción",
-    "Crimen"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/L2SDL6pi8jyvMRmh1vWbqfwHtf.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/uI3kWI7kGW5E0F8WduewgQYPt34.jpg",
-   "direccion": [
-    "Daniel Sánchez Arévalo"
-   ],
-   "reparto": [
-    "Laia Costa",
-    "Karra Elejalde",
-    "Luis Zahera",
-    "Tamar Novas",
-    "Álvaro Cervantes",
-    "Lluís Homar",
-    "Luz Valdenebro",
-    "Víctor Duplá"
-   ],
-   "trailer": "Jk12Xo0-oDc",
-   "dondeVer": [
-    {
-     "name": "Netflix"
-    },
-    {
-     "name": "Netflix Standard with Ads"
-    }
-   ],
-   "popularidad": 125.9,
-   "pr": false
-  },
-  {
    "tmdb": 791523,
    "title": "Wildwood: El bosque salvaje",
    "original": "Wildwood",
@@ -246,6 +206,152 @@
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
    "popularidad": 1453.3,
+   "pr": false
+  },
+  {
+   "tmdb": 1058424,
+   "title": "Hope: El primer impacto",
+   "original": "호프",
+   "estreno": "2026-09-10",
+   "clasificacion": "R",
+   "duracion": 157,
+   "resumen": "Tras un extraño hallazgo cerca de una aislada ciudad portuaria, los habitantes se ven envueltos en una desesperada lucha por la supervivencia.",
+   "generos": [
+    "Ciencia ficción",
+    "Misterio",
+    "Acción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/hHPIefotew38oJm3YCJPAzpi26c.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/j96rurZqmBjyY37Fncl3IB0qJNe.jpg",
+   "direccion": [
+    "나홍진"
+   ],
+   "reparto": [
+    "황정민",
+    "조인성",
+    "정호연",
+    "Alicia Vikander",
+    "Michael Fassbender",
+    "Taylor Russell",
+    "Cameron Britton",
+    "이상희"
+   ],
+   "trailer": "ODnHr2Emnf0",
+   "dondeVer": [],
+   "popularidad": 451.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1339713,
+   "title": "Obsesión",
+   "original": "Obsession",
+   "estreno": "2026-05-14",
+   "clasificacion": "R",
+   "duracion": 109,
+   "resumen": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
+   "generos": [
+    "Terror",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
+   "direccion": [
+    "Curry Barker"
+   ],
+   "reparto": [
+    "Michael Johnston",
+    "Inde Navarrette",
+    "Cooper Tomlinson",
+    "Megan Lawless",
+    "Andy Richter",
+    "Haley Fitzgerald",
+    "Darin Toonder",
+    "Anthony Pavone"
+   ],
+   "trailer": "WbziExW1-i4",
+   "dondeVer": [
+    {
+     "name": "Peacock Premium"
+    },
+    {
+     "name": "Peacock Premium Plus"
+    }
+   ],
+   "popularidad": 113.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1003596,
+   "title": "Avengers: Doomsday",
+   "original": "Avengers: Doomsday",
+   "estreno": "2026-12-18",
+   "clasificacion": null,
+   "duracion": 165,
+   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
+   "generos": [
+    "Ciencia ficción",
+    "Acción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+   "direccion": [
+    "Joe Russo",
+    "Anthony Russo"
+   ],
+   "reparto": [
+    "Robert Downey Jr.",
+    "Chris Evans",
+    "Chris Hemsworth",
+    "Pedro Pascal",
+    "Paul Rudd",
+    "Anthony Mackie",
+    "Florence Pugh",
+    "Vanessa Kirby"
+   ],
+   "trailer": "kZ2Nhqkx3-I",
+   "dondeVer": [],
+   "popularidad": 112.6,
+   "pr": false
+  },
+  {
+   "tmdb": 1571955,
+   "title": "Colisión",
+   "original": "Colisión",
+   "estreno": "2026-10-30",
+   "clasificacion": "R",
+   "duracion": 122,
+   "resumen": "En plena crisis económica, un grupo de atracadores asalta un banco de Madrid y desencadena una serie de acontecimientos imprevisibles. Lo que al principio parece un robo más se convierte en un juego de engaños, miedo y supervivencia, donde cada decisión cuenta, cada gesto esconde algo y todos buscan evitar algo más que ir la cárcel.",
+   "generos": [
+    "Drama",
+    "Acción",
+    "Crimen"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/sMPIiaOoyTr5o6s602KIVMJX3P2.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/uI3kWI7kGW5E0F8WduewgQYPt34.jpg",
+   "direccion": [
+    "Daniel Sánchez Arévalo"
+   ],
+   "reparto": [
+    "Laia Costa",
+    "Karra Elejalde",
+    "Luis Zahera",
+    "Tamar Novas",
+    "Álvaro Cervantes",
+    "Lluís Homar",
+    "Luz Valdenebro",
+    "Víctor Duplá"
+   ],
+   "trailer": "Jk12Xo0-oDc",
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 125.9,
    "pr": false
   },
   {
@@ -288,39 +394,6 @@
    "pr": false
   },
   {
-   "tmdb": 1058424,
-   "title": "Hope: El primer impacto",
-   "original": "호프",
-   "estreno": "2026-09-10",
-   "clasificacion": "R",
-   "duracion": 157,
-   "resumen": "Tras un extraño hallazgo cerca de una aislada ciudad portuaria, los habitantes se ven envueltos en una desesperada lucha por la supervivencia.",
-   "generos": [
-    "Ciencia ficción",
-    "Misterio",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/hHPIefotew38oJm3YCJPAzpi26c.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/qqHFLg90IUSoTmSMpKOOW5RyqN3.jpg",
-   "direccion": [
-    "나홍진"
-   ],
-   "reparto": [
-    "황정민",
-    "조인성",
-    "정호연",
-    "Alicia Vikander",
-    "Michael Fassbender",
-    "Taylor Russell",
-    "Cameron Britton",
-    "이상희"
-   ],
-   "trailer": "ODnHr2Emnf0",
-   "dondeVer": [],
-   "popularidad": 451.9,
-   "pr": false
-  },
-  {
    "tmdb": 1727734,
    "title": "Ali G: ¿Kién Ez Yo?",
    "original": "Ali G: Who Iz I?",
@@ -359,76 +432,36 @@
    "pr": false
   },
   {
-   "tmdb": 1003596,
-   "title": "Avengers: Doomsday",
-   "original": "Avengers: Doomsday",
-   "estreno": "2026-12-18",
-   "clasificacion": null,
-   "duracion": 165,
-   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
-   "generos": [
-    "Ciencia ficción",
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
-   "direccion": [
-    "Joe Russo",
-    "Anthony Russo"
-   ],
-   "reparto": [
-    "Robert Downey Jr.",
-    "Chris Evans",
-    "Chris Hemsworth",
-    "Pedro Pascal",
-    "Paul Rudd",
-    "Anthony Mackie",
-    "Florence Pugh",
-    "Vanessa Kirby"
-   ],
-   "trailer": "kZ2Nhqkx3-I",
-   "dondeVer": [],
-   "popularidad": 112.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1339713,
-   "title": "Obsesión",
-   "original": "Obsession",
-   "estreno": "2026-05-14",
+   "tmdb": 1423191,
+   "title": "Resident Evil: Noche cero",
+   "original": "Resident Evil",
+   "estreno": "2026-09-17",
    "clasificacion": "R",
-   "duracion": 109,
-   "resumen": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
+   "duracion": 95,
+   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
    "generos": [
     "Terror",
-    "Suspense"
+    "Ciencia ficción",
+    "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
    "direccion": [
-    "Curry Barker"
+    "Zach Cregger"
    ],
    "reparto": [
-    "Michael Johnston",
-    "Inde Navarrette",
-    "Cooper Tomlinson",
-    "Megan Lawless",
-    "Andy Richter",
-    "Haley Fitzgerald",
-    "Darin Toonder",
-    "Anthony Pavone"
+    "Austin Abrams",
+    "Paul Walter Hauser",
+    "Kali Reis",
+    "Zach Cherry",
+    "Johnno Wilson",
+    "Shaun W. Loeser",
+    "Zach Cregger",
+    "Emily Piggford"
    ],
-   "trailer": "WbziExW1-i4",
-   "dondeVer": [
-    {
-     "name": "Peacock Premium"
-    },
-    {
-     "name": "Peacock Premium Plus"
-    }
-   ],
-   "popularidad": 113.4,
+   "trailer": "d6oszs7f5aI",
+   "dondeVer": [],
+   "popularidad": 113.9,
    "pr": false
   },
   {
@@ -540,107 +573,71 @@
    "pr": false
   },
   {
-   "tmdb": 1423191,
-   "title": "Resident Evil: Noche cero",
-   "original": "Resident Evil",
-   "estreno": "2026-09-17",
-   "clasificacion": "R",
-   "duracion": 95,
-   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
+   "tmdb": 1377237,
+   "title": "Entrega al límite",
+   "original": "Runner",
+   "estreno": "2026-09-10",
+   "clasificacion": "PG-13",
+   "duracion": 97,
+   "resumen": "Hank es un mensajero encargado de transportar un órgano que puede salvarle la vida a un joven receptor. Pero la misión se vuelve una carrera contra el tiempo cuando un despiadado jefe del crimen hará lo que sea necesario para quedarse con él.",
    "generos": [
-    "Terror",
-    "Ciencia ficción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
-   "direccion": [
-    "Zach Cregger"
-   ],
-   "reparto": [
-    "Austin Abrams",
-    "Paul Walter Hauser",
-    "Kali Reis",
-    "Zach Cherry",
-    "Johnno Wilson",
-    "Shaun W. Loeser",
-    "Zach Cregger",
-    "Emily Piggford"
-   ],
-   "trailer": "d6oszs7f5aI",
-   "dondeVer": [],
-   "popularidad": 113.9,
-   "pr": false
-  },
-  {
-   "tmdb": 1368337,
-   "title": "La Odisea",
-   "original": "The Odyssey",
-   "estreno": "2026-07-16",
-   "clasificacion": "R",
-   "duracion": 173,
-   "resumen": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
-   "generos": [
-    "Aventura",
     "Acción",
-    "Fantasía"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bulFtfy3oBQtCnAMSi7g6DSSds3.jpg",
-   "direccion": [
-    "Christopher Nolan"
-   ],
-   "reparto": [
-    "Matt Damon",
-    "Tom Holland",
-    "Anne Hathaway",
-    "Robert Pattinson",
-    "Himesh Patel",
-    "Charlize Theron",
-    "John Leguizamo",
-    "Travis Scott"
-   ],
-   "trailer": "X9nUrOnHlz0",
-   "dondeVer": [],
-   "popularidad": 204.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1789549,
-   "title": "El Regalo De Cumpleaños",
-   "original": "Das Geschenk",
-   "estreno": "2026-10-30",
-   "clasificacion": "R",
-   "duracion": 86,
-   "resumen": "Marlene Frischmann (Jeanne Goursaud) quiere celebrar por todo lo alto el cumpleaños de su hijo Theo (Levin Wopp) y lo tiene todo preparado en la elegante casa de campo de su hermano: globos, una tarta sin gluten, una piñata e incluso animales salvajes prometen convertir el día en algo inolvidable. Pero la celebración, preparada con todo el cariño, no tarda en convertirse en una pesadilla desternillante, con acaloradas discusiones sobre la crianza, los modelos de masculinidad y los principios educativos. Tampoco ayudan precisamente a poner orden su alborotador hermano banquero Timo (Edin Hasanović), su excéntrico y desorientado padre Hans (Heiner Lauterbach), su compañera Jenny (Amal Keller), una idealista empeñada en salvar el mundo, y un regalo muy especial. Entre una familia de lo más disfuncional, madres helicóptero obsesionadas con controlarlo todo y la anarquía infantil, la fiesta acaba sumida en el caos.",
-   "generos": [
     "Comedia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rtifYyLgIgACVwsbVodZ3TZ2Yde.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/eBtITrrdFo1EG7t6TSG5U5c4P2e.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/gxrGVQdFmc3xxVn6UyY31ZjqM0s.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/npXZNWjOEYrqdMDPQ11SGBrXqAG.jpg",
    "direccion": [
-    "Vanessa Jopp"
+    "Scott Waugh"
    ],
    "reparto": [
-    "Jeanne Goursaud",
-    "Edin Hasanović",
-    "Heiner Lauterbach",
-    "Levin Wopp",
-    "Sogol Faghani",
-    "Enzo Brumm",
-    "Berit Künnecke",
-    "Amal Keller"
+    "Alan Ritchson",
+    "Owen Wilson",
+    "Rodrigo Santoro",
+    "Leila George",
+    "Kate Box",
+    "Peta Sergeant",
+    "Cecilia Toussaint",
+    "Geraldine Hakewill"
    ],
-   "trailer": null,
+   "trailer": "m8JUmBgHejI",
    "dondeVer": [
     {
-     "name": "Netflix"
-    },
-    {
-     "name": "Netflix Standard with Ads"
+     "name": "Angel Studios"
     }
    ],
-   "popularidad": 47.1,
+   "popularidad": 88.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1765072,
+   "title": "Puedes verlo todo",
+   "original": "You Can See Everything",
+   "estreno": "2026-10-16",
+   "clasificacion": "R",
+   "duracion": 174,
+   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
+   "generos": [
+    "Documental"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/Ap8QwmKfSjYbWC4XIP8w9pdn72O.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/nhIL3O4W9h5V5JbNQm7yjoDk3So.jpg",
+   "direccion": [
+    "Nathan Fielder",
+    "Lance Oppenheim"
+   ],
+   "reparto": [
+    "Elizabeth Holmes",
+    "Nathan Fielder",
+    "Billy Evans",
+    "Amanda Seyfried",
+    "Christopher Abbott",
+    "Lance Oppenheim",
+    "Christian Rasmus Holmes IV",
+    "Noel Anne"
+   ],
+   "trailer": "HvW_N5p1q44",
+   "dondeVer": [],
+   "popularidad": 89.7,
    "pr": false
   },
   {
@@ -678,36 +675,36 @@
    "pr": false
   },
   {
-   "tmdb": 1503762,
-   "title": "Sensatez y sentimiento",
-   "original": "Sense and Sensibility",
-   "estreno": "2026-10-15",
-   "clasificacion": "PG",
-   "duracion": 132,
-   "resumen": "Una nueva visión de la icónica novela de Jane Austen con una historia encantadora, ingeniosa y profundamente conmovedora sobre el amor y la hermandad.",
+   "tmdb": 1368337,
+   "title": "La Odisea",
+   "original": "The Odyssey",
+   "estreno": "2026-07-16",
+   "clasificacion": "R",
+   "duracion": 173,
+   "resumen": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
    "generos": [
-    "Drama",
-    "Romance",
-    "Historia"
+    "Aventura",
+    "Acción",
+    "Fantasía"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/xmfC7mUIZWyc0Mez55qwoHTQUNJ.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/tIcONOFK9D3F89ETK8DBS1hIwVF.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/bulFtfy3oBQtCnAMSi7g6DSSds3.jpg",
    "direccion": [
-    "Georgia Oakley"
+    "Christopher Nolan"
    ],
    "reparto": [
-    "Daisy Edgar-Jones",
-    "Esmé Creed-Miles",
-    "Caitríona Balfe",
-    "Frank Dillane",
-    "Herbert Nordrum",
-    "George MacKay",
-    "Fiona Shaw",
-    "Bodhi Rae Breathnach"
+    "Matt Damon",
+    "Tom Holland",
+    "Anne Hathaway",
+    "Robert Pattinson",
+    "Himesh Patel",
+    "Charlize Theron",
+    "John Leguizamo",
+    "Travis Scott"
    ],
-   "trailer": "GMwdcpKOOyY",
+   "trailer": "X9nUrOnHlz0",
    "dondeVer": [],
-   "popularidad": 91.0,
+   "popularidad": 204.1,
    "pr": false
   }
  ],
@@ -768,7 +765,7 @@
     "Josh Hartnett",
     "Brady Wagner",
     "Ismael Cruz Cordova",
-    "Ирина Дворовенко",
+    "Ірина Дворовенко",
     "Sienna Kulovitz",
     "K.K. Moggie"
    ],
@@ -1235,6 +1232,37 @@
    "pr": false
   },
   {
+   "tmdb": 1401459,
+   "title": "Fjord",
+   "original": "Fjord",
+   "estreno": "2026-10-29",
+   "clasificacion": "R",
+   "duracion": 146,
+   "resumen": "Los Gheorghiu, una pareja rumano-noruega muy religiosa, se instalan en un pueblo situado en un remoto fiordo, donde entablan una estrecha relación con sus vecinos, los Halberg. Sus hijos se hacen amigos a pesar de las diferencias en su educación. Cuando la adolescente Elia Gheorghiu aparece en el colegio con algunos moratones en el cuerpo, la comunidad se pregunta si la educación tradicional que los padres imparten a sus hijos tendrá algo que ver con ello.",
+   "generos": [
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/9L7ND90Rl6RANG5l0Z5ZfsI3RET.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/rCYzSP07jCA1HuFvrwgaEAPHitT.jpg",
+   "direccion": [
+    "Cristian Mungiu"
+   ],
+   "reparto": [
+    "Sebastian Stan",
+    "Renate Reinsve",
+    "Lisa Carlehed",
+    "Ellen Dorrit Petersen",
+    "Lisa Loven Kongsli",
+    "Henrikke Lund Olsen",
+    "Markus Tønseth",
+    "Vanessa Ceban"
+   ],
+   "trailer": "0gdRZZVoinM",
+   "dondeVer": [],
+   "popularidad": 37.7,
+   "pr": false
+  },
+  {
    "tmdb": 1669915,
    "title": "Angel and the Badman",
    "original": "Angel and the Badman",
@@ -1331,37 +1359,6 @@
    "trailer": "o_pIiP1A0RY",
    "dondeVer": [],
    "popularidad": 35.8,
-   "pr": false
-  },
-  {
-   "tmdb": 1401459,
-   "title": "Fjord",
-   "original": "Fjord",
-   "estreno": "2026-10-29",
-   "clasificacion": "R",
-   "duracion": 146,
-   "resumen": "Los Gheorghiu, una pareja rumano-noruega muy religiosa, se instalan en un pueblo situado en un remoto fiordo, donde entablan una estrecha relación con sus vecinos, los Halberg. Sus hijos se hacen amigos a pesar de las diferencias en su educación. Cuando la adolescente Elia Gheorghiu aparece en el colegio con algunos moratones en el cuerpo, la comunidad se pregunta si la educación tradicional que los padres imparten a sus hijos tendrá algo que ver con ello.",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/9L7ND90Rl6RANG5l0Z5ZfsI3RET.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rCYzSP07jCA1HuFvrwgaEAPHitT.jpg",
-   "direccion": [
-    "Cristian Mungiu"
-   ],
-   "reparto": [
-    "Sebastian Stan",
-    "Renate Reinsve",
-    "Lisa Carlehed",
-    "Ellen Dorrit Petersen",
-    "Lisa Loven Kongsli",
-    "Henrikke Lund Olsen",
-    "Markus Tønseth",
-    "Vanessa Ceban"
-   ],
-   "trailer": "0gdRZZVoinM",
-   "dondeVer": [],
-   "popularidad": 37.7,
    "pr": false
   },
   {
@@ -2020,41 +2017,6 @@
    "pr": false
   },
   {
-   "tmdb": 1595124,
-   "title": "Hermanastras",
-   "original": "Steps",
-   "estreno": "2026-11-20",
-   "clasificacion": "PG",
-   "duracion": 101,
-   "resumen": "",
-   "generos": [
-    "Animación",
-    "Fantasía",
-    "Comedia",
-    "Familia",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8Kj6Fsgdsdr7XsxrgHwIlSFF1fz.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/g1bEboMx1a8JCg1jXeDCh24RtgW.jpg",
-   "direccion": [
-    "Alyce Tzue"
-   ],
-   "reparto": [
-    "Ali Wong",
-    "Amanda Seyfried",
-    "Stephanie Hsu",
-    "Bette Midler",
-    "Nikki Glaser",
-    "Peter Dinklage",
-    "Daniel Radcliffe",
-    "Young Mazino"
-   ],
-   "trailer": "rXKefkjeoQQ",
-   "dondeVer": [],
-   "popularidad": 10.2,
-   "pr": false
-  },
-  {
    "tmdb": 1286656,
    "title": "Yo Soy Rocky",
    "original": "I Play Rocky",
@@ -2120,37 +2082,38 @@
    "pr": false
   },
   {
-   "tmdb": 1697911,
-   "title": "Drummer Boy",
-   "original": "Drummer Boy",
-   "estreno": "2026-11-06",
-   "clasificacion": "PG-13",
-   "duracion": 129,
+   "tmdb": 1595124,
+   "title": "Hermanastras",
+   "original": "Steps",
+   "estreno": "2026-11-20",
+   "clasificacion": "PG",
+   "duracion": 101,
    "resumen": "",
    "generos": [
-    "Bélica",
-    "Romance",
-    "Música"
+    "Animación",
+    "Fantasía",
+    "Comedia",
+    "Familia",
+    "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/bhjdgMm2fFrysSzVqv5RwRwIbVf.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/5KF459N6jOfRV7kV9XV7ZQdCLKK.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/8Kj6Fsgdsdr7XsxrgHwIlSFF1fz.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/g1bEboMx1a8JCg1jXeDCh24RtgW.jpg",
    "direccion": [
-    "Ben Smallbone",
-    "Joel Smallbone"
+    "Alyce Tzue"
    ],
    "reparto": [
-    "Joel Smallbone",
-    "Beth Easdown",
-    "Kenneth Barry",
-    "Charles Esten",
-    "Iain Glen",
-    "India Brown",
-    "Lucas Leach",
-    "Melora Hardin"
+    "Ali Wong",
+    "Amanda Seyfried",
+    "Stephanie Hsu",
+    "Bette Midler",
+    "Nikki Glaser",
+    "Peter Dinklage",
+    "Daniel Radcliffe",
+    "Young Mazino"
    ],
-   "trailer": "wlm_vxf4PaM",
+   "trailer": "rXKefkjeoQQ",
    "dondeVer": [],
-   "popularidad": 8.7,
+   "popularidad": 10.2,
    "pr": false
   },
   {
@@ -2185,6 +2148,40 @@
    "trailer": "RjEZaUBbUvU",
    "dondeVer": [],
    "popularidad": 9.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1697911,
+   "title": "Drummer Boy",
+   "original": "Drummer Boy",
+   "estreno": "2026-11-06",
+   "clasificacion": "PG-13",
+   "duracion": 129,
+   "resumen": "",
+   "generos": [
+    "Bélica",
+    "Romance",
+    "Música"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/bhjdgMm2fFrysSzVqv5RwRwIbVf.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/5KF459N6jOfRV7kV9XV7ZQdCLKK.jpg",
+   "direccion": [
+    "Ben Smallbone",
+    "Joel Smallbone"
+   ],
+   "reparto": [
+    "Joel Smallbone",
+    "Beth Easdown",
+    "Kenneth Barry",
+    "Charles Esten",
+    "Iain Glen",
+    "India Brown",
+    "Lucas Leach",
+    "Melora Hardin"
+   ],
+   "trailer": "wlm_vxf4PaM",
+   "dondeVer": [],
+   "popularidad": 8.7,
    "pr": false
   },
   {
@@ -2253,37 +2250,6 @@
    "pr": false
   },
   {
-   "tmdb": 10404,
-   "title": "La Linterna Roja",
-   "original": "大红灯笼高高挂",
-   "estreno": "2026-11-06",
-   "clasificacion": null,
-   "duracion": 125,
-   "resumen": "China, años veinte. Tras la muerte de su padre, la joven de 19 años Songlian se ve forzada a casarse con Chen Zouqian, el señor de una poderosa familia. Él es un hombre de cincuenta años y tiene ya tres esposas, cada una de las cuales vive en una casa independiente dentro de un gran castillo.",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/dze5P1wHqxSH4vt98zVTbeUKugi.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/9UCHfC9tYojD4mMVBm0boyzYEQq.jpg",
-   "direccion": [
-    "张艺谋"
-   ],
-   "reparto": [
-    "巩俐",
-    "何赛飞",
-    "曹翠芬",
-    "孔琳",
-    "金淑媛",
-    "马精武",
-    "崔志刚",
-    "周琦"
-   ],
-   "trailer": "tLYJzEtmavg",
-   "dondeVer": [],
-   "popularidad": 7.3,
-   "pr": false
-  },
-  {
    "tmdb": 1402181,
    "title": "Scene",
    "original": "சீன்",
@@ -2314,38 +2280,6 @@
    "trailer": null,
    "dondeVer": [],
    "popularidad": 7.9,
-   "pr": false
-  },
-  {
-   "tmdb": 1379486,
-   "title": "La Psicópata",
-   "original": "Victorian Psycho",
-   "estreno": "2026-11-13",
-   "clasificacion": "R",
-   "duracion": 102,
-   "resumen": "Winifred Notty, una joven institutriz que llega a la remota Ensor House para hacerse cargo de la educación de los hijos de una familia adinerada. Sin embargo, detrás de su aparente compostura se esconde una personalidad profundamente perturbadora. A medida que se instala en la mansión y comienza a formar parte de la rutina familiar, sus impulsos más oscuros empiezan a salir a la superficie, convirtiendo ese hogar en el escenario de una historia inquietante.",
-   "generos": [
-    "Terror",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/eknMIThHWZCxMzDAcUDk4rK2Wpc.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/92FSzMpBSkMH59ZCDz9tUjIWKAS.jpg",
-   "direccion": [
-    "Zachary Wigon"
-   ],
-   "reparto": [
-    "Maika Monroe",
-    "Thomasin McKenzie",
-    "Ruth Wilson",
-    "Jason Isaacs",
-    "Evie Templeton",
-    "Jacobi Jupe",
-    "Amy De Bhrún",
-    "Katherine Moran"
-   ],
-   "trailer": "sDiFol_2j2I",
-   "dondeVer": [],
-   "popularidad": 7.3,
    "pr": false
   },
   {
@@ -2381,6 +2315,69 @@
    "pr": false
   },
   {
+   "tmdb": 1379486,
+   "title": "La Psicópata",
+   "original": "Victorian Psycho",
+   "estreno": "2026-11-13",
+   "clasificacion": "R",
+   "duracion": 102,
+   "resumen": "Winifred Notty, una joven institutriz que llega a la remota Ensor House para hacerse cargo de la educación de los hijos de una familia adinerada. Sin embargo, detrás de su aparente compostura se esconde una personalidad profundamente perturbadora. A medida que se instala en la mansión y comienza a formar parte de la rutina familiar, sus impulsos más oscuros empiezan a salir a la superficie, convirtiendo ese hogar en el escenario de una historia inquietante.",
+   "generos": [
+    "Terror",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/eknMIThHWZCxMzDAcUDk4rK2Wpc.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/92FSzMpBSkMH59ZCDz9tUjIWKAS.jpg",
+   "direccion": [
+    "Zachary Wigon"
+   ],
+   "reparto": [
+    "Maika Monroe",
+    "Thomasin McKenzie",
+    "Ruth Wilson",
+    "Jason Isaacs",
+    "Evie Templeton",
+    "Jacobi Jupe",
+    "Amy De Bhrún",
+    "Katherine Moran"
+   ],
+   "trailer": "sDiFol_2j2I",
+   "dondeVer": [],
+   "popularidad": 7.3,
+   "pr": false
+  },
+  {
+   "tmdb": 10404,
+   "title": "La Linterna Roja",
+   "original": "大红灯笼高高挂",
+   "estreno": "2026-11-06",
+   "clasificacion": null,
+   "duracion": 125,
+   "resumen": "China, años veinte. Tras la muerte de su padre, la joven de 19 años Songlian se ve forzada a casarse con Chen Zouqian, el señor de una poderosa familia. Él es un hombre de cincuenta años y tiene ya tres esposas, cada una de las cuales vive en una casa independiente dentro de un gran castillo.",
+   "generos": [
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/dze5P1wHqxSH4vt98zVTbeUKugi.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/9UCHfC9tYojD4mMVBm0boyzYEQq.jpg",
+   "direccion": [
+    "张艺谋"
+   ],
+   "reparto": [
+    "巩俐",
+    "何赛飞",
+    "曹翠芬",
+    "孔琳",
+    "金淑媛",
+    "马精武",
+    "崔志刚",
+    "周琦"
+   ],
+   "trailer": "tLYJzEtmavg",
+   "dondeVer": [],
+   "popularidad": 7.3,
+   "pr": false
+  },
+  {
    "tmdb": 1505644,
    "title": "ENE Repeat",
    "original": "ఈNఈ Repeat",
@@ -2410,6 +2407,102 @@
    "trailer": null,
    "dondeVer": [],
    "popularidad": 6.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1088548,
+   "title": "Amarga Navidad",
+   "original": "Amarga Navidad",
+   "estreno": "2026-11-13",
+   "clasificacion": "R",
+   "duracion": 111,
+   "resumen": "Tras el fallecimiento de su madre en diciembre, Elsa, directora de publicidad, se sumerge en el trabajo para afrontar la situación. Cuando un ataque de pánico la obliga a tomarse un descanso, decide viajar a Lanzarote con su amiga Patricia mientras su pareja, Bonifacio, se queda en Madrid.",
+   "generos": [
+    "Drama",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ji29dXqoeIsQiVnXAkzI4nzxMjr.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ppLv2F7dhvI3wxaEoOP1E0OyBPP.jpg",
+   "direccion": [
+    "Pedro Almodóvar"
+   ],
+   "reparto": [
+    "Bárbara Lennie",
+    "Leonardo Sbaraglia",
+    "Aitana Sánchez-Gijón",
+    "Victoria Luengo",
+    "Patrick Criado",
+    "Milena Smit",
+    "Quim Gutiérrez",
+    "Rossy de Palma"
+   ],
+   "trailer": "SNbVMk-nLu4",
+   "dondeVer": [],
+   "popularidad": 6.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1655419,
+   "title": "Everytime",
+   "original": "Everytime",
+   "estreno": "2026-11-06",
+   "clasificacion": "NR",
+   "duracion": 123,
+   "resumen": "",
+   "generos": [
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/bOEoQxzC74eGMGbSq6xW7eLZjWn.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/bRkk5HjNLQMWB3LlZdxySSzxVLi.jpg",
+   "direccion": [
+    "Sandra Wollner"
+   ],
+   "reparto": [
+    "Birgit Minichmayr",
+    "Lotte Keiling",
+    "Tristán López",
+    "Carla Hüttermann",
+    "Hermann Beyer",
+    "Eva Weißenborn",
+    "Knut Berger",
+    "Lilly Marie Tschörtner"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 6.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1381273,
+   "title": "Tigre De Papel",
+   "original": "Paper Tiger",
+   "estreno": "2026-11-13",
+   "clasificacion": "R",
+   "duracion": 115,
+   "resumen": "Dos hermanos persiguen el sueño americano, pero se ven envueltos en una peligrosa trama de la mafia rusa que aterroriza a su familia, poniendo a prueba su vínculo a medida que la traición se hace posible.",
+   "generos": [
+    "Crimen",
+    "Drama",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/p6oLmq5KmuWY6uRXBQBL2q30jia.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/1VhgzeA0tBbd7GtAw1d2nL3UUBk.jpg",
+   "direccion": [
+    "James Gray"
+   ],
+   "reparto": [
+    "Miles Teller",
+    "Adam Driver",
+    "Scarlett Johansson",
+    "Gavin Goudey",
+    "Roman Engel",
+    "Cindy Katz",
+    "Yavor Vesselinov",
+    "Victor Ptak"
+   ],
+   "trailer": "MLwTyQOhBkw",
+   "dondeVer": [],
+   "popularidad": 6.1,
    "pr": false
   },
   {
@@ -2447,37 +2540,6 @@
    "pr": false
   },
   {
-   "tmdb": 1655419,
-   "title": "Everytime",
-   "original": "Everytime",
-   "estreno": "2026-11-06",
-   "clasificacion": "NR",
-   "duracion": 123,
-   "resumen": "",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/bOEoQxzC74eGMGbSq6xW7eLZjWn.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bRkk5HjNLQMWB3LlZdxySSzxVLi.jpg",
-   "direccion": [
-    "Sandra Wollner"
-   ],
-   "reparto": [
-    "Birgit Minichmayr",
-    "Lotte Keiling",
-    "Tristán López",
-    "Carla Hüttermann",
-    "Hermann Beyer",
-    "Eva Weißenborn",
-    "Knut Berger",
-    "Lilly Marie Tschörtner"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 6.4,
-   "pr": false
-  },
-  {
    "tmdb": 1612811,
    "title": "Disco",
    "original": "ഡിസ്കോ",
@@ -2506,103 +2568,6 @@
    "trailer": null,
    "dondeVer": [],
    "popularidad": 6.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1088548,
-   "title": "Amarga Navidad",
-   "original": "Amarga Navidad",
-   "estreno": "2026-11-13",
-   "clasificacion": "R",
-   "duracion": 111,
-   "resumen": "Tras el fallecimiento de su madre en diciembre, Elsa, directora de publicidad, se sumerge en el trabajo para afrontar la situación. Cuando un ataque de pánico la obliga a tomarse un descanso, decide viajar a Lanzarote con su amiga Patricia mientras su pareja, Bonifacio, se queda en Madrid.",
-   "generos": [
-    "Drama",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ji29dXqoeIsQiVnXAkzI4nzxMjr.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/ppLv2F7dhvI3wxaEoOP1E0OyBPP.jpg",
-   "direccion": [
-    "Pedro Almodóvar"
-   ],
-   "reparto": [
-    "Bárbara Lennie",
-    "Leonardo Sbaraglia",
-    "Aitana Sánchez-Gijón",
-    "Victoria Luengo",
-    "Patrick Criado",
-    "Milena Smit",
-    "Quim Gutiérrez",
-    "Rossy de Palma"
-   ],
-   "trailer": "SNbVMk-nLu4",
-   "dondeVer": [],
-   "popularidad": 6.4,
-   "pr": false
-  },
-  {
-   "tmdb": 1287365,
-   "title": "The Liberation",
-   "original": "The Liberation",
-   "estreno": "2026-11-06",
-   "clasificacion": null,
-   "duracion": 124,
-   "resumen": "",
-   "generos": [
-    "Drama",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/cjbHYvJz9j5H3BSBfoaOiGMEHeZ.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/9hrTg5I0cH4kCtlEfdtsb9krxtS.jpg",
-   "direccion": [
-    "Guy Nattiv"
-   ],
-   "reparto": [
-    "Carrie Coon",
-    "Lily James",
-    "Bella Ramsey",
-    "Odessa Young",
-    "Tracy Letts",
-    "Jaime Ray Newman",
-    "Siobhan Williams",
-    "Morgan Taylor Campbell"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 4.9,
-   "pr": false
-  },
-  {
-   "tmdb": 1650896,
-   "title": "Peppa Pig: Perfect Holiday",
-   "original": "小猪佩奇·完美假期",
-   "estreno": "2026-11-22",
-   "clasificacion": "PG",
-   "duracion": 88,
-   "resumen": "",
-   "generos": [
-    "Comedia",
-    "Animación",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/oYe06Fh4BHn6SNSCTaUNg0zSEj2.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/jRlvwhczCBfIBBT4BRDQ51cBRuv.jpg",
-   "direccion": [
-    "Liu Yuan"
-   ],
-   "reparto": [
-    "陈奕雯",
-    "符冲",
-    "范楚绒",
-    "张安琪",
-    "贾邱",
-    "孙畅",
-    "Ye Sun",
-    "Xiangtong Wu"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 5.5,
    "pr": false
   },
   {
@@ -2637,36 +2602,68 @@
    "pr": false
   },
   {
-   "tmdb": 1381273,
-   "title": "Tigre De Papel",
-   "original": "Paper Tiger",
+   "tmdb": 1608787,
+   "title": "Plucked",
+   "original": "Plucked",
    "estreno": "2026-11-13",
    "clasificacion": "R",
-   "duracion": 115,
-   "resumen": "Dos hermanos persiguen el sueño americano, pero se ven envueltos en una peligrosa trama de la mafia rusa que aterroriza a su familia, poniendo a prueba su vínculo a medida que la traición se hace posible.",
+   "duracion": 120,
+   "resumen": "",
    "generos": [
-    "Crimen",
-    "Drama",
-    "Suspense"
+    "Comedia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/p6oLmq5KmuWY6uRXBQBL2q30jia.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/1VhgzeA0tBbd7GtAw1d2nL3UUBk.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/yqhpJ3JXXrycbFSyzEb5FmapcXo.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/nDItBX6Wdqq2S4l6u4iTVNzdYpF.jpg",
    "direccion": [
-    "James Gray"
+    "Usher Morgan",
+    "Katie Vincent"
    ],
    "reparto": [
-    "Miles Teller",
-    "Adam Driver",
-    "Scarlett Johansson",
-    "Gavin Goudey",
-    "Roman Engel",
-    "Cindy Katz",
-    "Yavor Vesselinov",
-    "Victor Ptak"
+    "Katie Vincent",
+    "Jared Canfield",
+    "Tony Crane",
+    "Catherine Curtin",
+    "Bryant Caroll",
+    "Susan Gallagher",
+    "Tony D. Head",
+    "Bailey Macejak"
    ],
-   "trailer": "MLwTyQOhBkw",
+   "trailer": "MR7U_7FAxUY",
    "dondeVer": [],
-   "popularidad": 6.1,
+   "popularidad": 5.6,
+   "pr": false
+  },
+  {
+   "tmdb": 1650896,
+   "title": "Peppa Pig: Perfect Holiday",
+   "original": "小猪佩奇·完美假期",
+   "estreno": "2026-11-22",
+   "clasificacion": "PG",
+   "duracion": 88,
+   "resumen": "",
+   "generos": [
+    "Comedia",
+    "Animación",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/oYe06Fh4BHn6SNSCTaUNg0zSEj2.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/jRlvwhczCBfIBBT4BRDQ51cBRuv.jpg",
+   "direccion": [
+    "Liu Yuan"
+   ],
+   "reparto": [
+    "陈奕雯",
+    "符冲",
+    "范楚绒",
+    "张安琪",
+    "贾邱",
+    "孙畅",
+    "Ye Sun",
+    "Xiangtong Wu"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 5.5,
    "pr": false
   }
  ]
