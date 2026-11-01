@@ -163,6 +163,10 @@ async def register(req: RegisterRequest, request: Request):
             "active": False,
             "emailVisibility": False,
             "verified": False,
+            # 1-nov-2026: los VODs vienen prendidos (plan gratis = 5) para que el primer stream no se pierda;
+            # el streamer los puede apagar en su panel. Las cuentas de solo Mercado no los necesitan.
+            "vod_enabled": req.contenido.strip() != "Mercado",
+            "vod_plan": "free",
         },
     )
     if create.status_code not in (200, 201):

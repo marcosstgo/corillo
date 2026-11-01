@@ -18,7 +18,8 @@ if (!__validFormat) {
 } else if (!__inStaticList) {
   // Canal no en la lista estática — verificar via API (streamers nuevos en PocketBase)
   fetch('https://api.corillo.live/api/profile/' + encodeURIComponent(__rawChannel), { signal: AbortSignal.timeout(5000) })
-    .then(r => { if (!r.ok) location.replace('/_404/'); })
+    .then(r => { if (!r.ok) { location.replace('/_404/'); return null; } return r.json(); })
+    .then(d => { if (d && d.nuevo) { window.__canalNuevo = d.name || d.display_name || __rawChannel; window.__marcarNuevo?.(); } })
     .catch(() => {});
 }
 window.channel = __validFormat ? __rawChannel : '';
@@ -212,7 +213,14 @@ window.channel = __validFormat ? __rawChannel : '';
     } catch(e) {}
   }
 
+  // Cuenta que todavía no ha salido en vivo (1-nov-2026): en vez de «Sin transmisión», una bienvenida.
+  const NUEVO_T = 'Todavía no ha transmitido';
+  const nuevoMsg = () => `${window.__canalNuevo} acaba de llegar a Corillo. Cuando salga en vivo por primera vez, lo ves aquí.`;
+  window.__marcarNuevo = () => {
+    if (DOM.ovTitle && DOM.ovTitle.textContent === 'Sin transmisión') { DOM.ovTitle.textContent = NUEVO_T; DOM.ovMsg.textContent = nuevoMsg(); }
+  };
   function showOverlay(title, msg) {
+    if (window.__canalNuevo && title === 'Sin transmisión') { title = NUEVO_T; msg = nuevoMsg(); }
     hideUnmuteBanner();
     DOM.ovTitle.textContent = title;
     DOM.ovMsg.textContent   = msg;
@@ -475,7 +483,7 @@ window.channel = __validFormat ? __rawChannel : '';
         if (statsRow) statsRow.style.display = 'none';
         const v = DOM.video;
         v.muted = true;
-        v.src   = '/vods/' + vod.channel + '/' + vod.filename;
+        v.src   = 'https://vods.corillo.live/' + vod.channel + '/' + vod.filename;   // R2 (antes /vods/…: no existía)
         v.load();
         v.addEventListener('loadedmetadata', () => {
           if (v.duration > 60) v.currentTime = 30;

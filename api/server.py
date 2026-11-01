@@ -147,14 +147,18 @@ async def get_profile(key: str):
             f"{PB_URL}/api/collections/streamers/records",
             headers={"Authorization": token},
             params={
-                "filter": f'key={_q(key)} && active=true && first_live_at!=""',
-                "fields": "id,key,display_name,sub,bio,color,twitch,instagram,tiktok,avatar,panels,stream_title",
+                # La LISTA de streamers sigue pidiendo first_live_at (ver /streamers); la página del canal no: así el
+                # enlace funciona desde el día uno y dice «todavía no ha transmitido» (1-nov-2026). Las cuentas de
+                # solo Mercado (contenido = «Mercado» al registrarse) siguen sin canal.
+                "filter": f'key={_q(key)} && active=true && (first_live_at!="" || bio!="Mercado")',
+                "fields": "id,key,display_name,sub,bio,color,twitch,instagram,tiktok,avatar,panels,stream_title,first_live_at",
             },
         )
         items = r.json().get("items", [])
         if not items:
             raise HTTPException(status_code=404)
         rec = items[0]
+        rec["nuevo"] = not rec.pop("first_live_at", "")
         if rec.get("avatar"):
             rec["avatar_url"] = f"{PB_PUBLIC_URL}/api/files/streamers/{rec['id']}/{rec['avatar']}"
         return rec
