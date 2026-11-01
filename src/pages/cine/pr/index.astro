@@ -1,0 +1,59 @@
+---
+/* /cine/pr/ (1-nov-2026): todo el cine puertorriqueño que tiene ficha en Corillo, por estreno, con directores. */
+import SiteShell from '../../../layouts/SiteShell.astro';
+import PeliCard from '../../../components/cine/PeliCard.astro';
+import { hechoEnPR, fechaLarga } from '../../../data/cine';
+
+const pr = await hechoEnPR();
+const hoy = new Date().toISOString().slice(0, 10);
+const vienen = pr.filter(p => p.estreno && p.estreno > hoy).sort((a, b) => a.estreno!.localeCompare(b.estreno!));
+const ya = pr.filter(p => !(p.estreno && p.estreno > hoy));
+const porAno = new Map<number, typeof pr>();
+ya.forEach(p => { const y = p.year || 0; porAno.set(y, [...(porAno.get(y) || []), p]); });
+const directores = [...new Set(pr.flatMap(p => p.direccion))].sort((a, b) => a.localeCompare(b, 'es'));
+const ld = {
+  '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Cine puertorriqueño — CORILLO', url: 'https://corillo.live/cine/pr/',
+  description: 'Películas puertorriqueñas: estrenos en Puerto Rico, tráilers, directores, festivales y dónde verlas.',
+  about: { '@type': 'Country', name: 'Puerto Rico' },
+  mainEntity: { '@type': 'ItemList', itemListElement: pr.map((p, i) => ({ '@type': 'ListItem', position: i + 1,
+    url: `https://corillo.live/cine/${p.slug}/`, name: p.title })) },
+};
+---
+<SiteShell title="Cine puertorriqueño: películas boricuas, estrenos y dónde verlas | CORILLO"
+           description="Películas puertorriqueñas en cine y streaming: estrenos en Puerto Rico, tráilers oficiales, directores, festivales y premios. El cine hecho en la isla, en un solo sitio."
+           canonical="https://corillo.live/cine/pr/" ogImage={pr.find(p => p.fondo)?.fondo}>
+  <fragment slot="head">
+    <link rel="stylesheet" href="/assets/cine.css?v=1">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </fragment>
+  <div class="cn">
+    <nav class="cn-migas" aria-label="Estás en"><a href="/cine/">Cine</a></nav>
+    <header class="cn-hd">
+      <h1>🇵🇷 Hecho en Puerto Rico</h1>
+      <p>Las películas hechas en la isla: lo que está en el cine, lo que viene y dónde ver las que ya pasaron. Cada ficha la escribe
+         Corillo con fuentes. ¿Hiciste una película? <a href="mailto:hello@marcossantiago.com?subject=Corillo%20Cine%20·%20Mi%20película">Escríbenos</a>.</p>
+    </header>
+
+    {vienen.length > 0 && (
+      <section class="cn-bloque cn-bloque-pr">
+        <div class="cn-bloque-hd"><h2>Próximos estrenos boricuas</h2></div>
+        <div class="cn-fila">{vienen.map((p, i) => <PeliCard p={p} eager={i < 4} />)}</div>
+      </section>
+    )}
+    {[...porAno.entries()].sort((a, b) => b[0] - a[0]).map(([ano, l]) => (
+      <section class="cn-bloque">
+        <div class="cn-bloque-hd"><h2>{ano || 'Otras'}</h2></div>
+        <div class="cn-fila">{l.map(p => <PeliCard p={p} etiqueta="estreno" />)}</div>
+      </section>
+    ))}
+    {directores.length > 0 && (
+      <section class="cn-bloque">
+        <div class="cn-bloque-hd"><h2>Directores</h2></div>
+        <ul class="cn-dirs">{directores.map(d => {
+          const suyas = pr.filter(p => p.direccion.includes(d));
+          return <li><b>{d}</b> — {suyas.map((p, i) => <>{i > 0 && ', '}<a href={`/cine/${p.slug}/`}>{p.title}</a>{p.estreno && <small> ({fechaLarga(p.estreno)})</small>}</>)}</li>;
+        })}</ul>
+      </section>
+    )}
+  </div>
+</SiteShell>

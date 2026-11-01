@@ -1,0 +1,19 @@
+---
+/* Tarjeta de película (afiche 2:3). Se usa en /cine/ y /cine/pr/. */
+import { fechaCorta, type Pelicula } from '../../data/cine';
+interface Props { p: Pelicula; etiqueta?: 'estreno' | 'año'; eager?: boolean }
+const { p, etiqueta = 'estreno', eager = false } = Astro.props;
+const hoy = new Date().toISOString().slice(0, 10);
+const futura = p.estreno && p.estreno > hoy;
+---
+<a class="cn-card" href={`/cine/${p.slug}/`}>
+  <span class="cn-poster">
+    {p.afiche
+      ? <img src={p.afiche} alt={`Afiche de ${p.title}`} loading={eager ? 'eager' : 'lazy'} decoding="async" width="342" height="513" />
+      : <span class="cn-noposter"><b>{p.title}</b></span>}
+    {p.pr && <span class="cn-flag" title="Cine puertorriqueño">🇵🇷</span>}
+    {futura && <span class="cn-chip">Estrena {fechaCorta(p.estreno)}</span>}
+  </span>
+  <span class="cn-card-t">{p.title}</span>
+  <small>{etiqueta === 'año' ? (p.year || '') : (p.estreno ? (futura ? `Estrena el ${fechaCorta(p.estreno)}` : fechaCorta(p.estreno)) : (p.year || ''))}{p.generos[0] ? ` · ${p.generos[0]}` : ''}</small>
+</a>

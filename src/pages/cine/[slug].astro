@@ -1,0 +1,131 @@
+---
+/* Ficha de película (1-nov-2026). Página estática con JSON-LD schema.org/Movie: es lo que Google lee y muestra. */
+import SiteShell from '../../layouts/SiteShell.astro';
+import PeliCard from '../../components/cine/PeliCard.astro';
+import { render } from 'astro:content';
+import { todas, movieLd, fechaLarga, duracionTexto, type Pelicula } from '../../data/cine';
+
+export async function getStaticPaths() {
+  const lista = await todas();
+  return lista.map(p => ({ params: { slug: p.slug }, props: { p, lista } }));
+}
+const { p, lista } = Astro.props as { p: Pelicula; lista: Pelicula[] };
+const canonical = `https://corillo.live/cine/${p.slug}/`;
+const Content = p.entry ? (await render(p.entry)).Content : null;
+const hoy = new Date().toISOString().slice(0, 10);
+const futura = p.estreno && p.estreno > hoy;
+const relacionadas = lista.filter(x => x.slug !== p.slug && (p.pr ? x.pr : x.generos.some(g => p.generos.includes(g))))
+  .sort((a, b) => (b.estreno || '').localeCompare(a.estreno || '')).slice(0, 6);
+const ld = [movieLd(p, canonical), {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Cine', item: 'https://corillo.live/cine/' },
+    ...(p.pr ? [{ '@type': 'ListItem', position: 2, name: 'Hecho en Puerto Rico', item: 'https://corillo.live/cine/pr/' }] : []),
+    { '@type': 'ListItem', position: p.pr ? 3 : 2, name: p.title, item: canonical }],
+}];
+const titulo = `${p.title}${p.year ? ` (${p.year})` : ''}${p.pr ? ' · película puertorriqueña' : ''} | CORILLO Cine`;
+const datos: [string, string][] = [
+  ['Estreno en PR', p.estreno ? `${fechaLarga(p.estreno)}${p.estrenoNota ? ` · ${p.estrenoNota}` : ''}` : ''],
+  ['Duración', duracionTexto(p.duracion)], ['Clasificación', p.clasificacion || ''],
+  ['Dirección', p.direccion.join(', ')], ['Guion', (p.guion || []).join(', ')],
+  ['Productora', (p.productora || []).join(', ')], ['Distribuye', p.distribuidora || ''],
+  ['Filmada en', (p.filmadaEn || []).join(', ')],
+].filter(([, v]) => v) as [string, string][];
+---
+<SiteShell title={titulo} description={p.description} canonical={canonical} ogType="video.movie"
+           ogTitle={`${p.title}${p.pr ? ' 🇵🇷' : ''} — estreno, tráiler y dónde verla`} ogImage={p.fondo || p.afiche}>
+  <fragment slot="head">
+    <link rel="stylesheet" href="/assets/cine.css?v=1">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </fragment>
+
+  <article class="cn-ficha">
+    <header class="cn-hero">
+      {p.fondo && <img class="cn-hero-bg" src={p.fondo} alt="" fetchpriority="high" decoding="async" />}
+      <div class="cn-hero-in">
+        <nav class="cn-migas" aria-label="Estás en"><a href="/cine/">Cine</a>{p.pr && <> · <a href="/cine/pr/">Hecho en Puerto Rico</a></>}</nav>
+        <div class="cn-hero-grid">
+          {p.afiche && <img class="cn-hero-poster" src={p.afiche} alt={`Afiche de ${p.title}`} width="342" height="513" decoding="async" />}
+          <div>
+            <div class="cn-tags">
+              {p.pr && <span class="cn-tag pr">🇵🇷 Cine puertorriqueño</span>}
+              {futura ? <span class="cn-tag hot">Estrena el {fechaLarga(p.estreno)}</span> : p.estreno && <span class="cn-tag">Estrenó el {fechaLarga(p.estreno)}</span>}
+              {p.generos.map(g => <span class="cn-tag">{g}</span>)}
+            </div>
+            <h1>{p.title}{p.year && <span class="cn-year"> ({p.year})</span>}</h1>
+            {p.original && <p class="cn-orig">Título original: {p.original}</p>}
+            <p class="cn-resumen">{p.resumen}</p>
+            {p.direccion.length > 0 && <p class="cn-credito">Dirigida por <b>{p.direccion.join(', ')}</b>{p.reparto.length > 0 && <> · con {p.reparto.slice(0, 4).join(', ')}</>}</p>}
+            <div class="cn-acciones">
+              {p.trailer && <a class="play-btn" href="#trailer"><i class="fa-solid fa-play"></i> Ver tráiler</a>}
+              <a class="icon-btn" href="/discord/" title="Hablarla en el Discord de Corillo"><i class="fa-brands fa-discord"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="cn-cuerpo">
+      <div class="cn-main">
+        {p.trailer && (
+          <section id="trailer" class="cn-sec">
+            <h2>Tráiler oficial</h2>
+            <button class="cn-yt" type="button" data-yt={p.trailer} aria-label={`Reproducir el tráiler de ${p.title}`}>
+              <img src={`https://i.ytimg.com/vi/${p.trailer}/hqdefault.jpg`} alt="" loading="lazy" decoding="async" />
+              <span class="cn-yt-play"><i class="fa-solid fa-play"></i></span>
+            </button>
+            {p.trailerCanal && <p class="cn-nota">Del canal oficial de {p.trailerCanal} en YouTube.</p>}
+          </section>
+        )}
+        {Content ? <section class="cn-sec cn-texto"><Content /></section>
+                 : p.resumen && <section class="cn-sec cn-texto"><h2>De qué trata</h2><p>{p.resumen}</p></section>}
+        {p.reparto.length > 0 && <section class="cn-sec"><h2>Reparto</h2><ul class="cn-reparto">{p.reparto.map(a => <li>{a}</li>)}</ul></section>}
+        {p.premios?.length ? <section class="cn-sec"><h2>Festivales y premios</h2><ul class="cn-lista">{p.premios.map(a => <li>{a}</li>)}</ul></section> : null}
+      </div>
+
+      <aside class="cn-lado">
+        <div class="cn-box">
+          <h2>Ficha</h2>
+          <dl>{datos.map(([k, v]) => <><dt>{k}</dt><dd>{v}</dd></>)}</dl>
+        </div>
+        {p.dondeVer?.length ? (
+          <div class="cn-box"><h2>Dónde verla</h2><ul class="cn-lista">{p.dondeVer.map(d => <li>{d.url ? <a href={d.url} target="_blank" rel="noopener">{d.name}</a> : d.name}{d.nota && <small> · {d.nota}</small>}</li>)}</ul></div>
+        ) : null}
+        {p.enlaces?.length ? (
+          <div class="cn-box"><h2>Oficial</h2><ul class="cn-lista">{p.enlaces.map(e => <li><a href={e.url} target="_blank" rel="noopener">{e.name}</a></li>)}</ul></div>
+        ) : null}
+        {p.pr && (
+          <div class="cn-box cn-prod">
+            <h2>¿Eres parte de esta producción?</h2>
+            <p>Queremos que la ficha esté completa y correcta. Mándanos tu kit de prensa, correcciones o tu próximo estreno.</p>
+            <a class="cn-btn" href={`mailto:hello@marcossantiago.com?subject=${encodeURIComponent('Corillo Cine · ' + p.title)}`}>Escríbenos</a>
+          </div>
+        )}
+      </aside>
+    </div>
+
+    {p.fuentes.length > 0 && (
+      <footer class="cn-fuentes">
+        <h2>Fuentes</h2>
+        <ul>{p.fuentes.map(f => <li><a href={f.url} target="_blank" rel="noopener nofollow">{f.name}</a></li>)}</ul>
+        {p.imagenCredito && <p class="cn-nota">{p.imagenCredito}. Material promocional usado con fines informativos.</p>}
+      </footer>
+    )}
+
+    {relacionadas.length > 0 && (
+      <section class="cn-rel">
+        <h2>{p.pr ? 'Más cine puertorriqueño' : 'También te puede gustar'}</h2>
+        <div class="cn-fila">{relacionadas.map(x => <PeliCard p={x} />)}</div>
+      </section>
+    )}
+  </article>
+
+  <script is:inline>
+    // Tráiler liviano: la imagen primero; el reproductor de YouTube solo carga al tocar (página rápida y sin cookies antes).
+    document.querySelectorAll('.cn-yt').forEach(b => b.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0`;
+      f.title = b.getAttribute('aria-label'); f.allow = 'autoplay; encrypted-media; picture-in-picture'; f.allowFullscreen = true;
+      b.replaceWith(f);
+    }, { once: true }));
+  </script>
+</SiteShell>
