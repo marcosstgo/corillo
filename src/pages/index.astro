@@ -508,10 +508,12 @@ async function vtTransmisiones() {
   const vistos = new Set();
   items = items.filter(v => v.thumb && !vistos.has(v.channel) && vistos.add(v.channel)).slice(0, 2);
   if (!items.length || !vt.el) return;
+  let fotos = {};                                   // window.STREAMERS no trae la foto; la lista de corillo-api sí
+  try { for (const x of await (await fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(4000) })).json()) fotos[x.key] = x; } catch {}
   const e = x => String(x ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const nav = vt.el.querySelector('.h2-vt-nav');
   for (const v of items.reverse()) {
-    const s = streamerOf(v.channel), nombre = s.name;
+    const s = { ...streamerOf(v.channel), ...(fotos[v.channel] || {}) }, nombre = s.name || v.channel;
     const cara = s.avatar_url ? `<img src="${e(s.avatar_url)}" alt="" onerror="this.remove()">` : e(s.ava || nombre[0]);
     const href = `/vods/v/?id=${encodeURIComponent(v.id)}`;
     const art = document.createElement('article');
@@ -521,7 +523,7 @@ async function vtTransmisiones() {
       <div class="h2-vt-bg"><img src="${e(v.thumb)}" alt="" decoding="async"></div>
       <a class="h2-vt-play" href="${href}" tabindex="-1" aria-hidden="true"><i class="fa-solid fa-play"></i></a>
       <div class="h2-vt-txt">
-        <div class="h2-status"><span class="live-badge offline"><i class="fa-solid fa-tower-broadcast"></i> Transmisión</span>
+        <div class="h2-status"><span class="live-badge offline">Transmisión</span>
           <span class="featured-meta">${e(relativeTime(v.date))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
         <a class="h2-vt-who" href="/${e(v.channel)}/" tabindex="-1"><span class="h2-vt-face" style="background:${e(s.color || '#1e3a4a')}">${cara}</span><b>${e(nombre)}</b></a>
         <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `${nombre} en vivo`)}</a></h2>
