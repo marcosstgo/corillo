@@ -108,6 +108,7 @@ const datos: [string, string][] = [
         <h2>Fuentes</h2>
         <ul>{p.fuentes.map(f => <li><a href={f.url} target="_blank" rel="noopener nofollow">{f.name}</a></li>)}</ul>
         {p.imagenCredito && <p class="cn-nota">{p.imagenCredito}. Material promocional usado con fines informativos.</p>}
+        {p.tmdb && !p.propia && <p class="cn-nota cn-tmdb"><a href={`https://www.themoviedb.org/movie/${p.tmdb}`} target="_blank" rel="noopener nofollow"><img src="/assets/cine/tmdb-logo.svg" alt="TMDB" width="110" height="14" loading="lazy" /></a> Datos e imágenes de TMDB. Este sitio usa la API de TMDB, pero no está avalado ni certificado por TMDB.</p>}
       </footer>
     )}
 

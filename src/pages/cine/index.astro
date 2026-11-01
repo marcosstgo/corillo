@@ -77,10 +77,14 @@ const ld = {
       <p class="cn-nota cn-pronto">La cartelera general (lo que está pegao, lo que hay en el cine y lo que viene) se está conectando. Mientras, aquí está el cine boricua.</p>
     )}
 
-    <p class="cn-nota cn-attr">
-      {actualizado && <>Cartelera actualizada el {fechaLarga(actualizado.slice(0, 10))}. </>}
-      Datos e imágenes de la cartelera general: <a href="https://www.themoviedb.org/" target="_blank" rel="noopener nofollow">TMDB</a>
-      (este sitio usa la API de TMDB, pero no está avalado ni certificado por TMDB). Las fichas del cine puertorriqueño las escribe Corillo.
-    </p>
+    <aside class="cn-attr" aria-label="Fuente de los datos">
+      <a href="https://www.themoviedb.org/" target="_blank" rel="noopener nofollow"><img src="/assets/cine/tmdb-logo.svg" alt="TMDB" width="140" height="18" loading="lazy" /></a>
+      <p class="cn-nota">
+        {actualizado && <>Cartelera actualizada el {fechaLarga(actualizado.slice(0, 10))}. </>}
+        Este sitio usa TMDB y la API de TMDB, pero no está avalado, certificado ni aprobado por TMDB.
+        <span lang="en">(This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.)</span>
+        Las fichas del cine puertorriqueño las escribe Corillo con fuentes de la prensa de Puerto Rico.
+      </p>
+    </aside>
   </div>
 </SiteShell>

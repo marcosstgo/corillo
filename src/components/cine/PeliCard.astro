@@ -10,7 +10,9 @@ const futura = p.estreno && p.estreno > hoy;
   <span class="cn-poster">
     {p.afiche
       ? <img src={p.afiche} alt={`Afiche de ${p.title}`} loading={eager ? 'eager' : 'lazy'} decoding="async" width="342" height="513" />
-      : <span class="cn-noposter"><b>{p.title}</b></span>}
+      : p.fondo
+        ? <><img class="cn-fondo" src={p.fondo} alt={`Imagen de ${p.title}`} loading={eager ? 'eager' : 'lazy'} decoding="async" /><span class="cn-fondo-t">{p.title}</span></>
+        : <span class="cn-noposter"><b>{p.title}</b></span>}
     {p.pr && <span class="cn-flag" title="Cine puertorriqueño">🇵🇷</span>}
     {futura && <span class="cn-chip">Estrena {fechaCorta(p.estreno)}</span>}
   </span>

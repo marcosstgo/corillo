@@ -119,7 +119,7 @@ export function movieLd(p: Pelicula, url: string) {
     ...(p.trailer ? { trailer: { '@type': 'VideoObject', name: `${p.title} — tráiler oficial`, embedUrl: `https://www.youtube.com/embed/${p.trailer}`,
         thumbnailUrl: `https://i.ytimg.com/vi/${p.trailer}/hqdefault.jpg`, uploadDate: p.estreno || undefined, description: `Tráiler oficial de ${p.title}` } } : {}),
     ...(p.premios?.length ? { award: p.premios } : {}),
-    ...(p.enlaces?.length ? { sameAs: p.enlaces.map(e => e.url) } : {}),
+    ...(p.enlaces?.some(e => !/youtube|youtu\.be/.test(e.url)) ? { sameAs: p.enlaces.filter(e => !/youtube|youtu\.be/.test(e.url)).map(e => e.url) } : {}),
     inLanguage: 'es',
   };
 }
