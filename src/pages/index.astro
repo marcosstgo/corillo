@@ -526,7 +526,7 @@ async function vtTransmisiones() {
         <div class="h2-status"><span class="live-badge offline">Transmisión</span>
           <span class="featured-meta">${e(relativeTime(v.date))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
         <a class="h2-vt-who" href="/${e(v.channel)}/" tabindex="-1"><span class="h2-vt-face" style="background:${e(s.color || '#1e3a4a')}">${cara}</span><b>${e(nombre)}</b></a>
-        <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `${nombre} en vivo`)}</a></h2>
+        <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `Transmisión del ${new Date(v.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`)}</a></h2>
         <p class="h2-vt-sub">Lo que te perdiste del stream de ${e(nombre)}. Velo completo cuando quieras.</p>
         <div class="featured-actions">
           <a href="${href}" class="play-btn" tabindex="-1"><i class="fa-solid fa-play"></i> Ver la transmisión</a>
