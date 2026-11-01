@@ -163,7 +163,9 @@ async function init() {
 
   const s = streamerInfo(vod.channel);
   const colorStyle = s.color ? `background:${s.color}` : 'background:var(--crl-accent)';
-  const videoUrl   = `https://media.corillo.live/vods/${vod.channel}/${vod.filename}`;
+  // VODs en Cloudflare R2 (vods.corillo.live, desde el 1-nov-2026). Si un VOD recién hecho todavía no subió, se ve desde la casa.
+  const videoUrl   = `https://vods.corillo.live/${vod.channel}/${vod.filename}`;
+  const casaUrl    = `https://media.corillo.live/vods/${vod.channel}/${vod.filename}`;
   const posterAttr = vod.thumb ? `poster="${vod.thumb}?v=2"` : '';
 
   const titleTxt = vod.title || `Transmisión del ${new Date(vod.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`;
@@ -172,7 +174,7 @@ async function init() {
 
   document.getElementById('content')!.innerHTML = `
     <div class="player-wrap">
-      <video id="vodVideo" controls autoplay muted playsinline preload="metadata" src="${videoUrl}" ${posterAttr}></video>
+      <video id="vodVideo" controls autoplay muted playsinline preload="metadata" src="${videoUrl}" data-casa="${casaUrl}" onerror="if(this.dataset.casa&&this.src!==this.dataset.casa){this.src=this.dataset.casa}" ${posterAttr}></video>
       <button class="unmute-btn" id="unmuteBtn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
     </div>
     <h1 class="vd-title">${titleTxt}</h1>
