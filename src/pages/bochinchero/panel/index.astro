@@ -50,6 +50,10 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       .bp-lista li .t{flex:1 1 300px}
       .bp-lista small{display:block;color:var(--h2-mute)}
       .bp-tag{padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);color:var(--h2-mute);font:700 .75rem var(--h2-body)}
+      .bp-envoz{color:#3ddc84;font-weight:700}
+      .bp-ahora{border-color:color-mix(in srgb,#3ddc84 45%,transparent)}
+      .bp-ahora h2 small{font:500 .8rem var(--h2-body);color:var(--h2-mute)}
+      .bp-btn[disabled]{opacity:.45;cursor:not-allowed}
       .bp-tag.vivo{background:#ff5d6c;color:#fff}
       .bp-barras{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;align-items:end;height:110px}
       .bp-barras div{background:var(--bc);border-radius:4px 4px 0 0;min-height:2px}
@@ -314,15 +318,19 @@ import SiteShell from '../../../layouts/SiteShell.astro';
 
       async puyas(v) {
         const [pendientes, aprobadas, gente] = await Promise.all([api('GET', S('/puyas?estado=pendiente')), api('GET', S('/puyas')), api('GET', S('/personas'))]);
-        const fila = (p, pend) => `<li data-id="${p.id}"><div class="t">${esc(p.frase)}<small>Para ${esc(p.nombre || p.persona)}${p.origen === 'ia' ? ' · escrita por IA' : ''}${pend ? '' : ' · usada ' + p.usada}</small></div>
+        // «Tirarla ahora» (1-nov-2026): solo si la persona está en voz; el bot la dice en esa sala al momento.
+        const fila = (p, pend) => `<li data-id="${p.id}"><div class="t">${esc(p.frase)}<small>Para ${esc(p.nombre || p.persona)}${p.origen === 'ia' ? ' · escrita por IA' : ''}${pend ? '' : ' · usada ' + p.usada}${p.en_voz ? ` · <span class="bp-envoz">🔊 en voz en ${esc(p.en_voz)}</span>` : ''}</small></div>
             <button class="bp-btn sec peq oir">▶ Escuchar</button>
-            ${pend ? '<button class="bp-btn peq si">Aprobar</button><button class="bp-btn mal peq no">Rechazar</button>' : '<button class="bp-btn mal peq borrar">Borrar</button>'}</li>`;
+            ${pend ? '<button class="bp-btn peq si">Aprobar</button><button class="bp-btn mal peq no">Rechazar</button>'
+                   : `<button class="bp-btn peq tirar" ${p.en_voz ? '' : 'disabled title="Tiene que estar en una sala de voz"'}>📢 Tirarla ahora</button><button class="bp-btn mal peq borrar">Borrar</button>`}</li>`;
+        const enVoz = aprobadas.filter(p => p.en_voz);
         v.innerHTML = `
           ${pendientes.length ? `<div class="bp-card"><h2>Por aprobar</h2><ul class="bp-lista">${pendientes.map(p => fila(p, true)).join('')}</ul></div>` : ''}
           <div class="bp-card"><h2>Nueva puya</h2>
             <div class="bp-fila"><div style="flex:0 1 240px"><label>Para</label><select id="para">${gente.map(p => `<option value="${esc(p.id)}">${esc(p.nombre)}</option>`).join('')}</select></div>
               <div style="flex:3 1 340px"><label>La puya (usa {n} donde va el nombre)</label><input id="texto" maxlength="200" placeholder="Llegó {n}, el que se queja del lag"></div></div>
             <div class="bp-fila" style="margin-top:10px;justify-content:flex-end"><button class="bp-btn sec" id="probar" style="flex:0 0 auto">▶ Escuchar antes de guardar</button><button class="bp-btn" id="nueva" style="flex:0 0 auto">Guardar</button></div></div>
+          ${enVoz.length ? `<div class="bp-card bp-ahora"><h2>📢 Para tirar ahora <small>(están en voz)</small></h2><ul class="bp-lista">${enVoz.map(p => fila(p, false)).join('')}</ul></div>` : ''}
           <div class="bp-card"><h2>Puyas (${aprobadas.length})</h2>${aprobadas.length ? `<ul class="bp-lista">${aprobadas.map(p => fila(p, false)).join('')}</ul>` : '<p class="bp-vacio">Todavía no hay.</p>'}</div>`;
         const todas = [...pendientes, ...aprobadas];
         const llenar = () => {
@@ -342,6 +350,13 @@ import SiteShell from '../../../layouts/SiteShell.astro';
           li.querySelector('.si')?.addEventListener('click', () => accion('PATCH', { estado: 'aprobada' }, 'Aprobada.'));
           li.querySelector('.no')?.addEventListener('click', () => accion('PATCH', { estado: 'rechazada' }, 'Rechazada.'));
           li.querySelector('.borrar')?.addEventListener('click', () => accion('DELETE', null, 'Borrada.'));
+          li.querySelector('.tirar')?.addEventListener('click', async ev => {
+            const b = ev.currentTarget, antes = b.textContent;
+            v.querySelectorAll('.tirar').forEach(x => x.disabled = true);
+            b.textContent = '🔊 Diciéndola…';
+            try { const r = await api('POST', S('/puyas/' + p.id + '/tirar')); aviso('✓ ' + (r.mensaje || 'Dicha.')); VISTAS.puyas(v); }
+            catch (e) { b.textContent = antes; VISTAS.puyas(v); }
+          });
         });
       },
 
