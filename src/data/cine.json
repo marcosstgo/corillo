@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-01T03:04:52",
+ "actualizado": "2026-11-01T06:12:36",
  "pegao": [
   {
    "tmdb": 1283515,
@@ -136,6 +136,86 @@
    "pr": false
   },
   {
+   "tmdb": 1507696,
+   "title": "Apocalipsis Z: Nuevo mundo",
+   "original": "Apocalipsis Z: Nuevo mundo",
+   "estreno": "2026-10-30",
+   "clasificacion": "R",
+   "duracion": 96,
+   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
+   "generos": [
+    "Acción",
+    "Suspense",
+    "Terror"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
+   "direccion": [
+    "Carles Torrens"
+   ],
+   "reparto": [
+    "Carlos Alcaide",
+    "José María Yázpik",
+    "Julia Martínez",
+    "Mónica López",
+    "Tamara Casellas",
+    "Berta Vázquez",
+    "Santiago Vaca Narvaja",
+    "Mario Mayo"
+   ],
+   "trailer": "BIEzwpyawtw",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 228.0,
+   "pr": false
+  },
+  {
+   "tmdb": 1571955,
+   "title": "Colisión",
+   "original": "Colisión",
+   "estreno": "2026-10-30",
+   "clasificacion": "R",
+   "duracion": 122,
+   "resumen": "En plena crisis económica, un grupo de atracadores asalta un banco de Madrid y desencadena una serie de acontecimientos imprevisibles. Lo que al principio parece un robo más se convierte en un juego de engaños, miedo y supervivencia, donde cada decisión cuenta, cada gesto esconde algo y todos buscan evitar algo más que ir la cárcel.",
+   "generos": [
+    "Drama",
+    "Acción",
+    "Crimen"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/L2SDL6pi8jyvMRmh1vWbqfwHtf.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/uI3kWI7kGW5E0F8WduewgQYPt34.jpg",
+   "direccion": [
+    "Daniel Sánchez Arévalo"
+   ],
+   "reparto": [
+    "Laia Costa",
+    "Karra Elejalde",
+    "Luis Zahera",
+    "Tamar Novas",
+    "Álvaro Cervantes",
+    "Lluís Homar",
+    "Luz Valdenebro",
+    "Víctor Duplá"
+   ],
+   "trailer": "Jk12Xo0-oDc",
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 125.9,
+   "pr": false
+  },
+  {
    "tmdb": 791523,
    "title": "Wildwood: El bosque salvaje",
    "original": "Wildwood",
@@ -166,372 +246,6 @@
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
    "popularidad": 1453.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1507696,
-   "title": "Apocalipsis Z: Nuevo mundo",
-   "original": "Apocalipsis Z: Nuevo mundo",
-   "estreno": "2026-10-30",
-   "clasificacion": "R",
-   "duracion": 96,
-   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
-   "generos": [
-    "Acción",
-    "Suspense",
-    "Terror"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
-   "direccion": [
-    "Carles Torrens"
-   ],
-   "reparto": [
-    "Carlos Alcaide",
-    "Julia Martínez",
-    "Mario Mayo",
-    "Mónica López",
-    "Tamara Casellas",
-    "Santiago Vaca Narvaja",
-    "José María Yázpik",
-    "Berta Vázquez"
-   ],
-   "trailer": "BIEzwpyawtw",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
-   ],
-   "popularidad": 228.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1290418,
-   "title": "The Cycle",
-   "original": "The Cycle",
-   "estreno": "2026-09-17",
-   "clasificacion": "R",
-   "duracion": 111,
-   "resumen": "Meg ha vivido marcada por la desaparición de su padre, quien se esfumó sin dejar rastro hace 36 años. Su vida da un giro inesperado cuando la policía descubre su cadáver cerca de la escena de un brutal crimen, junto a los cuerpos de otras dos víctimas.",
-   "generos": [
-    "Terror",
-    "Suspense",
-    "Misterio"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/n5gSNf55KWfDc9hqP4H1KCCSutE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bgHW6AJl2SdKzxglvf9tshXbI84.jpg",
-   "direccion": [
-    "Jordan Downey"
-   ],
-   "reparto": [
-    "Deborah Ann Woll",
-    "Jeffrey Donovan",
-    "Gretchen Corbett",
-    "Jack Doolan",
-    "Will Hochman",
-    "Dana Millican",
-    "Phillip Andre Botello",
-    "Don Keith Opper"
-   ],
-   "trailer": "87ekbcLWPN4",
-   "dondeVer": [
-    {
-     "name": "AMC Plus Apple TV channel"
-    },
-    {
-     "name": "AMC+ Amazon Channel"
-    },
-    {
-     "name": "Shudder"
-    }
-   ],
-   "popularidad": 91.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1003596,
-   "title": "Avengers: Doomsday",
-   "original": "Avengers: Doomsday",
-   "estreno": "2026-12-18",
-   "clasificacion": null,
-   "duracion": 165,
-   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
-   "generos": [
-    "Ciencia ficción",
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
-   "direccion": [
-    "Joe Russo",
-    "Anthony Russo"
-   ],
-   "reparto": [
-    "Robert Downey Jr.",
-    "Chris Evans",
-    "Chris Hemsworth",
-    "Pedro Pascal",
-    "Paul Rudd",
-    "Anthony Mackie",
-    "Florence Pugh",
-    "Vanessa Kirby"
-   ],
-   "trailer": "kZ2Nhqkx3-I",
-   "dondeVer": [],
-   "popularidad": 112.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1381071,
-   "title": "Godzilla Minus Zero",
-   "original": "ゴジラ-0.0",
-   "estreno": "2026-11-03",
-   "clasificacion": "R",
-   "duracion": 135,
-   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
-   "generos": [
-    "Ciencia ficción",
-    "Terror",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
-   "direccion": [
-    "山崎貴"
-   ],
-   "reparto": [
-    "神木隆之介",
-    "浜辺美波",
-    "山田裕貴",
-    "佐々木蔵之介",
-    "國村隼",
-    "田中美央",
-    "安藤サクラ",
-    "長澤まさみ"
-   ],
-   "trailer": "kw0YhiqOPFg",
-   "dondeVer": [],
-   "popularidad": 22.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1727734,
-   "title": "Ali G: ¿Kién Ez Yo?",
-   "original": "Ali G: Who Iz I?",
-   "estreno": "2026-10-23",
-   "clasificacion": "R",
-   "duracion": 89,
-   "resumen": "Tras veinte años dedicados a «relajarse, fumar y follar», Ali G se queda atónito al descubrir que Julie, su novia de toda la vida, está embarazada de ocho meses. Ante la perspectiva de tener una boca más que alimentar, deja de holgazanear y pone rumbo a Estados Unidos para recuperar su antigua gloria... pero pronto se topa con adversarios que acabarán amenazando su propia existencia y la de su hijo.",
-   "generos": [
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/mgsw0NVOn5VX9rA6An8ijwUFX7q.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/hJcGJLi34zE4RhzsiDR6f7pw50K.jpg",
-   "direccion": [
-    "Sacha Baron Cohen"
-   ],
-   "reparto": [
-    "Sacha Baron Cohen",
-    "Morgana Robinson",
-    "Alpha Miknas",
-    "Clive Russell",
-    "A$AP Rocky",
-    "Rihanna",
-    "Tiffany Haddish",
-    "DJ Jazzy Jeff"
-   ],
-   "trailer": "6t7C4qaHihE",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
-   ],
-   "popularidad": 108.2,
-   "pr": false
-  },
-  {
-   "tmdb": 1339713,
-   "title": "Obsesión",
-   "original": "Obsession",
-   "estreno": "2026-05-14",
-   "clasificacion": "R",
-   "duracion": 109,
-   "resumen": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
-   "generos": [
-    "Terror",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
-   "direccion": [
-    "Curry Barker"
-   ],
-   "reparto": [
-    "Michael Johnston",
-    "Inde Navarrette",
-    "Cooper Tomlinson",
-    "Megan Lawless",
-    "Andy Richter",
-    "Haley Fitzgerald",
-    "Darin Toonder",
-    "Anthony Pavone"
-   ],
-   "trailer": "WbziExW1-i4",
-   "dondeVer": [
-    {
-     "name": "Peacock Premium"
-    },
-    {
-     "name": "Peacock Premium Plus"
-    }
-   ],
-   "popularidad": 113.4,
-   "pr": false
-  },
-  {
-   "tmdb": 1503762,
-   "title": "Sensatez y sentimiento",
-   "original": "Sense and Sensibility",
-   "estreno": "2026-10-15",
-   "clasificacion": "PG",
-   "duracion": 132,
-   "resumen": "Una nueva visión de la icónica novela de Jane Austen con una historia encantadora, ingeniosa y profundamente conmovedora sobre el amor y la hermandad.",
-   "generos": [
-    "Drama",
-    "Romance",
-    "Historia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/xmfC7mUIZWyc0Mez55qwoHTQUNJ.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/tIcONOFK9D3F89ETK8DBS1hIwVF.jpg",
-   "direccion": [
-    "Georgia Oakley"
-   ],
-   "reparto": [
-    "Daisy Edgar-Jones",
-    "Esmé Creed-Miles",
-    "Caitríona Balfe",
-    "Frank Dillane",
-    "Herbert Nordrum",
-    "George MacKay",
-    "Fiona Shaw",
-    "Bodhi Rae Breathnach"
-   ],
-   "trailer": "GMwdcpKOOyY",
-   "dondeVer": [],
-   "popularidad": 91.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1423191,
-   "title": "Resident Evil: Noche cero",
-   "original": "Resident Evil",
-   "estreno": "2026-09-17",
-   "clasificacion": "R",
-   "duracion": 95,
-   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
-   "generos": [
-    "Terror",
-    "Ciencia ficción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
-   "direccion": [
-    "Zach Cregger"
-   ],
-   "reparto": [
-    "Austin Abrams",
-    "Paul Walter Hauser",
-    "Kali Reis",
-    "Zach Cherry",
-    "Johnno Wilson",
-    "Shaun W. Loeser",
-    "Zach Cregger",
-    "Emily Piggford"
-   ],
-   "trailer": "d6oszs7f5aI",
-   "dondeVer": [],
-   "popularidad": 113.9,
-   "pr": false
-  },
-  {
-   "tmdb": 1083381,
-   "title": "Backrooms: Sin salida",
-   "original": "Backrooms",
-   "estreno": "2026-05-28",
-   "clasificacion": "R",
-   "duracion": 111,
-   "resumen": "Una extraña puerta aparece en el sótano de una exposición de muebles. Cuando el paciente de una terapeuta desaparece en una dimensión más allá de la realidad, ella deberá adentrarse en lo desconocido para salvarlo.",
-   "generos": [
-    "Terror",
-    "Misterio",
-    "Ciencia ficción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3YTb97zytlWRWZb7HrOiEhk4e6f.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/QNE9Ihuas4duMHJYGQgAcuRtXz.jpg",
-   "direccion": [
-    "Kane Parsons"
-   ],
-   "reparto": [
-    "Chiwetel Ejiofor",
-    "Renate Reinsve",
-    "Finn Bennett",
-    "Lukita Maxwell",
-    "Mark Duplass",
-    "Avan Jogia",
-    "Robert Bobroczkyi",
-    "Ember Ambrose"
-   ],
-   "trailer": "y_WLmKKMhpQ",
-   "dondeVer": [
-    {
-     "name": "HBO Max Amazon Channel"
-    },
-    {
-     "name": "HBO Max"
-    }
-   ],
-   "popularidad": 67.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1422041,
-   "title": "La bola negra",
-   "original": "La bola negra",
-   "estreno": "2026-10-16",
-   "clasificacion": "R",
-   "duracion": 159,
-   "resumen": "Las vidas interconectadas de tres hombres en tres épocas distintas, tres existencias íntimamente ligadas por la sexualidad y el deseo, el dolor y la herencia.",
-   "generos": [
-    "Drama",
-    "Bélica"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/t1azKLExwUxKj6v6m2L535evuRa.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bDsmYvrzto7xrEwqDpLC3SPhn9A.jpg",
-   "direccion": [
-    "Javier Ambrossi",
-    "Javier Calvo"
-   ],
-   "reparto": [
-    "Guitarricadelafuente",
-    "Miguel Bernardeau",
-    "Carlos González",
-    "Milo Quifes",
-    "Lola Dueñas",
-    "Penélope Cruz",
-    "Glenn Close",
-    "Antonio de la Torre"
-   ],
-   "trailer": "9NNU-vSeOB0",
-   "dondeVer": [],
-   "popularidad": 87.9,
    "pr": false
   },
   {
@@ -607,6 +321,160 @@
    "pr": false
   },
   {
+   "tmdb": 1727734,
+   "title": "Ali G: ¿Kién Ez Yo?",
+   "original": "Ali G: Who Iz I?",
+   "estreno": "2026-10-23",
+   "clasificacion": "R",
+   "duracion": 89,
+   "resumen": "Tras veinte años dedicados a «relajarse, fumar y follar», Ali G se queda atónito al descubrir que Julie, su novia de toda la vida, está embarazada de ocho meses. Ante la perspectiva de tener una boca más que alimentar, deja de holgazanear y pone rumbo a Estados Unidos para recuperar su antigua gloria... pero pronto se topa con adversarios que acabarán amenazando su propia existencia y la de su hijo.",
+   "generos": [
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/mgsw0NVOn5VX9rA6An8ijwUFX7q.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/hJcGJLi34zE4RhzsiDR6f7pw50K.jpg",
+   "direccion": [
+    "Sacha Baron Cohen"
+   ],
+   "reparto": [
+    "Sacha Baron Cohen",
+    "Morgana Robinson",
+    "Alpha Miknas",
+    "Clive Russell",
+    "A$AP Rocky",
+    "Rihanna",
+    "Tiffany Haddish",
+    "DJ Jazzy Jeff"
+   ],
+   "trailer": "6t7C4qaHihE",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 108.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1003596,
+   "title": "Avengers: Doomsday",
+   "original": "Avengers: Doomsday",
+   "estreno": "2026-12-18",
+   "clasificacion": null,
+   "duracion": 165,
+   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
+   "generos": [
+    "Ciencia ficción",
+    "Acción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+   "direccion": [
+    "Joe Russo",
+    "Anthony Russo"
+   ],
+   "reparto": [
+    "Robert Downey Jr.",
+    "Chris Evans",
+    "Chris Hemsworth",
+    "Pedro Pascal",
+    "Paul Rudd",
+    "Anthony Mackie",
+    "Florence Pugh",
+    "Vanessa Kirby"
+   ],
+   "trailer": "kZ2Nhqkx3-I",
+   "dondeVer": [],
+   "popularidad": 112.6,
+   "pr": false
+  },
+  {
+   "tmdb": 1339713,
+   "title": "Obsesión",
+   "original": "Obsession",
+   "estreno": "2026-05-14",
+   "clasificacion": "R",
+   "duracion": 109,
+   "resumen": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
+   "generos": [
+    "Terror",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
+   "direccion": [
+    "Curry Barker"
+   ],
+   "reparto": [
+    "Michael Johnston",
+    "Inde Navarrette",
+    "Cooper Tomlinson",
+    "Megan Lawless",
+    "Andy Richter",
+    "Haley Fitzgerald",
+    "Darin Toonder",
+    "Anthony Pavone"
+   ],
+   "trailer": "WbziExW1-i4",
+   "dondeVer": [
+    {
+     "name": "Peacock Premium"
+    },
+    {
+     "name": "Peacock Premium Plus"
+    }
+   ],
+   "popularidad": 113.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1290418,
+   "title": "The Cycle",
+   "original": "The Cycle",
+   "estreno": "2026-09-17",
+   "clasificacion": "R",
+   "duracion": 111,
+   "resumen": "Meg ha vivido marcada por la desaparición de su padre, quien se esfumó sin dejar rastro hace 36 años. Su vida da un giro inesperado cuando la policía descubre su cadáver cerca de la escena de un brutal crimen, junto a los cuerpos de otras dos víctimas.",
+   "generos": [
+    "Terror",
+    "Suspense",
+    "Misterio"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/n5gSNf55KWfDc9hqP4H1KCCSutE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/bgHW6AJl2SdKzxglvf9tshXbI84.jpg",
+   "direccion": [
+    "Jordan Downey"
+   ],
+   "reparto": [
+    "Deborah Ann Woll",
+    "Jeffrey Donovan",
+    "Gretchen Corbett",
+    "Jack Doolan",
+    "Will Hochman",
+    "Dana Millican",
+    "Phillip Andre Botello",
+    "Don Keith Opper"
+   ],
+   "trailer": "87ekbcLWPN4",
+   "dondeVer": [
+    {
+     "name": "AMC Plus Apple TV channel"
+    },
+    {
+     "name": "AMC+ Amazon Channel"
+    },
+    {
+     "name": "Shudder"
+    }
+   ],
+   "popularidad": 91.6,
+   "pr": false
+  },
+  {
    "tmdb": 969681,
    "title": "Spider-Man: Un nuevo día",
    "original": "Spider-Man: Brand New Day",
@@ -640,38 +508,6 @@
    "pr": false
   },
   {
-   "tmdb": 1765072,
-   "title": "Puedes verlo todo",
-   "original": "You Can See Everything",
-   "estreno": "2026-10-16",
-   "clasificacion": "R",
-   "duracion": 174,
-   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
-   "generos": [
-    "Documental"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/Ap8QwmKfSjYbWC4XIP8w9pdn72O.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/nhIL3O4W9h5V5JbNQm7yjoDk3So.jpg",
-   "direccion": [
-    "Nathan Fielder",
-    "Lance Oppenheim"
-   ],
-   "reparto": [
-    "Elizabeth Holmes",
-    "Nathan Fielder",
-    "Billy Evans",
-    "Amanda Seyfried",
-    "Christopher Abbott",
-    "Lance Oppenheim",
-    "Christian Rasmus Holmes IV",
-    "Noel Anne"
-   ],
-   "trailer": "HvW_N5p1q44",
-   "dondeVer": [],
-   "popularidad": 89.7,
-   "pr": false
-  },
-  {
    "tmdb": 1170608,
    "title": "Duna: Parte tres",
    "original": "Dune: Part Three",
@@ -701,6 +537,177 @@
    "trailer": "qdfXYN5kMBY",
    "dondeVer": [],
    "popularidad": 48.3,
+   "pr": false
+  },
+  {
+   "tmdb": 1423191,
+   "title": "Resident Evil: Noche cero",
+   "original": "Resident Evil",
+   "estreno": "2026-09-17",
+   "clasificacion": "R",
+   "duracion": 95,
+   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
+   "generos": [
+    "Terror",
+    "Ciencia ficción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
+   "direccion": [
+    "Zach Cregger"
+   ],
+   "reparto": [
+    "Austin Abrams",
+    "Paul Walter Hauser",
+    "Kali Reis",
+    "Zach Cherry",
+    "Johnno Wilson",
+    "Shaun W. Loeser",
+    "Zach Cregger",
+    "Emily Piggford"
+   ],
+   "trailer": "d6oszs7f5aI",
+   "dondeVer": [],
+   "popularidad": 113.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1368337,
+   "title": "La Odisea",
+   "original": "The Odyssey",
+   "estreno": "2026-07-16",
+   "clasificacion": "R",
+   "duracion": 173,
+   "resumen": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
+   "generos": [
+    "Aventura",
+    "Acción",
+    "Fantasía"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/bulFtfy3oBQtCnAMSi7g6DSSds3.jpg",
+   "direccion": [
+    "Christopher Nolan"
+   ],
+   "reparto": [
+    "Matt Damon",
+    "Tom Holland",
+    "Anne Hathaway",
+    "Robert Pattinson",
+    "Himesh Patel",
+    "Charlize Theron",
+    "John Leguizamo",
+    "Travis Scott"
+   ],
+   "trailer": "X9nUrOnHlz0",
+   "dondeVer": [],
+   "popularidad": 204.1,
+   "pr": false
+  },
+  {
+   "tmdb": 1789549,
+   "title": "El Regalo De Cumpleaños",
+   "original": "Das Geschenk",
+   "estreno": "2026-10-30",
+   "clasificacion": "R",
+   "duracion": 86,
+   "resumen": "Marlene Frischmann (Jeanne Goursaud) quiere celebrar por todo lo alto el cumpleaños de su hijo Theo (Levin Wopp) y lo tiene todo preparado en la elegante casa de campo de su hermano: globos, una tarta sin gluten, una piñata e incluso animales salvajes prometen convertir el día en algo inolvidable. Pero la celebración, preparada con todo el cariño, no tarda en convertirse en una pesadilla desternillante, con acaloradas discusiones sobre la crianza, los modelos de masculinidad y los principios educativos. Tampoco ayudan precisamente a poner orden su alborotador hermano banquero Timo (Edin Hasanović), su excéntrico y desorientado padre Hans (Heiner Lauterbach), su compañera Jenny (Amal Keller), una idealista empeñada en salvar el mundo, y un regalo muy especial. Entre una familia de lo más disfuncional, madres helicóptero obsesionadas con controlarlo todo y la anarquía infantil, la fiesta acaba sumida en el caos.",
+   "generos": [
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/rtifYyLgIgACVwsbVodZ3TZ2Yde.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/eBtITrrdFo1EG7t6TSG5U5c4P2e.jpg",
+   "direccion": [
+    "Vanessa Jopp"
+   ],
+   "reparto": [
+    "Jeanne Goursaud",
+    "Edin Hasanović",
+    "Heiner Lauterbach",
+    "Levin Wopp",
+    "Sogol Faghani",
+    "Enzo Brumm",
+    "Berit Künnecke",
+    "Amal Keller"
+   ],
+   "trailer": null,
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 47.1,
+   "pr": false
+  },
+  {
+   "tmdb": 1195803,
+   "title": "Wicker",
+   "original": "Wicker",
+   "estreno": "2026-10-29",
+   "clasificacion": "R",
+   "duracion": 105,
+   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
+   "generos": [
+    "Romance",
+    "Fantasía",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ewPz6uvKrbKlQrLRi1r9NTZQLzN.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/xVh1ypMoVkMf5IB7y3hnRplJ14c.jpg",
+   "direccion": [
+    "Eleanor Wilson",
+    "Alex Huston Fischer"
+   ],
+   "reparto": [
+    "Olivia Colman",
+    "Alexander Skarsgård",
+    "Peter Dinklage",
+    "Elizabeth Debicki",
+    "Marli Siu",
+    "Nabhaan Rizwan",
+    "Richard E. Grant",
+    "Kiell Smith-Bynoe"
+   ],
+   "trailer": "jA5zfiikcu8",
+   "dondeVer": [],
+   "popularidad": 68.8,
+   "pr": false
+  },
+  {
+   "tmdb": 1503762,
+   "title": "Sensatez y sentimiento",
+   "original": "Sense and Sensibility",
+   "estreno": "2026-10-15",
+   "clasificacion": "PG",
+   "duracion": 132,
+   "resumen": "Una nueva visión de la icónica novela de Jane Austen con una historia encantadora, ingeniosa y profundamente conmovedora sobre el amor y la hermandad.",
+   "generos": [
+    "Drama",
+    "Romance",
+    "Historia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/xmfC7mUIZWyc0Mez55qwoHTQUNJ.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/tIcONOFK9D3F89ETK8DBS1hIwVF.jpg",
+   "direccion": [
+    "Georgia Oakley"
+   ],
+   "reparto": [
+    "Daisy Edgar-Jones",
+    "Esmé Creed-Miles",
+    "Caitríona Balfe",
+    "Frank Dillane",
+    "Herbert Nordrum",
+    "George MacKay",
+    "Fiona Shaw",
+    "Bodhi Rae Breathnach"
+   ],
+   "trailer": "GMwdcpKOOyY",
+   "dondeVer": [],
+   "popularidad": 91.0,
    "pr": false
   }
  ],
@@ -1716,7 +1723,7 @@
   {
    "tmdb": 656908,
    "title": "Ramayana: Rise of a Legend",
-   "original": "रामायण : राइस ऑफ ए लीजेंड",
+   "original": "रामायणम्",
    "estreno": "2026-11-04",
    "clasificacion": "PG-13",
    "duracion": 195,
