@@ -422,7 +422,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         const nAuto = d.salas.filter(x => !x.auto).length, nPanel = d.salas.filter(x => !x.panel).length;
         v.innerHTML = `
           <div class="bp-card"><h2>Dónde puedo hablar</h2>
-            <p class="bp-vacio" style="margin:0 0 10px">Hablo solo (saludos, puyas al entrar, avisos) en <b>${nAuto}</b> de ${d.salas.length} salas, y por pedido del panel («Tirarla ahora») en <b>${nPanel}</b>. En las salas privadas no hablo solo, por privacidad; desde el panel sí, si me dieron permiso.${d.al_dia ? '' : ' ⚠️ Datos viejos: el bot no ha actualizado en 3 minutos.'}</p>
+            <p class="bp-vacio" style="margin:0 0 10px">Hablo solo (saludos, puyas al entrar, avisos) en <b>${nAuto}</b> de ${d.salas.length} salas, y por pedido del panel («Tirarla ahora») en <b>${nPanel}</b>. En las salas privadas no hablo solo, por privacidad; desde el panel sí, si me dieron permiso. <a href="/bochinchero/ayuda/#privadas" style="color:var(--bc,#ff6b3d)">Cómo darme permiso en una sala</a>.${d.al_dia ? '' : ' ⚠️ Datos viejos: el bot no ha actualizado en 3 minutos.'}</p>
             ${Object.entries(grupos).map(([cat, l]) => `<h3 class="bp-cat">${esc(cat)}</h3>
               <ul class="bp-lista bp-salas">${l.map(x => `<li><div class="t"><b>${esc(x.nombre)}</b>
                 <small>${x.privada ? '🔐 privada · ' : ''}${x.tipo === 'escenario' ? 'escenario · ' : ''}${x.limite ? `límite ${x.limite} · ` : ''}${x.gente ? `${x.gente} en la sala` : 'vacía'}</small>

@@ -1,0 +1,162 @@
+---
+// Ayuda / soporte del Bochinchero (1-nov-2026): permisos, dónde habla y dónde no (lo mismo que calcula el
+// diagnóstico de la pestaña «Salas» del panel: bot.py por_que_no), problemas comunes y actualizaciones.
+// Si cambian las reglas del bot (repo marcosstgo/bochinchero), actualizar aquí también.
+import SiteShell from '../../layouts/SiteShell.astro';
+import { DISCORD_PATH } from '../../data/site';
+
+const INVITAR = 'https://discord.com/oauth2/authorize?client_id=1559650132683653130&permissions=3165184&scope=bot%20applications.commands';
+
+const SALAS: [string, string, string, string][] = [
+  ['Sala pública (la ve todo el server)', 'sí', 'sí', 'Es donde vive el Bochinchero: saluda, visita y tira puyas.'],
+  ['Sala privada, sin permiso para el bot', 'no', 'no', 'No la puede ni ver. Dale permiso como se explica abajo.'],
+  ['Sala privada, con permiso para el bot', 'no', 'sí', 'Por privacidad nunca habla solo ahí. Un admin sí puede tirar una puya desde el panel.'],
+  ['Sala donde el bot no tiene «Hablar»', 'no', 'no', 'Entra pero no puede hablar. Dale el permiso «Hablar» en esa sala.'],
+  ['Sala llena (con límite de gente)', 'no', 'no', 'Discord no deja entrar a nadie más. Sube el límite o dale al bot «Mover miembros».'],
+  ['Sala de AFK', 'no', 'no', 'Ahí la gente está ausente: no se molesta.'],
+  ['Sala que apagaste en los ajustes', 'no', 'no', 'Ajustes → «Salas donde no hablo». Quítala de la lista para que vuelva a hablar ahí.'],
+  ['Escenario (Stage)', 'no', 'no', 'Los escenarios tienen sus reglas de quién habla: el bot no entra.'],
+];
+
+const PROBLEMAS: [string, string][] = [
+  ['Añadí el bot pero el panel dice «No tienes servers con el Bochinchero».',
+   'El panel arma tu lista de servers cuando entras con Discord. Si añadiste el bot después, dale a «Ya lo añadí · actualizar» (o a Salir y entra otra vez). Además tienes que ser dueño o tener «Gestionar servidor» o «Administrador» en ese server.'],
+  ['Tiré una puya desde el panel y no habló.',
+   'El panel te dice la razón al lado de la puya y en la pestaña «Salas». Lo más común: la persona ya no está en voz, la sala es privada y el bot no tiene permiso, la sala está llena, o se acabaron las voces nuevas del día de tu plan (las frases que ya se dijeron antes no cuentan).'],
+  ['El bot entró a la sala y no dijo nada.',
+   'Pasaba justo después de un reinicio del bot: Discord seguía creyendo que el bot viejo estaba en la sala. Desde el 1 de noviembre de 2026 el bot se despide bien al reiniciarse, limpia la conexión vieja y, si aun así no puede hablar, se sale. Si te vuelve a pasar, avísanos en el Discord del corillo.'],
+  ['No me saluda cuando entro.',
+   'Saluda solo si hay alguien más en la sala, una vez cada 4 horas por persona, y nunca en salas privadas, de AFK o apagadas en los ajustes. Revisa también que no hayas apagado tu saludo en /bochinche, y el horario del bot en los ajustes.'],
+  ['No escribe en el canal del ranking (o de moderación).',
+   'Le falta permiso de «Enviar mensajes» o «Insertar enlaces» en ese canal. Edita el canal → Permisos → añade el rol El Bochinchero con esos dos permisos.'],
+  ['No me salen los comandos / del Bochinchero.',
+   'Escribe / y busca su ícono en la lista. Si no sale, puede ser que el server no le dé «Usar comandos de aplicación» a tu rol, o que el bot se haya añadido sin el permiso de comandos: vuelve a invitarlo con el botón de abajo (no se borra nada).'],
+  ['No avisa cuando un streamer sale en vivo.',
+   'Los avisos de YouTube y Twitch dependen de las APIs oficiales de esas plataformas. Si un aviso no sale, revisa en el panel («Streamers en vivo») que el canal esté bien escrito. Si sigue sin salir, avísanos.'],
+  ['¿Por qué dice «se acabaron las voces nuevas de hoy»?',
+   'Cada plan tiene un tope de frases nuevas de voz al día (las que ya se dijeron antes salen del caché y no cuentan). El plan gratis tiene 5 al día; los servers nuevos tienen 14 días de prueba con todo.'],
+];
+
+const LD = {
+  '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: 'es',
+  mainEntity: PROBLEMAS.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+---
+<SiteShell title="Ayuda del Bochinchero: permisos, salas y problemas comunes | CORILLO"
+           description="Cómo darle permisos al Bochinchero, en qué salas de voz habla y en cuáles no, y cómo arreglar los problemas más comunes del bot y su panel."
+           canonical="https://corillo.live/bochinchero/ayuda/">
+  <fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(LD)} />
+    <style is:global>
+      .bh{--bc:#ff6b3d;max-width:1100px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px;color:var(--h2-bone)}
+      .bh-migas{font:600 .88rem var(--h2-body);color:var(--h2-mute)} .bh-migas a{color:var(--bc);text-decoration:none}
+      .bh h1{margin:10px 0 12px;font:800 clamp(2.3rem,6vw,4.4rem)/.95 var(--h2-display);letter-spacing:-.045em}
+      .bh h1 span{color:var(--bc)}
+      .bh-intro{margin:0;max-width:66ch;color:var(--h2-mute);font:500 clamp(1.02rem,1.5vw,1.18rem)/1.55 var(--h2-body)}
+      .bh-nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 0}
+      .bh-nav a{padding:8px 15px;border-radius:999px;color:var(--h2-mute);text-decoration:none;font:700 .9rem var(--h2-body);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bh-nav a:hover{color:var(--h2-bone)}
+      .bh-sec{margin-top:52px;scroll-margin-top:90px}
+      .bh-sec h2{margin:0 0 8px;font:800 clamp(1.5rem,3vw,2.2rem)/1 var(--h2-display);letter-spacing:-.035em}
+      .bh-sec>p{margin:0 0 18px;max-width:70ch;color:var(--h2-mute);font:500 1rem/1.55 var(--h2-body)}
+      .bh-sec code{color:var(--bc);font:700 .95em ui-monospace,SFMono-Regular,Menlo,monospace}
+      .bh-tabla{width:100%;border-collapse:separate;border-spacing:0;border-radius:20px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--h2-line);font:500 .95rem/1.45 var(--h2-body)}
+      .bh-tabla th,.bh-tabla td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--h2-line)}
+      .bh-tabla th{background:color-mix(in srgb,var(--h2-bone) 7%,transparent);color:var(--h2-mute);font-weight:800;font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
+      .bh-tabla tr:last-child td{border-bottom:0}
+      .bh-tabla td:first-child{font-weight:700}
+      .bh-tabla td.c{text-align:center;white-space:nowrap}
+      .bh-si{color:#35e0a1;font-weight:800} .bh-no{color:#ff6b7a;font-weight:800}
+      .bh-tabla td:last-child{color:var(--h2-mute)}
+      .bh-pasos{margin:0;padding-left:22px;display:grid;gap:8px;font:500 1rem/1.55 var(--h2-body)}
+      .bh-pasos b{color:var(--h2-bone)}
+      .bh-perm{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:10px}
+      .bh-perm div{padding:16px 18px;border-radius:18px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line);color:var(--h2-mute);font:500 .92rem/1.45 var(--h2-body)}
+      .bh-perm b{display:block;margin-bottom:4px;color:var(--h2-bone);font:800 1rem var(--h2-body)}
+      .bh-faq{display:grid;gap:10px}
+      .bh-faq details{padding:16px 20px;border-radius:20px;background:color-mix(in srgb,var(--h2-bone) 6%,transparent);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      .bh-faq summary{cursor:pointer;font:800 1.02rem/1.35 var(--h2-body);list-style:none;display:flex;justify-content:space-between;gap:12px}
+      .bh-faq summary::-webkit-details-marker{display:none}
+      .bh-faq summary::after{content:'+';color:var(--bc);font-weight:800}
+      .bh-faq details[open] summary::after{content:'–'}
+      .bh-faq p{margin:10px 0 0;color:var(--h2-mute);font:500 .97rem/1.55 var(--h2-body)}
+      .bh-nota{padding:18px 20px;border-radius:20px;background:color-mix(in srgb,var(--bc) 12%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--bc) 35%,transparent);font:500 .98rem/1.55 var(--h2-body)}
+      .bh-fin{margin-top:56px;display:flex;gap:12px;flex-wrap:wrap}
+      .bh-btn{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;border-radius:999px;background:var(--bc);color:#13173d;text-decoration:none;font:800 1rem var(--h2-body)}
+      .bh-alt{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;border-radius:999px;color:var(--h2-bone);text-decoration:none;font:700 1rem var(--h2-body);box-shadow:inset 0 0 0 1px var(--h2-line)}
+      @media (max-width:700px){ .bh-tabla thead{display:none} .bh-tabla tr{display:grid;grid-template-columns:1fr 1fr;padding:6px 0;border-bottom:1px solid var(--h2-line)}
+        .bh-tabla td{border:0;padding:6px 14px} .bh-tabla td:first-child,.bh-tabla td:last-child{grid-column:1/-1} .bh-tabla td.c{text-align:left}
+        .bh-tabla td.c::before{content:attr(data-l) ': ';color:var(--h2-mute);font-weight:600} }
+    </style>
+  </fragment>
+
+  <main class="bh">
+    <nav class="bh-migas" aria-label="Estás en"><a href="/bochinchero/">El Bochinchero</a> · Ayuda</nav>
+    <h1>Ayuda del <span>Bochinchero</span></h1>
+    <p class="bh-intro">Qué permisos necesita, en qué salas habla y en cuáles no, y cómo arreglar lo más común. Si no encuentras
+      tu caso, búscanos en el <a href={DISCORD_PATH} style="color:var(--bc)">Discord del corillo</a>.</p>
+    <nav class="bh-nav" aria-label="En esta página">
+      <a href="#permisos">Permisos</a><a href="#salas">Dónde habla</a><a href="#privadas">Salas privadas</a>
+      <a href="#problemas">Problemas comunes</a><a href="#actualizaciones">Actualizaciones</a>
+    </nav>
+
+    <section class="bh-sec" id="permisos">
+      <h2>Los permisos que necesita</h2>
+      <p>Al invitarlo pide solo estos cinco. Si un canal o una sala los quita, ahí no podrá hacer su trabajo.</p>
+      <div class="bh-perm">
+        <div><b>Ver canales</b>Para saber qué salas hay y quién está en voz.</div>
+        <div><b>Enviar mensajes</b>Para el ranking del domingo, los cumpleaños y las puyas por aprobar.</div>
+        <div><b>Insertar enlaces</b>Para que esos mensajes salgan con su tarjeta. Si lo añadiste antes del 1-nov-2026, dale este permiso al rol El Bochinchero (o vuelve a invitarlo).</div>
+        <div><b>Conectar</b>Para entrar a las salas de voz.</div>
+        <div><b>Hablar</b>Para decir sus puyas. Sin esto entra, pero se queda callado.</div>
+      </div>
+    </section>
+
+    <section class="bh-sec" id="salas">
+      <h2>Dónde habla y dónde no</h2>
+      <p>«Solo» es lo automático: saludos, visitas, puyas al entrar y avisos. «Panel» es cuando un admin le pide una puya
+        en el momento con <b>Tirarla ahora</b>. Para ver cómo está <b>cada sala de tu server</b>, abre el
+        <a href="/bochinchero/panel/" style="color:var(--bc)">panel</a> → pestaña <b>Salas</b>: el bot lo revisa cada minuto
+        con los permisos reales de Discord y te dice qué arreglar.</p>
+      <table class="bh-tabla">
+        <thead><tr><th>Tipo de sala</th><th>Solo</th><th>Panel</th><th>Por qué</th></tr></thead>
+        <tbody>{SALAS.map(([t, a, p, d]) => (
+          <tr><td>{t}</td>
+            <td class="c" data-l="Solo"><span class={a === 'sí' ? 'bh-si' : 'bh-no'}>{a === 'sí' ? '✓ sí' : '✗ no'}</span></td>
+            <td class="c" data-l="Panel"><span class={p === 'sí' ? 'bh-si' : 'bh-no'}>{p === 'sí' ? '✓ sí' : '✗ no'}</span></td>
+            <td>{d}</td></tr>))}</tbody>
+      </table>
+    </section>
+
+    <section class="bh-sec" id="privadas">
+      <h2>Darle permiso en una sala privada</h2>
+      <p>Las salas privadas (las que no ve todo el server) se respetan: el Bochinchero no habla solo ahí. Si quieres poder
+        tirarle una puya a alguien que está en una sala privada desde el panel, dale permiso a esa sala:</p>
+      <ol class="bh-pasos">
+        <li>En Discord, pasa el mouse por la sala → <b>⚙ Editar canal</b> → <b>Permisos</b>.</li>
+        <li>En <b>Roles/miembros</b>, dale a <b>+</b> y escoge el rol <b>El Bochinchero</b>.</li>
+        <li>Pon en verde (✓) <b>Ver canal</b>, <b>Conectar</b> y <b>Hablar</b>, y guarda.</li>
+        <li>En menos de un minuto la pestaña <b>Salas</b> del panel la marca con «Panel ✓».</li>
+      </ol>
+    </section>
+
+    <section class="bh-sec" id="problemas">
+      <h2>Problemas comunes</h2>
+      <div class="bh-faq">{PROBLEMAS.map(([q, a]) => <details><summary>{q}</summary><p>{a}</p></details>)}</div>
+    </section>
+
+    <section class="bh-sec" id="actualizaciones">
+      <h2>Actualizaciones</h2>
+      <div class="bh-nota">El Bochinchero es <b>un solo bot para todos los servers</b>: cuando lo mejoramos, a todos les llega al
+        mismo tiempo, sin reinstalar nada. Las puyas, apodos, cumpleaños, avisos y ajustes de tu server se quedan igual (y se
+        respaldan antes de cada cambio). Durante la actualización sale de la voz unos segundos y vuelve solo. Si alguna mejora
+        necesitara un permiso nuevo de Discord, lo avisaremos aquí.</div>
+    </section>
+
+    <div class="bh-fin">
+      <a class="bh-btn" href="/bochinchero/panel/"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Abrir el panel</a>
+      <a class="bh-alt" href={INVITAR} target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i> Añadir / volver a invitar</a>
+      <a class="bh-alt" href={DISCORD_PATH}><i class="fa-solid fa-comments" aria-hidden="true"></i> Pedir ayuda en el corillo</a>
+    </div>
+  </main>
+</SiteShell>

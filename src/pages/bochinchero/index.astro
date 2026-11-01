@@ -4,7 +4,7 @@
 import SiteShell from '../../layouts/SiteShell.astro';
 import { DISCORD_PATH } from '../../data/site';
 
-const INVITAR = 'https://discord.com/oauth2/authorize?client_id=1559650132683653130&permissions=3148800&scope=bot%20applications.commands';
+const INVITAR = 'https://discord.com/oauth2/authorize?client_id=1559650132683653130&permissions=3165184&scope=bot%20applications.commands';
 
 const MUESTRAS = [
   { f: 'acho', t: 'Su frase de cabecera', d: '«¡Ah, cho, cabrón! Puerto Rico es otra cosa.»' },
@@ -238,7 +238,7 @@ const LD = [
 
     <nav class="bc-nav" aria-label="En esta página">
       <a href="#oyelo">Óyelo</a><a href="#que-hace">Qué hace</a><a href="#como-se-usa">Cómo se usa</a><a href="#instalar">Instalarlo</a>
-      <a href="#comandos">Comandos</a><a href="#ajustes">Ajustes</a><a href="#avisos">Avisos</a><a href="#puyas">Puyas</a><a href="#roadmap">Lo que viene</a><a href="#planes">Planes</a><a href="#preguntas">Preguntas</a>
+      <a href="#comandos">Comandos</a><a href="#ajustes">Ajustes</a><a href="#avisos">Avisos</a><a href="#puyas">Puyas</a><a href="#roadmap">Lo que viene</a><a href="#planes">Planes</a><a href="#preguntas">Preguntas</a><a href="/bochinchero/ayuda/">Ayuda</a>
     </nav>
 
     <section class="bc-sec" id="oyelo">
@@ -285,7 +285,7 @@ const LD = [
       <h2>Instalarlo en tu server</h2>
       <p>Toma dos minutos. Tienes que ser admin del server (o tener «Gestionar servidor»).</p>
       <div class="bc-pasos">
-        <div class="bc-card"><b>Invítalo</b>Dale a <a href={INVITAR} target="_blank" rel="noopener">Añadir a mi server</a>, escoge tu server y autoriza. Pide solo lo necesario: ver canales, escribir, conectarse y hablar.</div>
+        <div class="bc-card"><b>Invítalo</b>Dale a <a href={INVITAR} target="_blank" rel="noopener">Añadir a mi server</a>, escoge tu server y autoriza. Pide solo lo necesario: ver canales, escribir (con tarjetas), conectarse y hablar.</div>
         <div class="bc-card"><b>Configúralo</b>Llega con un mensaje de bienvenida. Dale a <strong>Configurar</strong> (o escribe <code>/bochinche-ajustes</code>): escoge el nivel de picante, el canal del ranking y el de moderación.</div>
         <div class="bc-card"><b>Ponle puyas</b>Con <code>/puya agregar</code> le das puyas personales a la gente. A los que no tengan, el Bochinchero les escribe unas solo.</div>
       </div>
@@ -388,7 +388,7 @@ const LD = [
 
     <section class="bc-fin">
       <h2>¿Lo quieres en tu server?</h2>
-      <p>Hecho en Puerto Rico para las comunidades gaming de aquí. Si tienes preguntas, búscanos en el Discord del corillo. <a href="/bochinchero/legal/" style="color:var(--h2-mute)">Condiciones y privacidad</a></p>
+      <p>Hecho en Puerto Rico para las comunidades gaming de aquí. Si tienes preguntas, búscanos en el Discord del corillo. <a href="/bochinchero/ayuda/" style="color:var(--h2-mute)">Ayuda</a> · <a href="/bochinchero/legal/" style="color:var(--h2-mute)">Condiciones y privacidad</a></p>
       <div class="bc-row">
         <a class="bc-go" href={INVITAR} target="_blank" rel="noopener"><i class="fa-brands fa-discord" aria-hidden="true"></i> Añadir a mi server</a>
         <a class="bc-alt" href="/bochinchero/panel/"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Panel de control</a>
