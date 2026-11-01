@@ -163,7 +163,7 @@ async function init() {
 
   const s = streamerInfo(vod.channel);
   const colorStyle = s.color ? `background:${s.color}` : 'background:var(--crl-accent)';
-  const videoUrl   = `/vods/${vod.channel}/${vod.filename}`;
+  const videoUrl   = `https://media.corillo.live/vods/${vod.channel}/${vod.filename}`;
   const posterAttr = vod.thumb ? `poster="${vod.thumb}?v=2"` : '';
 
   const titleTxt = vod.title || `Transmisión del ${new Date(vod.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`;
