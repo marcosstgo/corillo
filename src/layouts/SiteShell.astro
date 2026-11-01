@@ -134,6 +134,9 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
     .foot-bottom { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:24px; border-top:1px solid var(--border); }
     .foot-copy { font-family:var(--mono); font-size:9px; letter-spacing:1px; color:rgba(255,255,255,.18); text-transform:uppercase; }
     [data-theme="light"] .foot-copy { color:rgba(0,0,0,.34); }
+    .foot-pr { color:rgba(255,255,255,.45); text-decoration:none; border-bottom:1px solid currentColor; padding-bottom:1px; transition:color .2s, border-color .2s; }
+    .foot-pr:hover, .foot-pr:focus-visible { color:var(--accent); }
+    [data-theme="light"] .foot-pr { color:rgba(0,0,0,.55); }
     .foot-credits { display:flex; align-items:center; justify-content:center; gap:8px; padding-top:18px; font-family:var(--mono); font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(255,255,255,.18); }
     [data-theme="light"] .foot-credits { color:rgba(0,0,0,.22); }
     .foot-credits-icon { display:inline-block; animation:crl-bounce 2.2s ease-in-out infinite; }
@@ -304,11 +307,7 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
       <a class="foot-social" href="https://github.com/marcosstgo" target="_blank" rel="noopener" title="GitHub"><i class="fa-brands fa-github"></i></a>
     </div>
     <span class="foot-version" id="footVersion"></span>
-    <div class="foot-copy">© 2026 CORILLO · Hecho con <i class="fa-solid fa-heart" style="color:var(--crl-hot);font-size:9px"></i> en Puerto Rico</div>
-  </div>
-  <div class="foot-credits">
-    <span class="foot-credits-icon">⚡</span>
-    <a href="https://marcossantiago.com" target="_blank" rel="noopener" class="foot-credits-link">Marcos Santiago</a>
+    <div class="foot-copy">© 2026 CORILLO · Hecho con <i class="fa-solid fa-heart" style="color:var(--crl-hot);font-size:9px"></i> en <a href="https://marcossantiago.com" target="_blank" rel="noopener" class="foot-pr" title="Hecho por Marcos Santiago">Puerto Rico</a></div>
   </div>
 </footer>
 
