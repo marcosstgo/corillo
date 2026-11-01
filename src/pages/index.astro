@@ -136,7 +136,7 @@ const VITRINA: Slide[] = [
   </section>
 
   <!-- PONTE AL DÍA -->
-  <!-- Oculta desde el 30-oct-2026: los VODs murieron con el disco. Quitar hidden cuando vuelva a haber VODs. -->
+  <!-- Sale sola cuando hay VODs (renderVodsRow); sin VODs no se enseña (desde el 31-oct-2026, VODs en la casa). -->
   <section class="h2-sec" id="vodsSection" hidden>
     <div class="h2-sec-hd">
       <h2>Ponte al día</h2>
@@ -917,10 +917,8 @@ function renderChannelGrid(paths) {
 function renderVodsRow() {
   const box = document.getElementById('vodsCarousel');
   if (!box) return;
-  if (!_recentVods.length) {
-    box.innerHTML = '<p class="h2-empty">Todavía no hay transmisiones grabadas.</p>';
-    return;
-  }
+  document.getElementById('vodsSection').hidden = !_recentVods.length;
+  if (!_recentVods.length) return;
   box.innerHTML = vodCards(_recentVods);
   attachPreviewListeners(box);
 }

@@ -311,7 +311,7 @@ async function init() {
     clipGenBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando…';
     try {
       const timeout = Math.min(dur * 2 + 15, 70) * 1000;
-      const r = await fetch(`https://api.corillo.live/api/clip/vod/${vod.id}?t=${t}&dur=${dur}`, { signal: AbortSignal.timeout(timeout) });
+      const r = await fetch(`https://media.corillo.live/api/clip/vod/${vod.id}?t=${t}&dur=${dur}`, { signal: AbortSignal.timeout(timeout) });
       if (!r.ok) throw new Error();
       const blob = await r.blob();
       const a = document.createElement('a');
