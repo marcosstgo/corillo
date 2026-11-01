@@ -2,6 +2,7 @@
 /* /cine/pr/ (1-nov-2026): todo el cine puertorriqueño que tiene ficha en Corillo, por estreno, con directores. */
 import SiteShell from '../../../layouts/SiteShell.astro';
 import PeliCard from '../../../components/cine/PeliCard.astro';
+import BanderaPR from '../../../components/cine/BanderaPR.astro';
 import { hechoEnPR, fechaLarga } from '../../../data/cine';
 
 const pr = await hechoEnPR();
@@ -23,13 +24,13 @@ const ld = {
            description="Películas puertorriqueñas en cine y streaming: estrenos en Puerto Rico, tráilers oficiales, directores, festivales y premios. El cine hecho en la isla, en un solo sitio."
            canonical="https://corillo.live/cine/pr/" ogImage={pr.find(p => p.fondo)?.fondo}>
   <fragment slot="head">
-    <link rel="stylesheet" href="/assets/cine.css?v=1">
+    <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   </fragment>
   <div class="cn">
     <nav class="cn-migas" aria-label="Estás en"><a href="/cine/">Cine</a></nav>
     <header class="cn-hd">
-      <h1>🇵🇷 Hecho en Puerto Rico</h1>
+      <h1><BanderaPR size={46} /> Hecho en Puerto Rico</h1>
       <p>Las películas hechas en la isla: lo que está en el cine, lo que viene y dónde ver las que ya pasaron. Cada ficha la escribe
          Corillo con fuentes. ¿Hiciste una película? <a href="mailto:hello@marcossantiago.com?subject=Corillo%20Cine%20·%20Mi%20película">Escríbenos</a>.</p>
     </header>

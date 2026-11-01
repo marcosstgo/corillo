@@ -2,6 +2,8 @@
 /* Ficha de película (1-nov-2026). Página estática con JSON-LD schema.org/Movie: es lo que Google lee y muestra. */
 import SiteShell from '../../layouts/SiteShell.astro';
 import PeliCard from '../../components/cine/PeliCard.astro';
+import BanderaPR from '../../components/cine/BanderaPR.astro';
+
 import { render } from 'astro:content';
 import { todas, movieLd, fechaLarga, duracionTexto, type Pelicula } from '../../data/cine';
 
@@ -32,9 +34,9 @@ const datos: [string, string][] = [
 ].filter(([, v]) => v) as [string, string][];
 ---
 <SiteShell title={titulo} description={p.description} canonical={canonical} ogType="video.movie"
-           ogTitle={`${p.title}${p.pr ? ' 🇵🇷' : ''} — estreno, tráiler y dónde verla`} ogImage={p.fondo || p.afiche}>
+           ogTitle={`${p.title}${p.pr ? ' · cine puertorriqueño' : ''} — estreno, tráiler y dónde verla`} ogImage={p.fondo || p.afiche}>
   <fragment slot="head">
-    <link rel="stylesheet" href="/assets/cine.css?v=1">
+    <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   </fragment>
 
@@ -43,11 +45,11 @@ const datos: [string, string][] = [
       {p.fondo && <img class="cn-hero-bg" src={p.fondo} alt="" fetchpriority="high" decoding="async" />}
       <div class="cn-hero-in">
         <nav class="cn-migas" aria-label="Estás en"><a href="/cine/">Cine</a>{p.pr && <> · <a href="/cine/pr/">Hecho en Puerto Rico</a></>}</nav>
-        <div class="cn-hero-grid">
+        <div class={`cn-hero-grid${p.afiche ? '' : ' sin-afiche'}`}>
           {p.afiche && <img class="cn-hero-poster" src={p.afiche} alt={`Afiche de ${p.title}`} width="342" height="513" decoding="async" />}
           <div>
             <div class="cn-tags">
-              {p.pr && <span class="cn-tag pr">🇵🇷 Cine puertorriqueño</span>}
+              {p.pr && <span class="cn-tag pr"><BanderaPR size={11} /> Cine puertorriqueño</span>}
               {futura ? <span class="cn-tag hot">Estrena el {fechaLarga(p.estreno)}</span> : p.estreno && <span class="cn-tag">Estrenó el {fechaLarga(p.estreno)}</span>}
               {p.generos.map(g => <span class="cn-tag">{g}</span>)}
             </div>

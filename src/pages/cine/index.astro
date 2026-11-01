@@ -2,12 +2,14 @@
 /* /cine/ (1-nov-2026): estreno destacado, lo que está pegao, cartelera en PR, próximos estrenos y cine puertorriqueño. */
 import SiteShell from '../../layouts/SiteShell.astro';
 import PeliCard from '../../components/cine/PeliCard.astro';
+import BanderaPR from '../../components/cine/BanderaPR.astro';
+
 import { hechoEnPR, pegao, cartelera, proximos, fechaLarga, actualizado } from '../../data/cine';
 
 const [pr, top, enCine, vienen] = await Promise.all([hechoEnPR(), pegao(), cartelera(), proximos()]);
 const hoy = new Date().toISOString().slice(0, 10);
 // Destacado: el próximo estreno boricua si hay uno en las próximas 3 semanas; si no, el estreno grande más cercano.
-const prPronto = pr.find(p => p.estreno && p.estreno >= hoy && (new Date(p.estreno).valueOf() - Date.now()) < 21 * 864e5);
+const prPronto = [...pr].reverse().find(p => p.fondo && p.estreno && p.estreno >= hoy && (new Date(p.estreno).valueOf() - Date.now()) < 21 * 864e5);
 const destacado = prPronto || vienen.find(p => p.fondo) || top.find(p => p.fondo) || pr.find(p => p.fondo);
 const ld = {
   '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Cine — CORILLO', url: 'https://corillo.live/cine/',
@@ -20,7 +22,7 @@ const ld = {
            description="Qué hay en el cine en Puerto Rico, los próximos estrenos con fecha de PR, lo que está pegao y lo mejor del cine puertorriqueño, con tráilers y dónde verlas."
            canonical="https://corillo.live/cine/" ogImage={destacado?.fondo}>
   <fragment slot="head">
-    <link rel="stylesheet" href="/assets/cine.css?v=1">
+    <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   </fragment>
 
@@ -30,7 +32,7 @@ const ld = {
         {destacado.fondo && <img src={destacado.fondo} alt="" fetchpriority="high" decoding="async" />}
         <span class="cn-dest-txt">
           <span class="cn-tags">
-            {destacado.pr && <span class="cn-tag pr">🇵🇷 Cine puertorriqueño</span>}
+            {destacado.pr && <span class="cn-tag pr"><BanderaPR size={11} /> Cine puertorriqueño</span>}
             {destacado.estreno && <span class="cn-tag hot">{destacado.estreno > hoy ? `Estrena el ${fechaLarga(destacado.estreno)}` : `En cines desde el ${fechaLarga(destacado.estreno)}`}</span>}
           </span>
           <b>{destacado.title}</b>
@@ -47,28 +49,28 @@ const ld = {
 
     {pr.length > 0 && (
       <section class="cn-bloque cn-bloque-pr">
-        <div class="cn-bloque-hd"><h2>🇵🇷 Hecho en Puerto Rico</h2><a href="/cine/pr/">Todo el cine boricua</a></div>
+        <div class="cn-bloque-hd"><h2><BanderaPR size={22} /> Hecho en Puerto Rico</h2><a href="/cine/pr/">Todo el cine boricua</a></div>
         <div class="cn-fila">{pr.slice(0, 12).map((p, i) => <PeliCard p={p} eager={i < 4} />)}</div>
       </section>
     )}
 
     {top.length > 0 && (
       <section class="cn-bloque">
-        <div class="cn-bloque-hd"><h2>🔥 Lo que está pegao</h2><small>Lo más visto y comentado esta semana</small></div>
+        <div class="cn-bloque-hd"><h2><i class="fa-solid fa-fire" aria-hidden="true"></i> Lo que está pegao</h2><small>Lo más visto y comentado esta semana</small></div>
         <div class="cn-fila">{top.slice(0, 18).map(p => <PeliCard p={p} />)}</div>
       </section>
     )}
 
     {enCine.length > 0 && (
       <section class="cn-bloque">
-        <div class="cn-bloque-hd"><h2>🎬 En cartelera en Puerto Rico</h2><a href="https://caribbeancinemas.com/" target="_blank" rel="noopener">Horarios en Caribbean Cinemas</a></div>
+        <div class="cn-bloque-hd"><h2><i class="fa-solid fa-ticket" aria-hidden="true"></i> En cartelera en Puerto Rico</h2><a href="https://caribbeancinemas.com/" target="_blank" rel="noopener">Horarios en Caribbean Cinemas</a></div>
         <div class="cn-fila">{enCine.slice(0, 24).map(p => <PeliCard p={p} />)}</div>
       </section>
     )}
 
     {vienen.length > 0 && (
       <section class="cn-bloque">
-        <div class="cn-bloque-hd"><h2>📅 Próximos estrenos</h2><small>Con la fecha de Puerto Rico</small></div>
+        <div class="cn-bloque-hd"><h2><i class="fa-regular fa-calendar" aria-hidden="true"></i> Próximos estrenos</h2><small>Con la fecha de Puerto Rico</small></div>
         <div class="cn-fila">{vienen.slice(0, 24).map(p => <PeliCard p={p} />)}</div>
       </section>
     )}
