@@ -79,6 +79,12 @@ def detalle(c, mid: int, popularidad: float) -> dict | None:
     if r.status_code != 200:
         return None
     d = r.json()
+    titulo = d.get('title') or d.get('original_title') or ''
+    if titulo and not all(ord(ch) < 0x0250 or not ch.isalpha() for ch in titulo):
+        # sin título en español y el original no es de alfabeto latino (hindi, japonés…): el de EE. UU.
+        en = c.get(f'/movie/{mid}', params={'language': 'en-US'})
+        if en.status_code == 200 and en.json().get('title'):
+            d['title'] = en.json()['title']
     estreno, cert = fecha_pr(d.get('release_dates', {}))
     tr, _ = trailer(d.get('videos', {}).get('results', []))
     prov = d.get('watch/providers', {}).get('results', {})

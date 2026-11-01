@@ -38,6 +38,7 @@ const datos: [string, string][] = [
   <fragment slot="head">
     <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    {!p.propia && <meta name="robots" content="noindex, follow" />}
   </fragment>
 
   <article class="cn-ficha">
