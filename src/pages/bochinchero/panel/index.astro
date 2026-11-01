@@ -51,6 +51,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       .bp-lista small{display:block;color:var(--h2-mute)}
       .bp-tag{padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);color:var(--h2-mute);font:700 .75rem var(--h2-body)}
       .bp-envoz{color:#3ddc84;font-weight:700}
+      .bp-nopuedo{display:block;margin-top:3px;color:#ffb454}
       .bp-ahora{border-color:color-mix(in srgb,#3ddc84 45%,transparent)}
       .bp-ahora h2 small{font:500 .8rem var(--h2-body);color:var(--h2-mute)}
       .bp-btn[disabled]{opacity:.45;cursor:not-allowed}
@@ -319,10 +320,10 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       async puyas(v) {
         const [pendientes, aprobadas, gente] = await Promise.all([api('GET', S('/puyas?estado=pendiente')), api('GET', S('/puyas')), api('GET', S('/personas'))]);
         // «Tirarla ahora» (1-nov-2026): solo si la persona está en voz; el bot la dice en esa sala al momento.
-        const fila = (p, pend) => `<li data-id="${p.id}"><div class="t">${esc(p.frase)}<small>Para ${esc(p.nombre || p.persona)}${p.origen === 'ia' ? ' · escrita por IA' : ''}${pend ? '' : ' · usada ' + p.usada}${p.en_voz ? ` · <span class="bp-envoz">🔊 en voz en ${esc(p.en_voz)}</span>` : ''}</small></div>
+        const fila = (p, pend) => `<li data-id="${p.id}"><div class="t">${esc(p.frase)}<small>Para ${esc(p.nombre || p.persona)}${p.origen === 'ia' ? ' · escrita por IA' : ''}${pend ? '' : ' · usada ' + p.usada}${p.en_voz ? ` · <span class="bp-envoz">🔊 en voz en ${esc(p.en_voz)}</span>` : ''}${p.no_puedo ? `<span class="bp-nopuedo">⚠️ ${esc(p.no_puedo)}</span>` : ''}</small></div>
             <button class="bp-btn sec peq oir">▶ Escuchar</button>
             ${pend ? '<button class="bp-btn peq si">Aprobar</button><button class="bp-btn mal peq no">Rechazar</button>'
-                   : `<button class="bp-btn peq tirar" ${p.en_voz ? '' : 'disabled title="Tiene que estar en una sala de voz"'}>📢 Tirarla ahora</button><button class="bp-btn mal peq borrar">Borrar</button>`}</li>`;
+                   : `<button class="bp-btn peq tirar" ${p.en_voz && !p.no_puedo ? '' : `disabled title="${esc(p.no_puedo || 'Tiene que estar en una sala de voz')}"`}>📢 Tirarla ahora</button><button class="bp-btn mal peq borrar">Borrar</button>`}</li>`;
         const enVoz = aprobadas.filter(p => p.en_voz);
         v.innerHTML = `
           ${pendientes.length ? `<div class="bp-card"><h2>Por aprobar</h2><ul class="bp-lista">${pendientes.map(p => fila(p, true)).join('')}</ul></div>` : ''}
@@ -351,11 +352,13 @@ import SiteShell from '../../../layouts/SiteShell.astro';
           li.querySelector('.no')?.addEventListener('click', () => accion('PATCH', { estado: 'rechazada' }, 'Rechazada.'));
           li.querySelector('.borrar')?.addEventListener('click', () => accion('DELETE', null, 'Borrada.'));
           li.querySelector('.tirar')?.addEventListener('click', async ev => {
+            // Solo cambia el botón que se tocó; los demás siguen igual (si se toca otro mientras habla, el bot
+            // contesta «espera, está diciendo otra»). Al terminar se refresca la lista (cuenta de usada, quién sigue en voz).
             const b = ev.currentTarget, antes = b.textContent;
-            v.querySelectorAll('.tirar').forEach(x => x.disabled = true);
-            b.textContent = '🔊 Diciéndola…';
+            if (b.dataset.ocupado) return;
+            b.dataset.ocupado = '1'; b.disabled = true; b.textContent = '🔊 Diciéndola…';
             try { const r = await api('POST', S('/puyas/' + p.id + '/tirar')); aviso('✓ ' + (r.mensaje || 'Dicha.')); VISTAS.puyas(v); }
-            catch (e) { b.textContent = antes; VISTAS.puyas(v); }
+            catch (e) { delete b.dataset.ocupado; b.disabled = false; b.textContent = antes; }
           });
         });
       },
