@@ -1,0 +1,50 @@
+{
+ "actualizado": "2026-11-01",
+ "eventos": [
+  {
+   "slug": "arcadia-battle-royale-2026",
+   "precio": "Entrada gratis con registro",
+   "web": "https://arcadiabattleroyale.com",
+   "voz_extra": "La entrada es gratis, pero hay que registrarse.",
+   "detalle": "Torneos, videojuegos y activaciones gaming.",
+   "nombre": "Arcadia Battle Royale 2026",
+   "inicio": "2026-11-14",
+   "fin": "2026-11-15",
+   "lugar": "Coliseo Rubén Rodríguez",
+   "municipio": "Bayamón",
+   "confirmado": true,
+   "fuente_nombre": "Página oficial de Arcadia Battle Royale",
+   "fuente_url": "https://arcadiabattleroyale.com"
+  },
+  {
+   "slug": "el-bohio-de-bdaly-9",
+   "nombre": "El Bohío de Bdaly #9!",
+   "inicio": "2026-11-21",
+   "fin": "2026-11-21",
+   "lugar": "San Juan",
+   "municipio": "",
+   "detalle": "5:00 PM · Super Smash Bros. Ultimate",
+   "precio": "",
+   "web": "",
+   "confirmado": false,
+   "fuente_nombre": "Salón de la Fama del Gaming en Puerto Rico",
+   "fuente_url": "https://salonfamagamingpr.org/calendario-de-eventos-de-videojuegos-y-esports-en-puerto-rico/",
+   "voz_extra": ""
+  },
+  {
+   "slug": "puerto-rico-sekaiju-con-winter-edition",
+   "nombre": "Puerto Rico Sekaiju Con – Winter Edition",
+   "inicio": "2027-01-09",
+   "fin": "2027-01-10",
+   "lugar": "Coliseo Marcelo Trujillo Panisse",
+   "municipio": "Humacao",
+   "detalle": "Convención de anime, cosplay y gaming",
+   "precio": "",
+   "web": "",
+   "confirmado": false,
+   "fuente_nombre": "Salón de la Fama del Gaming en Puerto Rico",
+   "fuente_url": "https://salonfamagamingpr.org/calendario-de-eventos-de-videojuegos-y-esports-en-puerto-rico/",
+   "voz_extra": ""
+  }
+ ]
+}

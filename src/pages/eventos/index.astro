@@ -1,0 +1,41 @@
+---
+/* /eventos/ (1-nov-2026): eventos de videojuegos en Puerto Rico. Página estática para Google; ver scripts/update-eventos.py. */
+import SiteShell from '../../layouts/SiteShell.astro';
+import { eventos, fechaEvento, dondeEvento } from '../../data/eventos';
+
+const lista = eventos();
+const confirmados = lista.filter(e => e.confirmado), porConfirmar = lista.filter(e => !e.confirmado);
+const canonical = 'https://corillo.live/eventos/';
+const ld = {
+  '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Eventos de videojuegos en Puerto Rico', url: canonical,
+  description: 'Torneos, convenciones y eventos de videojuegos y esports en Puerto Rico, con fecha y lugar.',
+  mainEntity: { '@type': 'ItemList', itemListElement: confirmados.map((e, i) => ({ '@type': 'ListItem', position: i + 1, url: `${canonical}${e.slug}/`, name: e.nombre })) },
+};
+---
+<SiteShell title="Eventos de videojuegos y esports en Puerto Rico | CORILLO"
+           description="Torneos, convenciones y eventos de videojuegos y esports en Puerto Rico: qué viene, cuándo y dónde."
+           canonical={canonical}>
+  <fragment slot="head">
+    <link rel="stylesheet" href="/assets/eventos.css?v=1">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </fragment>
+  <div class="ev">
+    <header class="ev-hd">
+      <h1>Eventos de videojuegos en Puerto Rico</h1>
+      <p>Torneos, convenciones y eventos gaming que vienen en la isla: cuándo son, dónde y cómo llegar.</p>
+    </header>
+    {confirmados.length > 0 && <section><h2>Próximos</h2><ul class="ev-lista">
+      {confirmados.map(e => <li><a href={`/eventos/${e.slug}/`}><time datetime={e.inicio}>{fechaEvento(e)}</time><b>{e.nombre}</b><span>{dondeEvento(e)}{e.precio && ` · ${e.precio}`}</span></a></li>)}
+    </ul></section>}
+    {porConfirmar.length > 0 && <section><h2>En calendario, por confirmar</h2>
+      <p class="ev-nota">Salen de un calendario público y todavía no las hemos confirmado con el organizador. Verifica antes de ir.</p>
+      <ul class="ev-lista">
+      {porConfirmar.map(e => <li><a href={e.fuente_url} rel="noopener" target="_blank"><time datetime={e.inicio}>{fechaEvento(e)}</time><b>{e.nombre}</b><span>{dondeEvento(e)}</span></a></li>)}
+    </ul></section>}
+    {lista.length === 0 && <p class="ev-nota">No tenemos eventos próximos en este momento. Vuelve pronto.</p>}
+    <footer class="ev-pie">
+      <p>Calendario base: <a href="https://salonfamagamingpr.org/calendario-de-eventos-de-videojuegos-y-esports-en-puerto-rico/" rel="noopener" target="_blank">Salón de la Fama del Gaming en Puerto Rico</a>. Corillo no organiza estos eventos.</p>
+      <p>¿Organizas un evento? <a href="/faq/">Escríbenos</a> y lo añadimos.</p>
+    </footer>
+  </div>
+</SiteShell>

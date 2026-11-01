@@ -1,0 +1,19 @@
+{
+  "_nota": "Eventos verificados a mano con el organizador. Ganan sobre el calendario. confirmado=true: el bot los dice en voz y Google los ve como Event.",
+  "eventos": [
+    {
+      "nombre": "Arcadia Battle Royale 2026",
+      "inicio": "2026-11-14",
+      "fin": "2026-11-15",
+      "lugar": "Coliseo Rubén Rodríguez",
+      "municipio": "Bayamón",
+      "detalle": "Torneos, videojuegos y activaciones gaming.",
+      "precio": "Entrada gratis con registro",
+      "web": "https://arcadiabattleroyale.com",
+      "confirmado": true,
+      "fuente_nombre": "Página oficial de Arcadia Battle Royale",
+      "fuente_url": "https://arcadiabattleroyale.com",
+      "voz_extra": "La entrada es gratis, pero hay que registrarse."
+    }
+  ]
+}

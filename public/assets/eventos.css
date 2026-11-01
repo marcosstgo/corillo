@@ -1,0 +1,21 @@
+/* /eventos/ — mismas variables del sitio que /cine/. */
+.ev{max-width:1100px;margin:0 auto;padding:clamp(18px,3vw,36px) var(--h2-gutter) 90px}
+.ev-hd{margin:clamp(22px,4vw,44px) 0 26px}
+.ev-hd h1{margin:0;font:800 clamp(2.2rem,6vw,4.4rem)/1 var(--h2-display);letter-spacing:-.04em}
+.ev-hd p{margin:14px 0 0;max-width:66ch;color:var(--h2-mute);font:500 clamp(1rem,1.5vw,1.2rem)/1.5 var(--h2-body)}
+.ev h2{margin:34px 0 14px;font:800 1.5rem var(--h2-display)}
+.ev a{color:var(--h2-cyan);overflow-wrap:anywhere}
+.ev-lista{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.ev-lista a{display:grid;gap:4px;padding:18px 20px;border:1px solid rgba(255,255,255,.14);border-radius:12px;color:inherit;text-decoration:none;transition:border-color .15s}
+.ev-lista a:hover,.ev-lista a:focus-visible{border-color:var(--h2-cyan)}
+.ev-lista time{color:var(--h2-cyan);font:700 .9rem var(--h2-body)}
+.ev-lista b{font:800 1.25rem var(--h2-display)}
+.ev-lista span{color:var(--h2-mute);font:500 .95rem var(--h2-body)}
+.ev-nota{color:var(--h2-mute);font:500 .95rem/1.5 var(--h2-body);margin:0 0 14px}
+.ev-aviso{padding:14px 16px;border:1px solid rgba(255,190,70,.55);border-radius:10px;font:500 .95rem/1.5 var(--h2-body)}
+.ev-datos{display:grid;grid-template-columns:max-content 1fr;gap:10px 22px;margin:24px 0;font:500 1.05rem var(--h2-body)}
+.ev-datos dt{color:var(--h2-mute)}.ev-datos dd{margin:0}
+.ev a.ev-btn{display:inline-block;padding:12px 20px;border:1px solid currentColor;border-radius:10px;font:700 1rem var(--h2-body);text-decoration:none}
+.ev-pie{margin-top:40px;color:var(--h2-mute);font:500 .9rem/1.6 var(--h2-body)}
+.ev-migas{margin-top:8px;font:600 .85rem var(--h2-body)}
+.ev-migas a{text-decoration:none}
