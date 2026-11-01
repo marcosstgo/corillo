@@ -132,7 +132,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
     }
 
     const TABS = [['resumen', 'Resumen'], ['ajustes', 'Ajustes'], ['personas', 'Personas'], ['puyas', 'Puyas'],
-                  ['avisos', 'Avisos en voz'], ['envivo', 'Streamers en vivo'], ['salas', 'Salas'], ['estadisticas', 'Estadísticas']];
+                  ['avisos', 'Avisos en voz'], ['envivo', 'Streamers en vivo'], ['noticias', 'Noticias'], ['salas', 'Salas'], ['estadisticas', 'Estadísticas']];
 
     async function pintarApp() {
       const yo = st.yo;
@@ -411,6 +411,19 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         });
       },
 
+      // Noticias en voz (1-nov-2026): salen solas, sin aprobar. Aquí se ve lo que ha dicho; se prende y apaga en Ajustes.
+      async noticias(v) {
+        const [{ noticias: lista }, { ajustes: a }] = await Promise.all([api('GET', S('/noticias')), api('GET', S('/ajustes'))]);
+        v.innerHTML = `
+          <div class="bp-card"><h2>Noticias de lo que juegan ${a.funciones.noticias ? '<span class="bp-ok">✅ prendida</span>' : '<span class="bp-no">apagada</span>'}</h2>
+            <p class="bp-vacio" style="margin:0 0 10px">Si alguien en una sala está jugando algo y hoy o ayer salió una actualización oficial en Steam, lo digo una vez.
+              Como mucho 2 al día y cada 3 horas por sala; si no hay nada importante, me callo. Se prende y se apaga en Ajustes.</p>
+            ${lista.length ? `<ul class="bp-lista">${lista.map(n => `<li><div class="t"><b>${esc(n.juego)}</b> · ${esc(n.sala)} · ${hace(n.dicha)}
+              <small>«${esc(n.texto)}»</small><small>${n.url && /^https:\/\//.test(n.url) ? `<a href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.titulo)}</a>` : esc(n.titulo)}</small></div></li>`).join('')}</ul>`
+              : '<p class="bp-vacio">Todavía no he dicho ninguna noticia.</p>'}
+          </div>`;
+      },
+
       // Diagnóstico de salas (1-nov-2026): lo calcula el bot cada minuto con los permisos reales de Discord.
       async salas(v) {
         let d;
@@ -436,7 +449,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         const max = Math.max(1, ...e.por_hora);
         const nombresDijo = { saludo: 'Saludos', grupo: 'Saludos al grupo', visita: 'Visitas', despedida: 'Despedidas', juego: 'Puyas por juego',
                               hacks: '«Usa hacks»', solito: 'Al que estaba solo', decir: '/decir', aviso: 'Avisos', en_vivo: 'Streamers en vivo',
-                              evento: 'Eventos', cumple: 'Cumpleaños', puya: 'Puyas propias', prueba: 'Pruebas', nombre: 'Nombres' };
+                              evento: 'Eventos', noticia: 'Noticias', cumple: 'Cumpleaños', puya: 'Puyas propias', prueba: 'Pruebas', nombre: 'Nombres' };
         v.innerHTML = `
           <div class="bp-grid">
             <div class="bp-card"><h2>Los más pegaos (${e.dias} días)</h2>${e.top.length ? `<ul class="bp-lista">${e.top.map((p, i) => `<li><div class="t"><b>${i + 1}. ${esc(p.nombre)}</b></div><span>${horas(p.minutos)}</span></li>`).join('')}</ul>` : '<p class="bp-vacio">Sin datos todavía.</p>'}</div>
