@@ -44,8 +44,10 @@ app.add_middleware(
 
 _http: httpx.AsyncClient = None
 
-_register_rl: dict[str, list] = {}
-REGISTER_RL_MAX    = 3
+_register_rl: dict[str, list] = {}      # cuentas CREADAS por IP (1-nov-2026: antes contaba también los errores)
+_register_intentos: dict[str, list] = {}  # intentos de cualquier tipo por IP (freno contra bots)
+REGISTER_RL_MAX    = 3                    # cuentas creadas por hora por IP
+REGISTER_INTENTOS_MAX = 15                # intentos por hora por IP (alguien que se equivoca no queda bloqueado)
 REGISTER_RL_WINDOW = 3600
 
 EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
@@ -61,6 +63,8 @@ RESERVED_HANDLES = {
     # rutas del sitio (una cuenta con ese nombre quedaría tapada por la página)
     'mercado', 'equipo', 'ofertas', 'noticias', 'discord', 'streamers', 'vods', 'reels',
     'faq', 'software', 'embed', 'overlay', 'que_es_corillo', 'rss',
+    # 1-nov-2026: todas las páginas del sitio (un canal con ese nombre quedaría tapado por la página)
+    'ayuda', 'bochinchero', 'cine', 'configuracion', 'cuentas', 'dev', 'discord', 'dmca', 'embed', 'en', 'equipo', 'faq', 'join', 'legal', 'media', 'mercado', 'multiplayer', 'natcheck', 'noticias', 'ofertas', 'overlay', 'pb', 'perfil', 'player', 'que-es-corillo', 'reels', 'roadmap', 'software', 'stats', 'status', 'stoat', 'streamers', 'uptime', 'verificar', 'vods', 'www',
 }
 
 
@@ -103,14 +107,16 @@ async def register(req: RegisterRequest, request: Request):
           or request.headers.get("x-forwarded-for", "").split(",")[0].strip()
           or (request.client.host if request.client else "unknown"))
     now = time.time()
+    intentos = [t for t in _register_intentos.get(ip, []) if now - t < REGISTER_RL_WINDOW]
     hits = [t for t in _register_rl.get(ip, []) if now - t < REGISTER_RL_WINDOW]
-    if len(hits) >= REGISTER_RL_MAX:
+    if len(intentos) >= REGISTER_INTENTOS_MAX or len(hits) >= REGISTER_RL_MAX:
         raise HTTPException(status_code=429, detail="Demasiados intentos. Intenta más tarde.")
-    hits.append(now)
+    intentos.append(now)
+    _register_intentos[ip] = intentos
     _register_rl[ip] = hits
 
     handle = req.handle.strip().lower()
-    if not re.match(r'^[a-z0-9_]{3,24}$', handle):
+    if not re.match(r'^[a-z0-9][a-z0-9_]{2,23}$', handle):   # empieza con letra o número (la página del canal lo exige)
         raise HTTPException(status_code=400, detail="Handle inválido")
     if "__" in handle:
         raise HTTPException(status_code=400, detail="Evita guiones bajos dobles en el handle")
@@ -171,6 +177,7 @@ async def register(req: RegisterRequest, request: Request):
     )
     if create.status_code not in (200, 201):
         raise HTTPException(status_code=400, detail="No se pudo crear la cuenta. Revisa los datos e intenta de nuevo.")
+    _register_rl.setdefault(ip, []).append(time.time())
 
     try:
         await _http.post(

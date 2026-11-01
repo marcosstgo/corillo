@@ -68,7 +68,11 @@ async def _validate(channel: str, secret: str) -> bool:
             params={"filter": f'key="{channel}" && active=true', "fields": "key,stream_key"},
         )
         items = r.json().get("items", [])
-        if not items:
+        # 1-nov-2026 (auditoría): exactamente un canal con ese key. Si hubiera dos (antes se podía), no se adivina
+        # cuál es el bueno: se rechaza y se avisa en el log.
+        if len(items) != 1:
+            if items:
+                print(f"[auth] {len(items)} registros con key={channel!r}: publicación rechazada", flush=True)
             return False
         sk = items[0].get("stream_key", "")
         _key_cache[channel] = {"stream_key": sk, "ts": now}
