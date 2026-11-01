@@ -50,7 +50,7 @@ const VITRINA: Slide[] = [
 >
   <fragment slot="head">
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/assets/home2.css?v=5">
+    <link rel="stylesheet" href="/assets/home2.css?v=6">
     <script is:inline>document.documentElement.setAttribute('data-theme','dark');</script>
   </fragment>
 
@@ -521,7 +521,7 @@ async function vtTransmisiones() {
     art.setAttribute('aria-roledescription', 'slide');
     art.innerHTML = `
       <div class="h2-vt-bg"><img src="${e(v.thumb)}" alt="" decoding="async"></div>
-      <a class="h2-vt-play" href="${href}" tabindex="-1" aria-hidden="true"><i class="fa-solid fa-play"></i></a>
+      <a class="h2-vt-play" href="${href}" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.6c0-1.2 1.3-1.9 2.3-1.3l11.3 7.4c.9.6.9 2 0 2.6L9.3 20.7C8.3 21.3 7 20.6 7 19.4V4.6Z"/></svg></a>
       <div class="h2-vt-txt">
         <div class="h2-status"><span class="live-badge offline">Transmisión</span>
           <span class="featured-meta">${e(relativeTime(v.date))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>

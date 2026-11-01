@@ -424,13 +424,14 @@ body.page-home .site-footer .foot-tagline { font-size: .85rem; line-height: 1.5;
 .h2-vt-play {
   position: absolute; z-index: 4; right: clamp(32px, 9vw, 170px); top: 44%; transform: translate(0, -50%);
   width: clamp(76px, 7.5vw, 112px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
-  background: rgba(6,20,63,.42); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  border: 2px solid rgba(245,248,255,.7); color: #fff; font-size: clamp(1.6rem, 2.4vw, 2.4rem); text-decoration: none;
+  background: rgba(6,20,63,.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(245,248,255,.55); color: #fff; text-decoration: none;
   box-shadow: 0 24px 60px -12px rgba(0,0,0,.6); transition: transform .25s ease, background .25s ease;
 }
-.h2-vt-play i { margin-left: 6%; }
+.h2-vt-play svg { width: 42%; height: 42%; margin-left: 5%; display: block; filter: drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
 .h2-vt-play:hover { transform: translate(0, -50%) scale(1.08); background: var(--h2-live, #ff2e4d); border-color: transparent; }
-.h2-vt--vod.on .h2-vt-play { animation: h2-vt-in .8s .2s cubic-bezier(.2,.8,.2,1) both; }
+.h2-vt--vod.on .h2-vt-play { animation: h2-vt-play-in .6s .2s ease-out both; }
+@keyframes h2-vt-play-in { from { opacity: 0; } to { opacity: 1; } }   /* solo opacidad: con transform pisaba el centrado */
 @media (max-width: 760px) {
   .h2-vt-play { top: 26%; right: 50%; transform: translate(50%, -50%); width: 72px; }
   .h2-vt-play:hover { transform: translate(50%, -50%) scale(1.08); }
