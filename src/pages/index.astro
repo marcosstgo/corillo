@@ -468,7 +468,7 @@ function vtShow(i) {
     sl.querySelectorAll('a').forEach(a => a.tabIndex = on ? 0 : -1);
     if (on) {
       const im = sl.querySelector('.h2-vt-bg img'); if (im) { im.loading = 'eager'; im.style.animation = 'none'; void im.offsetWidth; im.style.animation = ''; }
-      const m = sl.querySelector('[data-cuando]'); if (m && sl.dataset.fecha) m.textContent = cuando(+sl.dataset.fecha);   // el HTML puede tener horas o días
+      const m = sl.querySelector('[data-cuando]'); if (m && sl.dataset.fecha) m.textContent = cuando(+sl.dataset.fecha) + (m.dataset.cuando || '');   // el HTML puede tener horas o días; data-cuando trae lo que sigue a la fecha
     }
     const d = sl._dot; if (d) { d.classList.toggle('on', on); d.setAttribute('aria-selected', on ? 'true' : 'false'); d.style.setProperty('--vt-ms', VT_MS + 'ms'); }
   });
@@ -563,7 +563,7 @@ async function vtVideos() {
       <a class="h2-vt-play" href="${href}" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.6c0-1.2 1.3-1.9 2.3-1.3l11.3 7.4c.9.6.9 2 0 2.6L9.3 20.7C8.3 21.3 7 20.6 7 19.4V4.6Z"/></svg></a>
       <div class="h2-vt-txt">
         <div class="h2-status"><span class="live-badge offline">Video</span>
-          <span class="featured-meta"><span data-cuando>${e(cuando(fecha))}</span>${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
+          <span class="featured-meta" data-cuando="${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}">${e(cuando(fecha))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
         <a class="h2-vt-who" href="/${e(v.channel)}/" tabindex="-1"><span class="h2-vt-face" style="background:${e(s.color || '#1e3a4a')}">${cara}</span><b>${e(nombre)}</b></a>
         <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `Video de ${nombre}`)}</a></h2>
         <p class="h2-vt-sub">Lo nuevo de ${e(nombre)} en Corillo. Velo completo cuando quieras.</p>
