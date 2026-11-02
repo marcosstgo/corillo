@@ -10,12 +10,21 @@ import SiteShell from '../../../layouts/SiteShell.astro';
   <fragment slot="head">
     <meta name="theme-color" content="var(--crl-ink)" />
     <style is:global>
-      /* Disposición (2-nov-2026): el video arriba a todo lo ancho, sin pasarse del alto de la pantalla; debajo, datos y "Más de…" */
+      /* Disposición (2-nov-2026): el video manda. Debajo, en una sola columna alineada con él: título, canal y acciones, y más videos en cuadrícula */
       .vd{display:grid;grid-template-columns:minmax(0,1fr);gap:24px 28px;max-width:1680px;margin:0 auto;padding:22px var(--h2-gutter) 64px}
-      @media(min-width:1100px){.vd{grid-template-columns:minmax(0,1fr) 400px}}
-      @media(min-width:1500px){.vd{grid-template-columns:minmax(0,1fr) 450px}}
-      .vd-player{grid-column:1/-1;min-width:0}
-      .vd-player .player-wrap,.vd-player .sk{width:min(100%,calc((100dvh - 110px)*16/9));margin-inline:auto}
+      .vd-player{min-width:0}
+      .vd-player .player-wrap,.vd-player .sk,.vd-main,.vd-side{width:min(100%,calc((100dvh - 110px)*16/9));margin-inline:auto}
+      .vd-cab{display:grid;gap:8px}
+      .vd-meta{margin:0;color:var(--h2-mute);font:500 1rem/1.3 var(--h2-body)}
+      .vd-barra{display:flex;flex-wrap:wrap;align-items:center;gap:14px 24px;padding-bottom:22px;border-bottom:1px solid var(--h2-line)}
+      .vd-barra .vd-ch{flex:1 1 320px;min-width:0;padding:0;background:none;box-shadow:none;border-radius:0}
+      .vd-barra .vd-ava{width:52px;height:52px}
+      .vd-barra .vd-ch-t{flex:0 1 auto}
+      .vd-barra .vd-go{height:42px;padding:0 18px}
+      .vd-acc{display:flex;flex-wrap:wrap;gap:10px}
+      .vd-acc button{display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 18px;border:0;border-radius:999px;cursor:pointer;background:color-mix(in srgb,var(--h2-bone) 10%,transparent);color:var(--h2-bone);font:700 .95rem/1 var(--h2-body);transition:background .15s}
+      .vd-acc button:hover{background:color-mix(in srgb,var(--h2-bone) 18%,transparent)}
+      .vd-acc button:focus-visible{outline:2px solid var(--h2-bone);outline-offset:2px}
       .vd-main{min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-content:start}
       .player-wrap{position:relative;background:#000;aspect-ratio:16/9;border-radius:22px;overflow:hidden;box-shadow:0 30px 70px -30px rgb(0 0 0/.8),0 0 0 1px var(--h2-line)}
       .player-wrap video{width:100%;height:100%;display:block;object-fit:contain}
@@ -94,7 +103,12 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       .rel-card-body{min-width:0;display:block;padding:0}
       .rel-card-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:700 1rem/1.2 var(--h2-display);letter-spacing:-.015em}
       .rel-card-sub{margin-top:6px;color:var(--h2-mute);font:500 .84rem/1.3 var(--h2-body)}
-      @media(max-width:560px){.rel-card{grid-template-columns:132px minmax(0,1fr);gap:12px}}
+      /* más videos: cuadrícula debajo del video; en el celular, filas */
+      .rel-rail{grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:20px}
+      .rel-card{grid-template-columns:minmax(0,1fr);align-items:start;gap:10px;margin:0;padding:0;background:none}
+      .rel-card:hover{background:none}
+      .rel-card-thumb{border-radius:16px}
+      @media(max-width:560px){.rel-rail{grid-template-columns:minmax(0,1fr);gap:12px}.rel-card{grid-template-columns:132px minmax(0,1fr);gap:12px;align-items:center}}
     </style>
   </fragment>
 
@@ -118,12 +132,6 @@ function fmtDuration(s: number) {
   const ss = Math.floor(s % 60);
   if (h > 0) return `${h}h ${m.toString().padStart(2,'0')}m`;
   return `${m}:${ss.toString().padStart(2,'0')}`;
-}
-
-function fmtSize(bytes: number) {
-  if (!bytes) return '—';
-  if (bytes > 1073741824) return (bytes / 1073741824).toFixed(1) + ' GB';
-  return (bytes / 1048576).toFixed(0) + ' MB';
 }
 
 function fmtDate(iso: string) {
@@ -188,21 +196,20 @@ async function init() {
     </div>`;
 
   document.getElementById('content')!.innerHTML = `
-    <h1 class="vd-title">${esc(titleTxt)}</h1>
-    <div class="vd-ch" style="--tc:${s.color || 'var(--h2-cyan)'}">
-      <div class="vd-ava" id="vdAva" style="${colorStyle}">${s.avatar_url ? `<img src="${esc(s.avatar_url)}" alt="">` : esc((s.name||'?')[0].toUpperCase())}</div>
-      <div class="vd-ch-t"><a href="/${vod.channel}/">${esc(s.name)}</a>${s.sub ? `<small>${esc(s.sub)}</small>` : ''}</div>
-      <a href="/${vod.channel}/" class="vd-go"><i class="fa-solid fa-tower-broadcast"></i> Ver canal</a>
+    <div class="vd-cab">
+      <h1 class="vd-title">${esc(titleTxt)}</h1>
+      <p class="vd-meta">${new Date(String(vod.date).replace(' ', 'T')).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' })} · ${fmtDuration(vod.duration)}</p>
     </div>
-    <div class="vd-stats">
-      <div class="vd-stat" style="--tc:var(--h2-mag)"><span class="vd-tile"><i class="fa-regular fa-calendar"></i></span><div><small>Fecha</small><b>${new Date(String(vod.date).replace(' ', 'T')).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' })}</b></div></div>
-      <div class="vd-stat" style="--tc:var(--crl-confirm)"><span class="vd-tile"><i class="fa-solid fa-clock"></i></span><div><small>Duración</small><b>${fmtDuration(vod.duration)}</b></div></div>
-      <div class="vd-stat" style="--tc:var(--h2-live)"><span class="vd-tile"><i class="fa-solid fa-weight-hanging"></i></span><div><small>Tamaño</small><b>${fmtSize(vod.size)}</b></div></div>
-    </div>
-    <div class="vd-actions">
-      <a href="/vods/?ch=${vod.channel}" class="vd-btn" style="--tc:var(--crl-confirm)"><span class="vd-tile"><i class="fa-solid fa-film"></i></span>Más de ${esc(s.name)}</a>
-      <button class="vd-btn" id="copyLinkBtn" style="--tc:var(--h2-mag)"><span class="vd-tile"><i class="fa-solid fa-link"></i></span>Copiar enlace</button>
-      <button class="vd-btn" id="clipVodBtn" style="--tc:var(--h2-cyan)"><span class="vd-tile"><i class="fa-solid fa-scissors"></i></span>Descargar clip</button>
+    <div class="vd-barra">
+      <div class="vd-ch" style="--tc:${s.color || 'var(--h2-cyan)'}">
+        <div class="vd-ava" id="vdAva" style="${colorStyle}">${s.avatar_url ? `<img src="${esc(s.avatar_url)}" alt="">` : esc((s.name||'?')[0].toUpperCase())}</div>
+        <div class="vd-ch-t"><a href="/${vod.channel}/">${esc(s.name)}</a>${s.sub ? `<small>${esc(s.sub)}</small>` : ''}</div>
+        <a href="/${vod.channel}/" class="vd-go"><i class="fa-solid fa-tower-broadcast"></i> Ver canal</a>
+      </div>
+      <div class="vd-acc">
+        <button type="button" id="copyLinkBtn"><i class="fa-solid fa-link"></i> Copiar enlace</button>
+        <button type="button" id="clipVodBtn"><i class="fa-solid fa-scissors"></i> Descargar clip</button>
+      </div>
     </div>
     <div class="clip-panel" id="clipPanel">
       <div class="clip-panel-inner">
@@ -250,7 +257,7 @@ async function init() {
     navigator.clipboard.writeText(location.href).then(() => {
       const btn = document.getElementById('copyLinkBtn')!;
       const orig = btn.innerHTML;
-      btn.innerHTML = '<span class="vd-tile"><i class="fa-solid fa-check"></i></span>¡Copiado!';
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> ¡Copiado!';
       setTimeout(() => { btn.innerHTML = orig; }, 2000);
     });
   });
