@@ -1,15 +1,15 @@
 // Después del build: dist/_routes.json para Cloudflare Pages. La función (functions/[[path]].js) solo debe
-// correr para canales (/<canal>/) y anuncios nuevos del Mercado; todo lo que ya existe en dist/ se sirve directo
+// correr para canales (/<canal>/), la página de cada video y anuncios nuevos del Mercado; todo lo que ya existe en dist/ se sirve directo
 // (así no gasta invocaciones: el plan gratis da 100,000 al día). Límite de Cloudflare: 100 reglas.
 import fs from 'node:fs';
 
-const PASAN = new Set(['mercado', 'en']);   // carpetas que también pueden necesitar la función
+const PASAN = new Set(['mercado', 'en', 'vods']);   // carpetas que también pueden necesitar la función
 const exclude = [];
 for (const e of fs.readdirSync('dist', { withFileTypes: true })) {
   if (e.name.startsWith('_routes') || e.name === '404.html' || PASAN.has(e.name)) continue;
   exclude.push(e.isDirectory() ? `/${e.name}/*` : `/${e.name}`);
 }
-exclude.push('/');
+exclude.push('/', '/vods/');   // de /vods/ solo /vods/v/ necesita la función
 if (exclude.length > 99) throw new Error(`_routes.json: ${exclude.length} reglas, Cloudflare acepta 100`);
 // Sin dist/404.html, Pages responde la portada (modo SPA) a cualquier ruta desconocida y la función nunca ve el 404.
 if (fs.existsSync('dist/_404/index.html')) fs.copyFileSync('dist/_404/index.html', 'dist/404.html');
