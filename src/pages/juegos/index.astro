@@ -1,0 +1,57 @@
+---
+/* /juegos/ (2-nov-2026): lo más jugado en Steam. Página estática para Google; ver scripts/update-juegos.py. */
+import SiteShell from '../../layouts/SiteShell.astro';
+import PieSteam from '../../components/PieSteam.astro';
+import { top, numero, fechaFoto } from '../../data/juegos';
+
+const filas = top();
+const canonical = 'https://corillo.live/juegos/';
+const ld = {
+  '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Los juegos más jugados en Steam', url: canonical,
+  description: 'Los 100 juegos con más jugadores en Steam, con su pico reciente y cómo se han movido en la semana.',
+  mainEntity: { '@type': 'ItemList', numberOfItems: filas.length,
+    itemListElement: filas.slice(0, 100).map((f, i) => ({ '@type': 'ListItem', position: i + 1, name: f.ficha.nombre, url: `${canonical}${f.ficha.slug}/` })) },
+};
+const lider = filas[0];
+---
+<SiteShell title="Los juegos más jugados en Steam: top 100 y jugadores | CORILLO"
+           description={`Los 100 juegos con más jugadores en Steam. ${lider.ficha.nombre} va primero con ${numero(lider.ahora)} jugadores. Mira el pico reciente y quién sube o baja esta semana.`}
+           canonical={canonical}>
+  <fragment slot="head">
+    <link rel="stylesheet" href="/assets/juegos.css?v=1">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </fragment>
+  <div class="jg">
+    <header class="jg-hd">
+      <h1>Los juegos más jugados en Steam</h1>
+      <p>Los 100 juegos con más gente jugando en Steam, en PC. Fortnite, Valorant, League of Legends y las consolas no salen aquí porque no se juegan por Steam.</p>
+      <p class="jg-foto">Medido el {fechaFoto()} (hora de Puerto Rico)</p>
+    </header>
+    <div class="jg-tabla" role="table" aria-label="Top 100 de Steam">
+      <div class="jg-fila jg-cab" role="row">
+        <span role="columnheader">#</span><span role="columnheader">Juego</span>
+        <span role="columnheader" class="n">Jugando</span><span role="columnheader" class="n">Pico reciente</span>
+        <span role="columnheader" class="n" title="Puestos ganados o perdidos en el ranking semanal de Steam">Semana</span>
+      </div>
+      {filas.map(f => (
+        <a class="jg-fila" role="row" href={`/juegos/${f.ficha.slug}/`}>
+          <span role="cell" class="jg-puesto">{f.puesto}</span>
+          <span role="cell" class="jg-juego">
+            {f.ficha.imagen && <img src={f.ficha.imagen} alt="" width="120" height="56" loading={f.puesto <= 8 ? 'eager' : 'lazy'} decoding="async" referrerpolicy="no-referrer" />}
+            <b>{f.ficha.nombre}</b>
+          </span>
+          <span role="cell" class="n jg-ahora" data-etiqueta="jugando">{numero(f.ahora)}</span>
+          <span role="cell" class="n jg-pico" data-etiqueta="pico">{numero(f.pico)}</span>
+          <span role="cell" class="n jg-cambio">
+            {f.cambio === 'nuevo' ? <em class="jg-nuevo">Nuevo</em>
+              : f.cambio === null ? <span class="jg-nada" aria-label="Sin dato">—</span>
+              : f.cambio > 0 ? <em class="jg-sube" aria-label={`Subió ${f.cambio}`}>▲ {f.cambio}</em>
+              : f.cambio < 0 ? <em class="jg-baja" aria-label={`Bajó ${-f.cambio}`}>▼ {-f.cambio}</em>
+              : <span class="jg-nada" aria-label="Igual">=</span>}
+          </span>
+        </a>
+      ))}
+    </div>
+    <PieSteam />
+  </div>
+</SiteShell>

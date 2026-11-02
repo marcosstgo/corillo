@@ -1,0 +1,57 @@
+---
+/* /juegos/<juego>/ (2-nov-2026). No se copia la descripción de la tienda: solo hechos y los números de Steam, en palabras propias. */
+import SiteShell from '../../layouts/SiteShell.astro';
+import PieSteam from '../../components/PieSteam.astro';
+import { todos, numero, urlTienda, fechaFoto, fechaCorta } from '../../data/juegos';
+
+export function getStaticPaths() {
+  return todos().map(j => ({ params: { slug: j.ficha.slug }, props: j }));
+}
+const { appid, ficha, fila } = Astro.props;
+const canonical = `https://corillo.live/juegos/${ficha.slug}/`;
+const u = ficha.ultimo;
+const tienda = urlTienda(appid);
+const resumen = fila
+  ? `${ficha.nombre} está en el puesto ${fila.puesto} de lo más jugado en Steam, con ${numero(fila.ahora)} personas jugando al medirlo y un pico reciente de ${numero(fila.pico)}.`
+  : u ? `${ficha.nombre} no está ahora entre los 100 más jugados de Steam. La última vez que lo vimos, el ${fechaCorta(u.fecha)}, iba en el puesto ${u.puesto} con ${numero(u.ahora)} personas jugando.`
+  : `${ficha.nombre} no está ahora entre los 100 más jugados de Steam.`;
+const ld = [{
+  '@context': 'https://schema.org', '@type': 'VideoGame', name: ficha.nombre, url: canonical, description: resumen,
+  gamePlatform: 'PC', applicationCategory: 'Game', operatingSystem: 'Windows', sameAs: tienda,
+  ...(ficha.imagen ? { image: ficha.imagen } : {}), ...(ficha.generos.length ? { genre: ficha.generos } : {}),
+  ...(ficha.desarrollador ? { author: { '@type': 'Organization', name: ficha.desarrollador } } : {}),
+}, {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Juegos', item: 'https://corillo.live/juegos/' },
+    { '@type': 'ListItem', position: 2, name: ficha.nombre, item: canonical },
+  ],
+}];
+---
+<SiteShell title={`${ficha.nombre}: jugadores y posición en Steam | CORILLO`} description={resumen} canonical={canonical} ogImage={ficha.imagen || undefined}>
+  <fragment slot="head">
+    <link rel="stylesheet" href="/assets/juegos.css?v=1">
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </fragment>
+  <div class="jg jg-ficha">
+    <nav class="jg-migas" aria-label="Migas"><a href="/juegos/">← Lo más jugado</a></nav>
+    <header class="jg-hd">
+      <h1>{ficha.nombre}</h1>
+      <p>{resumen}</p>
+    </header>
+    {ficha.imagen && <img class="jg-portada" src={ficha.imagen} alt={`Portada de ${ficha.nombre}`} width="460" height="215" decoding="async" referrerpolicy="no-referrer" />}
+    {fila && <ul class="jg-numeros">
+      <li><b>#{fila.puesto}</b><span>en Steam</span></li>
+      <li><b>{numero(fila.ahora)}</b><span>jugando</span></li>
+      <li><b>{numero(fila.pico)}</b><span>pico reciente</span></li>
+    </ul>}
+    {fila && <p class="jg-foto">Medido el {fechaFoto()} (hora de Puerto Rico)</p>}
+    <dl class="jg-datos">
+      {ficha.desarrollador && <><dt>Desarrollador</dt><dd>{ficha.desarrollador}</dd></>}
+      {ficha.lanzamiento && <><dt>Lanzamiento</dt><dd>{ficha.lanzamiento.replace(/\b[A-Z]{3}\b/, m => m.toLowerCase())}</dd></>}
+      {ficha.generos.length > 0 && <><dt>Género</dt><dd>{ficha.generos.join(', ')}</dd></>}
+      <dt>Precio</dt><dd>{ficha.gratis ? 'Gratis' : <a href={tienda} rel="noopener" target="_blank">Ver precio en Steam</a>}</dd>
+    </dl>
+    <p><a class="jg-btn" href={tienda} rel="noopener" target="_blank">Ver en Steam</a></p>
+    <PieSteam />
+  </div>
+</SiteShell>
