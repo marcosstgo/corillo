@@ -293,3 +293,5 @@
 .canal-sin-video .crl-player-panel h3 { font: 800 clamp(1.6rem, 3vw, 2.4rem)/1.05 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif; letter-spacing: -.03em; text-transform: none; color: #f5f8ff; }
 .canal-sin-video .crl-player-panel p { font: 500 1.05rem/1.4 'DM Sans', system-ui, sans-serif; color: #c9d6f5; }
 .canal-sin-video #ovRetry { display: none; }
+.player-side .ch-links.crl-player-links:empty { display: none !important; }
+body:not(.canal-offline) .canal-avisame { display: none; }
