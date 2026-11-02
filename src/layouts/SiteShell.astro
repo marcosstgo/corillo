@@ -425,7 +425,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { setOpen(false); closeSearch(); } });
   window.addEventListener('resize', () => { if (desktop()) setOpen(false); });
 
-  /* búsqueda: filtra en las páginas que escuchan 'crl-search' (inicio); en las demás, Enter lleva a Streamers */
+  /* búsqueda: filtra en las páginas que escuchan 'crl-search' (Streamers); en las demás, Enter lleva a Streamers */
   const top = $('nvTop'), input = $('nvSearch') as HTMLInputElement | null, clear = $('nvSearchClear') as HTMLButtonElement | null;
   const emit = (q: string) => window.dispatchEvent(new CustomEvent('crl-search', { detail: q }));
   function closeSearch() { if (top?.classList.contains('is-search') && !input?.value) top.classList.remove('is-search'); }
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   input?.addEventListener('input', () => { const q = input.value.trim().toLowerCase(); if (clear) clear.hidden = !q; emit(q); });
   clear?.addEventListener('click', () => { if (!input) return; input.value = ''; clear.hidden = true; emit(''); input.focus(); });
   $('nvSearchForm')?.addEventListener('submit', e => {
-    if (location.pathname === '/' || location.pathname.startsWith('/streamers')) e.preventDefault();
+    if (location.pathname.startsWith('/streamers')) e.preventDefault();
   });
 
   try { const r = await fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(5000) }); if (r.ok) STREAMERS = (await r.json()).filter((s: any) => !s.soon); } catch {}

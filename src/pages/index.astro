@@ -10,6 +10,9 @@ const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/updat
    El orden sale de src/data/vitrina.js; los videos los añade el navegador con esas mismas reglas. */
 import { getCollection } from 'astro:content';
 import { ordenarVitrina, cuando, vigente } from '../data/vitrina.js';
+import { catOf } from '../data/news';
+import PeliCard from '../components/cine/PeliCard.astro';
+import { hechoEnPR, pegao, cartelera, proximos } from '../data/cine';
 type Slide = { kind: 'nota' | 'gratis' | 'equipo'; kicker: string; title: string; sub: string; href: string; cta: string; img: string; img2?: string; meta?: string; fecha?: number; hasta?: string };
 const NOTAS = (await getCollection('noticias')).filter(p => p.data.image).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const nota = (p: typeof NOTAS[number]): Slide => ({
@@ -37,6 +40,34 @@ const GRATIS = OFREE.filter(g => g.image && vigente(g.ends)).slice(0, 2);
 const VITRINA: Slide[] = ordenarVitrina([
   ...NOTAS.slice(0, 2).map(nota), ...GRATIS.slice(0, 1).map(gratis), ...EQUIPO.slice(0, 1).map(equipo), ...GRATIS.slice(1).map(gratis),
 ]);
+
+/* ── Lo que hay debajo del slider (2-nov-2026): noticias, cine y ofertas. Todo sale en el HTML, con enlaces reales para Google. ── */
+const NOTICIAS = NOTAS.slice(0, 4);
+
+// Cine: lo boricua que viene o está en sala va primero (siempre al frente); luego los estrenos del próximo mes y lo más visto en sala.
+const hoyISO = new Date().toISOString().slice(0, 10);
+const [pelisPR, pelisTop, pelisEnCine, pelisVienen] = await Promise.all([hechoEnPR(), pegao(), cartelera(), proximos()]);
+const enUnMes = (p: { estreno?: string }) => !!p.estreno && new Date(p.estreno).valueOf() - Date.now() < 30 * 864e5;
+const enSala = new Set(pelisEnCine.map(p => p.slug));
+const PELIS = [...new Map([
+  ...pelisPR.filter(p => (p.estreno && p.estreno > hoyISO && enUnMes(p)) || enSala.has(p.slug)).sort((a, b) => (a.estreno || '').localeCompare(b.estreno || '')),
+  ...pelisVienen.filter(enUnMes),
+  ...pelisTop.filter(p => enSala.has(p.slug)),
+].filter(p => p.afiche || p.fondo).map(p => [p.slug, p])).values()].slice(0, 10);
+
+// Ofertas de la semana: lo gratis, una de equipo (la que no está ya en el slider) y los mejores descuentos de juegos bien reseñados.
+type Oferta = { title: string; img: string; href: string; externo: boolean; precio: string; antes?: string | null; chip: string; lugar: string; hasta?: string; producto?: boolean };
+const OFERTAS_MAX = 4;
+const juegosOferta = [...OF.steam].filter(d => d.image && (d.rating ?? 0) >= 85 && (d.reviews ?? 0) >= 500).sort((a, b) => (b.pct ?? 0) - (a.pct ?? 0));
+const equipoOferta = EQUIPO[1] || EQUIPO[0];
+const OFERTAS_HOME: Oferta[] = [
+  ...GRATIS.map((g): Oferta => ({ title: g.title, img: g.image!, href: '/ofertas/gratis/', externo: false, precio: 'Gratis', antes: g.original, chip: 'Gratis',
+    lugar: g.ends ? `${g.store === 'epic' ? 'Epic Games' : 'Steam'} · hasta el ${fmtDay(g.ends)}` : (g.store === 'epic' ? 'Epic Games' : 'Steam'), hasta: g.ends })),
+  ...(equipoOferta ? [{ title: equipoOferta.title, img: equipoOferta.image!, href: `/ofertas/o/${equipoOferta.slug}/`, externo: false, precio: equipoOferta.price,
+    chip: 'Equipo', lugar: `${equipoOferta.retailer}${equipoOferta.save ? ` · ahorras ${equipoOferta.save}` : ''}`, producto: true }] : []),
+  ...juegosOferta.slice(0, OFERTAS_MAX).map((d): Oferta => ({ title: d.title, img: d.image!, href: d.url, externo: true, precio: d.price!, antes: d.original, chip: `-${d.pct}%`,
+    lugar: `Steam${d.rating ? ` · ${d.rating}% positivas` : ''}` })),
+].slice(0, OFERTAS_MAX);
 ---
 <SiteShell
   title="CORILLO — Stream Platform"
@@ -48,7 +79,8 @@ const VITRINA: Slide[] = ordenarVitrina([
 >
   <fragment slot="head">
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/assets/home2.css?v=6">
+    <link rel="stylesheet" href="/assets/home2.css?v=7">
+    <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script is:inline>document.documentElement.setAttribute('data-theme','dark');</script>
   </fragment>
 
@@ -131,45 +163,68 @@ const VITRINA: Slide[] = ordenarVitrina([
     <div class="h2-live-rail" id="liveRail"><!-- rendered by JS --></div>
   </section>
 
-  <!-- EL CORILLO -->
-  <section class="h2-sec">
+  <!-- NOTICIAS -->
+  {NOTICIAS.length > 0 && (
+  <section class="h2-sec" aria-labelledby="secNoticias">
     <div class="h2-sec-hd">
-      <h2>El corillo</h2>
-      <span class="h2-count"><span id="totalCountEl">0</span> streamers</span>
-      <a href="/streamers/" class="h2-more-link">Ver todos</a>
+      <h2 id="secNoticias">Noticias</h2>
+      <a href="/noticias/" class="h2-more-link">Ver todas</a>
     </div>
-    <div class="h2-people" id="channelGrid">
-      <span class="sk-label" role="status">Cargando el corillo…</span>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
+    <div class="h2-nt">
+      {NOTICIAS.map((p, i) => {
+        const c = catOf(p.data);
+        return (
+          <a class={`h2-nt-card${i === 0 ? ' is-lead' : ''}`} href={`/noticias/${p.id}/`} style={`--tc:${c.color}`}>
+            <span class="h2-nt-pic"><img src={p.data.image} alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
+            <span class="h2-nt-txt">
+              <small><b>{c.label}</b> · <time datetime={p.data.pubDate.toISOString()} data-rel={p.data.pubDate.valueOf()}>{cuando(p.data.pubDate.valueOf())}</time></small>
+              <strong>{p.data.cardTitle || p.data.heroTitle}</strong>
+              {i === 0 && <span class="h2-nt-sum">{p.data.summary}</span>}
+            </span>
+          </a>
+        );
+      })}
     </div>
   </section>
+  )}
 
-  <!-- GRATIS ESTA SEMANA (solo si hay datos reales) -->
-  {OFREE.length > 0 && (
-  <section class="h2-sec" id="gratisStrip" data-free-strip>
+  <!-- CINE -->
+  {PELIS.length > 0 && (
+  <section class="h2-sec" aria-labelledby="secCine">
     <div class="h2-sec-hd">
-      <h2>Gratis esta semana</h2>
-      <span class="h2-count">en Epic y Steam</span>
-      <a href="/ofertas/" class="h2-more-link">Ver todas las ofertas</a>
+      <h2 id="secCine">Cine</h2>
+      <span class="h2-count">Estrenos y cartelera en Puerto Rico</span>
+      <a href="/cine/" class="h2-more-link">Ver la cartelera</a>
     </div>
-    <div class="h2-fr">
-      {OFREE.slice(0, 3).map((g) => (
-        <a class="h2-fr-card" href="/ofertas/gratis/" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
-          {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="480" height="270" loading="lazy" />}
-          <span class="h2-fr-body"><b>{g.title}</b><span>{g.ends ? `Gratis hasta el ${fmtDay(g.ends)}` : 'Gratis por tiempo limitado'}</span></span>
+    <div class="cn-fila">
+      {PELIS.map(p => <PeliCard p={p} />)}
+    </div>
+    <p class="h2-credito">Datos e imágenes de películas: <a href="/cine/">TMDB</a>.</p>
+  </section>
+  )}
+
+  <!-- OFERTAS DE LA SEMANA -->
+  {OFERTAS_HOME.length > 0 && (
+  <section class="h2-sec" id="secOfertas" aria-labelledby="secOfertasT">
+    <div class="h2-sec-hd">
+      <h2 id="secOfertasT">Ofertas de esta semana</h2>
+      <span class="h2-count">Juegos y equipo</span>
+      <a href="/ofertas/" class="h2-more-link">Ver todas</a>
+    </div>
+    <div class="h2-of">
+      {OFERTAS_HOME.map(o => (
+        <a class={`h2-of-card${o.producto ? ' is-producto' : ''}`} href={o.href} data-hasta={o.hasta} {...(o.externo ? { target: '_blank', rel: 'nofollow noopener' } : {})}>
+          <span class="h2-of-pic"><img src={o.img} alt={`Imagen de ${o.title}`} width="460" height="259" loading="lazy" decoding="async" /><span class={`h2-of-chip${o.precio === 'Gratis' ? ' is-gratis' : ''}`}>{o.chip}</span></span>
+          <span class="h2-of-txt">
+            <strong>{o.title}</strong>
+            <span class="h2-of-precio"><b>{o.precio}</b>{o.antes && <s>{o.antes}</s>}</span>
+            <small>{o.lugar}</small>
+          </span>
         </a>
       ))}
     </div>
   </section>
   )}
-
 
   <!-- INVITACIÓN -->
   <section class="h2-join">
@@ -207,7 +262,6 @@ function ensureHls() {
   });
   return hlsLoadPromise;
 }
-let searchQuery  = '';
 let featuredKey  = undefined; // undefined=unset, null=offline, string=live channel
 let rotateTimer  = null;
 let statsTimer   = null;
@@ -586,6 +640,10 @@ async function vtVideos() {
   if (vtWrap().classList.contains('is-vitrina') && !vt.timer) vtArm();   // una vitrina de un solo slide ahora tiene más
 }
 
+/* El HTML puede tener horas o días: las fechas se recalculan y lo gratis que ya venció se quita. */
+document.querySelectorAll('time[data-rel]').forEach(t => { t.textContent = cuando(+t.dataset.rel); });
+document.querySelectorAll('.h2-of-card[data-hasta]').forEach(c => { if (!vigente(c.dataset.hasta)) c.remove(); });
+
 async function setFeaturedOffline() {
   featuredKey = null;
   renderFeaturedDots([]);
@@ -879,41 +937,6 @@ function renderLiveSection(live, paths) {
   }).join('');
 }
 
-function renderChannelGrid(paths) {
-  const liveSet = getLiveSet(paths);
-  const grid    = document.getElementById('channelGrid');
-
-  let list = STREAMERS.filter(s => !s.soon);
-  if (searchQuery) {
-    list = list.filter(s =>
-      s.name.toLowerCase().includes(searchQuery) ||
-      s.key.toLowerCase().includes(searchQuery)
-    );
-  }
-  // En vivo primero; el resto conserva el orden del roster
-  list = [...list].sort((a, b) => (liveSet.has(b.key) ? 1 : 0) - (liveSet.has(a.key) ? 1 : 0));
-
-  if (!list.length) {
-    grid.innerHTML = `<p class="h2-empty">No hay canales que coincidan con “${searchQuery}”.</p>`;
-    return;
-  }
-
-  const person = s => {
-    const live    = liveSet.has(s.key);
-    const viewers = live ? getViewers(paths, s.key) : 0;
-    const face = s.avatar_url
-      ? `<img src="${s.avatar_url}" alt="" loading="lazy" onerror="this.remove()">`
-      : `<span class="h2-initial">${s.ava || s.name[0]}</span>`;
-    return `<a class="h2-person${live ? ' is-live' : ''}" href="/${s.key}/">
-      <span class="h2-person-img" style="background:${s.color || '#1e3a4a'}">${face}</span>
-      ${live ? `<span class="h2-chip live">En vivo · ${viewers}</span>` : ''}
-      <span class="h2-person-txt"><strong>${s.name}</strong><small>${live ? (s.stream_title || 'Transmitiendo ahora') : (s.sub || 'corillo.live')}</small></span>
-    </a>`;
-  };
-
-  grid.innerHTML = list.map(person).join('');
-}
-
 async function poll() {
   const now    = Date.now();
   const paths  = await fetchPaths();
@@ -927,11 +950,8 @@ async function poll() {
   const liveWithViewers = live.map(s => ({ ...s, _viewers: getViewers(paths, s.key) }));
 
   document.getElementById('liveCountEl').textContent = live.length;
-  document.getElementById('totalCountEl').textContent = STREAMERS.filter(s => !s.soon).length;
 
-  // Live section + channel grid
   renderLiveSection(live, paths);
-  renderChannelGrid(paths);
 
   // Featured player
   if (live.length > 0) {
@@ -958,12 +978,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const onScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 40);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-
-  // Search input vive en el SiteShell; aquí escuchamos el evento que dispara.
-  window.addEventListener('crl-search', e => {
-    searchQuery = (e.detail || '').toLowerCase();
-    renderChannelGrid(lastPaths);
-  });
 
   // Cargar roster completo desde PocketBase — fuente de verdad única
   try {
@@ -1007,10 +1021,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   .h2-fr-body span{color:var(--crl-confirm,#35e0a1);font:700 .88rem var(--h2-body)}
   [data-free-strip] [data-hide]{display:none!important}
 </style>
-<script is:inline>
-  // no mostrar un juego gratis que ya venció (la página se regenera cada hora, pero así nunca queda uno viejo)
-  (function(){ var s=document.querySelector('[data-free-strip]'); if(!s) return; var n=Date.now(), vis=0;
-    s.querySelectorAll('.h2-fr-card[data-end]').forEach(function(c){ var e=+c.dataset.end; if(e&&e<=n) c.setAttribute('data-hide',''); else vis++; });
-    if(!vis) s.setAttribute('data-hide',''); })();
-</script>
 </SiteShell>
