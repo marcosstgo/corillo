@@ -38,9 +38,12 @@ MINIMO_FILAS = 10            # menos que esto: la página cambió; mejor fallar 
 
 _VIDEOJUEGOS = re.compile(r'videojuego|e-?sports?\b|\bgaming\b|\bgamer|\barcade\b|\bfgc\b|fighting game|lan party|street fighter|tekken|'
                           r'smash bros|mortal kombat|guilty gear|2xko|call of duty|warzone|fortnite|valorant|rocket league|apex legends|'
-                          r'battlefield|league of legends|counter-?strike|overwatch|rainbow six|\bpubg\b|\bea sports\b|\bfc ?2\d\b|nba ?2k', re.I)
+                          r'battlefield|league of legends|counter-?strike|overwatch|rainbow six|\bpubg\b|\bea sports\b|\bfc ?2\d\b|nba ?2k|\bebaseball\b|mlb the show', re.I)
 _NO = re.compile(r'\bTCG\b|\bVGC\b|League (Challenge|Cup)|Pre-?Release|Pok[eé]mon|Yu-?Gi-?Oh|Magic: |Lorcana|One Piece Card|'
                  r'\bcasino|\bapuesta', re.I)
+
+
+_REPETIDOS = re.compile(r'#\s*\d+|weekly|community events|qualifier', re.I)
 
 
 def _texto(fragmento: str) -> str:
@@ -105,6 +108,21 @@ def combinar(calendario: list[dict], propios: list[dict], hoy: date) -> list[dic
     return [{'slug': s, **e} for s, e in sorted(por_slug.items(), key=lambda x: (x[1]['inicio'], x[0]))]
 
 
+def recientes(calendario: list[dict], hoy: date, tope: int = 8) -> list[dict]:
+    """Torneos que ya pasaron, para enseñar que hay escena. Sin semanales ni actividades sueltas: se repetirían."""
+    salida, vistos = [], set()
+    for f in sorted(calendario, key=lambda x: x['inicio'], reverse=True):
+        slug = slug_de(f['nombre'])
+        if f['fin'] >= hoy.isoformat() or slug in vistos or not es_de_videojuegos(f) or _REPETIDOS.search(f['nombre']):
+            continue
+        vistos.add(slug)
+        lugar, municipio = separar_lugar(f['lugar_completo'])
+        salida.append({'nombre': f['nombre'], 'inicio': f['inicio'], 'fin': f['fin'], 'lugar': lugar, 'municipio': municipio, 'detalle': f['detalle']})
+        if len(salida) == tope:
+            break
+    return salida
+
+
 def bajar_calendario() -> str:
     r = httpx.get(API, params={'slug': FUENTE_URL.rstrip('/').rsplit('/', 1)[1]}, headers={'User-Agent': AGENTE}, timeout=30,
                   follow_redirects=True)
@@ -120,14 +138,15 @@ def main():
     propios = [e for e in json.loads(PROPIOS.read_text())['eventos']]
     eventos = combinar(cal, propios, hoy)
     viejo = json.loads(SALIDA.read_text()) if SALIDA.exists() else {}
-    cambio = eventos != viejo.get('eventos')
+    pasados = recientes(cal, hoy)
+    cambio = eventos != viejo.get('eventos') or pasados != viejo.get('pasados')
     print(f"calendario {len(cal)} filas · {len(eventos)} próximos ({sum(e['confirmado'] for e in eventos)} confirmados) · "
           f"{'CAMBIÓ' if cambio else 'sin cambios'}")
     for e in eventos:
         print(f"  {'✓' if e['confirmado'] else '?'} {e['inicio']} {e['nombre']} — {e['lugar']}, {e['municipio']}")
     if not cambio:
         return
-    SALIDA.write_text(json.dumps({'actualizado': hoy.isoformat(), 'eventos': eventos}, ensure_ascii=False, indent=1) + '\n')
+    SALIDA.write_text(json.dumps({'actualizado': hoy.isoformat(), 'eventos': eventos, 'pasados': pasados}, ensure_ascii=False, indent=1) + '\n')
     if '--publicar' in sys.argv:
         subprocess.run(['git', '-C', str(REPO), 'add', str(SALIDA)], check=True)
         subprocess.run(['git', '-C', str(REPO), 'commit', '-qm', 'Eventos: calendario al día'], check=True)

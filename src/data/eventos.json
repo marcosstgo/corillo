@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-01",
+ "actualizado": "2026-11-02",
  "eventos": [
   {
    "slug": "arcadia-battle-royale-2026",
@@ -45,6 +45,72 @@
    "fuente_nombre": "Salón de la Fama del Gaming en Puerto Rico",
    "fuente_url": "https://salonfamagamingpr.org/calendario-de-eventos-de-videojuegos-y-esports-en-puerto-rico/",
    "voz_extra": ""
+  }
+ ],
+ "pasados": [
+  {
+   "nombre": "Xentric Gaming: Let’s Brawl in Paradise",
+   "inicio": "2026-10-17",
+   "fin": "2026-10-17",
+   "lugar": "Santa Isabel",
+   "municipio": "",
+   "detalle": "2:00 PM · Super Smash Bros. Ultimate"
+  },
+  {
+   "nombre": "First Attack 2026",
+   "inicio": "2026-10-02",
+   "fin": "2026-10-04",
+   "lugar": "San Juan",
+   "municipio": "",
+   "detalle": "9:00 AM · Street Fighter 6, TEKKEN 8, Super Smash Bros. Ultimate, Fatal Fury: City of the Wolves, Rocket League, Fortnite y más"
+  },
+  {
+   "nombre": "PR eBaseball Championship 2026",
+   "inicio": "2026-10-02",
+   "fin": "2026-10-04",
+   "lugar": "San Juan",
+   "municipio": "",
+   "detalle": "9:00 AM · MLB The Show 26, eBaseball: PRO SPIRIT"
+  },
+  {
+   "nombre": "JT Plushies – Super Smash Bros Ultimate Tourney",
+   "inicio": "2026-09-20",
+   "fin": "2026-09-20",
+   "lugar": "Aguadilla",
+   "municipio": "",
+   "detalle": "1:00 PM · Super Smash Bros. Ultimate"
+  },
+  {
+   "nombre": "Apocalipsis 1: En Genesis (Road to First Attack)",
+   "inicio": "2026-09-20",
+   "fin": "2026-09-20",
+   "lugar": "San Juan",
+   "municipio": "",
+   "detalle": "4:00 PM · Super Smash Bros. Ultimate"
+  },
+  {
+   "nombre": "Roll For Grind: Bohío City!",
+   "inicio": "2026-09-12",
+   "fin": "2026-09-13",
+   "lugar": "San Juan",
+   "municipio": "",
+   "detalle": "12:00 PM · Super Smash Bros. Ultimate"
+  },
+  {
+   "nombre": "SUSD 2026 (September 12) Avatar Legends x Street Fighter 6",
+   "inicio": "2026-09-12",
+   "fin": "2026-09-12",
+   "lugar": "San Juan",
+   "municipio": "",
+   "detalle": "5:00 PM · Avatar Legends: The Fighting Game, Street Fighter 6"
+  },
+  {
+   "nombre": "Torneo Gamic Battle Royal",
+   "inicio": "2026-07-18",
+   "fin": "2026-07-19",
+   "lugar": "Centro de Convenciones de Aguada",
+   "municipio": "Aguada",
+   "detalle": "Inscripción: $5 · Formato: Battle Royal (el que más wins acumule gana; participantes deben jugar todos los juegos) · Juegos: Mario Kart World, Mario Kart 8 Deluxe, Super Smash Bros Ultimate, Street Fighter 6, Tekken 8, NBA The Run, Forza Horizon 6 · Premios: 1er $100 + Campeonato del Torneo, 2do $50, 3er Assassin’s Creed Black Flag Resynced (PS5)"
   }
  ]
 }

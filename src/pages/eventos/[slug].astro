@@ -1,7 +1,8 @@
 ---
-/* Ficha de evento confirmado (1-nov-2026), con JSON-LD schema.org/Event. */
+/* Ficha de evento confirmado (1-nov-2026; rehecha el 2-nov), con JSON-LD schema.org/Event. */
 import SiteShell from '../../layouts/SiteShell.astro';
-import { eventos, eventoLd, fechaEvento, dondeEvento, type Evento } from '../../data/eventos';
+import EventoAcciones from '../../components/EventoAcciones.astro';
+import { eventos, eventoLd, fechaEvento, dondeEvento, ficha, diasEntre, hoyPR, faltan, type Evento } from '../../data/eventos';
 
 export async function getStaticPaths() {
   return eventos().filter(e => e.confirmado).map(e => ({ params: { slug: e.slug }, props: { e } }));   // lo no confirmado no tiene ficha
@@ -9,25 +10,40 @@ export async function getStaticPaths() {
 const { e } = Astro.props as { e: Evento };
 const canonical = `https://corillo.live/eventos/${e.slug}/`;
 const donde = dondeEvento(e);
+const f = ficha(e);
+const otros = eventos().filter(o => o.slug !== e.slug).slice(0, 3);
 const ld = [eventoLd(e, canonical), { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
   { '@type': 'ListItem', position: 1, name: 'Eventos', item: 'https://corillo.live/eventos/' },
   { '@type': 'ListItem', position: 2, name: e.nombre, item: canonical }] }];
 ---
 <SiteShell title={`${e.nombre}: fecha y lugar | CORILLO Eventos`} description={`${e.nombre}, el ${fechaEvento(e)} en ${donde}, Puerto Rico.`} canonical={canonical}>
   <fragment slot="head">
-    <link rel="stylesheet" href="/assets/eventos.css?v=1">
+    <link rel="stylesheet" href="/assets/eventos.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <script src="/assets/eventos.js?v=1" defer></script>
   </fragment>
   <article class="ev">
-    <nav class="ev-migas" aria-label="Estás en"><a href="/eventos/">Eventos</a></nav>
-    <header class="ev-hd"><h1>{e.nombre}</h1>{e.detalle && <p>{e.detalle}</p>}</header>
+    <nav class="ev-migas" aria-label="Estás en"><a href="/eventos/"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Eventos</a></nav>
+    <section class="ev-hero">
+      <div class="ev-hero-fondo" aria-hidden="true"></div>
+      <div class="ev-fecha ev-fecha-xl"><time datetime={e.inicio}><b>{f.dia}</b><span>{f.mes}</span></time><small>{f.semana}</small></div>
+      <div class="ev-hero-txt">
+        <p class="ev-etq"><span class="ev-punto" aria-hidden="true"></span><span data-faltan={e.inicio} data-fin={e.fin}>{faltan(diasEntre(hoyPR(), e.inicio))}</span></p>
+        <h1>{e.nombre}</h1>
+        {e.detalle && <p class="ev-sub">{e.detalle}</p>}
+        <EventoAcciones e={e} oficial={true} compartir={true} />
+      </div>
+    </section>
     <dl class="ev-datos">
-      <dt>Cuándo</dt><dd><time datetime={e.inicio}>{fechaEvento(e)}</time></dd>
-      <dt>Dónde</dt><dd>{donde}</dd>
-      {e.precio && <><dt>Entrada</dt><dd>{e.precio}</dd></>}
-      <dt>Fuente</dt><dd><a href={e.fuente_url} rel="noopener" target="_blank">{e.fuente_nombre}</a></dd>
+      <div><dt>Cuándo</dt><dd><time datetime={e.inicio}>{fechaEvento(e)}</time></dd></div>
+      <div><dt>Dónde</dt><dd>{donde}</dd></div>
+      {e.precio && <div><dt>Entrada</dt><dd>{e.precio}</dd></div>}
+      <div><dt>Fuente</dt><dd><a href={e.fuente_url} rel="noopener" target="_blank">{e.fuente_nombre}</a></dd></div>
     </dl>
-    {e.web && <p><a class="ev-btn" href={e.web} rel="noopener" target="_blank">Ir a la página del evento</a></p>}
+    {otros.length > 0 && <section class="ev-otros"><h2>Otros eventos en Puerto Rico</h2>
+      <ul>{otros.map(o => { const g = ficha(o); return (
+        <li><a href={o.confirmado ? `/eventos/${o.slug}/` : `/eventos/#ev-${o.slug}`}><time datetime={o.inicio}>{g.dia} {g.mes}</time><b>{o.nombre}</b><span>{dondeEvento(o)}</span></a></li>); })}</ul>
+    </section>}
     <p class="ev-pie"><a href="/eventos/">Ver todos los eventos en Puerto Rico</a> · Corillo no organiza este evento.</p>
   </article>
 </SiteShell>

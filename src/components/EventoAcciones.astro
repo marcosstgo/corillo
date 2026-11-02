@@ -1,0 +1,18 @@
+---
+/* Botones de un evento: cómo llegar, añadir al calendario, página oficial y compartir. */
+import { googleUrl, mapaUrl, type Evento } from '../data/eventos';
+interface Props { e: Evento; ficha?: string; compartir?: boolean; oficial?: boolean }
+const { e, ficha, compartir = false, oficial = false } = Astro.props;
+const mapa = mapaUrl(e);
+const url = `https://corillo.live/eventos/${e.confirmado ? `${e.slug}/` : ''}`;
+---
+<div class="ev-acciones">
+  {ficha && <a class="ev-btn ev-btn-p" href={ficha}>Ver evento <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>}
+  {oficial && e.web && <a class="ev-btn ev-btn-p" href={e.web} rel="noopener" target="_blank">Página oficial <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>}
+  <details class="ev-cal">
+    <summary class="ev-btn"><i class="fa-regular fa-calendar-plus" aria-hidden="true"></i> Añadir al calendario</summary>
+    <div><a href={googleUrl(e)} rel="noopener nofollow" target="_blank">Google Calendar</a><a href={`/eventos/ics/${e.slug}.ics`} download>Apple, Outlook u otro</a></div>
+  </details>
+  {mapa && <a class="ev-btn" href={mapa} rel="noopener nofollow" target="_blank"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Cómo llegar</a>}
+  {compartir && <button class="ev-btn" type="button" data-compartir={url} data-titulo={e.nombre}><i class="fa-solid fa-share-nodes" aria-hidden="true"></i> <span>Compartir</span></button>}
+</div>

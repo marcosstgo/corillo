@@ -1,41 +1,117 @@
 ---
-/* /eventos/ (1-nov-2026): eventos de videojuegos en Puerto Rico. Página estática para Google; ver scripts/update-eventos.py. */
+/* /eventos/ (rehecha el 2-nov-2026): eventos de videojuegos en Puerto Rico. Página estática para Google; ver scripts/update-eventos.py.
+   Con pocos eventos no se rellena con nada inventado: lo que llena la página es el calendario, lo que ya pasó y qué hacer con cada evento. */
 import SiteShell from '../../layouts/SiteShell.astro';
-import { eventos, fechaEvento, dondeEvento } from '../../data/eventos';
+import EventoAcciones from '../../components/EventoAcciones.astro';
+import { eventos, pasados, fechaEvento, dondeEvento, ficha, detalleDe, diasEntre, hoyPR, faltan, mesesCalendario } from '../../data/eventos';
 
-const lista = eventos();
-const confirmados = lista.filter(e => e.confirmado), porConfirmar = lista.filter(e => !e.confirmado);
+const lista = eventos(), recientes = pasados();
+const proximo = lista[0], resto = lista.slice(1);
+const meses = mesesCalendario(lista);
 const canonical = 'https://corillo.live/eventos/';
+const CAL_WEB = 'webcal://corillo.live/eventos/calendario.ics';
+const CAL_GOOGLE = `https://calendar.google.com/calendar/render?cid=${encodeURIComponent(CAL_WEB)}`;
+const confirmados = lista.filter(e => e.confirmado);
 const ld = {
   '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Eventos de videojuegos en Puerto Rico', url: canonical,
   description: 'Torneos, convenciones y eventos de videojuegos y esports en Puerto Rico, con fecha y lugar.',
   mainEntity: { '@type': 'ItemList', itemListElement: confirmados.map((e, i) => ({ '@type': 'ListItem', position: i + 1, url: `${canonical}${e.slug}/`, name: e.nombre })) },
 };
+const AVISO = 'Sale de un calendario público y no lo hemos confirmado con el organizador. Verifica antes de ir.';
 ---
 <SiteShell title="Eventos de videojuegos y esports en Puerto Rico | CORILLO"
-           description="Torneos, convenciones y eventos de videojuegos y esports en Puerto Rico: qué viene, cuándo y dónde."
+           description="Torneos, convenciones y eventos de videojuegos y esports en Puerto Rico: qué viene, cuándo y dónde. Añádelos a tu calendario."
            canonical={canonical}>
   <fragment slot="head">
-    <link rel="stylesheet" href="/assets/eventos.css?v=1">
+    <link rel="stylesheet" href="/assets/eventos.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <script src="/assets/eventos.js?v=1" defer></script>
   </fragment>
   <div class="ev">
     <header class="ev-hd">
       <h1>Eventos de videojuegos en Puerto Rico</h1>
-      <p>Torneos, convenciones y eventos gaming que vienen en la isla: cuándo son, dónde y cómo llegar.</p>
+      <p>Torneos y convenciones que vienen en la isla: cuándo son, dónde, y cómo no se te olvidan.</p>
     </header>
-    {confirmados.length > 0 && <section><h2>Próximos</h2><ul class="ev-lista">
-      {confirmados.map(e => <li><a href={`/eventos/${e.slug}/`}><time datetime={e.inicio}>{fechaEvento(e)}</time><b>{e.nombre}</b><span>{dondeEvento(e)}{e.precio && ` · ${e.precio}`}</span></a></li>)}
-    </ul></section>}
-    {porConfirmar.length > 0 && <section><h2>En calendario, por confirmar</h2>
-      <p class="ev-nota">Salen de un calendario público y todavía no las hemos confirmado con el organizador. Verifica antes de ir.</p>
-      <ul class="ev-lista">
-      {porConfirmar.map(e => <li><a href={e.fuente_url} rel="noopener" target="_blank"><time datetime={e.inicio}>{fechaEvento(e)}</time><b>{e.nombre}</b><span>{dondeEvento(e)}</span></a></li>)}
-    </ul></section>}
-    {lista.length === 0 && <p class="ev-nota">No tenemos eventos próximos en este momento. Vuelve pronto.</p>}
+
+    {proximo && (() => { const f = ficha(proximo), d = detalleDe(proximo); return (
+      <section class="ev-hero" aria-labelledby="ev-prox">
+        <div class="ev-hero-fondo" aria-hidden="true"></div>
+        <div class="ev-fecha ev-fecha-xl"><time datetime={proximo.inicio}><b>{f.dia}</b><span>{f.mes}</span></time><small>{f.semana}</small></div>
+        <div class="ev-hero-txt">
+          <p class="ev-etq"><span class="ev-punto" aria-hidden="true"></span>Lo próximo · <span data-faltan={proximo.inicio} data-fin={proximo.fin}>{faltan(diasEntre(hoyPR(), proximo.inicio))}</span></p>
+          <h2 id="ev-prox">{proximo.nombre}</h2>
+          <p class="ev-sub">{fechaEvento(proximo)} · {dondeEvento(proximo)}</p>
+          {(d.texto || proximo.precio) && <p class="ev-sub2">{[d.texto, proximo.precio].filter(Boolean).join(' · ')}</p>}
+          {!proximo.confirmado && <p class="ev-aviso">{AVISO}</p>}
+          <EventoAcciones e={proximo} ficha={proximo.confirmado ? `/eventos/${proximo.slug}/` : undefined} compartir={true} />
+        </div>
+      </section>
+    ); })()}
+
+    {lista.length === 0 && <p class="ev-nota ev-vacio">No tenemos eventos próximos en este momento. Vuelve pronto o suscríbete abajo y te aparecen solos en el calendario.</p>}
+
+    <div class="ev-cols">
+      <div class="ev-col">
+        {resto.length > 0 && <section><h2>Lo que viene después</h2>
+          <ul class="ev-lista">
+            {resto.map(e => { const f = ficha(e), d = detalleDe(e); return (
+              <li class="ev-card" id={`ev-${e.slug}`}>
+                <div class="ev-fecha"><time datetime={e.inicio}><b>{f.dia}</b><span>{f.mes}</span></time><small>{f.semana}</small></div>
+                <div class="ev-card-txt">
+                  <p class="ev-etq-c"><span class={e.confirmado ? 'ev-sello ev-si' : 'ev-sello'}>{e.confirmado ? 'Confirmado' : 'Por confirmar'}</span><span data-faltan={e.inicio} data-fin={e.fin}>{faltan(diasEntre(hoyPR(), e.inicio))}</span></p>
+                  <h3>{e.confirmado ? <a href={`/eventos/${e.slug}/`}>{e.nombre}</a> : e.nombre}</h3>
+                  <p class="ev-sub2">{[dondeEvento(e), d.hora].filter(Boolean).join(' · ')}</p>
+                  {d.texto && <p class="ev-sub2">{d.texto}</p>}
+                  {d.juegos.length > 0 && <ul class="ev-juegos">{d.juegos.map(j => <li>{j}</li>)}</ul>}
+                  {!e.confirmado && <p class="ev-nota-c">{AVISO} <a href={e.fuente_url} rel="noopener" target="_blank">Ver la fuente</a></p>}
+                  <EventoAcciones e={e} />
+                </div>
+              </li>); })}
+          </ul></section>}
+
+        {recientes.length > 0 && <section class="ev-pasados"><h2>Lo que ya pasó</h2>
+          <p class="ev-nota">Torneos recientes de la escena en la isla.</p>
+          <ol>{recientes.map(p => { const f = ficha(p); return (
+            <li><time datetime={p.inicio}>{f.dia} {f.mes}</time><b>{p.nombre}</b><span>{dondeEvento(p)}</span></li>); })}</ol>
+        </section>}
+      </div>
+
+      {meses.length > 0 && <aside class="ev-meses" aria-label="Calendario de eventos">
+        <h2>Calendario</h2>
+        {meses.map(m => (
+          <section class="ev-mes"><h3>{m.titulo}</h3>
+            <div class="ev-dias" role="presentation">
+              {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map(d => <span class="ev-dsem" aria-hidden="true">{d}</span>)}
+              {Array.from({ length: m.hueco }, () => <span aria-hidden="true"></span>)}
+              {m.dias.map(d => d.evento
+                ? <a class="ev-dia ev-dia-on" data-fecha={d.fecha} href={d.evento.slug === proximo?.slug ? '#ev-prox' : `#ev-${d.evento.slug}`} title={d.evento.nombre} aria-label={`${d.n}: ${d.evento.nombre}`}>{d.n}</a>
+                : <span class="ev-dia" data-fecha={d.fecha}>{d.n}</span>)}
+            </div>
+          </section>))}
+      </aside>}
+    </div>
+
+    <section class="ev-cta">
+      <div class="ev-cta-c">
+        <i class="fa-regular fa-bell" aria-hidden="true"></i>
+        <h2>Que no se te pase ninguno</h2>
+        <p>Suscribe tu calendario y los eventos nuevos te aparecen solos. En el Discord de Corillo, El Bochinchero anuncia los confirmados en las salas de voz.</p>
+        <div class="ev-acciones">
+          <a class="ev-btn ev-btn-p" href={CAL_WEB}>Suscribir mi calendario</a>
+          <a class="ev-btn" href={CAL_GOOGLE} rel="noopener nofollow" target="_blank">Con Google Calendar</a>
+          <a class="ev-btn" href="/discord/"><i class="fa-brands fa-discord" aria-hidden="true"></i> Discord</a>
+        </div>
+      </div>
+      <div class="ev-cta-c">
+        <i class="fa-solid fa-trophy" aria-hidden="true"></i>
+        <h2>¿Organizas un torneo?</h2>
+        <p>Dinos la fecha y el lugar, y dónde confirmarlo. Lo verificamos y lo añadimos, con su propia página para que lo encuentren en Google.</p>
+        <div class="ev-acciones"><a class="ev-btn" href="/discord/">Escríbenos por Discord</a></div>
+      </div>
+    </section>
+
     <footer class="ev-pie">
       <p>Calendario base: <a href="https://salonfamagamingpr.org/calendario-de-eventos-de-videojuegos-y-esports-en-puerto-rico/" rel="noopener" target="_blank">Salón de la Fama del Gaming en Puerto Rico</a>. Corillo no organiza estos eventos.</p>
-      <p>¿Organizas un evento? <a href="/faq/">Escríbenos</a> y lo añadimos.</p>
     </footer>
   </div>
 </SiteShell>
