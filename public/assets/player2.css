@@ -233,3 +233,63 @@
   .crl-chat-panel .chat-header::before { width: 42px; height: 5px; top: 7px; background: rgba(245,248,255,.28); }
   .crl-chat-backdrop { background: rgba(3,9,30,.62); backdrop-filter: blur(3px); }
 }
+
+/* ── Canal reorganizado (2-nov-2026): sin estar en vivo, el último video arriba con su tarjeta; debajo perfil, videos, enlaces y números ── */
+.player-side .crl-player-info, .player-side .crl-player-vods, .player-side .crl-player-rail,
+.player-side .canal-enlaces, .player-side .crl-channel-stats { max-width: 1280px; margin-left: auto; margin-right: auto; box-sizing: border-box; width: 100%; }
+.player-side h1.ch-name { margin: 0; }
+.canal-offline #video.horizontal { height: min(62vh, 620px); max-height: none; aspect-ratio: auto; object-fit: cover; }
+.canal-offline .ctrl-bar, .canal-offline .unmute-btn { display: none !important; }
+.canal-video {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 14; display: grid; gap: 10px; justify-items: start;
+  padding: 90px clamp(16px, 3vw, 32px) clamp(18px, 3vw, 30px);
+  background: linear-gradient(to top, rgba(6,20,63,.96) 0%, rgba(6,20,63,.6) 55%, rgba(6,20,63,0) 100%);
+  font-family: 'DM Sans', system-ui, sans-serif; color: #f5f8ff; pointer-events: none;
+}
+.canal-video-meta { font: 600 clamp(.82rem, 1.1vw, .95rem)/1.2 'DM Sans', system-ui, sans-serif; color: #c9d6f5; }
+.canal-video-titulo {
+  font: 800 clamp(1.5rem, 3.4vw, 3rem)/1 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif; letter-spacing: -.03em; max-width: 24ch;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.canal-video-btn {
+  pointer-events: auto; display: inline-flex; align-items: center; gap: 9px; margin-top: 4px; padding: 12px 22px; border-radius: 999px;
+  background: #f5f8ff; color: #06143f; font: 700 1rem/1 'DM Sans', system-ui, sans-serif; text-decoration: none; transition: transform .15s;
+}
+.canal-video-btn:hover, .canal-video-btn:focus-visible { transform: translateY(-2px); }
+.canal-acciones { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 6px; }
+.canal-acciones .ch-links.crl-player-links { margin-top: 0; }
+.canal-avisame {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--p2-accent); color: #fff; font: 700 .95rem/1 var(--p2-body); transition: transform .15s;
+}
+.canal-avisame[hidden] { display: none; }
+.canal-avisame:hover { transform: translateY(-2px); }
+.canal-avisame.activo { background: var(--p2-card); box-shadow: inset 0 0 0 1px var(--p2-line); }
+.player-side .crl-player-vods-list { display: grid !important; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); overflow: visible; }
+.player-side .crl-player-vod-card { width: auto; min-width: 0; }
+.cvod-titulo { margin: 10px 4px 0; font: 700 1rem/1.25 var(--p2-body); color: var(--p2-bone); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.cvod-titulo + .crl-player-vod-date { margin-top: 4px; }
+.canal-enlaces { padding: 0 var(--p2-gutter); margin-top: clamp(26px, 4vw, 44px); }
+.canal-enlaces[hidden] { display: none; }
+.canal-enlaces h2 { margin: 0 0 16px; font: 800 clamp(1.5rem, 2.4vw, 2rem)/1 var(--p2-display); letter-spacing: -.03em; text-transform: none; color: var(--p2-bone); }
+.canal-enlaces .panels-grid { display: grid; }
+@media (max-width: 760px) {
+  .canal-offline #video.horizontal { height: min(58vh, 430px); }
+  .canal-video { padding-top: 70px; }
+  .player-side .crl-player-vods-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .canal-avisame { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { .canal-video-btn, .canal-avisame { transition: none; } }
+/* el video llena el espacio y las barras negras grabadas en el archivo quedan fuera */
+.canal-offline .crl-player-video-shell { overflow: hidden; }
+.canal-offline #video.horizontal { transform: scale(1.12); }
+.canal-enlaces .panels-grid { padding: 0; margin: 0; }
+.canal-offline .stats-row { display: none !important; }
+/* canal sin ningún video todavía */
+.canal-sin-video .crl-player-video-shell { background: radial-gradient(circle at 50% 40%, #173383, #06143f 70%); }
+.canal-sin-video #video.horizontal { height: clamp(200px, 32vh, 300px); opacity: 0; }
+.canal-sin-video .crl-player-overlay { background: none; }
+.canal-sin-video .crl-player-panel { background: none; border: 0; box-shadow: none; text-align: center; backdrop-filter: none; }
+.canal-sin-video .crl-player-panel h3 { font: 800 clamp(1.6rem, 3vw, 2.4rem)/1.05 'Bricolage Grotesque', 'DM Sans', system-ui, sans-serif; letter-spacing: -.03em; text-transform: none; color: #f5f8ff; }
+.canal-sin-video .crl-player-panel p { font: 500 1.05rem/1.4 'DM Sans', system-ui, sans-serif; color: #c9d6f5; }
+.canal-sin-video #ovRetry { display: none; }

@@ -257,28 +257,24 @@ window.channel = __validFormat ? __rawChannel : '';
 
   function hideUnmuteBanner() { DOM.unmuteBtn.classList.remove('show'); }
 
+  /* Sin estar en vivo, el último video se reproduce sin sonido y esta tarjeta dice qué es y lleva a verlo. */
   function showVodBadge(vod) {
     if (!App.vodBadge) {
-      const badge = document.createElement('a');
-      badge.id = 'vodBadge';
-      badge.style.cssText = [
-        'position:absolute','top:12px','left:12px','z-index:15',
-        'display:none','align-items:center','gap:7px',
-        'background:rgba(3,10,14,.82)','backdrop-filter:blur(8px)',
-        'border:1px solid rgba(90, 123, 255,.15)','border-radius:6px',
-        'padding:5px 12px','font-family:var(--mono,monospace)',
-        'font-size:10px','letter-spacing:1.5px','text-transform:uppercase',
-        'color:rgba(232,246,255,.55)','text-decoration:none','cursor:pointer',
-      ].join(';');
-      DOM.playerWrap.appendChild(badge);
-      App.vodBadge = badge;
+      const c = document.createElement('div');
+      c.id = 'vodBadge'; c.className = 'canal-video';
+      c.innerHTML = '<div class="canal-video-meta"></div><div class="canal-video-titulo"></div><a class="canal-video-btn"><i class="fa-solid fa-play"></i> Ver el video</a>';
+      DOM.playerWrap.appendChild(c);
+      App.vodBadge = c;
     }
-    const date = vod.date ? new Date(vod.date).toLocaleDateString('es-PR', { month: 'short', day: 'numeric' }) : '';
-    App.vodBadge.href = '/vods/v/?id=' + vod.id;
-    App.vodBadge.innerHTML = '<i class="fa-solid fa-film" style="font-size:9px;color:rgba(90, 123, 255,.5)"></i>'
-      + ' Última transmisión' + (date ? ' · ' + date : '')
-      + ' <span style="color:var(--accent,#5a7bff);margin-left:2px">Ver →</span>';
-    App.vodBadge.style.display = 'flex';
+    const nombre = (DOM.chName && DOM.chName.textContent) || App.channel;
+    const t = vod.date ? new Date(String(vod.date).replace(' ', 'T')) : null;
+    const fecha = t && !isNaN(t) ? t.toLocaleDateString('es-PR', { month: 'long', day: 'numeric' }) : '';
+    const s = Math.round(vod.duration || 0), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+    const dur = s ? (h ? h + ' h ' + m + ' min' : (m ? m + ' min' : s + ' s')) : '';
+    App.vodBadge.querySelector('.canal-video-meta').textContent = ['Último video', fecha, dur].filter(Boolean).join(' · ');
+    App.vodBadge.querySelector('.canal-video-titulo').textContent = vod.title || 'Video de ' + nombre;
+    App.vodBadge.querySelector('.canal-video-btn').href = '/vods/v/?id=' + vod.id;
+    App.vodBadge.style.display = '';
   }
 
   function hideVodBadge() {
@@ -463,6 +459,7 @@ window.channel = __validFormat ? __rawChannel : '';
   async function startWatch() {
     cleanup();   // limpia timers, hls, retryTimer — garantiza estado limpio
     setState('offline');
+    document.body.classList.add('canal-offline');
 
     // Try to show the latest VOD while the channel is offline
     try {
@@ -490,17 +487,19 @@ window.channel = __validFormat ? __rawChannel : '';
           v.play().catch(() => {});
         }, { once: true });
         const date = vod.date ? new Date(vod.date).toLocaleDateString('es-PR', { month: 'short', day: 'numeric' }) : '';
-        DOM.ovTitle.textContent  = 'Última transmisión';
-        DOM.ovMsg.textContent    = (date ? date + ' · ' : '') + 'El canal está offline';
-        DOM.ovRetry.innerHTML    = '<i class="fa-solid fa-film"></i> Ver VOD completo';
+        DOM.ovTitle.textContent  = 'Último video';
+        DOM.ovMsg.textContent    = (date ? date + ' · ' : '') + 'Ahora mismo no está en vivo';
+        DOM.ovRetry.innerHTML    = '<i class="fa-solid fa-play"></i> Ver el video';
         DOM.ovRetry.onclick      = () => { location.href = '/vods/v/?id=' + vod.id; };
         if (DOM.ovRetryLow) DOM.ovRetryLow.style.display = 'none';
         DOM.overlay.classList.add('show');
       } else {
-        showOverlay('Sin transmisión', 'El canal no está en vivo ahora mismo.');
+        document.body.classList.add('canal-sin-video');
+        showOverlay('Sin transmisión', 'Cuando salga en vivo, lo ves aquí.');
       }
     } catch {
-      showOverlay('Sin transmisión', 'El canal no está en vivo ahora mismo.');
+      document.body.classList.add('canal-sin-video');
+      showOverlay('Sin transmisión', 'Cuando salga en vivo, lo ves aquí.');
     }
 
     App.watchTimer = setInterval(async () => {
@@ -906,10 +905,17 @@ window.channel = __validFormat ? __rawChannel : '';
 
   function loadProfile() {
     initChannelUI();
-    fetch('https://api.corillo.live/api/profile/' + App.channel, { signal: AbortSignal.timeout(5000) })
-      .then(r => r.ok ? r.json() : null)
+    // El perfil viene dentro del HTML (functions/[[path]].js); si no, se pide a la API.
+    (window.__PERFIL__ ? Promise.resolve(window.__PERFIL__)
+      : fetch('https://api.corillo.live/api/profile/' + App.channel, { signal: AbortSignal.timeout(5000) }).then(r => r.ok ? r.json() : null))
       .then(data => {
         if (!data) return;
+        const nombre = data.name || data.display_name;
+        if (nombre) {
+          if (DOM.chName) DOM.chName.textContent = nombre;
+          if (DOM.navChName) DOM.navChName.textContent = nombre.toUpperCase();
+          if (App.currentVod && App.vodBadge) showVodBadge(App.currentVod);
+        }
         if (data.avatar_url) {
           [DOM.chAva, DOM.navChAva].forEach(el => {
             if (!el) return;
@@ -928,7 +934,7 @@ window.channel = __validFormat ? __rawChannel : '';
           const navTitle = document.getElementById('navStreamTitle');
           if (navTitle) { navTitle.textContent = title; navTitle.style.display = title ? '' : 'none'; }
         }
-        if (data.bio && data.bio.trim() && DOM.chBio) {
+        if (data.bio && data.bio.trim() && data.bio.trim() !== (data.sub || '').trim() && DOM.chBio) {   // sin repetir la misma línea
           DOM.chBio.textContent = data.bio.trim();
           DOM.chBio.style.display = '';
         }
@@ -940,7 +946,8 @@ window.channel = __validFormat ? __rawChannel : '';
           DOM.chLinks.innerHTML = html;
         }
         const panels = Array.isArray(data.panels) ? data.panels.filter(p => p && p.title) : [];
-        if (panels.length && DOM.statsRow) {
+        const trasVideos = document.getElementById('canalEnlaces');
+        if (panels.length && trasVideos) {
           const grid = document.createElement('div');
           grid.className = 'panels-grid';
           panels.forEach(p => {
@@ -953,7 +960,8 @@ window.channel = __validFormat ? __rawChannel : '';
             } else { buildPanel(card, p); }
             grid.appendChild(card);
           });
-          DOM.statsRow.after(grid);
+          trasVideos.appendChild(grid);
+          trasVideos.hidden = false;
         }
       })
       .catch(() => {});
@@ -1003,18 +1011,7 @@ window.channel = __validFormat ? __rawChannel : '';
     const streamerDef = (window.STREAMERS || []).find(s => s.key === App.channel);
     App.twitchUser = (streamerDef && streamerDef.twitch) ? streamerDef.twitch : App.channel;
 
-    // Meta tags
     const chUpper  = App.channel.toUpperCase();
-    const thumbUrl = 'https://media.corillo.live/assets/thumbs/' + App.channel + '.jpg';
-    const pageUrl  = 'https://corillo.live/' + App.channel + '/';
-    const desc     = 'Stream en vivo de ' + chUpper + ' en CORILLO — plataforma independiente desde Puerto Rico.';
-    document.title = 'CORILLO — ' + chUpper;
-    [['og:title','CORILLO — '+chUpper],['og:url',pageUrl],['og:description',desc],['og:image',thumbUrl],
-     ['twitter:title','CORILLO — '+chUpper],['twitter:description',desc],['twitter:image',thumbUrl]]
-      .forEach(([prop, val]) => {
-        const el = document.querySelector(`meta[property="${prop}"],meta[name="${prop}"]`);
-        if (el) el.setAttribute('content', val);
-      });
     if (DOM.chTag)            DOM.chTag.textContent            = '— ' + chUpper;
     if (DOM.twitchLink)       DOM.twitchLink.href              = 'https://twitch.tv/' + App.twitchUser;
     if (DOM.chatChannelLabel) DOM.chatChannelLabel.textContent = App.twitchUser;
@@ -1114,6 +1111,8 @@ window.channel = __validFormat ? __rawChannel : '';
         return;
       }
       setState('playing');
+      document.body.classList.remove('canal-offline', 'canal-sin-video');
+      if (window.__canalEnVivo) window.__canalEnVivo();
       setLive(true); hideOverlay(); startStatsPolling(); showUnmuteBanner(); checkKickBanner(); requestWakeLock();
     });
     DOM.video.addEventListener('pause',   releaseWakeLock);
