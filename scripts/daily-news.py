@@ -559,10 +559,16 @@ def main():
         for f in made: log('portada:', news_cover.portada(POSTS / f))
     except Exception as e:
         log('portada falló (la nota sale sin imagen):', type(e).__name__, e)
+    try:  # imagen para compartir, con el titular (si falla, se comparte la portada)
+        import news_cover
+        for f in made: log('compartir:', news_cover.compartir(POSTS / f))
+    except Exception as e:
+        log('imagen para compartir falló (se usa la portada):', type(e).__name__, e)
     if not deploy():
         for f in made: (POSTS / f).unlink(missing_ok=True)
         telegram('❌ Noticias: el build falló con la nota nueva; se retiró y el sitio quedó como estaba.'); sys.exit(1)
     portadas = [p for p in (REPO / 'public' / 'noticias' / 'portadas' / (f[:-3] + '.jpg') for f in made) if p.exists()]
+    portadas += [p for p in (REPO / 'public' / 'noticias' / 'compartir' / (f[:-3] + '.jpg') for f in made) if p.exists()]
     git_publish([POSTS / f for f in made] + portadas, 'noticias: ' + ', '.join(m[11:-3] for m in made)[:100])
     for f in made:
         t = re.search(r'^heroTitle: "(.*)"', (POSTS / f).read_text(), re.M).group(1)

@@ -176,6 +176,61 @@ def portada(path, forzar=False, sin_ia=False, solo_diseno=False):
     return f'{tipo}: {credito}'
 
 
+def compartir(path):
+    """Imagen para compartir la nota en WhatsApp y redes: su portada oscurecida, con el logo, la categoría y el titular.
+    Todo va en los 630 px del centro porque WhatsApp a veces recorta la vista previa en cuadrado. Si falta, se usa la portada."""
+    texto = path.read_text(encoding='utf-8')
+    fm = texto.split('---', 2)[1]
+    def campo(k):
+        m = re.search(rf'^{k}:\s*(.+)$', fm, re.M)
+        if not m: return ''
+        v = m.group(1).strip()
+        try: return json.loads(v) if v.startswith('"') else v
+        except ValueError: return v.strip('"')
+    origen = REPO / 'public' / campo('image').lstrip('/')
+    if not campo('image') or not origen.exists(): return 'sin portada'
+    OW, OH, COL = 1200, 630, 520
+    im = Image.open(origen).convert('RGB')
+    esc = max(OW / im.width, OH / im.height)
+    im = im.resize((round(im.width * esc), round(im.height * esc)), Image.LANCZOS)
+    x, y = (im.width - OW) // 2, (im.height - OH) // 2
+    im = im.crop((x, y, x + OW, y + OH))
+    # oscurecido: parejo en toda la imagen y más fuerte detrás de la columna del texto
+    mascara = Image.new('L', (OW, OH), 105)
+    ImageDraw.Draw(mascara).rectangle((OW // 2 - COL // 2 - 20, 0, OW // 2 + COL // 2 + 20, OH), fill=205)
+    im = Image.composite(Image.new('RGB', (OW, OH), INK), im, mascara.filter(ImageFilter.GaussianBlur(70)))
+    d = ImageDraw.Draw(im)
+
+    def lineas(fuente, titular):
+        out, act = [], ''
+        for p in titular.split():
+            prueba = f'{act} {p}'.strip()
+            if d.textlength(prueba, font=fuente) <= COL: act = prueba
+            else: out.append(act); act = p
+        return out + [act]
+
+    titular = campo('cardTitle') or campo('heroTitle') or campo('ogTitle')
+    logo = Image.open(Path(__file__).resolve().parent / 'assets' / 'logo-corillo.png').convert('RGBA')
+    logo = logo.resize((240, round(logo.height * 240 / logo.width)), Image.LANCZOS)
+    for tam in range(58, 29, -2):            # el tamaño más grande con el que el titular cabe
+        f = _font('bricolage.ttf', tam, 800)
+        ls = lineas(f, titular)
+        alto_l = round(tam * 1.1)
+        if len(ls) * alto_l <= 330 and all(d.textlength(l, font=f) <= COL for l in ls): break
+    cat = CATS.get(campo('category'), (campo('badgeLabel') or 'Noticias', (255, 106, 61)))
+    fc = _font('bricolage.ttf', 26, 700)
+    total = logo.height + 26 + 34 + 16 + len(ls) * alto_l
+    yy = (OH - total) // 2
+    im.paste(logo, ((OW - logo.width) // 2, yy), logo); yy += logo.height + 26
+    d.text((OW / 2, yy), cat[0], font=fc, fill=cat[1], anchor='ma'); yy += 34 + 16
+    for l in ls:
+        d.text((OW / 2, yy), l, font=f, fill=BONE, anchor='ma'); yy += alto_l
+    salida = REPO / 'public' / 'noticias' / 'compartir' / f'{path.stem}.jpg'
+    salida.parent.mkdir(parents=True, exist_ok=True)
+    im.save(salida, 'JPEG', quality=84, optimize=True, progressive=True)
+    return f'{tam} px, {len(ls)} líneas'
+
+
 if __name__ == '__main__':
     args = [a for a in sys.argv[1:] if not a.startswith('--')]
     notas = [Path(a) for a in args] or sorted(NOTAS.glob('20*.md'), reverse=True)[:9]
