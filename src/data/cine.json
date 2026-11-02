@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-01T18:12:36",
+ "actualizado": "2026-11-02T06:15:36",
  "pegao": [
   {
    "tmdb": 1283515,
@@ -30,7 +30,7 @@
    ],
    "trailer": "P-QWhkimt50",
    "dondeVer": [],
-   "popularidad": 218.7,
+   "popularidad": 236.8,
    "pr": false
   },
   {
@@ -63,47 +63,7 @@
    ],
    "trailer": "cmzVY1goqwQ",
    "dondeVer": [],
-   "popularidad": 188.9,
-   "pr": false
-  },
-  {
-   "tmdb": 1507696,
-   "title": "Apocalipsis Z: Nuevo mundo",
-   "original": "Apocalipsis Z: Nuevo mundo",
-   "estreno": "2026-10-30",
-   "clasificacion": "R",
-   "duracion": 96,
-   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
-   "generos": [
-    "Acción",
-    "Suspense",
-    "Terror"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
-   "direccion": [
-    "Carles Torrens"
-   ],
-   "reparto": [
-    "Carlos Alcaide",
-    "José María Yázpik",
-    "Julia Martínez",
-    "Mónica López",
-    "Tamara Casellas",
-    "Berta Vázquez",
-    "Santiago Vaca Narvaja",
-    "Mario Mayo"
-   ],
-   "trailer": "BIEzwpyawtw",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
-   ],
-   "popularidad": 228.0,
+   "popularidad": 189.7,
    "pr": false
   },
   {
@@ -136,7 +96,47 @@
    ],
    "trailer": "WGOv9Pzh9cE",
    "dondeVer": [],
-   "popularidad": 171.9,
+   "popularidad": 158.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1507696,
+   "title": "Apocalipsis Z: Nuevo mundo",
+   "original": "Apocalipsis Z: Nuevo mundo",
+   "estreno": "2026-10-30",
+   "clasificacion": "R",
+   "duracion": 96,
+   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
+   "generos": [
+    "Acción",
+    "Suspense",
+    "Terror"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
+   "direccion": [
+    "Carles Torrens"
+   ],
+   "reparto": [
+    "Carlos Alcaide",
+    "Julia Martínez",
+    "José María Yázpik",
+    "Mónica López",
+    "Tamara Casellas",
+    "Berta Vázquez",
+    "Santiago Vaca Narvaja",
+    "Mario Mayo"
+   ],
+   "trailer": "BIEzwpyawtw",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 293.6,
    "pr": false
   },
   {
@@ -172,7 +172,7 @@
    ],
    "trailer": "a8RHqN93qfo",
    "dondeVer": [],
-   "popularidad": 122.4,
+   "popularidad": 126.4,
    "pr": false
   },
   {
@@ -205,40 +205,7 @@
    ],
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
-   "popularidad": 1453.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1058424,
-   "title": "Hope: El primer impacto",
-   "original": "호프",
-   "estreno": "2026-09-10",
-   "clasificacion": "R",
-   "duracion": 157,
-   "resumen": "Tras un extraño hallazgo cerca de una aislada ciudad portuaria, los habitantes se ven envueltos en una desesperada lucha por la supervivencia.",
-   "generos": [
-    "Ciencia ficción",
-    "Misterio",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/hHPIefotew38oJm3YCJPAzpi26c.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/j96rurZqmBjyY37Fncl3IB0qJNe.jpg",
-   "direccion": [
-    "나홍진"
-   ],
-   "reparto": [
-    "황정민",
-    "조인성",
-    "정호연",
-    "Alicia Vikander",
-    "Michael Fassbender",
-    "Taylor Russell",
-    "Cameron Britton",
-    "이상희"
-   ],
-   "trailer": "ODnHr2Emnf0",
-   "dondeVer": [],
-   "popularidad": 451.9,
+   "popularidad": 1868.8,
    "pr": false
   },
   {
@@ -277,7 +244,7 @@
      "name": "Peacock Premium Plus"
     }
    ],
-   "popularidad": 113.4,
+   "popularidad": 116.5,
    "pr": false
   },
   {
@@ -311,7 +278,78 @@
    ],
    "trailer": "kZ2Nhqkx3-I",
    "dondeVer": [],
-   "popularidad": 112.6,
+   "popularidad": 118.0,
+   "pr": false
+  },
+  {
+   "tmdb": 1727734,
+   "title": "Ali G: ¿Kién Ez Yo?",
+   "original": "Ali G: Who Iz I?",
+   "estreno": "2026-10-23",
+   "clasificacion": "R",
+   "duracion": 89,
+   "resumen": "Tras veinte años dedicados a «relajarse, fumar y follar», Ali G se queda atónito al descubrir que Julie, su novia de toda la vida, está embarazada de ocho meses. Ante la perspectiva de tener una boca más que alimentar, deja de holgazanear y pone rumbo a Estados Unidos para recuperar su antigua gloria... pero pronto se topa con adversarios que acabarán amenazando su propia existencia y la de su hijo.",
+   "generos": [
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/mgsw0NVOn5VX9rA6An8ijwUFX7q.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/hJcGJLi34zE4RhzsiDR6f7pw50K.jpg",
+   "direccion": [
+    "Sacha Baron Cohen"
+   ],
+   "reparto": [
+    "Sacha Baron Cohen",
+    "Morgana Robinson",
+    "Alpha Miknas",
+    "Clive Russell",
+    "A$AP Rocky",
+    "Rihanna",
+    "Tiffany Haddish",
+    "DJ Jazzy Jeff"
+   ],
+   "trailer": "6t7C4qaHihE",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 117.6,
+   "pr": false
+  },
+  {
+   "tmdb": 1058424,
+   "title": "Hope: El primer impacto",
+   "original": "호프",
+   "estreno": "2026-09-10",
+   "clasificacion": "R",
+   "duracion": 157,
+   "resumen": "Tras un extraño hallazgo cerca de una aislada ciudad portuaria, los habitantes se ven envueltos en una desesperada lucha por la supervivencia.",
+   "generos": [
+    "Ciencia ficción",
+    "Misterio",
+    "Acción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/hHPIefotew38oJm3YCJPAzpi26c.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/j96rurZqmBjyY37Fncl3IB0qJNe.jpg",
+   "direccion": [
+    "나홍진"
+   ],
+   "reparto": [
+    "황정민",
+    "조인성",
+    "정호연",
+    "Alicia Vikander",
+    "Michael Fassbender",
+    "Taylor Russell",
+    "Cameron Britton",
+    "이상희"
+   ],
+   "trailer": "ODnHr2Emnf0",
+   "dondeVer": [],
+   "popularidad": 472.2,
    "pr": false
   },
   {
@@ -323,8 +361,8 @@
    "duracion": 122,
    "resumen": "En plena crisis económica, un grupo de atracadores asalta un banco de Madrid y desencadena una serie de acontecimientos imprevisibles. Lo que al principio parece un robo más se convierte en un juego de engaños, miedo y supervivencia, donde cada decisión cuenta, cada gesto esconde algo y todos buscan evitar algo más que ir la cárcel.",
    "generos": [
+    "Suspense",
     "Drama",
-    "Acción",
     "Crimen"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/sMPIiaOoyTr5o6s602KIVMJX3P2.jpg",
@@ -351,7 +389,7 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 125.9,
+   "popularidad": 153.1,
    "pr": false
   },
   {
@@ -390,45 +428,40 @@
      "name": "Amazon Prime Video with Ads"
     }
    ],
-   "popularidad": 298.0,
+   "popularidad": 308.4,
    "pr": false
   },
   {
-   "tmdb": 1727734,
-   "title": "Ali G: ¿Kién Ez Yo?",
-   "original": "Ali G: Who Iz I?",
-   "estreno": "2026-10-23",
+   "tmdb": 1381071,
+   "title": "Godzilla Minus Zero",
+   "original": "ゴジラ-0.0",
+   "estreno": "2026-11-03",
    "clasificacion": "R",
-   "duracion": 89,
-   "resumen": "Tras veinte años dedicados a «relajarse, fumar y follar», Ali G se queda atónito al descubrir que Julie, su novia de toda la vida, está embarazada de ocho meses. Ante la perspectiva de tener una boca más que alimentar, deja de holgazanear y pone rumbo a Estados Unidos para recuperar su antigua gloria... pero pronto se topa con adversarios que acabarán amenazando su propia existencia y la de su hijo.",
+   "duracion": 135,
+   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
    "generos": [
-    "Comedia"
+    "Ciencia ficción",
+    "Terror",
+    "Acción"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/mgsw0NVOn5VX9rA6An8ijwUFX7q.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/hJcGJLi34zE4RhzsiDR6f7pw50K.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
    "direccion": [
-    "Sacha Baron Cohen"
+    "山崎貴"
    ],
    "reparto": [
-    "Sacha Baron Cohen",
-    "Morgana Robinson",
-    "Alpha Miknas",
-    "Clive Russell",
-    "A$AP Rocky",
-    "Rihanna",
-    "Tiffany Haddish",
-    "DJ Jazzy Jeff"
+    "神木隆之介",
+    "浜辺美波",
+    "山田裕貴",
+    "佐々木蔵之介",
+    "國村隼",
+    "田中美央",
+    "安藤サクラ",
+    "長澤まさみ"
    ],
-   "trailer": "6t7C4qaHihE",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
-   ],
-   "popularidad": 108.2,
+   "trailer": "kw0YhiqOPFg",
+   "dondeVer": [],
+   "popularidad": 26.1,
    "pr": false
   },
   {
@@ -461,7 +494,106 @@
    ],
    "trailer": "d6oszs7f5aI",
    "dondeVer": [],
-   "popularidad": 113.9,
+   "popularidad": 105.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1170608,
+   "title": "Duna: Parte tres",
+   "original": "Dune: Part Three",
+   "estreno": "2026-12-17",
+   "clasificacion": null,
+   "duracion": 140,
+   "resumen": "Como emperador, Paul Atreides se enfrenta a las consecuencias de su ascenso al poder, mientras conspiraciones políticas y una guerra santa que abarca toda la galaxia amenazan el futuro que solo él puede prever.",
+   "generos": [
+    "Ciencia ficción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/5myJqI5SeZckhC8B2vMz7Nbl46z.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/i5E9H7Ik0u61ylDDTbmUpTL3Yw.jpg",
+   "direccion": [
+    "Denis Villeneuve"
+   ],
+   "reparto": [
+    "Timothée Chalamet",
+    "Zendaya",
+    "Jason Momoa",
+    "Florence Pugh",
+    "Rebecca Ferguson",
+    "Isaach de Bankolé",
+    "Charlotte Rampling",
+    "Anya Taylor-Joy"
+   ],
+   "trailer": "qdfXYN5kMBY",
+   "dondeVer": [],
+   "popularidad": 45.1,
+   "pr": false
+  },
+  {
+   "tmdb": 969681,
+   "title": "Spider-Man: Un nuevo día",
+   "original": "Spider-Man: Brand New Day",
+   "estreno": "2026-07-30",
+   "clasificacion": "PG-13",
+   "duracion": 145,
+   "resumen": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
+   "generos": [
+    "Ciencia ficción",
+    "Acción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/fBFjaDWfNslvrs6bJjknmG27wOS.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg",
+   "direccion": [
+    "Destin Daniel Cretton"
+   ],
+   "reparto": [
+    "Tom Holland",
+    "Sadie Sink",
+    "Tramell Tillman",
+    "Zendaya",
+    "Jacob Batalon",
+    "Jon Bernthal",
+    "Mark Ruffalo",
+    "Florence Pugh"
+   ],
+   "trailer": "owfWVJoxXR4",
+   "dondeVer": [],
+   "popularidad": 377.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1195803,
+   "title": "Wicker",
+   "original": "Wicker",
+   "estreno": "2026-10-29",
+   "clasificacion": "R",
+   "duracion": 105,
+   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
+   "generos": [
+    "Romance",
+    "Fantasía",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ewPz6uvKrbKlQrLRi1r9NTZQLzN.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/xVh1ypMoVkMf5IB7y3hnRplJ14c.jpg",
+   "direccion": [
+    "Alex Huston Fischer",
+    "Eleanor Wilson"
+   ],
+   "reparto": [
+    "Olivia Colman",
+    "Alexander Skarsgård",
+    "Peter Dinklage",
+    "Elizabeth Debicki",
+    "Marli Siu",
+    "Nabhaan Rizwan",
+    "Richard E. Grant",
+    "Kiell Smith-Bynoe"
+   ],
+   "trailer": "jA5zfiikcu8",
+   "dondeVer": [],
+   "popularidad": 65.8,
    "pr": false
   },
   {
@@ -504,207 +636,78 @@
      "name": "Shudder"
     }
    ],
-   "popularidad": 91.6,
+   "popularidad": 91.2,
    "pr": false
   },
   {
-   "tmdb": 969681,
-   "title": "Spider-Man: Un nuevo día",
-   "original": "Spider-Man: Brand New Day",
-   "estreno": "2026-07-30",
-   "clasificacion": "PG-13",
-   "duracion": 145,
-   "resumen": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
-   "generos": [
-    "Ciencia ficción",
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/fBFjaDWfNslvrs6bJjknmG27wOS.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/4tjxYg2AbOzzG9G1YuiT2NzYhlH.jpg",
-   "direccion": [
-    "Destin Daniel Cretton"
-   ],
-   "reparto": [
-    "Tom Holland",
-    "Sadie Sink",
-    "Tramell Tillman",
-    "Zendaya",
-    "Jacob Batalon",
-    "Jon Bernthal",
-    "Mark Ruffalo",
-    "Florence Pugh"
-   ],
-   "trailer": "owfWVJoxXR4",
-   "dondeVer": [],
-   "popularidad": 376.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1170608,
-   "title": "Duna: Parte tres",
-   "original": "Dune: Part Three",
-   "estreno": "2026-12-17",
-   "clasificacion": null,
-   "duracion": 140,
-   "resumen": "Como emperador, Paul Atreides se enfrenta a las consecuencias de su ascenso al poder, mientras conspiraciones políticas y una guerra santa que abarca toda la galaxia amenazan el futuro que solo él puede prever.",
-   "generos": [
-    "Ciencia ficción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/5myJqI5SeZckhC8B2vMz7Nbl46z.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/i5E9H7Ik0u61ylDDTbmUpTL3Yw.jpg",
-   "direccion": [
-    "Denis Villeneuve"
-   ],
-   "reparto": [
-    "Timothée Chalamet",
-    "Zendaya",
-    "Jason Momoa",
-    "Florence Pugh",
-    "Rebecca Ferguson",
-    "Isaach de Bankolé",
-    "Charlotte Rampling",
-    "Anya Taylor-Joy"
-   ],
-   "trailer": "qdfXYN5kMBY",
-   "dondeVer": [],
-   "popularidad": 48.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1377237,
-   "title": "Entrega al límite",
-   "original": "Runner",
-   "estreno": "2026-09-10",
-   "clasificacion": "PG-13",
-   "duracion": 97,
-   "resumen": "Hank es un mensajero encargado de transportar un órgano que puede salvarle la vida a un joven receptor. Pero la misión se vuelve una carrera contra el tiempo cuando un despiadado jefe del crimen hará lo que sea necesario para quedarse con él.",
-   "generos": [
-    "Acción",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/gxrGVQdFmc3xxVn6UyY31ZjqM0s.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/npXZNWjOEYrqdMDPQ11SGBrXqAG.jpg",
-   "direccion": [
-    "Scott Waugh"
-   ],
-   "reparto": [
-    "Alan Ritchson",
-    "Owen Wilson",
-    "Rodrigo Santoro",
-    "Leila George",
-    "Kate Box",
-    "Peta Sergeant",
-    "Cecilia Toussaint",
-    "Geraldine Hakewill"
-   ],
-   "trailer": "m8JUmBgHejI",
-   "dondeVer": [
-    {
-     "name": "Angel Studios"
-    }
-   ],
-   "popularidad": 88.2,
-   "pr": false
-  },
-  {
-   "tmdb": 1765072,
-   "title": "Puedes verlo todo",
-   "original": "You Can See Everything",
-   "estreno": "2026-10-16",
-   "clasificacion": "R",
-   "duracion": 174,
-   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
-   "generos": [
-    "Documental"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/Ap8QwmKfSjYbWC4XIP8w9pdn72O.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/nhIL3O4W9h5V5JbNQm7yjoDk3So.jpg",
-   "direccion": [
-    "Nathan Fielder",
-    "Lance Oppenheim"
-   ],
-   "reparto": [
-    "Elizabeth Holmes",
-    "Nathan Fielder",
-    "Billy Evans",
-    "Amanda Seyfried",
-    "Christopher Abbott",
-    "Lance Oppenheim",
-    "Christian Rasmus Holmes IV",
-    "Noel Anne"
-   ],
-   "trailer": "HvW_N5p1q44",
-   "dondeVer": [],
-   "popularidad": 89.7,
-   "pr": false
-  },
-  {
-   "tmdb": 1195803,
-   "title": "Wicker",
-   "original": "Wicker",
-   "estreno": "2026-10-29",
-   "clasificacion": "R",
-   "duracion": 105,
-   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
+   "tmdb": 1503762,
+   "title": "Sensatez y sentimiento",
+   "original": "Sense and Sensibility",
+   "estreno": "2026-10-15",
+   "clasificacion": "PG",
+   "duracion": 132,
+   "resumen": "Una nueva visión de la icónica novela de Jane Austen con una historia encantadora, ingeniosa y profundamente conmovedora sobre el amor y la hermandad.",
    "generos": [
     "Romance",
-    "Fantasía",
-    "Comedia"
+    "Drama",
+    "Historia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ewPz6uvKrbKlQrLRi1r9NTZQLzN.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/xVh1ypMoVkMf5IB7y3hnRplJ14c.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/xmfC7mUIZWyc0Mez55qwoHTQUNJ.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/tIcONOFK9D3F89ETK8DBS1hIwVF.jpg",
    "direccion": [
-    "Eleanor Wilson",
-    "Alex Huston Fischer"
+    "Georgia Oakley"
    ],
    "reparto": [
-    "Olivia Colman",
-    "Alexander Skarsgård",
-    "Peter Dinklage",
-    "Elizabeth Debicki",
-    "Marli Siu",
-    "Nabhaan Rizwan",
-    "Richard E. Grant",
-    "Kiell Smith-Bynoe"
+    "Daisy Edgar-Jones",
+    "Esmé Creed-Miles",
+    "Caitríona Balfe",
+    "Frank Dillane",
+    "Herbert Nordrum",
+    "George MacKay",
+    "Fiona Shaw",
+    "Bodhi Rae Breathnach"
    ],
-   "trailer": "jA5zfiikcu8",
+   "trailer": "GMwdcpKOOyY",
    "dondeVer": [],
-   "popularidad": 68.8,
+   "popularidad": 88.5,
    "pr": false
   },
   {
-   "tmdb": 1368337,
-   "title": "La Odisea",
-   "original": "The Odyssey",
-   "estreno": "2026-07-16",
+   "tmdb": 1789549,
+   "title": "El Regalo De Cumpleaños",
+   "original": "Das Geschenk",
+   "estreno": "2026-10-30",
    "clasificacion": "R",
-   "duracion": 173,
-   "resumen": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
+   "duracion": 86,
+   "resumen": "Marlene Frischmann (Jeanne Goursaud) quiere celebrar por todo lo alto el cumpleaños de su hijo Theo (Levin Wopp) y lo tiene todo preparado en la elegante casa de campo de su hermano: globos, una tarta sin gluten, una piñata e incluso animales salvajes prometen convertir el día en algo inolvidable. Pero la celebración, preparada con todo el cariño, no tarda en convertirse en una pesadilla desternillante, con acaloradas discusiones sobre la crianza, los modelos de masculinidad y los principios educativos. Tampoco ayudan precisamente a poner orden su alborotador hermano banquero Timo (Edin Hasanović), su excéntrico y desorientado padre Hans (Heiner Lauterbach), su compañera Jenny (Amal Keller), una idealista empeñada en salvar el mundo, y un regalo muy especial. Entre una familia de lo más disfuncional, madres helicóptero obsesionadas con controlarlo todo y la anarquía infantil, la fiesta acaba sumida en el caos.",
    "generos": [
-    "Aventura",
-    "Acción",
-    "Fantasía"
+    "Comedia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bulFtfy3oBQtCnAMSi7g6DSSds3.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/rtifYyLgIgACVwsbVodZ3TZ2Yde.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/eBtITrrdFo1EG7t6TSG5U5c4P2e.jpg",
    "direccion": [
-    "Christopher Nolan"
+    "Vanessa Jopp"
    ],
    "reparto": [
-    "Matt Damon",
-    "Tom Holland",
-    "Anne Hathaway",
-    "Robert Pattinson",
-    "Himesh Patel",
-    "Charlize Theron",
-    "John Leguizamo",
-    "Travis Scott"
+    "Jeanne Goursaud",
+    "Edin Hasanović",
+    "Heiner Lauterbach",
+    "Levin Wopp",
+    "Sogol Faghani",
+    "Enzo Brumm",
+    "Berit Künnecke",
+    "Amal Keller"
    ],
-   "trailer": "X9nUrOnHlz0",
-   "dondeVer": [],
-   "popularidad": 204.1,
+   "trailer": null,
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 50.1,
    "pr": false
   }
  ],
@@ -739,7 +742,7 @@
    ],
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
-   "popularidad": 1453.3,
+   "popularidad": 1868.8,
    "pr": false
   },
   {
@@ -771,7 +774,7 @@
    ],
    "trailer": "P-QWhkimt50",
    "dondeVer": [],
-   "popularidad": 218.7,
+   "popularidad": 236.8,
    "pr": false
   },
   {
@@ -804,7 +807,39 @@
    ],
    "trailer": "WGOv9Pzh9cE",
    "dondeVer": [],
-   "popularidad": 171.9,
+   "popularidad": 158.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1376400,
+   "title": "Crawlers",
+   "original": "Crawlers",
+   "estreno": "2026-10-15",
+   "clasificacion": "R",
+   "duracion": 80,
+   "resumen": "",
+   "generos": [
+    "Terror",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/lNXeEpg4yLSRwXwOeR5lbPgwbqL.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ayJsUQ4bEG6yY0UB6lMboiaDfYE.jpg",
+   "direccion": [
+    "Ángel Gómez Hernández"
+   ],
+   "reparto": [
+    "Matilda Lutz",
+    "Gary Anthony Stennette",
+    "Elena Sanz",
+    "Andrea Scott Méndez",
+    "Isabella Marie Egizi",
+    "Sam Lucas Smith",
+    "Gregg Sulkin",
+    "Melina Matthews"
+   ],
+   "trailer": "4DowjB87tRE",
+   "dondeVer": [],
+   "popularidad": 131.3,
    "pr": false
   },
   {
@@ -840,39 +875,7 @@
    ],
    "trailer": "a8RHqN93qfo",
    "dondeVer": [],
-   "popularidad": 122.4,
-   "pr": false
-  },
-  {
-   "tmdb": 1376400,
-   "title": "Crawlers",
-   "original": "Crawlers",
-   "estreno": "2026-10-15",
-   "clasificacion": "R",
-   "duracion": 80,
-   "resumen": "",
-   "generos": [
-    "Terror",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/lNXeEpg4yLSRwXwOeR5lbPgwbqL.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/ayJsUQ4bEG6yY0UB6lMboiaDfYE.jpg",
-   "direccion": [
-    "Ángel Gómez Hernández"
-   ],
-   "reparto": [
-    "Matilda Lutz",
-    "Gary Anthony Stennette",
-    "Elena Sanz",
-    "Andrea Scott Méndez",
-    "Isabella Marie Egizi",
-    "Sam Lucas Smith",
-    "Gregg Sulkin",
-    "Melina Matthews"
-   ],
-   "trailer": "4DowjB87tRE",
-   "dondeVer": [],
-   "popularidad": 119.1,
+   "popularidad": 126.4,
    "pr": false
   },
   {
@@ -904,7 +907,7 @@
    ],
    "trailer": "-MJAfIMUQ5s",
    "dondeVer": [],
-   "popularidad": 94.4,
+   "popularidad": 88.7,
    "pr": false
   },
   {
@@ -916,8 +919,8 @@
    "duracion": 132,
    "resumen": "Una nueva visión de la icónica novela de Jane Austen con una historia encantadora, ingeniosa y profundamente conmovedora sobre el amor y la hermandad.",
    "generos": [
-    "Drama",
     "Romance",
+    "Drama",
     "Historia"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/xmfC7mUIZWyc0Mez55qwoHTQUNJ.jpg",
@@ -937,7 +940,7 @@
    ],
    "trailer": "GMwdcpKOOyY",
    "dondeVer": [],
-   "popularidad": 91.0,
+   "popularidad": 88.5,
    "pr": false
   },
   {
@@ -968,7 +971,7 @@
    ],
    "trailer": "ocV7K_B67lQ",
    "dondeVer": [],
-   "popularidad": 86.7,
+   "popularidad": 87.5,
    "pr": false
   },
   {
@@ -997,7 +1000,7 @@
    ],
    "trailer": "Rh24D89hFMg",
    "dondeVer": [],
-   "popularidad": 77.0,
+   "popularidad": 78.2,
    "pr": false
   },
   {
@@ -1035,7 +1038,7 @@
      "name": "Disney Plus"
     }
    ],
-   "popularidad": 69.5,
+   "popularidad": 70.4,
    "pr": false
   },
   {
@@ -1054,8 +1057,8 @@
    "afiche": "https://image.tmdb.org/t/p/w342/ewPz6uvKrbKlQrLRi1r9NTZQLzN.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/xVh1ypMoVkMf5IB7y3hnRplJ14c.jpg",
    "direccion": [
-    "Eleanor Wilson",
-    "Alex Huston Fischer"
+    "Alex Huston Fischer",
+    "Eleanor Wilson"
    ],
    "reparto": [
     "Olivia Colman",
@@ -1069,7 +1072,7 @@
    ],
    "trailer": "jA5zfiikcu8",
    "dondeVer": [],
-   "popularidad": 68.8,
+   "popularidad": 65.8,
    "pr": false
   },
   {
@@ -1101,7 +1104,7 @@
    ],
    "trailer": "4jNrucYsh4A",
    "dondeVer": [],
-   "popularidad": 66.8,
+   "popularidad": 65.6,
    "pr": false
   },
   {
@@ -1132,7 +1135,7 @@
    ],
    "trailer": "67ho3OxCmmM",
    "dondeVer": [],
-   "popularidad": 62.9,
+   "popularidad": 61.6,
    "pr": false
   },
   {
@@ -1164,7 +1167,7 @@
    ],
    "trailer": "5fHXyqQOKL8",
    "dondeVer": [],
-   "popularidad": 56.5,
+   "popularidad": 55.1,
    "pr": false
   },
   {
@@ -1196,7 +1199,7 @@
    ],
    "trailer": "naaubL5GycY",
    "dondeVer": [],
-   "popularidad": 46.8,
+   "popularidad": 44.9,
    "pr": false
   },
   {
@@ -1228,7 +1231,7 @@
    ],
    "trailer": "4fn4UcgzRhg",
    "dondeVer": [],
-   "popularidad": 42.4,
+   "popularidad": 41.1,
    "pr": false
   },
   {
@@ -1259,7 +1262,7 @@
    ],
    "trailer": "0gdRZZVoinM",
    "dondeVer": [],
-   "popularidad": 37.7,
+   "popularidad": 36.6,
    "pr": false
   },
   {
@@ -1293,7 +1296,7 @@
    ],
    "trailer": "3hwFBZ6475g",
    "dondeVer": [],
-   "popularidad": 36.1,
+   "popularidad": 34.4,
    "pr": false
   },
   {
@@ -1327,7 +1330,7 @@
    ],
    "trailer": "uEcoV-ngH38",
    "dondeVer": [],
-   "popularidad": 35.9,
+   "popularidad": 35.0,
    "pr": false
   },
   {
@@ -1358,7 +1361,7 @@
    ],
    "trailer": "o_pIiP1A0RY",
    "dondeVer": [],
-   "popularidad": 35.8,
+   "popularidad": 33.8,
    "pr": false
   },
   {
@@ -1391,7 +1394,7 @@
    ],
    "trailer": "kw0YhiqOPFg",
    "dondeVer": [],
-   "popularidad": 22.5,
+   "popularidad": 26.1,
    "pr": false
   },
   {
@@ -1424,7 +1427,7 @@
    ],
    "trailer": "zql0pXIpELI",
    "dondeVer": [],
-   "popularidad": 19.3,
+   "popularidad": 25.2,
    "pr": false
   },
   {
@@ -1457,7 +1460,7 @@
    ],
    "trailer": "eCF2S3vchE4",
    "dondeVer": [],
-   "popularidad": 12.2,
+   "popularidad": 12.1,
    "pr": false
   },
   {
@@ -1484,13 +1487,13 @@
     "Ray Nicholson",
     "Tom Francis",
     "Brent Comer",
-    "Claudia Ware",
-    "Stacy Clausen",
-    "Ella Newton"
+    "Jack Ingram",
+    "Ella Newton",
+    "Peter Berg"
    ],
    "trailer": "CPFkLjHfKoc",
    "dondeVer": [],
-   "popularidad": 7.4,
+   "popularidad": 7.7,
    "pr": false
   },
   {
@@ -1519,7 +1522,7 @@
    ],
    "trailer": "8gjOXAjeisY",
    "dondeVer": [],
-   "popularidad": 6.4,
+   "popularidad": 6.1,
    "pr": false
   },
   {
@@ -1551,7 +1554,7 @@
    ],
    "trailer": "tv03AgZUBPY",
    "dondeVer": [],
-   "popularidad": 6.1,
+   "popularidad": 5.4,
    "pr": false
   },
   {
@@ -1583,7 +1586,7 @@
    ],
    "trailer": "K9Lpxc7bVTM",
    "dondeVer": [],
-   "popularidad": 4.8,
+   "popularidad": 4.6,
    "pr": false
   },
   {
@@ -1714,7 +1717,40 @@
    ],
    "trailer": "bwZzXTUcaQo",
    "dondeVer": [],
-   "popularidad": 34.3,
+   "popularidad": 36.8,
+   "pr": false
+  },
+  {
+   "tmdb": 1381071,
+   "title": "Godzilla Minus Zero",
+   "original": "ゴジラ-0.0",
+   "estreno": "2026-11-03",
+   "clasificacion": "R",
+   "duracion": 135,
+   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
+   "generos": [
+    "Ciencia ficción",
+    "Terror",
+    "Acción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
+   "direccion": [
+    "山崎貴"
+   ],
+   "reparto": [
+    "神木隆之介",
+    "浜辺美波",
+    "山田裕貴",
+    "佐々木蔵之介",
+    "國村隼",
+    "田中美央",
+    "安藤サクラ",
+    "長澤まさみ"
+   ],
+   "trailer": "kw0YhiqOPFg",
+   "dondeVer": [],
+   "popularidad": 26.1,
    "pr": false
   },
   {
@@ -1747,7 +1783,7 @@
    ],
    "trailer": "tPf0_b026Ck",
    "dondeVer": [],
-   "popularidad": 26.0,
+   "popularidad": 27.6,
    "pr": false
   },
   {
@@ -1779,38 +1815,41 @@
    ],
    "trailer": "l0pTZqZWs-c",
    "dondeVer": [],
-   "popularidad": 24.9,
+   "popularidad": 28.7,
    "pr": false
   },
   {
-   "tmdb": 1381071,
-   "title": "Godzilla Minus Zero",
-   "original": "ゴジラ-0.0",
-   "estreno": "2026-11-03",
-   "clasificacion": "R",
-   "duracion": 135,
-   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
+   "tmdb": 1117898,
+   "title": "El gato con sombrero",
+   "original": "The Cat in the Hat",
+   "estreno": "2026-11-06",
+   "clasificacion": "PG",
+   "duracion": 108,
+   "resumen": "Un astuto gato lleva el caos con sus travesuras a la vida de un par de hermanos que lidian con su mudanza a una nueva ciudad.",
    "generos": [
-    "Ciencia ficción",
-    "Terror",
-    "Acción"
+    "Animación",
+    "Comedia",
+    "Aventura",
+    "Fantasía",
+    "Familia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/5rS3PbnARmbbL3LiLhEX3Tr0l6k.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/9y9o686DsQg0KzPtERzcW7Cf8IE.jpg",
    "direccion": [
-    "山崎貴"
+    "Erica Rivinoja",
+    "Alessandro Carloni"
    ],
    "reparto": [
-    "神木隆之介",
-    "浜辺美波",
-    "山田裕貴",
-    "佐々木蔵之介",
-    "國村隼",
-    "田中美央",
-    "安藤サクラ",
-    "長澤まさみ"
+    "Bill Hader",
+    "Xochitl Gomez",
+    "Tiago Martinez",
+    "Matt Berry",
+    "Quinta Brunson",
+    "Bowen Yang",
+    "America Ferrera",
+    "Paula Pell"
    ],
-   "trailer": "kw0YhiqOPFg",
+   "trailer": "bRMu8S6FQ9c",
    "dondeVer": [],
    "popularidad": 22.5,
    "pr": false
@@ -1848,43 +1887,7 @@
    ],
    "trailer": "wkr5TpxKOTw",
    "dondeVer": [],
-   "popularidad": 21.8,
-   "pr": false
-  },
-  {
-   "tmdb": 1117898,
-   "title": "El gato con sombrero",
-   "original": "The Cat in the Hat",
-   "estreno": "2026-11-06",
-   "clasificacion": "PG",
-   "duracion": 108,
-   "resumen": "Un astuto gato lleva el caos con sus travesuras a la vida de un par de hermanos que lidian con su mudanza a una nueva ciudad.",
-   "generos": [
-    "Animación",
-    "Comedia",
-    "Aventura",
-    "Fantasía",
-    "Familia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/5rS3PbnARmbbL3LiLhEX3Tr0l6k.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/9y9o686DsQg0KzPtERzcW7Cf8IE.jpg",
-   "direccion": [
-    "Erica Rivinoja",
-    "Alessandro Carloni"
-   ],
-   "reparto": [
-    "Bill Hader",
-    "Xochitl Gomez",
-    "Tiago Martinez",
-    "Matt Berry",
-    "Quinta Brunson",
-    "Bowen Yang",
-    "America Ferrera",
-    "Paula Pell"
-   ],
-   "trailer": "bRMu8S6FQ9c",
-   "dondeVer": [],
-   "popularidad": 21.0,
+   "popularidad": 21.7,
    "pr": false
   },
   {
@@ -1916,7 +1919,7 @@
    ],
    "trailer": "A7lyvgnDuDE",
    "dondeVer": [],
-   "popularidad": 20.1,
+   "popularidad": 20.4,
    "pr": false
   },
   {
@@ -1949,7 +1952,7 @@
    ],
    "trailer": "Haw_sznA5aQ",
    "dondeVer": [],
-   "popularidad": 18.7,
+   "popularidad": 19.2,
    "pr": false
   },
   {
@@ -1966,7 +1969,7 @@
     "Bélica"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/zWuZWFKyga6GF3agrhJn8UtdMSu.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/mu930fAteJp5tqiXZbxiONTBPnK.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/8atC3ghkXK0cr3HutnzsffKWCbR.jpg",
    "direccion": [
     "Antonin Baudry"
    ],
@@ -1982,7 +1985,7 @@
    ],
    "trailer": "dKUArYoZ_0U",
    "dondeVer": [],
-   "popularidad": 16.8,
+   "popularidad": 17.2,
    "pr": false
   },
   {
@@ -2013,7 +2016,7 @@
    ],
    "trailer": "ryMtR8BvkA0",
    "dondeVer": [],
-   "popularidad": 10.8,
+   "popularidad": 10.2,
    "pr": false
   },
   {
@@ -2045,7 +2048,7 @@
    ],
    "trailer": "JtkPJREm_9o",
    "dondeVer": [],
-   "popularidad": 10.5,
+   "popularidad": 11.3,
    "pr": false
   },
   {
@@ -2078,7 +2081,7 @@
    ],
    "trailer": "ORxw68y3lyw",
    "dondeVer": [],
-   "popularidad": 10.4,
+   "popularidad": 11.6,
    "pr": false
   },
   {
@@ -2087,7 +2090,7 @@
    "original": "Steps",
    "estreno": "2026-11-20",
    "clasificacion": "PG",
-   "duracion": 101,
+   "duracion": 102,
    "resumen": "",
    "generos": [
     "Animación",
@@ -2113,7 +2116,7 @@
    ],
    "trailer": "rXKefkjeoQQ",
    "dondeVer": [],
-   "popularidad": 10.2,
+   "popularidad": 10.0,
    "pr": false
   },
   {
@@ -2147,7 +2150,7 @@
    ],
    "trailer": "RjEZaUBbUvU",
    "dondeVer": [],
-   "popularidad": 9.2,
+   "popularidad": 9.3,
    "pr": false
   },
   {
@@ -2181,6 +2184,39 @@
    ],
    "trailer": "wlm_vxf4PaM",
    "dondeVer": [],
+   "popularidad": 8.8,
+   "pr": false
+  },
+  {
+   "tmdb": 1402181,
+   "title": "Scene",
+   "original": "சீன்",
+   "estreno": "2026-11-06",
+   "clasificacion": "NR",
+   "duracion": 149,
+   "resumen": "",
+   "generos": [
+    "Acción",
+    "Comedia",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/kfc4w3OX8QsFm8f9MPUdmGheNl3.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/zYiUafcGC7JqK01GYbkimBYNaUR.jpg",
+   "direccion": [
+    "Jithu Madhavan"
+   ],
+   "reparto": [
+    "சூர்யா",
+    "Naslen",
+    "നസ്രിയ നസീം",
+    "Anandaraj",
+    "Lal",
+    "Raj Priyan",
+    "John Vijay",
+    "Gajaraj"
+   ],
+   "trailer": null,
+   "dondeVer": [],
    "popularidad": 8.7,
    "pr": false
   },
@@ -2213,7 +2249,7 @@
    ],
    "trailer": "guKEdb_iRXw",
    "dondeVer": [],
-   "popularidad": 8.6,
+   "popularidad": 7.7,
    "pr": false
   },
   {
@@ -2246,40 +2282,7 @@
    ],
    "trailer": "hTHeFP0mcuk",
    "dondeVer": [],
-   "popularidad": 8.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1402181,
-   "title": "Scene",
-   "original": "சீன்",
-   "estreno": "2026-11-06",
-   "clasificacion": "NR",
-   "duracion": 149,
-   "resumen": "",
-   "generos": [
-    "Acción",
-    "Comedia",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/kfc4w3OX8QsFm8f9MPUdmGheNl3.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/zYiUafcGC7JqK01GYbkimBYNaUR.jpg",
-   "direccion": [
-    "Jithu Madhavan"
-   ],
-   "reparto": [
-    "சூர்யா",
-    "നസ്രിയ നസീം",
-    "Naslen",
-    "Anandaraj",
-    "Lal",
-    "Raj Priyan",
-    "John Vijay",
-    "Gajaraj"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 7.9,
+   "popularidad": 8.2,
    "pr": false
   },
   {
@@ -2311,7 +2314,7 @@
    ],
    "trailer": "7ljcNjDeF60",
    "dondeVer": [],
-   "popularidad": 7.7,
+   "popularidad": 8.2,
    "pr": false
   },
   {
@@ -2343,7 +2346,7 @@
    ],
    "trailer": "sDiFol_2j2I",
    "dondeVer": [],
-   "popularidad": 7.3,
+   "popularidad": 7.1,
    "pr": false
   },
   {
@@ -2374,7 +2377,7 @@
    ],
    "trailer": "tLYJzEtmavg",
    "dondeVer": [],
-   "popularidad": 7.3,
+   "popularidad": 7.7,
    "pr": false
   },
   {
@@ -2406,7 +2409,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 6.4,
+   "popularidad": 5.0,
    "pr": false
   },
   {
@@ -2438,38 +2441,7 @@
    ],
    "trailer": "SNbVMk-nLu4",
    "dondeVer": [],
-   "popularidad": 6.4,
-   "pr": false
-  },
-  {
-   "tmdb": 1655419,
-   "title": "Everytime",
-   "original": "Everytime",
-   "estreno": "2026-11-06",
-   "clasificacion": "NR",
-   "duracion": 123,
-   "resumen": "",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/bOEoQxzC74eGMGbSq6xW7eLZjWn.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bRkk5HjNLQMWB3LlZdxySSzxVLi.jpg",
-   "direccion": [
-    "Sandra Wollner"
-   ],
-   "reparto": [
-    "Birgit Minichmayr",
-    "Lotte Keiling",
-    "Tristán López",
-    "Carla Hüttermann",
-    "Hermann Beyer",
-    "Eva Weißenborn",
-    "Knut Berger",
-    "Lilly Marie Tschörtner"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 6.4,
+   "popularidad": 6.9,
    "pr": false
   },
   {
@@ -2502,7 +2474,7 @@
    ],
    "trailer": "MLwTyQOhBkw",
    "dondeVer": [],
-   "popularidad": 6.1,
+   "popularidad": 6.3,
    "pr": false
   },
   {
@@ -2536,38 +2508,7 @@
    ],
    "trailer": "8N9e-skJ3hw",
    "dondeVer": [],
-   "popularidad": 6.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1612811,
-   "title": "Disco",
-   "original": "ഡിസ്കോ",
-   "estreno": "2026-11-06",
-   "clasificacion": "NR",
-   "duracion": 155,
-   "resumen": "",
-   "generos": [
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/yZ3AeO4bGYkSVT4onkAbLPTOSXe.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/nXeFm7r4mkxP4wMnS9i2lCORGxw.jpg",
-   "direccion": [
-    "Ullas Jose Chemban"
-   ],
-   "reparto": [
-    "Antony Varghese",
-    "Chemban Vinod Jose",
-    "Femina George",
-    "Arjun Ashokan",
-    "Lukman Avaran",
-    "Dev",
-    "Vishnu Unnikrishnan",
-    "Shebin Benson"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 6.0,
+   "popularidad": 5.7,
    "pr": false
   },
   {
@@ -2598,7 +2539,7 @@
    ],
    "trailer": "SzopCeFAWF0",
    "dondeVer": [],
-   "popularidad": 5.7,
+   "popularidad": 5.3,
    "pr": false
   },
   {
@@ -2630,7 +2571,7 @@
    ],
    "trailer": "MR7U_7FAxUY",
    "dondeVer": [],
-   "popularidad": 5.6,
+   "popularidad": 5.1,
    "pr": false
   },
   {
@@ -2662,6 +2603,69 @@
     "Xiangtong Wu"
    ],
    "trailer": null,
+   "dondeVer": [],
+   "popularidad": 5.7,
+   "pr": false
+  },
+  {
+   "tmdb": 1655419,
+   "title": "Everytime",
+   "original": "Everytime",
+   "estreno": "2026-11-06",
+   "clasificacion": "NR",
+   "duracion": 123,
+   "resumen": "",
+   "generos": [
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/bOEoQxzC74eGMGbSq6xW7eLZjWn.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/bRkk5HjNLQMWB3LlZdxySSzxVLi.jpg",
+   "direccion": [
+    "Sandra Wollner"
+   ],
+   "reparto": [
+    "Birgit Minichmayr",
+    "Lotte Keiling",
+    "Tristán López",
+    "Carla Hüttermann",
+    "Hermann Beyer",
+    "Eva Weißenborn",
+    "Knut Berger",
+    "Lilly Marie Tschörtner"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 5.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1241478,
+   "title": "Jimmy",
+   "original": "Jimmy",
+   "estreno": "2026-11-06",
+   "clasificacion": "PG-13",
+   "duracion": 120,
+   "resumen": "",
+   "generos": [
+    "Drama",
+    "Historia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/c3fWnsg5VEP5EhYZ4oY2NpFrrU1.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/2q3oieEIadF90wOtm9WGX5vrqUR.jpg",
+   "direccion": [
+    "Aaron Burns"
+   ],
+   "reparto": [
+    "KJ Apa",
+    "Jason Alexander",
+    "Max Casella",
+    "Sarah Drew",
+    "Julian Works",
+    "Jen Lilley",
+    "Christopher McDonald",
+    "Kara Killmer"
+   ],
+   "trailer": "56hqQ2_s2c4",
    "dondeVer": [],
    "popularidad": 5.5,
    "pr": false
