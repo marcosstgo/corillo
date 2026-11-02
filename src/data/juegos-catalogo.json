@@ -1,0 +1,2080 @@
+{
+ "105600": {
+  "desarrollador": "Re-Logic",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/105600/header.jpg?t=1792530636",
+  "lanzamiento": "16 MAY 2011",
+  "nombre": "Terraria",
+  "slug": "terraria",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 21621,
+   "fecha": "2026-11-02",
+   "pico": 45798,
+   "puesto": 56
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1085660": {
+  "desarrollador": "Bungie",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1085660/0ccf0dc0a8c4ec078db7ab99ddc820b2fa884441/header.jpg?t=1781815889",
+  "lanzamiento": "1 OCT 2019",
+  "nombre": "Destiny 2",
+  "slug": "destiny-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 25145,
+   "fecha": "2026-11-02",
+   "pico": 33292,
+   "puesto": 47
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "108600": {
+  "desarrollador": "The Indie Stone",
+  "generos": [
+   "Indie",
+   "Rol",
+   "Simuladores",
+   "Acceso anticipado"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/108600/header.jpg?t=1793224893",
+  "lanzamiento": "8 NOV 2013",
+  "nombre": "Project Zomboid",
+  "slug": "project-zomboid",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 36104,
+   "fecha": "2026-11-02",
+   "pico": 61716,
+   "puesto": 32
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1086940": {
+  "desarrollador": "Larian Studios",
+  "generos": [
+   "Aventura",
+   "Rol",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1086940/48a2fcbda8565bb45025e98fd8ebde8a7203f6a0/header.jpg?t=1777363040",
+  "lanzamiento": "3 AGO 2023",
+  "nombre": "Baldur's Gate 3",
+  "slug": "baldur-s-gate-3",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 33340,
+   "fecha": "2026-11-02",
+   "pico": 58283,
+   "puesto": 35
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1091500": {
+  "desarrollador": "CD PROJEKT RED",
+  "generos": [
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/48a93d6445a67520ea49833c93dae8f2e68fc540/header_alt_assets_9.jpg?t=1792682505",
+  "lanzamiento": "9 DIC 2020",
+  "nombre": "Cyberpunk 2077",
+  "slug": "cyberpunk-2077",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 102873,
+   "fecha": "2026-11-02",
+   "pico": 168742,
+   "puesto": 9
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1142710": {
+  "desarrollador": "CREATIVE ASSEMBLY, Feral Interactive",
+  "generos": [
+   "Acción",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1142710/header.jpg?t=1790321531",
+  "lanzamiento": "16 FEB 2022",
+  "nombre": "Total War: WARHAMMER III",
+  "slug": "total-war-warhammer-iii",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 22029,
+   "fecha": "2026-11-02",
+   "pico": 49763,
+   "puesto": 54
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1158310": {
+  "desarrollador": "Paradox Development Studio",
+  "generos": [
+   "Rol",
+   "Simuladores",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1158310/8a7e814d13f8e73c0d40471f585ece908f9be282/header.jpg?t=1792414688",
+  "lanzamiento": "1 SEP 2020",
+  "nombre": "Crusader Kings III",
+  "slug": "crusader-kings-iii",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 12627,
+   "fecha": "2026-11-02",
+   "pico": 25130,
+   "puesto": 89
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1172470": {
+  "desarrollador": "Respawn",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1172470/6cf04767652d703b6050da84b82cfb1194258d7d/header.jpg?t=1790164440",
+  "lanzamiento": "4 NOV 2020",
+  "nombre": "Apex Legends",
+  "slug": "apex-legends",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 64332,
+   "fecha": "2026-11-02",
+   "pico": 203578,
+   "puesto": 15
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1174180": {
+  "desarrollador": "Rockstar Games",
+  "generos": [
+   "Acción",
+   "Aventura"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1174180/header.jpg?t=1759502961",
+  "lanzamiento": "5 DIC 2019",
+  "nombre": "Red Dead Redemption 2",
+  "slug": "red-dead-redemption-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 20517,
+   "fecha": "2026-11-02",
+   "pico": 43382,
+   "puesto": 58
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1203220": {
+  "desarrollador": "24 Entertainment",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1203220/2c626fe471202399b2fe31cf25b05e5e88289a89/header.jpg?t=1792651021",
+  "lanzamiento": "11 AGO 2021",
+  "nombre": "NARAKA: BLADEPOINT",
+  "slug": "naraka-bladepoint",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 16088,
+   "fecha": "2026-11-02",
+   "pico": 63537,
+   "puesto": 72
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1203620": {
+  "desarrollador": "Keen Games GmbH",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1203620/98ca939f51b39bdd41e0e9198a9ccf8421148770/header_alt_assets_2.jpg?t=1792078032",
+  "lanzamiento": "15 OCT 2026",
+  "nombre": "Enshrouded",
+  "slug": "enshrouded",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 39384,
+   "fecha": "2026-11-02",
+   "pico": 98272,
+   "puesto": 31
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1222670": {
+  "desarrollador": "Maxis",
+  "generos": [
+   "Aventura",
+   "Casual",
+   "Simuladores",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1222670/header.jpg?t=1793293287",
+  "lanzamiento": "18 JUN 2020",
+  "nombre": "The Sims 4",
+  "slug": "the-sims-4",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 17784,
+   "fecha": "2026-11-02",
+   "pico": 33529,
+   "puesto": 65
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1245620": {
+  "desarrollador": "FromSoftware, Inc.",
+  "generos": [
+   "Acción",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg?t=1790290043",
+  "lanzamiento": "24 FEB 2022",
+  "nombre": "ELDEN RING",
+  "slug": "elden-ring",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 18238,
+   "fecha": "2026-11-02",
+   "pico": 33274,
+   "puesto": 62
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1281930": {
+  "desarrollador": "TML Team",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Rol"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1281930/header.jpg?t=1788369465",
+  "lanzamiento": "16 MAY 2020",
+  "nombre": "tModLoader",
+  "slug": "tmodloader",
+  "tipo": "mod",
+  "ultimo": {
+   "ahora": 14585,
+   "fecha": "2026-11-02",
+   "pico": 34308,
+   "puesto": 82
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1304930": {
+  "desarrollador": "Red Barrels",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1304930/e3b17cf268afa51334b63124a2fe0aef3f1d136b/header_alt_assets_4.jpg?t=1792554994",
+  "lanzamiento": "5 MAR 2024",
+  "nombre": "The Outlast Trials",
+  "slug": "the-outlast-trials",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11172,
+   "fecha": "2026-11-02",
+   "pico": 32044,
+   "puesto": 100
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1326470": {
+  "desarrollador": "Endnight Games Ltd",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1326470/header.jpg?t=1708624856",
+  "lanzamiento": "22 FEB 2024",
+  "nombre": "Sons Of The Forest",
+  "slug": "sons-of-the-forest",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11350,
+   "fecha": "2026-11-02",
+   "pico": 36591,
+   "puesto": 97
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1364780": {
+  "desarrollador": "CAPCOM Co., Ltd.",
+  "generos": [
+   "Acción",
+   "Aventura"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1364780/header.jpg?t=1791866175",
+  "lanzamiento": "1 JUN 2023",
+  "nombre": "Street Fighter 6",
+  "slug": "street-fighter-6",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 12135,
+   "fecha": "2026-11-02",
+   "pico": 30391,
+   "puesto": 90
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1366800": {
+  "desarrollador": "CenterPoint Gaming",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Formación en software"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1366800/5d2226e40ebdb5abff98b0b1a3651e4e5f7e4454/header_spanish.jpg?t=1783870581",
+  "lanzamiento": "17 AGO 2020",
+  "nombre": "Crosshair X",
+  "slug": "crosshair-x",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 27379,
+   "fecha": "2026-11-02",
+   "pico": 46380,
+   "puesto": 41
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1422450": {
+  "desarrollador": "Valve",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1422450/aa249c5e8cc8f90941bd1dbdc311773cd1afe065/header.jpg?t=1790716179",
+  "lanzamiento": "Por confirmarse",
+  "nombre": "Deadlock",
+  "slug": "deadlock",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 183750,
+   "fecha": "2026-11-02",
+   "pico": 263220,
+   "puesto": 5
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1476970": {
+  "desarrollador": "Lavaflame2",
+  "generos": [
+   "Aventura",
+   "Casual",
+   "Indie",
+   "Multijugador masivo"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1476970/header.jpg?t=1783034427",
+  "lanzamiento": "6 NOV 2025",
+  "nombre": "IdleOn - The Idle RPG",
+  "slug": "idleon-the-idle-rpg",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11935,
+   "fecha": "2026-11-02",
+   "pico": 14358,
+   "puesto": 93
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1623730": {
+  "desarrollador": "Pocketpair",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1623730/6912f19c43a95ff5fe514eedd35e68bf12335459/header.jpg?t=1790336367",
+  "lanzamiento": "9 JUL 2026",
+  "nombre": "Palworld",
+  "slug": "palworld",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 26915,
+   "fecha": "2026-11-02",
+   "pico": 52597,
+   "puesto": 42
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1665460": {
+  "desarrollador": "KONAMI",
+  "generos": [
+   "Simuladores",
+   "Deportes",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1665460/86619d0fb7126b3d5276004175f9a62181223c0f/header.jpg?t=1792635226",
+  "lanzamiento": "29 SEP 2021",
+  "nombre": "eFootball",
+  "slug": "efootball",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11652,
+   "fecha": "2026-11-02",
+   "pico": 22011,
+   "puesto": 95
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1808500": {
+  "desarrollador": "Embark Studios",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1808500/41ee6c5c81a5797132879892586465b917acc563/header_alt_assets_9.jpg?t=1793353805",
+  "lanzamiento": "30 OCT 2025",
+  "nombre": "ARC Raiders",
+  "slug": "arc-raiders",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 49803,
+   "fecha": "2026-11-02",
+   "pico": 95451,
+   "puesto": 21
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1867240": {
+  "desarrollador": "BULKHEAD",
+  "generos": [
+   "Acción",
+   "Indie",
+   "Multijugador masivo",
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1867240/cf3f484ca79e1e482d66a5eb9d0f331e18839cf0/header_alt_assets_0_spanish.jpg?t=1791928607",
+  "lanzamiento": "10 SEP 2026",
+  "nombre": "WARDOGS",
+  "slug": "wardogs",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 72995,
+   "fecha": "2026-11-02",
+   "pico": 146252,
+   "puesto": 13
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1905180": {
+  "desarrollador": "OBS Project",
+  "generos": [
+   "Utilidades",
+   "Producción de vídeo"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1905180/header.jpg?t=1788207455",
+  "lanzamiento": "21 MAR 2022",
+  "nombre": "OBS Studio",
+  "slug": "obs-studio",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 13806,
+   "fecha": "2026-11-02",
+   "pico": 31185,
+   "puesto": 84
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1938090": {
+  "desarrollador": "Treyarch, Raven Software",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1938090/23af6cf41e2d09620caa07700a4cb3288dbcbaa8/header.jpg?t=1793386059",
+  "lanzamiento": "27 OCT 2022",
+  "nombre": "Call of Duty",
+  "slug": "call-of-duty",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 132451,
+   "fecha": "2026-11-02",
+   "pico": 193921,
+   "puesto": 7
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "1973530": {
+  "desarrollador": "ProjectMoon",
+  "generos": [
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1973530/header.jpg?t=1792746022",
+  "lanzamiento": "26 FEB 2023",
+  "nombre": "Limbus Company",
+  "slug": "limbus-company",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 28637,
+   "fecha": "2026-11-02",
+   "pico": 42450,
+   "puesto": 40
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2073620": {
+  "desarrollador": "Morefun Studios",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Rol"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2073620/eccc13f9398a6af599a78ec7a437d6540f43a3c5/header.jpg?t=1791983571",
+  "lanzamiento": "15 SEP 2025",
+  "nombre": "Arena Breakout: Infinite",
+  "slug": "arena-breakout-infinite",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 14643,
+   "fecha": "2026-11-02",
+   "pico": 37431,
+   "puesto": 81
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2073850": {
+  "desarrollador": "Embark Studios",
+  "generos": [
+   "Acción",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2073850/4b0efa1275c8cedc030209eb174af726a5ca1776/header.jpg?t=1792501373",
+  "lanzamiento": "7 DIC 2023",
+  "nombre": "THE FINALS",
+  "slug": "the-finals",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 16053,
+   "fecha": "2026-11-02",
+   "pico": 26628,
+   "puesto": 73
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2139460": {
+  "desarrollador": "Starry Studio",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Casual",
+   "Multijugador masivo"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2139460/c18b08a2f93dec32fcc5fa71bc2da44ee42de1f0/header.jpg?t=1792640697",
+  "lanzamiento": "9 JUL 2024",
+  "nombre": "Once Human",
+  "slug": "once-human",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 18980,
+   "fecha": "2026-11-02",
+   "pico": 34149,
+   "puesto": 61
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "216150": {
+  "desarrollador": "NEXON Korea Corporation",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Casual",
+   "Multijugador masivo"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/216150/903ea857e7b2944b4738a01054c1560a455ab32b/header_alt_assets_21.jpg?t=1792606813",
+  "lanzamiento": "9 AGO 2012",
+  "nombre": "MapleStory",
+  "slug": "maplestory",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 23998,
+   "fecha": "2026-11-02",
+   "pico": 25178,
+   "puesto": 49
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "218620": {
+  "desarrollador": "OVERKILL - a Starbreeze Studio., Sidetrack Games",
+  "generos": [
+   "Acción",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/218620/c44949287e8ffa2518f01b5033b8431dd0f984e4/header.jpg?t=1789555107",
+  "lanzamiento": "13 AGO 2013",
+  "nombre": "PAYDAY 2",
+  "slug": "payday-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11339,
+   "fecha": "2026-11-02",
+   "pico": 21128,
+   "puesto": 98
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "221100": {
+  "desarrollador": "Bohemia Interactive",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/221100/header.jpg?t=1792059745",
+  "lanzamiento": "13 DIC 2018",
+  "nombre": "DayZ",
+  "slug": "dayz",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 26007,
+   "fecha": "2026-11-02",
+   "pico": 66239,
+   "puesto": 44
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2246340": {
+  "desarrollador": "CAPCOM Co., Ltd.",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2246340/header.jpg?t=1787549555",
+  "lanzamiento": "27 FEB 2025",
+  "nombre": "Monster Hunter Wilds",
+  "slug": "monster-hunter-wilds",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 13677,
+   "fecha": "2026-11-02",
+   "pico": 31828,
+   "puesto": 85
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2300320": {
+  "desarrollador": "GIANTS Software",
+  "generos": [
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2300320/c2a205133d23cd24faf3c152d972a1d0177661b8/header.jpg?t=1793106374",
+  "lanzamiento": "12 NOV 2024",
+  "nombre": "Farming Simulator 25",
+  "slug": "farming-simulator-25",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 13623,
+   "fecha": "2026-11-02",
+   "pico": 62953,
+   "puesto": 86
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "230410": {
+  "desarrollador": "Digital Extremes",
+  "generos": [
+   "Acción",
+   "Rol",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/230410/1a3e7c2a05ce4e5cad5ac4c7e858cf5b0934704e/header.jpg?t=1792613117",
+  "lanzamiento": "25 MAR 2013",
+  "nombre": "Warframe",
+  "slug": "warframe",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 61983,
+   "fecha": "2026-11-02",
+   "pico": 86297,
+   "puesto": 17
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2357570": {
+  "desarrollador": "Blizzard Entertainment, Inc.",
+  "generos": [
+   "Acción",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2357570/5c208b2699cd38ed6125d039be388fa744db54a4/header_alt_assets_23.jpg?t=1791576843",
+  "lanzamiento": "10 AGO 2023",
+  "nombre": "Overwatch",
+  "slug": "overwatch",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 49964,
+   "fecha": "2026-11-02",
+   "pico": 65807,
+   "puesto": 20
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "236390": {
+  "desarrollador": "Gaijin Entertainment",
+  "generos": [
+   "Acción",
+   "Multijugador masivo",
+   "Simuladores",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/236390/38881c549e623fe432af4e7b4bc3952b443906f5/header.jpg?t=1793185672",
+  "lanzamiento": "15 AGO 2013",
+  "nombre": "War Thunder",
+  "slug": "war-thunder",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 39923,
+   "fecha": "2026-11-02",
+   "pico": 106784,
+   "puesto": 30
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2399830": {
+  "desarrollador": "Studio Wildcard, Grove Street Games",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Multijugador masivo"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2399830/d934813ca531af0fce69fe36bc972f1c90d1aa19/header.jpg?t=1793226168",
+  "lanzamiento": "25 OCT 2023",
+  "nombre": "ARK: Survival Ascended",
+  "slug": "ark-survival-ascended",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 18132,
+   "fecha": "2026-11-02",
+   "pico": 33127,
+   "puesto": 64
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2507950": {
+  "desarrollador": "Team Jade",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2507950/09ef134458549352e5b5a06ed7f97cf00d729b62/header_alt_assets_14.jpg?t=1790238079",
+  "lanzamiento": "4 DIC 2024",
+  "nombre": "Delta Force",
+  "slug": "delta-force",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 42303,
+   "fecha": "2026-11-02",
+   "pico": 108109,
+   "puesto": 28
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "250900": {
+  "desarrollador": "Nicalis, Inc., Edmund McMillen",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/header.jpg?t=1731977365",
+  "lanzamiento": "4 NOV 2014",
+  "nombre": "The Binding of Isaac: Rebirth",
+  "slug": "the-binding-of-isaac-rebirth",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 29228,
+   "fecha": "2026-11-02",
+   "pico": 55879,
+   "puesto": 39
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "251570": {
+  "desarrollador": "The Fun Pimps",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/251570/header.jpg?t=1793138252",
+  "lanzamiento": "25 JUL 2024",
+  "nombre": "7 Days to Die",
+  "slug": "7-days-to-die",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 16703,
+   "fecha": "2026-11-02",
+   "pico": 39358,
+   "puesto": 69
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "252490": {
+  "desarrollador": "Facepunch Studios",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Multijugador masivo"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252490/header.jpg?t=1781536981",
+  "lanzamiento": "8 FEB 2018",
+  "nombre": "Rust",
+  "slug": "rust",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 46563,
+   "fecha": "2026-11-02",
+   "pico": 120346,
+   "puesto": 24
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "252950": {
+  "desarrollador": "Psyonix LLC",
+  "generos": [
+   "Acción",
+   "Indie",
+   "Carreras",
+   "Deportes"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/252950/3abd9ab079c8896a4762dbe34a853d89b7f704df/header_alt_assets_17.jpg?t=1791210513",
+  "lanzamiento": "6 JUL 2015",
+  "nombre": "Rocket League",
+  "slug": "rocket-league",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 16663,
+   "fecha": "2026-11-02",
+   "pico": 31473,
+   "puesto": 70
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "261550": {
+  "desarrollador": "TaleWorlds Entertainment",
+  "generos": [
+   "Acción",
+   "Indie",
+   "Rol",
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/261550/header.jpg?t=1764252300",
+  "lanzamiento": "25 OCT 2022",
+  "nombre": "Mount & Blade II: Bannerlord",
+  "slug": "mount-blade-ii-bannerlord",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 14723,
+   "fecha": "2026-11-02",
+   "pico": 36426,
+   "puesto": 78
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2676230": {
+  "desarrollador": "",
+  "generos": [],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2676230/9e8a2df18bfdd24267aefa6d3e14778c2ecb1708/header.jpg?t=1778609608",
+  "lanzamiento": "",
+  "nombre": "FiveM",
+  "slug": "fivem",
+  "tipo": "advertising",
+  "ultimo": {
+   "ahora": 95577,
+   "fecha": "2026-11-02",
+   "pico": 195910,
+   "puesto": 10
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "271590": {
+  "desarrollador": "Rockstar North",
+  "generos": [
+   "Acción",
+   "Aventura"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271590/header.jpg?t=1765387725",
+  "lanzamiento": "13 ABR 2015",
+  "nombre": "Grand Theft Auto V Legacy",
+  "slug": "grand-theft-auto-v-legacy",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 26269,
+   "fecha": "2026-11-02",
+   "pico": 75795,
+   "puesto": 43
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "275850": {
+  "desarrollador": "Hello Games",
+  "generos": [
+   "Acción",
+   "Aventura"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/275850/9f1ca9e3b7d1dccb7b5af404a6739ddc1118ef32/header_alt_assets_26.jpg?t=1793196605",
+  "lanzamiento": "12 AGO 2016",
+  "nombre": "No Man's Sky",
+  "slug": "no-man-s-sky",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 12135,
+   "fecha": "2026-11-02",
+   "pico": 21646,
+   "puesto": 91
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2767030": {
+  "desarrollador": "NetEase Games",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Casual",
+   "Multijugador masivo"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2767030/c61f65c5968af5d85b0393005991ecee0184fcaf/header.jpg?t=1792140776",
+  "lanzamiento": "5 DIC 2024",
+  "nombre": "Marvel Rivals",
+  "slug": "marvel-rivals",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 45431,
+   "fecha": "2026-11-02",
+   "pico": 54774,
+   "puesto": 25
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2807960": {
+  "desarrollador": "Battlefield Studios",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2807960/c12d12ce3c7d217398d3fcad77427bfc9d57c570/header.jpg?t=1793314012",
+  "lanzamiento": "10 OCT 2025",
+  "nombre": "Battlefield 6",
+  "slug": "battlefield-6",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 22998,
+   "fecha": "2026-11-02",
+   "pico": 47247,
+   "puesto": 51
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "284160": {
+  "desarrollador": "BeamNG",
+  "generos": [
+   "Carreras",
+   "Simuladores",
+   "Acceso anticipado"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/284160/17f8af1312bc48e6cd90e5fb639d4981682af260/header.jpg?t=1792417797",
+  "lanzamiento": "29 MAY 2015",
+  "nombre": "BeamNG.drive",
+  "slug": "beamng-drive",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 15783,
+   "fecha": "2026-11-02",
+   "pico": 41055,
+   "puesto": 75
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "2868840": {
+  "desarrollador": "Mega Crit",
+  "generos": [
+   "Indie",
+   "Estrategia",
+   "Acceso anticipado"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2868840/b0958d387dc366211e0f353443710cfcf9fdb020/header.jpg?t=1787169309",
+  "lanzamiento": "5 MAR 2026",
+  "nombre": "Slay the Spire 2",
+  "slug": "slay-the-spire-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 54977,
+   "fecha": "2026-11-02",
+   "pico": 89859,
+   "puesto": 18
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "289070": {
+  "desarrollador": "Firaxis Games, Aspyr (Mac)",
+  "generos": [
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/289070/header.jpg?t=1792718069",
+  "lanzamiento": "20 OCT 2016",
+  "nombre": "Sid Meier’s Civilization VI",
+  "slug": "sid-meier-s-civilization-vi",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 21835,
+   "fecha": "2026-11-02",
+   "pico": 43908,
+   "puesto": 55
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "292030": {
+  "desarrollador": "CD PROJEKT RED",
+  "generos": [
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/292030/7157bc74e5fe3f48ab007b18a3d043009d877ec4/header_alt_assets_1_spanish.jpg?t=1790845156",
+  "lanzamiento": "18 MAY 2015",
+  "nombre": "The Witcher 3: Wild Hunt — Remastered",
+  "slug": "the-witcher-3-wild-hunt-remastered",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 19941,
+   "fecha": "2026-11-02",
+   "pico": 63225,
+   "puesto": 60
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "294100": {
+  "desarrollador": "Ludeon Studios",
+  "generos": [
+   "Indie",
+   "Simuladores",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/294100/76e0613b8197327299d5dbabb0a7fd7828a689a2/header.jpg?t=1782756789",
+  "lanzamiento": "17 OCT 2018",
+  "nombre": "RimWorld",
+  "slug": "rimworld",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 25236,
+   "fecha": "2026-11-02",
+   "pico": 42986,
+   "puesto": 45
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "304930": {
+  "desarrollador": "Smartly Dressed Games",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Casual",
+   "Indie"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/304930/161ec2d6ace8a03afdb7a423510ff8f7d8b301ba/header.jpg?t=1783436894",
+  "lanzamiento": "7 JUL 2017",
+  "nombre": "Unturned",
+  "slug": "unturned",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 14718,
+   "fecha": "2026-11-02",
+   "pico": 18461,
+   "puesto": 79
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "322170": {
+  "desarrollador": "RobTop Games",
+  "generos": [
+   "Acción",
+   "Indie"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322170/header.jpg?t=1775300400",
+  "lanzamiento": "22 DIC 2014",
+  "nombre": "Geometry Dash",
+  "slug": "geometry-dash",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 31041,
+   "fecha": "2026-11-02",
+   "pico": 70803,
+   "puesto": 37
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "322330": {
+  "desarrollador": "Klei Entertainment",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/322330/050ea9c51a4e96f707309d33b7cdd38e0a6cbfff/header_alt_assets_51.jpg?t=1793044716",
+  "lanzamiento": "21 ABR 2016",
+  "nombre": "Don't Starve Together",
+  "slug": "don-t-starve-together",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 22739,
+   "fecha": "2026-11-02",
+   "pico": 70243,
+   "puesto": 52
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3240220": {
+  "desarrollador": "Rockstar North",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Carreras"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3240220/header.jpg?t=1781187782",
+  "lanzamiento": "4 MAR 2025",
+  "nombre": "Grand Theft Auto V Enhanced",
+  "slug": "grand-theft-auto-v-enhanced",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 31789,
+   "fecha": "2026-11-02",
+   "pico": 72469,
+   "puesto": 36
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3241660": {
+  "desarrollador": "semiwork",
+  "generos": [
+   "Acción",
+   "Acceso anticipado"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3241660/62177765c05399116f0453fe1177b00ceed698c4/header_alt_assets_3.jpg?t=1793278962",
+  "lanzamiento": "26 FEB 2025",
+  "nombre": "R.E.P.O.",
+  "slug": "r-e-p-o",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 33718,
+   "fecha": "2026-11-02",
+   "pico": 72524,
+   "puesto": 33
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3259780": {
+  "desarrollador": "Square Enix, LANCARSE Ltd.",
+  "generos": [
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3259780/710da43babb2043f9f6ad0e50023e31167d94708/header.jpg?t=1793031418",
+  "lanzamiento": "22 OCT 2026",
+  "nombre": "FINAL FANTASY RESONANCE",
+  "slug": "final-fantasy-resonance",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 17775,
+   "fecha": "2026-11-02",
+   "pico": 31253,
+   "puesto": 66
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3321460": {
+  "desarrollador": "Pearl Abyss",
+  "generos": [
+   "Acción",
+   "Aventura"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3321460/236f3814be7a97d86831800691b6096d449222a8/header.jpg?t=1792637341",
+  "lanzamiento": "19 MAR 2026",
+  "nombre": "Crimson Desert Enhanced",
+  "slug": "crimson-desert-enhanced",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 22230,
+   "fecha": "2026-11-02",
+   "pico": 43998,
+   "puesto": 53
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3393110": {
+  "desarrollador": "NC",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Rol"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3393110/10aa4b096ebe6af0d1dd7882e5ba004271aef6f7/header.jpg?t=1792771538",
+  "lanzamiento": "5 OCT 2026",
+  "nombre": "AION 2",
+  "slug": "aion-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 135505,
+   "fecha": "2026-11-02",
+   "pico": 233713,
+   "puesto": 6
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3405690": {
+  "desarrollador": "EA Canada, EA Romania",
+  "generos": [
+   "Simuladores",
+   "Deportes"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3405690/2d96aa1b06e453cd62dae9029d412f19e61932c3/header.jpg?t=1789751159",
+  "lanzamiento": "25 SEP 2025",
+  "nombre": "EA SPORTS FC 26",
+  "slug": "ea-sports-fc-26",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 15619,
+   "fecha": "2026-11-02",
+   "pico": 34193,
+   "puesto": 76
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3419430": {
+  "desarrollador": "Irox Games",
+  "generos": [
+   "Casual",
+   "Indie",
+   "Multijugador masivo",
+   "Simuladores"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3419430/2e6c93c020fe13d09d8120bb9164ed7cb58f00c5/header.jpg?t=1791309178",
+  "lanzamiento": "5 MAR 2025",
+  "nombre": "Bongo Cat",
+  "slug": "bongo-cat",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 128530,
+   "fecha": "2026-11-02",
+   "pico": 144879,
+   "puesto": 8
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3527290": {
+  "desarrollador": "Team PEAK",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3527290/31bac6b2eccf09b368f5e95ce510bae2baf3cfcd/header.jpg?t=1792684718",
+  "lanzamiento": "16 JUN 2025",
+  "nombre": "PEAK",
+  "slug": "peak",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 15937,
+   "fecha": "2026-11-02",
+   "pico": 22264,
+   "puesto": 74
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "359550": {
+  "desarrollador": "Ubisoft Montreal",
+  "generos": [
+   "Acción",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/359550/ee838739b8241c6f58361b88ae769dfd64dc4b87/header_alt_assets_27_spanish.jpg?t=1792001976",
+  "lanzamiento": "1 DIC 2015",
+  "nombre": "Tom Clancy's Rainbow Six Siege",
+  "slug": "tom-clancy-s-rainbow-six-siege",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 52836,
+   "fecha": "2026-11-02",
+   "pico": 86360,
+   "puesto": 19
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3678970": {
+  "desarrollador": "Nugem Studio, Tesseract Studio",
+  "generos": [
+   "Casual",
+   "Indie",
+   "Rol",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3678970/0b88e99449edbf1812e950f7fd0fa71a381c5b21/header_alt_assets_1_spanish.jpg?t=1792715315",
+  "lanzamiento": "27 MAY 2026",
+  "nombre": "TBH: Task Bar Hero",
+  "slug": "tbh-task-bar-hero",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 62830,
+   "fecha": "2026-11-02",
+   "pico": 76451,
+   "puesto": 16
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "376210": {
+  "desarrollador": "Afterthought LLC",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Multijugador masivo"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/376210/header.jpg?t=1653237914",
+  "lanzamiento": "1 DIC 2015",
+  "nombre": "The Isle",
+  "slug": "the-isle",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 14366,
+   "fecha": "2026-11-02",
+   "pico": 25014,
+   "puesto": 83
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "377160": {
+  "desarrollador": "Bethesda Game Studios",
+  "generos": [
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/377160/header.jpg?t=1786648137",
+  "lanzamiento": "9 NOV 2015",
+  "nombre": "Fallout 4",
+  "slug": "fallout-4",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11456,
+   "fecha": "2026-11-02",
+   "pico": 19575,
+   "puesto": 96
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "381210": {
+  "desarrollador": "Behaviour Interactive Inc.",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/381210/header.jpg?t=1793202236",
+  "lanzamiento": "14 JUN 2016",
+  "nombre": "Dead by Daylight",
+  "slug": "dead-by-daylight",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 43521,
+   "fecha": "2026-11-02",
+   "pico": 76247,
+   "puesto": 27
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "39210": {
+  "desarrollador": "Square Enix",
+  "generos": [
+   "Multijugador masivo",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/39210/header.jpg?t=1782870674",
+  "lanzamiento": "18 FEB 2014",
+  "nombre": "FINAL FANTASY XIV Online",
+  "slug": "final-fantasy-xiv-online",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 17711,
+   "fecha": "2026-11-02",
+   "pico": 25119,
+   "puesto": 67
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "3932890": {
+  "desarrollador": "Battlestate Games",
+  "generos": [
+   "Acción",
+   "Multijugador masivo",
+   "Rol",
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3932890/4dd12ea3b00a4f8b67bfd629f3b9abbf8d5cab05/header_alt_assets_2.jpg?t=1785782094",
+  "lanzamiento": "15 NOV 2025",
+  "nombre": "Escape from Tarkov",
+  "slug": "escape-from-tarkov",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 18133,
+   "fecha": "2026-11-02",
+   "pico": 42170,
+   "puesto": 63
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "394360": {
+  "desarrollador": "Paradox Development Studio",
+  "generos": [
+   "Simuladores",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/394360/67bbd0057627fc2244793bcdd09260c2539499cf/header.jpg?t=1791468228",
+  "lanzamiento": "6 JUN 2016",
+  "nombre": "Hearts of Iron IV",
+  "slug": "hearts-of-iron-iv",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 21122,
+   "fecha": "2026-11-02",
+   "pico": 54472,
+   "puesto": 57
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4000": {
+  "desarrollador": "Facepunch Studios",
+  "generos": [
+   "Casual",
+   "Indie",
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4000/header.jpg?t=1776868682",
+  "lanzamiento": "29 NOV 2006",
+  "nombre": "Garry's Mod",
+  "slug": "garry-s-mod",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 17697,
+   "fecha": "2026-11-02",
+   "pico": 38254,
+   "puesto": 68
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4019220": {
+  "desarrollador": "Cozy Lives",
+  "generos": [
+   "Casual",
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4019220/f1cd08127872e60e4c47a4bc3e40d682d94741bf/header.jpg?t=1792401675",
+  "lanzamiento": "21 SEP 2026",
+  "nombre": "Dressmaker",
+  "slug": "dressmaker",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 16186,
+   "fecha": "2026-11-02",
+   "pico": 23542,
+   "puesto": 71
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4080220": {
+  "desarrollador": "EA CANADA, EA Romania",
+  "generos": [
+   "Simuladores",
+   "Deportes"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4080220/ff6a3779f1ca83aae8ad3878454f6c11008ea24d/header.jpg?t=1790973254",
+  "lanzamiento": "24 SEP 2026",
+  "nombre": "EA SPORTS FC 27",
+  "slug": "ea-sports-fc-27",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 19960,
+   "fecha": "2026-11-02",
+   "pico": 67129,
+   "puesto": 59
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4115450": {
+  "desarrollador": "S-GAME Studio",
+  "generos": [
+   "Acción",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4115450/7f882f889630270d3d3fb93825ac6f55b55e7a6c/header.jpg?t=1793261976",
+  "lanzamiento": "28 OCT 2026",
+  "nombre": "Phantom Blade Zero",
+  "slug": "phantom-blade-zero",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 328222,
+   "fecha": "2026-11-02",
+   "pico": 833921,
+   "puesto": 3
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4126040": {
+  "desarrollador": "Pawprint Studio",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Rol"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4126040/c1ee5babadf5d46000587a5eaf5901bbb6b7013c/header.jpg?t=1793258293",
+  "lanzamiento": "15 SEP 2026",
+  "nombre": "Aniimo",
+  "slug": "aniimo",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 33361,
+   "fecha": "2026-11-02",
+   "pico": 61576,
+   "puesto": 34
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "413150": {
+  "desarrollador": "ConcernedApe",
+  "generos": [
+   "Indie",
+   "Rol",
+   "Simuladores"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413150/header.jpg?t=1786554168",
+  "lanzamiento": "26 FEB 2016",
+  "nombre": "Stardew Valley",
+  "slug": "stardew-valley",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 41018,
+   "fecha": "2026-11-02",
+   "pico": 92004,
+   "puesto": 29
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "427520": {
+  "desarrollador": "Wube Software LTD.",
+  "generos": [
+   "Casual",
+   "Indie",
+   "Simuladores",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/427520/ab9a2df0a77caebde20dc45adc021de8cdcf7cc5/header.jpg?t=1792752343",
+  "lanzamiento": "14 AGO 2020",
+  "nombre": "Factorio",
+  "slug": "factorio",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 12973,
+   "fecha": "2026-11-02",
+   "pico": 27438,
+   "puesto": 88
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "431960": {
+  "desarrollador": "Wallpaper Engine Team",
+  "generos": [
+   "Casual",
+   "Indie",
+   "Animación y modelado",
+   "Diseño e ilustración"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/431960/header.jpg?t=1779452230",
+  "lanzamiento": "16 NOV 2018",
+  "nombre": "Wallpaper Engine",
+  "slug": "wallpaper-engine",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 67280,
+   "fecha": "2026-11-02",
+   "pico": 118591,
+   "puesto": 14
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4348910": {
+  "desarrollador": "Questing Goose Studio",
+  "generos": [
+   "Indie",
+   "Rol",
+   "Simuladores",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4348910/66ad13c91ba06d7f0aa11b9fe0e53c3fe15bb9c3/header_alt_assets_3_spanish.jpg?t=1793358849",
+  "lanzamiento": "28 OCT 2026",
+  "nombre": "Probably Stolen - Cyberpunk Shopkeeper Sim",
+  "slug": "probably-stolen-cyberpunk-shopkeeper-sim",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 84433,
+   "fecha": "2026-11-02",
+   "pico": 152036,
+   "puesto": 12
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4356430": {
+  "desarrollador": "Visual Concepts",
+  "generos": [
+   "Deportes"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4356430/9152438fde7de9f4c20b4fd9072ba69f844dacab/header.jpg?t=1792163139",
+  "lanzamiento": "3 SEP 2026",
+  "nombre": "NBA 2K27",
+  "slug": "nba-2k27",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11299,
+   "fecha": "2026-11-02",
+   "pico": 20102,
+   "puesto": 99
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "438100": {
+  "desarrollador": "VRChat Inc.",
+  "generos": [
+   "Aventura",
+   "Casual",
+   "Multijugador masivo",
+   "Simuladores"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/438100/header.jpg?t=1762366454",
+  "lanzamiento": "1 FEB 2017",
+  "nombre": "VRChat",
+  "slug": "vrchat",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 47450,
+   "fecha": "2026-11-02",
+   "pico": 67356,
+   "puesto": 23
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "440": {
+  "desarrollador": "Valve",
+  "generos": [
+   "Acción",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/440/header.jpg?t=1757348372",
+  "lanzamiento": "10 OCT 2007",
+  "nombre": "Team Fortress 2",
+  "slug": "team-fortress-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 86980,
+   "fecha": "2026-11-02",
+   "pico": 119530,
+   "puesto": 11
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4623570": {
+  "desarrollador": "First Day Games",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Casual",
+   "Indie"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4623570/4c1aa677f31f987858b5d88981978bb83b86b519/header.jpg?t=1792998955",
+  "lanzamiento": "28 SEP 2026",
+  "nombre": "Deskrawl: Idle ARPG",
+  "slug": "deskrawl-idle-arpg",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 24771,
+   "fecha": "2026-11-02",
+   "pico": 26900,
+   "puesto": 48
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "4891320": {
+  "desarrollador": "New Normal Soft Inc.",
+  "generos": [
+   "Acción",
+   "Casual",
+   "Rol",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4891320/80d3cc10f37c03a6b520846baf44883651132896/header.jpg?t=1793274146",
+  "lanzamiento": "7 OCT 2026",
+  "nombre": "[WoG] War of Genesis: Idle Loot",
+  "slug": "wog-war-of-genesis-idle-loot",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 14696,
+   "fecha": "2026-11-02",
+   "pico": 16401,
+   "puesto": 80
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "489830": {
+  "desarrollador": "Bethesda Game Studios",
+  "generos": [
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/489830/header.jpg?t=1786648247",
+  "lanzamiento": "27 OCT 2016",
+  "nombre": "The Elder Scrolls V: Skyrim Special Edition",
+  "slug": "the-elder-scrolls-v-skyrim-special-edition",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 23476,
+   "fecha": "2026-11-02",
+   "pico": 40724,
+   "puesto": 50
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "526870": {
+  "desarrollador": "Coffee Stain Studios",
+  "generos": [
+   "Aventura",
+   "Indie",
+   "Simuladores",
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/526870/header.jpg?t=1791192059",
+  "lanzamiento": "10 SEP 2024",
+  "nombre": "Satisfactory",
+  "slug": "satisfactory",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11855,
+   "fecha": "2026-11-02",
+   "pico": 27552,
+   "puesto": 94
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "5335510": {
+  "desarrollador": "DragDrop Games",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Casual",
+   "Indie"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/5335510/41e1e802dfc069cc245b91043e451a2f9ffa80e3/header.jpg?t=1792950881",
+  "lanzamiento": "23 OCT 2026",
+  "nombre": "Moon Sweepers",
+  "slug": "moon-sweepers",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 43929,
+   "fecha": "2026-11-02",
+   "pico": 83138,
+   "puesto": 26
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "550": {
+  "desarrollador": "Valve",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/550/header.jpg?t=1772742214",
+  "lanzamiento": "16 NOV 2009",
+  "nombre": "Left 4 Dead 2",
+  "slug": "left-4-dead-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 25201,
+   "fecha": "2026-11-02",
+   "pico": 34167,
+   "puesto": 46
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "553850": {
+  "desarrollador": "Arrowhead Game Studios",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/553850/1ce535d4e78dacd9c834b3966eef37a25fc7cffb/header_spanish.jpg?t=1793395133",
+  "lanzamiento": "8 FEB 2024",
+  "nombre": "HELLDIVERS 2",
+  "slug": "helldivers-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 31022,
+   "fecha": "2026-11-02",
+   "pico": 50415,
+   "puesto": 38
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "570": {
+  "desarrollador": "Valve",
+  "generos": [
+   "Acción",
+   "Estrategia",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570/header.jpg?t=1791407503",
+  "lanzamiento": "9 JUL 2013",
+  "nombre": "Dota 2",
+  "slug": "dota-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 333806,
+   "fecha": "2026-11-02",
+   "pico": 802613,
+   "puesto": 2
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "578080": {
+  "desarrollador": "PUBG Corporation",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/578080/841ea38bc58cabb70aef65365cf50bc2d79329d9/header.jpg?t=1792718193",
+  "lanzamiento": "21 DIC 2017",
+  "nombre": "PUBG: BATTLEGROUNDS",
+  "slug": "pubg-battlegrounds",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 206911,
+   "fecha": "2026-11-02",
+   "pico": 802207,
+   "puesto": 4
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "582660": {
+  "desarrollador": "Pearl Abyss",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/582660/3c4172635738d9e5901e340b28136745fd9e491a/header_alt_assets_27.jpg?t=1786645008",
+  "lanzamiento": "24 MAY 2017",
+  "nombre": "Black Desert",
+  "slug": "black-desert",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 13120,
+   "fecha": "2026-11-02",
+   "pico": 18430,
+   "puesto": 87
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "632360": {
+  "desarrollador": "Hopoo Games",
+  "generos": [
+   "Acción",
+   "Indie"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/632360/77f4cff7fea7de8a4566d1fb76ace16967604da7/header_alt_assets_7.jpg?t=1791475448",
+  "lanzamiento": "11 AGO 2020",
+  "nombre": "Risk of Rain 2",
+  "slug": "risk-of-rain-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11936,
+   "fecha": "2026-11-02",
+   "pico": 16506,
+   "puesto": 92
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "730": {
+  "desarrollador": "Valve",
+  "generos": [
+   "Acción",
+   "Free to Play"
+  ],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/162664aa5da85f418105350c5d67ca565f6c3713/header.jpg?t=1793054556",
+  "lanzamiento": "21 AGO 2012",
+  "nombre": "Counter-Strike 2",
+  "slug": "counter-strike-2",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 444528,
+   "fecha": "2026-11-02",
+   "pico": 1288020,
+   "puesto": 1
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "813780": {
+  "desarrollador": "World's Edge, Forgotten Empires",
+  "generos": [
+   "Estrategia"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/813780/header.jpg?t=1790623375",
+  "lanzamiento": "14 NOV 2019",
+  "nombre": "Age of Empires II: Definitive Edition",
+  "slug": "age-of-empires-ii-definitive-edition",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 15175,
+   "fecha": "2026-11-02",
+   "pico": 27673,
+   "puesto": 77
+  },
+  "visto_desde": "2026-11-02"
+ },
+ "892970": {
+  "desarrollador": "Iron Gate AB",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Indie",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/892970/1888731b59362fca6c026cdbafa3dfffd45c3146/header_alt_assets_6.jpg?t=1791544831",
+  "lanzamiento": "9 SEP 2026",
+  "nombre": "Valheim",
+  "slug": "valheim",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 47963,
+   "fecha": "2026-11-02",
+   "pico": 106724,
+   "puesto": 22
+  },
+  "visto_desde": "2026-11-02"
+ }
+}
