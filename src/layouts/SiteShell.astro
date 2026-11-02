@@ -75,7 +75,7 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
   <link rel="stylesheet" href="/assets/homepage.css?v=3" />
   <link rel="stylesheet" href={`/assets/senal-home.css?v=${version}`} />
   <link rel="stylesheet" href="/assets/site2.css?v=6" />
-  <link rel="stylesheet" href="/assets/shell.css?v=3" />
+  <link rel="stylesheet" href="/assets/shell.css?v=4" />
   <script is:inline>try{var m=localStorage.getItem('corillo-sb');if(m=='min'||(m!='open'&&innerWidth<1360))document.documentElement.classList.add('nv-min');}catch(e){}</script>
   <!-- Rediseño sep-2026: las páginas del shell son siempre oscuras (identidad negro + cian/magenta).
        Los temas claro y "Verano PR" siguen existiendo en el player; el selector se oculta aquí (site2.css). -->
@@ -165,7 +165,7 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
 <!-- BARRA SUPERIOR -->
 <header class="nv-top" id="nvTop">
   <div class="nv-top-l">
-    <button class="nv-burger" id="nvBurger" type="button" aria-label="Mostrar u ocultar el menú" aria-controls="nvSide"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+    <button class="nv-burger" id="nvBurger" type="button" aria-label="Menú" aria-controls="nvSide" aria-expanded="false"><span class="nv-bars" aria-hidden="true"><i></i><i></i><i></i></span></button>
     <a href="/" class="nv-brand" aria-label="Corillo, inicio">
       <svg class="foot-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs><radialGradient id="nv-dg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
@@ -193,21 +193,6 @@ const OG_IMAGE = ogImage ? new URL(ogImage, 'https://corillo.live/').href : 'htt
 <!-- MENÚ LATERAL (escritorio) / CAJÓN (móvil) -->
 <div class="nv-scrim" id="nvScrim"></div>
 <aside class="nv-side" id="nvSide" aria-label="Menú principal">
-  <div class="nv-side-hd">
-    <a href="/" class="nv-brand" aria-label="Corillo, inicio">
-      <svg class="foot-brand-logo" viewBox="0 0 304 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="nv-dg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--crl-accent)" stop-opacity="0.18"/><stop offset="100%" stop-color="var(--crl-accent)" stop-opacity="0"/></radialGradient></defs>
-        <text x="0" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">C</text>
-        <circle cx="72" cy="42" r="36" fill="url(#nv-dg2)"/>
-        <circle cx="72" cy="42" r="34" class="foot-brand-ring-outer" stroke-width="9" fill="none"/>
-        <circle cx="72" cy="42" r="20" stroke="var(--crl-accent)" stroke-width="6" fill="none"/>
-        <circle cx="72" cy="42" r="8" fill="var(--crl-accent)"/>
-        <circle cx="72" cy="42" r="3.5" fill="var(--crl-confirm)"/>
-        <text x="114" y="74" font-family="Bebas Neue, cursive" font-size="82" class="foot-brand-word">RILLO</text>
-      </svg>
-    </a>
-    <button class="nv-icon" id="nvClose" type="button" aria-label="Cerrar menú"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
-  </div>
   <div class="nv-side-auth" id="nvSideAuth"></div>
   <nav aria-label="Secciones">
     <h2 class="nv-h">Explorar</h2>
@@ -382,6 +367,7 @@ const desktop = () => window.matchMedia('(min-width: 1000px)').matches;
 function setOpen(open: boolean) {
   document.body.classList.toggle('nv-open', open);
   $('nvMoreTab')?.setAttribute('aria-expanded', String(open));
+  $('nvBurger')?.setAttribute('aria-expanded', String(open));
 }
 function markActive() {
   const path = location.pathname;
@@ -414,12 +400,13 @@ async function loadVersion() {
 document.addEventListener('DOMContentLoaded', async () => {
   initFooter(); loadVersion(); markActive(); renderAuth();
 
+  document.querySelectorAll<HTMLElement>('.nv-side .nv-h, .nv-side .nv-item, .nv-promo').forEach((el, i) => el.style.setProperty('--i', String(i)));
   $('nvBurger')?.addEventListener('click', () => {
+    if (!desktop()) { setOpen(!document.body.classList.contains('nv-open')); return; }
     const min = document.documentElement.classList.toggle('nv-min');
     try { localStorage.setItem('corillo-sb', min ? 'min' : 'open'); } catch {}
   });
   $('nvMoreTab')?.addEventListener('click', () => setOpen(true));
-  $('nvClose')?.addEventListener('click', () => setOpen(false));
   $('nvScrim')?.addEventListener('click', () => setOpen(false));
   $('nvSide')?.addEventListener('click', e => { if ((e.target as HTMLElement).closest('a')) setOpen(false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { setOpen(false); closeSearch(); } });
@@ -429,7 +416,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const top = $('nvTop'), input = $('nvSearch') as HTMLInputElement | null, clear = $('nvSearchClear') as HTMLButtonElement | null;
   const emit = (q: string) => window.dispatchEvent(new CustomEvent('crl-search', { detail: q }));
   function closeSearch() { if (top?.classList.contains('is-search') && !input?.value) top.classList.remove('is-search'); }
-  $('nvSearchOpen')?.addEventListener('click', () => { top?.classList.add('is-search'); input?.focus(); });
+  $('nvSearchOpen')?.addEventListener('click', () => { setOpen(false); top?.classList.add('is-search'); input?.focus(); });
   input?.addEventListener('blur', () => setTimeout(closeSearch, 150));
   input?.addEventListener('input', () => { const q = input.value.trim().toLowerCase(); if (clear) clear.hidden = !q; emit(q); });
   clear?.addEventListener('click', () => { if (!input) return; input.value = ''; clear.hidden = true; emit(''); input.focus(); });
