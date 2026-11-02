@@ -5,18 +5,16 @@ const OF = loadOfertas();
 const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/update-deals.py); si no hay, la franja no se muestra
 
 /* ── Vitrina del hero (idea de Marcos, 31-oct-2026) ──
-   Cuando nadie está en vivo, el hero rota lo más reciente del Corillo: la noticia nueva, los juegos gratis y la mejor
-   oferta de equipo, cada uno con su imagen. Si alguien sale en vivo, el stream la reemplaza (ver startVitrina/stopVitrina). */
+   Cuando nadie está en vivo, el hero rota lo más reciente del Corillo: noticias, videos, juegos gratis y la mejor
+   oferta de equipo, cada uno con su imagen. Si alguien sale en vivo, el stream la reemplaza (ver startVitrina/stopVitrina).
+   El orden sale de src/data/vitrina.js; los videos los añade el navegador con esas mismas reglas. */
 import { getCollection } from 'astro:content';
-type Slide = { kind: 'nota' | 'gratis' | 'equipo'; kicker: string; title: string; sub: string; href: string; cta: string; img: string; img2?: string; meta?: string };
+import { ordenarVitrina, cuando, vigente } from '../data/vitrina.js';
+type Slide = { kind: 'nota' | 'gratis' | 'equipo'; kicker: string; title: string; sub: string; href: string; cta: string; img: string; img2?: string; meta?: string; fecha?: number; hasta?: string };
 const NOTAS = (await getCollection('noticias')).filter(p => p.data.image).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const hace = (d: Date) => {
-  const dias = Math.floor((Date.now() - d.valueOf()) / 864e5);
-  return dias <= 0 ? 'Hoy' : dias === 1 ? 'Ayer' : d.toLocaleDateString('es-PR', { day: 'numeric', month: 'long', timeZone: 'America/Puerto_Rico' });
-};
 const nota = (p: typeof NOTAS[number]): Slide => ({
   kind: 'nota', kicker: p.data.badgeLabel, title: p.data.heroTitle, sub: p.data.heroSub || p.data.summary || '',
-  href: `/noticias/${p.id}/`, cta: 'Leer la nota', img: p.data.image!, meta: hace(p.data.pubDate),
+  href: `/noticias/${p.id}/`, cta: 'Leer la nota', img: p.data.image!, meta: cuando(p.data.pubDate.valueOf()), fecha: p.data.pubDate.valueOf(),
 });
 const grande = (g: typeof OFREE[number]) => {      // la imagen de la tienda en alta resolución (con la normal de respaldo)
   const m = g.image?.match(/steam\/apps\/(\d+)\//);
@@ -27,7 +25,7 @@ const grande = (g: typeof OFREE[number]) => {      // la imagen de la tienda en 
 const gratis = (g: typeof OFREE[number]): Slide => ({
   kind: 'gratis', kicker: `Gratis en ${g.store === 'epic' ? 'Epic Games' : 'Steam'}`, title: g.title,
   sub: [g.original ? `Normalmente ${g.original}` : '', g.ends ? `gratis hasta el ${fmtDay(g.ends)}` : 'gratis por tiempo limitado'].filter(Boolean).join(' · '),
-  href: '/ofertas/gratis/', cta: 'Reclámalo gratis', ...grande(g), meta: 'Juego gratis',
+  href: '/ofertas/gratis/', cta: 'Reclámalo gratis', ...grande(g), meta: 'Juego gratis', hasta: g.ends,
 });
 const EQUIPO = [...OF.equipo].filter(x => x.image).sort((a, b) => (b.score || 0) - (a.score || 0));
 const equipo = (x: typeof EQUIPO[number]): Slide => ({
@@ -35,10 +33,10 @@ const equipo = (x: typeof EQUIPO[number]): Slide => ({
   sub: [`${x.price} en ${x.retailer}`, x.save ? `ahorras ${x.save}` : '', x.freeShip ? 'envío gratis' : ''].filter(Boolean).join(' · '),
   href: `/ofertas/o/${x.slug}/`, cta: 'Ver la oferta', img: x.image!, meta: 'Envía a Puerto Rico',
 });
-const VITRINA: Slide[] = [
-  NOTAS[0] && nota(NOTAS[0]), OFREE[0]?.image && gratis(OFREE[0]), EQUIPO[0] && equipo(EQUIPO[0]),
-  OFREE[1]?.image && gratis(OFREE[1]), NOTAS[1] && nota(NOTAS[1]),
-].filter(Boolean) as Slide[];
+const GRATIS = OFREE.filter(g => g.image && vigente(g.ends)).slice(0, 2);
+const VITRINA: Slide[] = ordenarVitrina([
+  ...NOTAS.slice(0, 2).map(nota), ...GRATIS.slice(0, 1).map(gratis), ...EQUIPO.slice(0, 1).map(equipo), ...GRATIS.slice(1).map(gratis),
+]);
 ---
 <SiteShell
   title="CORILLO — Stream Platform"
@@ -71,14 +69,14 @@ const VITRINA: Slide[] = [
       {VITRINA.length > 0 && (
       <div class="h2-vitrina" id="vitrina" aria-roledescription="carrusel" aria-label="Lo nuevo en Corillo">
         {VITRINA.map((v, i) => (
-          <article class={`h2-vt h2-vt--${v.kind}${i === 0 ? ' on' : ''}`} aria-hidden={i === 0 ? 'false' : 'true'} aria-roledescription="slide" aria-label={`${i + 1} de ${VITRINA.length}`}>
+          <article class={`h2-vt h2-vt--${v.kind}${i === 0 ? ' on' : ''}`} aria-hidden={i === 0 ? 'false' : 'true'} aria-roledescription="slide" aria-label={`${i + 1} de ${VITRINA.length}`} data-fecha={v.fecha} data-hasta={v.hasta}>
             <div class="h2-vt-bg">
               <img src={v.img} alt="" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} decoding="async"
                    data-img2={v.img2} onerror="if(this.dataset.img2&&this.src!==this.dataset.img2){this.src=this.dataset.img2}" />
             </div>
             {v.kind === 'equipo' && <div class="h2-vt-prod"><img src={v.img} alt={v.title} loading="lazy" decoding="async" /></div>}
             <div class="h2-vt-txt">
-              <div class="h2-status"><span class="live-badge offline">{v.kicker}</span>{v.meta && <span class="featured-meta">{v.meta}</span>}</div>
+              <div class="h2-status"><span class="live-badge offline">{v.kicker}</span>{v.meta && <span class="featured-meta" data-cuando={v.fecha ? '' : undefined}>{v.meta}</span>}</div>
               <h2 class="h2-vt-title"><a href={v.href} tabindex={i === 0 ? 0 : -1}>{v.title}</a></h2>
               {v.sub && <p class="h2-vt-sub">{v.sub}</p>}
               <div class="featured-actions">
@@ -88,11 +86,9 @@ const VITRINA: Slide[] = [
             </div>
           </article>
         ))}
-        {VITRINA.length > 1 && (
         <div class="h2-vt-nav" role="tablist" aria-label="Cambiar destacado">
           {VITRINA.map((v, i) => <button type="button" class={`h2-vt-dot${i === 0 ? ' on' : ''}`} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={`${i + 1}: ${v.title}`}><span></span></button>)}
         </div>
-        )}
       </div>
       )}
       <div class="h2-scrim"></div>
@@ -185,6 +181,7 @@ const VITRINA: Slide[] = [
 </main>
 
 <script>
+import { ordenarVitrina, conservarVisible, cuando, vigente } from '../data/vitrina.js';
 const POLL_MS     = 15000;
 const API_TIMEOUT = 5000;
 const CACHE_MS    = 8000;
@@ -451,58 +448,97 @@ function setFeaturedLive(key, paths) {
   startStatsAnimation(viewers, paths);
 }
 
-/* ── Vitrina (hero sin nadie en vivo): rota noticia, gratis y equipo; se pausa con el mouse encima o con la pestaña oculta ── */
+/* ── Vitrina (hero sin nadie en vivo): se pausa con el mouse encima, con el teclado dentro o con la pestaña oculta.
+   Las reglas de qué va primero están en src/data/vitrina.js. ── */
 const VT_MS = 7000;
 const vt = { idx: 0, timer: null, el: document.getElementById('vitrina') };
+const vtSlides = () => [...vt.el.querySelectorAll('.h2-vt')];
+const vtWrap = () => document.getElementById('featuredVideoWrap');
+function vtSiguienteCargando() {                       // la siguiente ya cargando, para que no aparezca en blanco
+  const slides = vtSlides(), next = slides[(vt.idx + 1) % slides.length]?.querySelector('img');
+  if (next) next.loading = 'eager';
+}
 function vtShow(i) {
   if (!vt.el) return;
-  const slides = vt.el.querySelectorAll('.h2-vt'), dots = vt.el.querySelectorAll('.h2-vt-dot');
+  const slides = vtSlides();
   vt.idx = (i + slides.length) % slides.length;
   slides.forEach((sl, k) => {
     const on = k === vt.idx;
     sl.classList.toggle('on', on); sl.setAttribute('aria-hidden', on ? 'false' : 'true');
     sl.querySelectorAll('a').forEach(a => a.tabIndex = on ? 0 : -1);
-    if (on) { const im = sl.querySelector('.h2-vt-bg img'); if (im) { im.loading = 'eager'; im.style.animation = 'none'; void im.offsetWidth; im.style.animation = ''; } }
+    if (on) {
+      const im = sl.querySelector('.h2-vt-bg img'); if (im) { im.loading = 'eager'; im.style.animation = 'none'; void im.offsetWidth; im.style.animation = ''; }
+      const m = sl.querySelector('[data-cuando]'); if (m && sl.dataset.fecha) m.textContent = cuando(+sl.dataset.fecha);   // el HTML puede tener horas o días
+    }
+    const d = sl._dot; if (d) { d.classList.toggle('on', on); d.setAttribute('aria-selected', on ? 'true' : 'false'); d.style.setProperty('--vt-ms', VT_MS + 'ms'); }
   });
-  dots.forEach((d, k) => { d.classList.toggle('on', k === vt.idx); d.setAttribute('aria-selected', k === vt.idx ? 'true' : 'false'); d.style.setProperty('--vt-ms', VT_MS + 'ms'); });
-  // la siguiente ya cargando, para que no aparezca en blanco
-  const next = slides[(vt.idx + 1) % slides.length]?.querySelector('img'); if (next) next.loading = 'eager';
+  vtSiguienteCargando();
+}
+/* Pone los slides en el orden de las reglas sin tocar el que está en pantalla (ni su imagen ni su barra se reinician). */
+function vtAcomodar() {
+  const slides = vtSlides(), visible = slides[vt.idx];
+  const orden = ordenarVitrina(slides.filter(sl => sl === visible || vigente(sl.dataset.hasta)).map(el => ({ el, fecha: +el.dataset.fecha || 0 }))).map(x => x.el);
+  const final = conservarVisible(orden, visible, vt.idx), pos = final.indexOf(visible);
+  const nav = vt.el.querySelector('.h2-vt-nav');
+  slides.filter(sl => !final.includes(sl)).forEach(sl => { sl._dot?.remove(); sl.remove(); });
+  final.forEach((sl, k) => {
+    sl.setAttribute('aria-label', `${k + 1} de ${final.length}`);
+    if (k === pos) return;
+    vt.el.insertBefore(sl, k < pos ? visible : nav);
+    if (sl._dot) nav.insertBefore(sl._dot, k < pos ? visible._dot : null);
+  });
+  vt.idx = pos;
+  if (nav) nav.style.display = final.length > 1 ? '' : 'none';
+  vtSiguienteCargando();
 }
 function vtArm() {
-  clearInterval(vt.timer);
-  if (!vt.el || vt.el.querySelectorAll('.h2-vt').length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  vt.timer = setInterval(() => { if (!document.hidden && !vt.el.matches(':hover')) vtShow(vt.idx + 1); }, VT_MS);
+  clearInterval(vt.timer); vt.timer = null;
+  if (!vt.el || !vtWrap().classList.contains('is-vitrina') || vtSlides().length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  vt.timer = setInterval(() => {
+    if (document.hidden || (_hover && vt.el.matches(':hover')) || vt.el.querySelector(':focus-visible')) return;
+    vtAcomodar();                                      // saca lo que venció con la página abierta
+    vtShow(vt.idx + 1);
+  }, VT_MS);
 }
 function startVitrina() {
   if (!vt.el) return false;
-  document.getElementById('featuredVideoWrap').classList.add('is-vitrina');
-  vtShow(vt.idx); vtArm();
+  if (vtWrap().classList.contains('is-vitrina')) return true;   // ya está corriendo: no reiniciarla
+  vtWrap().classList.add('is-vitrina');                          // alguien dejó de transmitir: empezar por lo más nuevo
+  vtShow(0); vtArm();
   return true;
 }
 function stopVitrina() {
   clearInterval(vt.timer); vt.timer = null;
-  document.getElementById('featuredVideoWrap').classList.remove('is-vitrina');
+  vtWrap().classList.remove('is-vitrina');
 }
 if (vt.el) {
-  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => { d.onclick = () => { vtShow(k); vtArm(); }; });
+  const dots = vt.el.querySelectorAll('.h2-vt-dot');
+  vtSlides().forEach((sl, k) => { sl._dot = dots[k]; if (dots[k]) dots[k]._slide = sl; });
+  vt.el.querySelector('.h2-vt-nav')?.addEventListener('click', e => {
+    const sl = e.target.closest('.h2-vt-dot')?._slide;
+    if (sl) { vtShow(vtSlides().indexOf(sl)); vtArm(); }
+  });
   let x0 = null;                                                     // deslizar con el dedo en el celular
   vt.el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   vt.el.addEventListener('touchend', e => {
     if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
     if (Math.abs(dx) > 50) { vtShow(vt.idx + (dx < 0 ? 1 : -1)); vtArm(); }
   });
-  vtShow(0); vtArm();
-  vtTransmisiones();
+  vtAcomodar(); vtShow(0); vtArm();
+  vtVideos();
 }
 
-/* La última transmisión grabada (VOD de los últimos 14 días) entra de PRIMERA en la vitrina, con la mejor imagen del
-   video (portada.py en corillo-media), el título, quién la hizo y cuánto dura. Hasta 2, de canales distintos. */
-async function vtTransmisiones() {
+/* Los videos (transmisiones grabadas y subidas, últimos 14 días; hasta 2, de canales distintos) entran por su fecha, con la
+   mejor imagen del video (portada.py en corillo-media), el título, quién lo hizo y cuánto dura. La colección vods todavía
+   no dice si un video se subió o salió de una transmisión, así que el texto sirve para los dos. Si PocketBase no contesta,
+   la vitrina sigue con lo que trajo el HTML. */
+async function vtVideos() {
   const desde = new Date(Date.now() - 14 * 864e5).toISOString().replace('T', ' ');
   let items = [];
   try {
     const r = await fetch(`${PB_URL}/api/collections/vods/records?sort=-date&perPage=10&filter=${encodeURIComponent(`date>="${desde}"`)}&fields=id,channel,title,thumb,duration,date`,
                           { signal: AbortSignal.timeout(5000) });
+    if (!r.ok) return;
     items = (await r.json()).items || [];
   } catch { return; }
   const vistos = new Set();
@@ -512,39 +548,42 @@ async function vtTransmisiones() {
   try { for (const x of await (await fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(4000) })).json()) fotos[x.key] = x; } catch {}
   const e = x => String(x ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const nav = vt.el.querySelector('.h2-vt-nav');
-  for (const v of items.reverse()) {
+  for (const v of items) {
+    const fecha = new Date(String(v.date).replace(' ', 'T')).getTime();
     const s = { ...streamerOf(v.channel), ...(fotos[v.channel] || {}) }, nombre = s.name || v.channel;
     const cara = s.avatar_url ? `<img src="${e(s.avatar_url)}" alt="" onerror="this.remove()">` : e(s.ava || nombre[0]);
     const href = `/vods/v/?id=${encodeURIComponent(v.id)}`;
     const art = document.createElement('article');
     art.className = 'h2-vt h2-vt--vod';
     art.setAttribute('aria-roledescription', 'slide');
+    art.setAttribute('aria-hidden', 'true');
+    art.dataset.fecha = fecha || '';
     art.innerHTML = `
       <div class="h2-vt-bg"><img src="${e(v.thumb)}" alt="" decoding="async"></div>
       <a class="h2-vt-play" href="${href}" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.6c0-1.2 1.3-1.9 2.3-1.3l11.3 7.4c.9.6.9 2 0 2.6L9.3 20.7C8.3 21.3 7 20.6 7 19.4V4.6Z"/></svg></a>
       <div class="h2-vt-txt">
-        <div class="h2-status"><span class="live-badge offline">Transmisión</span>
-          <span class="featured-meta">${e(relativeTime(v.date))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
+        <div class="h2-status"><span class="live-badge offline">Video</span>
+          <span class="featured-meta"><span data-cuando>${e(cuando(fecha))}</span>${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
         <a class="h2-vt-who" href="/${e(v.channel)}/" tabindex="-1"><span class="h2-vt-face" style="background:${e(s.color || '#1e3a4a')}">${cara}</span><b>${e(nombre)}</b></a>
-        <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `Transmisión del ${new Date(v.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`)}</a></h2>
-        <p class="h2-vt-sub">Lo que te perdiste del stream de ${e(nombre)}. Velo completo cuando quieras.</p>
+        <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `Video de ${nombre}`)}</a></h2>
+        <p class="h2-vt-sub">Lo nuevo de ${e(nombre)} en Corillo. Velo completo cuando quieras.</p>
         <div class="featured-actions">
-          <a href="${href}" class="play-btn" tabindex="-1"><i class="fa-solid fa-play"></i> Ver la transmisión</a>
+          <a href="${href}" class="play-btn" tabindex="-1"><i class="fa-solid fa-play"></i> Ver el video</a>
           <a href="/${e(v.channel)}/" class="icon-btn" title="Canal de ${e(nombre)}" tabindex="-1"><i class="fa-solid fa-user"></i></a>
         </div>
       </div>`;
-    vt.el.insertBefore(art, vt.el.querySelector('.h2-vt'));
+    vt.el.insertBefore(art, nav);
     if (nav) {
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'h2-vt-dot'; b.setAttribute('role', 'tab');
-      b.setAttribute('aria-label', `Transmisión de ${nombre}`); b.innerHTML = '<span></span>';
-      nav.prepend(b);
+      b.type = 'button'; b.className = 'h2-vt-dot'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', 'false');
+      b.setAttribute('aria-label', `Video de ${nombre}`); b.innerHTML = '<span></span>';
+      b.style.setProperty('--vt-ms', VT_MS + 'ms');
+      nav.append(b);
+      art._dot = b; b._slide = art;
     }
   }
-  const slides = vt.el.querySelectorAll('.h2-vt');
-  slides.forEach((sl, k) => sl.setAttribute('aria-label', `${k + 1} de ${slides.length}`));
-  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => { d.onclick = () => { vtShow(k); vtArm(); }; });
-  vtShow(0); vtArm();
+  vtAcomodar();
+  if (vtWrap().classList.contains('is-vitrina') && !vt.timer) vtArm();   // una vitrina de un solo slide ahora tiene más
 }
 
 async function setFeaturedOffline() {
@@ -564,7 +603,7 @@ async function setFeaturedOffline() {
 
   updateChatLabel(null);
 
-  // Sin nadie en vivo: la vitrina (noticias, gratis, equipo). Los VODs volverán a entrar aquí cuando existan otra vez.
+  // Sin nadie en vivo: la vitrina (noticias, videos, gratis, equipo).
   if (startVitrina()) return;
 
   // Load VODs if not cached yet
