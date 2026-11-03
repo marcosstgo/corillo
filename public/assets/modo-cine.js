@@ -4,7 +4,13 @@
 (function () {
   const CLAVE = 'corillo_cine';
   const raiz = document.documentElement;
-  try { if (localStorage.getItem(CLAVE) === '1') raiz.classList.add('modo-cine'); } catch {}
+  // En /vods/v/ el menú lateral se recoge a íconos para dar espacio; al salir vuelve a como lo tenía la persona (misma regla que SiteShell).
+  function menu(on) {
+    let m = null;
+    try { m = localStorage.getItem('corillo-sb'); } catch {}
+    raiz.classList.toggle('nv-min', on || m === 'min' || (m !== 'open' && innerWidth < 1360));
+  }
+  try { if (localStorage.getItem(CLAVE) === '1') { raiz.classList.add('modo-cine'); menu(true); } } catch {}
 
   const activo = () => raiz.classList.contains('modo-cine');
   // El CSS esconde el botón donde no aplica (celular, 9:16, canal apagado): la tecla obedece lo mismo.
@@ -22,6 +28,7 @@
 
   function alternar() {
     raiz.classList.toggle('modo-cine');
+    menu(activo());
     try { localStorage.setItem(CLAVE, activo() ? '1' : '0'); } catch {}
     pintar();
   }
