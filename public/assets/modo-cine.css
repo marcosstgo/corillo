@@ -1,0 +1,41 @@
+/* Modo cine — ver modo-cine.js. Solo en pantallas donde el video no ocupa ya todo el ancho. */
+[data-cine] { position: relative; }
+[data-cine] .ico-cine { width: 16px; height: 16px; display: block; fill: none; stroke: currentColor; stroke-width: 1.6; }
+[data-cine] .cine-tip {
+  position: absolute; bottom: calc(100% + 8px); right: 0; z-index: 20; display: none; align-items: center; gap: 8px;
+  padding: 6px 8px 6px 10px; border-radius: 8px; background: rgba(6,20,63,.94); color: #f5f8ff;
+  font: 600 13px/1 'DM Sans', system-ui, sans-serif; white-space: nowrap; pointer-events: none;
+}
+[data-cine] kbd {
+  display: inline-grid; place-items: center; min-width: 18px; height: 18px; border: 1px solid rgba(245,248,255,.45); border-radius: 4px;
+  font: 700 11px/1 'DM Sans', system-ui, sans-serif;
+}
+[data-cine]:hover .cine-tip, [data-cine]:focus-visible .cine-tip { display: inline-flex; }
+[data-cine][aria-pressed="true"] { color: var(--crl-accent2, #ffd23f); }
+[data-cine]:focus-visible { outline: 2px solid #f5f8ff; outline-offset: 2px; }
+
+@media (max-width: 960px) { [data-cine] { display: none !important; } }
+body:has(#video.vertical) [data-cine] { display: none; }
+
+@media (min-width: 961px) {
+  /* Canal: el video llena el alto debajo de la barra de 48px; el chat sigue al lado y el perfil queda bajando. */
+  html.modo-cine body:not(.canal-offline):not(.canal-sin-video) #video.horizontal { max-height: calc(100dvh - 48px); }
+
+  /* Videos: de borde a borde, sobre negro; título y relacionados siguen en su columna. */
+  html.modo-cine .vd { max-width: none; padding-top: 0; padding-inline: 0; }
+  html.modo-cine .vd-player { background: #000; }
+  html.modo-cine .vd-player .player-wrap, html.modo-cine .vd-player .sk {
+    width: min(100%, calc((100dvh - var(--nv-top, 64px)) * 16 / 9)); border-radius: 0; box-shadow: none;
+  }
+  html.modo-cine .vd-main, html.modo-cine .vd-side { width: min(100% - 2 * var(--h2-gutter, 24px), 1680px); }
+
+  .vd-player .player-wrap > [data-cine] {
+    position: absolute; top: 14px; right: 14px; z-index: 11; width: 40px; height: 40px; display: grid; place-items: center;
+    border: 0; border-radius: 50%; background: rgba(6,20,63,.72); color: #f5f8ff; cursor: pointer; opacity: 0; transition: opacity .15s, background .15s;
+  }
+  .vd-player .player-wrap:hover > [data-cine], .vd-player .player-wrap > [data-cine]:focus-visible { opacity: 1; }
+  .vd-player .player-wrap > [data-cine]:hover { background: rgba(6,20,63,.94); }
+  .vd-player .player-wrap > [data-cine] .ico-cine { width: 20px; height: 20px; }
+  .vd-player .player-wrap > [data-cine] .cine-tip { bottom: auto; top: calc(100% + 8px); }
+}
+@media (hover: none) { .vd-player .player-wrap > [data-cine] { opacity: 1 !important; } }

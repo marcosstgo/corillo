@@ -1,5 +1,6 @@
 ---
 import SiteShell from '../../../layouts/SiteShell.astro';
+import { version } from '../../../../version.json';
 ---
 <SiteShell
   pageClass="p-legacy"
@@ -9,6 +10,8 @@ import SiteShell from '../../../layouts/SiteShell.astro';
 >
   <fragment slot="head">
     <meta name="theme-color" content="var(--crl-ink)" />
+    <link rel="stylesheet" href={`/assets/modo-cine.css?v=${version}`} />
+    <script is:inline src={`/assets/modo-cine.js?v=${version}`}></script>
     <style is:global>
       /* Disposición (2-nov-2026): el video manda. Debajo, en una sola columna alineada con él: título, canal y acciones, y más videos en cuadrícula */
       .vd{display:grid;grid-template-columns:minmax(0,1fr);gap:24px 28px;max-width:1680px;margin:0 auto;padding:22px var(--h2-gutter) 64px}
@@ -193,7 +196,9 @@ async function init() {
     <div class="player-wrap">
       <video id="vodVideo" controls autoplay muted playsinline preload="metadata" src="${videoUrl}" data-casa="${casaUrl}" onerror="if(this.dataset.casa&&this.src!==this.dataset.casa){this.src=this.dataset.casa}" ${posterAttr}></video>
       <button class="unmute-btn" id="unmuteBtn"><i class="fa-solid fa-volume-xmark"></i> Activar sonido</button>
+      <button class="vd-cine" data-cine type="button" aria-pressed="false" aria-label="Modo cine"><svg class="ico-cine" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="2"/><rect x="6.5" y="9" width="11" height="6" rx="1"/></svg><span class="cine-tip"><span class="cine-txt">Modo cine</span> <kbd>T</kbd></span></button>
     </div>`;
+  (window as any).pintarModoCine?.();
 
   document.getElementById('content')!.innerHTML = `
     <div class="vd-cab">
