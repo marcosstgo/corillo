@@ -101,7 +101,7 @@
 }
 
 /* ── Lo último de cada uno (2-nov-2026) ── */
-.sr-vds-wrap { margin-bottom: clamp(32px, 5vw, 56px); }
+.sr-vds-wrap { margin-top: clamp(40px, 6vw, 72px); }
 .sr-vds-wrap[hidden] { display: none; }
 .sr-vds-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin-bottom: 16px; }
 .sr-vds-hd h2 { margin: 0; font: 800 clamp(1.5rem, 2.8vw, 2.2rem)/1 var(--h2-display); letter-spacing: -.03em; text-transform: none; color: var(--h2-bone); }
