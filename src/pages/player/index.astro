@@ -16,7 +16,7 @@ import { version } from '../../../version.json';
   <meta property="og:url" content="https://corillo.live/__CHANNEL__/" />
   <meta property="og:title" content="__CHANNEL__ — corillo" />
   <meta property="og:description" content="__CHANNEL__ en vivo en corillo — plataforma independiente desde Puerto Rico." />
-  <meta property="og:image" content="https://media.corillo.live/assets/thumbs/__CHANNEL__.jpg" />
+  <meta property="og:image" content="https://corillo.live/assets/og-corillo.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="__CHANNEL__ en corillo" />
@@ -25,7 +25,7 @@ import { version } from '../../../version.json';
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="__CHANNEL__ — corillo" />
   <meta name="twitter:description" content="__CHANNEL__ en vivo en corillo — plataforma independiente desde Puerto Rico." />
-  <meta name="twitter:image" content="https://media.corillo.live/assets/thumbs/__CHANNEL__.jpg" />
+  <meta name="twitter:image" content="https://corillo.live/assets/og-corillo.jpg" />
   <meta name="twitter:image:alt" content="__CHANNEL__ en corillo" />
   <link rel="canonical" href="https://corillo.live/__CHANNEL__/" />
   <link rel="manifest" href="/manifest.json" />
@@ -144,15 +144,45 @@ import { version } from '../../../version.json';
       <div class="ch-ava" id="chAva"></div>
       <div class="ch-details">
         <div class="ch-name-row">
-          <div class="ch-name" id="chName"></div>
+          <h1 class="ch-name" id="chName"></h1>
           <span class="ch-host-tag" id="chHostTag">HOST</span>
         </div>
         <div class="ch-sub" id="chSub"></div>
         <div class="ch-stream-title" id="chStreamTitle" style="display:none"></div>
         <div class="ch-bio" id="chBio"></div>
-        <div class="ch-links crl-player-links" id="chLinks"></div>
+        <div class="canal-acciones">
+          <div class="ch-links crl-player-links" id="chLinks"></div>
+          <button type="button" class="canal-avisame" id="canalAvisame" hidden></button>
+        </div>
       </div>
     </div>
+
+    <!-- Stream stats -->
+    <div class="stats-row crl-player-stats" id="statsRow">
+      <div class="stat"><div class="stat-val" id="sBitrate">—</div><div class="stat-lbl">Bitrate</div></div>
+      <div class="stat"><div class="stat-val" id="sBuffer">—</div><div class="stat-lbl">Buffer</div></div>
+      <div class="stat"><div class="stat-val" id="sLatency">—</div><div class="stat-lbl">Latencia</div></div>
+      <div class="stat"><div class="stat-val" id="sLevel">—</div><div class="stat-lbl">Calidad</div></div>
+      <div class="stat"><div class="stat-val" id="sRetries">0</div><div class="stat-lbl">Recs.</div></div>
+    </div>
+
+    <!-- Otros en vivo -->
+    <div class="other-live crl-player-rail" id="otherLiveSection" style="display:none">
+      <div class="other-hd crl-player-rail-title">Otros en vivo</div>
+      <div class="other-list crl-player-rail-list" id="otherLiveList"></div>
+    </div>
+
+    <!-- Videos -->
+    <div class="channel-vods crl-player-vods" id="channelVods" style="display:none">
+      <div class="cvods-hd crl-player-vods-head">
+        <span>Videos</span>
+        <a class="cvods-all crl-player-vods-link" id="cvodsAll" href="/vods/">Ver todos</a>
+      </div>
+      <div class="cvods-list crl-player-vods-list" id="cvodsList"></div>
+    </div>
+
+    <!-- Enlaces del streamer -->
+    <div class="canal-enlaces" id="canalEnlaces" hidden><h2>Enlaces</h2></div>
 
     <!-- Channel stats -->
     <div class="crl-channel-stats" id="channelStats" style="display:none">
@@ -174,29 +204,6 @@ import { version } from '../../../version.json';
       </div>
     </div>
 
-    <!-- Stream stats -->
-    <div class="stats-row crl-player-stats" id="statsRow">
-      <div class="stat"><div class="stat-val" id="sBitrate">—</div><div class="stat-lbl">Bitrate</div></div>
-      <div class="stat"><div class="stat-val" id="sBuffer">—</div><div class="stat-lbl">Buffer</div></div>
-      <div class="stat"><div class="stat-val" id="sLatency">—</div><div class="stat-lbl">Latencia</div></div>
-      <div class="stat"><div class="stat-val" id="sLevel">—</div><div class="stat-lbl">Calidad</div></div>
-      <div class="stat"><div class="stat-val" id="sRetries">0</div><div class="stat-lbl">Recs.</div></div>
-    </div>
-
-    <!-- Otros en vivo -->
-    <div class="other-live crl-player-rail" id="otherLiveSection" style="display:none">
-      <div class="other-hd crl-player-rail-title">Otros en vivo</div>
-      <div class="other-list crl-player-rail-list" id="otherLiveList"></div>
-    </div>
-
-    <!-- Últimas transmisiones -->
-    <div class="channel-vods crl-player-vods" id="channelVods" style="display:none">
-      <div class="cvods-hd crl-player-vods-head">
-        <span>Últimas transmisiones</span>
-        <a class="cvods-all crl-player-vods-link" id="cvodsAll" href="/vods/">Ver todas</a>
-      </div>
-      <div class="cvods-list crl-player-vods-list" id="cvodsList"></div>
-    </div>
 
   </div>
 
@@ -246,15 +253,16 @@ import { version } from '../../../version.json';
     const allLink=document.getElementById('cvodsAll');
     if(allLink)allLink.href=`/vods/?ch=${ch}`;
     const list=document.getElementById('cvodsList');
+    const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     list.innerHTML=items.map(v=>{
       const s=v.duration||0;
       const h=Math.floor(s/3600),m=Math.floor((s%3600)/60);
       const dur=s?(h?h+'h ':'')+m+'m':'';
-      const d=v.date?new Date(v.date).toLocaleDateString('es-PR',{month:'short',day:'numeric'}):'';
+      const d=v.date?new Date(String(v.date).replace(' ','T')).toLocaleDateString('es-PR',{month:'short',day:'numeric'}):'';
       const thumb=v.thumb?`<img src="${v.thumb}?v=2" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px" onerror="this.style.display='none'" loading="lazy">`:'';
       const canHover=window.matchMedia('(hover: hover)').matches;
       const preview=v.preview&&canHover?`<video data-preview src="${v.preview}?v=2" muted playsinline preload="none" loop style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:7px;opacity:0;transition:opacity .3s;pointer-events:none"></video>`:'';
-      return `<a class="cvod-card crl-player-vod-card" href="/vods/v/?id=${v.id}"><div class="cvod-thumb crl-player-vod-thumb" style="overflow:hidden">${thumb}${preview}<i class="fa-solid fa-play" style="position:relative;z-index:1"></i>${dur?`<span class="cvod-dur crl-player-vod-duration">${dur}</span>`:''}</div><div class="cvod-date crl-player-vod-date">${d}</div></a>`;
+      return `<a class="cvod-card crl-player-vod-card" href="/vods/v/?id=${v.id}"><div class="cvod-thumb crl-player-vod-thumb" style="overflow:hidden">${thumb}${preview}<i class="fa-solid fa-play" style="position:relative;z-index:1"></i>${dur?`<span class="cvod-dur crl-player-vod-duration">${dur}</span>`:''}</div>${v.title?`<div class="cvod-titulo">${esc(v.title)}</div>`:''}<div class="cvod-date crl-player-vod-date">${d}</div></a>`;
     }).join('');
     if(window.matchMedia('(hover: hover)').matches){
       list.querySelectorAll('.cvod-card').forEach(card=>{
@@ -276,7 +284,7 @@ import { version } from '../../../version.json';
     const r = await fetch(`https://api.corillo.live/api/stats/${encodeURIComponent(ch)}`, { signal: AbortSignal.timeout(6000) });
     if (r.ok) {
       const s = await r.json();
-      if (s.streams > 0) {
+      if (s.streams >= 5) {   // con menos, los números no dicen nada
         document.getElementById('csSt').textContent = s.streams;
         document.getElementById('csHr').textContent = s.total_hours;
         document.getElementById('csAv').textContent = s.avg_duration_min;
@@ -322,9 +330,12 @@ import { version } from '../../../version.json';
     btn.title = active ? 'Desactivar notificaciones' : 'Notificarme cuando esté en vivo';
     btn.classList.toggle('active', active);
     btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    const av = document.getElementById('canalAvisame');
+    if (av) { av.hidden = false; av.classList.toggle('activo', active); av.innerHTML = active ? '<i class="fa-solid fa-bell"></i> Te avisamos' : '<i class="fa-regular fa-bell"></i> Avísame cuando salga en vivo'; }
   }
   await refreshBtn();
 
+  document.getElementById('canalAvisame')?.addEventListener('click', () => btn.click());
   btn.addEventListener('click', async () => {
     try {
       const sub = await reg.pushManager.getSubscription();

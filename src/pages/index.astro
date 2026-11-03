@@ -5,18 +5,19 @@ const OF = loadOfertas();
 const OFREE = allFree(OF);   // juegos gratis de Epic (los escribe scripts/update-deals.py); si no hay, la franja no se muestra
 
 /* ── Vitrina del hero (idea de Marcos, 31-oct-2026) ──
-   Cuando nadie está en vivo, el hero rota lo más reciente del Corillo: la noticia nueva, los juegos gratis y la mejor
-   oferta de equipo, cada uno con su imagen. Si alguien sale en vivo, el stream la reemplaza (ver startVitrina/stopVitrina). */
+   Cuando nadie está en vivo, el hero rota lo más reciente del Corillo: noticias, videos, juegos gratis y la mejor
+   oferta de equipo, cada uno con su imagen. Si alguien sale en vivo, el stream la reemplaza (ver startVitrina/stopVitrina).
+   El orden sale de src/data/vitrina.js; los videos los añade el navegador con esas mismas reglas. */
 import { getCollection } from 'astro:content';
-type Slide = { kind: 'nota' | 'gratis' | 'equipo'; kicker: string; title: string; sub: string; href: string; cta: string; img: string; img2?: string; meta?: string };
+import { ordenarVitrina, cuando, vigente } from '../data/vitrina.js';
+import { catOf } from '../data/news';
+import PeliCard from '../components/cine/PeliCard.astro';
+import { hechoEnPR, pegao, cartelera, proximos } from '../data/cine';
+type Slide = { kind: 'nota' | 'gratis' | 'equipo'; kicker: string; title: string; sub: string; href: string; cta: string; img: string; img2?: string; meta?: string; fecha?: number; hasta?: string };
 const NOTAS = (await getCollection('noticias')).filter(p => p.data.image).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const hace = (d: Date) => {
-  const dias = Math.floor((Date.now() - d.valueOf()) / 864e5);
-  return dias <= 0 ? 'Hoy' : dias === 1 ? 'Ayer' : d.toLocaleDateString('es-PR', { day: 'numeric', month: 'long', timeZone: 'America/Puerto_Rico' });
-};
 const nota = (p: typeof NOTAS[number]): Slide => ({
   kind: 'nota', kicker: p.data.badgeLabel, title: p.data.heroTitle, sub: p.data.heroSub || p.data.summary || '',
-  href: `/noticias/${p.id}/`, cta: 'Leer la nota', img: p.data.image!, meta: hace(p.data.pubDate),
+  href: `/noticias/${p.id}/`, cta: 'Leer la nota', img: p.data.image!, meta: cuando(p.data.pubDate.valueOf()), fecha: p.data.pubDate.valueOf(),
 });
 const grande = (g: typeof OFREE[number]) => {      // la imagen de la tienda en alta resolución (con la normal de respaldo)
   const m = g.image?.match(/steam\/apps\/(\d+)\//);
@@ -27,7 +28,7 @@ const grande = (g: typeof OFREE[number]) => {      // la imagen de la tienda en 
 const gratis = (g: typeof OFREE[number]): Slide => ({
   kind: 'gratis', kicker: `Gratis en ${g.store === 'epic' ? 'Epic Games' : 'Steam'}`, title: g.title,
   sub: [g.original ? `Normalmente ${g.original}` : '', g.ends ? `gratis hasta el ${fmtDay(g.ends)}` : 'gratis por tiempo limitado'].filter(Boolean).join(' · '),
-  href: '/ofertas/gratis/', cta: 'Reclámalo gratis', ...grande(g), meta: 'Juego gratis',
+  href: '/ofertas/gratis/', cta: 'Reclámalo gratis', ...grande(g), meta: 'Juego gratis', hasta: g.ends,
 });
 const EQUIPO = [...OF.equipo].filter(x => x.image).sort((a, b) => (b.score || 0) - (a.score || 0));
 const equipo = (x: typeof EQUIPO[number]): Slide => ({
@@ -35,22 +36,51 @@ const equipo = (x: typeof EQUIPO[number]): Slide => ({
   sub: [`${x.price} en ${x.retailer}`, x.save ? `ahorras ${x.save}` : '', x.freeShip ? 'envío gratis' : ''].filter(Boolean).join(' · '),
   href: `/ofertas/o/${x.slug}/`, cta: 'Ver la oferta', img: x.image!, meta: 'Envía a Puerto Rico',
 });
-const VITRINA: Slide[] = [
-  NOTAS[0] && nota(NOTAS[0]), OFREE[0]?.image && gratis(OFREE[0]), EQUIPO[0] && equipo(EQUIPO[0]),
-  OFREE[1]?.image && gratis(OFREE[1]), NOTAS[1] && nota(NOTAS[1]),
-].filter(Boolean) as Slide[];
+const GRATIS = OFREE.filter(g => g.image && vigente(g.ends)).slice(0, 2);
+const VITRINA: Slide[] = ordenarVitrina([
+  ...NOTAS.slice(0, 2).map(nota), ...GRATIS.slice(0, 1).map(gratis), ...EQUIPO.slice(0, 1).map(equipo), ...GRATIS.slice(1).map(gratis),
+]);
+
+/* ── Lo que hay debajo del slider (2-nov-2026): noticias, cine y ofertas. Todo sale en el HTML, con enlaces reales para Google. ── */
+const NOTICIAS = NOTAS.slice(0, 4);
+
+// Cine: lo boricua que viene o está en sala va primero (siempre al frente); luego los estrenos del próximo mes y lo más visto en sala.
+const hoyISO = new Date().toISOString().slice(0, 10);
+const [pelisPR, pelisTop, pelisEnCine, pelisVienen] = await Promise.all([hechoEnPR(), pegao(), cartelera(), proximos()]);
+const enUnMes = (p: { estreno?: string }) => !!p.estreno && new Date(p.estreno).valueOf() - Date.now() < 30 * 864e5;
+const enSala = new Set(pelisEnCine.map(p => p.slug));
+const PELIS = [...new Map([
+  ...pelisPR.filter(p => (p.estreno && p.estreno > hoyISO && enUnMes(p)) || enSala.has(p.slug)).sort((a, b) => (a.estreno || '').localeCompare(b.estreno || '')),
+  ...pelisVienen.filter(enUnMes),
+  ...pelisTop.filter(p => enSala.has(p.slug)),
+].filter(p => p.afiche || p.fondo).map(p => [p.slug, p])).values()].slice(0, 10);
+
+// Ofertas de la semana: lo gratis, una de equipo (la que no está ya en el slider) y los mejores descuentos de juegos bien reseñados.
+type Oferta = { title: string; img: string; href: string; externo: boolean; precio: string; antes?: string | null; chip: string; lugar: string; hasta?: string; producto?: boolean };
+const OFERTAS_MAX = 4;
+const juegosOferta = [...OF.steam].filter(d => d.image && (d.rating ?? 0) >= 85 && (d.reviews ?? 0) >= 500).sort((a, b) => (b.pct ?? 0) - (a.pct ?? 0));
+const equipoOferta = EQUIPO[1] || EQUIPO[0];
+const OFERTAS_HOME: Oferta[] = [
+  ...GRATIS.map((g): Oferta => ({ title: g.title, img: g.image!, href: '/ofertas/gratis/', externo: false, precio: 'Gratis', antes: g.original, chip: 'Gratis',
+    lugar: g.ends ? `${g.store === 'epic' ? 'Epic Games' : 'Steam'} · hasta el ${fmtDay(g.ends)}` : (g.store === 'epic' ? 'Epic Games' : 'Steam'), hasta: g.ends })),
+  ...(equipoOferta ? [{ title: equipoOferta.title, img: equipoOferta.image!, href: `/ofertas/o/${equipoOferta.slug}/`, externo: false, precio: equipoOferta.price,
+    chip: 'Equipo', lugar: `${equipoOferta.retailer}${equipoOferta.save ? ` · ahorras ${equipoOferta.save}` : ''}`, producto: true }] : []),
+  ...juegosOferta.slice(0, OFERTAS_MAX).map((d): Oferta => ({ title: d.title, img: d.image!, href: d.url, externo: true, precio: d.price!, antes: d.original, chip: `-${d.pct}%`,
+    lugar: `Steam${d.rating ? ` · ${d.rating}% positivas` : ''}` })),
+].slice(0, OFERTAS_MAX);
 ---
 <SiteShell
-  title="CORILLO — Stream Platform"
-  description="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos."
+  title="Corillo: plataforma de streaming de Puerto Rico"
+  description="Transmisiones en vivo, videos, noticias, cine y ofertas, hecho en Puerto Rico. Sin algoritmos y sin baneos arbitrarios."
   canonical="https://corillo.live/"
-  ogTitle="CORILLO — Stream Platform"
-  ogDescription="Plataforma de streaming independiente desde Puerto Rico. Sin algoritmos, sin baneos arbitrarios. Solo tú, tu setup y tu audiencia."
+  ogTitle="Corillo: plataforma de streaming de Puerto Rico"
+  ogDescription="Transmisiones en vivo, videos, noticias, cine y ofertas, hecho en Puerto Rico."
   pageClass="page-home"
 >
   <fragment slot="head">
     <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="stylesheet" href="/assets/home2.css?v=6">
+    <link rel="stylesheet" href="/assets/home2.css?v=8">
+    <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script is:inline>document.documentElement.setAttribute('data-theme','dark');</script>
   </fragment>
 
@@ -71,14 +101,14 @@ const VITRINA: Slide[] = [
       {VITRINA.length > 0 && (
       <div class="h2-vitrina" id="vitrina" aria-roledescription="carrusel" aria-label="Lo nuevo en Corillo">
         {VITRINA.map((v, i) => (
-          <article class={`h2-vt h2-vt--${v.kind}${i === 0 ? ' on' : ''}`} aria-hidden={i === 0 ? 'false' : 'true'} aria-roledescription="slide" aria-label={`${i + 1} de ${VITRINA.length}`}>
+          <article class={`h2-vt h2-vt--${v.kind}${i === 0 ? ' on' : ''}`} aria-hidden={i === 0 ? 'false' : 'true'} aria-roledescription="slide" aria-label={`${i + 1} de ${VITRINA.length}`} data-fecha={v.fecha} data-hasta={v.hasta}>
             <div class="h2-vt-bg">
               <img src={v.img} alt="" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : 'auto'} decoding="async"
                    data-img2={v.img2} onerror="if(this.dataset.img2&&this.src!==this.dataset.img2){this.src=this.dataset.img2}" />
             </div>
             {v.kind === 'equipo' && <div class="h2-vt-prod"><img src={v.img} alt={v.title} loading="lazy" decoding="async" /></div>}
             <div class="h2-vt-txt">
-              <div class="h2-status"><span class="live-badge offline">{v.kicker}</span>{v.meta && <span class="featured-meta">{v.meta}</span>}</div>
+              <div class="h2-status"><span class="live-badge offline">{v.kicker}</span>{v.meta && <span class="featured-meta" data-cuando={v.fecha ? '' : undefined}>{v.meta}</span>}</div>
               <h2 class="h2-vt-title"><a href={v.href} tabindex={i === 0 ? 0 : -1}>{v.title}</a></h2>
               {v.sub && <p class="h2-vt-sub">{v.sub}</p>}
               <div class="featured-actions">
@@ -88,11 +118,9 @@ const VITRINA: Slide[] = [
             </div>
           </article>
         ))}
-        {VITRINA.length > 1 && (
         <div class="h2-vt-nav" role="tablist" aria-label="Cambiar destacado">
           {VITRINA.map((v, i) => <button type="button" class={`h2-vt-dot${i === 0 ? ' on' : ''}`} role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-label={`${i + 1}: ${v.title}`}><span></span></button>)}
         </div>
-        )}
       </div>
       )}
       <div class="h2-scrim"></div>
@@ -135,45 +163,68 @@ const VITRINA: Slide[] = [
     <div class="h2-live-rail" id="liveRail"><!-- rendered by JS --></div>
   </section>
 
-  <!-- EL CORILLO -->
-  <section class="h2-sec">
+  <!-- NOTICIAS -->
+  {NOTICIAS.length > 0 && (
+  <section class="h2-sec" aria-labelledby="secNoticias">
     <div class="h2-sec-hd">
-      <h2>El corillo</h2>
-      <span class="h2-count"><span id="totalCountEl">0</span> streamers</span>
-      <a href="/streamers/" class="h2-more-link">Ver todos</a>
+      <h2 id="secNoticias">Noticias</h2>
+      <a href="/noticias/" class="h2-more-link">Ver todas</a>
     </div>
-    <div class="h2-people" id="channelGrid">
-      <span class="sk-label" role="status">Cargando el corillo…</span>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
-      <div class="sk sk-person"></div>
+    <div class="h2-nt">
+      {NOTICIAS.map((p, i) => {
+        const c = catOf(p.data);
+        return (
+          <a class={`h2-nt-card${i === 0 ? ' is-lead' : ''}`} href={`/noticias/${p.id}/`} style={`--tc:${c.color}`}>
+            <span class="h2-nt-pic"><img src={p.data.image} alt="" width="1600" height="900" loading="lazy" decoding="async" /></span>
+            <span class="h2-nt-txt">
+              <small><b>{c.label}</b> · <time datetime={p.data.pubDate.toISOString()} data-rel={p.data.pubDate.valueOf()}>{cuando(p.data.pubDate.valueOf())}</time></small>
+              <strong>{p.data.cardTitle || p.data.heroTitle}</strong>
+              {i === 0 && <span class="h2-nt-sum">{p.data.summary}</span>}
+            </span>
+          </a>
+        );
+      })}
     </div>
   </section>
+  )}
 
-  <!-- GRATIS ESTA SEMANA (solo si hay datos reales) -->
-  {OFREE.length > 0 && (
-  <section class="h2-sec" id="gratisStrip" data-free-strip>
+  <!-- CINE -->
+  {PELIS.length > 0 && (
+  <section class="h2-sec" aria-labelledby="secCine">
     <div class="h2-sec-hd">
-      <h2>Gratis esta semana</h2>
-      <span class="h2-count">en Epic y Steam</span>
-      <a href="/ofertas/" class="h2-more-link">Ver todas las ofertas</a>
+      <h2 id="secCine">Cine</h2>
+      <span class="h2-count">Estrenos y cartelera en Puerto Rico</span>
+      <a href="/cine/" class="h2-more-link">Ver la cartelera</a>
     </div>
-    <div class="h2-fr">
-      {OFREE.slice(0, 3).map((g) => (
-        <a class="h2-fr-card" href="/ofertas/gratis/" data-end={g.ends ? new Date(g.ends).getTime() : ''}>
-          {g.image && <img src={g.image} alt={`Portada de ${g.title}`} width="480" height="270" loading="lazy" />}
-          <span class="h2-fr-body"><b>{g.title}</b><span>{g.ends ? `Gratis hasta el ${fmtDay(g.ends)}` : 'Gratis por tiempo limitado'}</span></span>
+    <div class="cn-fila">
+      {PELIS.map(p => <PeliCard p={p} />)}
+    </div>
+    <p class="h2-credito">Datos e imágenes de películas: <a href="/cine/">TMDB</a>.</p>
+  </section>
+  )}
+
+  <!-- OFERTAS DE LA SEMANA -->
+  {OFERTAS_HOME.length > 0 && (
+  <section class="h2-sec" id="secOfertas" aria-labelledby="secOfertasT">
+    <div class="h2-sec-hd">
+      <h2 id="secOfertasT">Ofertas de esta semana</h2>
+      <span class="h2-count">Juegos y equipo</span>
+      <a href="/ofertas/" class="h2-more-link">Ver todas</a>
+    </div>
+    <div class="h2-of">
+      {OFERTAS_HOME.map(o => (
+        <a class={`h2-of-card${o.producto ? ' is-producto' : ''}`} href={o.href} data-hasta={o.hasta} {...(o.externo ? { target: '_blank', rel: 'nofollow noopener' } : {})}>
+          <span class="h2-of-pic"><img src={o.img} alt={`Imagen de ${o.title}`} width="460" height="259" loading="lazy" decoding="async" /><span class={`h2-of-chip${o.precio === 'Gratis' ? ' is-gratis' : ''}`}>{o.chip}</span></span>
+          <span class="h2-of-txt">
+            <strong>{o.title}</strong>
+            <span class="h2-of-precio"><b>{o.precio}</b>{o.antes && <s>{o.antes}</s>}</span>
+            <small>{o.lugar}</small>
+          </span>
         </a>
       ))}
     </div>
   </section>
   )}
-
 
   <!-- INVITACIÓN -->
   <section class="h2-join">
@@ -185,6 +236,7 @@ const VITRINA: Slide[] = [
 </main>
 
 <script>
+import { ordenarVitrina, conservarVisible, cuando, vigente } from '../data/vitrina.js';
 const POLL_MS     = 15000;
 const API_TIMEOUT = 5000;
 const CACHE_MS    = 8000;
@@ -210,7 +262,6 @@ function ensureHls() {
   });
   return hlsLoadPromise;
 }
-let searchQuery  = '';
 let featuredKey  = undefined; // undefined=unset, null=offline, string=live channel
 let rotateTimer  = null;
 let statsTimer   = null;
@@ -451,58 +502,97 @@ function setFeaturedLive(key, paths) {
   startStatsAnimation(viewers, paths);
 }
 
-/* ── Vitrina (hero sin nadie en vivo): rota noticia, gratis y equipo; se pausa con el mouse encima o con la pestaña oculta ── */
+/* ── Vitrina (hero sin nadie en vivo): se pausa con el mouse encima, con el teclado dentro o con la pestaña oculta.
+   Las reglas de qué va primero están en src/data/vitrina.js. ── */
 const VT_MS = 7000;
 const vt = { idx: 0, timer: null, el: document.getElementById('vitrina') };
+const vtSlides = () => [...vt.el.querySelectorAll('.h2-vt')];
+const vtWrap = () => document.getElementById('featuredVideoWrap');
+function vtSiguienteCargando() {                       // la siguiente ya cargando, para que no aparezca en blanco
+  const slides = vtSlides(), next = slides[(vt.idx + 1) % slides.length]?.querySelector('img');
+  if (next) next.loading = 'eager';
+}
 function vtShow(i) {
   if (!vt.el) return;
-  const slides = vt.el.querySelectorAll('.h2-vt'), dots = vt.el.querySelectorAll('.h2-vt-dot');
+  const slides = vtSlides();
   vt.idx = (i + slides.length) % slides.length;
   slides.forEach((sl, k) => {
     const on = k === vt.idx;
     sl.classList.toggle('on', on); sl.setAttribute('aria-hidden', on ? 'false' : 'true');
     sl.querySelectorAll('a').forEach(a => a.tabIndex = on ? 0 : -1);
-    if (on) { const im = sl.querySelector('.h2-vt-bg img'); if (im) { im.loading = 'eager'; im.style.animation = 'none'; void im.offsetWidth; im.style.animation = ''; } }
+    if (on) {
+      const im = sl.querySelector('.h2-vt-bg img'); if (im) { im.loading = 'eager'; im.style.animation = 'none'; void im.offsetWidth; im.style.animation = ''; }
+      const m = sl.querySelector('[data-cuando]'); if (m && sl.dataset.fecha) m.textContent = cuando(+sl.dataset.fecha) + (m.dataset.cuando || '');   // el HTML puede tener horas o días; data-cuando trae lo que sigue a la fecha
+    }
+    const d = sl._dot; if (d) { d.classList.toggle('on', on); d.setAttribute('aria-selected', on ? 'true' : 'false'); d.style.setProperty('--vt-ms', VT_MS + 'ms'); }
   });
-  dots.forEach((d, k) => { d.classList.toggle('on', k === vt.idx); d.setAttribute('aria-selected', k === vt.idx ? 'true' : 'false'); d.style.setProperty('--vt-ms', VT_MS + 'ms'); });
-  // la siguiente ya cargando, para que no aparezca en blanco
-  const next = slides[(vt.idx + 1) % slides.length]?.querySelector('img'); if (next) next.loading = 'eager';
+  vtSiguienteCargando();
+}
+/* Pone los slides en el orden de las reglas sin tocar el que está en pantalla (ni su imagen ni su barra se reinician). */
+function vtAcomodar() {
+  const slides = vtSlides(), visible = slides[vt.idx];
+  const orden = ordenarVitrina(slides.filter(sl => sl === visible || vigente(sl.dataset.hasta)).map(el => ({ el, fecha: +el.dataset.fecha || 0 }))).map(x => x.el);
+  const final = conservarVisible(orden, visible, vt.idx), pos = final.indexOf(visible);
+  const nav = vt.el.querySelector('.h2-vt-nav');
+  slides.filter(sl => !final.includes(sl)).forEach(sl => { sl._dot?.remove(); sl.remove(); });
+  final.forEach((sl, k) => {
+    sl.setAttribute('aria-label', `${k + 1} de ${final.length}`);
+    if (k === pos) return;
+    vt.el.insertBefore(sl, k < pos ? visible : nav);
+    if (sl._dot) nav.insertBefore(sl._dot, k < pos ? visible._dot : null);
+  });
+  vt.idx = pos;
+  if (nav) nav.style.display = final.length > 1 ? '' : 'none';
+  vtSiguienteCargando();
 }
 function vtArm() {
-  clearInterval(vt.timer);
-  if (!vt.el || vt.el.querySelectorAll('.h2-vt').length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  vt.timer = setInterval(() => { if (!document.hidden && !vt.el.matches(':hover')) vtShow(vt.idx + 1); }, VT_MS);
+  clearInterval(vt.timer); vt.timer = null;
+  if (!vt.el || !vtWrap().classList.contains('is-vitrina') || vtSlides().length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  vt.timer = setInterval(() => {
+    if (document.hidden || (_hover && vt.el.matches(':hover')) || vt.el.querySelector(':focus-visible')) return;
+    vtAcomodar();                                      // saca lo que venció con la página abierta
+    vtShow(vt.idx + 1);
+  }, VT_MS);
 }
 function startVitrina() {
   if (!vt.el) return false;
-  document.getElementById('featuredVideoWrap').classList.add('is-vitrina');
-  vtShow(vt.idx); vtArm();
+  if (vtWrap().classList.contains('is-vitrina')) return true;   // ya está corriendo: no reiniciarla
+  vtWrap().classList.add('is-vitrina');                          // alguien dejó de transmitir: empezar por lo más nuevo
+  vtShow(0); vtArm();
   return true;
 }
 function stopVitrina() {
   clearInterval(vt.timer); vt.timer = null;
-  document.getElementById('featuredVideoWrap').classList.remove('is-vitrina');
+  vtWrap().classList.remove('is-vitrina');
 }
 if (vt.el) {
-  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => { d.onclick = () => { vtShow(k); vtArm(); }; });
+  const dots = vt.el.querySelectorAll('.h2-vt-dot');
+  vtSlides().forEach((sl, k) => { sl._dot = dots[k]; if (dots[k]) dots[k]._slide = sl; });
+  vt.el.querySelector('.h2-vt-nav')?.addEventListener('click', e => {
+    const sl = e.target.closest('.h2-vt-dot')?._slide;
+    if (sl) { vtShow(vtSlides().indexOf(sl)); vtArm(); }
+  });
   let x0 = null;                                                     // deslizar con el dedo en el celular
   vt.el.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
   vt.el.addEventListener('touchend', e => {
     if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
     if (Math.abs(dx) > 50) { vtShow(vt.idx + (dx < 0 ? 1 : -1)); vtArm(); }
   });
-  vtShow(0); vtArm();
-  vtTransmisiones();
+  vtAcomodar(); vtShow(0); vtArm();
+  vtVideos();
 }
 
-/* La última transmisión grabada (VOD de los últimos 14 días) entra de PRIMERA en la vitrina, con la mejor imagen del
-   video (portada.py en corillo-media), el título, quién la hizo y cuánto dura. Hasta 2, de canales distintos. */
-async function vtTransmisiones() {
+/* Los videos (transmisiones grabadas y subidas, últimos 14 días; hasta 2, de canales distintos) entran por su fecha, con la
+   mejor imagen del video (portada.py en corillo-media), el título, quién lo hizo y cuánto dura. La colección vods todavía
+   no dice si un video se subió o salió de una transmisión, así que el texto sirve para los dos. Si PocketBase no contesta,
+   la vitrina sigue con lo que trajo el HTML. */
+async function vtVideos() {
   const desde = new Date(Date.now() - 14 * 864e5).toISOString().replace('T', ' ');
   let items = [];
   try {
     const r = await fetch(`${PB_URL}/api/collections/vods/records?sort=-date&perPage=10&filter=${encodeURIComponent(`date>="${desde}"`)}&fields=id,channel,title,thumb,duration,date`,
                           { signal: AbortSignal.timeout(5000) });
+    if (!r.ok) return;
     items = (await r.json()).items || [];
   } catch { return; }
   const vistos = new Set();
@@ -512,40 +602,47 @@ async function vtTransmisiones() {
   try { for (const x of await (await fetch('https://api.corillo.live/api/streamers', { signal: AbortSignal.timeout(4000) })).json()) fotos[x.key] = x; } catch {}
   const e = x => String(x ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const nav = vt.el.querySelector('.h2-vt-nav');
-  for (const v of items.reverse()) {
+  for (const v of items) {
+    const fecha = new Date(String(v.date).replace(' ', 'T')).getTime();
     const s = { ...streamerOf(v.channel), ...(fotos[v.channel] || {}) }, nombre = s.name || v.channel;
     const cara = s.avatar_url ? `<img src="${e(s.avatar_url)}" alt="" onerror="this.remove()">` : e(s.ava || nombre[0]);
     const href = `/vods/v/?id=${encodeURIComponent(v.id)}`;
     const art = document.createElement('article');
     art.className = 'h2-vt h2-vt--vod';
     art.setAttribute('aria-roledescription', 'slide');
+    art.setAttribute('aria-hidden', 'true');
+    art.dataset.fecha = fecha || '';
     art.innerHTML = `
       <div class="h2-vt-bg"><img src="${e(v.thumb)}" alt="" decoding="async"></div>
       <a class="h2-vt-play" href="${href}" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.6c0-1.2 1.3-1.9 2.3-1.3l11.3 7.4c.9.6.9 2 0 2.6L9.3 20.7C8.3 21.3 7 20.6 7 19.4V4.6Z"/></svg></a>
       <div class="h2-vt-txt">
-        <div class="h2-status"><span class="live-badge offline">Transmisión</span>
-          <span class="featured-meta">${e(relativeTime(v.date))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
+        <div class="h2-status"><span class="live-badge offline">Video</span>
+          <span class="featured-meta" data-cuando="${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}">${e(cuando(fecha))}${v.duration ? ` · ${e(fmtDuration(v.duration))}` : ''}</span></div>
         <a class="h2-vt-who" href="/${e(v.channel)}/" tabindex="-1"><span class="h2-vt-face" style="background:${e(s.color || '#1e3a4a')}">${cara}</span><b>${e(nombre)}</b></a>
-        <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `Transmisión del ${new Date(v.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`)}</a></h2>
-        <p class="h2-vt-sub">Lo que te perdiste del stream de ${e(nombre)}. Velo completo cuando quieras.</p>
+        <h2 class="h2-vt-title"><a href="${href}" tabindex="-1">${e(v.title || `Video de ${nombre}`)}</a></h2>
+        <p class="h2-vt-sub">Lo nuevo de ${e(nombre)} en Corillo. Velo completo cuando quieras.</p>
         <div class="featured-actions">
-          <a href="${href}" class="play-btn" tabindex="-1"><i class="fa-solid fa-play"></i> Ver la transmisión</a>
+          <a href="${href}" class="play-btn" tabindex="-1"><i class="fa-solid fa-play"></i> Ver el video</a>
           <a href="/${e(v.channel)}/" class="icon-btn" title="Canal de ${e(nombre)}" tabindex="-1"><i class="fa-solid fa-user"></i></a>
         </div>
       </div>`;
-    vt.el.insertBefore(art, vt.el.querySelector('.h2-vt'));
+    vt.el.insertBefore(art, nav);
     if (nav) {
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'h2-vt-dot'; b.setAttribute('role', 'tab');
-      b.setAttribute('aria-label', `Transmisión de ${nombre}`); b.innerHTML = '<span></span>';
-      nav.prepend(b);
+      b.type = 'button'; b.className = 'h2-vt-dot'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', 'false');
+      b.setAttribute('aria-label', `Video de ${nombre}`); b.innerHTML = '<span></span>';
+      b.style.setProperty('--vt-ms', VT_MS + 'ms');
+      nav.append(b);
+      art._dot = b; b._slide = art;
     }
   }
-  const slides = vt.el.querySelectorAll('.h2-vt');
-  slides.forEach((sl, k) => sl.setAttribute('aria-label', `${k + 1} de ${slides.length}`));
-  vt.el.querySelectorAll('.h2-vt-dot').forEach((d, k) => { d.onclick = () => { vtShow(k); vtArm(); }; });
-  vtShow(0); vtArm();
+  vtAcomodar();
+  if (vtWrap().classList.contains('is-vitrina') && !vt.timer) vtArm();   // una vitrina de un solo slide ahora tiene más
 }
+
+/* El HTML puede tener horas o días: las fechas se recalculan y lo gratis que ya venció se quita. */
+document.querySelectorAll('time[data-rel]').forEach(t => { t.textContent = cuando(+t.dataset.rel); });
+document.querySelectorAll('.h2-of-card[data-hasta]').forEach(c => { if (!vigente(c.dataset.hasta)) c.remove(); });
 
 async function setFeaturedOffline() {
   featuredKey = null;
@@ -564,7 +661,7 @@ async function setFeaturedOffline() {
 
   updateChatLabel(null);
 
-  // Sin nadie en vivo: la vitrina (noticias, gratis, equipo). Los VODs volverán a entrar aquí cuando existan otra vez.
+  // Sin nadie en vivo: la vitrina (noticias, videos, gratis, equipo).
   if (startVitrina()) return;
 
   // Load VODs if not cached yet
@@ -840,41 +937,6 @@ function renderLiveSection(live, paths) {
   }).join('');
 }
 
-function renderChannelGrid(paths) {
-  const liveSet = getLiveSet(paths);
-  const grid    = document.getElementById('channelGrid');
-
-  let list = STREAMERS.filter(s => !s.soon);
-  if (searchQuery) {
-    list = list.filter(s =>
-      s.name.toLowerCase().includes(searchQuery) ||
-      s.key.toLowerCase().includes(searchQuery)
-    );
-  }
-  // En vivo primero; el resto conserva el orden del roster
-  list = [...list].sort((a, b) => (liveSet.has(b.key) ? 1 : 0) - (liveSet.has(a.key) ? 1 : 0));
-
-  if (!list.length) {
-    grid.innerHTML = `<p class="h2-empty">No hay canales que coincidan con “${searchQuery}”.</p>`;
-    return;
-  }
-
-  const person = s => {
-    const live    = liveSet.has(s.key);
-    const viewers = live ? getViewers(paths, s.key) : 0;
-    const face = s.avatar_url
-      ? `<img src="${s.avatar_url}" alt="" loading="lazy" onerror="this.remove()">`
-      : `<span class="h2-initial">${s.ava || s.name[0]}</span>`;
-    return `<a class="h2-person${live ? ' is-live' : ''}" href="/${s.key}/">
-      <span class="h2-person-img" style="background:${s.color || '#1e3a4a'}">${face}</span>
-      ${live ? `<span class="h2-chip live">En vivo · ${viewers}</span>` : ''}
-      <span class="h2-person-txt"><strong>${s.name}</strong><small>${live ? (s.stream_title || 'Transmitiendo ahora') : (s.sub || 'corillo.live')}</small></span>
-    </a>`;
-  };
-
-  grid.innerHTML = list.map(person).join('');
-}
-
 async function poll() {
   const now    = Date.now();
   const paths  = await fetchPaths();
@@ -888,11 +950,8 @@ async function poll() {
   const liveWithViewers = live.map(s => ({ ...s, _viewers: getViewers(paths, s.key) }));
 
   document.getElementById('liveCountEl').textContent = live.length;
-  document.getElementById('totalCountEl').textContent = STREAMERS.filter(s => !s.soon).length;
 
-  // Live section + channel grid
   renderLiveSection(live, paths);
-  renderChannelGrid(paths);
 
   // Featured player
   if (live.length > 0) {
@@ -919,12 +978,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const onScroll = () => document.body.classList.toggle('is-scrolled', window.scrollY > 40);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-
-  // Search input vive en el SiteShell; aquí escuchamos el evento que dispara.
-  window.addEventListener('crl-search', e => {
-    searchQuery = (e.detail || '').toLowerCase();
-    renderChannelGrid(lastPaths);
-  });
 
   // Cargar roster completo desde PocketBase — fuente de verdad única
   try {
@@ -968,10 +1021,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   .h2-fr-body span{color:var(--crl-confirm,#35e0a1);font:700 .88rem var(--h2-body)}
   [data-free-strip] [data-hide]{display:none!important}
 </style>
-<script is:inline>
-  // no mostrar un juego gratis que ya venció (la página se regenera cada hora, pero así nunca queda uno viejo)
-  (function(){ var s=document.querySelector('[data-free-strip]'); if(!s) return; var n=Date.now(), vis=0;
-    s.querySelectorAll('.h2-fr-card[data-end]').forEach(function(c){ var e=+c.dataset.end; if(e&&e<=n) c.setAttribute('data-hide',''); else vis++; });
-    if(!vis) s.setAttribute('data-hide',''); })();
-</script>
 </SiteShell>

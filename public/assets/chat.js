@@ -112,6 +112,19 @@ if (!chatVisible) {
   if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.add('active');
 }
 
+// En la computadora el chat arranca recogido y se abre al salir en vivo, si la persona no lo tiene apagado.
+// No se guarda como preferencia; en el celular sigue siendo la hoja de abajo de siempre.
+const _chatQuiereVerse = chatVisible && !_chatIsMobile;
+if (_chatQuiereVerse) {
+  chatVisible = false;
+  $('#content').classList.add('chat-hidden');
+  document.body.classList.add('chat-is-hidden');
+  if ($('#chatToggleBtn')) $('#chatToggleBtn').classList.remove('active');
+}
+window.__canalEnVivo = () => {
+  if (_chatQuiereVerse && !chatVisible && localStorage.getItem('corillo_chat') !== 'hidden') showChat();
+};
+
 if ($('#chatToggleBtn')) $('#chatToggleBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());
 if ($('#chatCloseBtn'))  $('#chatCloseBtn').addEventListener('click', hideChat);
 if ($('#chatRailBtn'))   $('#chatRailBtn').addEventListener('click', () => chatVisible ? hideChat() : showChat());

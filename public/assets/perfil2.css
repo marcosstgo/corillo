@@ -146,11 +146,12 @@ body .card-title::before { content: ''; width: 5px; height: 20px; border-radius:
 .vod-row-actions { display: grid !important; grid-template-columns: repeat(2, 40px); gap: 8px !important; }
 .reel-row-actions { gap: 8px !important; }
 body .btn[style*="font-size:.7rem"], body .btn[style*="font-size:.78rem"] { font-size: .9rem !important; }
-.vod-row-del, .vod-row-reel, .vod-row-embed, .vod-row-download, .reel-row-dl, .reel-row-del {
+.vod-row-del, .vod-row-reel, .vod-row-embed, .vod-row-download, .vod-row-edit, .reel-row-dl, .reel-row-del {
   width: 40px !important; height: 40px !important; display: grid; place-items: center; border: 0 !important; border-radius: 13px !important;
   background: var(--p-hov) !important; color: var(--p-bone) !important; transition: background .15s, color .15s;
 }
 .vod-row-reel:hover, .reel-row-dl:hover { background: color-mix(in srgb, var(--p-hot) 25%, transparent) !important; color: var(--p-hot) !important; }
+.vod-row-edit:hover, .vod-row-edit.active { background: color-mix(in srgb, var(--p-hot) 25%, transparent) !important; color: var(--p-hot) !important; }
 .vod-row-embed:hover { background: color-mix(in srgb, var(--p-sun) 25%, transparent) !important; color: var(--p-sun) !important; }
 .vod-row-download:hover { background: color-mix(in srgb, var(--p-mint) 25%, transparent) !important; color: var(--p-mint) !important; }
 .vod-row-del:hover, .reel-row-del:hover { background: color-mix(in srgb, var(--p-live) 25%, transparent) !important; color: #ff9db0 !important; }

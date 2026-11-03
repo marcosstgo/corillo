@@ -28,6 +28,10 @@ import SiteShell from '../../../layouts/SiteShell.astro';
       .bp-btn.peq{padding:6px 12px;font-size:.85rem}
       .bp-btn.mal{background:#ff5d6c22;color:#ff8a95}
       .bp-btn:disabled{opacity:.5;cursor:default}
+      .bp-dev{margin:0 0 16px;padding:12px 16px;border-radius:14px;background:color-mix(in srgb,var(--bc) 14%,transparent);font-size:.92rem}
+      .bp-af-plan{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+      .bp .bp-af-plan select{width:auto}
+      .bp .bp-af-plan input{width:6.5em}
       .bp-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 20px;padding:0;list-style:none}
       .bp-tabs button{padding:9px 16px;border:0;border-radius:999px;background:transparent;color:var(--h2-mute);font:700 .92rem var(--h2-body);cursor:pointer;box-shadow:inset 0 0 0 1px var(--h2-line)}
       .bp-tabs button.on{background:var(--bc);color:#13173d;box-shadow:none}
@@ -157,7 +161,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         <div class="bp-top"><h1>El Bochin<span>chero</span> · panel</h1>
           <select id="server" style="width:auto">${yo.servers.map(s => `<option value="${esc(s.id)}" ${s.id === st.gid ? 'selected' : ''}>${esc(s.nombre)}</option>`).join('')}</select>
           <div class="yo">${av}${esc(yo.nombre)} <button class="bp-btn sec peq" id="salir">Salir</button></div></div>
-        <ul class="bp-tabs">${TABS.map(([k, t]) => `<li><button data-tab="${k}" class="${k === st.tab ? 'on' : ''}">${t}<span class="n" id="n-${k}" hidden></span></button></li>`).join('')}</ul>
+        <ul class="bp-tabs">${(yo.dueno ? [...TABS, ['afiliados', 'Afiliados']] : TABS).map(([k, t]) => `<li><button data-tab="${k}" class="${k === st.tab ? 'on' : ''}">${t}<span class="n" id="n-${k}" hidden></span></button></li>`).join('')}</ul>
         <section id="vista"><p class="bp-vacio">Cargando…</p></section>`;
       $('#server').onchange = e => { st.gid = e.target.value; localStorage.setItem('boch_server', st.gid); pintarApp(); };
       $('#salir').onclick = salir;
@@ -182,6 +186,7 @@ import SiteShell from '../../../layouts/SiteShell.astro';
           ? (r.vivo.en_voz?.length ? `<ul class="bp-lista">${r.vivo.en_voz.map(p => `<li><div class="t"><b>${esc(p.nombre)}</b><small>${esc(p.sala)}</small></div>${p.juego ? `<span class="bp-tag">🎮 ${esc(p.juego)}</span>` : ''}</li>`).join('')}</ul>` : '<p class="bp-vacio">Nadie en las salas de voz ahora mismo.</p>')
           : '<p class="bp-vacio">El bot no ha reportado en los últimos minutos.</p>';
         v.innerHTML = `
+          ${r.desarrollo ? `<p class="bp-dev">${esc(r.desarrollo)}</p>` : ''}
           <div class="bp-grid">
             <div class="bp-card bp-stat"><small>Plan</small><b style="font-size:1.2rem">${esc(r.plan)}</b></div>
             <div class="bp-card bp-stat"><small>Voces nuevas hoy</small><b>${r.voces_hoy}${r.voces_tope != null ? ' / ' + r.voces_tope : ''}</b></div>
@@ -192,6 +197,39 @@ import SiteShell from '../../../layouts/SiteShell.astro';
             <div class="bp-card"><h2>En voz ahora</h2>${vivo}</div>
             <div class="bp-card"><h2>Los más pegaos (7 días)</h2>${r.ranking.length ? `<ul class="bp-lista">${r.ranking.map((p, i) => `<li><div class="t"><b>${['🥇', '🥈', '🥉'][i] || (i + 1) + '.'} ${esc(p.nombre)}</b></div><span>${horas(p.minutos)}</span></li>`).join('')}</ul>` : '<p class="bp-vacio">Todavía no hay datos.</p>'}</div>
           </div>`;
+      },
+
+      // Solo Marcos (BOCH_DUENOS en la API): el plan de cada server donde está el bot.
+      async afiliados(v) {
+        const { servers } = await api('GET', '/admin/servers');
+        const fecha = ts => new Date(ts * 1000).toLocaleDateString('es-PR', { day: 'numeric', month: 'long', year: 'numeric' });
+        const fila = s => {
+          const hasta = s.modo === 'prueba' ? ` · hasta el ${fecha(s.prueba_hasta)}` : '';
+          const miembros = s.miembros != null ? ` · ${s.miembros} miembros` : '';
+          const fijo = s.modo === 'casa' || s.modo === 'premium';
+          const opciones = [['afiliado', 'Afiliado'], ['prueba', 'De prueba'], ['gratis', 'Gratis']]
+            .map(([k, t]) => `<option value="${k}" ${k === s.modo ? 'selected' : ''}>${t}</option>`).join('');
+          return `<li data-id="${esc(s.id)}"><div class="t"><b>${esc(s.nombre)}</b><small>${esc(s.plan)}${hasta}${miembros}</small></div>
+            ${fijo ? '' : `<div class="bp-af-plan"><select aria-label="Plan de ${esc(s.nombre)}">${opciones}</select>
+              <input type="number" min="1" max="365" value="30" aria-label="Días de prueba" ${s.modo === 'prueba' ? '' : 'hidden'}>
+              <button class="bp-btn peq">Guardar</button></div>`}</li>`;
+        };
+        v.innerHTML = `<div class="bp-card"><h2>Plan de cada server</h2>
+          <p class="bp-vacio" style="margin:0 0 12px">Afiliado: lo mismo que Premium, gratis y sin fecha de vencimiento. De prueba: los días cuentan desde hoy.
+          Gratis: sin IA ni /decir, y no se les avisa nada. Sus admins ven en su panel que el bot está en desarrollo, salvo en Gratis.</p>
+          <ul class="bp-lista">${servers.map(fila).join('')}</ul></div>`;
+        v.querySelectorAll('li[data-id]').forEach(li => {
+          const sel = li.querySelector('select');
+          if (!sel) return;
+          const dias = li.querySelector('input');
+          sel.onchange = () => { dias.hidden = sel.value !== 'prueba'; };
+          li.querySelector('button').onclick = async () => {
+            const cuerpo = sel.value === 'prueba' ? { modo: 'prueba', dias: Number(dias.value) } : { modo: sel.value };
+            await api('PATCH', `/admin/servers/${li.dataset.id}`, cuerpo);
+            aviso('Guardado.');
+            await VISTAS.afiliados(v);
+          };
+        });
       },
 
       async ajustes(v) {

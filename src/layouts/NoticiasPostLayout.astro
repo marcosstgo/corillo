@@ -16,6 +16,7 @@ interface Props {
   pubDate?: string;          // ISO, para datos estructurados
   heroTitle: string;
   image?: string;
+  shareImage?: string;       // la de WhatsApp y redes, con el titular; si no hay, la portada
   imageCredit?: string;
   heroSub: string;
   minutes?: number;
@@ -26,21 +27,21 @@ interface Props {
   wide?: boolean;            // se conserva por compatibilidad con las notas viejas
 }
 
-const { pubDate, title, description, canonical, ogTitle, ogDescription, badgeLabel, category, date, heroTitle, heroSub, image, imageCredit, minutes = 3, tags = [], sources = [], ai = false, related = [] } = Astro.props;
+const { pubDate, title, description, canonical, ogTitle, ogDescription, badgeLabel, category, date, heroTitle, heroSub, image, shareImage, imageCredit, minutes = 3, tags = [], sources = [], ai = false, related = [] } = Astro.props;
 const cat = catOf({ category, badgeLabel });
 const ld = pubDate ? {
   '@context': 'https://schema.org', '@type': 'NewsArticle',
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
   headline: heroTitle.slice(0, 110), description, inLanguage: 'es',
   datePublished: pubDate, dateModified: pubDate,
-  image: ['https://corillo.live/assets/og-image.png'],
+  image: [image ? new URL(image, 'https://corillo.live/').href : 'https://corillo.live/assets/og-corillo.jpg'],
   articleSection: cat.label, keywords: tags.join(', ') || undefined,
   author: { '@type': 'Organization', name: 'CORILLO', url: 'https://corillo.live/' },
-  publisher: { '@type': 'Organization', name: 'CORILLO', url: 'https://corillo.live/', logo: { '@type': 'ImageObject', url: 'https://corillo.live/assets/og-image.png' } },
+  publisher: { '@type': 'Organization', name: 'CORILLO', url: 'https://corillo.live/', logo: { '@type': 'ImageObject', url: 'https://corillo.live/assets/og-corillo.jpg' } },
   isBasedOn: sources.length ? sources.map(s => ({ '@type': 'CreativeWork', name: s.name, url: s.url })) : undefined,
 } : null;
 ---
-<SiteShell pageClass="p-legacy" title={title} description={description} canonical={canonical} ogType="article" ogTitle={ogTitle} ogDescription={ogDescription} ogImage={image}>
+<SiteShell pageClass="p-legacy" title={title} description={description} canonical={canonical} ogType="article" ogTitle={ogTitle} ogDescription={ogDescription} ogImage={shareImage || image}>
   <fragment slot="head">
     {pubDate && <meta property="article:published_time" content={pubDate} />}
     {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}

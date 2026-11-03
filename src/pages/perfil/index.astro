@@ -367,7 +367,7 @@ import { version } from '../../../version.json';
     .vod-row-link { text-decoration: none; color: inherit; flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; }
     .vod-row-link:hover .vod-row-date { color: var(--accent); }
     .vod-row-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .vod-row-del, .vod-row-reel, .vod-row-embed, .vod-row-download {
+    .vod-row-del, .vod-row-reel, .vod-row-embed, .vod-row-download, .vod-row-edit {
       width: 30px; height: 30px; border-radius: 6px;
       border: 1px solid var(--border); background: transparent;
       color: var(--muted); cursor: pointer;
@@ -376,6 +376,16 @@ import { version } from '../../../version.json';
       text-decoration: none;
     }
     .vod-row-del:hover   { border-color: #e17055; color: #e17055; }
+    .vod-row-edit:hover  { border-color: var(--accent); color: var(--accent); }
+    .vod-row-edit.active { border-color: var(--accent); color: var(--accent); background: rgba(var(--crl-accent-rgb),.08); }
+    .vod-title-form { margin: 6px 0 8px; padding: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; }
+    .vod-title-form[hidden] { display: none; }
+    .vod-title-form label { display: block; font-size: .72rem; color: var(--muted); margin-bottom: 6px; }
+    .vod-title-fila { display: flex; gap: 8px; flex-wrap: wrap; }
+    .vod-title-fila input { flex: 1 1 220px; min-width: 0; }
+    .vod-title-fila .btn { font-size: .72rem; }
+    .vod-title-error { color: #e17055; font-size: .72rem; margin-top: 6px; }
+    .vod-title-error:empty { display: none; }
     .vod-row-reel:hover  { border-color: var(--accent); color: var(--accent); }
     .vod-row-embed:hover { border-color: rgba(var(--crl-accent-rgb),.4); color: var(--accent); }
     .vod-row-download:hover { border-color: #00b894; color: #00b894; }
@@ -788,7 +798,7 @@ import { version } from '../../../version.json';
       .card { padding: 16px; }
     }
   </style>
-  <link rel="stylesheet" href="/assets/perfil2.css?v=2" />
+  <link rel="stylesheet" href="/assets/perfil2.css?v=3" />
 </head>
 <body class="crl-body">
 
@@ -1579,6 +1589,7 @@ async function loadMyVods(channel) {
 
     if (!items.length) { empty.style.display = ''; return; }
 
+    items.forEach(v => vodTitulos.set(v.id, v.title || ''));
     list.innerHTML = items.map(v => {
       const vidSrc = v.filename ? `https://vods.corillo.live/${channel}/${v.filename}` : '';   // R2 (1-nov-2026)
       return `
@@ -1596,11 +1607,22 @@ async function loadMyVods(channel) {
           </a>
           <div class="vod-row-actions">
             <button class="vod-row-reel" id="rbtn-${v.id}" onclick="toggleReelPanel('${v.id}',${v.duration||0},'${esc(vidSrc)}','${esc(v.thumb||'')}')" title="Crear Reel"><i class="fa-solid fa-scissors"></i></button>
+            <button class="vod-row-edit" id="vedit-${v.id}" onclick="editVodTitle('${v.id}')" title="Cambiar título" aria-label="Cambiar título"><i class="fa-solid fa-pen"></i></button>
             <button class="vod-row-embed" onclick="copyEmbedCode('${v.id}')" title="Copiar código embed"><i class="fa-solid fa-code"></i></button>
             ${vidSrc ? `<a class="vod-row-download" href="${esc(vidSrc)}" download="${esc(v.filename||'')}" title="Descargar VOD completo"><i class="fa-solid fa-download"></i></a>` : ''}
             <button class="vod-row-del" onclick="deleteVod('${v.id}')" title="Borrar VOD"><i class="fa-solid fa-trash"></i></button>
           </div>
         </div>
+
+        <form class="vod-title-form" id="vtform-${v.id}" hidden onsubmit="saveVodTitle(event,'${v.id}')" onkeydown="if(event.key==='Escape')closeVodTitle('${v.id}')">
+          <label for="vtinput-${v.id}">Título del video</label>
+          <div class="vod-title-fila">
+            <input class="pf-input" id="vtinput-${v.id}" type="text" maxlength="120" placeholder="Ej: Battlefield 6 con el corillo" autocomplete="off">
+            <button class="btn btn-primary" type="submit">Guardar</button>
+            <button class="btn" type="button" onclick="closeVodTitle('${v.id}')">Cancelar</button>
+          </div>
+          <div class="vod-title-error" role="alert"></div>
+        </form>
 
         <div class="reel-panel" id="rpanel-${v.id}">
           <div class="reel-panel-header">
@@ -2176,6 +2198,55 @@ function copyEmbedCode(id) {
     }
     showToast('Código embed copiado', 'ok');
   });
+}
+
+// Título de un VOD: PocketBase solo deja editarlo al admin; corillo-media comprueba el dueño y cambia solo el título.
+const vodTitulos = new Map();
+
+function closeVodTitle(id) {
+  document.getElementById(`vtform-${id}`).hidden = true;
+  const btn = document.getElementById(`vedit-${id}`);
+  btn.classList.remove('active'); btn.focus();
+}
+
+function editVodTitle(id) {
+  const form = document.getElementById(`vtform-${id}`);
+  if (!form.hidden) { closeVodTitle(id); return; }
+  form.hidden = false;
+  document.getElementById(`vedit-${id}`).classList.add('active');
+  form.querySelector('.vod-title-error').textContent = '';
+  const input = form.querySelector('input');
+  input.value = vodTitulos.get(id) || '';
+  input.focus(); input.select();
+}
+
+async function saveVodTitle(ev, id) {
+  ev.preventDefault();
+  const form = document.getElementById(`vtform-${id}`);
+  const btn = form.querySelector('[type=submit]'), error = form.querySelector('.vod-title-error');
+  btn.disabled = true; error.textContent = '';
+  try {
+    const res = await fetch(`https://media.corillo.live/api/vod/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'Authorization': pb.authStore.token },
+      body: JSON.stringify({ title: form.querySelector('input').value }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'No se pudo guardar el título.');
+    vodTitulos.set(id, data.title);
+    const info = document.querySelector(`#vrow-${id} .vod-row-info`);
+    let el = info.querySelector('.vod-row-title');
+    if (data.title) {
+      if (!el) { el = document.createElement('div'); el.className = 'vod-row-title'; info.prepend(el); }
+      el.textContent = data.title;
+    } else if (el) el.remove();
+    closeVodTitle(id);
+    showToast('Título guardado');
+  } catch (e) {
+    error.textContent = e instanceof TypeError ? 'No hubo conexión. Intenta otra vez.' : e.message;
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 async function deleteVod(id) {
