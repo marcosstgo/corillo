@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-02T18:12:07",
+ "actualizado": "2026-11-03T06:13:36",
  "pegao": [
   {
    "tmdb": 1423191,
@@ -15,7 +15,7 @@
     "Aventura"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/vqNSvCFknXObgqn7nOFrJVEeGht.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
    "direccion": [
     "Zach Cregger"
    ],
@@ -31,7 +31,39 @@
    ],
    "trailer": "d6oszs7f5aI",
    "dondeVer": [],
-   "popularidad": 105.4,
+   "popularidad": 190.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1375441,
+   "title": "Primetime",
+   "original": "Primetime",
+   "estreno": "2026-09-24",
+   "clasificacion": "R",
+   "duracion": 110,
+   "resumen": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
+   "generos": [
+    "Drama",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/4E5RVsSUG1A4Adwbqupu5w6kofZ.jpg",
+   "direccion": [
+    "Lance Oppenheim"
+   ],
+   "reparto": [
+    "Robert Pattinson",
+    "Merritt Wever",
+    "Skyler Gisondo",
+    "Matthew Maher",
+    "Phoebe Bridgers",
+    "Victor Brunette",
+    "Bokeem Woodbine",
+    "Michael Chachere"
+   ],
+   "trailer": "5fHXyqQOKL8",
+   "dondeVer": [],
+   "popularidad": 56.1,
    "pr": false
   },
   {
@@ -63,106 +95,7 @@
    ],
    "trailer": "P-QWhkimt50",
    "dondeVer": [],
-   "popularidad": 236.8,
-   "pr": false
-  },
-  {
-   "tmdb": 1384216,
-   "title": "La guerra de los últimos",
-   "original": "The Dog Stars",
-   "estreno": "2026-08-27",
-   "clasificacion": "R",
-   "duracion": 119,
-   "resumen": "Tras la devastación mundial causada por una pandemia, un hombre vive una existencia solitaria en un hangar de aviones en Colorado con su perro y un hosco pistolero con quien ha entablado amistad. Cuando escucha una misteriosa transmisión por radio mientras vuela su viejo Cessna, comienza una búsqueda para descubrir el origen del sonido.",
-   "generos": [
-    "Acción",
-    "Suspense",
-    "Ciencia ficción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/flipeYd0sa4y4kpIc7Pn59JeBIj.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/3k7GzxOdLZkN3eZsuhLi2eRzkXO.jpg",
-   "direccion": [
-    "Ridley Scott"
-   ],
-   "reparto": [
-    "Jacob Elordi",
-    "Josh Brolin",
-    "Margaret Qualley",
-    "Guy Pearce",
-    "Benedict Wong",
-    "Allison Janney",
-    "Ewen Bremner",
-    "Sam Spruell"
-   ],
-   "trailer": "cmzVY1goqwQ",
-   "dondeVer": [],
-   "popularidad": 189.7,
-   "pr": false
-  },
-  {
-   "tmdb": 1400940,
-   "title": "Clayface",
-   "original": "Clayface",
-   "estreno": "2026-10-22",
-   "clasificacion": "R",
-   "duracion": 109,
-   "resumen": "Para mantener su relevancia como actor de películas clase B, Matt Hagen se inyecta una sustancia solo para descubrir que puede remodelar su rostro y su forma.",
-   "generos": [
-    "Terror",
-    "Suspense",
-    "Ciencia ficción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/avCm6vJzdIz9SCIZJ2CuBupGWDQ.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
-   "direccion": [
-    "James Watkins"
-   ],
-   "reparto": [
-    "Tom Rhys Harries",
-    "Naomi Ackie",
-    "Eddie Marsan",
-    "Max Minghella",
-    "David Dencik",
-    "Francesca Corney",
-    "Ruby Sear",
-    "Wil Coban"
-   ],
-   "trailer": "WGOv9Pzh9cE",
-   "dondeVer": [],
-   "popularidad": 158.5,
-   "pr": false
-  },
-  {
-   "tmdb": 791523,
-   "title": "Wildwood: El bosque salvaje",
-   "original": "Wildwood",
-   "estreno": "2026-10-29",
-   "clasificacion": "PG-13",
-   "duracion": 132,
-   "resumen": "Después de que su hermano bebé es secuestrado por una parvada de cuervos, la decidida adolescente Prue McKeel y su compañero Curtis Mehlberg inician una desesperada misión de rescate hacia el Bosque Impasable, un bosque encantado oculto justo más allá de Portland, Oregón.",
-   "generos": [
-    "Animación",
-    "Aventura",
-    "Fantasía"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3AxfnEViGaVspgifEag5au5bVJc.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/sl5NJ1vtyhP9Vr88bB4blULsJYp.jpg",
-   "direccion": [
-    "Travis Knight"
-   ],
-   "reparto": [
-    "Peyton Elizabeth Lee",
-    "Jacob Tremblay",
-    "Carey Mulligan",
-    "Mahershala Ali",
-    "Richard E. Grant",
-    "Angela Bassett",
-    "Awkwafina",
-    "Amandla Stenberg"
-   ],
-   "trailer": "qWX1ba0f-Qg",
-   "dondeVer": [],
-   "popularidad": 1868.8,
+   "popularidad": 235.3,
    "pr": false
   },
   {
@@ -202,7 +135,106 @@
      "name": "Amazon Prime Video with Ads"
     }
    ],
-   "popularidad": 293.6,
+   "popularidad": 324.0,
+   "pr": false
+  },
+  {
+   "tmdb": 1384216,
+   "title": "La guerra de los últimos",
+   "original": "The Dog Stars",
+   "estreno": "2026-08-27",
+   "clasificacion": "R",
+   "duracion": 119,
+   "resumen": "Tras la devastación mundial causada por una pandemia, un hombre vive una existencia solitaria en un hangar de aviones en Colorado con su perro y un hosco pistolero con quien ha entablado amistad. Cuando escucha una misteriosa transmisión por radio mientras vuela su viejo Cessna, comienza una búsqueda para descubrir el origen del sonido.",
+   "generos": [
+    "Acción",
+    "Suspense",
+    "Ciencia ficción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/flipeYd0sa4y4kpIc7Pn59JeBIj.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/3k7GzxOdLZkN3eZsuhLi2eRzkXO.jpg",
+   "direccion": [
+    "Ridley Scott"
+   ],
+   "reparto": [
+    "Jacob Elordi",
+    "Josh Brolin",
+    "Margaret Qualley",
+    "Guy Pearce",
+    "Benedict Wong",
+    "Allison Janney",
+    "Ewen Bremner",
+    "Sam Spruell"
+   ],
+   "trailer": "cmzVY1goqwQ",
+   "dondeVer": [],
+   "popularidad": 166.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1400940,
+   "title": "Clayface",
+   "original": "Clayface",
+   "estreno": "2026-10-22",
+   "clasificacion": "R",
+   "duracion": 109,
+   "resumen": "Para mantener su relevancia como actor de películas clase B, Matt Hagen se inyecta una sustancia solo para descubrir que puede remodelar su rostro y su forma.",
+   "generos": [
+    "Terror",
+    "Suspense",
+    "Ciencia ficción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/avCm6vJzdIz9SCIZJ2CuBupGWDQ.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/xSDoxv4pHvs4xZjvTb0Iqg1A6ro.jpg",
+   "direccion": [
+    "James Watkins"
+   ],
+   "reparto": [
+    "Tom Rhys Harries",
+    "Naomi Ackie",
+    "Eddie Marsan",
+    "Max Minghella",
+    "David Dencik",
+    "Francesca Corney",
+    "Ruby Sear",
+    "Wil Coban"
+   ],
+   "trailer": "WGOv9Pzh9cE",
+   "dondeVer": [],
+   "popularidad": 149.1,
+   "pr": false
+  },
+  {
+   "tmdb": 791523,
+   "title": "Wildwood: El bosque salvaje",
+   "original": "Wildwood",
+   "estreno": "2026-10-29",
+   "clasificacion": "PG-13",
+   "duracion": 132,
+   "resumen": "Después de que su hermano bebé es secuestrado por una parvada de cuervos, la decidida adolescente Prue McKeel y su compañero Curtis Mehlberg inician una desesperada misión de rescate hacia el Bosque Impasable, un bosque encantado oculto justo más allá de Portland, Oregón.",
+   "generos": [
+    "Animación",
+    "Aventura",
+    "Fantasía"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/3AxfnEViGaVspgifEag5au5bVJc.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/sl5NJ1vtyhP9Vr88bB4blULsJYp.jpg",
+   "direccion": [
+    "Travis Knight"
+   ],
+   "reparto": [
+    "Peyton Elizabeth Lee",
+    "Jacob Tremblay",
+    "Carey Mulligan",
+    "Mahershala Ali",
+    "Richard E. Grant",
+    "Angela Bassett",
+    "Awkwafina",
+    "Amandla Stenberg"
+   ],
+   "trailer": "qWX1ba0f-Qg",
+   "dondeVer": [],
+   "popularidad": 1725.7,
    "pr": false
   },
   {
@@ -238,7 +270,41 @@
    ],
    "trailer": "a8RHqN93qfo",
    "dondeVer": [],
-   "popularidad": 126.4,
+   "popularidad": 118.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1003596,
+   "title": "Avengers: Doomsday",
+   "original": "Avengers: Doomsday",
+   "estreno": "2026-12-18",
+   "clasificacion": null,
+   "duracion": 165,
+   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
+   "generos": [
+    "Ciencia ficción",
+    "Acción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+   "direccion": [
+    "Joe Russo",
+    "Anthony Russo"
+   ],
+   "reparto": [
+    "Robert Downey Jr.",
+    "Chris Evans",
+    "Chris Hemsworth",
+    "Pedro Pascal",
+    "Paul Rudd",
+    "Anthony Mackie",
+    "Florence Pugh",
+    "Vanessa Kirby"
+   ],
+   "trailer": "kZ2Nhqkx3-I",
+   "dondeVer": [],
+   "popularidad": 114.3,
    "pr": false
   },
   {
@@ -276,7 +342,7 @@
      "name": "Amazon Prime Video with Ads"
     }
    ],
-   "popularidad": 117.6,
+   "popularidad": 111.8,
    "pr": false
   },
   {
@@ -316,80 +382,138 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 153.1,
+   "popularidad": 161.4,
    "pr": false
   },
   {
-   "tmdb": 1003596,
-   "title": "Avengers: Doomsday",
-   "original": "Avengers: Doomsday",
-   "estreno": "2026-12-18",
-   "clasificacion": null,
-   "duracion": 165,
-   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
+   "tmdb": 656908,
+   "title": "Ramayana: Rise of a Legend",
+   "original": "रामायणम्",
+   "estreno": "2026-11-04",
+   "clasificacion": "PG-13",
+   "duracion": 167,
+   "resumen": "",
    "generos": [
-    "Ciencia ficción",
+    "Fantasía",
     "Acción",
     "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/nzL1ySE6vdmR6RxXhE7gLggkp41.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/bkhPaFOiqc9GeLMdf1D44KbozRH.jpg",
    "direccion": [
-    "Joe Russo",
-    "Anthony Russo"
+    "Nitesh Tiwari"
    ],
    "reparto": [
-    "Robert Downey Jr.",
-    "Chris Evans",
-    "Chris Hemsworth",
-    "Pedro Pascal",
-    "Paul Rudd",
-    "Anthony Mackie",
-    "Florence Pugh",
-    "Vanessa Kirby"
+    "रणबीर कपूर",
+    "Yash",
+    "Sai Pallavi",
+    "Ravi Dubey",
+    "अरुण गोविल",
+    "Rakul Preet Singh",
+    "लारा दत्ता",
+    "इंदिरा कृष्णन"
    ],
-   "trailer": "kZ2Nhqkx3-I",
+   "trailer": "tPf0_b026Ck",
    "dondeVer": [],
-   "popularidad": 118.0,
+   "popularidad": 29.8,
    "pr": false
   },
   {
-   "tmdb": 1596275,
-   "title": "Velocidad y Deseo",
-   "original": "Drive – The Pretenders",
-   "estreno": "2026-10-28",
+   "tmdb": 1381071,
+   "title": "Godzilla Minus Zero",
+   "original": "ゴジラ-0.0",
+   "estreno": "2026-11-03",
    "clasificacion": "R",
-   "duracion": 103,
-   "resumen": "Una joven mecánica de autos de carreras finge estar comprometida con la estrella más polémica del automovilismo. Oficialmente, es para salvar su reputación, pero en secreto es la oportunidad de ella de volver al volante. Pronto, la mentira amenaza con destruir todo, incluso lo que ya se ha convertido en mucho más que un simple trato…",
+   "duracion": 135,
+   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
    "generos": [
-    "Romance",
-    "Suspense"
+    "Ciencia ficción",
+    "Terror",
+    "Acción"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/aSvA1Xat045jh8ck7U626PPkzH1.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/hbz4aeVsjnKb2HRoFbbr46Egh8y.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
    "direccion": [
-    "Sergej Moya"
+    "山崎貴"
    ],
    "reparto": [
-    "Lisa-Marie Koroll",
-    "Amin Baahmed",
-    "Gustav Schmidt",
-    "Mišel Matičević",
-    "Lucie Heinze",
-    "Frederic Linkemann",
-    "Inka Friedrich",
-    "Jeanette Hain"
+    "神木隆之介",
+    "浜辺美波",
+    "山田裕貴",
+    "佐々木蔵之介",
+    "國村隼",
+    "田中美央",
+    "安藤サクラ",
+    "長澤まさみ"
    ],
-   "trailer": "-sV69CJwUwU",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
+   "trailer": "kw0YhiqOPFg",
+   "dondeVer": [],
+   "popularidad": 38.7,
+   "pr": false
+  },
+  {
+   "tmdb": 1058424,
+   "title": "Hope: El primer impacto",
+   "original": "호프",
+   "estreno": "2026-09-10",
+   "clasificacion": "R",
+   "duracion": 157,
+   "resumen": "Tras un extraño hallazgo cerca de una aislada ciudad portuaria, los habitantes se ven envueltos en una desesperada lucha por la supervivencia.",
+   "generos": [
+    "Ciencia ficción",
+    "Misterio",
+    "Acción"
    ],
-   "popularidad": 308.4,
+   "afiche": "https://image.tmdb.org/t/p/w342/hHPIefotew38oJm3YCJPAzpi26c.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/j96rurZqmBjyY37Fncl3IB0qJNe.jpg",
+   "direccion": [
+    "나홍진"
+   ],
+   "reparto": [
+    "황정민",
+    "조인성",
+    "정호연",
+    "Alicia Vikander",
+    "Michael Fassbender",
+    "Taylor Russell",
+    "Cameron Britton",
+    "이상희"
+   ],
+   "trailer": "ODnHr2Emnf0",
+   "dondeVer": [],
+   "popularidad": 454.8,
+   "pr": false
+  },
+  {
+   "tmdb": 1244523,
+   "title": "Terror en el Amazonas",
+   "original": "Beware Boiúna",
+   "estreno": "2026-10-01",
+   "clasificacion": "R",
+   "duracion": 104,
+   "resumen": "Un grupo de médicos se interna en la selva amazónica para realizar una misión humanitaria, pero su llegada altera el equilibrio de un territorio donde la naturaleza aún guarda secretos imposibles de controlar. Pronto descubrirán que no están solos: una criatura ancestral, conocida como la Boiúna, emerge para reclamar su dominio. Atrapados entre la selva, el río y un depredador que domina ambos mundos, deberán luchar por sobrevivir en un lugar donde la línea entre cazador y presa desaparece.",
+   "generos": [
+    "Terror",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/akm6jAZWebBOKweMp6G9TgkefrZ.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/9nU0FKNefmhbgi2xXlvZchZsqwm.jpg",
+   "direccion": [
+    "Mike P. Nelson"
+   ],
+   "reparto": [
+    "Logan Marshall-Green",
+    "Kiana Madeira",
+    "Jessica Rothe",
+    "Jackson Bews",
+    "Juan Pablo Shuk",
+    "Will Close",
+    "Vicente Peña",
+    "Jaime Newball"
+   ],
+   "trailer": "4fn4UcgzRhg",
+   "dondeVer": [],
+   "popularidad": 47.2,
    "pr": false
   },
   {
@@ -428,73 +552,7 @@
      "name": "Peacock Premium Plus"
     }
    ],
-   "popularidad": 116.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1381071,
-   "title": "Godzilla Minus Zero",
-   "original": "ゴジラ-0.0",
-   "estreno": "2026-11-03",
-   "clasificacion": "R",
-   "duracion": 135,
-   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
-   "generos": [
-    "Ciencia ficción",
-    "Terror",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
-   "direccion": [
-    "山崎貴"
-   ],
-   "reparto": [
-    "神木隆之介",
-    "浜辺美波",
-    "山田裕貴",
-    "佐々木蔵之介",
-    "國村隼",
-    "田中美央",
-    "安藤サクラ",
-    "長澤まさみ"
-   ],
-   "trailer": "kw0YhiqOPFg",
-   "dondeVer": [],
-   "popularidad": 26.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1058424,
-   "title": "Hope: El primer impacto",
-   "original": "호프",
-   "estreno": "2026-09-10",
-   "clasificacion": "R",
-   "duracion": 157,
-   "resumen": "Tras un extraño hallazgo cerca de una aislada ciudad portuaria, los habitantes se ven envueltos en una desesperada lucha por la supervivencia.",
-   "generos": [
-    "Ciencia ficción",
-    "Misterio",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/hHPIefotew38oJm3YCJPAzpi26c.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/j96rurZqmBjyY37Fncl3IB0qJNe.jpg",
-   "direccion": [
-    "나홍진"
-   ],
-   "reparto": [
-    "황정민",
-    "조인성",
-    "정호연",
-    "Alicia Vikander",
-    "Michael Fassbender",
-    "Taylor Russell",
-    "Cameron Britton",
-    "이상희"
-   ],
-   "trailer": "ODnHr2Emnf0",
-   "dondeVer": [],
-   "popularidad": 472.2,
+   "popularidad": 112.5,
    "pr": false
   },
   {
@@ -527,186 +585,111 @@
    ],
    "trailer": "owfWVJoxXR4",
    "dondeVer": [],
-   "popularidad": 377.2,
+   "popularidad": 358.6,
    "pr": false
   },
   {
-   "tmdb": 1117898,
-   "title": "El gato con sombrero",
-   "original": "The Cat in the Hat",
-   "estreno": "2026-11-06",
-   "clasificacion": "PG",
-   "duracion": 108,
-   "resumen": "Un astuto gato lleva el caos con sus travesuras a la vida de un par de hermanos que lidian con su mudanza a una nueva ciudad.",
-   "generos": [
-    "Animación",
-    "Comedia",
-    "Aventura",
-    "Fantasía",
-    "Familia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/5rS3PbnARmbbL3LiLhEX3Tr0l6k.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/9y9o686DsQg0KzPtERzcW7Cf8IE.jpg",
-   "direccion": [
-    "Erica Rivinoja",
-    "Alessandro Carloni"
-   ],
-   "reparto": [
-    "Bill Hader",
-    "Xochitl Gomez",
-    "Tiago Martinez",
-    "Matt Berry",
-    "Quinta Brunson",
-    "Bowen Yang",
-    "America Ferrera",
-    "Paula Pell"
-   ],
-   "trailer": "bRMu8S6FQ9c",
-   "dondeVer": [],
-   "popularidad": 22.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1300968,
-   "title": "Los Juegos del Hambre: Amanecer en la cosecha",
-   "original": "The Hunger Games: Sunrise on the Reaping",
-   "estreno": "2026-11-20",
-   "clasificacion": "PG-13",
-   "duracion": 150,
-   "resumen": "Ambientada décadas antes de los eventos liderados por Katniss y Peeta, la historia sigue a Haymitch Abernathy, el enigmático ganador del 50° Torneo de Los juegos del hambre, en una versión más brutal y decisiva de la competencia. La película también mostrará la primera aparición televisiva de Caesar Flickerman, cuya cobertura transformará para siempre la forma en que Panem vive los Juegos.",
+   "tmdb": 1170608,
+   "title": "Duna: Parte tres",
+   "original": "Dune: Part Three",
+   "estreno": "2026-12-17",
+   "clasificacion": null,
+   "duracion": 140,
+   "resumen": "Como emperador, Paul Atreides se enfrenta a las consecuencias de su ascenso al poder, mientras conspiraciones políticas y una guerra santa que abarca toda la galaxia amenazan el futuro que solo él puede prever.",
    "generos": [
     "Ciencia ficción",
-    "Acción",
     "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/nijGyrqQbDhSGss4uugQokvBAsG.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/aqFZcr2dxSZ2UwWSo1WC6C0rwDf.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/5myJqI5SeZckhC8B2vMz7Nbl46z.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/i5E9H7Ik0u61ylDDTbmUpTL3Yw.jpg",
    "direccion": [
-    "Francis Lawrence"
+    "Denis Villeneuve"
    ],
    "reparto": [
-    "Joseph Zada",
-    "Mckenna Grace",
-    "Maya Hawke",
-    "Ralph Fiennes",
-    "Jesse Plemons",
-    "Elle Fanning",
-    "Kieran Culkin",
-    "Glenn Close"
+    "Timothée Chalamet",
+    "Zendaya",
+    "Jason Momoa",
+    "Florence Pugh",
+    "Rebecca Ferguson",
+    "Isaach de Bankolé",
+    "Charlotte Rampling",
+    "Anya Taylor-Joy"
    ],
-   "trailer": "bwZzXTUcaQo",
+   "trailer": "qdfXYN5kMBY",
    "dondeVer": [],
-   "popularidad": 36.8,
+   "popularidad": 41.9,
    "pr": false
   },
   {
-   "tmdb": 1290418,
-   "title": "The Cycle",
-   "original": "The Cycle",
-   "estreno": "2026-09-17",
+   "tmdb": 1596275,
+   "title": "Velocidad y Deseo",
+   "original": "Drive – The Pretenders",
+   "estreno": "2026-10-28",
    "clasificacion": "R",
-   "duracion": 111,
-   "resumen": "Meg ha vivido marcada por la desaparición de su padre, quien se esfumó sin dejar rastro hace 36 años. Su vida da un giro inesperado cuando la policía descubre su cadáver cerca de la escena de un brutal crimen, junto a los cuerpos de otras dos víctimas.",
-   "generos": [
-    "Terror",
-    "Suspense",
-    "Misterio"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/n5gSNf55KWfDc9hqP4H1KCCSutE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bgHW6AJl2SdKzxglvf9tshXbI84.jpg",
-   "direccion": [
-    "Jordan Downey"
-   ],
-   "reparto": [
-    "Deborah Ann Woll",
-    "Jeffrey Donovan",
-    "Gretchen Corbett",
-    "Jack Doolan",
-    "Will Hochman",
-    "Dana Millican",
-    "Phillip Andre Botello",
-    "Don Keith Opper"
-   ],
-   "trailer": "87ekbcLWPN4",
-   "dondeVer": [
-    {
-     "name": "AMC Plus Apple TV channel"
-    },
-    {
-     "name": "AMC+ Amazon Channel"
-    },
-    {
-     "name": "Shudder"
-    }
-   ],
-   "popularidad": 91.2,
-   "pr": false
-  },
-  {
-   "tmdb": 656908,
-   "title": "Ramayana: Rise of a Legend",
-   "original": "रामायणम्",
-   "estreno": "2026-11-04",
-   "clasificacion": "PG-13",
-   "duracion": 167,
-   "resumen": "",
-   "generos": [
-    "Fantasía",
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/nzL1ySE6vdmR6RxXhE7gLggkp41.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/bkhPaFOiqc9GeLMdf1D44KbozRH.jpg",
-   "direccion": [
-    "Nitesh Tiwari"
-   ],
-   "reparto": [
-    "रणबीर कपूर",
-    "Yash",
-    "Sai Pallavi",
-    "Ravi Dubey",
-    "अरुण गोविल",
-    "Rakul Preet Singh",
-    "लारा दत्ता",
-    "इंदिरा कृष्णन"
-   ],
-   "trailer": "tPf0_b026Ck",
-   "dondeVer": [],
-   "popularidad": 27.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1195803,
-   "title": "Wicker",
-   "original": "Wicker",
-   "estreno": "2026-10-29",
-   "clasificacion": "R",
-   "duracion": 105,
-   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
+   "duracion": 103,
+   "resumen": "Una joven mecánica de autos de carreras finge estar comprometida con la estrella más polémica del automovilismo. Oficialmente, es para salvar su reputación, pero en secreto es la oportunidad de ella de volver al volante. Pronto, la mentira amenaza con destruir todo, incluso lo que ya se ha convertido en mucho más que un simple trato…",
    "generos": [
     "Romance",
-    "Fantasía",
-    "Comedia"
+    "Suspense"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ewPz6uvKrbKlQrLRi1r9NTZQLzN.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/xVh1ypMoVkMf5IB7y3hnRplJ14c.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/aSvA1Xat045jh8ck7U626PPkzH1.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/hbz4aeVsjnKb2HRoFbbr46Egh8y.jpg",
    "direccion": [
-    "Eleanor Wilson",
-    "Alex Huston Fischer"
+    "Sergej Moya"
    ],
    "reparto": [
-    "Olivia Colman",
-    "Alexander Skarsgård",
-    "Peter Dinklage",
-    "Elizabeth Debicki",
-    "Marli Siu",
-    "Nabhaan Rizwan",
-    "Richard E. Grant",
-    "Kiell Smith-Bynoe"
+    "Lisa-Marie Koroll",
+    "Amin Baahmed",
+    "Gustav Schmidt",
+    "Mišel Matičević",
+    "Lucie Heinze",
+    "Frederic Linkemann",
+    "Inka Friedrich",
+    "Jeanette Hain"
    ],
-   "trailer": "jA5zfiikcu8",
+   "trailer": "-sV69CJwUwU",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 295.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1368337,
+   "title": "La Odisea",
+   "original": "The Odyssey",
+   "estreno": "2026-07-16",
+   "clasificacion": "R",
+   "duracion": 173,
+   "resumen": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
+   "generos": [
+    "Aventura",
+    "Acción",
+    "Fantasía"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/iDiTY1wA35YWzTmXLTtqaxtN6tc.jpg",
+   "direccion": [
+    "Christopher Nolan"
+   ],
+   "reparto": [
+    "Matt Damon",
+    "Tom Holland",
+    "Anne Hathaway",
+    "Robert Pattinson",
+    "Himesh Patel",
+    "Charlize Theron",
+    "John Leguizamo",
+    "Travis Scott"
+   ],
+   "trailer": "X9nUrOnHlz0",
    "dondeVer": [],
-   "popularidad": 65.8,
+   "popularidad": 208.3,
    "pr": false
   }
  ],
@@ -741,7 +724,7 @@
    ],
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
-   "popularidad": 1868.8,
+   "popularidad": 1725.7,
    "pr": false
   },
   {
@@ -773,7 +756,7 @@
    ],
    "trailer": "P-QWhkimt50",
    "dondeVer": [],
-   "popularidad": 236.8,
+   "popularidad": 235.3,
    "pr": false
   },
   {
@@ -806,7 +789,7 @@
    ],
    "trailer": "WGOv9Pzh9cE",
    "dondeVer": [],
-   "popularidad": 158.5,
+   "popularidad": 149.1,
    "pr": false
   },
   {
@@ -838,7 +821,7 @@
    ],
    "trailer": "4DowjB87tRE",
    "dondeVer": [],
-   "popularidad": 131.3,
+   "popularidad": 129.0,
    "pr": false
   },
   {
@@ -874,7 +857,7 @@
    ],
    "trailer": "a8RHqN93qfo",
    "dondeVer": [],
-   "popularidad": 126.4,
+   "popularidad": 118.5,
    "pr": false
   },
   {
@@ -906,7 +889,7 @@
    ],
    "trailer": "-MJAfIMUQ5s",
    "dondeVer": [],
-   "popularidad": 88.7,
+   "popularidad": 82.5,
    "pr": false
   },
   {
@@ -939,7 +922,7 @@
    ],
    "trailer": "GMwdcpKOOyY",
    "dondeVer": [],
-   "popularidad": 88.5,
+   "popularidad": 83.8,
    "pr": false
   },
   {
@@ -970,7 +953,7 @@
    ],
    "trailer": "ocV7K_B67lQ",
    "dondeVer": [],
-   "popularidad": 87.5,
+   "popularidad": 82.9,
    "pr": false
   },
   {
@@ -999,7 +982,7 @@
    ],
    "trailer": "Rh24D89hFMg",
    "dondeVer": [],
-   "popularidad": 78.2,
+   "popularidad": 74.0,
    "pr": false
   },
   {
@@ -1037,7 +1020,39 @@
      "name": "Disney Plus"
     }
    ],
-   "popularidad": 70.4,
+   "popularidad": 68.3,
+   "pr": false
+  },
+  {
+   "tmdb": 1248832,
+   "title": "Digger",
+   "original": "Digger",
+   "estreno": "2026-10-01",
+   "clasificacion": "R",
+   "duracion": 129,
+   "resumen": "El hombre más poderoso del mundo se embarca en una misión frenética para demostrar que es el salvador de la humanidad antes de que el desastre que ha desatado lo destruya todo.",
+   "generos": [
+    "Comedia",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/txe65aR0g5JiYnHKPjX3E49M5td.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/vC5IxhgO6cVmw9O4QgkraRzfHvh.jpg",
+   "direccion": [
+    "Alejandro G. Iñárritu"
+   ],
+   "reparto": [
+    "Tom Cruise",
+    "Riz Ahmed",
+    "John Goodman",
+    "Sandra Hüller",
+    "Michael Stuhlbarg",
+    "Jesse Plemons",
+    "Robert John Burke",
+    "Emma D'Arcy"
+   ],
+   "trailer": "4jNrucYsh4A",
+   "dondeVer": [],
+   "popularidad": 63.4,
    "pr": false
   },
   {
@@ -1071,39 +1086,7 @@
    ],
    "trailer": "jA5zfiikcu8",
    "dondeVer": [],
-   "popularidad": 65.8,
-   "pr": false
-  },
-  {
-   "tmdb": 1248832,
-   "title": "Digger",
-   "original": "Digger",
-   "estreno": "2026-10-01",
-   "clasificacion": "R",
-   "duracion": 129,
-   "resumen": "El hombre más poderoso del mundo se embarca en una misión frenética para demostrar que es el salvador de la humanidad antes de que el desastre que ha desatado lo destruya todo.",
-   "generos": [
-    "Comedia",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/txe65aR0g5JiYnHKPjX3E49M5td.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/vC5IxhgO6cVmw9O4QgkraRzfHvh.jpg",
-   "direccion": [
-    "Alejandro G. Iñárritu"
-   ],
-   "reparto": [
-    "Tom Cruise",
-    "Riz Ahmed",
-    "John Goodman",
-    "Sandra Hüller",
-    "Michael Stuhlbarg",
-    "Jesse Plemons",
-    "Robert John Burke",
-    "Emma D'Arcy"
-   ],
-   "trailer": "4jNrucYsh4A",
-   "dondeVer": [],
-   "popularidad": 65.6,
+   "popularidad": 64.5,
    "pr": false
   },
   {
@@ -1134,7 +1117,7 @@
    ],
    "trailer": "67ho3OxCmmM",
    "dondeVer": [],
-   "popularidad": 61.6,
+   "popularidad": 58.3,
    "pr": false
   },
   {
@@ -1166,39 +1149,7 @@
    ],
    "trailer": "5fHXyqQOKL8",
    "dondeVer": [],
-   "popularidad": 55.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1281331,
-   "title": "El poder de la red",
-   "original": "The Social Reckoning",
-   "estreno": "2026-10-08",
-   "clasificacion": "R",
-   "duracion": 113,
-   "resumen": "Explora las prácticas internas de Facebook, la difusión de información falsa, el impacto en la salud mental de los adolescentes y la conexión con los eventos del 6 de enero en el Capitolio.",
-   "generos": [
-    "Drama",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ls1KWflioSJgCcKhDr6ykvYmgbI.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/wXTaGcqX3jvdXSKCJAkl5jZyrKp.jpg",
-   "direccion": [
-    "Aaron Sorkin"
-   ],
-   "reparto": [
-    "Mikey Madison",
-    "Jeremy Allen White",
-    "Jeremy Strong",
-    "Betty Gilpin",
-    "Bill Burr",
-    "Wunmi Mosaku",
-    "Billy Magnussen",
-    "Gbenga Akinnagbe"
-   ],
-   "trailer": "naaubL5GycY",
-   "dondeVer": [],
-   "popularidad": 44.9,
+   "popularidad": 56.1,
    "pr": false
   },
   {
@@ -1230,7 +1181,39 @@
    ],
    "trailer": "4fn4UcgzRhg",
    "dondeVer": [],
-   "popularidad": 41.1,
+   "popularidad": 47.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1281331,
+   "title": "El poder de la red",
+   "original": "The Social Reckoning",
+   "estreno": "2026-10-08",
+   "clasificacion": "R",
+   "duracion": 113,
+   "resumen": "Explora las prácticas internas de Facebook, la difusión de información falsa, el impacto en la salud mental de los adolescentes y la conexión con los eventos del 6 de enero en el Capitolio.",
+   "generos": [
+    "Drama",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ls1KWflioSJgCcKhDr6ykvYmgbI.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/wXTaGcqX3jvdXSKCJAkl5jZyrKp.jpg",
+   "direccion": [
+    "Aaron Sorkin"
+   ],
+   "reparto": [
+    "Mikey Madison",
+    "Jeremy Allen White",
+    "Jeremy Strong",
+    "Betty Gilpin",
+    "Bill Burr",
+    "Wunmi Mosaku",
+    "Billy Magnussen",
+    "Gbenga Akinnagbe"
+   ],
+   "trailer": "naaubL5GycY",
+   "dondeVer": [],
+   "popularidad": 42.6,
    "pr": false
   },
   {
@@ -1261,41 +1244,7 @@
    ],
    "trailer": "0gdRZZVoinM",
    "dondeVer": [],
-   "popularidad": 36.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1437396,
-   "title": "Your Mother Your Mother Your Mother",
-   "original": "Your Mother Your Mother Your Mother",
-   "estreno": "2026-10-15",
-   "clasificacion": "R",
-   "duracion": 112,
-   "resumen": "Latif, un sicario profundamente religioso, lucha por equilibrar su trabajo, su fe y su faceta como padre. Tras la muerte de su esposa, emprende un viaje desesperado a través de Houston para proteger a sus hijos, enfrentándose tanto a las fuerzas que lo acorralan como a las creencias que, en su interior, amenazan con desmoronarse.",
-   "generos": [
-    "Acción",
-    "Crimen",
-    "Drama",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/4KaPZSKnInnArErTTgy9Oy14leR.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/jiFLiatBtBALlAzV5R72gzspBad.jpg",
-   "direccion": [
-    "Bassam Tariq"
-   ],
-   "reparto": [
-    "Mahershala Ali",
-    "John Cho",
-    "Giancarlo Esposito",
-    "Abubakr Ali",
-    "Laith Nakli",
-    "Adia",
-    "Jahleel Kamara",
-    "Tiffany Boone"
-   ],
-   "trailer": "uEcoV-ngH38",
-   "dondeVer": [],
-   "popularidad": 35.0,
+   "popularidad": 35.3,
    "pr": false
   },
   {
@@ -1329,7 +1278,41 @@
    ],
    "trailer": "3hwFBZ6475g",
    "dondeVer": [],
-   "popularidad": 34.4,
+   "popularidad": 33.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1437396,
+   "title": "Your Mother Your Mother Your Mother",
+   "original": "Your Mother Your Mother Your Mother",
+   "estreno": "2026-10-15",
+   "clasificacion": "R",
+   "duracion": 112,
+   "resumen": "Latif, un sicario profundamente religioso, lucha por equilibrar su trabajo, su fe y su faceta como padre. Tras la muerte de su esposa, emprende un viaje desesperado a través de Houston para proteger a sus hijos, enfrentándose tanto a las fuerzas que lo acorralan como a las creencias que, en su interior, amenazan con desmoronarse.",
+   "generos": [
+    "Acción",
+    "Crimen",
+    "Drama",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/4KaPZSKnInnArErTTgy9Oy14leR.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/jiFLiatBtBALlAzV5R72gzspBad.jpg",
+   "direccion": [
+    "Bassam Tariq"
+   ],
+   "reparto": [
+    "Mahershala Ali",
+    "John Cho",
+    "Giancarlo Esposito",
+    "Abubakr Ali",
+    "Laith Nakli",
+    "Adia",
+    "Jahleel Kamara",
+    "Tiffany Boone"
+   ],
+   "trailer": "uEcoV-ngH38",
+   "dondeVer": [],
+   "popularidad": 33.9,
    "pr": false
   },
   {
@@ -1360,7 +1343,7 @@
    ],
    "trailer": "o_pIiP1A0RY",
    "dondeVer": [],
-   "popularidad": 33.8,
+   "popularidad": 32.7,
    "pr": false
   },
   {
@@ -1393,7 +1376,7 @@
    ],
    "trailer": "kw0YhiqOPFg",
    "dondeVer": [],
-   "popularidad": 26.1,
+   "popularidad": 38.7,
    "pr": false
   },
   {
@@ -1426,7 +1409,7 @@
    ],
    "trailer": "zql0pXIpELI",
    "dondeVer": [],
-   "popularidad": 25.2,
+   "popularidad": 26.5,
    "pr": false
   },
   {
@@ -1459,7 +1442,7 @@
    ],
    "trailer": "eCF2S3vchE4",
    "dondeVer": [],
-   "popularidad": 12.1,
+   "popularidad": 12.8,
    "pr": false
   },
   {
@@ -1553,7 +1536,7 @@
    ],
    "trailer": "tv03AgZUBPY",
    "dondeVer": [],
-   "popularidad": 5.4,
+   "popularidad": 4.7,
    "pr": false
   },
   {
@@ -1585,7 +1568,7 @@
    ],
    "trailer": "K9Lpxc7bVTM",
    "dondeVer": [],
-   "popularidad": 4.6,
+   "popularidad": 3.6,
    "pr": false
   },
   {
@@ -1618,7 +1601,7 @@
    ],
    "trailer": "Ik4lJmXgR6U",
    "dondeVer": [],
-   "popularidad": 2.6,
+   "popularidad": 1.9,
    "pr": false
   },
   {
@@ -1649,7 +1632,7 @@
    ],
    "trailer": "HdA2PoyDusw",
    "dondeVer": [],
-   "popularidad": 1.6,
+   "popularidad": 1.5,
    "pr": false
   },
   {
@@ -1681,7 +1664,7 @@
    ],
    "trailer": "4YamxsIqeRI",
    "dondeVer": [],
-   "popularidad": 1.5,
+   "popularidad": 1.0,
    "pr": false
   }
  ],
@@ -1716,7 +1699,7 @@
    ],
    "trailer": "bwZzXTUcaQo",
    "dondeVer": [],
-   "popularidad": 36.8,
+   "popularidad": 37.9,
    "pr": false
   },
   {
@@ -1748,7 +1731,7 @@
    ],
    "trailer": "l0pTZqZWs-c",
    "dondeVer": [],
-   "popularidad": 28.7,
+   "popularidad": 36.9,
    "pr": false
   },
   {
@@ -1781,40 +1764,7 @@
    ],
    "trailer": "tPf0_b026Ck",
    "dondeVer": [],
-   "popularidad": 27.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1381071,
-   "title": "Godzilla Minus Zero",
-   "original": "ゴジラ-0.0",
-   "estreno": "2026-11-03",
-   "clasificacion": "R",
-   "duracion": 135,
-   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
-   "generos": [
-    "Ciencia ficción",
-    "Terror",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
-   "direccion": [
-    "山崎貴"
-   ],
-   "reparto": [
-    "神木隆之介",
-    "浜辺美波",
-    "山田裕貴",
-    "佐々木蔵之介",
-    "國村隼",
-    "田中美央",
-    "安藤サクラ",
-    "長澤まさみ"
-   ],
-   "trailer": "kw0YhiqOPFg",
-   "dondeVer": [],
-   "popularidad": 26.1,
+   "popularidad": 29.8,
    "pr": false
   },
   {
@@ -1826,11 +1776,11 @@
    "duracion": 108,
    "resumen": "Un astuto gato lleva el caos con sus travesuras a la vida de un par de hermanos que lidian con su mudanza a una nueva ciudad.",
    "generos": [
+    "Aventura",
     "Animación",
     "Comedia",
-    "Aventura",
-    "Fantasía",
-    "Familia"
+    "Familia",
+    "Fantasía"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/5rS3PbnARmbbL3LiLhEX3Tr0l6k.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/9y9o686DsQg0KzPtERzcW7Cf8IE.jpg",
@@ -1850,7 +1800,7 @@
    ],
    "trailer": "bRMu8S6FQ9c",
    "dondeVer": [],
-   "popularidad": 22.5,
+   "popularidad": 24.9,
    "pr": false
   },
   {
@@ -1886,7 +1836,7 @@
    ],
    "trailer": "wkr5TpxKOTw",
    "dondeVer": [],
-   "popularidad": 21.7,
+   "popularidad": 20.2,
    "pr": false
   },
   {
@@ -1918,7 +1868,7 @@
    ],
    "trailer": "A7lyvgnDuDE",
    "dondeVer": [],
-   "popularidad": 20.4,
+   "popularidad": 20.3,
    "pr": false
   },
   {
@@ -1943,15 +1893,15 @@
     "John Malkovich",
     "Sam Rockwell",
     "Steve Buscemi",
-    "Mariana di Girolamo",
-    "Ailín Salas",
     "Tom Waits",
     "Parker Posey",
+    "Mariana di Girolamo",
+    "Ailín Salas",
     "Paola Giannini"
    ],
    "trailer": "Haw_sznA5aQ",
    "dondeVer": [],
-   "popularidad": 19.2,
+   "popularidad": 27.1,
    "pr": false
   },
   {
@@ -1984,7 +1934,40 @@
    ],
    "trailer": "dKUArYoZ_0U",
    "dondeVer": [],
-   "popularidad": 17.2,
+   "popularidad": 15.8,
+   "pr": false
+  },
+  {
+   "tmdb": 1457866,
+   "title": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
+   "original": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
+   "estreno": "2026-11-25",
+   "clasificacion": null,
+   "duracion": null,
+   "resumen": "",
+   "generos": [
+    "Drama",
+    "Comedia",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/44iyquHYfSInzp7rYYQyRV1Ndtk.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/aRO4TuqF8dkRCb5tPlsSlpJbmQD.jpg",
+   "direccion": [
+    "David Fincher"
+   ],
+   "reparto": [
+    "Brad Pitt",
+    "Elizabeth Debicki",
+    "Scott Caan",
+    "Yahya Abdul-Mateen II",
+    "Carla Gugino",
+    "Peter Weller",
+    "Matt Groove",
+    "JB Tadena"
+   ],
+   "trailer": "RjEZaUBbUvU",
+   "dondeVer": [],
+   "popularidad": 12.0,
    "pr": false
   },
   {
@@ -2049,7 +2032,7 @@
    ],
    "trailer": "JtkPJREm_9o",
    "dondeVer": [],
-   "popularidad": 11.3,
+   "popularidad": 11.0,
    "pr": false
   },
   {
@@ -2080,7 +2063,7 @@
    ],
    "trailer": "ryMtR8BvkA0",
    "dondeVer": [],
-   "popularidad": 10.2,
+   "popularidad": 9.8,
    "pr": false
   },
   {
@@ -2098,7 +2081,7 @@
     "Familia",
     "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8Kj6Fsgdsdr7XsxrgHwIlSFF1fz.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/jtfCcWZ3ZyKdgi0u7JVOxEOSSJP.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/g1bEboMx1a8JCg1jXeDCh24RtgW.jpg",
    "direccion": [
     "Alyce Tzue"
@@ -2115,41 +2098,7 @@
    ],
    "trailer": "rXKefkjeoQQ",
    "dondeVer": [],
-   "popularidad": 10.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1457866,
-   "title": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
-   "original": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
-   "estreno": "2026-11-25",
-   "clasificacion": null,
-   "duracion": null,
-   "resumen": "",
-   "generos": [
-    "Drama",
-    "Comedia",
-    "Suspense",
-    "Crimen"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/44iyquHYfSInzp7rYYQyRV1Ndtk.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/aRO4TuqF8dkRCb5tPlsSlpJbmQD.jpg",
-   "direccion": [
-    "David Fincher"
-   ],
-   "reparto": [
-    "Brad Pitt",
-    "Elizabeth Debicki",
-    "Scott Caan",
-    "Carla Gugino",
-    "Yahya Abdul-Mateen II",
-    "Peter Weller",
-    "Matt Groove",
-    "JB Tadena"
-   ],
-   "trailer": "RjEZaUBbUvU",
-   "dondeVer": [],
-   "popularidad": 9.3,
+   "popularidad": 8.8,
    "pr": false
   },
   {
@@ -2216,7 +2165,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 8.7,
+   "popularidad": 7.9,
    "pr": false
   },
   {
@@ -2249,7 +2198,7 @@
    ],
    "trailer": "hTHeFP0mcuk",
    "dondeVer": [],
-   "popularidad": 8.2,
+   "popularidad": 7.0,
    "pr": false
   },
   {
@@ -2281,7 +2230,7 @@
    ],
    "trailer": "7ljcNjDeF60",
    "dondeVer": [],
-   "popularidad": 8.2,
+   "popularidad": 6.9,
    "pr": false
   },
   {
@@ -2312,7 +2261,7 @@
    ],
    "trailer": "tLYJzEtmavg",
    "dondeVer": [],
-   "popularidad": 7.7,
+   "popularidad": 7.3,
    "pr": false
   },
   {
@@ -2344,7 +2293,7 @@
    ],
    "trailer": "guKEdb_iRXw",
    "dondeVer": [],
-   "popularidad": 7.7,
+   "popularidad": 7.2,
    "pr": false
   },
   {
@@ -2376,7 +2325,7 @@
    ],
    "trailer": "sDiFol_2j2I",
    "dondeVer": [],
-   "popularidad": 7.1,
+   "popularidad": 6.3,
    "pr": false
   },
   {
@@ -2408,7 +2357,7 @@
    ],
    "trailer": "SNbVMk-nLu4",
    "dondeVer": [],
-   "popularidad": 6.9,
+   "popularidad": 6.0,
    "pr": false
   },
   {
@@ -2474,7 +2423,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 5.7,
+   "popularidad": 5.2,
    "pr": false
   },
   {
@@ -2508,7 +2457,7 @@
    ],
    "trailer": "8N9e-skJ3hw",
    "dondeVer": [],
-   "popularidad": 5.7,
+   "popularidad": 4.3,
    "pr": false
   },
   {
@@ -2539,7 +2488,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 5.5,
+   "popularidad": 5.0,
    "pr": false
   },
   {
@@ -2571,7 +2520,7 @@
    ],
    "trailer": "56hqQ2_s2c4",
    "dondeVer": [],
-   "popularidad": 5.5,
+   "popularidad": 5.2,
    "pr": false
   },
   {
@@ -2602,7 +2551,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 5.5,
+   "popularidad": 5.2,
    "pr": false
   },
   {
@@ -2665,7 +2614,7 @@
    ],
    "trailer": "CQp2pUXLvJk",
    "dondeVer": [],
-   "popularidad": 5.1,
+   "popularidad": 4.3,
    "pr": false
   }
  ]
