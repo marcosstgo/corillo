@@ -1,5 +1,15 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
+import { ultimoDeCada, tarjetaVideo } from '../../data/videos-canal.js';
+
+// «Lo último de cada uno» sale en el HTML para que Google lo lea; si PocketBase no contesta, la sección se llena en el navegador.
+const pedir = (u: string) => fetch(u, { signal: AbortSignal.timeout(4000) }).then(r => r.ok ? r.json() : null).catch(() => null);
+const [vodsBuild, streamersBuild] = await Promise.all([
+  pedir('https://pb.corillo.live/api/collections/vods/records?sort=-date&perPage=100&fields=id,channel,title,thumb,preview,duration,date'),
+  pedir('https://api.corillo.live/api/streamers'),
+]);
+const porClave = Object.fromEntries((streamersBuild || []).map((x: any) => [x.key, x]));
+const VIDEOS = ultimoDeCada(vodsBuild?.items || []);
 ---
 <SiteShell
   title="CORILLO — Streamers en Puerto Rico"
@@ -8,7 +18,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 >
   <fragment slot="head">
     <meta name="theme-color" content="#06143f" />
-    <link rel="stylesheet" href="/assets/streamers2.css?v=2">
+    <link rel="stylesheet" href="/assets/streamers2.css?v=3">
   </fragment>
 
 <main class="h2-page sr-page">
@@ -25,6 +35,14 @@ import SiteShell from '../../layouts/SiteShell.astro';
   <section class="sr-live-wrap" id="liveRailWrap" aria-label="En vivo ahora">
     <h2 class="sr-live-title">En vivo ahora</h2>
     <div class="sr-live-rail" id="liveRail"></div>
+  </section>
+
+  <section class="sr-vds-wrap" id="videosWrap" aria-labelledby="videosTitulo" hidden={VIDEOS.length === 0}>
+    <div class="sr-vds-hd">
+      <h2 id="videosTitulo">Lo último de cada uno</h2>
+      <a href="/vods/">Ver todos los videos</a>
+    </div>
+    <div class="sr-vds" id="videosRail" set:html={VIDEOS.map((v: any) => tarjetaVideo(v, porClave[v.channel])).join('')} />
   </section>
 
   <div class="sr-tools">
@@ -57,6 +75,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 </main>
 
 <script>
+import { ultimoDeCada, tarjetaVideo } from '../../data/videos-canal.js';
 (function () {
   const POLL_MS = 15000;
   const PB_URL  = 'https://pb.corillo.live';
@@ -67,6 +86,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   let liveSet    = new Set();
   let viewersMap = {};
   let lastVods   = {};
+  let videos     = [];
   let searchQ    = '';
   let filterCat  = '';
   let thumbTick  = Math.floor(Date.now() / 60000);
@@ -101,7 +121,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
     ].join('');
     const meta = live
       ? `En vivo · ${viewers} viendo${s.stream_title ? ` <span>— ${s.stream_title}</span>` : ''}`
-      : (last ? `Última transmisión: ${last.toLowerCase()}` : '');
+      : (last ? `Último video: ${last.toLowerCase()}` : '');
     return `<article class="sr${live ? ' is-live' : ''}" data-href="/${s.key}/" data-key="${s.key}" role="link" tabindex="0" aria-label="${s.name}${live ? ', en vivo' : ''}">
       <div class="sr-face" style="background:${s.color || '#1e3a4a'}">${face}</div>
       <div class="sr-main">
@@ -114,13 +134,26 @@ import SiteShell from '../../layouts/SiteShell.astro';
     </article>`;
   }
 
+  /* ── Lo último de cada uno: obedece la búsqueda y los filtros, igual que la lista ── */
+  function pasaFiltro(s) {
+    if (filterCat && s.category !== filterCat) return false;
+    if (!searchQ) return true;
+    return s.name.toLowerCase().includes(searchQ) || (s.key || '').toLowerCase().includes(searchQ);
+  }
+  function renderVideos() {
+    if (!videos.length) return;            // sin datos frescos se queda lo que trajo el HTML
+    const porClave = Object.fromEntries(streamers.map(s => [s.key, s]));
+    const lista = ultimoDeCada(videos).filter(v => porClave[v.channel] ? pasaFiltro(porClave[v.channel]) : !(filterCat || searchQ));
+    const html = lista.map(v => tarjetaVideo(v, porClave[v.channel])).join('');
+    const rail = document.getElementById('videosRail');
+    if (rail.dataset.pintado !== html) { rail.innerHTML = html; rail.dataset.pintado = html; }
+    document.getElementById('videosWrap').hidden = !lista.length;
+  }
+
   /* ── Render ── */
   function render() {
-    let list = streamers.filter(s => {
-      if (filterCat && s.category !== filterCat) return false;
-      if (!searchQ) return true;
-      return s.name.toLowerCase().includes(searchQ) || (s.key || '').toLowerCase().includes(searchQ);
-    });
+    renderVideos();
+    let list = streamers.filter(pasaFiltro);
 
     // Live primero, luego alfabético
     list = [...list].sort((a, b) => {
@@ -210,19 +243,34 @@ import SiteShell from '../../layouts/SiteShell.astro';
   async function loadLastVods() {
     try {
       const r = await fetch(
-        `${PB_URL}/api/collections/vods/records?sort=-date&perPage=100&fields=channel,date`,
+        `${PB_URL}/api/collections/vods/records?sort=-date&perPage=100&fields=id,channel,title,thumb,preview,duration,date`,
         { signal: AbortSignal.timeout(5000) }
       );
       const items = (await r.json()).items || [];
+      videos = items;
       const seen  = new Set();
       for (const v of items) {
         if (!seen.has(v.channel)) {
           seen.add(v.channel);
-          lastVods[v.channel] = relTime(v.date);
+          lastVods[v.channel] = relTime(String(v.date).replace(' ', 'T'));
         }
       }
       render();
     } catch {}
+  }
+
+  /* ── Adelanto de 4 s al pasar el mouse (solo con mouse: en el celular no gasta datos) ── */
+  if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const rail = document.getElementById('videosRail');
+    rail.addEventListener('mouseover', e => {
+      const a = e.target.closest('.sr-vd[data-preview]');
+      if (!a || a.querySelector('video')) return;
+      const vid = document.createElement('video');
+      vid.src = a.dataset.preview; vid.muted = true; vid.loop = true; vid.playsInline = true; vid.setAttribute('aria-hidden', 'true');
+      a.querySelector('.sr-vd-pic').appendChild(vid);
+      vid.play().catch(() => vid.remove());
+      a.addEventListener('mouseleave', () => vid.remove(), { once: true });
+    });
   }
 
   /* ── Distribución: 2 columnas (por defecto) o 1; se recuerda la elección ── */
