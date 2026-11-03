@@ -163,7 +163,8 @@ function thumbHtml(vod: any, s: any, lazy: boolean, previewClass = '') {
     ${vod.duration ? `<span class="va-dur">${fmtDuration(vod.duration)}</span>` : ''}
   </div>`;
 }
-const vodLabel = (vod: any, _s: any) => vod.title || `Transmisión del ${new Date(vod.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`;
+const escTitulo = (t: string) => t.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!));   // el título lo escribe el streamer
+const vodLabel = (vod: any, _s: any) => (vod.title && escTitulo(vod.title)) || `Transmisión del ${new Date(vod.date).toLocaleDateString('es-PR', { day: 'numeric', month: 'long' })}`;
 
 /* ── Destacado grande ── */
 function renderFcard(vod: any) {
