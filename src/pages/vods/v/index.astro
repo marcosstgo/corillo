@@ -12,6 +12,7 @@ import { version } from '../../../../version.json';
     <meta name="theme-color" content="var(--crl-ink)" />
     <link rel="stylesheet" href={`/assets/modo-cine.css?v=${version}`} />
     <script is:inline src={`/assets/modo-cine.js?v=${version}`}></script>
+    <script is:inline src={`/assets/barra-video.js?v=${version}`}></script>
     <style is:global>
       /* Disposición (2-nov-2026): el video manda. Debajo, en una sola columna alineada con él: título, canal y acciones, y más videos en cuadrícula */
       .vd{display:grid;grid-template-columns:minmax(0,1fr);gap:24px 28px;max-width:1680px;margin:0 auto;padding:22px var(--h2-gutter) 64px}
@@ -240,6 +241,7 @@ async function init() {
 
   const video = document.getElementById('vodVideo') as HTMLVideoElement;
   const unmuteBtn = document.getElementById('unmuteBtn')!;
+  (window as any).barraVideo?.(video);
 
   // ?t=SEGUNDOS — permite enlazar un momento exacto (lo usan los Reels: "Ver la transmisión completa")
   const t0 = Number(new URLSearchParams(location.search).get('t'));
