@@ -44,6 +44,9 @@
     f.style.transform = `scale(${k})`;
   };
 
+  // Una caja que estaba escondida mide 0: al abrirla hay que volver a calcular.
+  OV.ajustarTodo = () => document.querySelectorAll('.ov-marco').forEach(m => OV.ajustar(m.parentElement));
+
   OV.copiar = (btn, texto) => navigator.clipboard.writeText(texto).then(() => {
     const t = btn.dataset.txt || btn.textContent; btn.dataset.txt = t;
     btn.textContent = '¡Copiado!'; btn.classList.add('ok');

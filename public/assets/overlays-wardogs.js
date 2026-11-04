@@ -1,5 +1,5 @@
 // /overlay/wardogs/: tarjetas de overlays, perfil de Steam y datos del juego.
-// Si al servidor le falta la llave de Steam o Steam deja de dar reseñas, las tarjetas afectadas lo dicen y vuelven solas cuando regresen los datos.
+// Si al servidor le falta la llave de Steam o Steam deja de dar reseñas, las tarjetas afectadas se esconden y vuelven solas cuando regresen los datos.
 (function () {
   const { $, esc, fmt, json } = OV;
   const VERDE = '#35e0a1';
@@ -7,20 +7,22 @@
   const cartas = [...document.querySelectorAll('.ov-carta')];
 
   const enlace = (c, base) => base + c.dataset.file + (c.dataset.steam ? '?steamid=' + encodeURIComponent(steam) : (c.dataset.q || ''));
-  function motivo(c) {
+  // Un overlay sin datos no se ofrece: copiarlo pondría una tarjeta vacía en el stream de alguien.
+  function sinDatos(c) {
     const d = c.dataset;
-    if (d.llave && sinLlave) return ['No disponible por ahora', 'Este overlay necesita datos de Steam que no tenemos ahora mismo.'];
-    if (d.resenas && juego && !(d.q ? juego.reviewsEs : juego.reviews)) return ['No disponible por ahora', 'Steam no está entregando las reseñas en este momento.'];
-    if (d.steam && !steam && !d.prev) return ['Escribe tu Steam', 'Aquí verás este overlay con tus datos reales.'];
-    return null;
+    if (d.resenas) return !juego || !(d.q ? juego.reviewsEs : juego.reviews);
+    if (d.llave && !d.steam) return !juego || !(juego.achievements || []).length;
+    return false;
   }
   function pintarCartas() {
     for (const c of cartas) {
-      const m = motivo(c), marco = c.querySelector('.ov-escena > div'), btn = c.querySelector('[data-copiar]');
-      btn.disabled = !!m || (!!c.dataset.steam && !steam);
-      if (m) {
+      const marco = c.querySelector('.ov-escena > div'), btn = c.querySelector('[data-copiar]');
+      c.hidden = sinDatos(c);
+      if (c.hidden) continue;
+      btn.disabled = !!c.dataset.steam && !steam;
+      if (c.dataset.steam && !steam && !c.dataset.prev) {
         marco.className = ''; marco.style.cssText = '';
-        marco.innerHTML = `<p class="ov-falta"><b>${esc(m[0])}</b>${esc(m[1])}</p>`;
+        marco.innerHTML = '<p class="ov-falta"><b>Escribe tu Steam</b>Aquí verás este overlay con tus datos reales.</p>';
         continue;
       }
       if (marco.querySelector('.ov-falta')) marco.replaceChildren();
@@ -38,9 +40,7 @@
   const decir = (t, k) => { const m = $('#msgSteam'); m.textContent = t; m.className = 'ov-msg' + (k ? ' ' + k : ''); };
   function apagarSteam() {
     sinLlave = true;
-    $('#steam').disabled = true; $('#botonSteam').disabled = true;
-    decir('Los overlays con tu perfil no están disponibles por ahora. Los que funcionan sin usuario siguen normal.', 'err');
-    pintarCartas();
+    $('#bloquePerfil').hidden = true; $('#sinPerfil').hidden = false;
   }
   async function cargarYo(crudo, callado) {
     const v = normalizar(crudo); if (!v || sinLlave) return;
@@ -86,7 +86,7 @@
       }
       $('#precio').textContent = juego.price ? juego.price.replace(/\s*USD$/, '') : '—';
       $('#precioNota').textContent = [juego.developer && 'Desarrolla ' + juego.developer, juego.released && 'salió el ' + juego.released].filter(Boolean).join(', ');
-      pintarLogros(); pintarCartas();
+      pintarLogros();
       const n = juego.news || [];
       $('#noticias').hidden = !n.length;
       $('#listaNoticias').innerHTML = n.map(x => `<a href="${/^https:\/\//.test(x.url) ? esc(x.url) : '#'}" target="_blank" rel="noopener"><b>${esc(x.title)}</b><span>${new Date(x.at * 1000).toLocaleDateString('es-PR', { day: 'numeric', month: 'short', year: 'numeric' })}</span></a>`).join('');
@@ -110,11 +110,17 @@
   }
 
   /* ── arranque ── */
-  pintarCartas(); cargarJugadores();
-  setInterval(cargarJugadores, 60000); setInterval(cargarJuego, 10 * 60000);
+  $('#bloquePerfil').hidden = true;   // se abre al saber que hay llave: así no brinca la página
+  cargarJugadores();
+  setInterval(cargarJugadores, 60000);
+  setInterval(() => cargarJuego().finally(() => { if (!sinLlave) pintarCartas(); }), 10 * 60000);
   cargarJuego().finally(async () => {
     // ¿Hay llave de Steam en el servidor? Sin ella responde 501 enseguida, sin llamar a Steam.
-    try { await json('wardogs/profile?steamid=0'); } catch (e) { if (e.status === 501) return apagarSteam(); }
+    try { await json('wardogs/profile?steamid=0'); } catch (e) { if (e.status === 501) sinLlave = true; }
+    pintarCartas();
+    if (sinLlave) return apagarSteam();
+    $('#bloquePerfil').hidden = false;
+    OV.ajustarTodo();
     let s = new URL(location.href).searchParams.get('steam');
     if (!s) { try { s = localStorage.getItem('wd-steam'); } catch (e) {} }
     if (s) { $('#steam').value = s; cargarYo(s, true); }

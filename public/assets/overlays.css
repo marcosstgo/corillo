@@ -21,6 +21,7 @@
 .ov-tabs a { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; flex: none; border-radius: 999px; color: var(--h2-mute); font: 700 .92rem var(--h2-body); text-decoration: none; transition: color .15s, background .15s; }
 .ov-tabs a:hover { color: var(--h2-bone); }
 .ov-tabs a[aria-current] { background: var(--h2-bone); color: var(--h2-ink); }
+@container (max-width: 460px) { .ov-tabs a { padding: 0 12px; font-size: .88rem; } .ov-tabs a i { display: none; } }
 
 /* cabecera */
 .ov-cab { margin-top: 26px; }
@@ -91,10 +92,17 @@ a.ov-vivo { text-decoration: underline; text-underline-offset: 3px; }
 /* generador de Battlefield 6 */
 .ov-gen { display: grid; gap: 18px; margin-top: 26px; grid-template-columns: minmax(0, 1fr); }
 .ov-cfg { display: grid; gap: 14px; align-content: start; min-width: 0; }
-.ov-vista { min-width: 0; overflow: hidden; border-radius: 22px; background: var(--ov-tarjeta); order: -1; }
+.ov-vista { min-width: 0; overflow: hidden; border-radius: 22px; background: var(--ov-tarjeta); }
+/* En una columna: usuario, vista con su enlace y después la lista. Así el enlace queda a la mano al terminar de escribir. */
+@container (max-width: 959px) {
+  .ov-cfg { display: contents; }
+  #pJugador { order: 1; }
+  .ov-vista { order: 2; }
+  .ov-cfg > .ov-panel:not(#pJugador) { order: 3; }
+}
 @container (min-width: 960px) {
   .ov-gen { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: start; }
-  .ov-vista { position: sticky; top: calc(var(--nv-top) + 16px); order: 0; }
+  .ov-vista { position: sticky; top: calc(var(--nv-top) + 16px); }
 }
 .ov-panel { padding: 20px; border-radius: 22px; background: var(--ov-tarjeta); min-width: 0; }
 .ov-paso { display: flex; align-items: center; gap: 12px; margin-bottom: 14px !important; font-size: 1.15rem !important; font-weight: 800; }
@@ -162,6 +170,7 @@ a.ov-vivo { text-decoration: underline; text-underline-offset: 3px; }
 .ov-carta h3 { font-size: 1.2rem; font-weight: 800; }
 .ov-carta p { color: var(--h2-mute); font-size: .92rem; line-height: 1.45; }
 .ov-carta .ov-falta { color: var(--h2-mute); }
+.ov-sin-perfil { margin-top: 14px !important; max-width: 70ch; padding: 16px 20px; border-radius: 16px; background: var(--ov-tarjeta); }
 .ov-fila { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
 .ov-medida { color: var(--h2-mute); font: 600 .84rem var(--h2-body); font-variant-numeric: tabular-nums; }
 .ov-ahora { display: grid; gap: 14px; margin-top: 16px; grid-template-columns: minmax(0, 1fr); }

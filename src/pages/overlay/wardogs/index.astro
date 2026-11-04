@@ -39,6 +39,8 @@ const ld = { '@context': 'https://schema.org', '@graph': [
 
       <h2 class="ov-sub">Con tu perfil de Steam</h2>
       <p class="ov-lead">Tu perfil y los detalles del juego deben estar en público (Steam → Perfil → Editar perfil → Privacidad).</p>
+      <p class="ov-aviso ov-sin-perfil" id="sinPerfil" hidden>Los overlays con tu perfil (tu perfil, tus logros, tarjeta de Steam, alerta de logro y barra inferior) no están disponibles por ahora. Los que funcionan sin usuario siguen normal.</p>
+      <div id="bloquePerfil">
       <form class="ov-steam" id="formSteam" autocomplete="off">
         <input class="ov-campo" id="steam" type="text" placeholder="Tu usuario o enlace de Steam" spellcheck="false" aria-label="Tu usuario o enlace de Steam">
         <button class="ov-btn" type="submit" id="botonSteam">Ver mi perfil</button>
@@ -53,6 +55,7 @@ const ld = { '@context': 'https://schema.org', '@graph': [
             </div>
           </article>
         ))}
+      </div>
       </div>
     </section>
 
