@@ -25,13 +25,13 @@ const ld = {
 };
 ---
 <SiteShell lang={lang} alternates={alternos(path)} title={`${a.titulo} — ${$} · ${pueblo} | ${t('mercado.nombre')} CORILLO`} description={desc} canonical={`https://corillo.live${ruta(lang, path)}`} ogImage={a.og || undefined} ogType="product">
-  <fragment slot="head">
+  <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(ld).replace(/</g, '\\u003c')} />
     {vendido && <meta name="robots" content="noindex" />}
     <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
     <link rel="stylesheet" href="/assets/mercado.css?v=8" />
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-  </fragment>
+  </Fragment>
 
   <main class="of" data-anuncio={a.id} data-turnstile={TURNSTILE_SITE_KEY} data-titulo={a.titulo}>
     <nav class="of-crumb" aria-label="Ruta"><a href={ruta(lang, '/mercado/')}>{t('mercado.nombre')}</a>{cat && <> / <a href={ruta(lang, `/mercado/${cat.slug}/`)}>{cat[lang]}</a></>}{sub && <> / {sub[lang]}</>}</nav>

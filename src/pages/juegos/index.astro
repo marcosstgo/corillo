@@ -17,10 +17,10 @@ const lider = filas[0];
 <SiteShell title="Los juegos más jugados en Steam: top 100 y jugadores | CORILLO"
            description={`Los 100 juegos con más jugadores en Steam. ${lider.ficha.nombre} va primero con ${numero(lider.ahora)} jugadores. Mira el pico reciente y quién sube o baja esta semana.`}
            canonical={canonical}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <link rel="stylesheet" href="/assets/juegos.css?v=1">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-  </fragment>
+  </Fragment>
   <div class="jg">
     <header class="jg-hd">
       <h1>Los juegos más jugados en Steam</h1>

@@ -9,7 +9,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
   ogTitle="CORILLO — Configuración OBS & Meld"
   ogDescription="Guía completa para configurar OBS Studio o Meld Studio y hacer stream a CORILLO desde Puerto Rico."
 >
-  <fragment slot="head">
+  <Fragment slot="head">
     <meta name="theme-color" content="#06143f" />
     <style>
       .wrap{max-width:860px;margin:0 auto;padding:0 20px}
@@ -109,7 +109,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       .page-footer a{color:var(--crl-accent);text-decoration:none}
       .page-footer a:hover{text-decoration:underline}
     </style>
-  </fragment>
+  </Fragment>
 
 <section class="hero">
   <div class="wrap">
@@ -122,10 +122,10 @@ import SiteShell from '../../layouts/SiteShell.astro';
   <div class="wrap">
 
     <div class="tabs">
-      <button class="tab active" id="tabObs" onclick="switchTab('obs')">
+      <button class="tab active" id="tabObs" type="button" data-tab="obs">
         <i class="fa-solid fa-video"></i> OBS Studio
       </button>
-      <button class="tab" id="tabMeld" onclick="switchTab('meld')">
+      <button class="tab" id="tabMeld" type="button" data-tab="meld">
         <i class="fa-solid fa-sliders"></i> Meld Studio
       </button>
     </div>
@@ -459,6 +459,8 @@ function switchTab(name: string) {
   document.getElementById('tabObs')!.classList.toggle('active',  name === 'obs');
   document.getElementById('tabMeld')!.classList.toggle('active', name === 'meld');
 }
+// El <script> de Astro es un módulo: sus funciones no existen para un onclick.
+document.querySelectorAll<HTMLElement>('.tabs [data-tab]').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab!)));
 
 document.querySelectorAll('.copy-btn').forEach(btn => {
   btn.addEventListener('click', async () => {

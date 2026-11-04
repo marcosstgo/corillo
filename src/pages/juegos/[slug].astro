@@ -28,10 +28,10 @@ const ld = [{
 }];
 ---
 <SiteShell title={`${ficha.nombre}: jugadores y posición en Steam | CORILLO`} description={resumen} canonical={canonical} ogImage={ficha.imagen || undefined}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <link rel="stylesheet" href="/assets/juegos.css?v=1">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-  </fragment>
+  </Fragment>
   <div class="jg jg-ficha">
     <nav class="jg-migas" aria-label="Migas"><a href="/juegos/">← Lo más jugado</a></nav>
     <header class="jg-hd">

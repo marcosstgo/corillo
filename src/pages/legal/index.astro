@@ -4,10 +4,10 @@ import SiteShell from '../../layouts/SiteShell.astro';
 <SiteShell
   pageClass="p-legacy"
   title="CORILLO — Términos de Servicio y Privacidad"
-  description="Términos de Servicio y Política de Privacidad de CORILLO."
+  description="Términos de servicio y política de privacidad de CORILLO."
   canonical="https://corillo.live/legal/"
 >
-  <fragment slot="head">
+  <Fragment slot="head">
     <meta name="theme-color" content="#06143f" />
     <style>
       .page-wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px}
@@ -72,19 +72,19 @@ import SiteShell from '../../layouts/SiteShell.astro';
       [data-theme="light"] .contact-card{background:rgba(255,255,255,.6)}
       [data-theme="light"] .contact-card p{color:rgba(0,0,0,.7)}
     </style>
-  </fragment>
+  </Fragment>
 
 <main>
   <div class="page-wrap">
 
     <div class="page-header">
-      <div class="page-title">Términos <span>y</span> privacidad</div>
+      <h1 class="page-title">Términos <span>y</span> privacidad</h1>
       <div class="page-meta">Última actualización: 1 de marzo de 2026 · Marcos Santiago</div>
     </div>
 
     <div class="lang-tabs">
-      <button class="lang-tab active" onclick="setLang('es')">Español</button>
-      <button class="lang-tab" onclick="setLang('en')">English</button>
+      <button class="lang-tab active" type="button" data-lang="es" aria-pressed="true">Español</button>
+      <button class="lang-tab" type="button" data-lang="en" lang="en" aria-pressed="false">English</button>
     </div>
 
     <!-- ESPAÑOL -->
@@ -105,7 +105,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
 
       <div class="legal-section" id="es-1">
-        <h2><span class="num">01</span>Aceptación de Términos</h2>
+        <h2><span class="num">01</span>Aceptación de términos</h2>
         <p>Al acceder o utilizar CORILLO ("la Plataforma"), operada por Marcos Santiago, usted acepta estar sujeto a estos Términos de Servicio. Si no está de acuerdo con alguna parte de estos términos, no debe utilizar la Plataforma.</p>
         <div class="highlight-box">
           <p>CORILLO es una plataforma de streaming independiente con sede en Puerto Rico. El uso de la Plataforma está sujeto a las leyes aplicables de los Estados Unidos y del Estado Libre Asociado de Puerto Rico.</p>
@@ -113,7 +113,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
 
       <div class="legal-section" id="es-2">
-        <h2><span class="num">02</span>Descripción del Servicio</h2>
+        <h2><span class="num">02</span>Descripción del servicio</h2>
         <p>CORILLO es una plataforma de transmisión en vivo que permite a usuarios autorizados ("Streamers") transmitir contenido de video en tiempo real. El acceso como Streamer es por invitación exclusiva y requiere aprobación previa.</p>
         <ul>
           <li>El servicio permite la visualización pública de transmisiones en vivo</li>
@@ -124,7 +124,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
 
       <div class="legal-section" id="es-3">
-        <h2><span class="num">03</span>Responsabilidad del Contenido</h2>
+        <h2><span class="num">03</span>Responsabilidad del contenido</h2>
         <p>Los Streamers son <strong>exclusivamente responsables</strong> del contenido que transmiten. Al utilizar CORILLO como Streamer, usted garantiza que:</p>
         <ul>
           <li>Tiene todos los derechos necesarios para transmitir el contenido</li>
@@ -137,7 +137,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
 
       <div class="legal-section" id="es-4">
-        <h2><span class="num">04</span>Propiedad Intelectual y DMCA</h2>
+        <h2><span class="num">04</span>Propiedad intelectual y DMCA</h2>
         <p>CORILLO respeta los derechos de propiedad intelectual y cumple con la <em>Digital Millennium Copyright Act (DMCA)</em>. Si usted es titular de derechos de autor y cree que su contenido está siendo utilizado sin autorización, puede presentar una reclamación.</p>
         <p>Para más información sobre nuestro proceso de reclamaciones DMCA, visite nuestra <a href="/dmca/">Política DMCA</a>.</p>
         <div class="highlight-box">
@@ -146,7 +146,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
 
       <div class="legal-section" id="es-5">
-        <h2><span class="num">05</span>Política de Privacidad</h2>
+        <h2><span class="num">05</span>Política de privacidad</h2>
         <p>CORILLO recopila información mínima necesaria para operar el servicio:</p>
         <ul>
           <li><strong>Datos de uso:</strong> Estadísticas de visualización anónimas (número de espectadores por transmisión)</li>
@@ -160,7 +160,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
       </div>
 
       <div class="legal-section" id="es-6">
-        <h2><span class="num">06</span>Limitación de Responsabilidad</h2>
+        <h2><span class="num">06</span>Limitación de responsabilidad</h2>
         <p>CORILLO y Marcos Santiago no serán responsables por:</p>
         <ul>
           <li>Daños directos, indirectos, incidentales o consecuentes derivados del uso de la Plataforma</li>
@@ -198,7 +198,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 
       <div class="legal-section" id="es-8">
         <h2><span class="num">09</span>Contacto</h2>
-        <p>Para consultas sobre estos Términos de Servicio o Política de Privacidad:</p>
+        <p>Para consultas sobre estos términos de servicio o política de privacidad:</p>
         <div class="contact-card">
           <p><strong>CORILLO — Marcos Santiago</strong></p>
           <p>Puerto Rico, Estados Unidos</p>
@@ -209,7 +209,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
     </div>
 
     <!-- ENGLISH -->
-    <div class="content-block" id="block-en">
+    <div class="content-block" id="block-en" lang="en">
       <div class="toc">
         <div class="toc-title">Contents</div>
         <ol>
@@ -333,20 +333,23 @@ import SiteShell from '../../layouts/SiteShell.astro';
 </main>
 
 <script>
-function setLang(lang: string) {
-  document.querySelectorAll('.content-block').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('block-' + lang)!.classList.add('active');
-  document.querySelectorAll('.lang-tab').forEach(t => {
-    if ((t as HTMLElement).textContent!.toLowerCase().includes(lang === 'es' ? 'español' : 'english')) {
-      t.classList.add('active');
-    }
+function mostrar(lang: string) {
+  document.querySelectorAll('.content-block').forEach(b => b.classList.toggle('active', b.id === 'block-' + lang));
+  document.querySelectorAll<HTMLElement>('.lang-tab').forEach(t => {
+    const on = t.dataset.lang === lang;
+    t.classList.toggle('active', on);
+    t.setAttribute('aria-pressed', String(on));
   });
-  localStorage.setItem('corillo-lang', lang);
 }
-const savedLang = localStorage.getItem('corillo-lang') || 'es';
+document.querySelectorAll<HTMLElement>('.lang-tab').forEach(t => t.addEventListener('click', () => {
+  const lang = t.dataset.lang!;
+  mostrar(lang);
+  try { localStorage.setItem('corillo-lang', lang); } catch {}
+}));
+let savedLang = 'es';
+try { savedLang = localStorage.getItem('corillo-lang') || 'es'; } catch {}
 const hashLang = /^#(en-|market$)/.test(location.hash) ? 'en' : /^#(es-|mercado$)/.test(location.hash) ? 'es' : '';
-if ((hashLang || savedLang) === 'en') setLang('en'); else if (hashLang === 'es') setLang('es');
+if ((hashLang || savedLang) === 'en') mostrar('en');
 if (hashLang) document.querySelector(location.hash)?.scrollIntoView();
 </script>
 

@@ -19,7 +19,7 @@ const desc = free.length
 const ld = free.length ? offersJsonLd(free, 'Juegos gratis', 'https://corillo.live/ofertas/gratis/') : null;
 ---
 <SiteShell title={title} description={desc} canonical="https://corillo.live/ofertas/gratis/">
-  <fragment slot="head">
+  <Fragment slot="head">
     {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
     <style is:global>
       .fr{max-width:1100px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px}
@@ -52,7 +52,7 @@ const ld = free.length ? offersJsonLd(free, 'Juegos gratis', 'https://corillo.li
       .fr-note{margin-top:40px;color:var(--h2-mute);font:500 .9rem/1.6 var(--h2-body);max-width:70ch}
       [data-hide]{display:none!important}
     </style>
-  </fragment>
+  </Fragment>
 
   <main class="fr">
     <nav class="fr-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / Juegos gratis</nav>

@@ -26,11 +26,11 @@ const desc = live
   : `Esta oferta de ${d.title} ya terminó. Mira las ofertas de ${listName.toLowerCase()} que siguen vigentes.`;
 ---
 <SiteShell title={`${title} — CORILLO`} description={desc} canonical={url} ogImage={hwOg(d)}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(hwJsonLd(d, live))} />
     {!live && <meta name="robots" content="noindex" />}
     <link rel="stylesheet" href="/assets/ofertas.css?v=5" />
-  </fragment>
+  </Fragment>
 
   <main class="of">
     <nav class="of-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / <a href={`/ofertas/${listSlug}/`}>{listName}</a> / {d.catLabel}</nav>

@@ -23,10 +23,10 @@ const ld = {
 <SiteShell title="Cine puertorriqueño: películas boricuas, estrenos y dónde verlas | CORILLO"
            description="Películas puertorriqueñas en cine y streaming: estrenos en Puerto Rico, tráilers oficiales, directores, festivales y premios. El cine hecho en la isla, en un solo sitio."
            canonical="https://corillo.live/cine/pr/" ogImage={pr.find(p => p.fondo)?.fondo}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-  </fragment>
+  </Fragment>
   <div class="cn">
     <nav class="cn-migas" aria-label="Estás en"><a href="/cine/">Cine</a></nav>
     <header class="cn-hd">

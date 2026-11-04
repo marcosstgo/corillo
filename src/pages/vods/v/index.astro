@@ -8,7 +8,7 @@ import { version } from '../../../../version.json';
   description="Transmisión grabada en CORILLO — plataforma independiente desde Puerto Rico."
   canonical="https://corillo.live/vods/v/"
 >
-  <fragment slot="head">
+  <Fragment slot="head">
     <meta name="theme-color" content="var(--crl-ink)" />
     <link rel="stylesheet" href={`/assets/modo-cine.css?v=${version}`} />
     <script is:inline src={`/assets/modo-cine.js?v=${version}`}></script>
@@ -114,7 +114,7 @@ import { version } from '../../../../version.json';
       .rel-card-thumb{border-radius:16px}
       @media(max-width:560px){.rel-rail{grid-template-columns:minmax(0,1fr);gap:12px}.rel-card{grid-template-columns:132px minmax(0,1fr);gap:12px;align-items:center}}
     </style>
-  </fragment>
+  </Fragment>
 
 <div class="vd">
   <div class="vd-player" id="vdPlayer"><div class="sk sk-thumb" style="border-radius:22px" aria-hidden="true"></div></div>

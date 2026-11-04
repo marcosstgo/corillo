@@ -21,10 +21,10 @@ const ld = {
 <SiteShell title="Cine en Puerto Rico: estrenos, cartelera y cine boricua | CORILLO"
            description="Qué hay en el cine en Puerto Rico, los próximos estrenos con fecha de PR, lo que está pegao y lo mejor del cine puertorriqueño, con tráilers y dónde verlas."
            canonical="https://corillo.live/cine/" ogImage={destacado?.fondo}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-  </fragment>
+  </Fragment>
 
   <div class="cn">
     {destacado && (

@@ -42,7 +42,7 @@ const ld = pubDate ? {
 } : null;
 ---
 <SiteShell pageClass="p-legacy" title={title} description={description} canonical={canonical} ogType="article" ogTitle={ogTitle} ogDescription={ogDescription} ogImage={shareImage || image}>
-  <fragment slot="head">
+  <Fragment slot="head">
     {pubDate && <meta property="article:published_time" content={pubDate} />}
     {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
     <style is:global>
@@ -107,7 +107,7 @@ const ld = pubDate ? {
       .more-card span{color:var(--h2-mute);font:500 .85rem var(--h2-body)}
     </style>
     <slot name="head" />
-  </fragment>
+  </Fragment>
 
   <article class="art" style={`--tc:${cat.color}`}>
     <header class="art-hd">

@@ -17,11 +17,11 @@ const ld = items.length ? {
 } : null;
 ---
 <SiteShell title={`${title} — CORILLO`} description={desc} canonical={`https://corillo.live/ofertas/${slug}/`}>
-  <fragment slot="head">
+  <Fragment slot="head">
     {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
     {!items.length && <meta name="robots" content="noindex" />}
     <link rel="stylesheet" href="/assets/ofertas.css?v=5" />
-  </fragment>
+  </Fragment>
 
   <main class="of">
     <nav class="of-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / {h1}</nav>

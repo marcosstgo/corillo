@@ -35,11 +35,11 @@ const datos: [string, string][] = [
 ---
 <SiteShell title={titulo} description={p.description} canonical={canonical} ogType="video.movie"
            ogTitle={`${p.title}${p.pr ? ' · cine puertorriqueño' : ''} — estreno, tráiler y dónde verla`} ogImage={p.fondo || p.afiche}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <link rel="stylesheet" href="/assets/cine.css?v=2">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
     {!p.propia && <meta name="robots" content="noindex, follow" />}
-  </fragment>
+  </Fragment>
 
   <article class="cn-ficha">
     <header class="cn-hero">

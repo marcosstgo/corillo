@@ -17,11 +17,11 @@ const cs = !!l.store && l.store !== 'steam' && l.store !== 'gog';
 const ld = items.length ? offersJsonLd(items, l.h1, `https://corillo.live/ofertas/${l.slug}/`) : null;
 ---
 <SiteShell title={`${l.title} — CORILLO`} description={desc} canonical={`https://corillo.live/ofertas/${l.slug}/`}>
-  <fragment slot="head">
+  <Fragment slot="head">
     {ld && <script type="application/ld+json" set:html={JSON.stringify(ld)} />}
     {!items.length && <meta name="robots" content="noindex" />}
     <link rel="stylesheet" href="/assets/ofertas.css?v=5" />
-  </fragment>
+  </Fragment>
 
   <main class="of">
     <nav class="of-crumb" aria-label="Ruta"><a href="/ofertas/">Ofertas</a> / {l.h1}</nav>

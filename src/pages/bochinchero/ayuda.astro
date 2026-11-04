@@ -45,7 +45,7 @@ const LD = {
 <SiteShell title="Ayuda del Bochinchero: permisos, salas y problemas comunes | CORILLO"
            description="Cómo darle permisos al Bochinchero, en qué salas de voz habla y en cuáles no, y cómo arreglar los problemas más comunes del bot y su panel."
            canonical="https://corillo.live/bochinchero/ayuda/">
-  <fragment slot="head">
+  <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(LD)} />
     <style is:global>
       .bh{--bc:#ff6b3d;max-width:1100px;margin:0 auto;padding:clamp(28px,5vw,64px) var(--h2-gutter) 90px;color:var(--h2-bone)}
@@ -88,7 +88,7 @@ const LD = {
         .bh-tabla td{border:0;padding:6px 14px} .bh-tabla td:first-child,.bh-tabla td:last-child{grid-column:1/-1} .bh-tabla td.c{text-align:left}
         .bh-tabla td.c::before{content:attr(data-l) ': ';color:var(--h2-mute);font-weight:600} }
     </style>
-  </fragment>
+  </Fragment>
 
   <main class="bh">
     <nav class="bh-migas" aria-label="Estás en"><a href="/bochinchero/">El Bochinchero</a> · Ayuda</nav>

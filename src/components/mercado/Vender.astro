@@ -11,11 +11,11 @@ const path = '/mercado/vender/';
 const cats = CATEGORIAS.map(c => ({ slug: c.slug, nombre: c[lang], sub: c.sub.map(s => ({ slug: s.slug, nombre: s[lang] })) }));
 ---
 <SiteShell lang={lang} alternates={alternos(path)} title={`${t('mercado.vender_titulo')} — ${t('mercado.nombre')} CORILLO`} description={t('mercado.vender_lema')} canonical={`https://corillo.live${ruta(lang, path)}`}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <meta name="robots" content="noindex" />
     <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
     <link rel="stylesheet" href="/assets/mercado.css?v=8" />
-  </fragment>
+  </Fragment>
   <main class="of mk-narrow" data-vender data-lang={lang}>
     <nav class="of-crumb" aria-label="Ruta"><a href={ruta(lang, '/mercado/')}>{t('mercado.nombre')}</a> / <span data-crumb>{t('mercado.vender_titulo')}</span></nav>
     <header class="of-hd" style="margin-top:14px">

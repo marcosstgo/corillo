@@ -13,11 +13,11 @@ const path = `/mercado/${modo}/`;
 const titulo = modo === 'mis-anuncios' ? t('mercado.mis_anuncios') : modo === 'moderacion' ? t('mercado.moderacion') : t('mercado.nombre');
 ---
 <SiteShell lang={lang} alternates={alternos(path)} title={`${titulo} — ${t('mercado.nombre')} CORILLO`} description={t('mercado.lema')} canonical={`https://corillo.live${ruta(lang, path)}`}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <meta name="robots" content="noindex" />
     <link rel="stylesheet" href="/assets/ofertas.css?v=2" />
     <link rel="stylesheet" href="/assets/mercado.css?v=8" />
-  </fragment>
+  </Fragment>
   <main class="of" data-privada={modo} data-lang={lang} data-fallback={modo === 'anuncio' ? '1' : undefined}>
     <nav class="of-crumb" aria-label="Ruta"><a href={ruta(lang, '/mercado/')}>{t('mercado.nombre')}</a>{modo !== 'anuncio' && <> / {titulo}</>}</nav>
     <header class="of-hd" style="margin-top:14px">

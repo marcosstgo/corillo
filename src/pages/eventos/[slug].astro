@@ -14,10 +14,10 @@ const ld = [eventoLd(e, canonical), { '@context': 'https://schema.org', '@type':
   { '@type': 'ListItem', position: 2, name: e.nombre, item: canonical }] }];
 ---
 <SiteShell title={`${e.nombre}: fecha y lugar | CORILLO Eventos`} description={`${e.nombre}, el ${fechaEvento(e)} en ${donde}, Puerto Rico.`} canonical={canonical}>
-  <fragment slot="head">
+  <Fragment slot="head">
     <link rel="stylesheet" href="/assets/eventos.css?v=1">
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
-  </fragment>
+  </Fragment>
   <article class="ev">
     <nav class="ev-migas" aria-label="Estás en"><a href="/eventos/">Eventos</a></nav>
     <header class="ev-hd"><h1>{e.nombre}</h1>{e.detalle && <p>{e.detalle}</p>}</header>
