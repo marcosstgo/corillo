@@ -205,13 +205,14 @@ import SiteShell from '../../../layouts/SiteShell.astro';
         const fecha = ts => new Date(ts * 1000).toLocaleDateString('es-PR', { day: 'numeric', month: 'long', year: 'numeric' });
         const fila = s => {
           const hasta = s.modo === 'prueba' ? ` · hasta el ${fecha(s.prueba_hasta)}` : '';
+          const quedan = s.modo === 'prueba' ? Math.max(1, Math.ceil((s.prueba_hasta - Date.now() / 1000) / 86400)) : 30;
           const miembros = s.miembros != null ? ` · ${s.miembros} miembros` : '';
           const fijo = s.modo === 'casa' || s.modo === 'premium';
           const opciones = [['afiliado', 'Afiliado'], ['prueba', 'De prueba'], ['gratis', 'Gratis']]
             .map(([k, t]) => `<option value="${k}" ${k === s.modo ? 'selected' : ''}>${t}</option>`).join('');
           return `<li data-id="${esc(s.id)}"><div class="t"><b>${esc(s.nombre)}</b><small>${esc(s.plan)}${hasta}${miembros}</small></div>
             ${fijo ? '' : `<div class="bp-af-plan"><select aria-label="Plan de ${esc(s.nombre)}">${opciones}</select>
-              <input type="number" min="1" max="365" value="30" aria-label="Días de prueba" ${s.modo === 'prueba' ? '' : 'hidden'}>
+              <input type="number" min="1" max="365" value="${quedan}" aria-label="Días de prueba, contados desde hoy" ${s.modo === 'prueba' ? '' : 'hidden'}>
               <button class="bp-btn peq">Guardar</button></div>`}</li>`;
         };
         v.innerHTML = `<div class="bp-card"><h2>Plan de cada server</h2>
@@ -223,11 +224,21 @@ import SiteShell from '../../../layouts/SiteShell.astro';
           if (!sel) return;
           const dias = li.querySelector('input');
           sel.onchange = () => { dias.hidden = sel.value !== 'prueba'; };
-          li.querySelector('button').onclick = async () => {
+          li.querySelector('button').onclick = async ev => {
+            const boton = ev.currentTarget;
             const cuerpo = sel.value === 'prueba' ? { modo: 'prueba', dias: Number(dias.value) } : { modo: sel.value };
-            await api('PATCH', `/admin/servers/${li.dataset.id}`, cuerpo);
+            boton.disabled = true;
+            let nuevo;
+            try { nuevo = await api('PATCH', `/admin/servers/${li.dataset.id}`, cuerpo); }
+            catch (e) { boton.disabled = false; return; }
             aviso('Guardado.');
-            await VISTAS.afiliados(v);
+            try { await VISTAS.afiliados(v); }
+            catch (e) {
+              const hasta = nuevo.modo === 'prueba' ? ` · hasta el ${fecha(nuevo.prueba_hasta)}` : '';
+              li.querySelector('small').textContent = nuevo.plan + hasta + (nuevo.miembros != null ? ` · ${nuevo.miembros} miembros` : '');
+              aviso('Guardado. La lista no se pudo refrescar; recarga la página para verla al día.');
+              boton.disabled = false;
+            }
           };
         });
       },
