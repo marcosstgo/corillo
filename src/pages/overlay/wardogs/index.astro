@@ -1,0 +1,94 @@
+---
+import SiteShell from '../../../layouts/SiteShell.astro';
+import OvTabs from '../../../components/overlays/OvTabs.astro';
+import { WD_SIN_USUARIO, WD_CON_PERFIL } from '../../../data/overlays';
+import { version } from '../../../../version.json';
+const titulo = 'Overlays de WARDOGS para OBS, gratis — Corillo';
+const desc = 'Overlays gratis de WARDOGS para tu stream: jugadores en vivo, logros y tu perfil de Steam. Fondo transparente para OBS.';
+const ld = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'WebApplication', name: 'Overlays de WARDOGS para OBS', description: desc, url: 'https://corillo.live/overlay/wardogs/', applicationCategory: 'MultimediaApplication', operatingSystem: 'Web', inLanguage: 'es', offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' } },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Corillo', item: 'https://corillo.live/' }, { '@type': 'ListItem', position: 2, name: 'Overlays', item: 'https://corillo.live/overlay/' }, { '@type': 'ListItem', position: 3, name: 'WARDOGS', item: 'https://corillo.live/overlay/wardogs/' }] },
+] };
+---
+<SiteShell pageClass="p-legacy" title={titulo} description={desc} canonical="https://corillo.live/overlay/wardogs/" ogImage="/overlay/assets/og-wardogs.png">
+  <Fragment slot="head">
+    <link rel="stylesheet" href={`/assets/overlays.css?v=${version}`} />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </Fragment>
+  <div class="ov" style="--tc:var(--ov-menta)">
+    <OvTabs actual="wardogs" />
+    <header class="ov-cab">
+      <h1>Overlays de WARDOGS</h1>
+      <p>Jugadores en vivo, logros y tu perfil de Steam en tu stream, con el fondo transparente para OBS. Cada overlay es un enlace: lo copias y lo pegas.</p>
+      <div class="ov-datos"><span class="ov-vivo"><i aria-hidden="true"></i><b id="hJugando">—</b> jugando en Steam</span></div>
+    </header>
+
+    <section class="ov-sec ov-sec-pegada" id="overlays">
+      <h2>Sin usuario</h2>
+      <p class="ov-lead">Solo copia el enlace y pégalo en OBS.</p>
+      <div class="ov-cartas">
+        {WD_SIN_USUARIO.map((c: any) => (
+          <article class="ov-carta" data-id={c.id} data-file={c.file} data-q={c.q} data-w={c.w} data-h={c.h} data-resenas={c.resenas ? '1' : undefined} data-llave={c.llave ? '1' : undefined}>
+            <div class="ov-escena"><div class="ov-marco"></div></div>
+            <div class="ov-carta-txt"><h3>{c.n}</h3><p>{c.d}</p>
+              <div class="ov-fila"><button class="ov-btn chico" type="button" data-copiar>Copiar enlace</button><span class="ov-medida">{c.w} × {c.h} px</span></div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <h2 class="ov-sub">Con tu perfil de Steam</h2>
+      <p class="ov-lead">Tu perfil y los detalles del juego deben estar en público (Steam → Perfil → Editar perfil → Privacidad).</p>
+      <form class="ov-steam" id="formSteam" autocomplete="off">
+        <input class="ov-campo" id="steam" type="text" placeholder="Tu usuario o enlace de Steam" spellcheck="false" aria-label="Tu usuario o enlace de Steam">
+        <button class="ov-btn" type="submit" id="botonSteam">Ver mi perfil</button>
+      </form>
+      <p class="ov-msg" id="msgSteam" role="status" aria-live="polite">Ejemplo: steamcommunity.com/id/tu-usuario</p>
+      <div class="ov-cartas">
+        {WD_CON_PERFIL.map((c: any) => (
+          <article class:list={['ov-carta', { ancha: c.wide }]} data-id={c.id} data-file={c.file} data-w={c.w} data-h={c.h} data-steam="1" data-llave="1" data-prev={c.prevQ}>
+            <div class="ov-escena"><div class="ov-marco"></div></div>
+            <div class="ov-carta-txt"><h3>{c.n}</h3><p>{c.d}</p>
+              <div class="ov-fila"><button class="ov-btn chico" type="button" data-copiar disabled>Copiar enlace</button><span class="ov-medida">{c.w} × {c.h} px</span></div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="ov-sec" id="ahora">
+      <h2>WARDOGS ahora mismo</h2>
+      <p class="ov-lead">Datos de Steam, actualizados cada minuto.</p>
+      <div class="ov-ahora">
+        <div class="ov-panel ov-grafica">
+          <div class="ov-numero" id="jugadores">—</div>
+          <div class="ov-nota" id="grafCap">Jugadores conectados en Steam</div>
+          <div id="grafica"></div>
+          <div class="ov-eje"><span id="ejeI"></span><span id="ejeD"></span></div>
+        </div>
+        <div class="ov-kpis">
+          <div class="ov-panel" id="kResenas" hidden><small>Reseñas positivas en Steam</small><b id="resPct">—</b><div class="ov-barra"><i id="resBarra" style="width:0"></i></div><div class="ov-nota" id="resNota"></div></div>
+          <div class="ov-panel"><small>Precio</small><b id="precio">—</b><div class="ov-nota" id="precioNota"></div></div>
+          <div class="ov-panel"><small>Récord registrado</small><b id="record">—</b><div class="ov-nota" id="recordNota"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ov-sec" id="logros" hidden>
+      <h2>Los logros, del más difícil al más fácil</h2>
+      <p class="ov-lead" id="logrosLead">El porcentaje es la parte de los jugadores que ya lo desbloqueó, según Steam.</p>
+      <div class="ov-logros" id="tablaLogros"></div>
+    </section>
+
+    <section class="ov-sec" id="noticias" hidden>
+      <h2>Anuncios oficiales</h2>
+      <p class="ov-lead">Lo último que publicó el estudio en Steam.</p>
+      <div class="ov-noticias" id="listaNoticias"></div>
+    </section>
+
+    <p class="ov-nota-larga"><strong>Qué puede mostrar Steam y qué no.</strong> De WARDOGS, Steam entrega las horas jugadas, los logros, si estás en partida y los datos públicos del juego. Kills, K/D y partidas no están disponibles: el estudio no ofrece una API pública de perfiles. Si tu perfil o los detalles del juego son privados, los overlays personales no pueden leerlos.</p>
+    <p class="ov-fuentes">Datos de Steam. <a href="https://github.com/marcosstgo/corillo-bf6-overlays" target="_blank" rel="noopener">Código en GitHub</a>.</p>
+  </div>
+  <script is:inline src={`/assets/overlays.js?v=${version}`}></script>
+  <script is:inline src={`/assets/overlays-wardogs.js?v=${version}`}></script>
+</SiteShell>

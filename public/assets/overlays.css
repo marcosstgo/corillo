@@ -1,0 +1,192 @@
+/* Páginas /overlay/ dentro del sitio (3-nov-2026). Todo cuelga de .ov para no tocar el resto. Los overlays de OBS tienen su propio tema (ov-theme.css). */
+.ov {
+  --ov-acento: var(--h2-cyan); --ov-sol: var(--h2-mag); --ov-menta: #35e0a1; --ov-vivo: var(--h2-live);
+  --ov-tarjeta: color-mix(in srgb, var(--h2-bone) 6%, transparent);
+  --ov-hover: color-mix(in srgb, var(--h2-bone) 12%, transparent);
+  --tc: var(--ov-acento);
+  container-type: inline-size;
+  max-width: 1320px; margin: 0 auto; padding: 22px var(--h2-gutter) 64px; color: var(--h2-bone); font-family: var(--h2-body);
+}
+.ov *, .ov *::before, .ov *::after { box-sizing: border-box; }
+.ov [hidden] { display: none !important; }
+.ov h1, .ov h2, .ov h3 { margin: 0; font-family: var(--h2-display); letter-spacing: -.02em; color: var(--h2-bone); }
+.ov p { margin: 0; }
+.ov a { color: inherit; }
+.ov button { font-family: inherit; cursor: pointer; }
+.ov :focus-visible { outline: 2px solid var(--h2-bone); outline-offset: 2px; }
+.ov-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+/* pestañas */
+.ov-tabs { display: flex; gap: 4px; width: fit-content; max-width: 100%; padding: 4px; overflow-x: auto; border-radius: 999px; background: var(--ov-tarjeta); scrollbar-width: none; }
+.ov-tabs a { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; flex: none; border-radius: 999px; color: var(--h2-mute); font: 700 .92rem var(--h2-body); text-decoration: none; transition: color .15s, background .15s; }
+.ov-tabs a:hover { color: var(--h2-bone); }
+.ov-tabs a[aria-current] { background: var(--h2-bone); color: var(--h2-ink); }
+
+/* cabecera */
+.ov-cab { margin-top: 26px; }
+.ov-cab h1 { font-size: clamp(2.3rem, 5cqi, 3.7rem); font-weight: 800; line-height: 1; letter-spacing: -.04em; }
+.ov-cab > p { margin-top: 14px; max-width: 62ch; color: var(--h2-mute); font-size: 1.08rem; line-height: 1.5; }
+.ov-datos { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 18px; }
+.ov-vivo { display: inline-flex; align-items: center; gap: 8px; color: var(--h2-mute); font: 600 .95rem var(--h2-body); }
+.ov-vivo b { color: var(--h2-bone); font-variant-numeric: tabular-nums; }
+.ov-vivo > i { width: 9px; height: 9px; flex: none; border-radius: 50%; background: var(--ov-vivo); box-shadow: 0 0 0 4px rgba(255,45,85,.22); }
+a.ov-vivo { text-decoration: underline; text-underline-offset: 3px; }
+
+/* el fondo a rayas imita un juego: enseña que el overlay es transparente */
+.ov-escena { position: relative; display: grid; place-items: center; min-height: 220px; padding: 22px 16px; overflow: hidden;
+  background: linear-gradient(120deg, rgba(6,20,63,.5), rgba(6,20,63,.82)), repeating-linear-gradient(115deg, #0d2a6b 0 22px, #0a2260 22px 44px); }
+.ov-marco { position: relative; overflow: hidden; }
+/* La página es color-scheme: dark y el overlay no. Sin esto, el navegador le pinta un fondo sólido al iframe y deja de verse transparente. */
+.ov-marco iframe { position: absolute; left: 0; top: 0; border: 0; background: transparent; transform-origin: top left; color-scheme: light; }
+.ov-falta { max-width: 30ch; text-align: center; color: var(--h2-mute); font-size: .95rem; line-height: 1.45; }
+.ov-falta b { display: block; margin-bottom: 4px; color: var(--h2-bone); font: 800 1.1rem var(--h2-display); }
+
+/* botones y controles */
+.ov-btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; height: 46px; padding: 0 20px; flex: none; border: 0; border-radius: 999px; background: var(--tc); color: var(--h2-ink); font: 800 .95rem var(--h2-body); transition: filter .15s, box-shadow .15s; }
+.ov-btn:hover { filter: brightness(1.08); }
+.ov-btn.chico { height: 40px; padding: 0 16px; font-size: .9rem; }
+.ov-btn.ok, .ov-copiar.ok { background: var(--ov-menta); color: var(--h2-ink); }
+.ov-btn:disabled { opacity: .4; cursor: not-allowed; filter: none; }
+.ov-campo { width: 100%; height: 50px; padding: 0 18px; border: 1.5px solid var(--h2-line); border-radius: 14px; background: var(--h2-ink); color: var(--h2-bone); font: 600 1rem var(--h2-body); }
+.ov-campo::placeholder { color: color-mix(in srgb, var(--h2-mute) 75%, transparent); }
+.ov-campo:focus { outline: none; border-color: var(--tc); }
+.ov-campo:disabled { opacity: .5; }
+.ov-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.ov-chip { height: 38px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--ov-tarjeta); color: var(--h2-bone); font: 700 .88rem var(--h2-body); transition: background .15s, color .15s; }
+.ov-chip:hover { background: var(--ov-hover); }
+.ov-chip[aria-pressed="true"] { background: var(--h2-bone); color: var(--h2-ink); }
+.ov-barra { height: 7px; overflow: hidden; border-radius: 99px; background: rgba(245,248,255,.12); }
+.ov-barra i { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--tc), var(--ov-acento)); }
+
+/* portada */
+.ov-juegos { display: grid; gap: 18px; margin-top: 26px; grid-template-columns: minmax(0, 1fr); }
+@container (min-width: 780px) { .ov-juegos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ov-juego { display: flex; flex-direction: column; overflow: hidden; border-radius: 22px; background: var(--ov-tarjeta); color: inherit; text-decoration: none; transition: background .15s, transform .2s; }
+.ov-juego:hover { background: var(--ov-hover); transform: translateY(-3px); }
+.ov-juego .ov-escena { min-height: 290px; }
+.ov-juego-txt { display: grid; gap: 8px; padding: 20px 22px 22px; flex: 1; align-content: start; }
+.ov-juego h2 { font-size: 1.7rem; font-weight: 800; }
+.ov-juego p { color: var(--h2-mute); line-height: 1.45; }
+.ov-juego-pie { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; }
+.ov-juego .ov-btn { height: 42px; }
+
+/* secciones */
+.ov-sec { margin-top: clamp(36px, 5cqi, 60px); scroll-margin-top: calc(var(--nv-top) + 16px); }
+.ov-sec-pegada { margin-top: 30px; }
+.ov-sec > h2 { font-size: clamp(1.5rem, 3cqi, 2rem); font-weight: 800; letter-spacing: -.03em; }
+.ov-sub { margin-top: 40px !important; font-size: clamp(1.5rem, 3cqi, 2rem) !important; font-weight: 800; }
+.ov-lead { margin-top: 6px !important; max-width: 64ch; color: var(--h2-mute); line-height: 1.5; }
+.ov-pasos { display: grid; gap: 12px; margin: 16px 0 0; padding: 0; list-style: none; grid-template-columns: minmax(0, 1fr); }
+@container (min-width: 780px) { .ov-pasos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.ov-pasos li { display: flex; gap: 14px; padding: 16px 18px; border-radius: 18px; background: var(--ov-tarjeta); color: var(--h2-mute); line-height: 1.45; }
+.ov-pasos b { display: grid; place-items: center; width: 30px; height: 30px; flex: none; border-radius: 50%; background: var(--ov-acento); color: var(--h2-ink); font: 800 .9rem var(--h2-display); }
+.ov-pasos strong { color: var(--h2-bone); }
+.ov-fuentes { margin-top: 36px !important; color: var(--h2-mute); font-size: .88rem; }
+.ov-fuentes a { color: var(--h2-bone); }
+.ov-nota-larga { margin-top: 36px !important; max-width: 80ch; padding: 16px 20px; border-radius: 16px; background: var(--ov-tarjeta); color: var(--h2-mute); font-size: .94rem; line-height: 1.55; }
+.ov-nota-larga strong { color: var(--h2-bone); }
+.ov-aviso { color: var(--h2-mute); line-height: 1.45; }
+.ov-aviso b { color: var(--h2-bone); }
+
+/* generador de Battlefield 6 */
+.ov-gen { display: grid; gap: 18px; margin-top: 26px; grid-template-columns: minmax(0, 1fr); }
+.ov-cfg { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.ov-vista { min-width: 0; overflow: hidden; border-radius: 22px; background: var(--ov-tarjeta); order: -1; }
+@container (min-width: 960px) {
+  .ov-gen { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: start; }
+  .ov-vista { position: sticky; top: calc(var(--nv-top) + 16px); order: 0; }
+}
+.ov-panel { padding: 20px; border-radius: 22px; background: var(--ov-tarjeta); min-width: 0; }
+.ov-paso { display: flex; align-items: center; gap: 12px; margin-bottom: 14px !important; font-size: 1.15rem !important; font-weight: 800; }
+.ov-paso b { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--ov-acento); color: var(--h2-ink); font: 800 .9rem var(--h2-display); }
+.ov-ayuda { margin-top: 12px; }
+.ov-ayuda summary { cursor: pointer; color: var(--ov-sol); font: 700 .9rem var(--h2-body); }
+.ov-ayuda p { margin-top: 8px; color: var(--h2-mute); font-size: .9rem; line-height: 1.5; }
+.ov-ayuda strong { color: var(--h2-bone); }
+.ov-jugador { display: grid; grid-template-columns: minmax(0, 1fr) 124px 44px; gap: 8px; margin-bottom: 8px; }
+.ov-jugador select { padding: 0 10px; font-size: .92rem; }
+.ov-quitar { border: 0; border-radius: 14px; background: var(--ov-tarjeta); color: var(--h2-bone); }
+.ov-quitar:hover { background: var(--ov-hover); }
+.ov-grupo { margin: 18px 0 10px !important; color: var(--h2-mute) !important; font: 700 .86rem var(--h2-body) !important; letter-spacing: 0 !important; }
+.ov-grupo:first-child { margin-top: 0 !important; }
+.ov-tipos { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+.ov-tipo { display: flex; gap: 12px; padding: 12px; border: 0; border-radius: 16px; background: var(--ov-tarjeta); color: inherit; text-align: left; transition: background .15s; }
+.ov-tipo:hover { background: var(--ov-hover); }
+.ov-tipo[aria-pressed="true"] { background: color-mix(in srgb, var(--tc) 16%, transparent); box-shadow: inset 0 0 0 2px var(--tc); }
+.ov-tipo-ico { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 12px; background: color-mix(in srgb, var(--tc) 22%, transparent); color: var(--tc); }
+.ov-tipo[aria-pressed="true"] .ov-tipo-ico { background: var(--tc); color: var(--h2-ink); }
+.ov-tipo b { display: block; font: 800 1rem/1.15 var(--h2-display); }
+.ov-tipo small { display: block; margin-top: 3px; color: var(--h2-mute); font-size: .82rem; line-height: 1.3; }
+.ov-escena-grande { min-height: 320px; padding: 44px 20px 24px; }
+.ov-escena-rotulo { position: absolute; top: 14px; left: 18px; color: var(--h2-mute); font: 700 .82rem var(--h2-body); }
+.ov-salida { padding: 18px 20px 20px; }
+.ov-url { display: flex; gap: 8px; }
+.ov-url input { flex: 1; min-width: 0; height: 50px; padding: 0 16px; border: 1.5px solid var(--h2-line); border-radius: 14px; background: var(--h2-ink); color: var(--ov-sol); font: 600 .85rem ui-monospace, 'SFMono-Regular', Menlo, monospace; }
+.ov-copiar { flex: none; height: 50px; padding: 0 22px; border: 0; border-radius: 14px; background: var(--ov-acento); color: var(--h2-ink); font: 800 1rem var(--h2-body); }
+.ov-copiar:hover { filter: brightness(1.08); }
+.ov-obs { margin-top: 12px !important; color: var(--h2-mute); font-size: .92rem; line-height: 1.5; }
+.ov-obs strong { color: var(--h2-bone); }
+
+/* servidores */
+.ov-srv-barra { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 18px; }
+.ov-srv-barra .ov-campo { flex: 1 1 240px; max-width: 340px; height: 44px; }
+.ov-srv-barra .ov-chips { margin-top: 0; }
+.ov-srvs { display: grid; gap: 14px; margin-top: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+.ov-srvs > .ov-aviso { grid-column: 1 / -1; padding: 28px 8px; text-align: center; }
+.ov-srv { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border-radius: 18px; background: var(--ov-tarjeta); }
+.ov-srv-foto { position: relative; aspect-ratio: 2 / 1; background: var(--h2-panel); }
+.ov-srv-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ov-srv-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6,20,63,.1) 30%, rgba(6,20,63,.92)); }
+.ov-srv-mapa { position: absolute; left: 14px; bottom: 10px; z-index: 1; font: 800 1.1rem var(--h2-display); }
+.ov-srv-lleno { position: absolute; right: 10px; top: 10px; z-index: 1; padding: 3px 10px; border-radius: 999px; background: var(--ov-vivo); color: #fff; font: 800 .76rem var(--h2-body); }
+.ov-srv-txt { display: grid; gap: 9px; padding: 13px 16px 16px; }
+.ov-srv h3 { min-height: 2.6em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font: 700 .95rem/1.3 var(--h2-body); letter-spacing: 0; }
+.ov-srv-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.ov-srv-tags span { padding: 3px 9px; border-radius: 999px; background: var(--ov-tarjeta); color: var(--h2-mute); font: 600 .78rem var(--h2-body); }
+.ov-srv-tags span:empty { display: none; }
+.ov-srv-cuenta { font: 800 1.3rem var(--h2-display); font-variant-numeric: tabular-nums; }
+.ov-srv-cuenta small { color: var(--h2-mute); font: 600 .82rem var(--h2-body); }
+.ov-mas { margin-top: 16px; }
+
+/* WARDOGS */
+.ov-steam { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; max-width: 620px; }
+.ov-steam .ov-campo { flex: 1 1 280px; min-width: 0; height: 46px; }
+.ov-msg { margin-top: 8px !important; min-height: 1.4em; color: var(--h2-mute); font: 600 .9rem/1.4 var(--h2-body); }
+.ov-msg.err { color: #ff9db0; }
+.ov-msg.bien { color: var(--ov-menta); }
+.ov-cartas { display: grid; gap: 16px; margin-top: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); align-items: start; }
+.ov-carta { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border-radius: 22px; background: var(--ov-tarjeta); }
+.ov-carta.ancha { grid-column: 1 / -1; }
+.ov-carta .ov-escena { min-height: 200px; }
+.ov-carta-txt { display: grid; gap: 8px; padding: 16px 18px 18px; }
+.ov-carta h3 { font-size: 1.2rem; font-weight: 800; }
+.ov-carta p { color: var(--h2-mute); font-size: .92rem; line-height: 1.45; }
+.ov-carta .ov-falta { color: var(--h2-mute); }
+.ov-fila { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
+.ov-medida { color: var(--h2-mute); font: 600 .84rem var(--h2-body); font-variant-numeric: tabular-nums; }
+.ov-ahora { display: grid; gap: 14px; margin-top: 16px; grid-template-columns: minmax(0, 1fr); }
+@container (min-width: 840px) { .ov-ahora { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); } }
+.ov-numero { font: 800 clamp(2.4rem, 5cqi, 3.6rem)/1 var(--h2-display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.ov-nota { margin-top: 5px; color: var(--h2-mute); font-size: .9rem; line-height: 1.4; }
+.ov-grafica svg { display: block; width: 100%; height: 150px; margin-top: 14px; overflow: visible; }
+.ov-eje { display: flex; justify-content: space-between; margin-top: 6px; color: var(--h2-mute); font: 600 .8rem var(--h2-body); }
+.ov-kpis { display: grid; gap: 12px; align-content: start; }
+.ov-kpis small { display: block; color: var(--h2-mute); font: 600 .88rem var(--h2-body); }
+.ov-kpis b { display: block; margin-top: 3px; font: 800 1.8rem/1.05 var(--h2-display); font-variant-numeric: tabular-nums; }
+.ov-kpis .ov-barra { margin-top: 10px; }
+.ov-logros, .ov-noticias { display: grid; gap: 10px; margin-top: 16px; }
+.ov-logro { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px 16px 12px 12px; border-radius: 18px; background: var(--ov-tarjeta); }
+.ov-logro img { width: 52px; height: 52px; border-radius: 12px; background: var(--h2-panel); }
+.ov-logro.tengo { box-shadow: inset 0 0 0 1.5px var(--ov-sol); }
+.ov-logro.falta img { filter: grayscale(1); opacity: .5; }
+.ov-logro h3 { font-size: 1.02rem; font-weight: 800; }
+.ov-logro p { margin-top: 2px; color: var(--h2-mute); font-size: .86rem; }
+.ov-logro .ov-barra { height: 6px; margin-top: 7px; }
+.ov-logro-pct { min-width: 4.4ch; text-align: right; font: 800 1.4rem var(--h2-display); font-variant-numeric: tabular-nums; }
+.ov-logro-pct small { display: block; color: var(--h2-mute); font: 600 .74rem var(--h2-body); }
+.ov-logro.raro .ov-logro-pct { color: var(--ov-sol); }
+.ov-noticias a { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 15px 18px; border-radius: 16px; background: var(--ov-tarjeta); text-decoration: none; transition: background .15s; }
+.ov-noticias a:hover { background: var(--ov-hover); }
+.ov-noticias b { font: 800 1rem var(--h2-display); min-width: 0; }
+.ov-noticias span { flex: none; color: var(--h2-mute); font: 600 .85rem var(--h2-body); }
+@media (prefers-reduced-motion: reduce) { .ov-juego:hover { transform: none; } }

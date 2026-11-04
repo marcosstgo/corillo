@@ -1,0 +1,65 @@
+---
+import SiteShell from '../../layouts/SiteShell.astro';
+import OvTabs from '../../components/overlays/OvTabs.astro';
+import OvPasos from '../../components/overlays/OvPasos.astro';
+import { version } from '../../../version.json';
+const titulo = 'Overlays gratis para OBS: Battlefield 6 y WARDOGS — Corillo';
+const desc = 'Overlays gratis para OBS con datos en vivo de Battlefield 6 y WARDOGS. Fondo transparente, sin registrarte y sin instalar nada.';
+const ld = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'CollectionPage', name: titulo, description: desc, url: 'https://corillo.live/overlay/', inLanguage: 'es',
+    hasPart: [{ '@type': 'WebApplication', name: 'Overlays de Battlefield 6 para OBS', url: 'https://corillo.live/overlay/bf6/', applicationCategory: 'MultimediaApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' } },
+      { '@type': 'WebApplication', name: 'Overlays de WARDOGS para OBS', url: 'https://corillo.live/overlay/wardogs/', applicationCategory: 'MultimediaApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' } }] },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Corillo', item: 'https://corillo.live/' }, { '@type': 'ListItem', position: 2, name: 'Overlays', item: 'https://corillo.live/overlay/' }] },
+] };
+---
+<SiteShell pageClass="p-legacy" title={titulo} description={desc} canonical="https://corillo.live/overlay/" ogImage="/overlay/assets/og-overlays.png">
+  <Fragment slot="head">
+    <link rel="stylesheet" href={`/assets/overlays.css?v=${version}`} />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </Fragment>
+  <div class="ov">
+    <OvTabs actual="todos" />
+    <header class="ov-cab">
+      <h1>Overlays para OBS</h1>
+      <p>Tus estadísticas en tu stream, en vivo y gratis. Escoge el juego, copia el enlace y pégalo como fuente de navegador. No hay que registrarse ni instalar nada.</p>
+    </header>
+    <section class="ov-juegos" aria-label="Juegos disponibles">
+      <a class="ov-juego" href="/overlay/bf6/" style="--tc:var(--ov-sol)">
+        <div class="ov-escena"><div id="frBf6"></div></div>
+        <div class="ov-juego-txt">
+          <h2>Battlefield 6</h2>
+          <p>Stats, armas, clases y sesión con tu EA ID, más los servidores activos en este momento.</p>
+          <div class="ov-juego-pie">
+            <span class="ov-vivo"><i aria-hidden="true"></i><b id="nBf6">—</b> jugando en Steam</span>
+            <span class="ov-btn">Ver overlays <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </div>
+        </div>
+      </a>
+      <a class="ov-juego" href="/overlay/wardogs/" style="--tc:var(--ov-menta)">
+        <div class="ov-escena"><div id="frWd"></div></div>
+        <div class="ov-juego-txt">
+          <h2>WARDOGS</h2>
+          <p>Jugadores en vivo, logros y tu perfil de Steam, con datos oficiales de Steam.</p>
+          <div class="ov-juego-pie">
+            <span class="ov-vivo"><i aria-hidden="true"></i><b id="nWd">—</b> jugando en Steam</span>
+            <span class="ov-btn">Ver overlays <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+          </div>
+        </div>
+      </a>
+    </section>
+    <section class="ov-sec">
+      <h2>Cómo se usa</h2>
+      <OvPasos />
+    </section>
+    <p class="ov-fuentes">Datos de Battlefield 6 de <a href="https://gametools.network" target="_blank" rel="noopener">gametools.network</a>, EA y Steam. Datos de WARDOGS de Steam. <a href="https://github.com/marcosstgo/corillo-bf6-overlays" target="_blank" rel="noopener">Código en GitHub</a>.</p>
+  </div>
+  <script is:inline src={`/assets/overlays.js?v=${version}`}></script>
+  <script is:inline>
+    // Vistas en vivo: los overlays reales, no capturas. Battlefield usa una cuenta de ejemplo de Corillo.
+    OV.frame(OV.$('#frBf6'), OV.ORIGEN + '/overlay/bf6/overlay.html?name=katat0nia&platform=ea', 380, 240);
+    OV.frame(OV.$('#frWd'), OV.ORIGEN + '/overlay/wardogs/pulse.html', 380, 210);
+    const num = (id, ruta) => OV.json(ruta).then(d => { OV.$(id).textContent = OV.fmt(d.players); }).catch(() => {});
+    const contar = () => { num('#nBf6', 'players'); num('#nWd', 'wardogs/players'); };
+    contar(); setInterval(contar, 60000);
+  </script>
+</SiteShell>

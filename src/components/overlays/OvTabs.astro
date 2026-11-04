@@ -1,0 +1,11 @@
+---
+const { actual } = Astro.props as { actual: 'todos' | 'bf6' | 'wardogs' };
+const TABS = [
+  { k: 'todos', href: '/overlay/', txt: 'Todos', ic: 'layer-group' },
+  { k: 'bf6', href: '/overlay/bf6/', txt: 'Battlefield 6', ic: 'crosshairs' },
+  { k: 'wardogs', href: '/overlay/wardogs/', txt: 'WARDOGS', ic: 'dog' },
+];
+---
+<nav class="ov-tabs" aria-label="Overlays por juego">
+  {TABS.map(t => <a href={t.href} aria-current={t.k === actual ? 'page' : undefined}><i class={`fa-solid fa-${t.ic}`} aria-hidden="true"></i>{t.txt}</a>)}
+</nav>

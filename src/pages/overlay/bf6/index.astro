@@ -1,0 +1,95 @@
+---
+import SiteShell from '../../../layouts/SiteShell.astro';
+import OvTabs from '../../../components/overlays/OvTabs.astro';
+import { BF6_GRUPOS } from '../../../data/overlays';
+import { version } from '../../../../version.json';
+const titulo = 'Overlays de Battlefield 6 para OBS, gratis — Corillo';
+const desc = 'Overlays gratis de Battlefield 6 para tu stream: K/D, armas, clases, sesión y más, con fondo transparente para OBS. Además, servidores activos en vivo.';
+const PLATS = [['ea', 'EA App'], ['steam', 'Steam'], ['psn', 'PlayStation'], ['xbox', 'Xbox'], ['ps5', 'PS5'], ['epic', 'Epic']];
+const ld = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'WebApplication', name: 'Overlays de Battlefield 6 para OBS', description: desc, url: 'https://corillo.live/overlay/bf6/', applicationCategory: 'MultimediaApplication', operatingSystem: 'Web', inLanguage: 'es', offers: { '@type': 'Offer', price: 0, priceCurrency: 'USD' } },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Corillo', item: 'https://corillo.live/' }, { '@type': 'ListItem', position: 2, name: 'Overlays', item: 'https://corillo.live/overlay/' }, { '@type': 'ListItem', position: 3, name: 'Battlefield 6', item: 'https://corillo.live/overlay/bf6/' }] },
+] };
+---
+<SiteShell pageClass="p-legacy" title={titulo} description={desc} canonical="https://corillo.live/overlay/bf6/" ogImage="/overlay/assets/og-bf6.png">
+  <Fragment slot="head">
+    <link rel="stylesheet" href={`/assets/overlays.css?v=${version}`} />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </Fragment>
+  <div class="ov" style="--tc:var(--ov-sol)">
+    <OvTabs actual="bf6" />
+    <header class="ov-cab">
+      <h1>Overlays de Battlefield 6</h1>
+      <p>Tu K/D, tus armas, tus clases y tu sesión en el stream, en vivo y con el fondo transparente para OBS. Escribe tu EA ID, copia el enlace y pégalo.</p>
+      <div class="ov-datos">
+        <span class="ov-vivo"><i aria-hidden="true"></i><b id="hSteam">—</b> jugando en Steam</span>
+        <a class="ov-vivo sin-punto" href="#servidores"><b id="hSrv">—</b> servidores con jugadores</a>
+      </div>
+    </header>
+
+    <div class="ov-gen">
+      <div class="ov-cfg">
+        <section class="ov-panel" id="pJugador">
+          <h2 class="ov-paso"><b>1</b><span id="pasoTitulo">Tu usuario</span></h2>
+          <div id="unJugador">
+            <label class="ov-sr" for="nombre">Tu EA ID</label>
+            <input class="ov-campo" id="nombre" type="text" placeholder="Tu EA ID" autocomplete="off" spellcheck="false">
+            <div class="ov-chips" id="plataformas" role="group" aria-label="Plataforma">
+              {PLATS.map(([v, l], i) => <button class="ov-chip" type="button" data-p={v} aria-pressed={i === 0 ? 'true' : 'false'}>{l}</button>)}
+            </div>
+            <details class="ov-ayuda"><summary>¿Te sale «Player not found»?</summary><p>Los perfiles de Battlefield 6 son <strong>privados por defecto</strong>. En el juego: Perfil → Ajustes → Sistema → activa <strong>Compartir datos de juego</strong> y pon el perfil en <strong>Público</strong>. El usuario es tu <strong>EA ID</strong>, no tu nombre de Steam, PSN o Xbox.</p></details>
+          </div>
+          <div id="escuadron" hidden>
+            <div id="filas"></div>
+            <button class="ov-chip" id="otroJugador" type="button">+ Añadir jugador (máx. 4)</button>
+          </div>
+        </section>
+        <section class="ov-panel">
+          <h2 class="ov-paso"><b>2</b><span>Elige tu overlay</span></h2>
+          <div id="tipos">
+            {BF6_GRUPOS.map(g => <>
+              <h3 class="ov-grupo">{g.g}</h3>
+              <div class="ov-tipos">
+                {g.items.map((t, i) => (
+                  <button class="ov-tipo" type="button" data-id={t.id} data-w={t.w} data-h={t.h} data-ea={t.ea ? '1' : undefined} data-multi={t.multi ? '1' : undefined} style={`--tc:${t.c}`} aria-pressed={t.id === 'overlay' ? 'true' : 'false'}>
+                    <span class="ov-tipo-ico"><i class={`fa-solid fa-${t.ic}`} aria-hidden="true"></i></span>
+                    <span><b>{t.n}</b><small>{t.d}</small></span>
+                  </button>
+                ))}
+              </div>
+            </>)}
+          </div>
+        </section>
+      </div>
+      <section class="ov-vista" aria-label="Vista previa y enlace">
+        <div class="ov-escena ov-escena-grande">
+          <span class="ov-escena-rotulo" id="rotulo">Ejemplo con katat0nia</span>
+          <div id="vista"></div>
+        </div>
+        <div class="ov-salida">
+          <div id="sinEnlace" class="ov-aviso">Escribe tu usuario y aquí te sale tu enlace para OBS.</div>
+          <div id="conEnlace" hidden>
+            <h2 class="ov-paso"><b>3</b><span>Cópialo a OBS</span></h2>
+            <div class="ov-url"><input id="enlace" readonly aria-label="Enlace para OBS"><button class="ov-copiar" id="copiar" type="button">Copiar</button></div>
+            <p class="ov-obs">En OBS: <strong>Fuentes → Fuente de navegador</strong>, pega el enlace y usa <strong id="medidas">380 × 240</strong> px. El fondo ya es transparente.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="ov-sec" id="servidores">
+      <h2>Servidores de Battlefield 6 en vivo</h2>
+      <p class="ov-lead">Los servidores con más jugadores ahora mismo. Es una muestra de hasta 100 servidores que entrega gametools.network, actualizada cada minuto.</p>
+      <div class="ov-srv-barra">
+        <input class="ov-campo" id="srvQ" type="search" placeholder="Buscar un servidor por nombre" autocomplete="off" spellcheck="false" aria-label="Buscar un servidor por nombre">
+        <div class="ov-chips" id="regiones" role="group" aria-label="Región"></div>
+      </div>
+      <div class="ov-chips" id="modos" role="group" aria-label="Modo de juego"></div>
+      <div class="ov-srvs" id="srvs" aria-live="polite"><p class="ov-aviso">Cargando servidores…</p></div>
+      <button class="ov-chip ov-mas" id="srvMas" type="button" hidden>Ver más servidores</button>
+    </section>
+    <p class="ov-fuentes">Datos de Battlefield 6 de <a href="https://gametools.network" target="_blank" rel="noopener">gametools.network</a> y EA. <a href="https://github.com/marcosstgo/corillo-bf6-overlays" target="_blank" rel="noopener">Código en GitHub</a>.</p>
+  </div>
+  <script is:inline src={`/assets/overlays.js?v=${version}`}></script>
+  <script is:inline src={`/assets/overlays-bf6.js?v=${version}`}></script>
+</SiteShell>

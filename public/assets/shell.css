@@ -120,7 +120,7 @@ body.nv-open { overflow: hidden; }
 @keyframes nv-pulse { 50% { opacity: .35; } }
 
 .nv-sm { height: 44px; font: 600 .98rem/1 var(--h2-body); opacity: .92; }
-.nv-sm .nv-tile { width: 34px; height: 34px; border-radius: 11px; font-size: .9rem; --tc: var(--h2-mute); }
+.nv-sm .nv-tile { width: 34px; height: 34px; border-radius: 11px; font-size: .9rem; }
 
 .nv-promo {
   margin-top: auto; padding: 16px; display: grid; gap: 6px; border-radius: 22px;
