@@ -1,4 +1,21 @@
 {
+ "1049590": {
+  "desarrollador": "Nimble Neuron",
+  "generos": [],
+  "gratis": true,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1049590/72918ebacd0d4f8537969dc8b976ceb98f681cab/header.jpg?t=1789544685",
+  "lanzamiento": "19 JUL 2023",
+  "nombre": "Eternal Return",
+  "slug": "eternal-return",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11165,
+   "fecha": "2026-11-04",
+   "pico": 24303,
+   "puesto": 98
+  },
+  "visto_desde": "2026-11-04"
+ },
  "105600": {
   "desarrollador": "Re-Logic",
   "generos": [
@@ -14,9 +31,9 @@
   "slug": "terraria",
   "tipo": "game",
   "ultimo": {
-   "ahora": 21835,
-   "fecha": "2026-11-03",
-   "pico": 40327,
+   "ahora": 22440,
+   "fecha": "2026-11-04",
+   "pico": 39506,
    "puesto": 49
   },
   "visto_desde": "2026-11-02"
@@ -35,10 +52,10 @@
   "slug": "destiny-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 12675,
-   "fecha": "2026-11-03",
-   "pico": 27670,
-   "puesto": 87
+   "ahora": 12713,
+   "fecha": "2026-11-04",
+   "pico": 28207,
+   "puesto": 89
   },
   "visto_desde": "2026-11-02"
  },
@@ -57,9 +74,9 @@
   "slug": "project-zomboid",
   "tipo": "game",
   "ultimo": {
-   "ahora": 26506,
-   "fecha": "2026-11-03",
-   "pico": 50203,
+   "ahora": 28016,
+   "fecha": "2026-11-04",
+   "pico": 46695,
    "puesto": 36
   },
   "visto_desde": "2026-11-02"
@@ -78,10 +95,10 @@
   "slug": "baldur-s-gate-3",
   "tipo": "game",
   "ultimo": {
-   "ahora": 19946,
-   "fecha": "2026-11-03",
-   "pico": 46073,
-   "puesto": 54
+   "ahora": 20834,
+   "fecha": "2026-11-04",
+   "pico": 43195,
+   "puesto": 52
   },
   "visto_desde": "2026-11-02"
  },
@@ -97,10 +114,10 @@
   "slug": "cyberpunk-2077",
   "tipo": "game",
   "ultimo": {
-   "ahora": 77185,
-   "fecha": "2026-11-03",
-   "pico": 134129,
-   "puesto": 12
+   "ahora": 75484,
+   "fecha": "2026-11-04",
+   "pico": 123041,
+   "puesto": 13
   },
   "visto_desde": "2026-11-02"
  },
@@ -117,9 +134,9 @@
   "slug": "total-war-warhammer-iii",
   "tipo": "game",
   "ultimo": {
-   "ahora": 21101,
-   "fecha": "2026-11-03",
-   "pico": 38331,
+   "ahora": 22045,
+   "fecha": "2026-11-04",
+   "pico": 35869,
    "puesto": 50
   },
   "visto_desde": "2026-11-02"
@@ -138,9 +155,9 @@
   "slug": "crusader-kings-iii",
   "tipo": "game",
   "ultimo": {
-   "ahora": 11952,
-   "fecha": "2026-11-03",
-   "pico": 19986,
+   "ahora": 11986,
+   "fecha": "2026-11-04",
+   "pico": 19041,
    "puesto": 92
   },
   "visto_desde": "2026-11-02"
@@ -159,10 +176,10 @@
   "slug": "apex-legends",
   "tipo": "game",
   "ultimo": {
-   "ahora": 84812,
-   "fecha": "2026-11-03",
-   "pico": 196083,
-   "puesto": 10
+   "ahora": 114065,
+   "fecha": "2026-11-04",
+   "pico": 186464,
+   "puesto": 6
   },
   "visto_desde": "2026-11-02"
  },
@@ -179,10 +196,10 @@
   "slug": "red-dead-redemption-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 20192,
-   "fecha": "2026-11-03",
-   "pico": 34692,
-   "puesto": 52
+   "ahora": 20747,
+   "fecha": "2026-11-04",
+   "pico": 32633,
+   "puesto": 53
   },
   "visto_desde": "2026-11-02"
  },
@@ -201,9 +218,9 @@
   "slug": "naraka-bladepoint",
   "tipo": "game",
   "ultimo": {
-   "ahora": 25458,
-   "fecha": "2026-11-03",
-   "pico": 60483,
+   "ahora": 25166,
+   "fecha": "2026-11-04",
+   "pico": 60148,
    "puesto": 42
   },
   "visto_desde": "2026-11-02"
@@ -223,10 +240,10 @@
   "slug": "enshrouded",
   "tipo": "game",
   "ultimo": {
-   "ahora": 28308,
-   "fecha": "2026-11-03",
-   "pico": 74069,
-   "puesto": 34
+   "ahora": 29291,
+   "fecha": "2026-11-04",
+   "pico": 69092,
+   "puesto": 32
   },
   "visto_desde": "2026-11-02"
  },
@@ -245,10 +262,10 @@
   "slug": "the-sims-4",
   "tipo": "game",
   "ultimo": {
-   "ahora": 14388,
-   "fecha": "2026-11-03",
-   "pico": 28576,
-   "puesto": 79
+   "ahora": 14455,
+   "fecha": "2026-11-04",
+   "pico": 26443,
+   "puesto": 80
   },
   "visto_desde": "2026-11-02"
  },
@@ -265,10 +282,10 @@
   "slug": "elden-ring",
   "tipo": "game",
   "ultimo": {
-   "ahora": 15778,
-   "fecha": "2026-11-03",
-   "pico": 26728,
-   "puesto": 74
+   "ahora": 15392,
+   "fecha": "2026-11-04",
+   "pico": 25603,
+   "puesto": 78
   },
   "visto_desde": "2026-11-02"
  },
@@ -287,10 +304,10 @@
   "slug": "tmodloader",
   "tipo": "mod",
   "ultimo": {
-   "ahora": 16739,
-   "fecha": "2026-11-03",
-   "pico": 29334,
-   "puesto": 69
+   "ahora": 17011,
+   "fecha": "2026-11-04",
+   "pico": 28762,
+   "puesto": 70
   },
   "visto_desde": "2026-11-02"
  },
@@ -329,10 +346,10 @@
   "slug": "vtube-studio",
   "tipo": "game",
   "ultimo": {
-   "ahora": 11612,
-   "fecha": "2026-11-03",
-   "pico": 18666,
-   "puesto": 94
+   "ahora": 11215,
+   "fecha": "2026-11-04",
+   "pico": 19508,
+   "puesto": 97
   },
   "visto_desde": "2026-11-02"
  },
@@ -371,10 +388,10 @@
   "slug": "street-fighter-6",
   "tipo": "game",
   "ultimo": {
-   "ahora": 19103,
-   "fecha": "2026-11-03",
-   "pico": 32260,
-   "puesto": 57
+   "ahora": 16272,
+   "fecha": "2026-11-04",
+   "pico": 30749,
+   "puesto": 72
   },
   "visto_desde": "2026-11-02"
  },
@@ -393,10 +410,10 @@
   "slug": "crosshair-x",
   "tipo": "game",
   "ultimo": {
-   "ahora": 24916,
-   "fecha": "2026-11-03",
-   "pico": 43189,
-   "puesto": 44
+   "ahora": 25603,
+   "fecha": "2026-11-04",
+   "pico": 43903,
+   "puesto": 41
   },
   "visto_desde": "2026-11-02"
  },
@@ -412,9 +429,9 @@
   "slug": "deadlock",
   "tipo": "game",
   "ultimo": {
-   "ahora": 91728,
-   "fecha": "2026-11-03",
-   "pico": 228746,
+   "ahora": 97305,
+   "fecha": "2026-11-04",
+   "pico": 224285,
    "puesto": 8
   },
   "visto_desde": "2026-11-02"
@@ -455,10 +472,10 @@
   "slug": "idleon-the-idle-rpg",
   "tipo": "game",
   "ultimo": {
-   "ahora": 12078,
-   "fecha": "2026-11-03",
-   "pico": 15044,
-   "puesto": 91
+   "ahora": 11956,
+   "fecha": "2026-11-04",
+   "pico": 14387,
+   "puesto": 93
   },
   "visto_desde": "2026-11-02"
  },
@@ -499,10 +516,10 @@
   "slug": "palworld",
   "tipo": "game",
   "ultimo": {
-   "ahora": 26019,
-   "fecha": "2026-11-03",
-   "pico": 42846,
-   "puesto": 39
+   "ahora": 24320,
+   "fecha": "2026-11-04",
+   "pico": 41179,
+   "puesto": 44
   },
   "visto_desde": "2026-11-02"
  },
@@ -539,10 +556,10 @@
   "slug": "arc-raiders",
   "tipo": "game",
   "ultimo": {
-   "ahora": 31213,
-   "fecha": "2026-11-03",
-   "pico": 78956,
-   "puesto": 30
+   "ahora": 32063,
+   "fecha": "2026-11-04",
+   "pico": 74526,
+   "puesto": 27
   },
   "visto_desde": "2026-11-02"
  },
@@ -561,10 +578,10 @@
   "slug": "stalzone",
   "tipo": "game",
   "ultimo": {
-   "ahora": 11349,
-   "fecha": "2026-11-03",
-   "pico": 18557,
-   "puesto": 97
+   "ahora": 18553,
+   "fecha": "2026-11-04",
+   "pico": 18756,
+   "puesto": 62
   },
   "visto_desde": "2026-11-02"
  },
@@ -583,9 +600,9 @@
   "slug": "wardogs",
   "tipo": "game",
   "ultimo": {
-   "ahora": 46560,
-   "fecha": "2026-11-03",
-   "pico": 116495,
+   "ahora": 46687,
+   "fecha": "2026-11-04",
+   "pico": 106557,
    "puesto": 21
   },
   "visto_desde": "2026-11-02"
@@ -603,9 +620,9 @@
   "slug": "obs-studio",
   "tipo": "game",
   "ultimo": {
-   "ahora": 19916,
-   "fecha": "2026-11-03",
-   "pico": 29516,
+   "ahora": 20705,
+   "fecha": "2026-11-04",
+   "pico": 29477,
    "puesto": 55
   },
   "visto_desde": "2026-11-02"
@@ -622,10 +639,10 @@
   "slug": "call-of-duty",
   "tipo": "game",
   "ultimo": {
-   "ahora": 85166,
-   "fecha": "2026-11-03",
-   "pico": 149821,
-   "puesto": 9
+   "ahora": 81666,
+   "fecha": "2026-11-04",
+   "pico": 142231,
+   "puesto": 11
   },
   "visto_desde": "2026-11-02"
  },
@@ -644,10 +661,10 @@
   "slug": "brotato",
   "tipo": "game",
   "ultimo": {
-   "ahora": 18184,
-   "fecha": "2026-11-03",
-   "pico": 18184,
-   "puesto": 61
+   "ahora": 19100,
+   "fecha": "2026-11-04",
+   "pico": 29166,
+   "puesto": 60
   },
   "visto_desde": "2026-11-03"
  },
@@ -663,10 +680,10 @@
   "slug": "limbus-company",
   "tipo": "game",
   "ultimo": {
-   "ahora": 31606,
-   "fecha": "2026-11-03",
-   "pico": 36586,
-   "puesto": 29
+   "ahora": 32980,
+   "fecha": "2026-11-04",
+   "pico": 40085,
+   "puesto": 26
   },
   "visto_desde": "2026-11-02"
  },
@@ -685,10 +702,10 @@
   "slug": "arena-breakout-infinite",
   "tipo": "game",
   "ultimo": {
-   "ahora": 17051,
-   "fecha": "2026-11-03",
-   "pico": 34674,
-   "puesto": 68
+   "ahora": 19192,
+   "fecha": "2026-11-04",
+   "pico": 32358,
+   "puesto": 59
   },
   "visto_desde": "2026-11-02"
  },
@@ -727,10 +744,10 @@
   "slug": "once-human",
   "tipo": "game",
   "ultimo": {
-   "ahora": 17788,
-   "fecha": "2026-11-03",
-   "pico": 28638,
-   "puesto": 66
+   "ahora": 17142,
+   "fecha": "2026-11-04",
+   "pico": 27037,
+   "puesto": 67
   },
   "visto_desde": "2026-11-02"
  },
@@ -749,10 +766,10 @@
   "slug": "maplestory",
   "tipo": "game",
   "ultimo": {
-   "ahora": 16003,
-   "fecha": "2026-11-03",
-   "pico": 24958,
-   "puesto": 73
+   "ahora": 15905,
+   "fecha": "2026-11-04",
+   "pico": 23921,
+   "puesto": 75
   },
   "visto_desde": "2026-11-02"
  },
@@ -769,10 +786,10 @@
   "slug": "payday-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 18124,
-   "fecha": "2026-11-03",
-   "pico": 20843,
-   "puesto": 63
+   "ahora": 14840,
+   "fecha": "2026-11-04",
+   "pico": 18943,
+   "puesto": 79
   },
   "visto_desde": "2026-11-02"
  },
@@ -790,10 +807,10 @@
   "slug": "dayz",
   "tipo": "game",
   "ultimo": {
-   "ahora": 25842,
-   "fecha": "2026-11-03",
-   "pico": 57811,
-   "puesto": 40
+   "ahora": 29598,
+   "fecha": "2026-11-04",
+   "pico": 52621,
+   "puesto": 31
   },
   "visto_desde": "2026-11-02"
  },
@@ -811,10 +828,10 @@
   "slug": "monster-hunter-wilds",
   "tipo": "game",
   "ultimo": {
-   "ahora": 16033,
-   "fecha": "2026-11-03",
-   "pico": 28913,
-   "puesto": 72
+   "ahora": 12798,
+   "fecha": "2026-11-04",
+   "pico": 28219,
+   "puesto": 88
   },
   "visto_desde": "2026-11-02"
  },
@@ -831,10 +848,10 @@
   "slug": "euro-truck-simulator-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 18509,
-   "fecha": "2026-11-03",
-   "pico": 45178,
-   "puesto": 59
+   "ahora": 19821,
+   "fecha": "2026-11-04",
+   "pico": 40946,
+   "puesto": 56
   },
   "visto_desde": "2026-11-02"
  },
@@ -850,10 +867,10 @@
   "slug": "farming-simulator-25",
   "tipo": "game",
   "ultimo": {
-   "ahora": 17790,
-   "fecha": "2026-11-03",
-   "pico": 52045,
-   "puesto": 65
+   "ahora": 18490,
+   "fecha": "2026-11-04",
+   "pico": 47650,
+   "puesto": 63
   },
   "visto_desde": "2026-11-02"
  },
@@ -871,10 +888,10 @@
   "slug": "warframe",
   "tipo": "game",
   "ultimo": {
-   "ahora": 53075,
-   "fecha": "2026-11-03",
-   "pico": 80511,
-   "puesto": 18
+   "ahora": 50900,
+   "fecha": "2026-11-04",
+   "pico": 75626,
+   "puesto": 19
   },
   "visto_desde": "2026-11-02"
  },
@@ -891,10 +908,10 @@
   "slug": "overwatch",
   "tipo": "game",
   "ultimo": {
-   "ahora": 28567,
-   "fecha": "2026-11-03",
-   "pico": 55703,
-   "puesto": 33
+   "ahora": 25794,
+   "fecha": "2026-11-04",
+   "pico": 52330,
+   "puesto": 39
   },
   "visto_desde": "2026-11-02"
  },
@@ -912,10 +929,10 @@
   "slug": "black-myth-wukong",
   "tipo": "game",
   "ultimo": {
-   "ahora": 14353,
-   "fecha": "2026-11-03",
-   "pico": 24351,
-   "puesto": 80
+   "ahora": 14431,
+   "fecha": "2026-11-04",
+   "pico": 24456,
+   "puesto": 81
   },
   "visto_desde": "2026-11-02"
  },
@@ -934,10 +951,10 @@
   "slug": "war-thunder",
   "tipo": "game",
   "ultimo": {
-   "ahora": 47728,
-   "fecha": "2026-11-03",
-   "pico": 85881,
-   "puesto": 19
+   "ahora": 51690,
+   "fecha": "2026-11-04",
+   "pico": 84201,
+   "puesto": 18
   },
   "visto_desde": "2026-11-02"
  },
@@ -956,10 +973,10 @@
   "slug": "ark-survival-ascended",
   "tipo": "game",
   "ultimo": {
-   "ahora": 18506,
-   "fecha": "2026-11-03",
-   "pico": 26793,
-   "puesto": 60
+   "ahora": 17116,
+   "fecha": "2026-11-04",
+   "pico": 25363,
+   "puesto": 68
   },
   "visto_desde": "2026-11-02"
  },
@@ -978,9 +995,9 @@
   "slug": "delta-force",
   "tipo": "game",
   "ultimo": {
-   "ahora": 55152,
-   "fecha": "2026-11-03",
-   "pico": 101110,
+   "ahora": 53748,
+   "fecha": "2026-11-04",
+   "pico": 98614,
    "puesto": 17
   },
   "visto_desde": "2026-11-02"
@@ -997,10 +1014,10 @@
   "slug": "the-binding-of-isaac-rebirth",
   "tipo": "game",
   "ultimo": {
-   "ahora": 30779,
-   "fecha": "2026-11-03",
-   "pico": 50185,
-   "puesto": 31
+   "ahora": 31402,
+   "fecha": "2026-11-04",
+   "pico": 48753,
+   "puesto": 29
   },
   "visto_desde": "2026-11-02"
  },
@@ -1019,10 +1036,10 @@
   "slug": "7-days-to-die",
   "tipo": "game",
   "ultimo": {
-   "ahora": 17417,
-   "fecha": "2026-11-03",
-   "pico": 30589,
-   "puesto": 67
+   "ahora": 16719,
+   "fecha": "2026-11-04",
+   "pico": 29499,
+   "puesto": 71
   },
   "visto_desde": "2026-11-02"
  },
@@ -1041,9 +1058,9 @@
   "slug": "rust",
   "tipo": "game",
   "ultimo": {
-   "ahora": 65095,
-   "fecha": "2026-11-03",
-   "pico": 109606,
+   "ahora": 64372,
+   "fecha": "2026-11-04",
+   "pico": 103524,
    "puesto": 16
   },
   "visto_desde": "2026-11-02"
@@ -1085,10 +1102,10 @@
   "slug": "mount-blade-ii-bannerlord",
   "tipo": "game",
   "ultimo": {
-   "ahora": 18125,
-   "fecha": "2026-11-03",
-   "pico": 28973,
-   "puesto": 62
+   "ahora": 18179,
+   "fecha": "2026-11-04",
+   "pico": 28634,
+   "puesto": 64
   },
   "visto_desde": "2026-11-02"
  },
@@ -1102,9 +1119,9 @@
   "slug": "fivem",
   "tipo": "advertising",
   "ultimo": {
-   "ahora": 67778,
-   "fecha": "2026-11-03",
-   "pico": 184511,
+   "ahora": 66038,
+   "fecha": "2026-11-04",
+   "pico": 169728,
    "puesto": 15
   },
   "visto_desde": "2026-11-02"
@@ -1122,10 +1139,10 @@
   "slug": "grand-theft-auto-v-legacy",
   "tipo": "game",
   "ultimo": {
-   "ahora": 43368,
-   "fecha": "2026-11-03",
-   "pico": 68778,
-   "puesto": 22
+   "ahora": 47759,
+   "fecha": "2026-11-04",
+   "pico": 62314,
+   "puesto": 20
   },
   "visto_desde": "2026-11-02"
  },
@@ -1164,10 +1181,10 @@
   "slug": "marvel-rivals",
   "tipo": "game",
   "ultimo": {
-   "ahora": 19062,
-   "fecha": "2026-11-03",
-   "pico": 50639,
-   "puesto": 58
+   "ahora": 18780,
+   "fecha": "2026-11-04",
+   "pico": 48937,
+   "puesto": 61
   },
   "visto_desde": "2026-11-02"
  },
@@ -1183,10 +1200,10 @@
   "slug": "battlefield-6",
   "tipo": "game",
   "ultimo": {
-   "ahora": 14972,
-   "fecha": "2026-11-03",
-   "pico": 38558,
-   "puesto": 77
+   "ahora": 16067,
+   "fecha": "2026-11-04",
+   "pico": 36209,
+   "puesto": 74
   },
   "visto_desde": "2026-11-02"
  },
@@ -1204,10 +1221,10 @@
   "slug": "beamng-drive",
   "tipo": "game",
   "ultimo": {
-   "ahora": 15191,
-   "fecha": "2026-11-03",
-   "pico": 33047,
-   "puesto": 76
+   "ahora": 16259,
+   "fecha": "2026-11-04",
+   "pico": 32821,
+   "puesto": 73
   },
   "visto_desde": "2026-11-02"
  },
@@ -1225,10 +1242,10 @@
   "slug": "slay-the-spire-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 47438,
-   "fecha": "2026-11-03",
-   "pico": 83130,
-   "puesto": 20
+   "ahora": 44931,
+   "fecha": "2026-11-04",
+   "pico": 82334,
+   "puesto": 22
   },
   "visto_desde": "2026-11-02"
  },
@@ -1244,10 +1261,10 @@
   "slug": "sid-meier-s-civilization-vi",
   "tipo": "game",
   "ultimo": {
-   "ahora": 22746,
-   "fecha": "2026-11-03",
-   "pico": 34373,
-   "puesto": 46
+   "ahora": 22504,
+   "fecha": "2026-11-04",
+   "pico": 33689,
+   "puesto": 48
   },
   "visto_desde": "2026-11-02"
  },
@@ -1263,10 +1280,10 @@
   "slug": "the-witcher-3-wild-hunt-remastered",
   "tipo": "game",
   "ultimo": {
-   "ahora": 22531,
-   "fecha": "2026-11-03",
-   "pico": 46496,
-   "puesto": 47
+   "ahora": 23808,
+   "fecha": "2026-11-04",
+   "pico": 41537,
+   "puesto": 46
   },
   "visto_desde": "2026-11-02"
  },
@@ -1284,10 +1301,10 @@
   "slug": "rimworld",
   "tipo": "game",
   "ultimo": {
-   "ahora": 25184,
-   "fecha": "2026-11-03",
-   "pico": 35103,
-   "puesto": 43
+   "ahora": 25634,
+   "fecha": "2026-11-04",
+   "pico": 34627,
+   "puesto": 40
   },
   "visto_desde": "2026-11-02"
  },
@@ -1306,12 +1323,34 @@
   "slug": "unturned",
   "tipo": "game",
   "ultimo": {
-   "ahora": 14112,
-   "fecha": "2026-11-03",
-   "pico": 16711,
-   "puesto": 81
+   "ahora": 11797,
+   "fecha": "2026-11-04",
+   "pico": 14255,
+   "puesto": 94
   },
   "visto_desde": "2026-11-02"
+ },
+ "3218230": {
+  "desarrollador": "XLGAMES",
+  "generos": [
+   "Acción",
+   "Aventura",
+   "Multijugador masivo",
+   "Rol"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3218230/header.jpg?t=1793752512",
+  "lanzamiento": "3 NOV 2026",
+  "nombre": "ArcheAge Chronicles",
+  "slug": "archeage-chronicles",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 17029,
+   "fecha": "2026-11-04",
+   "pico": 26244,
+   "puesto": 69
+  },
+  "visto_desde": "2026-11-04"
  },
  "322170": {
   "desarrollador": "RobTop Games",
@@ -1326,9 +1365,9 @@
   "slug": "geometry-dash",
   "tipo": "game",
   "ultimo": {
-   "ahora": 26093,
-   "fecha": "2026-11-03",
-   "pico": 55206,
+   "ahora": 27265,
+   "fecha": "2026-11-04",
+   "pico": 58812,
    "puesto": 38
   },
   "visto_desde": "2026-11-02"
@@ -1348,10 +1387,10 @@
   "slug": "don-t-starve-together",
   "tipo": "game",
   "ultimo": {
-   "ahora": 32038,
-   "fecha": "2026-11-03",
-   "pico": 63370,
-   "puesto": 28
+   "ahora": 30820,
+   "fecha": "2026-11-04",
+   "pico": 63076,
+   "puesto": 30
   },
   "visto_desde": "2026-11-02"
  },
@@ -1369,10 +1408,10 @@
   "slug": "grand-theft-auto-v-enhanced",
   "tipo": "game",
   "ultimo": {
-   "ahora": 37176,
-   "fecha": "2026-11-03",
-   "pico": 62166,
-   "puesto": 25
+   "ahora": 38270,
+   "fecha": "2026-11-04",
+   "pico": 59647,
+   "puesto": 24
   },
   "visto_desde": "2026-11-02"
  },
@@ -1389,10 +1428,10 @@
   "slug": "r-e-p-o",
   "tipo": "game",
   "ultimo": {
-   "ahora": 19368,
-   "fecha": "2026-11-03",
-   "pico": 56862,
-   "puesto": 56
+   "ahora": 19813,
+   "fecha": "2026-11-04",
+   "pico": 55542,
+   "puesto": 58
   },
   "visto_desde": "2026-11-02"
  },
@@ -1428,10 +1467,10 @@
   "slug": "crimson-desert-enhanced",
   "tipo": "game",
   "ultimo": {
-   "ahora": 20322,
-   "fecha": "2026-11-03",
-   "pico": 32505,
-   "puesto": 51
+   "ahora": 19819,
+   "fecha": "2026-11-04",
+   "pico": 30461,
+   "puesto": 57
   },
   "visto_desde": "2026-11-02"
  },
@@ -1450,10 +1489,10 @@
   "slug": "aion-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 146253,
-   "fecha": "2026-11-03",
-   "pico": 210025,
-   "puesto": 6
+   "ahora": 82424,
+   "fecha": "2026-11-04",
+   "pico": 191908,
+   "puesto": 10
   },
   "visto_desde": "2026-11-02"
  },
@@ -1470,10 +1509,10 @@
   "slug": "ea-sports-fc-26",
   "tipo": "game",
   "ultimo": {
-   "ahora": 12993,
-   "fecha": "2026-11-03",
-   "pico": 29925,
-   "puesto": 86
+   "ahora": 13298,
+   "fecha": "2026-11-04",
+   "pico": 25169,
+   "puesto": 84
   },
   "visto_desde": "2026-11-02"
  },
@@ -1492,9 +1531,9 @@
   "slug": "bongo-cat",
   "tipo": "game",
   "ultimo": {
-   "ahora": 156051,
-   "fecha": "2026-11-03",
-   "pico": 164619,
+   "ahora": 151434,
+   "fecha": "2026-11-04",
+   "pico": 165257,
    "puesto": 5
   },
   "visto_desde": "2026-11-02"
@@ -1514,10 +1553,10 @@
   "slug": "ark-survival-evolved",
   "tipo": "game",
   "ultimo": {
-   "ahora": 11762,
-   "fecha": "2026-11-03",
-   "pico": 19902,
-   "puesto": 93
+   "ahora": 12206,
+   "fecha": "2026-11-04",
+   "pico": 18938,
+   "puesto": 90
   },
   "visto_desde": "2026-11-02"
  },
@@ -1556,10 +1595,10 @@
   "slug": "football-manager-26",
   "tipo": "game",
   "ultimo": {
-   "ahora": 10697,
-   "fecha": "2026-11-02",
-   "pico": 19578,
-   "puesto": 99
+   "ahora": 11430,
+   "fecha": "2026-11-04",
+   "pico": 18563,
+   "puesto": 96
   },
   "visto_desde": "2026-11-02"
  },
@@ -1576,10 +1615,10 @@
   "slug": "tom-clancy-s-rainbow-six-siege",
   "tipo": "game",
   "ultimo": {
-   "ahora": 25574,
-   "fecha": "2026-11-03",
-   "pico": 67202,
-   "puesto": 41
+   "ahora": 24659,
+   "fecha": "2026-11-04",
+   "pico": 65509,
+   "puesto": 43
   },
   "visto_desde": "2026-11-02"
  },
@@ -1597,10 +1636,10 @@
   "slug": "blender",
   "tipo": "game",
   "ultimo": {
-   "ahora": 13266,
-   "fecha": "2026-11-03",
-   "pico": 15908,
-   "puesto": 85
+   "ahora": 13549,
+   "fecha": "2026-11-04",
+   "pico": 16249,
+   "puesto": 82
   },
   "visto_desde": "2026-11-02"
  },
@@ -1619,9 +1658,9 @@
   "slug": "tbh-task-bar-hero",
   "tipo": "game",
   "ultimo": {
-   "ahora": 70181,
-   "fecha": "2026-11-03",
-   "pico": 77615,
+   "ahora": 67647,
+   "fecha": "2026-11-04",
+   "pico": 77616,
    "puesto": 14
   },
   "visto_desde": "2026-11-02"
@@ -1641,10 +1680,10 @@
   "slug": "the-isle",
   "tipo": "game",
   "ultimo": {
-   "ahora": 12550,
-   "fecha": "2026-11-03",
-   "pico": 20843,
-   "puesto": 89
+   "ahora": 12799,
+   "fecha": "2026-11-04",
+   "pico": 19897,
+   "puesto": 87
   },
   "visto_desde": "2026-11-02"
  },
@@ -1679,10 +1718,10 @@
   "slug": "dead-by-daylight",
   "tipo": "game",
   "ultimo": {
-   "ahora": 34628,
-   "fecha": "2026-11-03",
-   "pico": 66940,
-   "puesto": 26
+   "ahora": 31738,
+   "fecha": "2026-11-04",
+   "pico": 62797,
+   "puesto": 28
   },
   "visto_desde": "2026-11-02"
  },
@@ -1721,10 +1760,10 @@
   "slug": "escape-from-tarkov",
   "tipo": "game",
   "ultimo": {
-   "ahora": 22523,
-   "fecha": "2026-11-03",
-   "pico": 37020,
-   "puesto": 48
+   "ahora": 23338,
+   "fecha": "2026-11-04",
+   "pico": 35725,
+   "puesto": 47
   },
   "visto_desde": "2026-11-02"
  },
@@ -1741,9 +1780,9 @@
   "slug": "hearts-of-iron-iv",
   "tipo": "game",
   "ultimo": {
-   "ahora": 26183,
-   "fecha": "2026-11-03",
-   "pico": 42178,
+   "ahora": 27511,
+   "fecha": "2026-11-04",
+   "pico": 41409,
    "puesto": 37
   },
   "visto_desde": "2026-11-02"
@@ -1762,10 +1801,10 @@
   "slug": "garry-s-mod",
   "tipo": "game",
   "ultimo": {
-   "ahora": 16659,
-   "fecha": "2026-11-03",
-   "pico": 30670,
-   "puesto": 70
+   "ahora": 17874,
+   "fecha": "2026-11-04",
+   "pico": 31114,
+   "puesto": 65
   },
   "visto_desde": "2026-11-02"
  },
@@ -1802,10 +1841,10 @@
   "slug": "ea-sports-fc-27",
   "tipo": "game",
   "ultimo": {
-   "ahora": 20050,
-   "fecha": "2026-11-03",
-   "pico": 62102,
-   "puesto": 53
+   "ahora": 20716,
+   "fecha": "2026-11-04",
+   "pico": 54159,
+   "puesto": 54
   },
   "visto_desde": "2026-11-02"
  },
@@ -1822,10 +1861,10 @@
   "slug": "phantom-blade-zero",
   "tipo": "game",
   "ultimo": {
-   "ahora": 391729,
-   "fecha": "2026-11-03",
-   "pico": 827122,
-   "puesto": 3
+   "ahora": 301939,
+   "fecha": "2026-11-04",
+   "pico": 790954,
+   "puesto": 4
   },
   "visto_desde": "2026-11-02"
  },
@@ -1844,10 +1883,10 @@
   "slug": "aniimo",
   "tipo": "game",
   "ultimo": {
-   "ahora": 30151,
-   "fecha": "2026-11-03",
-   "pico": 51249,
-   "puesto": 32
+   "ahora": 28024,
+   "fecha": "2026-11-04",
+   "pico": 44429,
+   "puesto": 35
   },
   "visto_desde": "2026-11-02"
  },
@@ -1865,9 +1904,9 @@
   "slug": "stardew-valley",
   "tipo": "game",
   "ultimo": {
-   "ahora": 41003,
-   "fecha": "2026-11-03",
-   "pico": 80406,
+   "ahora": 41916,
+   "fecha": "2026-11-04",
+   "pico": 79001,
    "puesto": 23
   },
   "visto_desde": "2026-11-02"
@@ -1887,10 +1926,10 @@
   "slug": "factorio",
   "tipo": "game",
   "ultimo": {
-   "ahora": 12575,
-   "fecha": "2026-11-03",
-   "pico": 22532,
-   "puesto": 88
+   "ahora": 12901,
+   "fecha": "2026-11-04",
+   "pico": 22095,
+   "puesto": 86
   },
   "visto_desde": "2026-11-02"
  },
@@ -1909,10 +1948,10 @@
   "slug": "wallpaper-engine",
   "tipo": "game",
   "ultimo": {
-   "ahora": 83001,
-   "fecha": "2026-11-03",
-   "pico": 110549,
-   "puesto": 11
+   "ahora": 84623,
+   "fecha": "2026-11-04",
+   "pico": 112900,
+   "puesto": 9
   },
   "visto_desde": "2026-11-02"
  },
@@ -1931,9 +1970,9 @@
   "slug": "probably-stolen-cyberpunk-shopkeeper-sim",
   "tipo": "game",
   "ultimo": {
-   "ahora": 107143,
-   "fecha": "2026-11-03",
-   "pico": 156413,
+   "ahora": 113178,
+   "fecha": "2026-11-04",
+   "pico": 164471,
    "puesto": 7
   },
   "visto_desde": "2026-11-02"
@@ -1950,10 +1989,10 @@
   "slug": "nba-2k27",
   "tipo": "game",
   "ultimo": {
-   "ahora": 10964,
-   "fecha": "2026-11-03",
-   "pico": 18547,
-   "puesto": 99
+   "ahora": 11565,
+   "fecha": "2026-11-04",
+   "pico": 19349,
+   "puesto": 95
   },
   "visto_desde": "2026-11-02"
  },
@@ -1972,10 +2011,10 @@
   "slug": "vrchat",
   "tipo": "game",
   "ultimo": {
-   "ahora": 37605,
-   "fecha": "2026-11-03",
-   "pico": 56189,
-   "puesto": 24
+   "ahora": 34316,
+   "fecha": "2026-11-04",
+   "pico": 55668,
+   "puesto": 25
   },
   "visto_desde": "2026-11-02"
  },
@@ -1992,10 +2031,10 @@
   "slug": "team-fortress-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 72484,
-   "fecha": "2026-11-03",
-   "pico": 98618,
-   "puesto": 13
+   "ahora": 76661,
+   "fecha": "2026-11-04",
+   "pico": 92960,
+   "puesto": 12
   },
   "visto_desde": "2026-11-02"
  },
@@ -2014,9 +2053,9 @@
   "slug": "deskrawl-idle-arpg",
   "tipo": "game",
   "ultimo": {
-   "ahora": 24299,
-   "fecha": "2026-11-03",
-   "pico": 26009,
+   "ahora": 24291,
+   "fecha": "2026-11-04",
+   "pico": 25201,
    "puesto": 45
   },
   "visto_desde": "2026-11-02"
@@ -2036,10 +2075,10 @@
   "slug": "wog-war-of-genesis-idle-loot",
   "tipo": "game",
   "ultimo": {
-   "ahora": 15527,
-   "fecha": "2026-11-03",
-   "pico": 16507,
-   "puesto": 75
+   "ahora": 15520,
+   "fecha": "2026-11-04",
+   "pico": 15972,
+   "puesto": 77
   },
   "visto_desde": "2026-11-02"
  },
@@ -2055,10 +2094,10 @@
   "slug": "the-elder-scrolls-v-skyrim-special-edition",
   "tipo": "game",
   "ultimo": {
-   "ahora": 16611,
-   "fecha": "2026-11-03",
-   "pico": 33441,
-   "puesto": 71
+   "ahora": 17286,
+   "fecha": "2026-11-04",
+   "pico": 32024,
+   "puesto": 66
   },
   "visto_desde": "2026-11-02"
  },
@@ -2075,10 +2114,10 @@
   "slug": "character-house-desktop-companion-demo",
   "tipo": "demo",
   "ultimo": {
-   "ahora": 11587,
-   "fecha": "2026-11-03",
-   "pico": 14884,
-   "puesto": 96
+   "ahora": 11093,
+   "fecha": "2026-11-04",
+   "pico": 14745,
+   "puesto": 100
   },
   "visto_desde": "2026-11-02"
  },
@@ -2119,10 +2158,10 @@
   "slug": "moon-sweepers",
   "tipo": "game",
   "ultimo": {
-   "ahora": 32041,
-   "fecha": "2026-11-03",
-   "pico": 65199,
-   "puesto": 27
+   "ahora": 28171,
+   "fecha": "2026-11-04",
+   "pico": 57471,
+   "puesto": 34
   },
   "visto_desde": "2026-11-02"
  },
@@ -2138,9 +2177,9 @@
   "slug": "left-4-dead-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 13426,
-   "fecha": "2026-11-03",
-   "pico": 32301,
+   "ahora": 13479,
+   "fecha": "2026-11-04",
+   "pico": 29936,
    "puesto": 83
   },
   "visto_desde": "2026-11-02"
@@ -2157,10 +2196,10 @@
   "slug": "helldivers-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 18055,
-   "fecha": "2026-11-03",
-   "pico": 39175,
-   "puesto": 64
+   "ahora": 21876,
+   "fecha": "2026-11-04",
+   "pico": 44403,
+   "puesto": 51
   },
   "visto_desde": "2026-11-02"
  },
@@ -2178,9 +2217,9 @@
   "slug": "dota-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 417536,
-   "fecha": "2026-11-03",
-   "pico": 701331,
+   "ahora": 466612,
+   "fecha": "2026-11-04",
+   "pico": 704324,
    "puesto": 2
   },
   "visto_desde": "2026-11-02"
@@ -2200,10 +2239,10 @@
   "slug": "pubg-battlegrounds",
   "tipo": "game",
   "ultimo": {
-   "ahora": 330064,
-   "fecha": "2026-11-03",
-   "pico": 764045,
-   "puesto": 4
+   "ahora": 382893,
+   "fecha": "2026-11-04",
+   "pico": 763018,
+   "puesto": 3
   },
   "visto_desde": "2026-11-02"
  },
@@ -2222,12 +2261,31 @@
   "slug": "black-desert",
   "tipo": "game",
   "ultimo": {
-   "ahora": 13334,
-   "fecha": "2026-11-03",
-   "pico": 17208,
-   "puesto": 84
+   "ahora": 13141,
+   "fecha": "2026-11-04",
+   "pico": 16624,
+   "puesto": 85
   },
   "visto_desde": "2026-11-02"
+ },
+ "594650": {
+  "desarrollador": "Crytek",
+  "generos": [
+   "Acción"
+  ],
+  "gratis": false,
+  "imagen": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/594650/8cf55bcd74fc14c93f3a9cc7d0a442afabab6f88/header_alt_assets_29.jpg?t=1791385253",
+  "lanzamiento": "27 AGO 2019",
+  "nombre": "Hunt: Showdown 1896",
+  "slug": "hunt-showdown-1896",
+  "tipo": "game",
+  "ultimo": {
+   "ahora": 11134,
+   "fecha": "2026-11-04",
+   "pico": 24629,
+   "puesto": 99
+  },
+  "visto_desde": "2026-11-04"
  },
  "632360": {
   "desarrollador": "Hopoo Games",
@@ -2262,9 +2320,9 @@
   "slug": "counter-strike-2",
   "tipo": "game",
   "ultimo": {
-   "ahora": 621233,
-   "fecha": "2026-11-03",
-   "pico": 1089723,
+   "ahora": 716685,
+   "fecha": "2026-11-04",
+   "pico": 1127912,
    "puesto": 1
   },
   "visto_desde": "2026-11-02"
@@ -2284,10 +2342,10 @@
   "slug": "russian-fishing-4",
   "tipo": "game",
   "ultimo": {
-   "ahora": 14846,
-   "fecha": "2026-11-03",
-   "pico": 21259,
-   "puesto": 78
+   "ahora": 15692,
+   "fecha": "2026-11-04",
+   "pico": 21128,
+   "puesto": 76
   },
   "visto_desde": "2026-11-02"
  },
@@ -2303,10 +2361,10 @@
   "slug": "age-of-empires-ii-definitive-edition",
   "tipo": "game",
   "ultimo": {
-   "ahora": 12184,
-   "fecha": "2026-11-03",
-   "pico": 23742,
-   "puesto": 90
+   "ahora": 12118,
+   "fecha": "2026-11-04",
+   "pico": 21723,
+   "puesto": 91
   },
   "visto_desde": "2026-11-02"
  },
@@ -2325,10 +2383,10 @@
   "slug": "valheim",
   "tipo": "game",
   "ultimo": {
-   "ahora": 27507,
-   "fecha": "2026-11-03",
-   "pico": 81331,
-   "puesto": 35
+   "ahora": 28405,
+   "fecha": "2026-11-04",
+   "pico": 75262,
+   "puesto": 33
   },
   "visto_desde": "2026-11-02"
  }
