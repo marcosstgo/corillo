@@ -95,8 +95,10 @@ import SiteShell from '../../layouts/SiteShell.astro';
   <div class="page-wrap">
 
     <div class="page-header">
-      <h1 class="page-title">Política <span>DMCA</span></h1>
-      <div class="page-meta">Digital Millennium Copyright Act · Última actualización: 1 de marzo de 2026</div>
+      <h1 class="page-title" data-t="es">Política <span>DMCA</span></h1>
+      <div class="page-title" data-t="en" lang="en" hidden>DMCA <span>Policy</span></div>
+      <div class="page-meta" data-t="es">Digital Millennium Copyright Act · Última actualización: 1 de marzo de 2026</div>
+      <div class="page-meta" data-t="en" lang="en" hidden>Digital Millennium Copyright Act · Last updated: March 1, 2026</div>
     </div>
 
     <div class="lang-tabs">
@@ -289,6 +291,7 @@ import SiteShell from '../../layouts/SiteShell.astro';
 <script>
 function mostrar(lang: string) {
   document.querySelectorAll('.content-block').forEach(b => b.classList.toggle('active', b.id === 'block-' + lang));
+  document.querySelectorAll<HTMLElement>('[data-t]').forEach(e => { e.hidden = e.dataset.t !== lang; });
   document.querySelectorAll<HTMLElement>('.lang-tab').forEach(t => {
     const on = t.dataset.lang === lang;
     t.classList.toggle('active', on);
