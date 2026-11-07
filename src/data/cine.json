@@ -1,39 +1,6 @@
 {
- "actualizado": "2026-11-07T06:13:01",
+ "actualizado": "2026-11-07T18:14:01",
  "pegao": [
-  {
-   "tmdb": 1368337,
-   "title": "La Odisea",
-   "original": "The Odyssey",
-   "estreno": "2026-07-16",
-   "clasificacion": "R",
-   "duracion": 173,
-   "resumen": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
-   "generos": [
-    "Aventura",
-    "Acción",
-    "Fantasía"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/iDiTY1wA35YWzTmXLTtqaxtN6tc.jpg",
-   "direccion": [
-    "Christopher Nolan"
-   ],
-   "reparto": [
-    "Matt Damon",
-    "Tom Holland",
-    "Anne Hathaway",
-    "Robert Pattinson",
-    "Himesh Patel",
-    "Charlize Theron",
-    "John Leguizamo",
-    "Travis Scott"
-   ],
-   "trailer": "X9nUrOnHlz0",
-   "dondeVer": [],
-   "popularidad": 188.1,
-   "pr": false
-  },
   {
    "tmdb": 1423191,
    "title": "Resident Evil: Noche cero",
@@ -68,6 +35,39 @@
    "pr": false
   },
   {
+   "tmdb": 1368337,
+   "title": "La Odisea",
+   "original": "The Odyssey",
+   "estreno": "2026-07-16",
+   "clasificacion": "R",
+   "duracion": 173,
+   "resumen": "Odiseo, el legendario rey de Ítaca, emprende un largo y peligroso viaje de regreso a casa tras la guerra de Troya. A lo largo de su travesía, se ve obligado a enfrentarse a los caprichos de los dioses, a monstruos mitológicos y a pruebas que ponen a prueba su astucia y su humanidad hasta el límite.",
+   "generos": [
+    "Aventura",
+    "Acción",
+    "Fantasía"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/sRxbUe5FB25Gde0e2FnwwSckpXb.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/bulFtfy3oBQtCnAMSi7g6DSSds3.jpg",
+   "direccion": [
+    "Christopher Nolan"
+   ],
+   "reparto": [
+    "Matt Damon",
+    "Tom Holland",
+    "Anne Hathaway",
+    "Robert Pattinson",
+    "Himesh Patel",
+    "Charlize Theron",
+    "John Leguizamo",
+    "Travis Scott"
+   ],
+   "trailer": "X9nUrOnHlz0",
+   "dondeVer": [],
+   "popularidad": 188.1,
+   "pr": false
+  },
+  {
    "tmdb": 1263337,
    "title": "El corazón de la bestia",
    "original": "Heart of the Beast",
@@ -94,69 +94,6 @@
    "trailer": "Rh24D89hFMg",
    "dondeVer": [],
    "popularidad": 202.2,
-   "pr": false
-  },
-  {
-   "tmdb": 1483525,
-   "title": "Un amor posible",
-   "original": "가능한 사랑",
-   "estreno": "2026-10-23",
-   "clasificacion": "R",
-   "duracion": 165,
-   "resumen": "Un hombre desempleado y su esposa conocen a una cineasta documentalista y su pareja, y los cuatro se enfrentan a sus deseos escondidos.",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/y6tr4niJo46r8txkdQYCAJBeZEN.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/k0BY5D4Ya6NHhsvNYMmaabpvUtS.jpg",
-   "direccion": [
-    "이창동"
-   ],
-   "reparto": [
-    "전도연",
-    "설경구",
-    "조인성",
-    "Cho Yeo-jeong",
-    "Jo Yu-ri",
-    "최민",
-    "정섶",
-    "강창권"
-   ],
-   "trailer": "zd3qXH9qN70",
-   "dondeVer": [],
-   "popularidad": 45.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1375441,
-   "title": "Primetime",
-   "original": "Primetime",
-   "estreno": "2026-09-24",
-   "clasificacion": "R",
-   "duracion": 110,
-   "resumen": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
-   "generos": [
-    "Suspense",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/sEsMwSDUWGIx9EfNxzM6KzVSsSQ.jpg",
-   "direccion": [
-    "Lance Oppenheim"
-   ],
-   "reparto": [
-    "Robert Pattinson",
-    "Merritt Wever",
-    "Skyler Gisondo",
-    "Matthew Maher",
-    "Phoebe Bridgers",
-    "Victor Brunette",
-    "Bokeem Woodbine",
-    "Michael Chachere"
-   ],
-   "trailer": "5fHXyqQOKL8",
-   "dondeVer": [],
-   "popularidad": 109.9,
    "pr": false
   },
   {
@@ -190,39 +127,6 @@
    "trailer": "VczwWXoMKL0",
    "dondeVer": [],
    "popularidad": 36.9,
-   "pr": false
-  },
-  {
-   "tmdb": 656908,
-   "title": "Ramayana: Rise of a Legend",
-   "original": "रामायणम्",
-   "estreno": "2026-11-05",
-   "clasificacion": "PG-13",
-   "duracion": 208,
-   "resumen": "",
-   "generos": [
-    "Fantasía",
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/nzL1ySE6vdmR6RxXhE7gLggkp41.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/yHVZncPRZr63mezRX20IyKLrSkv.jpg",
-   "direccion": [
-    "Nitesh Tiwari"
-   ],
-   "reparto": [
-    "रणबीर कपूर",
-    "Yash",
-    "Sai Pallavi",
-    "Ravi Dubey",
-    "अरुण गोविल",
-    "लारा दत्ता",
-    "Rakul Preet Singh",
-    "इंदिरा कृष्णन"
-   ],
-   "trailer": "tPf0_b026Ck",
-   "dondeVer": [],
-   "popularidad": 126.1,
    "pr": false
   },
   {
@@ -291,43 +195,35 @@
    "pr": false
   },
   {
-   "tmdb": 1507696,
-   "title": "Apocalipsis Z: Nuevo mundo",
-   "original": "Apocalipsis Z: Nuevo mundo",
-   "estreno": "2026-10-30",
+   "tmdb": 1375441,
+   "title": "Primetime",
+   "original": "Primetime",
+   "estreno": "2026-09-24",
    "clasificacion": "R",
-   "duracion": 96,
-   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
+   "duracion": 110,
+   "resumen": "En 2006, el presentador Chris Hansen de NBC se propuso hacer historia en la televisión con el programa To Catch a Predator, convirtiendo una investigación encubierta de horario estelar en uno de los fenómenos culturales más controvertidos de la década.",
    "generos": [
-    "Acción",
     "Suspense",
-    "Terror"
+    "Drama"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/lmrulvLbmaejTix1YaMxo1oGhH1.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/sEsMwSDUWGIx9EfNxzM6KzVSsSQ.jpg",
    "direccion": [
-    "Carles Torrens"
+    "Lance Oppenheim"
    ],
    "reparto": [
-    "Carlos Alcaide",
-    "Julia Martínez",
-    "José María Yázpik",
-    "Mónica López",
-    "Tamara Casellas",
-    "Berta Vázquez",
-    "Santiago Vaca Narvaja",
-    "Mario Mayo"
+    "Robert Pattinson",
+    "Merritt Wever",
+    "Skyler Gisondo",
+    "Matthew Maher",
+    "Phoebe Bridgers",
+    "Victor Brunette",
+    "Bokeem Woodbine",
+    "Michael Chachere"
    ],
-   "trailer": "BIEzwpyawtw",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
-   ],
-   "popularidad": 381.7,
+   "trailer": "5fHXyqQOKL8",
+   "dondeVer": [],
+   "popularidad": 109.9,
    "pr": false
   },
   {
@@ -363,37 +259,41 @@
    "pr": false
   },
   {
-   "tmdb": 1003596,
-   "title": "Avengers: Doomsday",
-   "original": "Avengers: Doomsday",
-   "estreno": "2026-12-18",
-   "clasificacion": null,
+   "tmdb": 1483525,
+   "title": "Un amor posible",
+   "original": "가능한 사랑",
+   "estreno": "2026-10-23",
+   "clasificacion": "R",
    "duracion": 165,
-   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
+   "resumen": "Un hombre desempleado y su esposa conocen a una cineasta documentalista y su pareja, y los cuatro se enfrentan a sus deseos escondidos.",
    "generos": [
-    "Ciencia ficción",
-    "Acción",
-    "Aventura"
+    "Drama"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/y6tr4niJo46r8txkdQYCAJBeZEN.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/k0BY5D4Ya6NHhsvNYMmaabpvUtS.jpg",
    "direccion": [
-    "Joe Russo",
-    "Anthony Russo"
+    "이창동"
    ],
    "reparto": [
-    "Robert Downey Jr.",
-    "Chris Evans",
-    "Chris Hemsworth",
-    "Pedro Pascal",
-    "Paul Rudd",
-    "Anthony Mackie",
-    "Florence Pugh",
-    "Vanessa Kirby"
+    "전도연",
+    "설경구",
+    "조인성",
+    "Cho Yeo-jeong",
+    "Jo Yu-ri",
+    "최민",
+    "정섶",
+    "강창권"
    ],
-   "trailer": "kZ2Nhqkx3-I",
-   "dondeVer": [],
-   "popularidad": 96.5,
+   "trailer": "zd3qXH9qN70",
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 45.1,
    "pr": false
   },
   {
@@ -430,42 +330,36 @@
    "pr": false
   },
   {
-   "tmdb": 1339713,
-   "title": "Obsesión",
-   "original": "Obsession",
-   "estreno": "2026-05-14",
-   "clasificacion": "R",
-   "duracion": 109,
-   "resumen": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
+   "tmdb": 656908,
+   "title": "Ramayana: Rise of a Legend",
+   "original": "रामायणम्",
+   "estreno": "2026-11-05",
+   "clasificacion": "PG-13",
+   "duracion": 208,
+   "resumen": "",
    "generos": [
-    "Terror",
-    "Suspense"
+    "Fantasía",
+    "Acción",
+    "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/nzL1ySE6vdmR6RxXhE7gLggkp41.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/yHVZncPRZr63mezRX20IyKLrSkv.jpg",
    "direccion": [
-    "Curry Barker"
+    "Nitesh Tiwari"
    ],
    "reparto": [
-    "Michael Johnston",
-    "Inde Navarrette",
-    "Cooper Tomlinson",
-    "Megan Lawless",
-    "Andy Richter",
-    "Haley Fitzgerald",
-    "Darin Toonder",
-    "Anthony Pavone"
+    "रणबीर कपूर",
+    "Yash",
+    "Sai Pallavi",
+    "Ravi Dubey",
+    "अरुण गोविल",
+    "लारा दत्ता",
+    "Rakul Preet Singh",
+    "इंदिरा कृष्णन"
    ],
-   "trailer": "WbziExW1-i4",
-   "dondeVer": [
-    {
-     "name": "Peacock Premium"
-    },
-    {
-     "name": "Peacock Premium Plus"
-    }
-   ],
-   "popularidad": 90.9,
+   "trailer": "tPf0_b026Ck",
+   "dondeVer": [],
+   "popularidad": 126.1,
    "pr": false
   },
   {
@@ -499,111 +393,6 @@
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
    "popularidad": 441.9,
-   "pr": false
-  },
-  {
-   "tmdb": 969681,
-   "title": "Spider-Man: Un nuevo día",
-   "original": "Spider-Man: Brand New Day",
-   "estreno": "2026-07-30",
-   "clasificacion": "PG-13",
-   "duracion": 145,
-   "resumen": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
-   "generos": [
-    "Ciencia ficción",
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/fBFjaDWfNslvrs6bJjknmG27wOS.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/subj7knTn4DeS6KS7qI66EQKe9i.jpg",
-   "direccion": [
-    "Destin Daniel Cretton"
-   ],
-   "reparto": [
-    "Tom Holland",
-    "Sadie Sink",
-    "Tramell Tillman",
-    "Zendaya",
-    "Jacob Batalon",
-    "Jon Bernthal",
-    "Mark Ruffalo",
-    "Florence Pugh"
-   ],
-   "trailer": "owfWVJoxXR4",
-   "dondeVer": [],
-   "popularidad": 327.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1570488,
-   "title": "La razón de estar contigo: Una Navidad perfecta",
-   "original": "A Dog's Perfect Christmas",
-   "estreno": "2026-11-04",
-   "clasificacion": "PG-13",
-   "duracion": 102,
-   "resumen": "Cuando una emergencia médica sacude a la familia Goss, su sabio perro Winstead decide hacer todo lo posible para mantener a sus humanos unidos antes de la Nochebuena.",
-   "generos": [
-    "Comedia",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/eixA3LDfxqMKpz2L8uIM1kTIJ8g.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/hhQT0TySg3LXCE8BEPpfPJ5zJA2.jpg",
-   "direccion": [
-    "Cathryn Michon"
-   ],
-   "reparto": [
-    "Dennis Quaid",
-    "Milo Ventimiglia",
-    "Brooke Lena Johnson",
-    "Kathleen Rose Perkins",
-    "Jennifer Tilly",
-    "Thomas Haden Church",
-    "Mary Steenburgen",
-    "Ethan Loomis"
-   ],
-   "trailer": "L18ih13Bf-U",
-   "dondeVer": [
-    {
-     "name": "Netflix"
-    },
-    {
-     "name": "Netflix Standard with Ads"
-    }
-   ],
-   "popularidad": 96.5,
-   "pr": false
-  },
-  {
-   "tmdb": 891621,
-   "title": "Caballo salvaje nueve",
-   "original": "Wild Horse Nine",
-   "estreno": "2026-11-05",
-   "clasificacion": "R",
-   "duracion": 118,
-   "resumen": "Poco antes del golpe de estado chileno de 1973, los agentes de la CIA Chris y Lee son enviados desde Santiago a la Isla de Pascua por su jefa de la oficina, MJ. Entre las emblemáticas estatuas de la isla, y mientras los veteranos compañeros lidian con sus oscuros pasados ​​y conspiraciones actuales, el nuevo vínculo que Chris establece con un par de estudiantes rebeldes amenaza con desbaratar el viaje de todos a este remoto paraíso.",
-   "generos": [
-    "Comedia",
-    "Crimen",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ulvGcZer26aBaNG0s4IEJGyyLIq.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/b17UWf3LqHgKolQkXckne32qv0.jpg",
-   "direccion": [
-    "Martin McDonagh"
-   ],
-   "reparto": [
-    "John Malkovich",
-    "Sam Rockwell",
-    "Steve Buscemi",
-    "Bastián Bodenhöfer",
-    "Luciano Reinoso",
-    "Sofía Chacón",
-    "Laura Villa",
-    "Djure Gasic"
-   ],
-   "trailer": "Haw_sznA5aQ",
-   "dondeVer": [],
-   "popularidad": 56.3,
    "pr": false
   },
   {
@@ -647,6 +436,79 @@
    "pr": false
   },
   {
+   "tmdb": 969681,
+   "title": "Spider-Man: Un nuevo día",
+   "original": "Spider-Man: Brand New Day",
+   "estreno": "2026-07-30",
+   "clasificacion": "PG-13",
+   "duracion": 145,
+   "resumen": "A medida qué Spider-Man está en la cima de su carrera protegiendo la ciudad de Nueva York, una serie de crímenes inusuales lo arrastran a una red de misterios más grande de lo que jamás haya enfrentado.",
+   "generos": [
+    "Ciencia ficción",
+    "Acción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/fBFjaDWfNslvrs6bJjknmG27wOS.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/subj7knTn4DeS6KS7qI66EQKe9i.jpg",
+   "direccion": [
+    "Destin Daniel Cretton"
+   ],
+   "reparto": [
+    "Tom Holland",
+    "Sadie Sink",
+    "Tramell Tillman",
+    "Zendaya",
+    "Jacob Batalon",
+    "Jon Bernthal",
+    "Mark Ruffalo",
+    "Florence Pugh"
+   ],
+   "trailer": "owfWVJoxXR4",
+   "dondeVer": [],
+   "popularidad": 327.1,
+   "pr": false
+  },
+  {
+   "tmdb": 1507696,
+   "title": "Apocalipsis Z: Nuevo mundo",
+   "original": "Apocalipsis Z: Nuevo mundo",
+   "estreno": "2026-10-30",
+   "clasificacion": "R",
+   "duracion": 96,
+   "resumen": "Secuela de 'Apocalipsis Z: El principio del fin'. La historia nos traslada a unas Islas Canarias que se han convertido en el último refugio de Europa tras el brote del virus TSJ. Cuando una misión especial parte hacia la península en busca de suministros vitales, Roberto (Carlos Alcaide) se une al equipo con dudosas intenciones. La peligrosa operación se transforma en una carrera desesperada por la supervivencia, y Roberto y sus compañeros se encontrarán entre hordas de infectados y lealtades divididas. Entonces surge la eterna pregunta: ¿salvarse uno mismo o arriesgarlo todo para salvar lo poco que queda de humanidad?",
+   "generos": [
+    "Acción",
+    "Suspense",
+    "Terror"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/pS2R3DEiucuizVkKP80qzdO97TE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/o3XwuDUj0n8qnK91p6q8LKfr6rj.jpg",
+   "direccion": [
+    "Carles Torrens"
+   ],
+   "reparto": [
+    "Carlos Alcaide",
+    "Julia Martínez",
+    "José María Yázpik",
+    "Mónica López",
+    "Tamara Casellas",
+    "Berta Vázquez",
+    "Santiago Vaca Narvaja",
+    "Mario Mayo"
+   ],
+   "trailer": "BIEzwpyawtw",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 381.7,
+   "pr": false
+  },
+  {
    "tmdb": 1384216,
    "title": "La guerra de los últimos",
    "original": "The Dog Stars",
@@ -677,6 +539,154 @@
    "trailer": "cmzVY1goqwQ",
    "dondeVer": [],
    "popularidad": 89.1,
+   "pr": false
+  },
+  {
+   "tmdb": 1003596,
+   "title": "Avengers: Doomsday",
+   "original": "Avengers: Doomsday",
+   "estreno": "2026-12-18",
+   "clasificacion": null,
+   "duracion": 165,
+   "resumen": "Héroes amados de tres universos distintos están en rumbo a una colisión letal y enfrentan una amenaza existencial como ninguna otra que hayan conocido.",
+   "generos": [
+    "Ciencia ficción",
+    "Acción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/3A4IzhQHCzX5nuQParZp07F5rCT.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/rObL4of4eFA8yWaN9pRFo9aOVNi.jpg",
+   "direccion": [
+    "Joe Russo",
+    "Anthony Russo"
+   ],
+   "reparto": [
+    "Robert Downey Jr.",
+    "Chris Evans",
+    "Chris Hemsworth",
+    "Pedro Pascal",
+    "Paul Rudd",
+    "Anthony Mackie",
+    "Florence Pugh",
+    "Vanessa Kirby"
+   ],
+   "trailer": "kZ2Nhqkx3-I",
+   "dondeVer": [],
+   "popularidad": 96.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1570488,
+   "title": "La razón de estar contigo: Una Navidad perfecta",
+   "original": "A Dog's Perfect Christmas",
+   "estreno": "2026-11-04",
+   "clasificacion": "PG-13",
+   "duracion": 102,
+   "resumen": "Cuando una emergencia médica sacude a la familia Goss, su sabio perro Winstead decide hacer todo lo posible para mantener a sus humanos unidos antes de la Nochebuena.",
+   "generos": [
+    "Comedia",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/eixA3LDfxqMKpz2L8uIM1kTIJ8g.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/hhQT0TySg3LXCE8BEPpfPJ5zJA2.jpg",
+   "direccion": [
+    "Cathryn Michon"
+   ],
+   "reparto": [
+    "Dennis Quaid",
+    "Milo Ventimiglia",
+    "Brooke Lena Johnson",
+    "Kathleen Rose Perkins",
+    "Jennifer Tilly",
+    "Thomas Haden Church",
+    "Mary Steenburgen",
+    "Ethan Loomis"
+   ],
+   "trailer": "L18ih13Bf-U",
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 96.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1117898,
+   "title": "El gato con sombrero",
+   "original": "The Cat in the Hat",
+   "estreno": "2026-11-05",
+   "clasificacion": "PG",
+   "duracion": 108,
+   "resumen": "Un astuto gato lleva el caos con sus travesuras a la vida de un par de hermanos que lidian con su mudanza a una nueva ciudad.",
+   "generos": [
+    "Animación",
+    "Fantasía",
+    "Aventura",
+    "Familia",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/5rS3PbnARmbbL3LiLhEX3Tr0l6k.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/9y9o686DsQg0KzPtERzcW7Cf8IE.jpg",
+   "direccion": [
+    "Erica Rivinoja",
+    "Alessandro Carloni"
+   ],
+   "reparto": [
+    "Bill Hader",
+    "Xochitl Gomez",
+    "Tiago Martinez",
+    "Matt Berry",
+    "Quinta Brunson",
+    "Bowen Yang",
+    "America Ferrera",
+    "Paula Pell"
+   ],
+   "trailer": "bRMu8S6FQ9c",
+   "dondeVer": [],
+   "popularidad": 56.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1339713,
+   "title": "Obsesión",
+   "original": "Obsession",
+   "estreno": "2026-05-14",
+   "clasificacion": "R",
+   "duracion": 109,
+   "resumen": "Tras romper el misterioso \"Sauce de un Deseo\" para conquistar el corazón de la chica que le gusta, un romántico empedernido consigue exactamente lo que pedía, pero pronto descubre que algunos deseos tienen un precio oscuro y siniestro.",
+   "generos": [
+    "Terror",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/rmCkNtzYR2xTOO3ZXmIqB5zgYdE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/5lTZyuBTNOfawsfPT8Q0cIg6qAF.jpg",
+   "direccion": [
+    "Curry Barker"
+   ],
+   "reparto": [
+    "Michael Johnston",
+    "Inde Navarrette",
+    "Cooper Tomlinson",
+    "Megan Lawless",
+    "Andy Richter",
+    "Haley Fitzgerald",
+    "Darin Toonder",
+    "Anthony Pavone"
+   ],
+   "trailer": "WbziExW1-i4",
+   "dondeVer": [
+    {
+     "name": "Peacock Premium"
+    },
+    {
+     "name": "Peacock Premium Plus"
+    }
+   ],
+   "popularidad": 90.9,
    "pr": false
   }
  ],
@@ -813,6 +823,39 @@
    "pr": false
   },
   {
+   "tmdb": 1244523,
+   "title": "Terror en el Amazonas",
+   "original": "Beware Boiúna",
+   "estreno": "2026-10-01",
+   "clasificacion": "R",
+   "duracion": 104,
+   "resumen": "Un grupo de médicos se interna en la selva amazónica para realizar una misión humanitaria, pero su llegada altera el equilibrio de un territorio donde la naturaleza aún guarda secretos imposibles de controlar. Pronto descubrirán que no están solos: una criatura ancestral, conocida como la Boiúna, emerge para reclamar su dominio. Atrapados entre la selva, el río y un depredador que domina ambos mundos, deberán luchar por sobrevivir en un lugar donde la línea entre cazador y presa desaparece.",
+   "generos": [
+    "Terror",
+    "Suspense",
+    "Acción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/akm6jAZWebBOKweMp6G9TgkefrZ.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/9nU0FKNefmhbgi2xXlvZchZsqwm.jpg",
+   "direccion": [
+    "Mike P. Nelson"
+   ],
+   "reparto": [
+    "Kiana Madeira",
+    "Jessica Rothe",
+    "Will Close",
+    "Juan Pablo Shuk",
+    "Logan Marshall-Green",
+    "Jaime Newball",
+    "Jackson Bews",
+    "Tonfy Andoque"
+   ],
+   "trailer": "4fn4UcgzRhg",
+   "dondeVer": [],
+   "popularidad": 122.5,
+   "pr": false
+  },
+  {
    "tmdb": 1400940,
    "title": "Clayface",
    "original": "Clayface",
@@ -875,39 +918,6 @@
    "trailer": "4DowjB87tRE",
    "dondeVer": [],
    "popularidad": 86.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1244523,
-   "title": "Terror en el Amazonas",
-   "original": "Beware Boiúna",
-   "estreno": "2026-10-01",
-   "clasificacion": "R",
-   "duracion": 104,
-   "resumen": "Un grupo de médicos se interna en la selva amazónica para realizar una misión humanitaria, pero su llegada altera el equilibrio de un territorio donde la naturaleza aún guarda secretos imposibles de controlar. Pronto descubrirán que no están solos: una criatura ancestral, conocida como la Boiúna, emerge para reclamar su dominio. Atrapados entre la selva, el río y un depredador que domina ambos mundos, deberán luchar por sobrevivir en un lugar donde la línea entre cazador y presa desaparece.",
-   "generos": [
-    "Terror",
-    "Suspense",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/akm6jAZWebBOKweMp6G9TgkefrZ.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/9nU0FKNefmhbgi2xXlvZchZsqwm.jpg",
-   "direccion": [
-    "Mike P. Nelson"
-   ],
-   "reparto": [
-    "Kiana Madeira",
-    "Jessica Rothe",
-    "Will Close",
-    "Juan Pablo Shuk",
-    "Logan Marshall-Green",
-    "Jaime Newball",
-    "Jackson Bews",
-    "Tonfy Andoque"
-   ],
-   "trailer": "4fn4UcgzRhg",
-   "dondeVer": [],
-   "popularidad": 122.5,
    "pr": false
   },
   {
@@ -1016,9 +1026,8 @@
    "duracion": 132,
    "resumen": "Una nueva visión de la icónica novela de Jane Austen con una historia encantadora, ingeniosa y profundamente conmovedora sobre el amor y la hermandad.",
    "generos": [
-    "Romance",
     "Drama",
-    "Historia"
+    "Romance"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/xmfC7mUIZWyc0Mez55qwoHTQUNJ.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/rv6dwE4SXAT5f00Ks8YL2kFvnLA.jpg",
@@ -1077,6 +1086,39 @@
    "pr": false
   },
   {
+   "tmdb": 891621,
+   "title": "Caballo salvaje nueve",
+   "original": "Wild Horse Nine",
+   "estreno": "2026-11-05",
+   "clasificacion": "R",
+   "duracion": 118,
+   "resumen": "Poco antes del golpe de estado chileno de 1973, los agentes de la CIA Chris y Lee son enviados desde Santiago a la Isla de Pascua por su jefa de la oficina, MJ. Entre las emblemáticas estatuas de la isla, y mientras los veteranos compañeros lidian con sus oscuros pasados ​​y conspiraciones actuales, el nuevo vínculo que Chris establece con un par de estudiantes rebeldes amenaza con desbaratar el viaje de todos a este remoto paraíso.",
+   "generos": [
+    "Comedia",
+    "Crimen",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ulvGcZer26aBaNG0s4IEJGyyLIq.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/b17UWf3LqHgKolQkXckne32qv0.jpg",
+   "direccion": [
+    "Martin McDonagh"
+   ],
+   "reparto": [
+    "John Malkovich",
+    "Sam Rockwell",
+    "Steve Buscemi",
+    "Mariana di Girolamo",
+    "Ailín Salas",
+    "Parker Posey",
+    "Tom Waits",
+    "Paola Giannini"
+   ],
+   "trailer": "Haw_sznA5aQ",
+   "dondeVer": [],
+   "popularidad": 56.3,
+   "pr": false
+  },
+  {
    "tmdb": 1195803,
    "title": "Wicker",
    "original": "Wicker",
@@ -1092,8 +1134,8 @@
    "afiche": "https://image.tmdb.org/t/p/w342/ewPz6uvKrbKlQrLRi1r9NTZQLzN.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/xVh1ypMoVkMf5IB7y3hnRplJ14c.jpg",
    "direccion": [
-    "Alex Huston Fischer",
-    "Eleanor Wilson"
+    "Eleanor Wilson",
+    "Alex Huston Fischer"
    ],
    "reparto": [
     "Olivia Colman",
@@ -1143,39 +1185,6 @@
    "pr": false
   },
   {
-   "tmdb": 891621,
-   "title": "Caballo salvaje nueve",
-   "original": "Wild Horse Nine",
-   "estreno": "2026-11-05",
-   "clasificacion": "R",
-   "duracion": 118,
-   "resumen": "Poco antes del golpe de estado chileno de 1973, los agentes de la CIA Chris y Lee son enviados desde Santiago a la Isla de Pascua por su jefa de la oficina, MJ. Entre las emblemáticas estatuas de la isla, y mientras los veteranos compañeros lidian con sus oscuros pasados ​​y conspiraciones actuales, el nuevo vínculo que Chris establece con un par de estudiantes rebeldes amenaza con desbaratar el viaje de todos a este remoto paraíso.",
-   "generos": [
-    "Comedia",
-    "Crimen",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ulvGcZer26aBaNG0s4IEJGyyLIq.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/b17UWf3LqHgKolQkXckne32qv0.jpg",
-   "direccion": [
-    "Martin McDonagh"
-   ],
-   "reparto": [
-    "John Malkovich",
-    "Sam Rockwell",
-    "Steve Buscemi",
-    "Bastián Bodenhöfer",
-    "Luciano Reinoso",
-    "Sofía Chacón",
-    "Laura Villa",
-    "Djure Gasic"
-   ],
-   "trailer": "Haw_sznA5aQ",
-   "dondeVer": [],
-   "popularidad": 56.3,
-   "pr": false
-  },
-  {
    "tmdb": 1255833,
    "title": "La caída de la ballena",
    "original": "Whalefall",
@@ -1204,6 +1213,40 @@
    "trailer": "67ho3OxCmmM",
    "dondeVer": [],
    "popularidad": 44.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1697911,
+   "title": "Drummer Boy",
+   "original": "Drummer Boy",
+   "estreno": "2026-11-05",
+   "clasificacion": "PG-13",
+   "duracion": 129,
+   "resumen": "",
+   "generos": [
+    "Bélica",
+    "Romance",
+    "Música"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/bhjdgMm2fFrysSzVqv5RwRwIbVf.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/5KF459N6jOfRV7kV9XV7ZQdCLKK.jpg",
+   "direccion": [
+    "Ben Smallbone",
+    "Joel Smallbone"
+   ],
+   "reparto": [
+    "Joel Smallbone",
+    "Beth Easdown",
+    "Kenneth Barry",
+    "Charles Esten",
+    "Iain Glen",
+    "India Brown",
+    "Lucas Leach",
+    "Melora Hardin"
+   ],
+   "trailer": "wlm_vxf4PaM",
+   "dondeVer": [],
+   "popularidad": 35.8,
    "pr": false
   },
   {
@@ -1239,39 +1282,6 @@
    "pr": false
   },
   {
-   "tmdb": 939541,
-   "title": "Christmas at the Kringles",
-   "original": "Christmas at the Kringles",
-   "estreno": "2026-10-29",
-   "clasificacion": "R",
-   "duracion": 100,
-   "resumen": "",
-   "generos": [
-    "Acción",
-    "Terror",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/oVxkhheRVWSacimUZBuMemQX85E.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/yZq46gEwwXKzJRemlC0qPPBJmvt.jpg",
-   "direccion": [
-    "Kevin Lewis"
-   ],
-   "reparto": [
-    "Ron Livingston",
-    "Rachel Bilson",
-    "Rob Riggle",
-    "Arden Myrin",
-    "Thomas Lennon",
-    "Beverly D'Angelo",
-    "Donald Faison",
-    "David Wain"
-   ],
-   "trailer": "zql0pXIpELI",
-   "dondeVer": [],
-   "popularidad": 27.3,
-   "pr": false
-  },
-  {
    "tmdb": 1401459,
    "title": "Fjord",
    "original": "Fjord",
@@ -1300,6 +1310,39 @@
    "trailer": "0gdRZZVoinM",
    "dondeVer": [],
    "popularidad": 27.4,
+   "pr": false
+  },
+  {
+   "tmdb": 939541,
+   "title": "Christmas at the Kringles",
+   "original": "Christmas at the Kringles",
+   "estreno": "2026-10-29",
+   "clasificacion": "R",
+   "duracion": 100,
+   "resumen": "",
+   "generos": [
+    "Acción",
+    "Terror",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/oVxkhheRVWSacimUZBuMemQX85E.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/7lEFPOUwk3H1aLx1UqGafAXRUPY.jpg",
+   "direccion": [
+    "Kevin Lewis"
+   ],
+   "reparto": [
+    "Ron Livingston",
+    "Rachel Bilson",
+    "Rob Riggle",
+    "Arden Myrin",
+    "Thomas Lennon",
+    "Beverly D'Angelo",
+    "Donald Faison",
+    "David Wain"
+   ],
+   "trailer": "zql0pXIpELI",
+   "dondeVer": [],
+   "popularidad": 27.3,
    "pr": false
   },
   {
@@ -1365,40 +1408,6 @@
    "trailer": "o_pIiP1A0RY",
    "dondeVer": [],
    "popularidad": 23.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1697911,
-   "title": "Drummer Boy",
-   "original": "Drummer Boy",
-   "estreno": "2026-11-05",
-   "clasificacion": "PG-13",
-   "duracion": 129,
-   "resumen": "",
-   "generos": [
-    "Bélica",
-    "Romance",
-    "Música"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/bhjdgMm2fFrysSzVqv5RwRwIbVf.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/5KF459N6jOfRV7kV9XV7ZQdCLKK.jpg",
-   "direccion": [
-    "Ben Smallbone",
-    "Joel Smallbone"
-   ],
-   "reparto": [
-    "Joel Smallbone",
-    "Beth Easdown",
-    "Kenneth Barry",
-    "Charles Esten",
-    "Iain Glen",
-    "India Brown",
-    "Lucas Leach",
-    "Melora Hardin"
-   ],
-   "trailer": "wlm_vxf4PaM",
-   "dondeVer": [],
-   "popularidad": 35.8,
    "pr": false
   },
   {
@@ -1529,35 +1538,6 @@
    "pr": false
   },
   {
-   "tmdb": 1632359,
-   "title": "El amor que nunca llega",
-   "original": "El amor que nunca llega",
-   "estreno": "2026-11-05",
-   "clasificacion": "NR",
-   "duracion": 89,
-   "resumen": "",
-   "generos": [
-    "Romance",
-    "Drama",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3lnXgU7zAD625JlxZayQlFHgOOb.jpg",
-   "fondo": null,
-   "direccion": [
-    "Eduardo J. Villanueva"
-   ],
-   "reparto": [
-    "Cristina Sesto",
-    "Luis Enrique Romero",
-    "Ruben Pazo",
-    "Paola tirado"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 1.8,
-   "pr": true
-  },
-  {
    "tmdb": 1596249,
    "title": "Ha-Chan, Shake Your Booty!",
    "original": "Ha-Chan, Shake Your Booty!",
@@ -1589,6 +1569,35 @@
    "dondeVer": [],
    "popularidad": 1.9,
    "pr": false
+  },
+  {
+   "tmdb": 1632359,
+   "title": "El amor que nunca llega",
+   "original": "El amor que nunca llega",
+   "estreno": "2026-11-05",
+   "clasificacion": "NR",
+   "duracion": 89,
+   "resumen": "",
+   "generos": [
+    "Romance",
+    "Drama",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/3lnXgU7zAD625JlxZayQlFHgOOb.jpg",
+   "fondo": null,
+   "direccion": [
+    "Eduardo J. Villanueva"
+   ],
+   "reparto": [
+    "Cristina Sesto",
+    "Luis Enrique Romero",
+    "Ruben Pazo",
+    "Paola tirado"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 1.8,
+   "pr": true
   },
   {
    "tmdb": 945883,
@@ -1789,6 +1798,39 @@
    "pr": false
   },
   {
+   "tmdb": 1457866,
+   "title": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
+   "original": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
+   "estreno": "2026-11-25",
+   "clasificacion": null,
+   "duracion": null,
+   "resumen": "",
+   "generos": [
+    "Drama",
+    "Comedia",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/5jO6rhfethzH7xdWl6KCOxCNCzQ.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/qqPspJFy0XrEoVTKZdp0Em7kej6.jpg",
+   "direccion": [
+    "David Fincher"
+   ],
+   "reparto": [
+    "Brad Pitt",
+    "Elizabeth Debicki",
+    "Scott Caan",
+    "Yahya Abdul-Mateen II",
+    "Carla Gugino",
+    "Peter Weller",
+    "Matt Groove",
+    "JB Tadena"
+   ],
+   "trailer": "RjEZaUBbUvU",
+   "dondeVer": [],
+   "popularidad": 13.1,
+   "pr": false
+  },
+  {
    "tmdb": 1437511,
    "title": "Cómo robar un banco",
    "original": "How to Rob a Bank",
@@ -1854,39 +1896,6 @@
    "pr": false
   },
   {
-   "tmdb": 1457866,
-   "title": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
-   "original": "THE FURTHER MIS-ADVENTURES OF CLIFF BOOTH",
-   "estreno": "2026-11-25",
-   "clasificacion": null,
-   "duracion": null,
-   "resumen": "",
-   "generos": [
-    "Drama",
-    "Comedia",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/5jO6rhfethzH7xdWl6KCOxCNCzQ.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/qqPspJFy0XrEoVTKZdp0Em7kej6.jpg",
-   "direccion": [
-    "David Fincher"
-   ],
-   "reparto": [
-    "Brad Pitt",
-    "Elizabeth Debicki",
-    "Scott Caan",
-    "Yahya Abdul-Mateen II",
-    "Carla Gugino",
-    "Peter Weller",
-    "Matt Groove",
-    "JB Tadena"
-   ],
-   "trailer": "RjEZaUBbUvU",
-   "dondeVer": [],
-   "popularidad": 13.1,
-   "pr": false
-  },
-  {
    "tmdb": 1476614,
    "title": "De repente",
    "original": "急に具合が悪くなる",
@@ -1948,41 +1957,6 @@
    "trailer": "hTHeFP0mcuk",
    "dondeVer": [],
    "popularidad": 6.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1595124,
-   "title": "Hermanastras",
-   "original": "Steps",
-   "estreno": "2026-11-20",
-   "clasificacion": "PG",
-   "duracion": 102,
-   "resumen": "",
-   "generos": [
-    "Animación",
-    "Fantasía",
-    "Comedia",
-    "Familia",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/jtfCcWZ3ZyKdgi0u7JVOxEOSSJP.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/g1bEboMx1a8JCg1jXeDCh24RtgW.jpg",
-   "direccion": [
-    "Alyce Tzue"
-   ],
-   "reparto": [
-    "Ali Wong",
-    "Amanda Seyfried",
-    "Stephanie Hsu",
-    "Bette Midler",
-    "Nikki Glaser",
-    "Peter Dinklage",
-    "Daniel Radcliffe",
-    "Young Mazino"
-   ],
-   "trailer": "rXKefkjeoQQ",
-   "dondeVer": [],
-   "popularidad": 5.5,
    "pr": false
   },
   {
@@ -2051,6 +2025,41 @@
    "pr": false
   },
   {
+   "tmdb": 1595124,
+   "title": "Hermanastras",
+   "original": "Steps",
+   "estreno": "2026-11-20",
+   "clasificacion": "PG",
+   "duracion": 102,
+   "resumen": "",
+   "generos": [
+    "Animación",
+    "Fantasía",
+    "Comedia",
+    "Familia",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/jtfCcWZ3ZyKdgi0u7JVOxEOSSJP.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/g1bEboMx1a8JCg1jXeDCh24RtgW.jpg",
+   "direccion": [
+    "Alyce Tzue"
+   ],
+   "reparto": [
+    "Ali Wong",
+    "Amanda Seyfried",
+    "Stephanie Hsu",
+    "Bette Midler",
+    "Nikki Glaser",
+    "Peter Dinklage",
+    "Daniel Radcliffe",
+    "Young Mazino"
+   ],
+   "trailer": "rXKefkjeoQQ",
+   "dondeVer": [],
+   "popularidad": 5.5,
+   "pr": false
+  },
+  {
    "tmdb": 1599230,
    "title": "Elsinore",
    "original": "Elsinore",
@@ -2079,70 +2088,6 @@
    "trailer": "SzopCeFAWF0",
    "dondeVer": [],
    "popularidad": 5.4,
-   "pr": false
-  },
-  {
-   "tmdb": 1131943,
-   "title": "Madden",
-   "original": "Madden",
-   "estreno": "2026-11-11",
-   "clasificacion": "R",
-   "duracion": 110,
-   "resumen": "",
-   "generos": [
-    "Drama",
-    "Historia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/bRa83oPFFPqaAF3wrpVWPqqfFel.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/iNKyRudHcd2oXV5eaWE0LbixkX3.jpg",
-   "direccion": [
-    "David O. Russell"
-   ],
-   "reparto": [
-    "Nicolas Cage",
-    "Christian Bale",
-    "John Mulaney",
-    "Kathryn Hahn",
-    "Sienna Miller",
-    "Shane Gillis",
-    "Sergio Duque",
-    "David Lengel"
-   ],
-   "trailer": "7ljcNjDeF60",
-   "dondeVer": [],
-   "popularidad": 4.9,
-   "pr": false
-  },
-  {
-   "tmdb": 1809505,
-   "title": "Dark Noon",
-   "original": "Dark Noon",
-   "estreno": "2026-11-19",
-   "clasificacion": "NR",
-   "duracion": 84,
-   "resumen": "",
-   "generos": [
-    "Crimen",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/c47IqLeltfbQKAAces0eRMmLEi7.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/zjCKxJQLVYVGTvqOuUbyBIByvW2.jpg",
-   "direccion": [
-    "J.R. Jaquish"
-   ],
-   "reparto": [
-    "Michael Steger",
-    "Michael Barra",
-    "Rachel Spencer Hewitt",
-    "Joe Kurak",
-    "Mark Tierno",
-    "John W. Iwanonkiw",
-    "Jillian O'Neil",
-    "Greg Dorchak"
-   ],
-   "trailer": "T6Ms_6r_k08",
-   "dondeVer": [],
-   "popularidad": 4.4,
    "pr": false
   },
   {
@@ -2178,6 +2123,38 @@
    "pr": false
   },
   {
+   "tmdb": 1131943,
+   "title": "Madden",
+   "original": "Madden",
+   "estreno": "2026-11-11",
+   "clasificacion": "R",
+   "duracion": 110,
+   "resumen": "",
+   "generos": [
+    "Drama",
+    "Historia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/bRa83oPFFPqaAF3wrpVWPqqfFel.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/iNKyRudHcd2oXV5eaWE0LbixkX3.jpg",
+   "direccion": [
+    "David O. Russell"
+   ],
+   "reparto": [
+    "Nicolas Cage",
+    "Christian Bale",
+    "John Mulaney",
+    "Kathryn Hahn",
+    "Sienna Miller",
+    "Shane Gillis",
+    "Sergio Duque",
+    "David Lengel"
+   ],
+   "trailer": "7ljcNjDeF60",
+   "dondeVer": [],
+   "popularidad": 4.9,
+   "pr": false
+  },
+  {
    "tmdb": 1650896,
    "title": "Peppa Pig: Perfect Holiday",
    "original": "小猪佩奇·完美假期",
@@ -2208,6 +2185,71 @@
    "trailer": null,
    "dondeVer": [],
    "popularidad": 4.8,
+   "pr": false
+  },
+  {
+   "tmdb": 1615596,
+   "title": "Best Pancakes in the County",
+   "original": "Best Pancakes in the County",
+   "estreno": "2026-11-20",
+   "clasificacion": null,
+   "duracion": 98,
+   "resumen": "",
+   "generos": [
+    "Acción",
+    "Suspense",
+    "Crimen"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/wXVYDQl2ENk3NhT1ETS4C8cAEOC.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/34eWzsWpZa17DqT8KeL5InlvRK7.jpg",
+   "direccion": [
+    "Ken Sanzel"
+   ],
+   "reparto": [
+    "Nicolas Cage",
+    "Justin Long",
+    "Shelley Hennig",
+    "Ravi Patel",
+    "Brandon Mychal Smith",
+    "Kelly Greyson",
+    "Jaylen Moore",
+    "Michael Sirow"
+   ],
+   "trailer": "JQsr_JLAiq0",
+   "dondeVer": [],
+   "popularidad": 4.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1809505,
+   "title": "Dark Noon",
+   "original": "Dark Noon",
+   "estreno": "2026-11-19",
+   "clasificacion": "NR",
+   "duracion": 84,
+   "resumen": "",
+   "generos": [
+    "Crimen",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/c47IqLeltfbQKAAces0eRMmLEi7.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/zjCKxJQLVYVGTvqOuUbyBIByvW2.jpg",
+   "direccion": [
+    "J.R. Jaquish"
+   ],
+   "reparto": [
+    "Michael Steger",
+    "Michael Barra",
+    "Rachel Spencer Hewitt",
+    "Joe Kurak",
+    "Mark Tierno",
+    "John W. Iwanonkiw",
+    "Jillian O'Neil",
+    "Greg Dorchak"
+   ],
+   "trailer": "T6Ms_6r_k08",
+   "dondeVer": [],
+   "popularidad": 4.4,
    "pr": false
   },
   {
@@ -2273,71 +2315,6 @@
    "trailer": "Dihu6iM__rI",
    "dondeVer": [],
    "popularidad": 3.4,
-   "pr": false
-  },
-  {
-   "tmdb": 1772726,
-   "title": "Confession",
-   "original": "Confession",
-   "estreno": "2026-11-11",
-   "clasificacion": null,
-   "duracion": 132,
-   "resumen": "",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/kPId5qdaCPVOSeZYHaYXFYQmEFy.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/kLs8iYrujY0IhTSag1wkiiAFpKl.jpg",
-   "direccion": [
-    "Václav Marhoul"
-   ],
-   "reparto": [
-    "Rob Lowe",
-    "James Franco",
-    "Jennifer Jason Leigh",
-    "Nick Nolte",
-    "Dean Norris",
-    "Kodi Smit-McPhee",
-    "Richard Brake",
-    "Emile Hirsch"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 2.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1287520,
-   "title": "November 1963",
-   "original": "November 1963",
-   "estreno": "2026-11-20",
-   "clasificacion": null,
-   "duracion": 120,
-   "resumen": "",
-   "generos": [
-    "Historia",
-    "Crimen",
-    "Suspense",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ujp2aHu1lWMjAGoletnsmv3mcMn.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/ppQKMpC4WhEumnzu4aAcWjAr7WU.jpg",
-   "direccion": [
-    "Roland Joffé"
-   ],
-   "reparto": [
-    "John Travolta",
-    "Robert Carlyle",
-    "Dermot Mulroney",
-    "Jefferson White",
-    "Mandy Patinkin",
-    "Thomas Fiscella",
-    "Neil Jackson",
-    "Victoria Baldesarra"
-   ],
-   "trailer": "8N9e-skJ3hw",
-   "dondeVer": [],
-   "popularidad": 2.9,
    "pr": false
   },
   {
@@ -2407,6 +2384,103 @@
    "pr": false
   },
   {
+   "tmdb": 1287520,
+   "title": "November 1963",
+   "original": "November 1963",
+   "estreno": "2026-11-20",
+   "clasificacion": null,
+   "duracion": 120,
+   "resumen": "",
+   "generos": [
+    "Historia",
+    "Crimen",
+    "Suspense",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ujp2aHu1lWMjAGoletnsmv3mcMn.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ppQKMpC4WhEumnzu4aAcWjAr7WU.jpg",
+   "direccion": [
+    "Roland Joffé"
+   ],
+   "reparto": [
+    "John Travolta",
+    "Robert Carlyle",
+    "Dermot Mulroney",
+    "Jefferson White",
+    "Mandy Patinkin",
+    "Thomas Fiscella",
+    "Neil Jackson",
+    "Victoria Baldesarra"
+   ],
+   "trailer": "8N9e-skJ3hw",
+   "dondeVer": [],
+   "popularidad": 2.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1505644,
+   "title": "ENE Repeat",
+   "original": "ఈNఈ Repeat",
+   "estreno": "2026-11-19",
+   "clasificacion": "NR",
+   "duracion": 155,
+   "resumen": "",
+   "generos": [
+    "Comedia",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/qMBlRfQNusaUhhBAIcHmforVTW5.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ygh5XRm9EmEUsBpBPNHnVGmxcSl.jpg",
+   "direccion": [
+    "తరుణ్ భాస్కర్ దాస్యం"
+   ],
+   "reparto": [
+    "Vishwak Sen",
+    "Abhinav Gomatam",
+    "Venkatesh Kakumanu",
+    "Maganti Srinath",
+    "Meher Ramesh",
+    "Anisha Ambrose",
+    "Shivathmika",
+    "Sinjith Yerramilli"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 2.7,
+   "pr": false
+  },
+  {
+   "tmdb": 1772726,
+   "title": "Confession",
+   "original": "Confession",
+   "estreno": "2026-11-11",
+   "clasificacion": null,
+   "duracion": 132,
+   "resumen": "",
+   "generos": [
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/kPId5qdaCPVOSeZYHaYXFYQmEFy.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/kLs8iYrujY0IhTSag1wkiiAFpKl.jpg",
+   "direccion": [
+    "Václav Marhoul"
+   ],
+   "reparto": [
+    "Rob Lowe",
+    "James Franco",
+    "Jennifer Jason Leigh",
+    "Nick Nolte",
+    "Dean Norris",
+    "Kodi Smit-McPhee",
+    "Richard Brake",
+    "Emile Hirsch"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 2.6,
+   "pr": false
+  },
+  {
    "tmdb": 1608787,
    "title": "Plucked",
    "original": "Plucked",
@@ -2436,39 +2510,6 @@
    "trailer": "MR7U_7FAxUY",
    "dondeVer": [],
    "popularidad": 2.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1615596,
-   "title": "Best Pancakes in the County",
-   "original": "Best Pancakes in the County",
-   "estreno": "2026-11-20",
-   "clasificacion": null,
-   "duracion": 98,
-   "resumen": "",
-   "generos": [
-    "Acción",
-    "Suspense",
-    "Crimen"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/wXVYDQl2ENk3NhT1ETS4C8cAEOC.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/34eWzsWpZa17DqT8KeL5InlvRK7.jpg",
-   "direccion": [
-    "Ken Sanzel"
-   ],
-   "reparto": [
-    "Nicolas Cage",
-    "Justin Long",
-    "Shelley Hennig",
-    "Ravi Patel",
-    "Brandon Mychal Smith",
-    "Kelly Greyson",
-    "Jaylen Moore",
-    "Michael Sirow"
-   ],
-   "trailer": "JQsr_JLAiq0",
-   "dondeVer": [],
-   "popularidad": 4.5,
    "pr": false
   },
   {
@@ -2505,64 +2546,28 @@
    "pr": false
   },
   {
-   "tmdb": 1720486,
-   "title": "Lilo & Scratch",
-   "original": "Lilo & Scratch",
-   "estreno": "2026-11-25",
-   "clasificacion": "PG",
-   "duracion": null,
+   "tmdb": 1597242,
+   "title": "Cameron Winter at Carnegie Hall",
+   "original": "Cameron Winter at Carnegie Hall",
+   "estreno": "2026-11-20",
+   "clasificacion": null,
+   "duracion": 75,
    "resumen": "",
    "generos": [
-    "Animación",
-    "Comedia",
-    "Familia",
-    "Ciencia ficción"
+    "Documental",
+    "Música"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rfND8uEf8draC83xQVFH6eQkFmA.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/sWoCqZjjDmKU4BMfeBBRoGgyyfn.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/sQt2KQWkpGb79UKlCJNJ2BKobjo.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/7wwJh55u7y5YoUJaABy5o47d14z.jpg",
    "direccion": [
-    "ฝน วีระสุนทร",
-    "Malcon Pierce"
+    "Paul Thomas Anderson"
    ],
    "reparto": [
-    "Chris Sanders",
-    "Maia Kealoha"
+    "Cameron Winter"
    ],
-   "trailer": null,
+   "trailer": "E8olY56RpkU",
    "dondeVer": [],
-   "popularidad": 2.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1505644,
-   "title": "ENE Repeat",
-   "original": "ఈNఈ Repeat",
-   "estreno": "2026-11-19",
-   "clasificacion": "NR",
-   "duracion": 155,
-   "resumen": "",
-   "generos": [
-    "Comedia",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/qMBlRfQNusaUhhBAIcHmforVTW5.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/ygh5XRm9EmEUsBpBPNHnVGmxcSl.jpg",
-   "direccion": [
-    "తరుణ్ భాస్కర్ దాస్యం"
-   ],
-   "reparto": [
-    "Vishwak Sen",
-    "Abhinav Gomatam",
-    "Venkatesh Kakumanu",
-    "Maganti Srinath",
-    "Meher Ramesh",
-    "Anisha Ambrose",
-    "Shivathmika",
-    "Sinjith Yerramilli"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 2.7,
+   "popularidad": 2.4,
    "pr": false
   },
   {
@@ -2597,28 +2602,32 @@
    "pr": false
   },
   {
-   "tmdb": 1597242,
-   "title": "Cameron Winter at Carnegie Hall",
-   "original": "Cameron Winter at Carnegie Hall",
-   "estreno": "2026-11-20",
-   "clasificacion": null,
-   "duracion": 75,
+   "tmdb": 1720486,
+   "title": "Lilo & Scratch",
+   "original": "Lilo & Scratch",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG",
+   "duracion": null,
    "resumen": "",
    "generos": [
-    "Documental",
-    "Música"
+    "Animación",
+    "Comedia",
+    "Familia",
+    "Ciencia ficción"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/sQt2KQWkpGb79UKlCJNJ2BKobjo.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/7wwJh55u7y5YoUJaABy5o47d14z.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/rfND8uEf8draC83xQVFH6eQkFmA.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/sWoCqZjjDmKU4BMfeBBRoGgyyfn.jpg",
    "direccion": [
-    "Paul Thomas Anderson"
+    "ฝน วีระสุนทร",
+    "Malcon Pierce"
    ],
    "reparto": [
-    "Cameron Winter"
+    "Chris Sanders",
+    "Maia Kealoha"
    ],
-   "trailer": "E8olY56RpkU",
+   "trailer": null,
    "dondeVer": [],
-   "popularidad": 2.4,
+   "popularidad": 2.3,
    "pr": false
   }
  ]
