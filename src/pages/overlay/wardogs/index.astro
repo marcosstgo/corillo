@@ -1,6 +1,7 @@
 ---
 import SiteShell from '../../../layouts/SiteShell.astro';
 import OvTabs from '../../../components/overlays/OvTabs.astro';
+import OvAviso from '../../../components/overlays/OvAviso.astro';
 import { WD_SIN_USUARIO, WD_CON_PERFIL } from '../../../data/overlays';
 import { version } from '../../../../version.json';
 const titulo = 'Overlays de WARDOGS para OBS, gratis — Corillo';
@@ -90,6 +91,7 @@ const ld = { '@context': 'https://schema.org', '@graph': [
     </section>
 
     <p class="ov-nota-larga"><strong>Qué puede mostrar Steam y qué no.</strong> De WARDOGS, Steam entrega las horas jugadas, los logros, si estás en partida y los datos públicos del juego. Kills, K/D y partidas no están disponibles: el estudio no ofrece una API pública de perfiles. Si tu perfil o los detalles del juego son privados, los overlays personales no pueden leerlos.</p>
+    <OvAviso juego="wardogs" />
     <p class="ov-fuentes">Datos de Steam. <a href="https://github.com/marcosstgo/corillo-bf6-overlays" target="_blank" rel="noopener">Código en GitHub</a>.</p>
   </div>
   <script is:inline src={`/assets/overlays.js?v=${version}`}></script>
