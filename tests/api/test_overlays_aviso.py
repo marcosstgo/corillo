@@ -8,7 +8,7 @@ def cli(monkeypatch):
     import server, overlays, turnstile, correo
     overlays._log.clear()
     enviados = []
-    estado = {"ts": True, "correo": True}
+    estado = {"ts": True, "correo": True, "discord": True}
 
     async def ver(http, token, accion, ip=""):
         enviados.append(("ts", accion))
@@ -19,7 +19,12 @@ def cli(monkeypatch):
         return estado["correo"]
 
     monkeypatch.setattr(turnstile, "verificar", ver)
+    async def dm(texto):
+        enviados.append(("discord", texto))
+        return estado["discord"]
+
     monkeypatch.setattr(correo, "enviar", env)
+    monkeypatch.setattr(overlays, "_discord", dm)
     return TestClient(server.app), enviados, estado
 
 
@@ -65,10 +70,42 @@ def test_limite_por_ip(cli):
     assert len([e for e in env if e[0] == "correo"]) == 5
 
 
-def test_fallo_de_correo_502(cli):
+def test_discord_lleva_el_aviso(cli):
+    c, env, _ = cli
+    c.post("/overlays/reporte", json=BASE)
+    dm = [e for e in env if e[0] == "discord"][0][1]
+    assert "Battlefield 6" in dm and "sgJohn" in dm and "API not responding" in dm
+
+
+def test_basta_uno_de_los_dos(cli):
     c, _, estado = cli
-    estado["correo"] = False
+    estado["correo"] = False                       # hoy en el VPS no hay Mailgun
+    assert c.post("/overlays/reporte", json=BASE).status_code == 200
+    estado["discord"], estado["correo"] = False, True
+    assert c.post("/overlays/reporte", json=BASE).status_code == 200
+
+
+def test_sin_discord_ni_correo_502(cli):
+    c, _, estado = cli
+    estado["correo"] = estado["discord"] = False
     assert c.post("/overlays/reporte", json=BASE).status_code == 502
+
+
+def test_discord_real_sin_avisar_py_es_false(monkeypatch):
+    import asyncio, overlays
+    monkeypatch.setattr(overlays, "AVISAR", "/no/existe/avisar.py")
+    assert asyncio.run(overlays._discord("hola")) is False
+
+
+def test_discord_real_con_script_falso(monkeypatch, tmp_path):
+    import asyncio, overlays
+    ok = tmp_path / "ok.py"; ok.write_text("import sys; open(sys.argv[0]+'.txt','w').write(sys.stdin.read())")
+    malo = tmp_path / "malo.py"; malo.write_text("import sys; sys.exit(1)")
+    monkeypatch.setattr(overlays, "AVISAR", str(ok))
+    assert asyncio.run(overlays._discord("hola sgJohn")) is True
+    assert (tmp_path / "ok.py.txt").read_text() == "hola sgJohn"
+    monkeypatch.setattr(overlays, "AVISAR", str(malo))
+    assert asyncio.run(overlays._discord("x")) is False
 
 
 @pytest.mark.parametrize("cambio", [{"que": "hey"}, {"que": "x" * 1001}, {"juego": "fortnite"}, {"contacto": "x" * 121}])

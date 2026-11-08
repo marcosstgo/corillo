@@ -2,10 +2,12 @@
 Avisos de problemas con los overlays (/api/overlays/reporte) — lo monta server.py con include_router.
 
 Los overlays corren dentro del OBS de cada streamer: si algo falla, Corillo no se entera.
-El botón «Avísanos» de /overlay/ manda aquí lo que pasa y llega un correo a Marcos.
+El botón «Avísanos» de /overlay/ manda aquí lo que pasa y le llega a Marcos por DM de Discord
+(avisar.py, con el token del Bochinchero) y, si Mailgun está configurado, también por correo.
 Protegido con Turnstile (acción «overlay»), honeypot y un límite por IP.
 """
-import os, re, time
+import asyncio, os, re, time
+from pathlib import Path
 from typing import Literal
 
 from fastapi import APIRouter, HTTPException, Request
@@ -16,6 +18,7 @@ import turnstile
 from mercado import ip_cliente
 
 AVISO_EMAIL = os.environ.get("OVERLAYS_AVISO_EMAIL", os.environ.get("MERCADO_AVISO_EMAIL", "hello@marcossantiago.com"))
+AVISAR = os.environ.get("AVISAR_PY", str(Path.home() / "avisar.py"))   # scripts/vps/avisar.py de corillo-server
 POR_HORA = 5                      # avisos por IP por hora
 _log: dict[str, list[float]] = {}
 _http = None
@@ -56,6 +59,19 @@ def armar_correo(juego: str, que: str, enlace: str, contacto: str, ip: str) -> t
     return asunto, texto, responder_a
 
 
+async def _discord(texto: str) -> bool:
+    """DM a Marcos con avisar.py. False si no está o falla (nunca revienta la petición)."""
+    if not os.path.isfile(AVISAR):
+        return False
+    try:
+        p = await asyncio.create_subprocess_exec("python3", AVISAR, "dm", stdin=asyncio.subprocess.PIPE,
+                                                 stdout=asyncio.subprocess.DEVNULL, stderr=asyncio.subprocess.DEVNULL)
+        await asyncio.wait_for(p.communicate(texto.encode()), timeout=30)
+        return p.returncode == 0
+    except Exception:
+        return False
+
+
 class AvisoIn(BaseModel):
     juego: Literal["bf6", "wardogs", "otro"] = "otro"
     que: str = Field(..., min_length=5, max_length=1000)
@@ -75,6 +91,8 @@ async def reportar(body: AvisoIn, request: Request):
     if not _limite(ip):
         raise HTTPException(429, "Ya recibimos varios avisos tuyos. Intenta otra vez en un rato.")
     asunto, texto, responder_a = armar_correo(body.juego, body.que, body.enlace, body.contacto, ip)
-    if not await correo.enviar(_http(), AVISO_EMAIL, asunto, texto, responder_a=responder_a):
+    por_discord = await _discord(f"🛠️ **{asunto}**\n{texto}")
+    por_correo = await correo.enviar(_http(), AVISO_EMAIL, asunto, texto, responder_a=responder_a)
+    if not (por_discord or por_correo):
         raise HTTPException(502, "No se pudo enviar el aviso. Intenta otra vez en un rato.")
     return {"ok": True, "mensaje": "¡Gracias! Ya nos llegó. Lo vamos a revisar."}

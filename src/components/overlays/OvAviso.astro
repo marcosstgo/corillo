@@ -1,6 +1,6 @@
 ---
 // Botón «Avísanos» de las páginas de overlays: los overlays corren en el OBS de cada streamer
-// y Corillo no se entera si fallan. Manda a /api/overlays/reporte (correo a Marcos).
+// y Corillo no se entera si fallan. Manda a /api/overlays/reporte (DM de Discord a Marcos, y correo si hay Mailgun).
 import { TURNSTILE_SITE_KEY } from '../../data/site';
 const { juego = 'otro' } = Astro.props as { juego?: 'bf6' | 'wardogs' | 'otro' };
 ---
