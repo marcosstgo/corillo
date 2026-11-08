@@ -1194,6 +1194,11 @@ import mercado
 mercado.bind(lambda: _http, _admin_token, lambda: _pb_token.update({"token": "", "ts": 0.0}))
 app.include_router(mercado.router)
 
+# ── Avisos de overlays (/api/overlays/reporte) ──
+import overlays
+overlays.bind(lambda: _http)
+app.include_router(overlays.router)
+
 
 @app.get("/health")
 def health():
