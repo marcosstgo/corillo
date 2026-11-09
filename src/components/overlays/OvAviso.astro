@@ -1,0 +1,60 @@
+---
+// Botón «Avísanos» de las páginas de overlays: los overlays corren en el OBS de cada streamer
+// y Corillo no se entera si fallan. Manda a /api/overlays/reporte (DM de Discord a Marcos, y correo si hay Mailgun).
+import { TURNSTILE_SITE_KEY } from '../../data/site';
+const { juego = 'otro' } = Astro.props as { juego?: 'bf6' | 'wardogs' | 'otro' };
+---
+<div class="ov-avisanos" data-turnstile={TURNSTILE_SITE_KEY} data-juego={juego}>
+  <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+  <span>¿Algún problema con tu overlay?</span>
+  <button type="button" class="ov-chip" id="avAbrir">Avísanos</button>
+</div>
+<dialog class="ov-dlg" id="avDlg" aria-labelledby="avT">
+  <form id="avForm" novalidate>
+    <header><h2 id="avT">Avísanos qué pasa</h2><button type="button" class="ov-x" id="avCerrar" aria-label="Cerrar">&times;</button></header>
+    <label>¿Qué pasa?<textarea name="que" required minlength="5" maxlength="1000" rows="3" placeholder="Ej.: no salen mis stats, dice «API not responding»"></textarea></label>
+    <label>Enlace del overlay <small>(opcional)</small><input name="enlace" maxlength="500" placeholder="https://corillo.live/overlay/…" autocomplete="off"></label>
+    <label>Cómo te contestamos <small>(opcional: Discord o correo)</small><input name="contacto" maxlength="120" autocomplete="email"></label>
+    <div class="ov-hp" aria-hidden="true"><input name="web" tabindex="-1" autocomplete="off"></div>
+    <div class="ov-ts" id="avTs"></div>
+    <p class="ov-av-msg" id="avMsg" role="status" hidden></p>
+    <button class="ov-btn" type="submit" id="avEnviar">Enviar</button>
+  </form>
+</dialog>
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<script is:inline>
+(function () {
+  var raiz = document.querySelector('.ov-avisanos'), dlg = document.getElementById('avDlg'), f = document.getElementById('avForm');
+  var msg = document.getElementById('avMsg'), btn = document.getElementById('avEnviar'), wid;
+  var API = 'https://api.corillo.live/api/overlays/reporte';
+  function aviso(t, ok) { msg.textContent = t; msg.hidden = false; msg.classList.toggle('ok', !!ok); }
+  function ts(cb) { if (window.turnstile) return cb(); var i = setInterval(function () { if (window.turnstile) { clearInterval(i); cb(); } }, 100); }
+  document.getElementById('avAbrir').addEventListener('click', function () {
+    var e = document.getElementById('enlace');            // en bf6/wardogs: el enlace que ya generó
+    if (e && e.value && !f.enlace.value) f.enlace.value = e.value;
+    msg.hidden = true; btn.disabled = false; dlg.showModal();
+    ts(function () {
+      if (wid !== undefined) return window.turnstile.reset(wid);
+      wid = window.turnstile.render('#avTs', { sitekey: raiz.dataset.turnstile, action: 'overlay', theme: 'dark', language: 'es' });
+    });
+  });
+  document.getElementById('avCerrar').addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (f.que.value.trim().length < 5) { aviso('Cuéntanos un poco más de lo que pasa.'); f.que.focus(); return; }
+    var tok = wid !== undefined && window.turnstile ? window.turnstile.getResponse(wid) || '' : '';
+    if (!tok) { aviso('Espera a que termine la verificación de abajo y vuelve a enviar.'); return; }
+    btn.disabled = true; aviso('Enviando…', true);
+    fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+      juego: raiz.dataset.juego, que: f.que.value, enlace: f.enlace.value, contacto: f.contacto.value, web: f.web.value, token: tok }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) {
+        if (x.ok) { aviso(x.d.mensaje || '¡Gracias! Ya nos llegó.', true); f.reset(); setTimeout(function () { dlg.close(); }, 2500); }
+        else { aviso(x.d.detail || 'No se pudo enviar. Intenta otra vez en un rato.'); btn.disabled = false; }
+        if (window.turnstile) window.turnstile.reset(wid);
+      })
+      .catch(function () { aviso('No se pudo enviar. Revisa tu conexión e intenta otra vez.'); btn.disabled = false; });
+  });
+})();
+</script>

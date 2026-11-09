@@ -1,6 +1,7 @@
 ---
 import SiteShell from '../../../layouts/SiteShell.astro';
 import OvTabs from '../../../components/overlays/OvTabs.astro';
+import OvAviso from '../../../components/overlays/OvAviso.astro';
 import { BF6_GRUPOS } from '../../../data/overlays';
 import { version } from '../../../../version.json';
 const titulo = 'Overlays de Battlefield 6 para OBS, gratis — Corillo';
@@ -88,6 +89,7 @@ const ld = { '@context': 'https://schema.org', '@graph': [
       <div class="ov-srvs" id="srvs" aria-live="polite"><p class="ov-aviso">Cargando servidores…</p></div>
       <button class="ov-chip ov-mas" id="srvMas" type="button" hidden>Ver más servidores</button>
     </section>
+    <OvAviso juego="bf6" />
     <p class="ov-fuentes">Datos de Battlefield 6 de <a href="https://gametools.network" target="_blank" rel="noopener">gametools.network</a> y EA. <a href="https://github.com/marcosstgo/corillo-bf6-overlays" target="_blank" rel="noopener">Código en GitHub</a>.</p>
   </div>
   <script is:inline src={`/assets/overlays.js?v=${version}`}></script>

@@ -1,6 +1,7 @@
 ---
 import SiteShell from '../../layouts/SiteShell.astro';
 import OvTabs from '../../components/overlays/OvTabs.astro';
+import OvAviso from '../../components/overlays/OvAviso.astro';
 import OvPasos from '../../components/overlays/OvPasos.astro';
 import { version } from '../../../version.json';
 const titulo = 'Overlays gratis para OBS: Battlefield 6 y WARDOGS — Corillo';
@@ -51,6 +52,7 @@ const ld = { '@context': 'https://schema.org', '@graph': [
       <h2>Cómo se usa</h2>
       <OvPasos />
     </section>
+    <OvAviso juego="otro" />
     <p class="ov-fuentes">Datos de Battlefield 6 de <a href="https://gametools.network" target="_blank" rel="noopener">gametools.network</a>, EA y Steam. Datos de WARDOGS de Steam. <a href="https://github.com/marcosstgo/corillo-bf6-overlays" target="_blank" rel="noopener">Código en GitHub</a>.</p>
   </div>
   <script is:inline src={`/assets/overlays.js?v=${version}`}></script>
