@@ -1,5 +1,5 @@
 {
-  "version": "2.3.157",
+  "version": "2.3.158",
   "date": "2026-11-10",
   "changes": [
     "Corillo vuelve tras la caída del servidor (28-oct): página en Cloudflare Pages, APIs en corillo-vps, video en media.corillo.live.",
