@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-11T01:52:05+00:00",
+ "actualizado": "2026-11-11T04:22:52+00:00",
  "noticias": [
   {
    "gid": "1848664643359946",
@@ -230,33 +230,33 @@
    "id": "UCkMIq70Im_rSUo8KXMVDlXQ",
    "pr": true,
    "url": "https://www.youtube.com/@CaptMatojo07",
-   "en_vivo": "h6fPKSGuz2Y",
+   "en_vivo": null,
    "videos": [
     {
      "id": "h6fPKSGuz2Y",
      "titulo": "🚨 BF6 | ✨🎰 ¡CASINO HEIST! 💰 🎲 ¡EL GRAN GOLPE HA COMENZADO! ⚔️ LET’S GO!",
-     "detalle": "17 lo están viendo",
-     "vivo": true,
+     "detalle": "378 · Transmitido hace 7 min",
+     "vivo": false,
      "directo": true
     },
     {
      "id": "v9iainPJBOM",
      "titulo": "🚨 BF6 | 🔥 ¡PREPARÁNDOSE PARA FASE 2 T5! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚁 ¡LET’S GO!",
-     "detalle": "556 · Transmitido hace 23 h",
+     "detalle": "557 · Transmitido hace 1 día",
      "vivo": false,
      "directo": true
     },
     {
      "id": "JvJPGiiAiNs",
      "titulo": "🚨 BF6 | 🔥 ¡RUMBO A FASE 2 T5! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚁 ¡LET’S GO!",
-     "detalle": "544 · Transmitido hace 1 día",
+     "detalle": "545 · Transmitido hace 1 día",
      "vivo": false,
      "directo": true
     },
     {
      "id": "3HvaY8KyFtc",
      "titulo": "🚁 BF6 | 🔥 ¡VIERNES DE GUERRA TOTAL! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚀 ¡CHANCLETEROS, LET’S GO!",
-     "detalle": "661 · Transmitido hace 3 días",
+     "detalle": "662 · Transmitido hace 3 días",
      "vivo": false,
      "directo": true
     },
@@ -270,14 +270,14 @@
     {
      "id": "_KDikAQ1P1M",
      "titulo": "🚨 BF6 | 🔥 ¡BIENVENIDOS AL EVENTO DE LA COMUNIDAD! ⚔️ CHANCLETEROS, ¡AL COMBATE! 🚁💥 LET’S GO! 🚀",
-     "detalle": "1 K · Transmitido hace 7 días",
+     "detalle": "1 K · Transmitido hace 8 días",
      "vivo": false,
      "directo": true
     },
     {
      "id": "VjdkXL-KScM",
      "titulo": "🚁 BF6 | 🔥 ¡VIERNES DE GUERRA TOTAL! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚀 ¡CHANCLETEROS, LET’S GO!",
-     "detalle": "1.4 K · Transmitido hace 10 días",
+     "detalle": "1.4 K · Transmitido hace 11 días",
      "vivo": false,
      "directo": true
     },
