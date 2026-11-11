@@ -1,0 +1,11 @@
+[
+ {
+  "titulo": "Cámara en tercera persona para Portal",
+  "resumen": "Script de andy6170 y TabbedScamper que activa la tercera persona en experiencias de Battlefield Portal: cambio de hombro, primera persona al apuntar con francotirador y lanzadores, y altura según la postura. Funciona con bloques y con TypeScript.",
+  "tipo": "Portal",
+  "autor": "andy6170",
+  "url": "https://github.com/andy6170/BF6_Third_Person_Camera",
+  "video": "https://youtu.be/jHKCPhZuWRw",
+  "agregado": "2026-11-10"
+ }
+]

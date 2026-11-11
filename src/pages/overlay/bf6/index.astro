@@ -2,6 +2,7 @@
 import SiteShell from '../../../layouts/SiteShell.astro';
 import OvTabs from '../../../components/overlays/OvTabs.astro';
 import OvAviso from '../../../components/overlays/OvAviso.astro';
+import Servidores from '../../../components/bf6/Servidores.astro';
 import { BF6_GRUPOS } from '../../../data/overlays';
 import { version } from '../../../../version.json';
 const titulo = 'Overlays de Battlefield 6 para OBS, gratis — Corillo';
@@ -23,8 +24,8 @@ const ld = { '@context': 'https://schema.org', '@graph': [
       <h1>Overlays de Battlefield 6</h1>
       <p>Tu K/D, tus armas, tus clases y tu sesión en el stream, en vivo y con el fondo transparente para OBS. Escribe tu EA ID, copia el enlace y pégalo.</p>
       <div class="ov-datos">
-        <span class="ov-vivo"><i aria-hidden="true"></i><b id="hSteam">—</b> jugando en Steam</span>
-        <a class="ov-vivo sin-punto" href="#servidores"><b id="hSrv">—</b> servidores con jugadores</a>
+        <span class="ov-vivo"><i aria-hidden="true"></i><b data-bf6="steam">—</b> jugando en Steam</span>
+        <a class="ov-vivo sin-punto" href="#servidores"><b data-bf6="servidores">—</b> servidores con jugadores</a>
       </div>
     </header>
 
@@ -78,20 +79,11 @@ const ld = { '@context': 'https://schema.org', '@graph': [
       </section>
     </div>
 
-    <section class="ov-sec" id="servidores">
-      <h2>Servidores de Battlefield 6 en vivo</h2>
-      <p class="ov-lead">Los servidores con más jugadores ahora mismo. Es una muestra de hasta 100 servidores que entrega gametools.network, actualizada cada minuto.</p>
-      <div class="ov-srv-barra">
-        <input class="ov-campo" id="srvQ" type="search" placeholder="Buscar un servidor por nombre" autocomplete="off" spellcheck="false" aria-label="Buscar un servidor por nombre">
-        <div class="ov-chips" id="regiones" role="group" aria-label="Región"></div>
-      </div>
-      <div class="ov-chips" id="modos" role="group" aria-label="Modo de juego"></div>
-      <div class="ov-srvs" id="srvs" aria-live="polite"><p class="ov-aviso">Cargando servidores…</p></div>
-      <button class="ov-chip ov-mas" id="srvMas" type="button" hidden>Ver más servidores</button>
-    </section>
+    <Servidores />
     <OvAviso juego="bf6" />
     <p class="ov-fuentes">Datos de Battlefield 6 de <a href="https://gametools.network" target="_blank" rel="noopener">gametools.network</a> y EA. <a href="https://github.com/marcosstgo/corillo-bf6-overlays" target="_blank" rel="noopener">Código en GitHub</a>.</p>
   </div>
   <script is:inline src={`/assets/overlays.js?v=${version}`}></script>
   <script is:inline src={`/assets/overlays-bf6.js?v=${version}`}></script>
+  <script is:inline src={`/assets/bf6-servidores.js?v=${version}`}></script>
 </SiteShell>

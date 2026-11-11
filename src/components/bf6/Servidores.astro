@@ -1,0 +1,17 @@
+---
+/* Buscador de servidores de Battlefield 6 en vivo (10-nov-2026). Lo usan /bf6/ y /overlay/bf6/; el código va en
+   public/assets/bf6-servidores.js (cargar después de overlays.js) y el estilo en overlays.css. */
+interface Props { region?: string; titulo?: string }
+const { region = 'all', titulo = 'Servidores de Battlefield 6 en vivo' } = Astro.props;
+---
+<section class="ov-sec" id="servidores" data-region={region}>
+  <h2>{titulo}</h2>
+  <p class="ov-lead">Los servidores con más jugadores ahora mismo. Es una muestra de hasta 100 servidores que entrega gametools.network, actualizada cada minuto.</p>
+  <div class="ov-srv-barra">
+    <input class="ov-campo" id="srvQ" type="search" placeholder="Buscar un servidor por nombre" autocomplete="off" spellcheck="false" aria-label="Buscar un servidor por nombre">
+    <div class="ov-chips" id="regiones" role="group" aria-label="Región"></div>
+  </div>
+  <div class="ov-chips" id="modos" role="group" aria-label="Modo de juego"></div>
+  <div class="ov-srvs" id="srvs" aria-live="polite"><p class="ov-aviso">Cargando servidores…</p></div>
+  <button class="ov-chip ov-mas" id="srvMas" type="button" hidden>Ver más servidores</button>
+</section>

@@ -1,0 +1,177 @@
+---
+/* /bf6/ (10-nov-2026): todo Battlefield 6 en un sitio. Anuncios oficiales (resumidos en español), prensa, Capitán Matojo
+   y otros canales, lo de Corillo (directos y videos con "Battlefield"/"BF6" en el título y noticias con la etiqueta),
+   servidores en vivo, comunidad (aprobada a mano) y herramientas. Datos: scripts/update-bf6.py → src/data/bf6.json. */
+import { getCollection } from 'astro:content';
+import SiteShell from '../../layouts/SiteShell.astro';
+import Servidores from '../../components/bf6/Servidores.astro';
+import { anuncios, prensa, canales, comunidad, steam, fechaMini, ES_BF6, APPID } from '../../data/bf6';
+import { numero, fechaCorta } from '../../data/juegos';
+import { DISCORD_INVITE } from '../../data/site';
+import { version } from '../../../version.json';
+
+const canonical = 'https://corillo.live/bf6/';
+const j = steam();
+const u = j?.fila ?? j?.ficha.ultimo;
+const nuestras = (await getCollection('noticias'))
+  .filter(p => (p.data.tags || []).some((t: string) => ES_BF6.test(t)) || ES_BF6.test(p.data.title || ''))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()).slice(0, 6);
+const pedir = (url: string) => fetch(url, { signal: AbortSignal.timeout(5000) }).then(r => r.ok ? r.json() : null).catch(() => null);
+const vodsRaw = await pedir('https://pb.corillo.live/api/collections/vods/records?sort=-date&perPage=200&fields=id,channel,title,thumb,date');
+const vods = (vodsRaw?.items || []).filter((v: any) => v.thumb && ES_BF6.test(v.title || '')).slice(0, 8);
+const destacado = anuncios.find(a => a.imagen) || anuncios[0];
+const matojo = canales.find(c => c.handle === 'CaptMatojo07');
+const portada = j?.ficha.imagen || null;   // para los anuncios que no traen foto
+const yt = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const desc = 'Todo Battlefield 6 en español: actualizaciones y temporadas, noticias, servidores en vivo, directos de streamers boricuas como Capitán Matojo, scripts de Portal y overlays gratis. Por Corillo, desde Puerto Rico.';
+const ld = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'CollectionPage', name: 'Battlefield 6 — Corillo', url: canonical, description: desc, inLanguage: 'es',
+    about: { '@type': 'VideoGame', name: 'Battlefield 6', url: 'https://corillo.live/juegos/battlefield-6/', sameAs: `https://store.steampowered.com/app/${APPID}/`, gamePlatform: ['PC', 'PlayStation 5', 'Xbox Series X|S'] },
+    mainEntity: { '@type': 'ItemList', itemListElement: [
+      ...nuestras.map(p => ({ url: `https://corillo.live/noticias/${p.id}/`, name: p.data.heroTitle || p.data.title })),
+      ...anuncios.map(a => ({ url: a.url, name: a.titulo })),
+    ].slice(0, 20).map((x, i) => ({ '@type': 'ListItem', position: i + 1, ...x })) } },
+  { '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Corillo', item: 'https://corillo.live/' },
+    { '@type': 'ListItem', position: 2, name: 'Battlefield 6', item: canonical } ] },
+] };
+---
+<SiteShell title="Battlefield 6: noticias, servidores y streamers boricuas | CORILLO" description={desc} canonical={canonical} ogImage={destacado?.imagen || j?.ficha.imagen || undefined}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href={`/assets/overlays.css?v=${version}`}>
+    <link rel="stylesheet" href={`/assets/bf6.css?v=${version}`}>
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </Fragment>
+
+  <div class="ov b6">
+    <header class="b6-hero">
+      {destacado?.imagen && <img class="b6-hero-bg" src={destacado.imagen} alt="" fetchpriority="high" decoding="async" referrerpolicy="no-referrer" />}
+      <div class="b6-hero-txt">
+        <p class="b6-kicker">La sección de Battlefield de Corillo</p>
+        <h1>Battlefield 6</h1>
+        <p class="b6-lead">Las actualizaciones y temporadas explicadas en español, lo que dice la prensa, servidores en vivo y la gente que lo juega, empezando por la de aquí.</p>
+        <div class="ov-datos">
+          <span class="ov-vivo"><i aria-hidden="true"></i><b data-bf6="steam">{u ? numero(u.ahora) : '—'}</b> jugando en Steam</span>
+          <a class="ov-vivo sin-punto" href="#servidores"><b data-bf6="servidores">—</b> servidores con jugadores</a>
+        </div>
+        <nav class="b6-saltos" aria-label="En esta página">
+          <a href="#noticias">Noticias</a><a href="#canales">Directos</a><a href="#corillo">De Corillo</a><a href="#servidores">Servidores</a><a href="#comunidad">Comunidad</a><a href="#herramientas">Herramientas</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="ov-sec" id="noticias">
+      <h2>Lo nuevo de Battlefield 6</h2>
+      <p class="ov-lead">Los anuncios oficiales de EA y Battlefield Studios, resumidos en español. Cada uno enlaza al anuncio completo (en inglés).</p>
+      <div class="b6-anuncios">
+        {anuncios.slice(0, 6).map((a, i) => (
+          <a class={`b6-anuncio${i === 0 ? ' b6-grande' : ''}`} href={a.url} target="_blank" rel="noopener">
+            {(a.imagen || portada) && <span class="b6-foto"><img src={a.imagen || portada} alt="" loading={i < 2 ? 'eager' : 'lazy'} decoding="async" referrerpolicy="no-referrer" /></span>}
+            <span class="b6-anuncio-txt">
+              <time datetime={a.fecha}>{fechaCorta(a.fecha)}</time>
+              <b>{a.titulo}</b>
+              {a.resumen && <span>{a.resumen}</span>}
+              <small>Anuncio oficial en Steam ↗</small>
+            </span>
+          </a>
+        ))}
+      </div>
+      {anuncios.length > 6 && <details class="b6-mas"><summary>Anuncios anteriores</summary><ul class="b6-lista">
+        {anuncios.slice(6).map(a => <li><time datetime={a.fecha}>{fechaMini(a.fecha)}</time><a href={a.url} target="_blank" rel="noopener">{a.titulo}</a></li>)}
+      </ul></details>}
+
+      {prensa.length > 0 && <>
+        <h3 class="b6-sub">Lo que dice la prensa</h3>
+        <ul class="b6-lista b6-prensa">
+          {prensa.map(t => <li><time datetime={t.fecha}>{fechaMini(t.fecha)}</time><a href={t.url} target="_blank" rel="noopener nofollow">{t.titulo}</a><small>{t.medio}</small></li>)}
+        </ul>
+        <p class="b6-nota">Titulares de otros medios; cada enlace lleva a la nota original.</p>
+      </>}
+    </section>
+
+    {matojo && (
+      <section class="ov-sec" id="canales">
+        <h2>Directos de Battlefield 6</h2>
+        <p class="ov-lead">Creadores que juegan Battlefield 6 y que vale la pena seguir. Empezamos por casa.</p>
+        <article class="b6-canal" data-canal={matojo.id}>
+          <div class="b6-canal-cab">
+            <div>
+              <h3>{matojo.nombre} {matojo.pr && <span class="b6-pr">Puerto Rico</span>}</h3>
+              <p>Boricua, buena vibra y Battlefield varias veces por semana: tanques, aviones, helicópteros y eventos con su comunidad, los Chancleteros.</p>
+            </div>
+            <div class="b6-canal-btns">
+              <a class="ov-btn" href={`${matojo.url}/live`} target="_blank" rel="noopener">{matojo.en_vivo ? 'Ver el directo' : 'Ver si está en vivo'}</a>
+              <a class="ov-chip b6-chip-link" href={`${matojo.url}?sub_confirmation=1`} target="_blank" rel="noopener">Suscribirse en YouTube</a>
+            </div>
+          </div>
+          <button class="b6-reproductor" type="button" data-video={matojo.en_vivo || matojo.videos[0]?.id} aria-label={`Reproducir aquí: ${matojo.en_vivo ? 'el directo de ' + matojo.nombre : matojo.videos[0]?.titulo}`}>
+            {(matojo.en_vivo || matojo.videos[0]) && <img src={yt(matojo.en_vivo || matojo.videos[0].id)} alt="" loading="lazy" decoding="async" />}
+            <span class="b6-play" aria-hidden="true"></span>
+            <span class="b6-reproductor-t">{matojo.en_vivo ? 'Último directo (puede seguir en vivo)' : 'Último video'}</span>
+          </button>
+          <div class="b6-videos">
+            {matojo.videos.slice(0, 8).map(v => (
+              <a class="b6-video" href={`https://www.youtube.com/watch?v=${v.id}`} target="_blank" rel="noopener" data-video={v.id}>
+                <span class="b6-video-pic"><img src={yt(v.id)} alt="" loading="lazy" decoding="async" width="480" height="360" />{v.directo && <span class="b6-etq">Directo</span>}</span>
+                <span class="b6-video-t">{v.titulo}</span>
+              </a>
+            ))}
+          </div>
+        </article>
+      </section>
+    )}
+
+    <section class="ov-sec" id="corillo">
+      <h2>Battlefield en Corillo</h2>
+      <p class="ov-lead">Los directos y videos de Corillo que llevan «Battlefield» o «BF6» en el título salen aquí solos.</p>
+      <div class="b6-envivo" id="b6Vivo" hidden></div>
+      {vods.length > 0 ? (
+        <div class="b6-videos">
+          {vods.map((v: any) => (
+            <a class="b6-video" href={`/vods/v/?id=${encodeURIComponent(v.id)}`}>
+              <span class="b6-video-pic"><img src={v.thumb} alt="" loading="lazy" decoding="async" width="640" height="360" /></span>
+              <span class="b6-video-t">{v.title}</span>
+              <small>{v.channel} · {fechaMini(String(v.date).slice(0, 10))}</small>
+            </a>
+          ))}
+        </div>
+      ) : <p class="ov-aviso">Todavía no hay videos de Battlefield en Corillo.</p>}
+      {nuestras.length > 0 && <>
+        <h3 class="b6-sub">Noticias de Corillo</h3>
+        <ul class="b6-lista">{nuestras.map(p => <li><time datetime={p.data.pubDate.toISOString().slice(0, 10)}>{fechaMini(p.data.pubDate.toISOString().slice(0, 10))}</time><a href={`/noticias/${p.id}/`}>{p.data.heroTitle || p.data.title}</a></li>)}</ul>
+      </>}
+    </section>
+
+    <Servidores region="North America" titulo="Servidores en vivo" />
+
+    <section class="ov-sec" id="comunidad">
+      <h2>Comunidad y Portal</h2>
+      <p class="ov-lead">Experiencias de Portal, scripts y herramientas de la comunidad, revisadas por Corillo antes de entrar. Nada de trampas: si pone en riesgo tu cuenta, no sale aquí.</p>
+      <div class="b6-aportes">
+        {comunidad.map(c => (
+          <article class="b6-aporte">
+            <span class="b6-etq">{c.tipo}</span>
+            <h3><a href={c.url} target="_blank" rel="noopener">{c.titulo}</a></h3>
+            <p>{c.resumen}</p>
+            <p class="b6-aporte-pie">Por {c.autor}{c.video && <> · <a href={c.video} target="_blank" rel="noopener">Ver el tutorial</a></>}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="ov-sec" id="herramientas">
+      <h2>Herramientas</h2>
+      <div class="b6-herr">
+        <a class="b6-herr-i" href="/overlay/bf6/"><b>Overlays para OBS</b><span>Tu K/D, armas y sesión en el stream, gratis y con fondo transparente.</span></a>
+        <a class="b6-herr-i" href="/overlay/bf6/#pJugador"><b>Tus estadísticas</b><span>Escribe tu EA ID y mira tus números en un overlay.</span></a>
+        <a class="b6-herr-i" href="/juegos/battlefield-6/"><b>Jugadores en Steam</b><span>{u ? `Puesto ${u.puesto} en Steam y un pico reciente de ${numero(u.pico)}.` : 'Su posición entre lo más jugado de Steam.'}</span></a>
+        <a class="b6-herr-i b6-discord" href={DISCORD_INVITE} target="_blank" rel="noopener"><b>Juega con el corillo</b><span>Busca escuadra en nuestro Discord.</span></a>
+      </div>
+    </section>
+
+    <p class="ov-fuentes">Fuentes: anuncios de Battlefield 6 en Steam (resúmenes de Corillo con ayuda de IA), titulares de Google News, YouTube, <a href="https://gametools.network" target="_blank" rel="noopener">gametools.network</a> y la API de Steam. Battlefield es una marca de Electronic Arts; Corillo no está afiliado a EA.</p>
+  </div>
+  <script is:inline src={`/assets/overlays.js?v=${version}`}></script>
+  <script is:inline src={`/assets/bf6-servidores.js?v=${version}`}></script>
+  <script is:inline src={`/assets/bf6.js?v=${version}`}></script>
+</SiteShell>
