@@ -41,6 +41,26 @@ MIN_SCORE = 7
 UA = 'CorilloNewsBot/1.0 (+https://corillo.live/noticias/; hello@marcossantiago.com)'
 WINDOW_H = 40
 MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+TEMA = 'general'   # 'bf6' = nota de Battlefield 6 para corillo.live/bf6/ (--tema bf6; lun/mié/vie, 10-nov-2026)
+BF6_PREFIJO = 'bf6-'   # sus archivos: AAAA-MM-DD-bf6-<slug>.md (así la nota diaria general no los cuenta)
+BF6_FEEDS = [   # Bing News da el enlace directo al medio (Google News no: su enlace no se puede leer)
+    {'name': 'Bing News (es)', 'url': 'https://www.bing.com/news/search?q=%22Battlefield+6%22&format=rss&setlang=es&cc=US', 'cat': 'gaming', 'bing': True},
+    {'name': 'Bing News (en)', 'url': 'https://www.bing.com/news/search?q=%22Battlefield+6%22&format=rss&setlang=en&cc=US', 'cat': 'gaming', 'bing': True},
+    {'name': 'MP1st', 'url': 'https://mp1st.com/feed', 'cat': 'gaming', 'kw': True},
+    {'name': 'Battlefield 6 en Steam', 'url': 'https://store.steampowered.com/feeds/news/app/2807960/', 'cat': 'gaming', 'steam': True},
+]
+BF6_ESCRIBIR = """
+
+REGLAS DE LA SECCIÓN BATTLEFIELD 6 (además de las de arriba):
+- Los lectores están en Puerto Rico. Toda hora va en hora de Puerto Rico (AST, UTC-4; no cambia en verano): convierte desde UTC
+  u otra zona y dila así, por ejemplo "a las 5:00 a. m., hora de Puerto Rico". Nunca uses la hora de España ni otra zona.
+- Los nombres oficiales del juego van en inglés, igual que en el juego: mapas (European Casino), modos (Conquest, Escalation,
+  Breakthrough), eventos y temporadas (Casino Heist, Season 5), armas, vehículos, monedas (DOUGH) y sistemas (Leaderboards, Portal).
+  Si ayuda, explica en español qué es, pero no inventes traducciones.
+- No hables de tus fuentes ni de sus diferencias dentro del texto ("una fuente dice", "según otro medio lo llaman"). Si las
+  fuentes no coinciden, usa lo que dice el anuncio oficial; si no hay anuncio oficial, deja ese dato fuera.
+- Escribe para quien juega: qué cambia, cuándo y qué tiene que hacer. Nada de cifras de jugadores salvo que sean el tema."""
+BF6_KW = re.compile(r'battlefield|\bbf6\b|redsec', re.I)
 CATS = {  # espejo de src/data/news.ts
     'gaming': ('Gaming y esports', 'fa-solid fa-gamepad', 'badge-confirm'),
     'tech': ('Tecnología e IA', 'fa-solid fa-microchip', 'badge-accent'),
@@ -102,10 +122,11 @@ def norm(t):
 
 # ───────────── descubrir ─────────────
 def discover(exclude_urls):
-    cutoff = time.time() - WINDOW_H * 3600
-    kw = re.compile(CFG['kw_regex'], re.I)
+    bf6 = TEMA == 'bf6'
+    cutoff = time.time() - (72 if bf6 else WINDOW_H) * 3600
+    kw = BF6_KW if bf6 else re.compile(CFG['kw_regex'], re.I)
     items, seen_t = [], []
-    for f in CFG['feeds']:
+    for f in (BF6_FEEDS if bf6 else CFG['feeds']):
         try:
             r = httpx.get(f['url'], headers={'User-Agent': UA}, timeout=15, follow_redirects=True)
             d = feedparser.parse(r.content)
@@ -116,13 +137,25 @@ def discover(exclude_urls):
             ts = e.get('published_parsed') or e.get('updated_parsed')
             if ts and time.mktime(ts) < cutoff - 3600 * 8: continue  # (mktime local vs UTC: margen de 8 h)
             title = html.unescape(e.get('title', '')).strip(); link = e.get('link', '')
-            summ = re.sub(r'<[^>]+>', ' ', html.unescape(e.get('summary', ''))); summ = re.sub(r'\s+', ' ', summ).strip()[:400]
+            if f.get('bing'):   # bing.com/news/apiclick.aspx?...&url=<enlace real>
+                from urllib.parse import urlparse, parse_qs
+                link = (parse_qs(urlparse(link).query).get('url') or [link])[0]
+                if 'msn.com/' in link: continue   # MSN solo republica y su página no se puede leer
+            completo = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', html.unescape(e.get('summary', '')))).strip()
+            summ = completo[:400]
             if not title or not link or link in exclude_urls: continue
             if f.get('kw') and not kw.search(title + ' ' + summ): continue
             key = ' '.join(norm(title)[:8])
             if any(difflib.SequenceMatcher(None, key, s).ratio() > .85 for s in seen_t): continue
             seen_t.append(key); n += 1
-            items.append({'source': f['name'], 'cat': f['cat'], 'title': title, 'url': link, 'summary': summ})
+            if bf6 and not BF6_KW.search(title + ' ' + summ): continue
+            if f.get('bing'):
+                fuente = html.unescape(e.get('source', {}).get('title', '') if hasattr(e.get('source', ''), 'get') else '') or urlparse(link).netloc.replace('www.', '')
+            else:
+                fuente = f['name']
+            it = {'source': fuente, 'cat': f['cat'], 'title': title, 'url': link, 'summary': summ}
+            if f.get('steam') and len(completo) > 800: it['text'] = completo[:12000]   # el anuncio entero viene en el feed
+            items.append(it)
         log(f"feed {f['name']}: {n}")
     for i, it in enumerate(items): it['id'] = i
     return items
@@ -194,6 +227,13 @@ o ninguna. Criterios: relevancia real para la comunidad, hecho concreto y verifi
 que se pueda explicar aportando contexto útil. Descarta ofertas/cupones, listas de "mejores X", reseñas de producto,
 política general, crónica roja y notas que ya cubrimos. Descarta también muertes, enfermedades o tragedias personales (sobre todo de menores), escándalos y chismes de famosos: no somos un medio de sucesos. Busca variedad: si las últimas notas fueron de videojuegos, prefiere cine/series, tecnología/IA, streaming o Puerto Rico cuando haya una historia igual de buena. Prefiere historias con varias fuentes independientes.
 Puntúa 1-10 (10 = imperdible). Si nada llega a {threshold}, devuelve choice_id null."""
+BF6_SEL_SYS = """Eres el editor de la sección de Battlefield 6 de CORILLO (corillo.live/bf6/), una comunidad gamer de Puerto Rico.
+Tu trabajo: de los titulares recientes sobre Battlefield 6, escoger LA noticia que de verdad le sirva a quien juega, o ninguna.
+Vale: actualizaciones y parches, temporadas y eventos, mapas, modos, armas y balance, Portal y lo que crea la comunidad, esports,
+anuncios oficiales de EA o Battlefield Studios, cambios de precio o semanas gratis, y decisiones que afecten a los jugadores.
+No vale: rumores o filtraciones sin confirmar, ofertas de tiendas, listas, guías genéricas, opinión, clickbait, y notas que ya
+cubrimos (aunque venga de otro medio). Más vale no publicar que publicar relleno.
+Puntúa 1-10 (10 = imperdible para quien juega Battlefield 6). Si nada llega a {threshold}, devuelve choice_id null. category: gaming."""
 SEL_SCHEMA = {'type': 'object', 'additionalProperties': False,
     'required': ['choice_id', 'score', 'category', 'angle', 'related_ids', 'reason'],
     'properties': {'choice_id': {'type': ['integer', 'null']}, 'score': {'type': 'integer'},
@@ -349,7 +389,7 @@ def pick_story(client, items, used_ids, pub, min_score=MIN_SCORE):
     for _try in range(3):
         avail = [i for i in items if i['id'] not in used_ids]
         lst = '\n'.join(f"[{i['id']}] ({i['source']}/{i['cat']}) {i['title']} — {i['summary'][:220]}" for i in avail)
-        sel = llm_json(client, SEL_SYS.format(threshold=min_score), f"Notas que CORILLO ya publicó (NO repetir estos temas ni sus variantes, aunque venga de otra fuente):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
+        sel = llm_json(client, (BF6_SEL_SYS if TEMA == 'bf6' else SEL_SYS).format(threshold=min_score), f"Notas que CORILLO ya publicó (NO repetir estos temas ni sus variantes, aunque venga de otra fuente):\n{recent}\n\nTitulares de las últimas {WINDOW_H} horas:\n{lst}\n\nElige.", SEL_SCHEMA, 8000)
         log('selector:', json.dumps(sel, ensure_ascii=False)[:400])
         cid = sel['choice_id']
         if cid is None or sel['score'] < min_score: break
@@ -364,7 +404,7 @@ def pick_story(client, items, used_ids, pub, min_score=MIN_SCORE):
     chosen = [byid[sel['choice_id']]] + [byid[r] for r in sel['related_ids'] if r in byid and r != sel['choice_id']][:3]
     srcs, texts = [], []
     for c in chosen:
-        t = fetch_text(c['url'])
+        t = c.get('text') or fetch_text(c['url'])
         if len(t) < 500: t = c['title'] + '. ' + c['summary']  # solo el resumen del feed si la página no sirve
         if len(t) > 200: srcs.append(c); texts.append(t)
     full = [t for t in texts if len(t) > 800]
@@ -429,6 +469,7 @@ def write_story(client, sel, srcs, texts, block, force=False):
     for attempt in (1, 2, 3):
         u = (f"Enfoque sugerido por el editor: {sel['angle']}\nCategoría sugerida: {sel['category']}\n\n"
              f"HOJA DE HECHOS VERIFICADOS (escribe solo con esto):\n{sheet}\n\nNO ESTABLECIDO (no lo afirmes):\n{notest}\n\nFuentes completas, solo como contexto:\n{block}{hedge}")
+        if TEMA == 'bf6': u += BF6_ESCRIBIR
         if problems: u += '\n\nProblemas del intento anterior a corregir:\n' + '\n'.join('- ' + p for p in problems)
         art = llm_json(client, WRITE_SYS, u, WRITE_SCHEMA, 10000)
         ratio = copied_ratio(art['body'], texts)
@@ -446,6 +487,9 @@ def write_story(client, sel, srcs, texts, block, force=False):
         if soft: log('reparos menores (no bloquean):', soft)
         if not blocking:
             art['category'] = art['category'] if art['category'] in CATS else sel['category']
+            if TEMA == 'bf6':   # para que salga en /bf6/ y busque el arte oficial del juego
+                art['category'], art['game'] = 'gaming', 'Battlefield 6'
+                art['tags'] = ['Battlefield 6'] + [t for t in art['tags'] if t.lower() != 'battlefield 6'][:4]
             return art, srcs
         log('problemas graves:', blocking)
         problems = blocking + soft
@@ -458,7 +502,7 @@ def make_one(client, items, used_ids, pub, dry):
     visto en el día, marcado como sin confirmar (mismo criterio honesto que --force)."""
     fallback = None
     for n in range(1, MAX_STORIES + 1):
-        min_score = max(4, MIN_SCORE - (n - 1))
+        min_score = max(6 if TEMA == 'bf6' else 4, MIN_SCORE - (n - 1))
         st = pick_story(client, items, used_ids, pub, min_score)
         if st is None:
             log(f'nada elegible en el intento {n}/{MAX_STORIES} (umbral {min_score}); se baja el umbral y se prueba otra vez')
@@ -470,6 +514,8 @@ def make_one(client, items, used_ids, pub, dry):
             if r: return r
             used_ids.update(ids)      # tampoco volver a intentar las fuentes relacionadas del mismo hecho
         log(f'tema descartado ({n}/{MAX_STORIES}); se prueba con otro')
+    if fallback and TEMA == 'bf6':
+        log('Battlefield 6: ningún tema pasó la verificación; no se publica (sin último recurso, decisión de Marcos 10-nov-2026)'); return None
     if fallback:
         log('ÚLTIMO RECURSO: se agotaron los temas normales; se publica el mejor candidato del día marcándolo como sin confirmar (nunca se queda sin nota)')
         sel, srcs, texts, block, ids = fallback
@@ -481,9 +527,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true'); ap.add_argument('--backfill', type=int, default=0)
     ap.add_argument('--unpublish')
+    ap.add_argument('--tema', choices=['general', 'bf6'], default='general', help='bf6 = nota de Battlefield 6 (Sonnet; solo si hay algo bueno)')
     ap.add_argument('--force', type=int, help='id de candidato: publícalo aunque el verificador lo rechace (decisión humana)')
     ap.add_argument('--force-query', help='como --force pero busca el candidato por texto en el título/resumen')
     a = ap.parse_args()
+    global TEMA
+    TEMA = a.tema
     load_env()
 
     if a.unpublish:
@@ -497,7 +546,12 @@ def main():
     today = f'{now:%Y-%m-%d}'
     hoy = dt.datetime.now().strftime('%Y-%m-%d')
     forcing = a.force is not None or bool(a.force_query)
-    if not a.backfill and not a.dry_run and not forcing and any(p['file'].startswith(hoy) and 'ai: true' in (POSTS / p['file']).read_text() for p in pub):
+    es_bf6 = lambda f: f[11:].startswith(BF6_PREFIJO)
+    if TEMA == 'bf6':
+        ayer = (dt.datetime.now() - dt.timedelta(days=1)).strftime('%Y-%m-%d')
+        if not a.dry_run and not forcing and any(es_bf6(p['file']) and p['file'][:10] >= ayer for p in pub):
+            log('Battlefield 6: ya hay nota de hoy o de ayer'); return
+    elif not a.backfill and not a.dry_run and not forcing and any(p['file'].startswith(hoy) and not es_bf6(p['file']) and 'ai: true' in (POSTS / p['file']).read_text() for p in pub):
         log('ya hay nota automática de hoy'); return
     global PROVIDER
     PROVIDER = os.environ.get('NEWS_PROVIDER') or ('deepseek' if os.environ.get('DEEPSEEK_API_KEY') else 'anthropic')
@@ -531,7 +585,8 @@ def main():
         telegram(f"📰 Nota publicada en CORILLO (forzada manualmente por el editor):\n{art['title']}\nhttps://corillo.live/noticias/{fname[:-3]}/\n\nRetirar: daily-news.py --unpublish {fname[:-3]}")
         return
 
-    if len(items) < 5: log('muy pocos candidatos'); telegram('⚠️ Noticias: muy pocos candidatos hoy (¿feeds caídos?)'); return
+    if TEMA == 'bf6' and len(items) < 2: log('Battlefield 6: muy pocos candidatos; no se publica'); return
+    if TEMA != 'bf6' and len(items) < 5: log('muy pocos candidatos'); telegram('⚠️ Noticias: muy pocos candidatos hoy (¿feeds caídos?)'); return
 
     n = max(1, a.backfill); made, used = [], set()
     for _ in range(n):
@@ -541,7 +596,7 @@ def main():
         if not r: break
         art, srcs = r
         md = build_md(art, srcs, now + dt.timedelta(minutes=len(made)))
-        fname = f"{dt.datetime.now():%Y-%m-%d}-{slugify(art['title'])}.md"
+        fname = f"{dt.datetime.now():%Y-%m-%d}-{BF6_PREFIJO if TEMA == 'bf6' else ''}{slugify(art['title'])}.md"
         if a.dry_run:
             print('\n' + '=' * 70 + f'\n{fname}\n' + '=' * 70 + f'\n{md}')
             made.append(fname); continue
@@ -551,7 +606,7 @@ def main():
     if a.dry_run or not made:
         if not made:
             log('hoy no se publica nada')
-            if not a.dry_run: telegram('⚠️ Noticias: hoy NO se publicó ninguna nota (el verificador rechazó todos los borradores). Detalle en ~/corillo-news/logs/daily.log')
+            if not a.dry_run and TEMA != 'bf6': telegram('⚠️ Noticias: hoy NO se publicó ninguna nota (el verificador rechazó todos los borradores). Detalle en ~/corillo-news/logs/daily.log')
         save_state(st) if not a.dry_run else None; return
     save_state(st)
     try:  # portada de cada nota: arte oficial del juego (Steam) → ilustración IA → portada de diseño (scripts/news_cover.py)
@@ -573,7 +628,7 @@ def main():
     for f in made:
         t = re.search(r'^heroTitle: "(.*)"', (POSTS / f).read_text(), re.M).group(1)
         telegram(f"📰 Nota publicada en CORILLO:\n{t}\nhttps://corillo.live/noticias/{f[:-3]}/\n\nRetirar: daily-news.py --unpublish {f[:-3]}")
-        discord(f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
+        discord(f"🎯 **Battlefield 6:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/" if TEMA == 'bf6' else f"📰 **Noticia del día:** {t}\nhttps://corillo.live/noticias/{f[:-3]}/")
 
 
 def whatsapp(slug, title, md):
