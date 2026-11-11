@@ -34,6 +34,7 @@ MODELO = os.environ.get('BF6_MODEL', 'claude-opus-5-5')
 GNEWS_URL = 'https://news.google.com/rss/search'
 PRENSA_DIAS = 21        # titulares más viejos que esto no salen
 PRENSA_MAX = 12
+PRENSA_HORAS = 6       # la prensa se vuelve a escoger como mucho cada 6 h (el sitio se publica varias veces al día)
 NAVEGADOR = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36',
              'Accept-Language': 'es-419,es;q=0.9'}
 # Creadores de BF6 que salen en la página. Marcos decide quién entra (10-nov-2026: CaptMatojo07, boricua).
@@ -265,6 +266,9 @@ def main() -> int:
         firma = sorted(c['url'] for c in cands)
         if firma == viejo.get('prensa_firma'):
             titulares = viejo.get('prensa', [])          # nada nuevo en Google News: no se gasta otra consulta
+        elif viejo.get('prensa') and viejo.get('prensa_hora') and \
+                (datetime.now(timezone.utc) - datetime.fromisoformat(viejo['prensa_hora'])).total_seconds() < PRENSA_HORAS * 3600:
+            titulares, firma = viejo['prensa'], viejo.get('prensa_firma')
         elif cliente:
             titulares = elegir_prensa(cliente, cands)
         else:
@@ -272,11 +276,12 @@ def main() -> int:
     except Exception as e:
         log(f'prensa falló: {type(e).__name__}: {str(e)[:120]} — quedan los titulares de antes')
         titulares, firma = viejo.get('prensa', []), viejo.get('prensa_firma')
+    prensa_hora = viejo.get('prensa_hora') if firma == viejo.get('prensa_firma') else datetime.now(timezone.utc).isoformat(timespec='seconds')
     previos = {c.get('handle'): c for c in viejo.get('canales', [])}
     canales = [canal(c, previos.get(c['handle'])) for c in CANALES]
 
     datos = {'actualizado': datetime.now(timezone.utc).isoformat(timespec='seconds'),
-             'noticias': salida, 'prensa': titulares, 'prensa_firma': firma, 'canales': canales}
+             'noticias': salida, 'prensa': titulares, 'prensa_firma': firma, 'prensa_hora': prensa_hora, 'canales': canales}
     if all(datos[k] == viejo.get(k) for k in ('noticias', 'prensa', 'canales')):
         log('sin cambios')
         return 0
