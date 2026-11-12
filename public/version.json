@@ -1,6 +1,6 @@
 {
-  "version": "2.3.175",
-  "date": "2026-11-11",
+  "version": "2.3.176",
+  "date": "2026-11-12",
   "changes": [
     "Corillo vuelve tras la caída del servidor (28-oct): página en Cloudflare Pages, APIs en corillo-vps, video en media.corillo.live.",
     "Noticias con portada (arte oficial de Steam o ilustración propia); Sobre Corillo reescrita.",
