@@ -1,6 +1,15 @@
 {
- "actualizado": "2026-11-13T11:32:18+00:00",
+ "actualizado": "2026-11-13T16:26:01+00:00",
  "noticias": [
+  {
+   "gid": "1849192144187912",
+   "fecha": "2026-11-13",
+   "titulo_original": "Battlefield 6 Free Trial Live Now",
+   "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1849192144187912",
+   "imagen": null,
+   "titulo": "Prueba gratuita de Battlefield 6 ya disponible por 4 días",
+   "resumen": "Durante cuatro días se puede jugar gratis Conquest y Escalation, además del evento Casino Heist con contratos y recompensas de temática Las Vegas. Requiere tener Battlefield REDSEC instalado y actualizado."
+  },
   {
    "gid": "1848664643359946",
    "fecha": "2026-11-10",
@@ -99,15 +108,6 @@
    "imagen": null,
    "titulo": "Se extiende la prueba gratuita de Battlefield 6 en Steam hasta el martes",
    "resumen": "Tras fallas el primer día, la prueba gratuita y el fin de semana de doble XP siguen hasta el martes 20 de octubre a la 1 PM EDT. Si no ves Multiplayer, reinicia Steam y pulsa Play Game en la tienda para descargarlo."
-  },
-  {
-   "gid": "1846651706681823",
-   "fecha": "2026-10-16",
-   "titulo_original": "Siege of Vegas and Season 5 Battlefield Discord Live Q&A on October 20",
-   "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846651706681823",
-   "imagen": null,
-   "titulo": "Q&A en vivo en Discord sobre Siege of Vegas y Season 5 el 20 de octubre",
-   "resumen": "El equipo de desarrollo responderá preguntas sobre Season 5, Battlefield 6 y REDSEC durante una hora en Discord el 20 de octubre a las 12 PM EDT (9 AM PDT). Conviene unirse al servidor antes del evento."
   }
  ],
  "prensa": [
@@ -221,7 +221,7 @@
     {
      "id": "h6fPKSGuz2Y",
      "titulo": "🚨 BF6 | ✨🎰 ¡CASINO HEIST! 💰 🎲 ¡EL GRAN GOLPE HA COMENZADO! ⚔️ LET’S GO!",
-     "detalle": "726 · Transmitido hace 2 días",
+     "detalle": "727 · Transmitido hace 2 días",
      "vivo": false,
      "directo": true
     },
