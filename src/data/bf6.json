@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-15T01:25:49+00:00",
+ "actualizado": "2026-11-15T04:22:56+00:00",
  "noticias": [
   {
    "gid": "1849192144187912",
@@ -217,33 +217,33 @@
    "id": "UCkMIq70Im_rSUo8KXMVDlXQ",
    "pr": true,
    "url": "https://www.youtube.com/@CaptMatojo07",
-   "en_vivo": "wtIPex4Jl6M",
+   "en_vivo": null,
    "videos": [
     {
      "id": "wtIPex4Jl6M",
      "titulo": "🚨 BF6 | 🎰🔥 ¡SÁBADO DE CASINO HEIST! 💰 APUESTAS AL LÍMITE, ¡EL BOTÍN NOS ESPERA! ⚔️ ¡LET’S GO!",
-     "detalle": "26 lo están viendo",
-     "vivo": true,
+     "detalle": "574 · Transmitido hace 32 min",
+     "vivo": false,
      "directo": true
     },
     {
      "id": "qzxlEaOEUm8",
      "titulo": "🚨 BF6 | ✨🎰 ¡VIERNES DE GUERRA TOTAL! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚀 ¡CHANCLETEROS, LET’S GO!",
-     "detalle": "609 · Transmitido hace 20 h",
+     "detalle": "615 · Transmitido hace 23 h",
      "vivo": false,
      "directo": true
     },
     {
      "id": "h6fPKSGuz2Y",
      "titulo": "🚨 BF6 | ✨🎰 ¡CASINO HEIST! 💰 🎲 ¡EL GRAN GOLPE HA COMENZADO! ⚔️ LET’S GO!",
-     "detalle": "731 · Transmitido hace 3 días",
+     "detalle": "731 · Transmitido hace 4 días",
      "vivo": false,
      "directo": true
     },
     {
      "id": "v9iainPJBOM",
      "titulo": "🚨 BF6 | 🔥 ¡PREPARÁNDOSE PARA FASE 2 T5! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚁 ¡LET’S GO!",
-     "detalle": "565 · Transmitido hace 4 días",
+     "detalle": "565 · Transmitido hace 5 días",
      "vivo": false,
      "directo": true
     },
@@ -271,7 +271,7 @@
     {
      "id": "_KDikAQ1P1M",
      "titulo": "🚨 BF6 | 🔥 ¡BIENVENIDOS AL EVENTO DE LA COMUNIDAD! ⚔️ CHANCLETEROS, ¡AL COMBATE! 🚁💥 LET’S GO! 🚀",
-     "detalle": "1 K · Transmitido hace 11 días",
+     "detalle": "1 K · Transmitido hace 12 días",
      "vivo": false,
      "directo": true
     }
