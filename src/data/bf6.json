@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-15T22:15:10+00:00",
+ "actualizado": "2026-11-16T01:24:59+00:00",
  "noticias": [
   {
    "gid": "1849192144187912",
@@ -221,12 +221,19 @@
    "id": "UCkMIq70Im_rSUo8KXMVDlXQ",
    "pr": true,
    "url": "https://www.youtube.com/@CaptMatojo07",
-   "en_vivo": null,
+   "en_vivo": "1gCJosJ4Peo",
    "videos": [
+    {
+     "id": "1gCJosJ4Peo",
+     "titulo": "🚨 BF6 | 🔥 ¡ZONA DE COMBATE ACTIVADA! ⚔️ CHANCLETEROS, ¡HOY SE LUCHA! 🚀 ¡LET’S GO!",
+     "detalle": "23 lo están viendo",
+     "vivo": true,
+     "directo": true
+    },
     {
      "id": "wtIPex4Jl6M",
      "titulo": "🚨 BF6 | 🎰🔥 ¡SÁBADO DE CASINO HEIST! 💰 APUESTAS AL LÍMITE, ¡EL BOTÍN NOS ESPERA! ⚔️ ¡LET’S GO!",
-     "detalle": "852 · Transmitido hace 18 h",
+     "detalle": "857 · Transmitido hace 21 h",
      "vivo": false,
      "directo": true
     },
@@ -234,6 +241,13 @@
      "id": "qzxlEaOEUm8",
      "titulo": "🚨 BF6 | ✨🎰 ¡VIERNES DE GUERRA TOTAL! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚀 ¡CHANCLETEROS, LET’S GO!",
      "detalle": "620 · Transmitido hace 1 día",
+     "vivo": false,
+     "directo": true
+    },
+    {
+     "id": "31lI_dadHpw",
+     "titulo": "🚨 BF6 | 🎰🔥 ¡CASINO HEIST EN ACCIÓN! 💰 LA APUESTA MÁS GRANDE COMIENZA ⚔️ LET’S GO!",
+     "detalle": "639 · Transmitido hace 3 días",
      "vivo": false,
      "directo": true
     },
@@ -261,21 +275,7 @@
     {
      "id": "3HvaY8KyFtc",
      "titulo": "🚁 BF6 | 🔥 ¡VIERNES DE GUERRA TOTAL! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚀 ¡CHANCLETEROS, LET’S GO!",
-     "detalle": "677 · Transmitido hace 8 días",
-     "vivo": false,
-     "directo": true
-    },
-    {
-     "id": "MV8w_E07Kjo",
-     "titulo": "BF6 | 💀 ¡ZONA DE COMBATE! ⚔️ CHANCLETEROS, ¡AL ATAQUE! 🚁🔥 LET’S GO!",
-     "detalle": "776 · Transmitido hace 10 días",
-     "vivo": false,
-     "directo": true
-    },
-    {
-     "id": "_KDikAQ1P1M",
-     "titulo": "🚨 BF6 | 🔥 ¡BIENVENIDOS AL EVENTO DE LA COMUNIDAD! ⚔️ CHANCLETEROS, ¡AL COMBATE! 🚁💥 LET’S GO! 🚀",
-     "detalle": "1 K · Transmitido hace 12 días",
+     "detalle": "678 · Transmitido hace 8 días",
      "vivo": false,
      "directo": true
     }
