@@ -1,21 +1,6 @@
 {
- "actualizado": "2026-11-01",
+ "actualizado": "2026-11-16",
  "eventos": [
-  {
-   "slug": "arcadia-battle-royale-2026",
-   "precio": "Entrada gratis con registro",
-   "web": "https://arcadiabattleroyale.com",
-   "voz_extra": "La entrada es gratis, pero hay que registrarse.",
-   "detalle": "Torneos, videojuegos y activaciones gaming.",
-   "nombre": "Arcadia Battle Royale 2026",
-   "inicio": "2026-11-14",
-   "fin": "2026-11-15",
-   "lugar": "Coliseo Rubén Rodríguez",
-   "municipio": "Bayamón",
-   "confirmado": true,
-   "fuente_nombre": "Página oficial de Arcadia Battle Royale",
-   "fuente_url": "https://arcadiabattleroyale.com"
-  },
   {
    "slug": "el-bohio-de-bdaly-9",
    "nombre": "El Bohío de Bdaly #9!",
