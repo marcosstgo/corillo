@@ -1,6 +1,15 @@
 {
- "actualizado": "2026-11-17T13:26:02+00:00",
+ "actualizado": "2026-11-17T16:23:49+00:00",
  "noticias": [
+  {
+   "gid": "1849458702694300",
+   "fecha": "2026-11-17",
+   "titulo_original": "Battlefield Community Survey – Casino Heist",
+   "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1849458702694300",
+   "imagen": null,
+   "titulo": "Ya está disponible la encuesta comunitaria sobre la fase Casino Heist",
+   "resumen": "El equipo de Battlefield 6 abrió su encuesta comunitaria para conocer cómo ha sido tu experiencia con Casino Heist. Las respuestas tienen cupo limitado y se aceptan por orden de llegada, así que conviene completarla pronto."
+  },
   {
    "gid": "1849192144187912",
    "fecha": "2026-11-13",
@@ -99,15 +108,6 @@
    "imagen": "https://clan.akamai.steamstatic.com/images/45712411/cee06701ad347e94f06d4466f5d70759271cc1c4.png",
    "titulo": "Dead Space: Convergence llega a Battlefield 6 con el modo Marker Incursion",
    "resumen": "Desde el 20 de octubre, el evento de Halloween trae Marker Incursion, un PvE para 16 jugadores donde destruyes Marker Shrines, además del DS-23 Pulse Rifle como Battle Pick-Up y recompensas como el skin Aegis VII."
-  },
-  {
-   "gid": "1846651706683012",
-   "fecha": "2026-10-16",
-   "titulo_original": "Steam Free Trial Extended!",
-   "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846651706683012",
-   "imagen": null,
-   "titulo": "Se extiende la prueba gratuita de Battlefield 6 en Steam hasta el martes",
-   "resumen": "Tras fallas el primer día, la prueba gratuita y el fin de semana de doble XP siguen hasta el martes 20 de octubre a la 1 PM EDT. Si no ves Multiplayer, reinicia Steam y pulsa Play Game en la tienda para descargarlo."
   }
  ],
  "prensa": [
@@ -203,14 +203,14 @@
     {
      "id": "65kJ_StCY4M",
      "titulo": "BF6 | 💎🎰 ¡QUE COMIENCE EL LUNES DE BATALLA, CHANCLETEROS! ⚔️ HOY VENIMOS A PASARLA BIEN 😎 ¡LET’S GO!",
-     "detalle": "508 · Transmitido hace 11 h",
+     "detalle": "516 · Transmitido hace 14 h",
      "vivo": false,
      "directo": true
     },
     {
      "id": "1gCJosJ4Peo",
      "titulo": "🚨 BF6 | 🔥 ¡ZONA DE COMBATE ACTIVADA! ⚔️ CHANCLETEROS, ¡HOY SE LUCHA! 🚀 ¡LET’S GO!",
-     "detalle": "524 · Transmitido hace 1 día",
+     "detalle": "526 · Transmitido hace 1 día",
      "vivo": false,
      "directo": true
     },
