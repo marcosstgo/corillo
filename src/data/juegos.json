@@ -1,704 +1,704 @@
 {
- "actualizado": "2026-11-16T06:14-04:00",
+ "actualizado": "2026-11-17T06:14-04:00",
  "juegos": [
   {
    "appid": 730,
    "puesto": 1,
-   "ahora": 611586,
-   "pico": 1299141,
+   "ahora": 619420,
+   "pico": 1089270,
    "cambio": 0
   },
   {
    "appid": 570,
    "puesto": 2,
-   "ahora": 509480,
-   "pico": 874632,
-   "cambio": 1
+   "ahora": 470123,
+   "pico": 774257,
+   "cambio": 0
   },
   {
    "appid": 578080,
    "puesto": 3,
-   "ahora": 290932,
-   "pico": 734283,
-   "cambio": -1
+   "ahora": 294462,
+   "pico": 707459,
+   "cambio": 0
   },
   {
    "appid": 4262460,
    "puesto": 4,
-   "ahora": 202856,
-   "pico": 547950,
-   "cambio": 10
+   "ahora": 225227,
+   "pico": 527477,
+   "cambio": 6
   },
   {
    "appid": 3419430,
    "puesto": 5,
-   "ahora": 195700,
-   "pico": 195700,
-   "cambio": -9
-  },
-  {
-   "appid": 4115450,
-   "puesto": 6,
-   "ahora": 124013,
-   "pico": 307720,
-   "cambio": -3
+   "ahora": 191436,
+   "pico": 207640,
+   "cambio": -5
   },
   {
    "appid": 3393110,
-   "puesto": 7,
-   "ahora": 121479,
-   "pico": 179047,
-   "cambio": -8
+   "puesto": 6,
+   "ahora": 124344,
+   "pico": 156636,
+   "cambio": -6
   },
   {
-   "appid": 2868840,
-   "puesto": 8,
-   "ahora": 95543,
-   "pico": 182135,
-   "cambio": 3
+   "appid": 4115450,
+   "puesto": 7,
+   "ahora": 117156,
+   "pico": 280692,
+   "cambio": -4
   },
   {
    "appid": 440,
-   "puesto": 9,
-   "ahora": 92453,
-   "pico": 107055,
-   "cambio": -1
+   "puesto": 8,
+   "ahora": 95067,
+   "pico": 104779,
+   "cambio": 0
   },
   {
-   "appid": 1172470,
-   "puesto": 10,
-   "ahora": 86348,
-   "pico": 244711,
-   "cambio": 1
+   "appid": 2868840,
+   "puesto": 9,
+   "ahora": 93949,
+   "pico": 164877,
+   "cambio": 4
   },
   {
    "appid": 1422450,
+   "puesto": 10,
+   "ahora": 86255,
+   "pico": 195219,
+   "cambio": 0
+  },
+  {
+   "appid": 1172470,
    "puesto": 11,
-   "ahora": 85152,
-   "pico": 233122,
+   "ahora": 85012,
+   "pico": 229343,
    "cambio": 0
   },
   {
    "appid": 431960,
    "puesto": 12,
-   "ahora": 80933,
-   "pico": 118941,
-   "cambio": 0
+   "ahora": 82490,
+   "pico": 109790,
+   "cambio": -1
   },
   {
    "appid": 1938090,
    "puesto": 13,
-   "ahora": 80276,
-   "pico": 178351,
+   "ahora": 75939,
+   "pico": 127539,
    "cambio": -3
   },
   {
    "appid": 4348910,
    "puesto": 14,
-   "ahora": 77622,
-   "pico": 129332,
-   "cambio": -12
-  },
-  {
-   "appid": 2507950,
-   "puesto": 15,
-   "ahora": 60910,
-   "pico": 114782,
-   "cambio": 1
-  },
-  {
-   "appid": 3678970,
-   "puesto": 16,
-   "ahora": 59178,
-   "pico": 66989,
-   "cambio": -11
-  },
-  {
-   "appid": 238960,
-   "puesto": 17,
-   "ahora": 58418,
-   "pico": 119674,
-   "cambio": -44
+   "ahora": 74322,
+   "pico": 121248,
+   "cambio": -9
   },
   {
    "appid": 252490,
-   "puesto": 18,
-   "ahora": 58100,
-   "pico": 119615,
+   "puesto": 15,
+   "ahora": 66939,
+   "pico": 103211,
    "cambio": -7
+  },
+  {
+   "appid": 2507950,
+   "puesto": 16,
+   "ahora": 60091,
+   "pico": 107172,
+   "cambio": 0
+  },
+  {
+   "appid": 3678970,
+   "puesto": 17,
+   "ahora": 60002,
+   "pico": 66710,
+   "cambio": -10
+  },
+  {
+   "appid": 238960,
+   "puesto": 18,
+   "ahora": 52455,
+   "pico": 98848,
+   "cambio": 147
   },
   {
    "appid": 1091500,
    "puesto": 19,
-   "ahora": 51357,
-   "pico": 110518,
+   "ahora": 50236,
+   "pico": 81146,
    "cambio": -2
   },
   {
    "appid": 230410,
    "puesto": 20,
-   "ahora": 49563,
-   "pico": 75958,
-   "cambio": -2
-  },
-  {
-   "appid": 1867240,
-   "puesto": 21,
-   "ahora": 44755,
-   "pico": 133836,
-   "cambio": 8
+   "ahora": 50152,
+   "pico": 71411,
+   "cambio": 0
   },
   {
    "appid": 236390,
-   "puesto": 22,
-   "ahora": 44652,
-   "pico": 95729,
-   "cambio": -3
+   "puesto": 21,
+   "ahora": 44263,
+   "pico": 73283,
+   "cambio": 1
   },
   {
    "appid": 1973530,
-   "puesto": 23,
-   "ahora": 43254,
-   "pico": 59845,
-   "cambio": 9
+   "puesto": 22,
+   "ahora": 43298,
+   "pico": 52517,
+   "cambio": 4
   },
   {
    "appid": 3240220,
+   "puesto": 23,
+   "ahora": 42894,
+   "pico": 66446,
+   "cambio": 2
+  },
+  {
+   "appid": 1867240,
    "puesto": 24,
-   "ahora": 40448,
-   "pico": 80554,
-   "cambio": 6
+   "ahora": 42081,
+   "pico": 100267,
+   "cambio": 9
   },
   {
    "appid": 271590,
    "puesto": 25,
-   "ahora": 39577,
-   "pico": 73084,
-   "cambio": 7
+   "ahora": 40452,
+   "pico": 62606,
+   "cambio": 5
   },
   {
    "appid": 413150,
    "puesto": 26,
-   "ahora": 39153,
-   "pico": 86105,
+   "ahora": 39241,
+   "pico": 73858,
    "cambio": -2
   },
   {
    "appid": 4530370,
    "puesto": 27,
-   "ahora": 37827,
-   "pico": 79746,
-   "cambio": 33
+   "ahora": 38565,
+   "pico": 73875,
+   "cambio": 30
   },
   {
    "appid": 227300,
    "puesto": 28,
-   "ahora": 37365,
-   "pico": 101783,
-   "cambio": 18
+   "ahora": 37568,
+   "pico": 76768,
+   "cambio": 22
   },
   {
    "appid": 438100,
    "puesto": 29,
-   "ahora": 36600,
-   "pico": 62208,
-   "cambio": 0
+   "ahora": 36020,
+   "pico": 55310,
+   "cambio": -2
   },
   {
    "appid": 5052450,
    "puesto": 30,
-   "ahora": 31936,
-   "pico": 33884,
+   "ahora": 35385,
+   "pico": 37817,
    "cambio": null
   },
   {
    "appid": 250900,
    "puesto": 31,
-   "ahora": 26862,
-   "pico": 48261,
-   "cambio": -2
-  },
-  {
-   "appid": 1366800,
-   "puesto": 32,
-   "ahora": 26701,
-   "pico": 54357,
-   "cambio": -2
+   "ahora": 27896,
+   "pico": 42311,
+   "cambio": -4
   },
   {
    "appid": 394360,
+   "puesto": 32,
+   "ahora": 26918,
+   "pico": 41245,
+   "cambio": 4
+  },
+  {
+   "appid": 1366800,
    "puesto": 33,
-   "ahora": 26245,
-   "pico": 55296,
-   "cambio": 2
+   "ahora": 26801,
+   "pico": 46584,
+   "cambio": -3
   },
   {
    "appid": 322330,
    "puesto": 34,
-   "ahora": 26143,
-   "pico": 54210,
-   "cambio": -1
+   "ahora": 26184,
+   "pico": 49487,
+   "cambio": 1
   },
   {
    "appid": 381210,
    "puesto": 35,
-   "ahora": 25790,
-   "pico": 58926,
-   "cambio": -2
+   "ahora": 25853,
+   "pico": 47307,
+   "cambio": -5
   },
   {
    "appid": 359550,
    "puesto": 36,
-   "ahora": 25302,
-   "pico": 83306,
-   "cambio": 0
+   "ahora": 25547,
+   "pico": 64673,
+   "cambio": 3
   },
   {
    "appid": 1203220,
    "puesto": 37,
-   "ahora": 25014,
-   "pico": 60235,
-   "cambio": -6
-  },
-  {
-   "appid": 2767030,
-   "puesto": 38,
-   "ahora": 24467,
-   "pico": 71037,
-   "cambio": 15
+   "ahora": 24641,
+   "pico": 58747,
+   "cambio": -3
   },
   {
    "appid": 108600,
-   "puesto": 39,
-   "ahora": 24086,
-   "pico": 54399,
-   "cambio": 1
+   "puesto": 38,
+   "ahora": 24522,
+   "pico": 41211,
+   "cambio": 0
   },
   {
-   "appid": 5135440,
+   "appid": 2767030,
+   "puesto": 39,
+   "ahora": 23846,
+   "pico": 66301,
+   "cambio": 11
+  },
+  {
+   "appid": 322170,
    "puesto": 40,
-   "ahora": 23449,
-   "pico": 28857,
-   "cambio": null
+   "ahora": 23531,
+   "pico": 48453,
+   "cambio": 0
   },
   {
    "appid": 221100,
    "puesto": 41,
-   "ahora": 23140,
-   "pico": 55306,
-   "cambio": -3
+   "ahora": 22832,
+   "pico": 45991,
+   "cambio": -6
   },
   {
    "appid": 294100,
    "puesto": 42,
-   "ahora": 22930,
-   "pico": 38128,
-   "cambio": -4
-  },
-  {
-   "appid": 322170,
-   "puesto": 43,
-   "ahora": 22905,
-   "pico": 63875,
-   "cambio": -3
+   "ahora": 22705,
+   "pico": 31302,
+   "cambio": -5
   },
   {
    "appid": 2357570,
-   "puesto": 44,
-   "ahora": 22497,
-   "pico": 53405,
-   "cambio": -2
+   "puesto": 43,
+   "ahora": 21927,
+   "pico": 44953,
+   "cambio": -3
   },
   {
    "appid": 289070,
+   "puesto": 44,
+   "ahora": 21903,
+   "pico": 32825,
+   "cambio": -2
+  },
+  {
+   "appid": 1174180,
    "puesto": 45,
-   "ahora": 21849,
-   "pico": 41114,
+   "ahora": 20956,
+   "pico": 32890,
    "cambio": 1
   },
   {
-   "appid": 4126040,
+   "appid": 4459590,
    "puesto": 46,
-   "ahora": 21448,
-   "pico": 34648,
-   "cambio": -7
+   "ahora": 20801,
+   "pico": 22549,
+   "cambio": null
   },
   {
    "appid": 4623570,
    "puesto": 47,
-   "ahora": 21097,
-   "pico": 21797,
+   "ahora": 20705,
+   "pico": 21483,
    "cambio": null
   },
   {
    "appid": 1623730,
    "puesto": 48,
-   "ahora": 20671,
-   "pico": 41369,
-   "cambio": -3
-  },
-  {
-   "appid": 1174180,
-   "puesto": 49,
-   "ahora": 20586,
-   "pico": 42866,
-   "cambio": -1
+   "ahora": 20599,
+   "pico": 33440,
+   "cambio": -6
   },
   {
    "appid": 3932890,
-   "puesto": 50,
-   "ahora": 20038,
-   "pico": 34473,
-   "cambio": 2
-  },
-  {
-   "appid": 1808500,
-   "puesto": 51,
-   "ahora": 19990,
-   "pico": 60998,
-   "cambio": -9
+   "puesto": 49,
+   "ahora": 20319,
+   "pico": 31852,
+   "cambio": 1
   },
   {
    "appid": 1905180,
-   "puesto": 52,
-   "ahora": 19796,
-   "pico": 34110,
-   "cambio": -1
+   "puesto": 50,
+   "ahora": 19942,
+   "pico": 30420,
+   "cambio": 0
   },
   {
    "appid": 261550,
+   "puesto": 51,
+   "ahora": 19560,
+   "pico": 29906,
+   "cambio": 5
+  },
+  {
+   "appid": 1808500,
+   "puesto": 52,
+   "ahora": 19464,
+   "pico": 47382,
+   "cambio": -10
+  },
+  {
+   "appid": 4126040,
    "puesto": 53,
-   "ahora": 19390,
-   "pico": 36215,
-   "cambio": 6
+   "ahora": 19409,
+   "pico": 30953,
+   "cambio": -8
   },
   {
    "appid": 489830,
    "puesto": 54,
-   "ahora": 18738,
-   "pico": 47149,
-   "cambio": 8
-  },
-  {
-   "appid": 1086940,
-   "puesto": 55,
-   "ahora": 18261,
-   "pico": 54932,
-   "cambio": -2
+   "ahora": 18875,
+   "pico": 36791,
+   "cambio": 5
   },
   {
    "appid": 1142710,
-   "puesto": 56,
-   "ahora": 18246,
-   "pico": 39932,
-   "cambio": -1
-  },
-  {
-   "appid": 892970,
-   "puesto": 57,
-   "ahora": 18186,
-   "pico": 70903,
-   "cambio": -3
+   "puesto": 55,
+   "ahora": 18485,
+   "pico": 29793,
+   "cambio": -2
   },
   {
    "appid": 105600,
+   "puesto": 56,
+   "ahora": 18357,
+   "pico": 32336,
+   "cambio": -2
+  },
+  {
+   "appid": 1086940,
+   "puesto": 57,
+   "ahora": 18132,
+   "pico": 39866,
+   "cambio": -4
+  },
+  {
+   "appid": 892970,
    "puesto": 58,
-   "ahora": 17973,
-   "pico": 39595,
+   "ahora": 17923,
+   "pico": 51300,
    "cambio": -5
   },
   {
    "appid": 1203620,
    "puesto": 59,
-   "ahora": 17921,
-   "pico": 60950,
-   "cambio": -7
-  },
-  {
-   "appid": 4080220,
-   "puesto": 60,
-   "ahora": 17628,
-   "pico": 52851,
-   "cambio": -2
+   "ahora": 17069,
+   "pico": 44279,
+   "cambio": -11
   },
   {
    "appid": 292030,
-   "puesto": 61,
-   "ahora": 16787,
-   "pico": 45658,
-   "cambio": -5
-  },
-  {
-   "appid": 304930,
-   "puesto": 62,
-   "ahora": 16641,
-   "pico": 20281,
-   "cambio": null
-  },
-  {
-   "appid": 216150,
-   "puesto": 63,
-   "ahora": 16636,
-   "pico": 24204,
-   "cambio": null
+   "puesto": 60,
+   "ahora": 16913,
+   "pico": 31545,
+   "cambio": -4
   },
   {
    "appid": 2300320,
-   "puesto": 64,
-   "ahora": 16588,
-   "pico": 56377,
-   "cambio": -3
-  },
-  {
-   "appid": 2399830,
-   "puesto": 65,
-   "ahora": 16266,
-   "pico": 31183,
+   "puesto": 61,
+   "ahora": 16888,
+   "pico": 44790,
    "cambio": -2
   },
   {
    "appid": 3321460,
-   "puesto": 66,
-   "ahora": 15813,
-   "pico": 34392,
-   "cambio": -8
+   "puesto": 62,
+   "ahora": 16781,
+   "pico": 24199,
+   "cambio": -7
   },
   {
-   "appid": 1364780,
-   "puesto": 67,
-   "ahora": 15567,
-   "pico": 28580,
-   "cambio": 2
-  },
-  {
-   "appid": 5335510,
-   "puesto": 68,
-   "ahora": 15062,
-   "pico": 40901,
-   "cambio": -15
-  },
-  {
-   "appid": 1222670,
-   "puesto": 69,
-   "ahora": 14979,
-   "pico": 34408,
-   "cambio": 0
-  },
-  {
-   "appid": 1245620,
-   "puesto": 70,
-   "ahora": 14911,
-   "pico": 32004,
-   "cambio": 4
-  },
-  {
-   "appid": 4459590,
-   "puesto": 71,
-   "ahora": 14744,
-   "pico": 15358,
+   "appid": 216150,
+   "puesto": 63,
+   "ahora": 16553,
+   "pico": 23940,
    "cambio": null
   },
   {
-   "appid": 2807960,
-   "puesto": 72,
-   "ahora": 14707,
-   "pico": 42949,
-   "cambio": -1
-  },
-  {
-   "appid": 4000,
-   "puesto": 73,
-   "ahora": 14338,
-   "pico": 34833,
+   "appid": 1364780,
+   "puesto": 64,
+   "ahora": 16172,
+   "pico": 29289,
    "cambio": 2
   },
   {
-   "appid": 553850,
-   "puesto": 74,
-   "ahora": 13989,
-   "pico": 35927,
-   "cambio": -3
+   "appid": 2399830,
+   "puesto": 65,
+   "ahora": 15911,
+   "pico": 23332,
+   "cambio": -6
+  },
+  {
+   "appid": 4080220,
+   "puesto": 66,
+   "ahora": 15650,
+   "pico": 44988,
+   "cambio": -4
+  },
+  {
+   "appid": 5135440,
+   "puesto": 67,
+   "ahora": 15625,
+   "pico": 23622,
+   "cambio": null
+  },
+  {
+   "appid": 1245620,
+   "puesto": 68,
+   "ahora": 15294,
+   "pico": 25388,
+   "cambio": 3
+  },
+  {
+   "appid": 5335510,
+   "puesto": 69,
+   "ahora": 15066,
+   "pico": 34165,
+   "cambio": -12
+  },
+  {
+   "appid": 1222670,
+   "puesto": 70,
+   "ahora": 14722,
+   "pico": 26969,
+   "cambio": 2
+  },
+  {
+   "appid": 4000,
+   "puesto": 71,
+   "ahora": 14473,
+   "pico": 27287,
+   "cambio": 0
+  },
+  {
+   "appid": 284160,
+   "puesto": 72,
+   "ahora": 14017,
+   "pico": 29526,
+   "cambio": 2
   },
   {
    "appid": 1281930,
-   "puesto": 75,
-   "ahora": 13972,
-   "pico": 29450,
+   "puesto": 73,
+   "ahora": 14016,
+   "pico": 24632,
    "cambio": -2
   },
   {
    "appid": 2073620,
-   "puesto": 76,
-   "ahora": 13912,
-   "pico": 30980,
-   "cambio": -9
+   "puesto": 74,
+   "ahora": 13981,
+   "pico": 26357,
+   "cambio": -7
   },
   {
-   "appid": 284160,
+   "appid": 251570,
+   "puesto": 75,
+   "ahora": 13756,
+   "pico": 24101,
+   "cambio": -5
+  },
+  {
+   "appid": 365670,
+   "puesto": 76,
+   "ahora": 13738,
+   "pico": 16662,
+   "cambio": 3
+  },
+  {
+   "appid": 553850,
    "puesto": 77,
-   "ahora": 13807,
-   "pico": 37774,
-   "cambio": 1
+   "ahora": 13497,
+   "pico": 27342,
+   "cambio": -6
   },
   {
    "appid": 1449850,
    "puesto": 78,
-   "ahora": 13773,
-   "pico": 19550,
-   "cambio": -5
+   "ahora": 13456,
+   "pico": 19825,
+   "cambio": -4
   },
   {
-   "appid": 251570,
+   "appid": 2807960,
    "puesto": 79,
-   "ahora": 13669,
-   "pico": 32718,
-   "cambio": -6
-  },
-  {
-   "appid": 365670,
-   "puesto": 80,
-   "ahora": 13487,
-   "pico": 16589,
-   "cambio": null
-  },
-  {
-   "appid": 2139460,
-   "puesto": 81,
-   "ahora": 13480,
-   "pico": 24319,
-   "cambio": null
+   "ahora": 13295,
+   "pico": 31030,
+   "cambio": 0
   },
   {
    "appid": 1942280,
-   "puesto": 82,
-   "ahora": 13421,
-   "pico": 25505,
-   "cambio": -11
+   "puesto": 80,
+   "ahora": 13232,
+   "pico": 22711,
+   "cambio": -8
   },
   {
    "appid": 550,
-   "puesto": 83,
-   "ahora": 13285,
-   "pico": 33396,
-   "cambio": -2
+   "puesto": 81,
+   "ahora": 13211,
+   "pico": 29237,
+   "cambio": 1
   },
   {
-   "appid": 4891320,
-   "puesto": 84,
-   "ahora": 12975,
-   "pico": 14013,
+   "appid": 2139460,
+   "puesto": 82,
+   "ahora": 12890,
+   "pico": 20064,
    "cambio": null
   },
   {
    "appid": 582660,
-   "puesto": 85,
-   "ahora": 12666,
-   "pico": 17642,
+   "puesto": 83,
+   "ahora": 12774,
+   "pico": 16206,
    "cambio": null
   },
   {
-   "appid": 3241660,
-   "puesto": 86,
-   "ahora": 12292,
-   "pico": 49358,
-   "cambio": -11
-  },
-  {
    "appid": 766570,
-   "puesto": 87,
-   "ahora": 12273,
-   "pico": 20720,
+   "puesto": 84,
+   "ahora": 12551,
+   "pico": 18354,
    "cambio": null
   },
   {
    "appid": 3405690,
+   "puesto": 85,
+   "ahora": 12277,
+   "pico": 23235,
+   "cambio": -1
+  },
+  {
+   "appid": 304930,
+   "puesto": 86,
+   "ahora": 12263,
+   "pico": 19607,
+   "cambio": null
+  },
+  {
+   "appid": 3241660,
+   "puesto": 87,
+   "ahora": 12151,
+   "pico": 35467,
+   "cambio": -7
+  },
+  {
+   "appid": 4891320,
    "puesto": 88,
-   "ahora": 12260,
-   "pico": 30093,
-   "cambio": -3
-  },
-  {
-   "appid": 949230,
-   "puesto": 89,
-   "ahora": 11795,
-   "pico": 23860,
-   "cambio": 61
-  },
-  {
-   "appid": 4356430,
-   "puesto": 90,
-   "ahora": 11696,
-   "pico": 20817,
-   "cambio": null
-  },
-  {
-   "appid": 218620,
-   "puesto": 91,
-   "ahora": 11695,
-   "pico": 15668,
-   "cambio": null
-  },
-  {
-   "appid": 346110,
-   "puesto": 92,
-   "ahora": 11590,
-   "pico": 22715,
+   "ahora": 11915,
+   "pico": 13501,
    "cambio": null
   },
   {
    "appid": 813780,
-   "puesto": 93,
-   "ahora": 11450,
-   "pico": 25967,
-   "cambio": -4
+   "puesto": 89,
+   "ahora": 11571,
+   "pico": 21130,
+   "cambio": -6
   },
   {
-   "appid": 3564740,
+   "appid": 4356430,
+   "puesto": 90,
+   "ahora": 11532,
+   "pico": 20009,
+   "cambio": null
+  },
+  {
+   "appid": 346110,
+   "puesto": 91,
+   "ahora": 11454,
+   "pico": 18446,
+   "cambio": null
+  },
+  {
+   "appid": 1325860,
+   "puesto": 92,
+   "ahora": 11144,
+   "pico": 18976,
+   "cambio": null
+  },
+  {
+   "appid": 3557620,
+   "puesto": 93,
+   "ahora": 11092,
+   "pico": 11092,
+   "cambio": 11
+  },
+  {
+   "appid": 2358720,
    "puesto": 94,
-   "ahora": 11266,
-   "pico": 23748,
+   "ahora": 11084,
+   "pico": 18952,
    "cambio": null
   },
   {
    "appid": 376210,
    "puesto": 95,
-   "ahora": 11090,
-   "pico": 22467,
+   "ahora": 11035,
+   "pico": 18389,
    "cambio": null
-  },
-  {
-   "appid": 2358720,
-   "puesto": 96,
-   "ahora": 11075,
-   "pico": 19974,
-   "cambio": null
-  },
-  {
-   "appid": 1665460,
-   "puesto": 97,
-   "ahora": 10941,
-   "pico": 23407,
-   "cambio": 0
   },
   {
    "appid": 427520,
-   "puesto": 98,
-   "ahora": 10811,
-   "pico": 23808,
+   "puesto": 96,
+   "ahora": 10789,
+   "pico": 19115,
    "cambio": null
   },
   {
-   "appid": 1325860,
-   "puesto": 99,
-   "ahora": 10576,
-   "pico": 19001,
+   "appid": 39210,
+   "puesto": 97,
+   "ahora": 10599,
+   "pico": 20991,
    "cambio": null
+  },
+  {
+   "appid": 1623660,
+   "puesto": 98,
+   "ahora": 10343,
+   "pico": 10881,
+   "cambio": null
+  },
+  {
+   "appid": 2246340,
+   "puesto": 99,
+   "ahora": 10179,
+   "pico": 20747,
+   "cambio": -7
   },
   {
    "appid": 583950,
    "puesto": 100,
-   "ahora": 10552,
-   "pico": 10771,
+   "ahora": 10020,
+   "pico": 10537,
    "cambio": null
   }
  ]
