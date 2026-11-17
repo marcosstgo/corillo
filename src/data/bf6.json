@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-16T22:26:01+00:00",
+ "actualizado": "2026-11-17T01:24:03+00:00",
  "noticias": [
   {
    "gid": "1849192144187912",
@@ -205,12 +205,19 @@
    "id": "UCkMIq70Im_rSUo8KXMVDlXQ",
    "pr": true,
    "url": "https://www.youtube.com/@CaptMatojo07",
-   "en_vivo": null,
+   "en_vivo": "65kJ_StCY4M",
    "videos": [
+    {
+     "id": "65kJ_StCY4M",
+     "titulo": "BF6 | 💎🎰 ¡QUE COMIENCE EL LUNES DE BATALLA, CHANCLETEROS! ⚔️ HOY VENIMOS A PASARLA BIEN 😎 ¡LET’S GO!",
+     "detalle": "19 lo están viendo",
+     "vivo": true,
+     "directo": true
+    },
     {
      "id": "1gCJosJ4Peo",
      "titulo": "🚨 BF6 | 🔥 ¡ZONA DE COMBATE ACTIVADA! ⚔️ CHANCLETEROS, ¡HOY SE LUCHA! 🚀 ¡LET’S GO!",
-     "detalle": "467 · Transmitido hace 19 h",
+     "detalle": "485 · Transmitido hace 22 h",
      "vivo": false,
      "directo": true
     },
@@ -253,13 +260,6 @@
      "id": "JvJPGiiAiNs",
      "titulo": "🚨 BF6 | 🔥 ¡RUMBO A FASE 2 T5! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚁 ¡LET’S GO!",
      "detalle": "574 · Transmitido hace 7 días",
-     "vivo": false,
-     "directo": true
-    },
-    {
-     "id": "3HvaY8KyFtc",
-     "titulo": "🚁 BF6 | 🔥 ¡VIERNES DE GUERRA TOTAL! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚀 ¡CHANCLETEROS, LET’S GO!",
-     "detalle": "689 · Transmitido hace 9 días",
      "vivo": false,
      "directo": true
     }
