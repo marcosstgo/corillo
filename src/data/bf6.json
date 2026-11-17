@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-17T01:24:03+00:00",
+ "actualizado": "2026-11-17T04:25:44+00:00",
  "noticias": [
   {
    "gid": "1849192144187912",
@@ -205,26 +205,26 @@
    "id": "UCkMIq70Im_rSUo8KXMVDlXQ",
    "pr": true,
    "url": "https://www.youtube.com/@CaptMatojo07",
-   "en_vivo": "65kJ_StCY4M",
+   "en_vivo": null,
    "videos": [
     {
      "id": "65kJ_StCY4M",
      "titulo": "BF6 | 💎🎰 ¡QUE COMIENCE EL LUNES DE BATALLA, CHANCLETEROS! ⚔️ HOY VENIMOS A PASARLA BIEN 😎 ¡LET’S GO!",
-     "detalle": "19 lo están viendo",
-     "vivo": true,
+     "detalle": "462 · Transmitido hace 2 h",
+     "vivo": false,
      "directo": true
     },
     {
      "id": "1gCJosJ4Peo",
      "titulo": "🚨 BF6 | 🔥 ¡ZONA DE COMBATE ACTIVADA! ⚔️ CHANCLETEROS, ¡HOY SE LUCHA! 🚀 ¡LET’S GO!",
-     "detalle": "485 · Transmitido hace 22 h",
+     "detalle": "502 · Transmitido hace 1 día",
      "vivo": false,
      "directo": true
     },
     {
      "id": "wtIPex4Jl6M",
      "titulo": "🚨 BF6 | 🎰🔥 ¡SÁBADO DE CASINO HEIST! 💰 APUESTAS AL LÍMITE, ¡EL BOTÍN NOS ESPERA! ⚔️ ¡LET’S GO!",
-     "detalle": "868 · Transmitido hace 1 día",
+     "detalle": "868 · Transmitido hace 2 días",
      "vivo": false,
      "directo": true
     },
@@ -238,21 +238,21 @@
     {
      "id": "31lI_dadHpw",
      "titulo": "🚨 BF6 | 🎰🔥 ¡CASINO HEIST EN ACCIÓN! 💰 LA APUESTA MÁS GRANDE COMIENZA ⚔️ LET’S GO!",
-     "detalle": "640 · Transmitido hace 4 días",
+     "detalle": "640 · Transmitido hace 5 días",
      "vivo": false,
      "directo": true
     },
     {
      "id": "h6fPKSGuz2Y",
      "titulo": "🚨 BF6 | ✨🎰 ¡CASINO HEIST! 💰 🎲 ¡EL GRAN GOLPE HA COMENZADO! ⚔️ LET’S GO!",
-     "detalle": "733 · Transmitido hace 5 días",
+     "detalle": "733 · Transmitido hace 6 días",
      "vivo": false,
      "directo": true
     },
     {
      "id": "v9iainPJBOM",
      "titulo": "🚨 BF6 | 🔥 ¡PREPARÁNDOSE PARA FASE 2 T5! ⚔️ TANQUES, AVIONES Y HELICÓPTEROS 🚁 ¡LET’S GO!",
-     "detalle": "565 · Transmitido hace 6 días",
+     "detalle": "565 · Transmitido hace 7 días",
      "vivo": false,
      "directo": true
     },
