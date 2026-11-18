@@ -92,15 +92,28 @@ def ia(meta):
               f"Bold, modern style: deep dark navy blue background with glowing warm orange and sunny yellow light accents. "
               f"Topic (illustrate the idea, never write it): {_sin_marcas(meta['titulo'])}. "
               f"Context: {_sin_marcas(meta['resumen'])}")
-    r = HTTP.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
-                  params={'key': key}, json={'contents': [{'parts': [{'text': prompt}]}],
-                                             'generationConfig': {'responseModalities': ['IMAGE'], 'imageConfig': {'aspectRatio': '16:9'}}},
-                  timeout=90)
-    if r.status_code != 200: return None
-    import base64
-    for p in r.json().get('candidates', [{}])[0].get('content', {}).get('parts', []):
-        if 'inlineData' in p:
-            return base64.b64decode(p['inlineData']['data']), 'Ilustración generada para Corillo'
+    # Hasta 3 intentos: el 17-nov-2026 un fallo pasajero de Gemini dejó la nota de YouTube con la portada de diseño,
+    # y como no se anotaba la razón, no se supo por qué. Ahora cada fallo queda en el log (stderr → daily.log).
+    import base64, time
+    for intento in range(1, 4):
+        try:
+            r = HTTP.post('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
+                          params={'key': key}, json={'contents': [{'parts': [{'text': prompt}]}],
+                                                     'generationConfig': {'responseModalities': ['IMAGE'], 'imageConfig': {'aspectRatio': '16:9'}}},
+                          timeout=90)
+            if r.status_code == 200:
+                c = (r.json().get('candidates') or [{}])[0]
+                for p in c.get('content', {}).get('parts', []):
+                    if 'inlineData' in p:
+                        return base64.b64decode(p['inlineData']['data']), 'Ilustración generada para Corillo'
+                razon = f"sin imagen (finishReason={c.get('finishReason')}, promptFeedback={r.json().get('promptFeedback')})"
+            else:
+                razon = f'HTTP {r.status_code}: {r.text[:200]}'
+        except (httpx.HTTPError, ValueError) as e:
+            razon = f'{type(e).__name__}: {e}'
+        print(f'  ilustración IA intento {intento} falló: {razon}', file=sys.stderr, flush=True)
+        if intento < 3:
+            time.sleep(20 * intento)
     return None
 
 

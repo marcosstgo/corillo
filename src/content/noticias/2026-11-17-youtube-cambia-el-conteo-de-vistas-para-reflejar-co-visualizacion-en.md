@@ -19,7 +19,7 @@ sources:
   - name: "Dexerto"
     url: "https://www.dexerto.com/entertainment/youtube-now-shows-co-views-in-big-shake-up-to-view-counts-3428863/"
 image: "/noticias/portadas/2026-11-17-youtube-cambia-el-conteo-de-vistas-para-reflejar-co-visualizacion-en.jpg"
-imageCredit: "Portada de Corillo"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 YouTube está cambiando la forma en que muestra las vistas públicas de los videos. A partir de ahora, una sola reproducción en un televisor puede contar como varias vistas si la plataforma estima que varias personas están mirando juntas. Por ejemplo, si YouTube calcula que tres personas vieron un video en la sala, esa reproducción se contará como tres vistas. En teléfonos, tabletas y PC, una reproducción sigue contando como una vista.
