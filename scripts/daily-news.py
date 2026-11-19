@@ -611,7 +611,15 @@ def main():
     save_state(st)
     try:  # portada de cada nota: arte oficial del juego (Steam) → ilustración IA → portada de diseño (scripts/news_cover.py)
         import news_cover
-        for f in made: log('portada:', news_cover.portada(POSTS / f))
+        for f in made:
+            res = news_cover.portada(POSTS / f)
+            log('portada:', res)
+            if res.startswith('diseno') and news_cover.ULTIMO_FALLO_IA:   # la IA se intentó y falló
+                razon = news_cover.ULTIMO_FALLO_IA
+                saldo = '402' in razon or 'RESOURCE_EXHAUSTED' in razon or 'quota' in razon.lower()
+                pista = ' Parece saldo de Gemini agotado: hay que recargar crédito en Google AI Studio.' if saldo else ''
+                telegram(f"⚠️ Noticias: la nota {f[:-3]} salió con la portada de diseño porque la ilustración IA falló ({razon[:160]}).{pista}\n"
+                         f"Rehacerla: news_cover.portada(nota, forzar=True), news_cover.compartir(nota) y publicar.")
     except Exception as e:
         log('portada falló (la nota sale sin imagen):', type(e).__name__, e)
     try:  # imagen para compartir, con el titular (si falla, se comparte la portada)

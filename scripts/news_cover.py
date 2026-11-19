@@ -82,10 +82,20 @@ def _sin_marcas(s):
     return re.sub(r'\s+', ' ', s).strip()
 
 
+# Razón del último fallo de la ilustración IA (None si salió bien o no se intentó). daily-news.py la usa para
+# avisarle a Marcos por DM: el 17 y 18-nov-2026 las notas salieron con la portada de diseño (saldo de Gemini
+# agotado) y solo quedó en el log.
+ULTIMO_FALLO_IA = None
+
+
 def ia(meta):
     """Ilustración con Gemini. Sin caras de personas reales, sin texto, sin logos de marcas."""
+    global ULTIMO_FALLO_IA
+    ULTIMO_FALLO_IA = None
     key = os.environ.get('GEMINI_API_KEY')
-    if not key: return None
+    if not key:
+        ULTIMO_FALLO_IA = 'falta GEMINI_API_KEY'
+        return None
     prompt = (f"Editorial illustration for a gaming news site, 16:9. ABSOLUTELY NO text, letters, numbers, dates, roman numerals, titles or logos of any kind (no game logos, no company logos), and no real people's faces "
               f"(use silhouettes, objects or scenery instead). A full-bleed illustration, not a screenshot, poster or user interface. "
               # Colores con palabras: con códigos (#06143f) el modelo a veces los escribía en la imagen
@@ -114,6 +124,7 @@ def ia(meta):
         print(f'  ilustración IA intento {intento} falló: {razon}', file=sys.stderr, flush=True)
         if intento < 3:
             time.sleep(20 * intento)
+    ULTIMO_FALLO_IA = razon
     return None
 
 
