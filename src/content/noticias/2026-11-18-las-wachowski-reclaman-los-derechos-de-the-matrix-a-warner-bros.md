@@ -21,7 +21,7 @@ sources:
   - name: "Hobby Consolas"
     url: "https://www.hobbyconsolas.com/hobbycine/matrix-5-esta-peligro-las-hermanas-wachowski-reclaman-devolucion-los-derechos-por-parte-warner_7062401_0.html"
 image: "/noticias/portadas/2026-11-18-las-wachowski-reclaman-los-derechos-de-the-matrix-a-warner-bros.jpg"
-imageCredit: "Portada de Corillo"
+imageCredit: "Ilustración generada para Corillo"
 ---
 
 Las hermanas Wachowski, creadoras de The Matrix, han notificado formalmente a Warner Bros. que ejercen sus derechos de terminación de copyright sobre la franquicia. Según informa Puck News, la restitución de los derechos podría ocurrir en febrero de 2029, lo que devolvería a Lana y Lilly Wachowski el control sobre futuras producciones de la saga.
