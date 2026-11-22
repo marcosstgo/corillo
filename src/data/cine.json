@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-21T18:12:00",
+ "actualizado": "2026-11-22T06:15:00",
  "pegao": [
   {
    "tmdb": 1368337,
@@ -31,7 +31,7 @@
    ],
    "trailer": "X9nUrOnHlz0",
    "dondeVer": [],
-   "popularidad": 481.7,
+   "popularidad": 481.5,
    "pr": false
   },
   {
@@ -64,7 +64,7 @@
    ],
    "trailer": "bwZzXTUcaQo",
    "dondeVer": [],
-   "popularidad": 292.7,
+   "popularidad": 343.1,
    "pr": false
   },
   {
@@ -98,49 +98,7 @@
    ],
    "trailer": "kZ2Nhqkx3-I",
    "dondeVer": [],
-   "popularidad": 173.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1595124,
-   "title": "Hermanastras",
-   "original": "Steps",
-   "estreno": "2026-11-20",
-   "clasificacion": "PG",
-   "duracion": 106,
-   "resumen": "Culpada de hacer travesuras mágicas en el Royal Ball, la hermanastra Lilith convierte a su hermana en una rana. Debe trabajar con Cenicienta y un troll para salvar el reino y demostrar que los villanos también merecen un final feliz.",
-   "generos": [
-    "Animación",
-    "Familia",
-    "Comedia",
-    "Aventura",
-    "Fantasía"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/5f69fuZBiPoa8H1AJ3UHH4AztOb.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/g1bEboMx1a8JCg1jXeDCh24RtgW.jpg",
-   "direccion": [
-    "Alyce Tzue"
-   ],
-   "reparto": [
-    "Ali Wong",
-    "Amanda Seyfried",
-    "Stephanie Hsu",
-    "Nikki Glaser",
-    "Daniel Radcliffe",
-    "Young Mazino",
-    "Peter Dinklage",
-    "Bette Midler"
-   ],
-   "trailer": "rXKefkjeoQQ",
-   "dondeVer": [
-    {
-     "name": "Netflix"
-    },
-    {
-     "name": "Netflix Standard with Ads"
-    }
-   ],
-   "popularidad": 50.8,
+   "popularidad": 167.9,
    "pr": false
   },
   {
@@ -172,7 +130,32 @@
    ],
    "trailer": "5ckqV_uf8E0",
    "dondeVer": [],
-   "popularidad": 83.2,
+   "popularidad": 94.6,
+   "pr": false
+  },
+  {
+   "tmdb": 1599184,
+   "title": "Battle Through the Heavens Movie：Duel of the Two Dou Emperors",
+   "original": "斗破苍穹剧场版 双帝之战",
+   "estreno": "2026-11-22",
+   "clasificacion": null,
+   "duracion": null,
+   "resumen": "",
+   "generos": [
+    "Animación",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/dzEKynSeeXWPNaFCpYK7R92TVll.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/9uMWGlxHR3bpyhzKQLYL83m5puq.jpg",
+   "direccion": [],
+   "reparto": [
+    "不一",
+    "刘雨轩",
+    "陈奕雯"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 26.9,
    "pr": false
   },
   {
@@ -212,7 +195,7 @@
      "name": "Amazon Prime Video with Ads"
     }
    ],
-   "popularidad": 66.0,
+   "popularidad": 77.5,
    "pr": false
   },
   {
@@ -251,40 +234,49 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 117.4,
+   "popularidad": 144.6,
    "pr": false
   },
   {
-   "tmdb": 1423191,
-   "title": "Resident Evil: Noche cero",
-   "original": "Resident Evil",
-   "estreno": "2026-09-17",
-   "clasificacion": "R",
-   "duracion": 94,
-   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
+   "tmdb": 1595124,
+   "title": "Hermanastras",
+   "original": "Steps",
+   "estreno": "2026-11-20",
+   "clasificacion": "PG",
+   "duracion": 107,
+   "resumen": "Culpada de hacer travesuras mágicas en el Royal Ball, la hermanastra Lilith convierte a su hermana en una rana. Debe trabajar con Cenicienta y un troll para salvar el reino y demostrar que los villanos también merecen un final feliz.",
    "generos": [
-    "Terror",
-    "Ciencia ficción",
-    "Aventura"
+    "Animación",
+    "Familia",
+    "Comedia",
+    "Aventura",
+    "Fantasía"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/5f69fuZBiPoa8H1AJ3UHH4AztOb.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/g1bEboMx1a8JCg1jXeDCh24RtgW.jpg",
    "direccion": [
-    "Zach Cregger"
+    "Alyce Tzue"
    ],
    "reparto": [
-    "Austin Abrams",
-    "Paul Walter Hauser",
-    "Kali Reis",
-    "Zach Cherry",
-    "Johnno Wilson",
-    "Shaun W. Loeser",
-    "Zach Cregger",
-    "Emily Piggford"
+    "Ali Wong",
+    "Amanda Seyfried",
+    "Stephanie Hsu",
+    "Nikki Glaser",
+    "Daniel Radcliffe",
+    "Young Mazino",
+    "Peter Dinklage",
+    "Bette Midler"
    ],
-   "trailer": "d6oszs7f5aI",
-   "dondeVer": [],
-   "popularidad": 294.6,
+   "trailer": "rXKefkjeoQQ",
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 83.6,
    "pr": false
   },
   {
@@ -317,110 +309,7 @@
    ],
    "trailer": "owfWVJoxXR4",
    "dondeVer": [],
-   "popularidad": 300.8,
-   "pr": false
-  },
-  {
-   "tmdb": 1400837,
-   "title": "Madre siniestra",
-   "original": "Other Mommy",
-   "estreno": "2026-10-08",
-   "clasificacion": "R",
-   "duracion": 93,
-   "resumen": "Bela, una niña de ocho años que vive en un hogar con problemas matrimoniales, enfrenta a una entidad siniestra que sale de su armario. La presencia, a quien llama «otra mamá», se vuelve cada vez más amenazante para ella y su familia.",
-   "generos": [
-    "Terror"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/vnQtwToGRWTuHdLltq3hNdbXkii.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/smZ8BT4Vzw4iCEppTLCnN8jNYtn.jpg",
-   "direccion": [
-    "Rob Savage"
-   ],
-   "reparto": [
-    "Jessica Chastain",
-    "Jay Duplass",
-    "Arabella Olivia Clark",
-    "Karen Allen",
-    "Arian Moayed",
-    "Dichen Lachman",
-    "Sean Kaufman",
-    "Adam Silver"
-   ],
-   "trailer": "ocV7K_B67lQ",
-   "dondeVer": [],
-   "popularidad": 327.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1568060,
-   "title": "Perfectos mentirosos",
-   "original": "Perfectos mentirosos",
-   "estreno": "2026-11-20",
-   "clasificacion": null,
-   "duracion": 108,
-   "resumen": "Sigue a Jude Derry en una universidad elitista donde busca desenmascarar los secretos de los poderosos hermanos Cash, mientras se ve envuelta en engaños, tensión y un triángulo amoroso.",
-   "generos": [
-    "Drama",
-    "Romance",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/1amYmUeoBi23kGcR2pWQclEzXk2.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/OiXyM1w9NxdV450GpV92B0YPMj.jpg",
-   "direccion": [
-    "Jesús Colmenar"
-   ],
-   "reparto": [
-    "Irene Balmes",
-    "Gleb Abrosimov",
-    "Pau Simon",
-    "Pablo Scapigliati",
-    "Asier Etxeandia",
-    "Silvia Kal",
-    "Irene Ferreiro",
-    "Manuela Calle"
-   ],
-   "trailer": "50v6k3LUcxU",
-   "dondeVer": [
-    {
-     "name": "Amazon Prime Video"
-    },
-    {
-     "name": "Amazon Prime Video with Ads"
-    }
-   ],
-   "popularidad": 63.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1567605,
-   "title": "Ebenezer: Los fantasmas de Navidad",
-   "original": "Ebenezer",
-   "estreno": "2026-11-12",
-   "clasificacion": "PG-13",
-   "duracion": 115,
-   "resumen": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
-   "generos": [
-    "Fantasía",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ekfB30eDEJAHHEW7yI4gLcq0k3A.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/274ahmbkJSzdmcWrWSTu9DFv5rp.jpg",
-   "direccion": [
-    "Ti West"
-   ],
-   "reparto": [
-    "Johnny Depp",
-    "Rupert Grint",
-    "Daisy Ridley",
-    "Ian McKellen",
-    "Andrea Riseborough",
-    "Sam Claflin",
-    "Tramell Tillman",
-    "Arthur Conti"
-   ],
-   "trailer": "A7lyvgnDuDE",
-   "dondeVer": [],
-   "popularidad": 114.1,
+   "popularidad": 301.1,
    "pr": false
   },
   {
@@ -453,7 +342,173 @@
    ],
    "trailer": "kw0YhiqOPFg",
    "dondeVer": [],
-   "popularidad": 120.2,
+   "popularidad": 122.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1423191,
+   "title": "Resident Evil: Noche cero",
+   "original": "Resident Evil",
+   "estreno": "2026-09-17",
+   "clasificacion": "R",
+   "duracion": 94,
+   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
+   "generos": [
+    "Terror",
+    "Ciencia ficción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/3icyRAqgakNcQn6aDVz9libFmBA.jpg",
+   "direccion": [
+    "Zach Cregger"
+   ],
+   "reparto": [
+    "Austin Abrams",
+    "Paul Walter Hauser",
+    "Kali Reis",
+    "Zach Cherry",
+    "Johnno Wilson",
+    "Shaun W. Loeser",
+    "Zach Cregger",
+    "Emily Piggford"
+   ],
+   "trailer": "d6oszs7f5aI",
+   "dondeVer": [],
+   "popularidad": 285.6,
+   "pr": false
+  },
+  {
+   "tmdb": 1400837,
+   "title": "Madre siniestra",
+   "original": "Other Mommy",
+   "estreno": "2026-10-08",
+   "clasificacion": "R",
+   "duracion": 93,
+   "resumen": "Bela, una niña de ocho años que vive en un hogar con problemas matrimoniales, enfrenta a una entidad siniestra que sale de su armario. La presencia, a quien llama «otra mamá», se vuelve cada vez más amenazante para ella y su familia.",
+   "generos": [
+    "Terror"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/vnQtwToGRWTuHdLltq3hNdbXkii.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/smZ8BT4Vzw4iCEppTLCnN8jNYtn.jpg",
+   "direccion": [
+    "Rob Savage"
+   ],
+   "reparto": [
+    "Jessica Chastain",
+    "Jay Duplass",
+    "Arabella Olivia Clark",
+    "Karen Allen",
+    "Arian Moayed",
+    "Dichen Lachman",
+    "Sean Kaufman",
+    "Adam Silver"
+   ],
+   "trailer": "ocV7K_B67lQ",
+   "dondeVer": [],
+   "popularidad": 320.3,
+   "pr": false
+  },
+  {
+   "tmdb": 1567605,
+   "title": "Ebenezer: Los fantasmas de Navidad",
+   "original": "Ebenezer",
+   "estreno": "2026-11-12",
+   "clasificacion": "PG-13",
+   "duracion": 115,
+   "resumen": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
+   "generos": [
+    "Fantasía",
+    "Drama",
+    "Terror"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ekfB30eDEJAHHEW7yI4gLcq0k3A.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/274ahmbkJSzdmcWrWSTu9DFv5rp.jpg",
+   "direccion": [
+    "Ti West"
+   ],
+   "reparto": [
+    "Johnny Depp",
+    "Rupert Grint",
+    "Daisy Ridley",
+    "Ian McKellen",
+    "Andrea Riseborough",
+    "Sam Claflin",
+    "Tramell Tillman",
+    "Arthur Conti"
+   ],
+   "trailer": "A7lyvgnDuDE",
+   "dondeVer": [],
+   "popularidad": 108.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1263337,
+   "title": "El corazón de la bestia",
+   "original": "Heart of the Beast",
+   "estreno": "2026-09-24",
+   "clasificacion": "R",
+   "duracion": 101,
+   "resumen": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
+   "generos": [
+    "Aventura",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/kVDHPDggier9ciMc8Xglinq1jWv.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/yE766yhgg98tKwTKd8CyNvAtmn6.jpg",
+   "direccion": [
+    "David Ayer"
+   ],
+   "reparto": [
+    "Brad Pitt",
+    "J.K. Simmons",
+    "Anna Lambe",
+    "Justin Melnick",
+    "Shaun DeZern"
+   ],
+   "trailer": "Rh24D89hFMg",
+   "dondeVer": [],
+   "popularidad": 385.0,
+   "pr": false
+  },
+  {
+   "tmdb": 1568060,
+   "title": "Perfectos mentirosos",
+   "original": "Perfectos mentirosos",
+   "estreno": "2026-11-20",
+   "clasificacion": null,
+   "duracion": 108,
+   "resumen": "Sigue a Jude Derry en una universidad elitista donde busca desenmascarar los secretos de los poderosos hermanos Cash, mientras se ve envuelta en engaños, tensión y un triángulo amoroso.",
+   "generos": [
+    "Drama",
+    "Romance",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/1amYmUeoBi23kGcR2pWQclEzXk2.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/OiXyM1w9NxdV450GpV92B0YPMj.jpg",
+   "direccion": [
+    "Jesús Colmenar"
+   ],
+   "reparto": [
+    "Irene Balmes",
+    "Gleb Abrosimov",
+    "Pau Simon",
+    "Pablo Scapigliati",
+    "Asier Etxeandia",
+    "Irene Ferreiro",
+    "Silvia Kal",
+    "Jorge Motos"
+   ],
+   "trailer": "50v6k3LUcxU",
+   "dondeVer": [
+    {
+     "name": "Amazon Prime Video"
+    },
+    {
+     "name": "Amazon Prime Video with Ads"
+    }
+   ],
+   "popularidad": 81.9,
    "pr": false
   },
   {
@@ -485,141 +540,40 @@
    ],
    "trailer": "qdfXYN5kMBY",
    "dondeVer": [],
-   "popularidad": 37.9,
+   "popularidad": 40.0,
    "pr": false
   },
   {
-   "tmdb": 1263337,
-   "title": "El corazón de la bestia",
-   "original": "Heart of the Beast",
-   "estreno": "2026-09-24",
+   "tmdb": 1084409,
+   "title": "Maestros Del Crimen",
+   "original": "A Talent for Murder",
+   "estreno": "2026-10-23",
    "clasificacion": "R",
-   "duracion": 101,
-   "resumen": "Tras un terrible accidente aéreo, el oficial de las Fuerzas Especiales James Belmont y su perro de combate, Odin, quedan varados en lo profundo de la naturaleza salvaje de Alaska. Juntos, se ven obligados a librar una brutal lucha por la supervivencia contra los elementos.",
+   "duracion": 106,
+   "resumen": "Un joven viaja de Nueva York a Suiza para intentar convencer a la aclamada autora de novelas de suspense Patricia Highsmith de que escriba una última entrega de su serie sobre Tom Ripley; sus esfuerzos, sin embargo, van tornándose poco a poco más siniestros.",
    "generos": [
-    "Aventura",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/kVDHPDggier9ciMc8Xglinq1jWv.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/yE766yhgg98tKwTKd8CyNvAtmn6.jpg",
-   "direccion": [
-    "David Ayer"
-   ],
-   "reparto": [
-    "Brad Pitt",
-    "J.K. Simmons",
-    "Anna Lambe",
-    "Justin Melnick",
-    "Shaun DeZern"
-   ],
-   "trailer": "Rh24D89hFMg",
-   "dondeVer": [],
-   "popularidad": 398.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1286656,
-   "title": "Yo Soy Rocky",
-   "original": "I Play Rocky",
-   "estreno": "2026-11-06",
-   "clasificacion": "PG-13",
-   "duracion": 128,
-   "resumen": "Un actor desconocido, sin dinero ni contactos, tenía una sola convicción: no solo escribiría Rocky, sino que él sería Rocky Balboa. Rechazado una y otra vez por los estudios, Sylvester Stallone lo apostó todo por sí mismo y se negó a ceder el papel, incluso cuando le ofrecieron una fortuna por hacerlo.",
-   "generos": [
+    "Suspense",
     "Drama",
-    "Historia"
+    "Crimen"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/6ItqVHcsb2swkE7ajS6EVCH2mpd.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/1lnnjBCRLZzKRhQipK5zm61YkPe.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/mstDPKNKgSGFvVFVdfzeMNkcyw2.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/mfpjOQ6hsvMUIFyzWglwerbpgFS.jpg",
    "direccion": [
-    "Peter Farrelly"
+    "Anton Corbijn"
    ],
    "reparto": [
-    "Anthony Ippolito",
-    "AnnaSophia Robb",
-    "P.J. Byrne",
-    "Toby Kebbell",
-    "Jay Duplass",
-    "Tracy Letts",
-    "Matt Dillon",
-    "Stephan James"
+    "Helen Mirren",
+    "Alden Ehrenreich",
+    "Olivia Cooke",
+    "Juliet Stevenson",
+    "James Faulkner",
+    "Brid Brennan",
+    "Maddalena Vallecchi Williams",
+    "Nikolai Selikovsky"
    ],
-   "trailer": "JtkPJREm_9o",
+   "trailer": "IzFgGhFrx0o",
    "dondeVer": [],
-   "popularidad": 54.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1765072,
-   "title": "Puedes verlo todo",
-   "original": "You Can See Everything",
-   "estreno": "2026-10-16",
-   "clasificacion": "R",
-   "duracion": 175,
-   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
-   "generos": [
-    "Documental"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/lxv8IU6AU5FcqXimC3izkbRip7D.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rrbbzCyS45yooXpUGJatfptlHYI.jpg",
-   "direccion": [
-    "Nathan Fielder",
-    "Lance Oppenheim"
-   ],
-   "reparto": [
-    "Elizabeth Holmes",
-    "Nathan Fielder",
-    "Billy Evans",
-    "Amanda Seyfried",
-    "Christopher Abbott",
-    "Lance Oppenheim",
-    "Christian Rasmus Holmes IV",
-    "Noel Anne Holmes"
-   ],
-   "trailer": "-B-gh1BlS4w",
-   "dondeVer": [],
-   "popularidad": 70.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1518204,
-   "title": "Allen",
-   "original": "Allen",
-   "estreno": "2026-11-12",
-   "clasificacion": "PG-13",
-   "duracion": 107,
-   "resumen": "Veinte años después de su increíble encuentro con un alienígena, Petey sigue estancado en el pasado. Hasta que, por alguna extraña razón, su viejo amigo vuelve...",
-   "generos": [
-    "Ciencia ficción",
-    "Aventura",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/alhhrpj1PSAn5bfz4Os1k7Bweoj.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/51fGmBW7WjyJouP9TjIcxRpCUNk.jpg",
-   "direccion": [
-    "Daley Pearson",
-    "Jeffrey Walker"
-   ],
-   "reparto": [
-    "T.J. Power",
-    "Charlotte Nicdao",
-    "Josh Helman",
-    "Emily Barclay",
-    "Benedict Hardie",
-    "Elijah Tamati",
-    "Edward A O'Sullivan",
-    "Caitlin Niemotko"
-   ],
-   "trailer": "P8G5Y25W3eA",
-   "dondeVer": [
-    {
-     "name": "Netflix"
-    },
-    {
-     "name": "Netflix Standard with Ads"
-    }
-   ],
-   "popularidad": 46.4,
+   "popularidad": 54.5,
    "pr": false
   },
   {
@@ -658,40 +612,40 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 97.3,
+   "popularidad": 87.8,
    "pr": false
   },
   {
-   "tmdb": 1084409,
-   "title": "Maestros Del Crimen",
-   "original": "A Talent for Murder",
-   "estreno": "2026-10-23",
-   "clasificacion": "R",
-   "duracion": 106,
-   "resumen": "Un joven viaja de Nueva York a Suiza para intentar convencer a la aclamada autora de novelas de suspense Patricia Highsmith de que escriba una última entrega de su serie sobre Tom Ripley; sus esfuerzos, sin embargo, van tornándose poco a poco más siniestros.",
+   "tmdb": 656908,
+   "title": "Ramayana: El Nacimiento de una Leyenda",
+   "original": "रामायणम्",
+   "estreno": "2026-11-05",
+   "clasificacion": "PG-13",
+   "duracion": 168,
+   "resumen": "Una antigua epopeya sigue a un joven príncipe y a una princesa, cuyo matrimonio y posterior exilio marcan el comienzo de un viaje legendario. Su historia de amor, deber y destino prepara el terreno para desafíos aún mayores.",
    "generos": [
-    "Suspense",
-    "Drama",
-    "Crimen"
+    "Fantasía",
+    "Acción",
+    "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/mstDPKNKgSGFvVFVdfzeMNkcyw2.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/mfpjOQ6hsvMUIFyzWglwerbpgFS.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/nzL1ySE6vdmR6RxXhE7gLggkp41.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/yHVZncPRZr63mezRX20IyKLrSkv.jpg",
    "direccion": [
-    "Anton Corbijn"
+    "Nitesh Tiwari"
    ],
    "reparto": [
-    "Helen Mirren",
-    "Alden Ehrenreich",
-    "Olivia Cooke",
-    "Juliet Stevenson",
-    "James Faulkner",
-    "Brid Brennan",
-    "Maddalena Vallecchi Williams",
-    "Nikolai Selikovsky"
+    "Ranbir Kapoor",
+    "Yash",
+    "Sai Pallavi",
+    "Ravi Dubey",
+    "अरुण गोविल",
+    "Shobana",
+    "लारा दत्ता",
+    "Rakul Preet Singh"
    ],
-   "trailer": "IzFgGhFrx0o",
+   "trailer": "tPf0_b026Ck",
    "dondeVer": [],
-   "popularidad": 58.2,
+   "popularidad": 128.7,
    "pr": false
   }
  ],
@@ -726,7 +680,7 @@
    ],
    "trailer": "bwZzXTUcaQo",
    "dondeVer": [],
-   "popularidad": 292.7,
+   "popularidad": 343.1,
    "pr": false
   },
   {
@@ -759,39 +713,7 @@
    ],
    "trailer": "kw0YhiqOPFg",
    "dondeVer": [],
-   "popularidad": 120.2,
-   "pr": false
-  },
-  {
-   "tmdb": 1567605,
-   "title": "Ebenezer: Los fantasmas de Navidad",
-   "original": "Ebenezer",
-   "estreno": "2026-11-12",
-   "clasificacion": "PG-13",
-   "duracion": 115,
-   "resumen": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
-   "generos": [
-    "Fantasía",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ekfB30eDEJAHHEW7yI4gLcq0k3A.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/274ahmbkJSzdmcWrWSTu9DFv5rp.jpg",
-   "direccion": [
-    "Ti West"
-   ],
-   "reparto": [
-    "Johnny Depp",
-    "Rupert Grint",
-    "Daisy Ridley",
-    "Ian McKellen",
-    "Andrea Riseborough",
-    "Sam Claflin",
-    "Tramell Tillman",
-    "Arthur Conti"
-   ],
-   "trailer": "A7lyvgnDuDE",
-   "dondeVer": [],
-   "popularidad": 114.1,
+   "popularidad": 122.4,
    "pr": false
   },
   {
@@ -824,7 +746,73 @@
    ],
    "trailer": "9NNU-vSeOB0",
    "dondeVer": [],
-   "popularidad": 113.0,
+   "popularidad": 110.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1567605,
+   "title": "Ebenezer: Los fantasmas de Navidad",
+   "original": "Ebenezer",
+   "estreno": "2026-11-12",
+   "clasificacion": "PG-13",
+   "duracion": 115,
+   "resumen": "Una emocionante historia de fantasmas ambientada en el Londres de Dickens, que sigue el viaje sobrenatural de un hombre para enfrentar su pasado, presente y futuro mientras lucha por una segunda oportunidad de redención.",
+   "generos": [
+    "Fantasía",
+    "Drama",
+    "Terror"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ekfB30eDEJAHHEW7yI4gLcq0k3A.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/274ahmbkJSzdmcWrWSTu9DFv5rp.jpg",
+   "direccion": [
+    "Ti West"
+   ],
+   "reparto": [
+    "Johnny Depp",
+    "Rupert Grint",
+    "Daisy Ridley",
+    "Ian McKellen",
+    "Andrea Riseborough",
+    "Sam Claflin",
+    "Tramell Tillman",
+    "Arthur Conti"
+   ],
+   "trailer": "A7lyvgnDuDE",
+   "dondeVer": [],
+   "popularidad": 108.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1153576,
+   "title": "Street Fighter",
+   "original": "Street Fighter",
+   "estreno": "2026-10-15",
+   "clasificacion": "PG-13",
+   "duracion": 120,
+   "resumen": "En 1993, los distanciados luchadores Ryu y Ken Masters se ven obligados a volver a la acción cuando la misteriosa Chun-Li los recluta para el próximo Torneo Mundial de Guerreros.",
+   "generos": [
+    "Acción",
+    "Comedia",
+    "Fantasía"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/j9Ukn1hRqSyv5qhHgDHd1s1Dhsg.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/zDE9hd1SG9695YncbZGjSf7Z9Jk.jpg",
+   "direccion": [
+    "Kitao Sakurai"
+   ],
+   "reparto": [
+    "Andrew Koji",
+    "Noah Centineo",
+    "Callina Liang",
+    "David Dastmalchian",
+    "Andrew Schulz",
+    "Cody Rhodes",
+    "Mel Jarnson",
+    "Roman Reigns"
+   ],
+   "trailer": "-MJAfIMUQ5s",
+   "dondeVer": [],
+   "popularidad": 70.0,
    "pr": false
   },
   {
@@ -858,40 +846,7 @@
    ],
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
-   "popularidad": 75.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1153576,
-   "title": "Street Fighter",
-   "original": "Street Fighter",
-   "estreno": "2026-10-15",
-   "clasificacion": "PG-13",
-   "duracion": 120,
-   "resumen": "En 1993, los distanciados luchadores Ryu y Ken Masters se ven obligados a volver a la acción cuando la misteriosa Chun-Li los recluta para el próximo Torneo Mundial de Guerreros.",
-   "generos": [
-    "Acción",
-    "Comedia",
-    "Fantasía"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/j9Ukn1hRqSyv5qhHgDHd1s1Dhsg.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/zDE9hd1SG9695YncbZGjSf7Z9Jk.jpg",
-   "direccion": [
-    "Kitao Sakurai"
-   ],
-   "reparto": [
-    "Andrew Koji",
-    "Noah Centineo",
-    "Callina Liang",
-    "David Dastmalchian",
-    "Andrew Schulz",
-    "Cody Rhodes",
-    "Mel Jarnson",
-    "Roman Reigns"
-   ],
-   "trailer": "-MJAfIMUQ5s",
-   "dondeVer": [],
-   "popularidad": 74.5,
+   "popularidad": 71.6,
    "pr": false
   },
   {
@@ -924,7 +879,7 @@
    ],
    "trailer": "WGOv9Pzh9cE",
    "dondeVer": [],
-   "popularidad": 69.4,
+   "popularidad": 65.1,
    "pr": false
   },
   {
@@ -957,7 +912,7 @@
    ],
    "trailer": "ORxw68y3lyw",
    "dondeVer": [],
-   "popularidad": 67.0,
+   "popularidad": 62.5,
    "pr": false
   },
   {
@@ -990,7 +945,7 @@
    ],
    "trailer": "Haw_sznA5aQ",
    "dondeVer": [],
-   "popularidad": 61.2,
+   "popularidad": 53.5,
    "pr": false
   },
   {
@@ -1026,7 +981,38 @@
    ],
    "trailer": "bRMu8S6FQ9c",
    "dondeVer": [],
-   "popularidad": 55.6,
+   "popularidad": 50.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1255833,
+   "title": "La caída de la ballena",
+   "original": "Whalefall",
+   "estreno": "2026-10-15",
+   "clasificacion": "PG-13",
+   "duracion": 106,
+   "resumen": "Tras la muerte de su padre, Jay Gardiner se sumerge en la costa central de California en busca de sus restos, hasta que es tragado por una enorme ballena.",
+   "generos": [
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/5d8BZCZQaO3gCdP9JaA5B5qGFsH.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/shW2jHkQLZVv4Fko2rJDqTGU0gx.jpg",
+   "direccion": [
+    "Brian Duffield"
+   ],
+   "reparto": [
+    "Austin Abrams",
+    "Josh Brolin",
+    "Elisabeth Shue",
+    "John Ortiz",
+    "Jane Levy",
+    "Emily Rudd",
+    "Kamy D. Bruder",
+    "Mark Meloro Jr."
+   ],
+   "trailer": "67ho3OxCmmM",
+   "dondeVer": [],
+   "popularidad": 45.8,
    "pr": false
   },
   {
@@ -1058,7 +1044,7 @@
    ],
    "trailer": "GMwdcpKOOyY",
    "dondeVer": [],
-   "popularidad": 49.9,
+   "popularidad": 45.6,
    "pr": false
   },
   {
@@ -1077,8 +1063,8 @@
    "afiche": "https://image.tmdb.org/t/p/w342/rdukIaIVFRrjy51jIdd5PTKwhKv.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/xVh1ypMoVkMf5IB7y3hnRplJ14c.jpg",
    "direccion": [
-    "Alex Huston Fischer",
-    "Eleanor Wilson"
+    "Eleanor Wilson",
+    "Alex Huston Fischer"
    ],
    "reparto": [
     "Olivia Colman",
@@ -1092,104 +1078,7 @@
    ],
    "trailer": "jA5zfiikcu8",
    "dondeVer": [],
-   "popularidad": 48.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1255833,
-   "title": "La caída de la ballena",
-   "original": "Whalefall",
-   "estreno": "2026-10-15",
-   "clasificacion": "PG-13",
-   "duracion": 106,
-   "resumen": "Tras la muerte de su padre, Jay Gardiner se sumerge en la costa central de California en busca de sus restos, hasta que es tragado por una enorme ballena.",
-   "generos": [
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/5d8BZCZQaO3gCdP9JaA5B5qGFsH.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/shW2jHkQLZVv4Fko2rJDqTGU0gx.jpg",
-   "direccion": [
-    "Brian Duffield"
-   ],
-   "reparto": [
-    "Austin Abrams",
-    "Josh Brolin",
-    "Elisabeth Shue",
-    "John Ortiz",
-    "Jane Levy",
-    "Emily Rudd",
-    "Kamy D. Bruder",
-    "Mark Meloro Jr."
-   ],
-   "trailer": "67ho3OxCmmM",
-   "dondeVer": [],
-   "popularidad": 48.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1437396,
-   "title": "Your Mother Your Mother Your Mother",
-   "original": "Your Mother Your Mother Your Mother",
-   "estreno": "2026-10-15",
-   "clasificacion": "R",
-   "duracion": 112,
-   "resumen": "Latif, un sicario profundamente religioso, lucha por equilibrar su trabajo, su fe y su faceta como padre. Tras la muerte de su esposa, emprende un viaje desesperado a través de Houston para proteger a sus hijos, enfrentándose tanto a las fuerzas que lo acorralan como a las creencias que, en su interior, amenazan con desmoronarse.",
-   "generos": [
-    "Drama",
-    "Acción",
-    "Crimen",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/58g3PjU11nBszOWc836lC8t2Mzi.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/45Mbs6dmn2W0hvuyxXPDkKREHpP.jpg",
-   "direccion": [
-    "Bassam Tariq"
-   ],
-   "reparto": [
-    "Mahershala Ali",
-    "John Cho",
-    "Giancarlo Esposito",
-    "Abubakr Ali",
-    "Laith Nakli",
-    "Adia",
-    "Jahleel Kamara",
-    "Tiffany Boone"
-   ],
-   "trailer": "uEcoV-ngH38",
-   "dondeVer": [],
-   "popularidad": 46.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1376400,
-   "title": "Crawlers",
-   "original": "Crawlers",
-   "estreno": "2026-10-15",
-   "clasificacion": "R",
-   "duracion": 80,
-   "resumen": "Los inquilinos de los apartamentos Paradiso Palms luchan contra una invasión de arañas mortales, mientras que el astuto administrador del edificio podría ser su única esperanza de supervivencia.",
-   "generos": [
-    "Terror",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/lNXeEpg4yLSRwXwOeR5lbPgwbqL.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/ayJsUQ4bEG6yY0UB6lMboiaDfYE.jpg",
-   "direccion": [
-    "Ángel Gómez Hernández"
-   ],
-   "reparto": [
-    "Matilda Lutz",
-    "Gary Anthony Stennette",
-    "Elena Sanz",
-    "Andrea Scott Méndez",
-    "Isabella Marie Egizi",
-    "Sam Lucas Smith",
-    "Gregg Sulkin",
-    "Melina Matthews"
-   ],
-   "trailer": "4DowjB87tRE",
-   "dondeVer": [],
-   "popularidad": 46.0,
+   "popularidad": 45.4,
    "pr": false
   },
   {
@@ -1223,7 +1112,73 @@
    ],
    "trailer": "wlm_vxf4PaM",
    "dondeVer": [],
-   "popularidad": 45.0,
+   "popularidad": 38.8,
+   "pr": false
+  },
+  {
+   "tmdb": 1437396,
+   "title": "Your Mother Your Mother Your Mother",
+   "original": "Your Mother Your Mother Your Mother",
+   "estreno": "2026-10-15",
+   "clasificacion": "R",
+   "duracion": 112,
+   "resumen": "Latif, un sicario profundamente religioso, lucha por equilibrar su trabajo, su fe y su faceta como padre. Tras la muerte de su esposa, emprende un viaje desesperado a través de Houston para proteger a sus hijos, enfrentándose tanto a las fuerzas que lo acorralan como a las creencias que, en su interior, amenazan con desmoronarse.",
+   "generos": [
+    "Drama",
+    "Acción",
+    "Crimen",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/58g3PjU11nBszOWc836lC8t2Mzi.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/45Mbs6dmn2W0hvuyxXPDkKREHpP.jpg",
+   "direccion": [
+    "Bassam Tariq"
+   ],
+   "reparto": [
+    "Mahershala Ali",
+    "John Cho",
+    "Giancarlo Esposito",
+    "Abubakr Ali",
+    "Laith Nakli",
+    "Adia",
+    "Jahleel Kamara",
+    "Tiffany Boone"
+   ],
+   "trailer": "uEcoV-ngH38",
+   "dondeVer": [],
+   "popularidad": 41.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1376400,
+   "title": "Crawlers",
+   "original": "Crawlers",
+   "estreno": "2026-10-15",
+   "clasificacion": "R",
+   "duracion": 80,
+   "resumen": "Los inquilinos de los apartamentos Paradiso Palms luchan contra una invasión de arañas mortales, mientras que el astuto administrador del edificio podría ser su única esperanza de supervivencia.",
+   "generos": [
+    "Terror",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/lNXeEpg4yLSRwXwOeR5lbPgwbqL.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ayJsUQ4bEG6yY0UB6lMboiaDfYE.jpg",
+   "direccion": [
+    "Ángel Gómez Hernández"
+   ],
+   "reparto": [
+    "Matilda Lutz",
+    "Gary Anthony Stennette",
+    "Elena Sanz",
+    "Andrea Scott Méndez",
+    "Isabella Marie Egizi",
+    "Sam Lucas Smith",
+    "Gregg Sulkin",
+    "Melina Matthews"
+   ],
+   "trailer": "4DowjB87tRE",
+   "dondeVer": [],
+   "popularidad": 40.7,
    "pr": false
   },
   {
@@ -1256,7 +1211,7 @@
    ],
    "trailer": "iXA7BmrBBxs",
    "dondeVer": [],
-   "popularidad": 38.0,
+   "popularidad": 31.8,
    "pr": false
   },
   {
@@ -1287,7 +1242,7 @@
    ],
    "trailer": "0gdRZZVoinM",
    "dondeVer": [],
-   "popularidad": 37.1,
+   "popularidad": 34.2,
    "pr": false
   },
   {
@@ -1320,7 +1275,7 @@
    ],
    "trailer": "zql0pXIpELI",
    "dondeVer": [],
-   "popularidad": 28.4,
+   "popularidad": 23.1,
    "pr": false
   },
   {
@@ -1353,7 +1308,7 @@
    ],
    "trailer": "RjEZaUBbUvU",
    "dondeVer": [],
-   "popularidad": 16.1,
+   "popularidad": 17.3,
    "pr": false
   },
   {
@@ -1386,7 +1341,7 @@
    ],
    "trailer": "eCF2S3vchE4",
    "dondeVer": [],
-   "popularidad": 6.9,
+   "popularidad": 7.3,
    "pr": false
   },
   {
@@ -1419,7 +1374,7 @@
    ],
    "trailer": "CPFkLjHfKoc",
    "dondeVer": [],
-   "popularidad": 4.7,
+   "popularidad": 4.9,
    "pr": false
   },
   {
@@ -1448,7 +1403,7 @@
    ],
    "trailer": "8gjOXAjeisY",
    "dondeVer": [],
-   "popularidad": 4.0,
+   "popularidad": 4.1,
    "pr": false
   },
   {
@@ -1479,7 +1434,7 @@
    ],
    "trailer": "AyYaNvtC2i0",
    "dondeVer": [],
-   "popularidad": 2.8,
+   "popularidad": 2.6,
    "pr": false
   },
   {
@@ -1510,7 +1465,7 @@
    ],
    "trailer": "3vVLiARu62s",
    "dondeVer": [],
-   "popularidad": 1.4,
+   "popularidad": 1.7,
    "pr": false
   },
   {
@@ -1542,7 +1497,7 @@
    ],
    "trailer": "4YamxsIqeRI",
    "dondeVer": [],
-   "popularidad": 1.1,
+   "popularidad": 0.9,
    "pr": false
   },
   {
@@ -1604,7 +1559,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 0.3,
+   "popularidad": 0.4,
    "pr": true
   },
   {
@@ -1662,7 +1617,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 0.3,
+   "popularidad": 0.2,
    "pr": true
   }
  ],
@@ -1700,7 +1655,7 @@
    ],
    "trailer": "wkr5TpxKOTw",
    "dondeVer": [],
-   "popularidad": 42.0,
+   "popularidad": 42.5,
    "pr": false
   },
   {
@@ -1716,7 +1671,7 @@
     "Romance"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/iU2XxFhMxC5Z2gOPASkRmtuDjJQ.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/1zcCFBcqEQtAtXDh6EoBPy16RLR.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/nubnNXuMArUhiDW1nUevGsG65x9.jpg",
    "direccion": [
     "John Hamburg"
    ],
@@ -1732,7 +1687,7 @@
    ],
    "trailer": "j0MROuSV-pA",
    "dondeVer": [],
-   "popularidad": 38.8,
+   "popularidad": 39.0,
    "pr": false
   },
   {
@@ -1765,7 +1720,7 @@
    ],
    "trailer": "Dihu6iM__rI",
    "dondeVer": [],
-   "popularidad": 22.7,
+   "popularidad": 19.6,
    "pr": false
   },
   {
@@ -1798,7 +1753,7 @@
    ],
    "trailer": "RjEZaUBbUvU",
    "dondeVer": [],
-   "popularidad": 16.1,
+   "popularidad": 17.3,
    "pr": false
   },
   {
@@ -1827,7 +1782,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 12.9,
+   "popularidad": 10.3,
    "pr": false
   },
   {
@@ -1860,7 +1815,7 @@
    ],
    "trailer": "kAExvESKk1c",
    "dondeVer": [],
-   "popularidad": 9.5,
+   "popularidad": 9.6,
    "pr": false
   },
   {
@@ -1894,7 +1849,7 @@
    ],
    "trailer": "8N9e-skJ3hw",
    "dondeVer": [],
-   "popularidad": 9.3,
+   "popularidad": 8.5,
    "pr": false
   },
   {
@@ -1927,7 +1882,7 @@
    ],
    "trailer": "J6MRNchmZkY",
    "dondeVer": [],
-   "popularidad": 8.7,
+   "popularidad": 8.8,
    "pr": false
   },
   {
@@ -1960,7 +1915,7 @@
    ],
    "trailer": "clyzHmBx43E",
    "dondeVer": [],
-   "popularidad": 8.7,
+   "popularidad": 7.9,
    "pr": false
   },
   {
@@ -1991,7 +1946,7 @@
    ],
    "trailer": "ryMtR8BvkA0",
    "dondeVer": [],
-   "popularidad": 8.3,
+   "popularidad": 8.8,
    "pr": false
   },
   {
@@ -2023,7 +1978,7 @@
    ],
    "trailer": "I6tMFYT9s7E",
    "dondeVer": [],
-   "popularidad": 7.0,
+   "popularidad": 7.1,
    "pr": false
   },
   {
@@ -2057,7 +2012,7 @@
    ],
    "trailer": "VL-xjzQFWsY",
    "dondeVer": [],
-   "popularidad": 6.9,
+   "popularidad": 7.1,
    "pr": false
   },
   {
@@ -2090,7 +2045,7 @@
    ],
    "trailer": "80xR3G5eowo",
    "dondeVer": [],
-   "popularidad": 4.7,
+   "popularidad": 4.4,
    "pr": false
   },
   {
@@ -2122,7 +2077,7 @@
    ],
    "trailer": "JpZ7y72u-c8",
    "dondeVer": [],
-   "popularidad": 4.1,
+   "popularidad": 4.2,
    "pr": false
   },
   {
@@ -2183,7 +2138,7 @@
    ],
    "trailer": "uO4wsV7HEUY",
    "dondeVer": [],
-   "popularidad": 3.6,
+   "popularidad": 3.2,
    "pr": false
   },
   {
@@ -2217,7 +2172,7 @@
    ],
    "trailer": "IXZMB2cSnls",
    "dondeVer": [],
-   "popularidad": 3.5,
+   "popularidad": 4.1,
    "pr": false
   },
   {
@@ -2242,7 +2197,7 @@
    ],
    "trailer": "H_NwyHRY9yk",
    "dondeVer": [],
-   "popularidad": 3.4,
+   "popularidad": 2.9,
    "pr": false
   },
   {
@@ -2274,7 +2229,7 @@
    ],
    "trailer": "2ZW9QDB_PHA",
    "dondeVer": [],
-   "popularidad": 3.3,
+   "popularidad": 3.1,
    "pr": false
   },
   {
@@ -2306,7 +2261,7 @@
    ],
    "trailer": "_XEZHlWlZ_o",
    "dondeVer": [],
-   "popularidad": 3.1,
+   "popularidad": 2.8,
    "pr": false
   },
   {
@@ -2338,7 +2293,7 @@
    ],
    "trailer": "fdkwGvMB5zQ",
    "dondeVer": [],
-   "popularidad": 2.9,
+   "popularidad": 3.1,
    "pr": false
   },
   {
@@ -2372,7 +2327,7 @@
    ],
    "trailer": "mdGrH_f4wJw",
    "dondeVer": [],
-   "popularidad": 2.8,
+   "popularidad": 2.5,
    "pr": false
   },
   {
@@ -2407,7 +2362,7 @@
    ],
    "trailer": "oqZaJgF4sfE",
    "dondeVer": [],
-   "popularidad": 2.7,
+   "popularidad": 2.5,
    "pr": false
   },
   {
@@ -2439,7 +2394,7 @@
    ],
    "trailer": "-CDgxJgiQY4",
    "dondeVer": [],
-   "popularidad": 2.5,
+   "popularidad": 2.9,
    "pr": false
   },
   {
@@ -2471,7 +2426,7 @@
    ],
    "trailer": "cal1RfsmHUI",
    "dondeVer": [],
-   "popularidad": 2.1,
+   "popularidad": 2.0,
    "pr": false
   },
   {
@@ -2502,7 +2457,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 2.1,
+   "popularidad": 1.7,
    "pr": false
   },
   {
@@ -2533,7 +2488,7 @@
    ],
    "trailer": "MpIwPydkWac",
    "dondeVer": [],
-   "popularidad": 2.0,
+   "popularidad": 2.1,
    "pr": false
   },
   {
@@ -2565,7 +2520,7 @@
    ],
    "trailer": "sJAqmdXaM8U",
    "dondeVer": [],
-   "popularidad": 1.9,
+   "popularidad": 1.8,
    "pr": false
   },
   {
@@ -2594,7 +2549,7 @@
    ],
    "trailer": "2iIBYPng3uI",
    "dondeVer": [],
-   "popularidad": 1.9,
+   "popularidad": 2.1,
    "pr": false
   },
   {
