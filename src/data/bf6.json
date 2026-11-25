@@ -1,6 +1,15 @@
 {
- "actualizado": "2026-11-25T13:21:56+00:00",
+ "actualizado": "2026-11-25T16:22:03+00:00",
  "noticias": [
+  {
+   "gid": "1850460852981829",
+   "fecha": "2026-11-25",
+   "titulo_original": "BATTLEFIELD 6 GAME UPDATE 2.1.2.5",
+   "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1850460852981829",
+   "imagen": null,
+   "titulo": "Battlefield 6 y REDSEC reciben la actualización 2.1.2.5",
+   "resumen": "Llega el jueves 26 a las 09:00 UTC en todas las plataformas. Reduce la espera para disparar tras lanzar el Supply Pouch, corrige cierres inesperados y la bandera flotante en European Casino, y permite a los bots subir escaleras en Vegas Strip."
+  },
   {
    "gid": "1849458702694300",
    "fecha": "2026-11-17",
@@ -99,15 +108,6 @@
    "imagen": null,
    "titulo": "Nueva encuesta de la comunidad sobre Siege of Las Vegas",
    "resumen": "Ya está disponible una encuesta de unos 5 minutos sobre Siege of Las Vegas, con cupo limitado por orden de llegada. El equipo también recoge comentarios en Reddit, X, Discord y Battlefield Labs."
-  },
-  {
-   "gid": "1846651706695664",
-   "fecha": "2026-10-20",
-   "titulo_original": "New Nightmares: Battlefield x Dead Space Event Guide",
-   "url": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1846651706695664",
-   "imagen": "https://clan.akamai.steamstatic.com/images/45712411/cee06701ad347e94f06d4466f5d70759271cc1c4.png",
-   "titulo": "Dead Space: Convergence llega a Battlefield 6 con el modo Marker Incursion",
-   "resumen": "Desde el 20 de octubre, el evento de Halloween trae Marker Incursion, un PvE para 16 jugadores donde destruyes Marker Shrines, además del DS-23 Pulse Rifle como Battle Pick-Up y recompensas como el skin Aegis VII."
   }
  ],
  "prensa": [
@@ -201,7 +201,7 @@
     {
      "id": "QuclFr_zafc",
      "titulo": "🚨 ✅ BF6 | ¡SAQUEAMOS LOS SERVIDORES! 📈🔥 DESTRUCCIÓN TOTAL 🚁⚔️ LET’S GO!",
-     "detalle": "485 · Transmitido hace 9 h",
+     "detalle": "501 · Transmitido hace 12 h",
      "vivo": false,
      "directo": true
     },
