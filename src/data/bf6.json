@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-24T22:15:13+00:00",
+ "actualizado": "2026-11-25T01:25:52+00:00",
  "noticias": [
   {
    "gid": "1849458702694300",
@@ -204,8 +204,15 @@
    "id": "UCkMIq70Im_rSUo8KXMVDlXQ",
    "pr": true,
    "url": "https://www.youtube.com/@CaptMatojo07",
-   "en_vivo": null,
+   "en_vivo": "QuclFr_zafc",
    "videos": [
+    {
+     "id": "QuclFr_zafc",
+     "titulo": "🚨 ✅ BF6 | ¡SAQUEAMOS LOS SERVIDORES! 📈🔥 DESTRUCCIÓN TOTAL 🚁⚔️ LET’S GO!",
+     "detalle": "21 lo están viendo",
+     "vivo": true,
+     "directo": true
+    },
     {
      "id": "1HMIZYeO5TE",
      "titulo": "🚨 ✅ BF6 | ¡SAQUEAMOS LOS SERVIDORES! 📈🔥 DESTRUCCIÓN TOTAL 🚁⚔️ LET’S GO!",
@@ -216,7 +223,7 @@
     {
      "id": "hm0Oe9c_6L0",
      "titulo": "BF6 | 💀 ¡HOY VAMOS A SAQUEAR LOS SERVIDORES! 🚁 TANQUES, AVIONES Y DESTRUCCIÓN TOTAL ⚔️ LET’S GO!",
-     "detalle": "493 · Transmitido hace 3 días",
+     "detalle": "492 · Transmitido hace 3 días",
      "vivo": false,
      "directo": true
     },
@@ -252,13 +259,6 @@
      "id": "31lI_dadHpw",
      "titulo": "🚨 BF6 | 🎰🔥 ¡CASINO HEIST EN ACCIÓN! 💰 LA APUESTA MÁS GRANDE COMIENZA ⚔️ LET’S GO!",
      "detalle": "642 · Transmitido hace 12 días",
-     "vivo": false,
-     "directo": true
-    },
-    {
-     "id": "h6fPKSGuz2Y",
-     "titulo": "🚨 BF6 | ✨🎰 ¡CASINO HEIST! 💰 🎲 ¡EL GRAN GOLPE HA COMENZADO! ⚔️ LET’S GO!",
-     "detalle": "736 · Transmitido hace 13 días",
      "vivo": false,
      "directo": true
     }
