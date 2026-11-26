@@ -1,39 +1,6 @@
 {
- "actualizado": "2026-11-26T06:11:00",
+ "actualizado": "2026-11-26T18:13:00",
  "pegao": [
-  {
-   "tmdb": 1300968,
-   "title": "Los Juegos del Hambre: Amanecer en la cosecha",
-   "original": "The Hunger Games: Sunrise on the Reaping",
-   "estreno": "2026-11-19",
-   "clasificacion": "PG-13",
-   "duracion": 159,
-   "resumen": "Ambientada décadas antes de los eventos liderados por Katniss y Peeta, la historia sigue a Haymitch Abernathy, el enigmático ganador del 50° Torneo de Los juegos del hambre, en una versión más brutal y decisiva de la competencia. La película también mostrará la primera aparición televisiva de Caesar Flickerman, cuya cobertura transformará para siempre la forma en que Panem vive los Juegos.",
-   "generos": [
-    "Ciencia ficción",
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8K4lZ5oepk3kArMWfQuqSegxSRe.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/aqFZcr2dxSZ2UwWSo1WC6C0rwDf.jpg",
-   "direccion": [
-    "Francis Lawrence"
-   ],
-   "reparto": [
-    "Joseph Zada",
-    "Mckenna Grace",
-    "Jesse Plemons",
-    "Ralph Fiennes",
-    "Glenn Close",
-    "Whitney Peak",
-    "Elle Fanning",
-    "Kieran Culkin"
-   ],
-   "trailer": "bwZzXTUcaQo",
-   "dondeVer": [],
-   "popularidad": 373.4,
-   "pr": false
-  },
   {
    "tmdb": 1003596,
    "title": "Avengers: Doomsday",
@@ -66,6 +33,39 @@
    "trailer": "kZ2Nhqkx3-I",
    "dondeVer": [],
    "popularidad": 261.4,
+   "pr": false
+  },
+  {
+   "tmdb": 1300968,
+   "title": "Los Juegos del Hambre: Amanecer en la cosecha",
+   "original": "The Hunger Games: Sunrise on the Reaping",
+   "estreno": "2026-11-19",
+   "clasificacion": "PG-13",
+   "duracion": 159,
+   "resumen": "Ambientada décadas antes de los eventos liderados por Katniss y Peeta, la historia sigue a Haymitch Abernathy, el enigmático ganador del 50° Torneo de Los juegos del hambre, en una versión más brutal y decisiva de la competencia. La película también mostrará la primera aparición televisiva de Caesar Flickerman, cuya cobertura transformará para siempre la forma en que Panem vive los Juegos.",
+   "generos": [
+    "Ciencia ficción",
+    "Acción",
+    "Aventura"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/8K4lZ5oepk3kArMWfQuqSegxSRe.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/aqFZcr2dxSZ2UwWSo1WC6C0rwDf.jpg",
+   "direccion": [
+    "Francis Lawrence"
+   ],
+   "reparto": [
+    "Joseph Zada",
+    "Mckenna Grace",
+    "Jesse Plemons",
+    "Ralph Fiennes",
+    "Glenn Close",
+    "Whitney Peak",
+    "Elle Fanning",
+    "Kieran Culkin"
+   ],
+   "trailer": "bwZzXTUcaQo",
+   "dondeVer": [],
+   "popularidad": 373.4,
    "pr": false
   },
   {
@@ -102,6 +102,42 @@
    "pr": false
   },
   {
+   "tmdb": 1538497,
+   "title": "Hechizo: Bienvenidos a Hexe",
+   "original": "Hexed",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG",
+   "duracion": 103,
+   "resumen": "Billie, una adolescente impulsiva y poco convencional, descubre que posee poderes mágicos secretos; al liberarlos, se ve arrastrada a un viaje espectacular que la lleva más allá de los suburbios y la adentra en Hexe, un vasto reino de brujas. Obligada a unir fuerzas con su cautelosa madre, Alice, ambas desvelan secretos familiares que podrían cambiar para siempre el mundo de las brujas.",
+   "generos": [
+    "Aventura",
+    "Animación",
+    "Familia",
+    "Fantasía",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/tTt3P9jEL3VmQ6DKhq04AhlADYz.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/wdjW11Tp4w9EfDBxbjyBJvDVHDA.jpg",
+   "direccion": [
+    "Jason Hand",
+    "ฝน วีระสุนทร"
+   ],
+   "reparto": [
+    "Hailee Steinfeld",
+    "Rashida Jones",
+    "Jodie Foster",
+    "Walton Goggins",
+    "Henry Winkler",
+    "Dan Stevens",
+    "Brett Gelman",
+    "Tracey Ullman"
+   ],
+   "trailer": "wkr5TpxKOTw",
+   "dondeVer": [],
+   "popularidad": 69.9,
+   "pr": false
+  },
+  {
    "tmdb": 969681,
    "title": "Spider-Man: Un nuevo día",
    "original": "Spider-Man: Brand New Day",
@@ -135,20 +171,51 @@
    "pr": false
   },
   {
+   "tmdb": 1765072,
+   "title": "Puedes verlo todo",
+   "original": "You Can See Everything",
+   "estreno": "2026-10-16",
+   "clasificacion": "R",
+   "duracion": 175,
+   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
+   "generos": [
+    "Documental"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/lxv8IU6AU5FcqXimC3izkbRip7D.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/rrbbzCyS45yooXpUGJatfptlHYI.jpg",
+   "direccion": [
+    "Nathan Fielder",
+    "Lance Oppenheim"
+   ],
+   "reparto": [
+    "Elizabeth Holmes",
+    "Nathan Fielder",
+    "Billy Evans",
+    "Amanda Seyfried",
+    "Christopher Abbott",
+    "Lance Oppenheim",
+    "Christian Rasmus Holmes IV",
+    "Noel Anne Holmes"
+   ],
+   "trailer": "-B-gh1BlS4w",
+   "dondeVer": [],
+   "popularidad": 123.5,
+   "pr": false
+  },
+  {
    "tmdb": 1458300,
    "title": "The Mosquito Bowl",
    "original": "The Mosquito Bowl",
    "estreno": "2026-10-29",
    "clasificacion": "R",
    "duracion": 128,
-   "resumen": "",
+   "resumen": "Después del ataque a Pearl Harbor, cuatro estrellas del fútbol universitario se alistan en los Marines de EE. UU., descubriendo la fuerza de la hermandad y el precio de la guerra.",
    "generos": [
     "Bélica",
-    "Historia",
     "Drama"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/yWhMnr8pkhgZ1rGlj4z2dxLbS99.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/k2djfMwL3LhpvZMfPN7IFX4DG5N.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/nfcXn5yvBejpbljQIBrTlOMQZoC.jpg",
    "direccion": [
     "Peter Berg"
    ],
@@ -163,7 +230,14 @@
     "Ella Newton"
    ],
    "trailer": "CPFkLjHfKoc",
-   "dondeVer": [],
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
    "popularidad": 63.0,
    "pr": false
   },
@@ -211,39 +285,41 @@
    "pr": false
   },
   {
-   "tmdb": 1538497,
-   "title": "Hechizo: Bienvenidos a Hexe",
-   "original": "Hexed",
-   "estreno": "2026-11-25",
-   "clasificacion": "PG",
-   "duracion": 103,
-   "resumen": "Billie, una adolescente impulsiva y poco convencional, descubre que posee poderes mágicos secretos; al liberarlos, se ve arrastrada a un viaje espectacular que la lleva más allá de los suburbios y la adentra en Hexe, un vasto reino de brujas. Obligada a unir fuerzas con su cautelosa madre, Alice, ambas desvelan secretos familiares que podrían cambiar para siempre el mundo de las brujas.",
+   "tmdb": 1280115,
+   "title": "El camino del pequeño guerrero",
+   "original": "Way of the Warrior Kid",
+   "estreno": "2026-11-24",
+   "clasificacion": "PG-13",
+   "duracion": 107,
+   "resumen": "Jake es un SEAL herido que se vuelve el mentor de su tímido sobrino, Marc. Jake usa principios militares para enseñarle a Marc a ser un pequeño guerrero al entrar a la secundaria.",
    "generos": [
-    "Aventura",
-    "Animación",
-    "Familia",
-    "Fantasía",
-    "Comedia"
+    "Drama"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/tTt3P9jEL3VmQ6DKhq04AhlADYz.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/wdjW11Tp4w9EfDBxbjyBJvDVHDA.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/uh9hCepFpB2xvLUeYSZKrjcjnvk.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/vOByLZRhCIIItlSlCT7bYbI9MYL.jpg",
    "direccion": [
-    "Jason Hand",
-    "ฝน วีระสุนทร"
+    "McG"
    ],
    "reparto": [
-    "Hailee Steinfeld",
-    "Rashida Jones",
-    "Jodie Foster",
-    "Walton Goggins",
-    "Henry Winkler",
-    "Dan Stevens",
-    "Brett Gelman",
-    "Tracey Ullman"
+    "Chris Pratt",
+    "Jude Hill",
+    "Linda Cardellini",
+    "Jocko Willink",
+    "Ava Torres",
+    "Levi McConaughey",
+    "Darien Sills-Evans",
+    "Carl McDowell"
    ],
-   "trailer": "wkr5TpxKOTw",
-   "dondeVer": [],
-   "popularidad": 69.9,
+   "trailer": "R1ECMLrwDYQ",
+   "dondeVer": [
+    {
+     "name": "Apple TV"
+    },
+    {
+     "name": "Apple TV Amazon Channel"
+    }
+   ],
+   "popularidad": 51.0,
    "pr": false
   },
   {
@@ -294,8 +370,8 @@
    "afiche": "https://image.tmdb.org/t/p/w342/rdukIaIVFRrjy51jIdd5PTKwhKv.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/r4DTGm1f1r23cyjRJ5kFMh7qYlj.jpg",
    "direccion": [
-    "Eleanor Wilson",
-    "Alex Huston Fischer"
+    "Alex Huston Fischer",
+    "Eleanor Wilson"
    ],
    "reparto": [
     "Olivia Colman",
@@ -313,70 +389,68 @@
    "pr": false
   },
   {
-   "tmdb": 1280115,
-   "title": "El camino del pequeño guerrero",
-   "original": "Way of the Warrior Kid",
-   "estreno": "2026-11-24",
+   "tmdb": 1153576,
+   "title": "Street Fighter",
+   "original": "Street Fighter",
+   "estreno": "2026-10-15",
    "clasificacion": "PG-13",
-   "duracion": 107,
-   "resumen": "Jake es un SEAL herido que se vuelve el mentor de su tímido sobrino, Marc. Jake usa principios militares para enseñarle a Marc a ser un pequeño guerrero al entrar a la secundaria.",
+   "duracion": 120,
+   "resumen": "En 1993, los distanciados luchadores Ryu y Ken Masters se ven obligados a volver a la acción cuando la misteriosa Chun-Li los recluta para el próximo Torneo Mundial de Guerreros.",
    "generos": [
-    "Drama"
+    "Acción",
+    "Comedia",
+    "Fantasía"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/uh9hCepFpB2xvLUeYSZKrjcjnvk.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/1JL6mDxYRauwv81bLupSZczC39M.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/j9Ukn1hRqSyv5qhHgDHd1s1Dhsg.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/zDE9hd1SG9695YncbZGjSf7Z9Jk.jpg",
    "direccion": [
-    "McG"
+    "Kitao Sakurai"
    ],
    "reparto": [
-    "Chris Pratt",
-    "Jude Hill",
-    "Linda Cardellini",
-    "Jocko Willink",
-    "Ava Torres",
-    "Levi McConaughey",
-    "Darien Sills-Evans",
-    "Carl McDowell"
+    "Andrew Koji",
+    "Noah Centineo",
+    "Callina Liang",
+    "David Dastmalchian",
+    "Andrew Schulz",
+    "Cody Rhodes",
+    "Mel Jarnson",
+    "Roman Reigns"
    ],
-   "trailer": "R1ECMLrwDYQ",
-   "dondeVer": [
-    {
-     "name": "Apple TV"
-    }
-   ],
-   "popularidad": 51.0,
+   "trailer": "-MJAfIMUQ5s",
+   "dondeVer": [],
+   "popularidad": 47.7,
    "pr": false
   },
   {
-   "tmdb": 1765072,
-   "title": "Puedes verlo todo",
-   "original": "You Can See Everything",
-   "estreno": "2026-10-16",
-   "clasificacion": "R",
-   "duracion": 175,
-   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
+   "tmdb": 1400336,
+   "title": "La nueva Focker",
+   "original": "Focker In-Law",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG-13",
+   "duracion": 105,
+   "resumen": "Henry, el hijo de Greg y Pam Focker, se enfrenta al caos familiar cuando decide casarse con una mujer de carácter fuerte que parece ser totalmente incompatible con él.",
    "generos": [
-    "Documental"
+    "Comedia",
+    "Romance"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/lxv8IU6AU5FcqXimC3izkbRip7D.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rrbbzCyS45yooXpUGJatfptlHYI.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/kiagXCuuvdE28GspcvOXlfFI0J3.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/6IfsmHoVWwgJwzxA9DLim2XZbSn.jpg",
    "direccion": [
-    "Nathan Fielder",
-    "Lance Oppenheim"
+    "John Hamburg"
    ],
    "reparto": [
-    "Elizabeth Holmes",
-    "Nathan Fielder",
-    "Billy Evans",
-    "Amanda Seyfried",
-    "Christopher Abbott",
-    "Lance Oppenheim",
-    "Christian Rasmus Holmes IV",
-    "Noel Anne Holmes"
+    "Robert De Niro",
+    "Ben Stiller",
+    "Ariana Grande",
+    "Skyler Gisondo",
+    "Owen Wilson",
+    "Blythe Danner",
+    "Teri Polo",
+    "Beanie Feldstein"
    ],
-   "trailer": "-B-gh1BlS4w",
+   "trailer": "j0MROuSV-pA",
    "dondeVer": [],
-   "popularidad": 123.5,
+   "popularidad": 55.4,
    "pr": false
   },
   {
@@ -451,39 +525,6 @@
    "pr": false
   },
   {
-   "tmdb": 1381071,
-   "title": "Godzilla Minus Zero",
-   "original": "ゴジラ-0.0",
-   "estreno": "2026-11-03",
-   "clasificacion": "R",
-   "duracion": 135,
-   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
-   "generos": [
-    "Ciencia ficción",
-    "Terror",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
-   "direccion": [
-    "山崎貴"
-   ],
-   "reparto": [
-    "神木隆之介",
-    "浜辺美波",
-    "吉岡秀隆",
-    "田中泯",
-    "長澤まさみ",
-    "山田裕貴",
-    "佐々木蔵之介",
-    "安藤サクラ"
-   ],
-   "trailer": "kw0YhiqOPFg",
-   "dondeVer": [],
-   "popularidad": 80.2,
-   "pr": false
-  },
-  {
    "tmdb": 1551025,
    "title": "Cómo proteger a una estrella",
    "original": "Guarding Stars",
@@ -523,35 +564,36 @@
    "pr": false
   },
   {
-   "tmdb": 1400336,
-   "title": "La nueva Focker",
-   "original": "Focker In-Law",
-   "estreno": "2026-11-25",
-   "clasificacion": "PG-13",
-   "duracion": 105,
-   "resumen": "Henry, el hijo de Greg y Pam Focker, se enfrenta al caos familiar cuando decide casarse con una mujer de carácter fuerte que parece ser totalmente incompatible con él.",
+   "tmdb": 1423191,
+   "title": "Resident Evil: Noche cero",
+   "original": "Resident Evil",
+   "estreno": "2026-09-17",
+   "clasificacion": "R",
+   "duracion": 94,
+   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
    "generos": [
-    "Comedia",
-    "Romance"
+    "Terror",
+    "Ciencia ficción",
+    "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/kiagXCuuvdE28GspcvOXlfFI0J3.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/6IfsmHoVWwgJwzxA9DLim2XZbSn.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/vqNSvCFknXObgqn7nOFrJVEeGht.jpg",
    "direccion": [
-    "John Hamburg"
+    "Zach Cregger"
    ],
    "reparto": [
-    "Ben Stiller",
-    "Robert De Niro",
-    "Ariana Grande",
-    "Skyler Gisondo",
-    "Owen Wilson",
-    "Blythe Danner",
-    "Teri Polo",
-    "Beanie Feldstein"
+    "Austin Abrams",
+    "Paul Walter Hauser",
+    "Kali Reis",
+    "Zach Cherry",
+    "Johnno Wilson",
+    "Shaun W. Loeser",
+    "Zach Cregger",
+    "Emily Piggford"
    ],
-   "trailer": "j0MROuSV-pA",
+   "trailer": "d6oszs7f5aI",
    "dondeVer": [],
-   "popularidad": 55.4,
+   "popularidad": 223.5,
    "pr": false
   },
   {
@@ -595,6 +637,39 @@
    "pr": false
   },
   {
+   "tmdb": 1381071,
+   "title": "Godzilla Minus Zero",
+   "original": "ゴジラ-0.0",
+   "estreno": "2026-11-03",
+   "clasificacion": "R",
+   "duracion": 135,
+   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
+   "generos": [
+    "Ciencia ficción",
+    "Terror",
+    "Acción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
+   "direccion": [
+    "山崎貴"
+   ],
+   "reparto": [
+    "神木隆之介",
+    "浜辺美波",
+    "吉岡秀隆",
+    "田中泯",
+    "長澤まさみ",
+    "山田裕貴",
+    "佐々木蔵之介",
+    "安藤サクラ"
+   ],
+   "trailer": "kw0YhiqOPFg",
+   "dondeVer": [],
+   "popularidad": 80.2,
+   "pr": false
+  },
+  {
    "tmdb": 1568060,
    "title": "Perfectos mentirosos",
    "original": "Perfectos mentirosos",
@@ -632,71 +707,6 @@
     }
    ],
    "popularidad": 88.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1423191,
-   "title": "Resident Evil: Noche cero",
-   "original": "Resident Evil",
-   "estreno": "2026-09-17",
-   "clasificacion": "R",
-   "duracion": 94,
-   "resumen": "Un desafortunado mensajero, encargado de entregar un paquete a un hospital remoto, se ve atrapado en medio de un brote y debe luchar contra hordas de criaturas mutantes para sobrevivir.",
-   "generos": [
-    "Terror",
-    "Ciencia ficción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ntmaNFJ7O60n45E1E6HZlXeSV5e.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/vqNSvCFknXObgqn7nOFrJVEeGht.jpg",
-   "direccion": [
-    "Zach Cregger"
-   ],
-   "reparto": [
-    "Austin Abrams",
-    "Paul Walter Hauser",
-    "Kali Reis",
-    "Zach Cherry",
-    "Johnno Wilson",
-    "Shaun W. Loeser",
-    "Zach Cregger",
-    "Emily Piggford"
-   ],
-   "trailer": "d6oszs7f5aI",
-   "dondeVer": [],
-   "popularidad": 223.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1496696,
-   "title": "Breeder",
-   "original": "Breeder",
-   "estreno": "2026-10-28",
-   "clasificacion": "R",
-   "duracion": 97,
-   "resumen": "",
-   "generos": [
-    "Terror",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/alsb3UC17kxIcytLWvwkmL0STgU.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/l5gJE9xW1FFtub3gUezh1PjBbY5.jpg",
-   "direccion": [
-    "Alex Goyette"
-   ],
-   "reparto": [
-    "Daniel Doheny",
-    "Dot-Marie Jones",
-    "Maddie Phillips",
-    "Tanaya Beatty",
-    "Lillian Doucet-Roche",
-    "Isla Spencer",
-    "Paige McGarvin",
-    "John Murphy"
-   ],
-   "trailer": "9MeILB0M274",
-   "dondeVer": [],
-   "popularidad": 122.8,
    "pr": false
   }
  ],
@@ -768,6 +778,40 @@
    "pr": false
   },
   {
+   "tmdb": 1195803,
+   "title": "El hombre de mis fantasias",
+   "original": "Wicker",
+   "estreno": "2026-10-29",
+   "clasificacion": "R",
+   "duracion": 105,
+   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
+   "generos": [
+    "Romance",
+    "Fantasía",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/rdukIaIVFRrjy51jIdd5PTKwhKv.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/r4DTGm1f1r23cyjRJ5kFMh7qYlj.jpg",
+   "direccion": [
+    "Alex Huston Fischer",
+    "Eleanor Wilson"
+   ],
+   "reparto": [
+    "Olivia Colman",
+    "Alexander Skarsgård",
+    "Peter Dinklage",
+    "Elizabeth Debicki",
+    "Marli Siu",
+    "Nabhaan Rizwan",
+    "Richard E. Grant",
+    "Phil Daniels"
+   ],
+   "trailer": "jA5zfiikcu8",
+   "dondeVer": [],
+   "popularidad": 79.5,
+   "pr": false
+  },
+  {
    "tmdb": 1422041,
    "title": "La bola negra",
    "original": "La bola negra",
@@ -833,37 +877,110 @@
    "pr": false
   },
   {
-   "tmdb": 1195803,
-   "title": "El hombre de mis fantasias",
-   "original": "Wicker",
-   "estreno": "2026-10-29",
-   "clasificacion": "R",
-   "duracion": 105,
-   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
+   "tmdb": 1538497,
+   "title": "Hechizo: Bienvenidos a Hexe",
+   "original": "Hexed",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG",
+   "duracion": 103,
+   "resumen": "Billie, una adolescente impulsiva y poco convencional, descubre que posee poderes mágicos secretos; al liberarlos, se ve arrastrada a un viaje espectacular que la lleva más allá de los suburbios y la adentra en Hexe, un vasto reino de brujas. Obligada a unir fuerzas con su cautelosa madre, Alice, ambas desvelan secretos familiares que podrían cambiar para siempre el mundo de las brujas.",
    "generos": [
-    "Romance",
+    "Aventura",
+    "Animación",
+    "Familia",
     "Fantasía",
     "Comedia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rdukIaIVFRrjy51jIdd5PTKwhKv.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/r4DTGm1f1r23cyjRJ5kFMh7qYlj.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/tTt3P9jEL3VmQ6DKhq04AhlADYz.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/wdjW11Tp4w9EfDBxbjyBJvDVHDA.jpg",
    "direccion": [
-    "Eleanor Wilson",
-    "Alex Huston Fischer"
+    "Jason Hand",
+    "ฝน วีระสุนทร"
    ],
    "reparto": [
-    "Olivia Colman",
-    "Alexander Skarsgård",
-    "Peter Dinklage",
-    "Elizabeth Debicki",
-    "Marli Siu",
-    "Nabhaan Rizwan",
-    "Richard E. Grant",
-    "Phil Daniels"
+    "Hailee Steinfeld",
+    "Rashida Jones",
+    "Jodie Foster",
+    "Walton Goggins",
+    "Henry Winkler",
+    "Dan Stevens",
+    "Brett Gelman",
+    "Tracey Ullman"
    ],
-   "trailer": "jA5zfiikcu8",
+   "trailer": "wkr5TpxKOTw",
    "dondeVer": [],
-   "popularidad": 79.5,
+   "popularidad": 69.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1458300,
+   "title": "The Mosquito Bowl",
+   "original": "The Mosquito Bowl",
+   "estreno": "2026-10-29",
+   "clasificacion": "R",
+   "duracion": 128,
+   "resumen": "Después del ataque a Pearl Harbor, cuatro estrellas del fútbol universitario se alistan en los Marines de EE. UU., descubriendo la fuerza de la hermandad y el precio de la guerra.",
+   "generos": [
+    "Bélica",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/yWhMnr8pkhgZ1rGlj4z2dxLbS99.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/nfcXn5yvBejpbljQIBrTlOMQZoC.jpg",
+   "direccion": [
+    "Peter Berg"
+   ],
+   "reparto": [
+    "Nicholas Galitzine",
+    "Bill Skarsgård",
+    "Ray Nicholson",
+    "Tom Francis",
+    "Brent Comer",
+    "Dominic Bogart",
+    "Jack Ingram",
+    "Ella Newton"
+   ],
+   "trailer": "CPFkLjHfKoc",
+   "dondeVer": [
+    {
+     "name": "Netflix"
+    },
+    {
+     "name": "Netflix Standard with Ads"
+    }
+   ],
+   "popularidad": 63.0,
+   "pr": false
+  },
+  {
+   "tmdb": 1400336,
+   "title": "La nueva Focker",
+   "original": "Focker In-Law",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG-13",
+   "duracion": 105,
+   "resumen": "Henry, el hijo de Greg y Pam Focker, se enfrenta al caos familiar cuando decide casarse con una mujer de carácter fuerte que parece ser totalmente incompatible con él.",
+   "generos": [
+    "Comedia",
+    "Romance"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/kiagXCuuvdE28GspcvOXlfFI0J3.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/6IfsmHoVWwgJwzxA9DLim2XZbSn.jpg",
+   "direccion": [
+    "John Hamburg"
+   ],
+   "reparto": [
+    "Robert De Niro",
+    "Ben Stiller",
+    "Ariana Grande",
+    "Skyler Gisondo",
+    "Owen Wilson",
+    "Blythe Danner",
+    "Teri Polo",
+    "Beanie Feldstein"
+   ],
+   "trailer": "j0MROuSV-pA",
+   "dondeVer": [],
+   "popularidad": 55.4,
    "pr": false
   },
   {
@@ -933,39 +1050,6 @@
    "pr": false
   },
   {
-   "tmdb": 1437511,
-   "title": "Cómo robar un banco",
-   "original": "How to Rob a Bank",
-   "estreno": "2026-11-12",
-   "clasificacion": "R",
-   "duracion": 122,
-   "resumen": "Una banda de ladrones expertos en redes sociales transmite en vivo sus audaces robos bancarios, sin darse cuenta de que la fama viral que están ganando los ha puesto en la mira de un veterano agente del FBI y una brillante ingeniera de software. A pesar de que este dúo fuera de lo común los sigue cada vez más de cerca, la organización criminal lleva sus límites al extremo, arriesgándolo todo por sus ideales y por el golpe más ambicioso de sus vidas hasta ahora.",
-   "generos": [
-    "Acción",
-    "Crimen",
-    "Suspense"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/iHqjtNxzLmfWei4poUdckHmsBBz.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/u38hNQbxvIicUdfrHpqa9puBnA9.jpg",
-   "direccion": [
-    "David Leitch"
-   ],
-   "reparto": [
-    "Nicholas Hoult",
-    "Zoë Kravitz",
-    "Pete Davidson",
-    "John C. Reilly",
-    "Anna Sawai",
-    "Rhenzy Feliz",
-    "Christian Slater",
-    "Tati Gabrielle"
-   ],
-   "trailer": "ORxw68y3lyw",
-   "dondeVer": [],
-   "popularidad": 35.4,
-   "pr": false
-  },
-  {
    "tmdb": 1117898,
    "title": "El gato con sombrero",
    "original": "The Cat in the Hat",
@@ -999,6 +1083,39 @@
    "trailer": "bRMu8S6FQ9c",
    "dondeVer": [],
    "popularidad": 35.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1437511,
+   "title": "Cómo robar un banco",
+   "original": "How to Rob a Bank",
+   "estreno": "2026-11-12",
+   "clasificacion": "R",
+   "duracion": 122,
+   "resumen": "Una banda de ladrones expertos en redes sociales transmite en vivo sus audaces robos bancarios, sin darse cuenta de que la fama viral que están ganando los ha puesto en la mira de un veterano agente del FBI y una brillante ingeniera de software. A pesar de que este dúo fuera de lo común los sigue cada vez más de cerca, la organización criminal lleva sus límites al extremo, arriesgándolo todo por sus ideales y por el golpe más ambicioso de sus vidas hasta ahora.",
+   "generos": [
+    "Acción",
+    "Crimen",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/iHqjtNxzLmfWei4poUdckHmsBBz.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/u38hNQbxvIicUdfrHpqa9puBnA9.jpg",
+   "direccion": [
+    "David Leitch"
+   ],
+   "reparto": [
+    "Nicholas Hoult",
+    "Zoë Kravitz",
+    "Pete Davidson",
+    "John C. Reilly",
+    "Anna Sawai",
+    "Rhenzy Feliz",
+    "Christian Slater",
+    "Tati Gabrielle"
+   ],
+   "trailer": "ORxw68y3lyw",
+   "dondeVer": [],
+   "popularidad": 35.4,
    "pr": false
   },
   {
@@ -1099,6 +1216,39 @@
    "pr": false
   },
   {
+   "tmdb": 1381273,
+   "title": "Tigre De Papel",
+   "original": "Paper Tiger",
+   "estreno": "2026-11-13",
+   "clasificacion": "R",
+   "duracion": 115,
+   "resumen": "Dos hermanos persiguen el sueño americano, pero se ven envueltos en una peligrosa trama de la mafia rusa que aterroriza a su familia, poniendo a prueba su vínculo a medida que la traición se hace posible.",
+   "generos": [
+    "Crimen",
+    "Drama",
+    "Suspense"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/p6oLmq5KmuWY6uRXBQBL2q30jia.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/7QshsnWS3NIZp60qMgcYm1C6dxm.jpg",
+   "direccion": [
+    "James Gray"
+   ],
+   "reparto": [
+    "Adam Driver",
+    "Miles Teller",
+    "Scarlett Johansson",
+    "Gavin Goudey",
+    "Roman Engel",
+    "Cindy Katz",
+    "Yavor Vesselinov",
+    "Victor Ptak"
+   ],
+   "trailer": "MLwTyQOhBkw",
+   "dondeVer": [],
+   "popularidad": 20.6,
+   "pr": false
+  },
+  {
    "tmdb": 1697911,
    "title": "Drummer Boy",
    "original": "Drummer Boy",
@@ -1166,6 +1316,71 @@
    "pr": false
   },
   {
+   "tmdb": 1461490,
+   "title": "Hershey",
+   "original": "Hershey",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG",
+   "duracion": 110,
+   "resumen": "",
+   "generos": [
+    "Drama",
+    "Historia",
+    "Romance"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ojd8Gu2bPsOzdMz6Ip5AYDu4Vki.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/mFAalGTR6PBJPPNbjVklMJ6OhSB.jpg",
+   "direccion": [
+    "Mark Waters"
+   ],
+   "reparto": [
+    "Finn Wittrock",
+    "Alexandra Daddario",
+    "Alan Ruck",
+    "Richard Kind",
+    "David Costabile",
+    "Heléne Yorke",
+    "Michael Moreland",
+    "Francesca Faridany"
+   ],
+   "trailer": "Dihu6iM__rI",
+   "dondeVer": [],
+   "popularidad": 11.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1088548,
+   "title": "Amarga Navidad",
+   "original": "Amarga Navidad",
+   "estreno": "2026-11-25",
+   "clasificacion": "R",
+   "duracion": 111,
+   "resumen": "Tras el fallecimiento de su madre en diciembre, Elsa, directora de publicidad, se sumerge en el trabajo para afrontar la situación. Cuando un ataque de pánico la obliga a tomarse un descanso, decide viajar a Lanzarote con su amiga Patricia mientras su pareja, Bonifacio, se queda en Madrid.",
+   "generos": [
+    "Drama",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ji29dXqoeIsQiVnXAkzI4nzxMjr.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ppLv2F7dhvI3wxaEoOP1E0OyBPP.jpg",
+   "direccion": [
+    "Pedro Almodóvar"
+   ],
+   "reparto": [
+    "Bárbara Lennie",
+    "Leonardo Sbaraglia",
+    "Aitana Sánchez-Gijón",
+    "Victoria Luengo",
+    "Patrick Criado",
+    "Milena Smit",
+    "Quim Gutiérrez",
+    "Rossy de Palma"
+   ],
+   "trailer": "SNbVMk-nLu4",
+   "dondeVer": [],
+   "popularidad": 10.6,
+   "pr": false
+  },
+  {
    "tmdb": 939541,
    "title": "Christmas at the Kringles",
    "original": "Christmas at the Kringles",
@@ -1196,39 +1411,6 @@
    "trailer": "zql0pXIpELI",
    "dondeVer": [],
    "popularidad": 6.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1458300,
-   "title": "The Mosquito Bowl",
-   "original": "The Mosquito Bowl",
-   "estreno": "2026-10-29",
-   "clasificacion": "R",
-   "duracion": 128,
-   "resumen": "",
-   "generos": [
-    "Bélica",
-    "Historia",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/yWhMnr8pkhgZ1rGlj4z2dxLbS99.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/k2djfMwL3LhpvZMfPN7IFX4DG5N.jpg",
-   "direccion": [
-    "Peter Berg"
-   ],
-   "reparto": [
-    "Nicholas Galitzine",
-    "Bill Skarsgård",
-    "Ray Nicholson",
-    "Tom Francis",
-    "Brent Comer",
-    "Dominic Bogart",
-    "Jack Ingram",
-    "Ella Newton"
-   ],
-   "trailer": "CPFkLjHfKoc",
-   "dondeVer": [],
-   "popularidad": 63.0,
    "pr": false
   },
   {
@@ -1356,6 +1538,35 @@
    "pr": true
   },
   {
+   "tmdb": 1632359,
+   "title": "El amor que nunca llega",
+   "original": "El amor que nunca llega",
+   "estreno": "2026-11-05",
+   "clasificacion": "NR",
+   "duracion": 89,
+   "resumen": "",
+   "generos": [
+    "Romance",
+    "Drama",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/3lnXgU7zAD625JlxZayQlFHgOOb.jpg",
+   "fondo": null,
+   "direccion": [
+    "Eduardo J. Villanueva"
+   ],
+   "reparto": [
+    "Cristina Sesto",
+    "Luis Enrique Romero",
+    "Ruben Pazo",
+    "Paola tirado"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 0.3,
+   "pr": true
+  },
+  {
    "tmdb": 1819475,
    "title": "Raíces",
    "original": "Raíces",
@@ -1386,33 +1597,31 @@
    "pr": true
   },
   {
-   "tmdb": 1632359,
-   "title": "El amor que nunca llega",
-   "original": "El amor que nunca llega",
-   "estreno": "2026-11-05",
-   "clasificacion": "NR",
-   "duracion": 89,
+   "tmdb": 1833747,
+   "title": "Ahora sobran las cucharas",
+   "original": "Ahora sobran las cucharas",
+   "estreno": "2026-11-21",
+   "clasificacion": null,
+   "duracion": null,
    "resumen": "",
    "generos": [
-    "Romance",
-    "Drama",
-    "Comedia"
+    "Acción",
+    "Aventura"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/3lnXgU7zAD625JlxZayQlFHgOOb.jpg",
-   "fondo": null,
+   "afiche": "https://image.tmdb.org/t/p/w342/pWyrMUpYz8tcT8ui8Kt5c4sfmNx.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/jqeZ8ca82ltfD1VES0dgxlcuST5.jpg",
    "direccion": [
-    "Eduardo J. Villanueva"
+    "Kamila Millán Santiago"
    ],
    "reparto": [
-    "Cristina Sesto",
-    "Luis Enrique Romero",
-    "Ruben Pazo",
-    "Paola tirado"
+    "Heyda Salamán Rivera",
+    "Irializ Siaca Rivera",
+    "Kiara J. Pizarro Sánchez"
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 0.3,
-   "pr": true
+   "popularidad": 0.2,
+   "pr": false
   },
   {
    "tmdb": 1824318,
@@ -1470,33 +1679,6 @@
    "dondeVer": [],
    "popularidad": 0.2,
    "pr": true
-  },
-  {
-   "tmdb": 1833747,
-   "title": "Ahora sobran las cucharas",
-   "original": "Ahora sobran las cucharas",
-   "estreno": "2026-11-21",
-   "clasificacion": null,
-   "duracion": null,
-   "resumen": "",
-   "generos": [
-    "Acción",
-    "Aventura"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pWyrMUpYz8tcT8ui8Kt5c4sfmNx.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/jqeZ8ca82ltfD1VES0dgxlcuST5.jpg",
-   "direccion": [
-    "Kamila Millán Santiago"
-   ],
-   "reparto": [
-    "Heyda Salamán Rivera",
-    "Irializ Siaca Rivera",
-    "Kiara J. Pizarro Sánchez"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 0.2,
-   "pr": false
   }
  ],
  "proximos": [
@@ -1633,38 +1815,6 @@
    "pr": false
   },
   {
-   "tmdb": 1452168,
-   "title": "¡Behemoth! Una vida. En piezas",
-   "original": "Behemoth!",
-   "estreno": "2026-12-04",
-   "clasificacion": "R",
-   "duracion": 127,
-   "resumen": "El talentoso violonchelista Alex Serian regresa a su hogar en Los Ángeles después de 20 años de giras. La música, que ha sido el río constante y absorbente de su vida, comienza a llevarlo a una aventura que lo cambiará para siempre.",
-   "generos": [
-    "Música",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/51kfJbUK3Hf7Wk7KFRceiHNgU09.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/b3YTMlknqSqJVV7I45kIQNVzErs.jpg",
-   "direccion": [
-    "Tony Gilroy"
-   ],
-   "reparto": [
-    "Pedro Pascal",
-    "Olivia Wilde",
-    "Eva Victor",
-    "Will Arnett",
-    "Hank Azaria",
-    "Alexa Swinton",
-    "Kaya Ralls",
-    "Erik Griffin"
-   ],
-   "trailer": "I6tMFYT9s7E",
-   "dondeVer": [],
-   "popularidad": 8.9,
-   "pr": false
-  },
-  {
    "tmdb": 1165369,
    "title": "La Bataille de Gaulle : J'écris ton nom",
    "original": "La Bataille de Gaulle : J'écris ton nom",
@@ -1695,6 +1845,38 @@
    "trailer": "J6MRNchmZkY",
    "dondeVer": [],
    "popularidad": 9.1,
+   "pr": false
+  },
+  {
+   "tmdb": 1452168,
+   "title": "¡Behemoth! Una vida. En piezas",
+   "original": "Behemoth!",
+   "estreno": "2026-12-04",
+   "clasificacion": "R",
+   "duracion": 127,
+   "resumen": "El talentoso violonchelista Alex Serian regresa a su hogar en Los Ángeles después de 20 años de giras. La música, que ha sido el río constante y absorbente de su vida, comienza a llevarlo a una aventura que lo cambiará para siempre.",
+   "generos": [
+    "Música",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/51kfJbUK3Hf7Wk7KFRceiHNgU09.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/b3YTMlknqSqJVV7I45kIQNVzErs.jpg",
+   "direccion": [
+    "Tony Gilroy"
+   ],
+   "reparto": [
+    "Pedro Pascal",
+    "Olivia Wilde",
+    "Eva Victor",
+    "Will Arnett",
+    "Hank Azaria",
+    "Alexa Swinton",
+    "Kaya Ralls",
+    "Erik Griffin"
+   ],
+   "trailer": "I6tMFYT9s7E",
+   "dondeVer": [],
+   "popularidad": 8.9,
    "pr": false
   },
   {
@@ -1744,7 +1926,7 @@
     "Crimen",
     "Misterio"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rpP29aOKpHy1FhX8OZQdUICEs2j.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/beGZqhL2Eb3lmAMLBGOmXPRuUnc.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/hhBoWDKmq9u8V2qi0Rtm3XGiydn.jpg",
    "direccion": [
     "Brad Bird"
@@ -1762,70 +1944,6 @@
    "trailer": "VL-xjzQFWsY",
    "dondeVer": [],
    "popularidad": 7.6,
-   "pr": false
-  },
-  {
-   "tmdb": 1287520,
-   "title": "November 1963",
-   "original": "November 1963",
-   "estreno": "2026-12-04",
-   "clasificacion": null,
-   "duracion": 120,
-   "resumen": "",
-   "generos": [
-    "Crimen",
-    "Suspense",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ujp2aHu1lWMjAGoletnsmv3mcMn.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/ppQKMpC4WhEumnzu4aAcWjAr7WU.jpg",
-   "direccion": [
-    "Roland Joffé"
-   ],
-   "reparto": [
-    "John Travolta",
-    "Robert Carlyle",
-    "Dermot Mulroney",
-    "Jefferson White",
-    "Mandy Patinkin",
-    "Thomas Fiscella",
-    "Neil Jackson",
-    "Victoria Baldesarra"
-   ],
-   "trailer": "8N9e-skJ3hw",
-   "dondeVer": [],
-   "popularidad": 4.0,
-   "pr": false
-  },
-  {
-   "tmdb": 1154730,
-   "title": "La Gradiva",
-   "original": "La Gradiva",
-   "estreno": "2026-12-18",
-   "clasificacion": null,
-   "duracion": 145,
-   "resumen": "",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/aFrhFiIhdf2klvXq8VFcB06b5pS.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/kt8bR6HCWto7MRzLy1J67OVeOpy.jpg",
-   "direccion": [
-    "Marine Atlan"
-   ],
-   "reparto": [
-    "Colas Quignard",
-    "Antonia Buresi",
-    "Mitia Capellier-Audat",
-    "Suzanne Gerin",
-    "Hadya Fofana",
-    "Rouge Isaac",
-    "Lou-Ann Le Glorennec",
-    "Chamathka Warahena"
-   ],
-   "trailer": "5yY6V9MbEoE",
-   "dondeVer": [],
-   "popularidad": 5.5,
    "pr": false
   },
   {
@@ -1861,6 +1979,37 @@
    "pr": false
   },
   {
+   "tmdb": 1154730,
+   "title": "La Gradiva",
+   "original": "La Gradiva",
+   "estreno": "2026-12-18",
+   "clasificacion": null,
+   "duracion": 145,
+   "resumen": "",
+   "generos": [
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/aFrhFiIhdf2klvXq8VFcB06b5pS.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/kt8bR6HCWto7MRzLy1J67OVeOpy.jpg",
+   "direccion": [
+    "Marine Atlan"
+   ],
+   "reparto": [
+    "Colas Quignard",
+    "Antonia Buresi",
+    "Mitia Capellier-Audat",
+    "Suzanne Gerin",
+    "Hadya Fofana",
+    "Rouge Isaac",
+    "Lou-Ann Le Glorennec",
+    "Chamathka Warahena"
+   ],
+   "trailer": "5yY6V9MbEoE",
+   "dondeVer": [],
+   "popularidad": 5.5,
+   "pr": false
+  },
+  {
    "tmdb": 1176962,
    "title": "Rose",
    "original": "Rose",
@@ -1873,7 +2022,7 @@
     "Historia",
     "Bélica"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/flnb7COkqD4dZNZiCacNkai22vz.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/3myAuZIQdQNrAXpQKA4zk5Z163s.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/1KUzZMCBOtInUFoGUEJJsQyQKVi.jpg",
    "direccion": [
     "Markus Schleinzer"
@@ -1891,6 +2040,38 @@
    "trailer": "80xR3G5eowo",
    "dondeVer": [],
    "popularidad": 5.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1045968,
+   "title": "The Fox",
+   "original": "The Fox",
+   "estreno": "2026-12-04",
+   "clasificacion": "R",
+   "duracion": 90,
+   "resumen": "",
+   "generos": [
+    "Comedia",
+    "Fantasía"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/unIaSB9LZ0r3iZ2jBAQ2Qi5mFIp.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/24fTCT6aavjyWC2RwzISUNMF2XL.jpg",
+   "direccion": [
+    "Dario Russo"
+   ],
+   "reparto": [
+    "Jai Courtney",
+    "Emily Browning",
+    "Olivia Colman",
+    "Claudia Doumit",
+    "Peter O'Brien",
+    "Sam Neill",
+    "Miranda Otto",
+    "Damon Herriman"
+   ],
+   "trailer": "_XEZHlWlZ_o",
+   "dondeVer": [],
+   "popularidad": 4.4,
    "pr": false
   },
   {
@@ -1928,35 +2109,68 @@
    "pr": false
   },
   {
-   "tmdb": 1045968,
-   "title": "The Fox",
-   "original": "The Fox",
-   "estreno": "2026-12-04",
-   "clasificacion": "R",
-   "duracion": 90,
+   "tmdb": 1532610,
+   "title": "Ink",
+   "original": "Ink",
+   "estreno": "2027-01-08",
+   "clasificacion": null,
+   "duracion": 116,
    "resumen": "",
    "generos": [
-    "Comedia",
-    "Fantasía"
+    "Drama",
+    "Historia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/unIaSB9LZ0r3iZ2jBAQ2Qi5mFIp.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/24fTCT6aavjyWC2RwzISUNMF2XL.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/szw4uloM6CdDb5UOcfwKbyBCxmE.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/sWtM1GfbjMkcvpj2riGW8QxlTr.jpg",
    "direccion": [
-    "Dario Russo"
+    "Danny Boyle"
    ],
    "reparto": [
-    "Jai Courtney",
-    "Emily Browning",
-    "Olivia Colman",
-    "Claudia Doumit",
-    "Peter O'Brien",
-    "Sam Neill",
-    "Miranda Otto",
-    "Damon Herriman"
+    "Jack O'Connell",
+    "Guy Pearce",
+    "Claire Foy",
+    "Blake Harrison",
+    "Patrick Kennedy",
+    "Angus Imrie",
+    "Brian Gleeson",
+    "Bertie Carvel"
    ],
-   "trailer": "_XEZHlWlZ_o",
+   "trailer": "_LE1L4Huyys",
    "dondeVer": [],
-   "popularidad": 4.4,
+   "popularidad": 4.0,
+   "pr": false
+  },
+  {
+   "tmdb": 1287520,
+   "title": "November 1963",
+   "original": "November 1963",
+   "estreno": "2026-12-04",
+   "clasificacion": null,
+   "duracion": 120,
+   "resumen": "",
+   "generos": [
+    "Crimen",
+    "Suspense",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/ujp2aHu1lWMjAGoletnsmv3mcMn.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ppQKMpC4WhEumnzu4aAcWjAr7WU.jpg",
+   "direccion": [
+    "Roland Joffé"
+   ],
+   "reparto": [
+    "John Travolta",
+    "Robert Carlyle",
+    "Dermot Mulroney",
+    "Jefferson White",
+    "Mandy Patinkin",
+    "Thomas Fiscella",
+    "Neil Jackson",
+    "Victoria Baldesarra"
+   ],
+   "trailer": "8N9e-skJ3hw",
+   "dondeVer": [],
+   "popularidad": 4.0,
    "pr": false
   },
   {
@@ -1989,38 +2203,6 @@
    "trailer": "fdkwGvMB5zQ",
    "dondeVer": [],
    "popularidad": 3.8,
-   "pr": false
-  },
-  {
-   "tmdb": 1532610,
-   "title": "Ink",
-   "original": "Ink",
-   "estreno": "2027-01-08",
-   "clasificacion": null,
-   "duracion": 116,
-   "resumen": "",
-   "generos": [
-    "Drama",
-    "Historia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/szw4uloM6CdDb5UOcfwKbyBCxmE.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/sWtM1GfbjMkcvpj2riGW8QxlTr.jpg",
-   "direccion": [
-    "Danny Boyle"
-   ],
-   "reparto": [
-    "Jack O'Connell",
-    "Guy Pearce",
-    "Claire Foy",
-    "Blake Harrison",
-    "Patrick Kennedy",
-    "Angus Imrie",
-    "Brian Gleeson",
-    "Bertie Carvel"
-   ],
-   "trailer": "_LE1L4Huyys",
-   "dondeVer": [],
-   "popularidad": 4.0,
    "pr": false
   },
   {
@@ -2085,6 +2267,31 @@
    "pr": false
   },
   {
+   "tmdb": 1649403,
+   "title": "George Michael: The Faith Tour",
+   "original": "George Michael: The Faith Tour",
+   "estreno": "2026-12-11",
+   "clasificacion": "NR",
+   "duracion": 113,
+   "resumen": "",
+   "generos": [
+    "Música"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/eUGdToeZasqb8FRbTgezietxfW2.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/7jPnBTbEB18yOoQcZm3ubPhn8Fd.jpg",
+   "direccion": [
+    "Andy Morahan",
+    "David Austin"
+   ],
+   "reparto": [
+    "George Michael"
+   ],
+   "trailer": "H_NwyHRY9yk",
+   "dondeVer": [],
+   "popularidad": 2.9,
+   "pr": false
+  },
+  {
    "tmdb": 1370191,
    "title": "Tender Loving Care",
    "original": "Tender Loving Care",
@@ -2112,31 +2319,6 @@
     "Kaedon Skerritt"
    ],
    "trailer": "-CDgxJgiQY4",
-   "dondeVer": [],
-   "popularidad": 2.9,
-   "pr": false
-  },
-  {
-   "tmdb": 1649403,
-   "title": "George Michael: The Faith Tour",
-   "original": "George Michael: The Faith Tour",
-   "estreno": "2026-12-11",
-   "clasificacion": "NR",
-   "duracion": 113,
-   "resumen": "",
-   "generos": [
-    "Música"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/eUGdToeZasqb8FRbTgezietxfW2.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/7jPnBTbEB18yOoQcZm3ubPhn8Fd.jpg",
-   "direccion": [
-    "Andy Morahan",
-    "David Austin"
-   ],
-   "reparto": [
-    "George Michael"
-   ],
-   "trailer": "H_NwyHRY9yk",
    "dondeVer": [],
    "popularidad": 2.9,
    "pr": false
@@ -2208,38 +2390,6 @@
    "pr": false
   },
   {
-   "tmdb": 1213643,
-   "title": "Killing Castro",
-   "original": "Killing Castro",
-   "estreno": "2026-12-11",
-   "clasificacion": "R",
-   "duracion": 113,
-   "resumen": "",
-   "generos": [
-    "Drama",
-    "Historia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pxiUYMlevGn56mnfPqfADdvo9ab.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/ilTcnOBtYq5M7gMrVKvQHNitkOq.jpg",
-   "direccion": [
-    "Eif Rivera"
-   ],
-   "reparto": [
-    "Diego Boneta",
-    "Xolo Maridueña",
-    "KiKi Layne",
-    "Al Pacino",
-    "Alexander Ludwig",
-    "Kendrick Sampson",
-    "Logan Marshall-Green",
-    "Ron Livingston"
-   ],
-   "trailer": "cal1RfsmHUI",
-   "dondeVer": [],
-   "popularidad": 1.9,
-   "pr": false
-  },
-  {
    "tmdb": 1630464,
    "title": "Clarissa",
    "original": "Clarissa",
@@ -2267,6 +2417,38 @@
     "Kehinde Cardoso"
    ],
    "trailer": "sJAqmdXaM8U",
+   "dondeVer": [],
+   "popularidad": 1.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1213643,
+   "title": "Killing Castro",
+   "original": "Killing Castro",
+   "estreno": "2026-12-11",
+   "clasificacion": "R",
+   "duracion": 113,
+   "resumen": "",
+   "generos": [
+    "Drama",
+    "Historia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/pxiUYMlevGn56mnfPqfADdvo9ab.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/ilTcnOBtYq5M7gMrVKvQHNitkOq.jpg",
+   "direccion": [
+    "Eif Rivera"
+   ],
+   "reparto": [
+    "Diego Boneta",
+    "Xolo Maridueña",
+    "KiKi Layne",
+    "Al Pacino",
+    "Alexander Ludwig",
+    "Kendrick Sampson",
+    "Logan Marshall-Green",
+    "Ron Livingston"
+   ],
+   "trailer": "cal1RfsmHUI",
    "dondeVer": [],
    "popularidad": 1.9,
    "pr": false
@@ -2333,36 +2515,92 @@
    "pr": false
   },
   {
-   "tmdb": 1600162,
-   "title": "A Little Dream of Me",
-   "original": "Cảm Ơn Người Đã Thức Cùng Tôi",
-   "estreno": "2026-12-04",
+   "tmdb": 797716,
+   "title": "The Magnificent Raiders of Dimension War One",
+   "original": "The Magnificent Raiders of Dimension War One",
+   "estreno": "2026-12-06",
    "clasificacion": null,
-   "duracion": 137,
+   "duracion": null,
    "resumen": "",
    "generos": [
-    "Familia",
-    "Romance",
-    "Música"
+    "Fantasía"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/cY1Lh6RUiPDhyEVPiSKveGPIlV8.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/xqP3DER87N1kZGHCsQbKRNZJLOb.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/grvdsNcfpWzpPO3qREUEDX12c3.jpg",
+   "fondo": null,
    "direccion": [
-    "Chung Chí Công"
+    "Tom Greene"
    ],
    "reparto": [
-    "Kaycee",
-    "Trần Doãn Hoàng",
-    "Nguyễn Hùng",
-    "Hữu Châu",
-    "Phương Nam",
-    "Tào Nhân",
-    "Anh Nguyễn",
-    "Choco Trúc Phương"
+    "Tom Sizemore",
+    "Robert LaSardo",
+    "Celine Alva",
+    "Daniel Baldwin",
+    "Tony Devon",
+    "Bai Ling",
+    "Terry Funk",
+    "Ciro Dapagio"
    ],
-   "trailer": "z45Beypyejw",
+   "trailer": "psLrU5NOWrI",
    "dondeVer": [],
-   "popularidad": 1.4,
+   "popularidad": 1.6,
+   "pr": false
+  },
+  {
+   "tmdb": 1358274,
+   "title": "Starlight",
+   "original": "Starlight",
+   "estreno": "2026-12-12",
+   "clasificacion": "PG-13",
+   "duracion": 180,
+   "resumen": "",
+   "generos": [
+    "Drama",
+    "Romance"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/9f7zQjgjSeBuqHpNiwJClCPD9aZ.jpg",
+   "fondo": null,
+   "direccion": [
+    "Michael Brando"
+   ],
+   "reparto": [
+    "Michael Brando",
+    "Irmena Chichikova",
+    "Cassie Clare",
+    "Ruby Kammer",
+    "Brice Bexter",
+    "Lesley Conroy",
+    "Craig Russell",
+    "Michaela Longden"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 1.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1832527,
+   "title": "THIS SYMPHONY MAY CONTAIN HOPE.",
+   "original": "THIS SYMPHONY MAY CONTAIN HOPE.",
+   "estreno": "2026-12-13",
+   "clasificacion": null,
+   "duracion": 135,
+   "resumen": "",
+   "generos": [
+    "Música"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/5V5VEgSGH3rg5eMwfNseirCCiZI.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/7pkilXj86HOR7IIbsyOeb25DseM.jpg",
+   "direccion": [
+    "Rohan Blair-Mangat"
+   ],
+   "reparto": [
+    "RAYE",
+    "Amma",
+    "Absolutely"
+   ],
+   "trailer": "6zxGjST6JyI",
+   "dondeVer": [],
+   "popularidad": 1.5,
    "pr": false
   },
   {
@@ -2394,57 +2632,6 @@
    "trailer": "-o39M6N24Dk",
    "dondeVer": [],
    "popularidad": 1.5,
-   "pr": false
-  },
-  {
-   "tmdb": 951018,
-   "title": "A Fox Under a Pink Moon",
-   "original": "روباه و ماه صورتی",
-   "estreno": "2026-12-02",
-   "clasificacion": null,
-   "duracion": 76,
-   "resumen": "",
-   "generos": [
-    "Documental"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pWhGSn4IaPOfNAgh9ZhGVhkuvO1.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/sdMLtTxADRF3WAHmtL9oUFNY5wt.jpg",
-   "direccion": [
-    "مهرداد اسکویی",
-    "Soraya Akhlaghi"
-   ],
-   "reparto": [
-    "Soraya Akhlaghi"
-   ],
-   "trailer": "HBlaV0xOBLI",
-   "dondeVer": [],
-   "popularidad": 1.3,
-   "pr": false
-  },
-  {
-   "tmdb": 1713050,
-   "title": "Alias Rukmini",
-   "original": "అలియాస్ రుక్మిణీ",
-   "estreno": "2026-12-04",
-   "clasificacion": "NR",
-   "duracion": 157,
-   "resumen": "",
-   "generos": [
-    "Romance",
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/uPjaz6v4Ti8GZQQFihK1rjrFH3A.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/zM8b3Zq2dAswk4kpGYvG9Y2A0Bb.jpg",
-   "direccion": [
-    "Murali Kanth Devasoth"
-   ],
-   "reparto": [
-    "Nithiin",
-    "Aafiya Sayed"
-   ],
-   "trailer": null,
-   "dondeVer": [],
-   "popularidad": 1.3,
    "pr": false
   }
  ]
