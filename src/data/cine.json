@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-26T18:13:00",
+ "actualizado": "2026-11-27T06:15:00",
  "pegao": [
   {
    "tmdb": 1003596,
@@ -32,7 +32,7 @@
    ],
    "trailer": "kZ2Nhqkx3-I",
    "dondeVer": [],
-   "popularidad": 261.4,
+   "popularidad": 263.0,
    "pr": false
   },
   {
@@ -65,7 +65,40 @@
    ],
    "trailer": "bwZzXTUcaQo",
    "dondeVer": [],
-   "popularidad": 373.4,
+   "popularidad": 342.5,
+   "pr": false
+  },
+  {
+   "tmdb": 1153576,
+   "title": "Street Fighter",
+   "original": "Street Fighter",
+   "estreno": "2026-10-15",
+   "clasificacion": "PG-13",
+   "duracion": 120,
+   "resumen": "En 1993, los distanciados luchadores Ryu y Ken Masters se ven obligados a volver a la acción cuando la misteriosa Chun-Li los recluta para el próximo Torneo Mundial de Guerreros.",
+   "generos": [
+    "Acción",
+    "Comedia",
+    "Fantasía"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/j9Ukn1hRqSyv5qhHgDHd1s1Dhsg.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/zDE9hd1SG9695YncbZGjSf7Z9Jk.jpg",
+   "direccion": [
+    "Kitao Sakurai"
+   ],
+   "reparto": [
+    "Andrew Koji",
+    "Noah Centineo",
+    "Callina Liang",
+    "David Dastmalchian",
+    "Andrew Schulz",
+    "Cody Rhodes",
+    "Mel Jarnson",
+    "Roman Reigns"
+   ],
+   "trailer": "-MJAfIMUQ5s",
+   "dondeVer": [],
+   "popularidad": 51.5,
    "pr": false
   },
   {
@@ -98,43 +131,7 @@
    ],
    "trailer": "X9nUrOnHlz0",
    "dondeVer": [],
-   "popularidad": 383.1,
-   "pr": false
-  },
-  {
-   "tmdb": 1538497,
-   "title": "Hechizo: Bienvenidos a Hexe",
-   "original": "Hexed",
-   "estreno": "2026-11-25",
-   "clasificacion": "PG",
-   "duracion": 103,
-   "resumen": "Billie, una adolescente impulsiva y poco convencional, descubre que posee poderes mágicos secretos; al liberarlos, se ve arrastrada a un viaje espectacular que la lleva más allá de los suburbios y la adentra en Hexe, un vasto reino de brujas. Obligada a unir fuerzas con su cautelosa madre, Alice, ambas desvelan secretos familiares que podrían cambiar para siempre el mundo de las brujas.",
-   "generos": [
-    "Aventura",
-    "Animación",
-    "Familia",
-    "Fantasía",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/tTt3P9jEL3VmQ6DKhq04AhlADYz.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/wdjW11Tp4w9EfDBxbjyBJvDVHDA.jpg",
-   "direccion": [
-    "Jason Hand",
-    "ฝน วีระสุนทร"
-   ],
-   "reparto": [
-    "Hailee Steinfeld",
-    "Rashida Jones",
-    "Jodie Foster",
-    "Walton Goggins",
-    "Henry Winkler",
-    "Dan Stevens",
-    "Brett Gelman",
-    "Tracey Ullman"
-   ],
-   "trailer": "wkr5TpxKOTw",
-   "dondeVer": [],
-   "popularidad": 69.9,
+   "popularidad": 350.0,
    "pr": false
   },
   {
@@ -167,54 +164,56 @@
    ],
    "trailer": "owfWVJoxXR4",
    "dondeVer": [],
-   "popularidad": 294.3,
+   "popularidad": 295.9,
    "pr": false
   },
   {
-   "tmdb": 1765072,
-   "title": "Puedes verlo todo",
-   "original": "You Can See Everything",
-   "estreno": "2026-10-16",
-   "clasificacion": "R",
-   "duracion": 175,
-   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
+   "tmdb": 1538497,
+   "title": "Hechizo: Bienvenidos a Hexe",
+   "original": "Hexed",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG",
+   "duracion": 103,
+   "resumen": "Billie, una adolescente impulsiva y poco convencional, descubre que posee poderes mágicos secretos; al liberarlos, se ve arrastrada a un viaje espectacular que la lleva más allá de los suburbios y la adentra en Hexe, un vasto reino de brujas. Obligada a unir fuerzas con su cautelosa madre, Alice, ambas desvelan secretos familiares que podrían cambiar para siempre el mundo de las brujas.",
    "generos": [
-    "Documental"
+    "Animación",
+    "Fantasía",
+    "Familia"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/lxv8IU6AU5FcqXimC3izkbRip7D.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rrbbzCyS45yooXpUGJatfptlHYI.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/tTt3P9jEL3VmQ6DKhq04AhlADYz.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/wdjW11Tp4w9EfDBxbjyBJvDVHDA.jpg",
    "direccion": [
-    "Nathan Fielder",
-    "Lance Oppenheim"
+    "Jason Hand",
+    "ฝน วีระสุนทร"
    ],
    "reparto": [
-    "Elizabeth Holmes",
-    "Nathan Fielder",
-    "Billy Evans",
-    "Amanda Seyfried",
-    "Christopher Abbott",
-    "Lance Oppenheim",
-    "Christian Rasmus Holmes IV",
-    "Noel Anne Holmes"
+    "Hailee Steinfeld",
+    "Rashida Jones",
+    "Jodie Foster",
+    "Walton Goggins",
+    "Henry Winkler",
+    "Dan Stevens",
+    "Brett Gelman",
+    "Tracey Ullman"
    ],
-   "trailer": "-B-gh1BlS4w",
+   "trailer": "wkr5TpxKOTw",
    "dondeVer": [],
-   "popularidad": 123.5,
+   "popularidad": 77.1,
    "pr": false
   },
   {
    "tmdb": 1458300,
-   "title": "The Mosquito Bowl",
+   "title": "The Mosquito Bowl: Un partido en plena guerra",
    "original": "The Mosquito Bowl",
    "estreno": "2026-10-29",
    "clasificacion": "R",
-   "duracion": 128,
-   "resumen": "Después del ataque a Pearl Harbor, cuatro estrellas del fútbol universitario se alistan en los Marines de EE. UU., descubriendo la fuerza de la hermandad y el precio de la guerra.",
+   "duracion": 129,
+   "resumen": "Tras el ataque a Pearl Harbor, cuatro atletas universitarios se unen a la Marina estadounidense y descubren la fuerza de la hermandad y el costo de la guerra.",
    "generos": [
     "Bélica",
     "Drama"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/yWhMnr8pkhgZ1rGlj4z2dxLbS99.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/uYjAyQJTsZMyVvAWsjnXQaci4Zj.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/nfcXn5yvBejpbljQIBrTlOMQZoC.jpg",
    "direccion": [
     "Peter Berg"
@@ -225,9 +224,9 @@
     "Ray Nicholson",
     "Tom Francis",
     "Brent Comer",
-    "Dominic Bogart",
     "Jack Ingram",
-    "Ella Newton"
+    "Ella Newton",
+    "Peter Berg"
    ],
    "trailer": "CPFkLjHfKoc",
    "dondeVer": [
@@ -238,7 +237,7 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 63.0,
+   "popularidad": 100.5,
    "pr": false
   },
   {
@@ -281,45 +280,39 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 126.7,
+   "popularidad": 129.3,
    "pr": false
   },
   {
-   "tmdb": 1280115,
-   "title": "El camino del pequeño guerrero",
-   "original": "Way of the Warrior Kid",
-   "estreno": "2026-11-24",
-   "clasificacion": "PG-13",
-   "duracion": 107,
-   "resumen": "Jake es un SEAL herido que se vuelve el mentor de su tímido sobrino, Marc. Jake usa principios militares para enseñarle a Marc a ser un pequeño guerrero al entrar a la secundaria.",
+   "tmdb": 1765072,
+   "title": "Puedes verlo todo",
+   "original": "You Can See Everything",
+   "estreno": "2026-10-16",
+   "clasificacion": "R",
+   "duracion": 175,
+   "resumen": "Treinta y cuatro días antes de ser enviada a prisión, la infame Elizabeth Holmes, fundadora de Silicon Valley, invita a un escéptico equipo de filmación a documentar cada uno de sus movimientos. Lo que comienza como un retrato íntimo de una enigmática delincuente se convierte en un viaje alucinante de tres años hacia el abismo.",
    "generos": [
-    "Drama"
+    "Documental"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/uh9hCepFpB2xvLUeYSZKrjcjnvk.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/vOByLZRhCIIItlSlCT7bYbI9MYL.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/lxv8IU6AU5FcqXimC3izkbRip7D.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/fnIcdPVaO4JAzfLhv8OVEqFK6a7.jpg",
    "direccion": [
-    "McG"
+    "Nathan Fielder",
+    "Lance Oppenheim"
    ],
    "reparto": [
-    "Chris Pratt",
-    "Jude Hill",
-    "Linda Cardellini",
-    "Jocko Willink",
-    "Ava Torres",
-    "Levi McConaughey",
-    "Darien Sills-Evans",
-    "Carl McDowell"
+    "Elizabeth Holmes",
+    "Nathan Fielder",
+    "Billy Evans",
+    "Amanda Seyfried",
+    "Christopher Abbott",
+    "Lance Oppenheim",
+    "Christian Rasmus Holmes IV",
+    "Noel Anne Holmes"
    ],
-   "trailer": "R1ECMLrwDYQ",
-   "dondeVer": [
-    {
-     "name": "Apple TV"
-    },
-    {
-     "name": "Apple TV Amazon Channel"
-    }
-   ],
-   "popularidad": 51.0,
+   "trailer": "-B-gh1BlS4w",
+   "dondeVer": [],
+   "popularidad": 114.6,
    "pr": false
   },
   {
@@ -351,106 +344,45 @@
    ],
    "trailer": "naaubL5GycY",
    "dondeVer": [],
-   "popularidad": 80.8,
+   "popularidad": 73.5,
    "pr": false
   },
   {
-   "tmdb": 1195803,
-   "title": "El hombre de mis fantasias",
-   "original": "Wicker",
-   "estreno": "2026-10-29",
-   "clasificacion": "R",
-   "duracion": 105,
-   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
-   "generos": [
-    "Romance",
-    "Fantasía",
-    "Comedia"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/rdukIaIVFRrjy51jIdd5PTKwhKv.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/r4DTGm1f1r23cyjRJ5kFMh7qYlj.jpg",
-   "direccion": [
-    "Alex Huston Fischer",
-    "Eleanor Wilson"
-   ],
-   "reparto": [
-    "Olivia Colman",
-    "Alexander Skarsgård",
-    "Peter Dinklage",
-    "Elizabeth Debicki",
-    "Marli Siu",
-    "Nabhaan Rizwan",
-    "Richard E. Grant",
-    "Phil Daniels"
-   ],
-   "trailer": "jA5zfiikcu8",
-   "dondeVer": [],
-   "popularidad": 79.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1153576,
-   "title": "Street Fighter",
-   "original": "Street Fighter",
-   "estreno": "2026-10-15",
+   "tmdb": 1280115,
+   "title": "El camino del pequeño guerrero",
+   "original": "Way of the Warrior Kid",
+   "estreno": "2026-11-24",
    "clasificacion": "PG-13",
-   "duracion": 120,
-   "resumen": "En 1993, los distanciados luchadores Ryu y Ken Masters se ven obligados a volver a la acción cuando la misteriosa Chun-Li los recluta para el próximo Torneo Mundial de Guerreros.",
+   "duracion": 107,
+   "resumen": "Jake es un SEAL herido que se vuelve el mentor de su tímido sobrino, Marc. Jake usa principios militares para enseñarle a Marc a ser un pequeño guerrero al entrar a la secundaria.",
    "generos": [
-    "Acción",
-    "Comedia",
-    "Fantasía"
+    "Drama"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/j9Ukn1hRqSyv5qhHgDHd1s1Dhsg.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/zDE9hd1SG9695YncbZGjSf7Z9Jk.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/90ZboGgICWBdAojHVXyVuMypeko.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/vOByLZRhCIIItlSlCT7bYbI9MYL.jpg",
    "direccion": [
-    "Kitao Sakurai"
+    "McG"
    ],
    "reparto": [
-    "Andrew Koji",
-    "Noah Centineo",
-    "Callina Liang",
-    "David Dastmalchian",
-    "Andrew Schulz",
-    "Cody Rhodes",
-    "Mel Jarnson",
-    "Roman Reigns"
+    "Chris Pratt",
+    "Jude Hill",
+    "Linda Cardellini",
+    "Jocko Willink",
+    "Ava Torres",
+    "Levi McConaughey",
+    "Darien Sills-Evans",
+    "Carl McDowell"
    ],
-   "trailer": "-MJAfIMUQ5s",
-   "dondeVer": [],
-   "popularidad": 47.7,
-   "pr": false
-  },
-  {
-   "tmdb": 1400336,
-   "title": "La nueva Focker",
-   "original": "Focker In-Law",
-   "estreno": "2026-11-25",
-   "clasificacion": "PG-13",
-   "duracion": 105,
-   "resumen": "Henry, el hijo de Greg y Pam Focker, se enfrenta al caos familiar cuando decide casarse con una mujer de carácter fuerte que parece ser totalmente incompatible con él.",
-   "generos": [
-    "Comedia",
-    "Romance"
+   "trailer": "R1ECMLrwDYQ",
+   "dondeVer": [
+    {
+     "name": "Apple TV"
+    },
+    {
+     "name": "Apple TV Amazon Channel"
+    }
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/kiagXCuuvdE28GspcvOXlfFI0J3.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/6IfsmHoVWwgJwzxA9DLim2XZbSn.jpg",
-   "direccion": [
-    "John Hamburg"
-   ],
-   "reparto": [
-    "Robert De Niro",
-    "Ben Stiller",
-    "Ariana Grande",
-    "Skyler Gisondo",
-    "Owen Wilson",
-    "Blythe Danner",
-    "Teri Polo",
-    "Beanie Feldstein"
-   ],
-   "trailer": "j0MROuSV-pA",
-   "dondeVer": [],
-   "popularidad": 55.4,
+   "popularidad": 81.0,
    "pr": false
   },
   {
@@ -482,7 +414,73 @@
    ],
    "trailer": "qdfXYN5kMBY",
    "dondeVer": [],
-   "popularidad": 52.0,
+   "popularidad": 51.2,
+   "pr": false
+  },
+  {
+   "tmdb": 1195803,
+   "title": "El hombre de mis fantasias",
+   "original": "Wicker",
+   "estreno": "2026-10-29",
+   "clasificacion": "R",
+   "duracion": 105,
+   "resumen": "Una pescadora vive en la periferia de un pueblo costero; es soltera, apestosa y objeto de burlas constantes. Un día, harta de sus estirados y estrechos vecinos, encarga un marido de mimbre para ella.",
+   "generos": [
+    "Romance",
+    "Fantasía",
+    "Comedia"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/rdukIaIVFRrjy51jIdd5PTKwhKv.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/r4DTGm1f1r23cyjRJ5kFMh7qYlj.jpg",
+   "direccion": [
+    "Eleanor Wilson",
+    "Alex Huston Fischer"
+   ],
+   "reparto": [
+    "Olivia Colman",
+    "Alexander Skarsgård",
+    "Peter Dinklage",
+    "Elizabeth Debicki",
+    "Marli Siu",
+    "Nabhaan Rizwan",
+    "Richard E. Grant",
+    "Phil Daniels"
+   ],
+   "trailer": "jA5zfiikcu8",
+   "dondeVer": [],
+   "popularidad": 85.1,
+   "pr": false
+  },
+  {
+   "tmdb": 1400336,
+   "title": "La nueva Focker",
+   "original": "Focker In-Law",
+   "estreno": "2026-11-25",
+   "clasificacion": "PG-13",
+   "duracion": 105,
+   "resumen": "Henry, el hijo de Greg y Pam Focker, se enfrenta al caos familiar cuando decide casarse con una mujer de carácter fuerte que parece ser totalmente incompatible con él.",
+   "generos": [
+    "Comedia",
+    "Romance"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/kiagXCuuvdE28GspcvOXlfFI0J3.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/6IfsmHoVWwgJwzxA9DLim2XZbSn.jpg",
+   "direccion": [
+    "John Hamburg"
+   ],
+   "reparto": [
+    "Ben Stiller",
+    "Robert De Niro",
+    "Ariana Grande",
+    "Skyler Gisondo",
+    "Owen Wilson",
+    "Blythe Danner",
+    "Teri Polo",
+    "Beanie Feldstein"
+   ],
+   "trailer": "j0MROuSV-pA",
+   "dondeVer": [],
+   "popularidad": 59.4,
    "pr": false
   },
   {
@@ -521,7 +519,7 @@
      "name": "Amazon Prime Video with Ads"
     }
    ],
-   "popularidad": 69.2,
+   "popularidad": 67.2,
    "pr": false
   },
   {
@@ -560,7 +558,40 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 155.8,
+   "popularidad": 134.7,
+   "pr": false
+  },
+  {
+   "tmdb": 1381071,
+   "title": "Godzilla Minus Zero",
+   "original": "ゴジラ-0.0",
+   "estreno": "2026-11-03",
+   "clasificacion": "R",
+   "duracion": 135,
+   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
+   "generos": [
+    "Ciencia ficción",
+    "Terror",
+    "Acción"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
+   "direccion": [
+    "山崎貴"
+   ],
+   "reparto": [
+    "神木隆之介",
+    "浜辺美波",
+    "吉岡秀隆",
+    "田中泯",
+    "長澤まさみ",
+    "山田裕貴",
+    "佐々木蔵之介",
+    "安藤サクラ"
+   ],
+   "trailer": "kw0YhiqOPFg",
+   "dondeVer": [],
+   "popularidad": 71.9,
    "pr": false
   },
   {
@@ -593,7 +624,7 @@
    ],
    "trailer": "d6oszs7f5aI",
    "dondeVer": [],
-   "popularidad": 223.5,
+   "popularidad": 215.0,
    "pr": false
   },
   {
@@ -633,40 +664,7 @@
      "name": "Amazon Prime Video with Ads"
     }
    ],
-   "popularidad": 57.7,
-   "pr": false
-  },
-  {
-   "tmdb": 1381071,
-   "title": "Godzilla Minus Zero",
-   "original": "ゴジラ-0.0",
-   "estreno": "2026-11-03",
-   "clasificacion": "R",
-   "duracion": 135,
-   "resumen": "La guerra dejó a Japón en la ruina, y Godzilla lo sumió en una situación aún peor. Han pasado dos años desde entonces, y el país ha librado una lucha ardua por recuperarse y finalmente retomar su vida cotidiana. Justo cuando la humanidad lograba aferrarse a una paz duramente conquistada, una nueva amenaza irrumpe, aplastando la esperanza en un instante.",
-   "generos": [
-    "Ciencia ficción",
-    "Terror",
-    "Acción"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/8VKjocpP0EiUiUzTPWwz7TV2kWP.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/oqrYIDH4tvfEzPe1yqT4jzmAWHQ.jpg",
-   "direccion": [
-    "山崎貴"
-   ],
-   "reparto": [
-    "神木隆之介",
-    "浜辺美波",
-    "吉岡秀隆",
-    "田中泯",
-    "長澤まさみ",
-    "山田裕貴",
-    "佐々木蔵之介",
-    "安藤サクラ"
-   ],
-   "trailer": "kw0YhiqOPFg",
-   "dondeVer": [],
-   "popularidad": 80.2,
+   "popularidad": 44.4,
    "pr": false
   },
   {
@@ -706,7 +704,7 @@
      "name": "Amazon Prime Video with Ads"
     }
    ],
-   "popularidad": 88.3,
+   "popularidad": 78.7,
    "pr": false
   }
  ],
@@ -741,7 +739,7 @@
    ],
    "trailer": "bwZzXTUcaQo",
    "dondeVer": [],
-   "popularidad": 373.4,
+   "popularidad": 342.5,
    "pr": false
   },
   {
@@ -774,7 +772,7 @@
    ],
    "trailer": "kw0YhiqOPFg",
    "dondeVer": [],
-   "popularidad": 80.2,
+   "popularidad": 71.9,
    "pr": false
   },
   {
@@ -793,8 +791,8 @@
    "afiche": "https://image.tmdb.org/t/p/w342/rdukIaIVFRrjy51jIdd5PTKwhKv.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/r4DTGm1f1r23cyjRJ5kFMh7qYlj.jpg",
    "direccion": [
-    "Alex Huston Fischer",
-    "Eleanor Wilson"
+    "Eleanor Wilson",
+    "Alex Huston Fischer"
    ],
    "reparto": [
     "Olivia Colman",
@@ -808,7 +806,7 @@
    ],
    "trailer": "jA5zfiikcu8",
    "dondeVer": [],
-   "popularidad": 79.5,
+   "popularidad": 85.1,
    "pr": false
   },
   {
@@ -841,7 +839,7 @@
    ],
    "trailer": "9NNU-vSeOB0",
    "dondeVer": [],
-   "popularidad": 72.9,
+   "popularidad": 63.5,
    "pr": false
   },
   {
@@ -873,7 +871,7 @@
    ],
    "trailer": "A7lyvgnDuDE",
    "dondeVer": [],
-   "popularidad": 71.7,
+   "popularidad": 65.1,
    "pr": false
   },
   {
@@ -885,11 +883,9 @@
    "duracion": 103,
    "resumen": "Billie, una adolescente impulsiva y poco convencional, descubre que posee poderes mágicos secretos; al liberarlos, se ve arrastrada a un viaje espectacular que la lleva más allá de los suburbios y la adentra en Hexe, un vasto reino de brujas. Obligada a unir fuerzas con su cautelosa madre, Alice, ambas desvelan secretos familiares que podrían cambiar para siempre el mundo de las brujas.",
    "generos": [
-    "Aventura",
     "Animación",
-    "Familia",
     "Fantasía",
-    "Comedia"
+    "Familia"
    ],
    "afiche": "https://image.tmdb.org/t/p/w342/tTt3P9jEL3VmQ6DKhq04AhlADYz.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/wdjW11Tp4w9EfDBxbjyBJvDVHDA.jpg",
@@ -909,22 +905,22 @@
    ],
    "trailer": "wkr5TpxKOTw",
    "dondeVer": [],
-   "popularidad": 69.9,
+   "popularidad": 77.1,
    "pr": false
   },
   {
    "tmdb": 1458300,
-   "title": "The Mosquito Bowl",
+   "title": "The Mosquito Bowl: Un partido en plena guerra",
    "original": "The Mosquito Bowl",
    "estreno": "2026-10-29",
    "clasificacion": "R",
-   "duracion": 128,
-   "resumen": "Después del ataque a Pearl Harbor, cuatro estrellas del fútbol universitario se alistan en los Marines de EE. UU., descubriendo la fuerza de la hermandad y el precio de la guerra.",
+   "duracion": 129,
+   "resumen": "Tras el ataque a Pearl Harbor, cuatro atletas universitarios se unen a la Marina estadounidense y descubren la fuerza de la hermandad y el costo de la guerra.",
    "generos": [
     "Bélica",
     "Drama"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/yWhMnr8pkhgZ1rGlj4z2dxLbS99.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/uYjAyQJTsZMyVvAWsjnXQaci4Zj.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/nfcXn5yvBejpbljQIBrTlOMQZoC.jpg",
    "direccion": [
     "Peter Berg"
@@ -935,9 +931,9 @@
     "Ray Nicholson",
     "Tom Francis",
     "Brent Comer",
-    "Dominic Bogart",
     "Jack Ingram",
-    "Ella Newton"
+    "Ella Newton",
+    "Peter Berg"
    ],
    "trailer": "CPFkLjHfKoc",
    "dondeVer": [
@@ -948,7 +944,7 @@
      "name": "Netflix Standard with Ads"
     }
    ],
-   "popularidad": 63.0,
+   "popularidad": 100.5,
    "pr": false
   },
   {
@@ -969,8 +965,8 @@
     "John Hamburg"
    ],
    "reparto": [
-    "Robert De Niro",
     "Ben Stiller",
+    "Robert De Niro",
     "Ariana Grande",
     "Skyler Gisondo",
     "Owen Wilson",
@@ -980,7 +976,7 @@
    ],
    "trailer": "j0MROuSV-pA",
    "dondeVer": [],
-   "popularidad": 55.4,
+   "popularidad": 59.4,
    "pr": false
   },
   {
@@ -1013,7 +1009,7 @@
    ],
    "trailer": "qWX1ba0f-Qg",
    "dondeVer": [],
-   "popularidad": 53.2,
+   "popularidad": 45.6,
    "pr": false
   },
   {
@@ -1046,7 +1042,7 @@
    ],
    "trailer": "WGOv9Pzh9cE",
    "dondeVer": [],
-   "popularidad": 42.6,
+   "popularidad": 39.3,
    "pr": false
   },
   {
@@ -1082,7 +1078,7 @@
    ],
    "trailer": "bRMu8S6FQ9c",
    "dondeVer": [],
-   "popularidad": 35.5,
+   "popularidad": 32.9,
    "pr": false
   },
   {
@@ -1115,7 +1111,7 @@
    ],
    "trailer": "ORxw68y3lyw",
    "dondeVer": [],
-   "popularidad": 35.4,
+   "popularidad": 31.0,
    "pr": false
   },
   {
@@ -1146,7 +1142,7 @@
    ],
    "trailer": "0gdRZZVoinM",
    "dondeVer": [],
-   "popularidad": 34.6,
+   "popularidad": 30.1,
    "pr": false
   },
   {
@@ -1179,7 +1175,7 @@
    ],
    "trailer": "Haw_sznA5aQ",
    "dondeVer": [],
-   "popularidad": 30.5,
+   "popularidad": 25.9,
    "pr": false
   },
   {
@@ -1212,14 +1208,14 @@
    ],
    "trailer": "RjEZaUBbUvU",
    "dondeVer": [],
-   "popularidad": 24.2,
+   "popularidad": 26.3,
    "pr": false
   },
   {
    "tmdb": 1381273,
    "title": "Tigre De Papel",
    "original": "Paper Tiger",
-   "estreno": "2026-11-13",
+   "estreno": "2026-11-25",
    "clasificacion": "R",
    "duracion": 115,
    "resumen": "Dos hermanos persiguen el sueño americano, pero se ven envueltos en una peligrosa trama de la mafia rusa que aterroriza a su familia, poniendo a prueba su vínculo a medida que la traición se hace posible.",
@@ -1245,7 +1241,7 @@
    ],
    "trailer": "MLwTyQOhBkw",
    "dondeVer": [],
-   "popularidad": 20.6,
+   "popularidad": 19.0,
    "pr": false
   },
   {
@@ -1279,7 +1275,7 @@
    ],
    "trailer": "wlm_vxf4PaM",
    "dondeVer": [],
-   "popularidad": 18.7,
+   "popularidad": 15.7,
    "pr": false
   },
   {
@@ -1312,7 +1308,7 @@
    ],
    "trailer": "iXA7BmrBBxs",
    "dondeVer": [],
-   "popularidad": 11.3,
+   "popularidad": 7.7,
    "pr": false
   },
   {
@@ -1345,7 +1341,7 @@
    ],
    "trailer": "Dihu6iM__rI",
    "dondeVer": [],
-   "popularidad": 11.2,
+   "popularidad": 8.8,
    "pr": false
   },
   {
@@ -1377,7 +1373,7 @@
    ],
    "trailer": "SNbVMk-nLu4",
    "dondeVer": [],
-   "popularidad": 10.6,
+   "popularidad": 7.0,
    "pr": false
   },
   {
@@ -1410,7 +1406,7 @@
    ],
    "trailer": "zql0pXIpELI",
    "dondeVer": [],
-   "popularidad": 6.6,
+   "popularidad": 3.4,
    "pr": false
   },
   {
@@ -1439,7 +1435,7 @@
    ],
    "trailer": "8gjOXAjeisY",
    "dondeVer": [],
-   "popularidad": 3.3,
+   "popularidad": 3.4,
    "pr": false
   },
   {
@@ -1470,7 +1466,7 @@
    ],
    "trailer": "AyYaNvtC2i0",
    "dondeVer": [],
-   "popularidad": 2.8,
+   "popularidad": 3.1,
    "pr": false
   },
   {
@@ -1534,7 +1530,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 0.5,
+   "popularidad": 0.4,
    "pr": true
   },
   {
@@ -1563,7 +1559,7 @@
    ],
    "trailer": null,
    "dondeVer": [],
-   "popularidad": 0.3,
+   "popularidad": 0.2,
    "pr": true
   },
   {
@@ -1649,7 +1645,7 @@
    ],
    "trailer": "ZyNMlP3THNo",
    "dondeVer": [],
-   "popularidad": 0.2,
+   "popularidad": 0.3,
    "pr": true
   },
   {
@@ -1713,7 +1709,7 @@
    ],
    "trailer": "kZ2Nhqkx3-I",
    "dondeVer": [],
-   "popularidad": 261.4,
+   "popularidad": 263.0,
    "pr": false
   },
   {
@@ -1745,7 +1741,7 @@
    ],
    "trailer": "qdfXYN5kMBY",
    "dondeVer": [],
-   "popularidad": 52.0,
+   "popularidad": 51.2,
    "pr": false
   },
   {
@@ -1777,7 +1773,7 @@
    ],
    "trailer": "kAExvESKk1c",
    "dondeVer": [],
-   "popularidad": 14.3,
+   "popularidad": 14.0,
    "pr": false
   },
   {
@@ -1811,7 +1807,7 @@
    ],
    "trailer": "-EFxXA0mPII",
    "dondeVer": [],
-   "popularidad": 10.6,
+   "popularidad": 10.3,
    "pr": false
   },
   {
@@ -1844,7 +1840,7 @@
    ],
    "trailer": "J6MRNchmZkY",
    "dondeVer": [],
-   "popularidad": 9.1,
+   "popularidad": 8.7,
    "pr": false
   },
   {
@@ -1876,7 +1872,7 @@
    ],
    "trailer": "I6tMFYT9s7E",
    "dondeVer": [],
-   "popularidad": 8.9,
+   "popularidad": 8.3,
    "pr": false
   },
   {
@@ -1909,7 +1905,7 @@
    ],
    "trailer": "clyzHmBx43E",
    "dondeVer": [],
-   "popularidad": 7.8,
+   "popularidad": 7.5,
    "pr": false
   },
   {
@@ -1943,7 +1939,7 @@
    ],
    "trailer": "VL-xjzQFWsY",
    "dondeVer": [],
-   "popularidad": 7.6,
+   "popularidad": 7.5,
    "pr": false
   },
   {
@@ -1975,7 +1971,7 @@
    ],
    "trailer": "JpZ7y72u-c8",
    "dondeVer": [],
-   "popularidad": 6.2,
+   "popularidad": 5.9,
    "pr": false
   },
   {
@@ -2006,7 +2002,7 @@
    ],
    "trailer": "5yY6V9MbEoE",
    "dondeVer": [],
-   "popularidad": 5.5,
+   "popularidad": 5.3,
    "pr": false
   },
   {
@@ -2039,7 +2035,7 @@
    ],
    "trailer": "80xR3G5eowo",
    "dondeVer": [],
-   "popularidad": 5.2,
+   "popularidad": 4.9,
    "pr": false
   },
   {
@@ -2071,7 +2067,7 @@
    ],
    "trailer": "_XEZHlWlZ_o",
    "dondeVer": [],
-   "popularidad": 4.4,
+   "popularidad": 4.8,
    "pr": false
   },
   {
@@ -2105,7 +2101,7 @@
    ],
    "trailer": "IXZMB2cSnls",
    "dondeVer": [],
-   "popularidad": 4.2,
+   "popularidad": 3.8,
    "pr": false
   },
   {
@@ -2137,7 +2133,7 @@
    ],
    "trailer": "_LE1L4Huyys",
    "dondeVer": [],
-   "popularidad": 4.0,
+   "popularidad": 3.5,
    "pr": false
   },
   {
@@ -2153,7 +2149,7 @@
     "Suspense",
     "Drama"
    ],
-   "afiche": "https://image.tmdb.org/t/p/w342/ujp2aHu1lWMjAGoletnsmv3mcMn.jpg",
+   "afiche": "https://image.tmdb.org/t/p/w342/p3OB7chGUU64fxtzNGawqRNPhFc.jpg",
    "fondo": "https://image.tmdb.org/t/p/w1280/ppQKMpC4WhEumnzu4aAcWjAr7WU.jpg",
    "direccion": [
     "Roland Joffé"
@@ -2170,7 +2166,7 @@
    ],
    "trailer": "8N9e-skJ3hw",
    "dondeVer": [],
-   "popularidad": 4.0,
+   "popularidad": 3.4,
    "pr": false
   },
   {
@@ -2202,7 +2198,7 @@
    ],
    "trailer": "fdkwGvMB5zQ",
    "dondeVer": [],
-   "popularidad": 3.8,
+   "popularidad": 3.9,
    "pr": false
   },
   {
@@ -2234,7 +2230,7 @@
    ],
    "trailer": "2ZW9QDB_PHA",
    "dondeVer": [],
-   "popularidad": 3.3,
+   "popularidad": 3.1,
    "pr": false
   },
   {
@@ -2288,7 +2284,7 @@
    ],
    "trailer": "H_NwyHRY9yk",
    "dondeVer": [],
-   "popularidad": 2.9,
+   "popularidad": 2.7,
    "pr": false
   },
   {
@@ -2320,7 +2316,7 @@
    ],
    "trailer": "-CDgxJgiQY4",
    "dondeVer": [],
-   "popularidad": 2.9,
+   "popularidad": 2.5,
    "pr": false
   },
   {
@@ -2351,7 +2347,7 @@
    ],
    "trailer": "MpIwPydkWac",
    "dondeVer": [],
-   "popularidad": 2.4,
+   "popularidad": 2.1,
    "pr": false
   },
   {
@@ -2386,6 +2382,67 @@
    ],
    "trailer": "oqZaJgF4sfE",
    "dondeVer": [],
+   "popularidad": 2.1,
+   "pr": false
+  },
+  {
+   "tmdb": 1395627,
+   "title": "Vrushakarma",
+   "original": "వృషకర్మ",
+   "estreno": "2026-12-03",
+   "clasificacion": null,
+   "duracion": 185,
+   "resumen": "",
+   "generos": [
+    "Fantasía",
+    "Suspense",
+    "Misterio",
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/amNYQ0qy5NNn29ZRXdy9RdwIp1G.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/q5GrH7opo6RBVGsJTiIwmFrMxRb.jpg",
+   "direccion": [
+    "Karthik Varma Dandu"
+   ],
+   "reparto": [
+    "Naga Chaitanya Akkineni",
+    "Meenakshi Chaudhary",
+    "स्पर्श श्रीवास्तव",
+    "Jayaram",
+    "Satya"
+   ],
+   "trailer": null,
+   "dondeVer": [],
+   "popularidad": 1.9,
+   "pr": false
+  },
+  {
+   "tmdb": 1489396,
+   "title": "Eetha",
+   "original": "ईथा",
+   "estreno": "2026-12-04",
+   "clasificacion": "NR",
+   "duracion": 150,
+   "resumen": "",
+   "generos": [
+    "Drama"
+   ],
+   "afiche": "https://image.tmdb.org/t/p/w342/fWyiD2s9bxwbpEv18FRDNNwStp4.jpg",
+   "fondo": "https://image.tmdb.org/t/p/w1280/oXPQa5s46wjo5kDRt2rQ5Pjev68.jpg",
+   "direccion": [
+    "Laxman Utekar"
+   ],
+   "reparto": [
+    "Shraddha Kapoor",
+    "Randeep Hooda",
+    "Mohammed Zeeshan Ayyub",
+    "Siddharth Jadhav",
+    "Anant Joshi",
+    "नाना पाटेकर",
+    "Ulka Gupta"
+   ],
+   "trailer": null,
+   "dondeVer": [],
    "popularidad": 1.9,
    "pr": false
   },
@@ -2418,7 +2475,7 @@
    ],
    "trailer": "sJAqmdXaM8U",
    "dondeVer": [],
-   "popularidad": 1.9,
+   "popularidad": 1.8,
    "pr": false
   },
   {
@@ -2450,7 +2507,7 @@
    ],
    "trailer": "cal1RfsmHUI",
    "dondeVer": [],
-   "popularidad": 1.9,
+   "popularidad": 1.8,
    "pr": false
   },
   {
@@ -2479,7 +2536,7 @@
    ],
    "trailer": "2iIBYPng3uI",
    "dondeVer": [],
-   "popularidad": 1.7,
+   "popularidad": 1.6,
    "pr": false
   },
   {
@@ -2511,7 +2568,7 @@
    ],
    "trailer": "ld465IU0NGY",
    "dondeVer": [],
-   "popularidad": 1.6,
+   "popularidad": 1.4,
    "pr": false
   },
   {
@@ -2542,7 +2599,7 @@
    ],
    "trailer": "psLrU5NOWrI",
    "dondeVer": [],
-   "popularidad": 1.6,
+   "popularidad": 1.4,
    "pr": false
   },
   {
@@ -2573,63 +2630,6 @@
     "Michaela Longden"
    ],
    "trailer": null,
-   "dondeVer": [],
-   "popularidad": 1.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1832527,
-   "title": "THIS SYMPHONY MAY CONTAIN HOPE.",
-   "original": "THIS SYMPHONY MAY CONTAIN HOPE.",
-   "estreno": "2026-12-13",
-   "clasificacion": null,
-   "duracion": 135,
-   "resumen": "",
-   "generos": [
-    "Música"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/5V5VEgSGH3rg5eMwfNseirCCiZI.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/7pkilXj86HOR7IIbsyOeb25DseM.jpg",
-   "direccion": [
-    "Rohan Blair-Mangat"
-   ],
-   "reparto": [
-    "RAYE",
-    "Amma",
-    "Absolutely"
-   ],
-   "trailer": "6zxGjST6JyI",
-   "dondeVer": [],
-   "popularidad": 1.5,
-   "pr": false
-  },
-  {
-   "tmdb": 1498915,
-   "title": "The Day She Returns",
-   "original": "그녀가 돌아온 날",
-   "estreno": "2026-12-15",
-   "clasificacion": null,
-   "duracion": 85,
-   "resumen": "",
-   "generos": [
-    "Drama"
-   ],
-   "afiche": "https://image.tmdb.org/t/p/w342/pzAR32SOHwYT9OebuPh7jiSWapf.jpg",
-   "fondo": "https://image.tmdb.org/t/p/w1280/rxqC1iE9Io09mlU0NIWJiLRaoRd.jpg",
-   "direccion": [
-    "Hong Sang-soo"
-   ],
-   "reparto": [
-    "송선미",
-    "Jo Yoon-hee",
-    "박미소",
-    "김선진",
-    "오윤수",
-    "강소이",
-    "하성국",
-    "신석호"
-   ],
-   "trailer": "-o39M6N24Dk",
    "dondeVer": [],
    "popularidad": 1.5,
    "pr": false
