@@ -1,5 +1,5 @@
 {
- "actualizado": "2026-11-28T01:23:05+00:00",
+ "actualizado": "2026-11-28T04:24:44+00:00",
  "noticias": [
   {
    "gid": "1850460852981829",
@@ -202,26 +202,26 @@
    "id": "UCkMIq70Im_rSUo8KXMVDlXQ",
    "pr": true,
    "url": "https://www.youtube.com/@CaptMatojo07",
-   "en_vivo": "ZOrJnC4D8yE",
+   "en_vivo": null,
    "videos": [
     {
      "id": "ZOrJnC4D8yE",
      "titulo": "🚨 BF6 | ¡VIERNES DE EMERGENCIA! ⚡ PROTOCOLO ELITE ACTIVADO 🔥 LET'S GO!",
-     "detalle": "21 lo están viendo",
-     "vivo": true,
+     "detalle": "461 · Transmitido hace 6 min",
+     "vivo": false,
      "directo": true
     },
     {
      "id": "QuclFr_zafc",
      "titulo": "🚨 ✅ BF6 | ¡SAQUEAMOS LOS SERVIDORES! 📈🔥 DESTRUCCIÓN TOTAL 🚁⚔️ LET’S GO!",
-     "detalle": "590 · Transmitido hace 2 días",
+     "detalle": "590 · Transmitido hace 3 días",
      "vivo": false,
      "directo": true
     },
     {
      "id": "1HMIZYeO5TE",
      "titulo": "🚨 ✅ BF6 | ¡SAQUEAMOS LOS SERVIDORES! 📈🔥 DESTRUCCIÓN TOTAL 🚁⚔️ LET’S GO!",
-     "detalle": "1.2 K · Transmitido hace 4 días",
+     "detalle": "1.2 K · Transmitido hace 5 días",
      "vivo": false,
      "directo": true
     },
@@ -235,21 +235,21 @@
     {
      "id": "65kJ_StCY4M",
      "titulo": "BF6 | 💎🎰 ¡QUE COMIENCE EL LUNES DE BATALLA, CHANCLETEROS! ⚔️ HOY VENIMOS A PASARLA BIEN 😎 ¡LET’S GO!",
-     "detalle": "581 · Transmitido hace 10 días",
+     "detalle": "581 · Transmitido hace 11 días",
      "vivo": false,
      "directo": true
     },
     {
      "id": "1gCJosJ4Peo",
      "titulo": "🚨 BF6 | 🔥 ¡ZONA DE COMBATE ACTIVADA! ⚔️ CHANCLETEROS, ¡HOY SE LUCHA! 🚀 ¡LET’S GO!",
-     "detalle": "547 · Transmitido hace 11 días",
+     "detalle": "547 · Transmitido hace 12 días",
      "vivo": false,
      "directo": true
     },
     {
      "id": "wtIPex4Jl6M",
      "titulo": "🚨 BF6 | 🎰🔥 ¡SÁBADO DE CASINO HEIST! 💰 APUESTAS AL LÍMITE, ¡EL BOTÍN NOS ESPERA! ⚔️ ¡LET’S GO!",
-     "detalle": "871 · Transmitido hace 12 días",
+     "detalle": "871 · Transmitido hace 13 días",
      "vivo": false,
      "directo": true
     },
